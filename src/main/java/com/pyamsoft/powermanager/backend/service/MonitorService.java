@@ -30,18 +30,20 @@ import com.pyamsoft.pydroid.util.LogUtil;
 public final class MonitorService extends ServiceBase {
 
   private static final String TAG = MonitorService.class.getSimpleName();
-  private static boolean enabled;
   private ScreenStateReceiver screenStateReceiver;
   private BatteryStateReceiver batteryStateReceiver;
   private GlobalPreferenceUtil preferenceUtil;
   private PersistentNotification persistentNotification;
 
   public static void powerManagerService(final Context context) {
-    if (enabled) {
-      enabled = true;
+    final GlobalPreferenceUtil.PowerManagerMonitor p =
+        GlobalPreferenceUtil.get().powerManagerMonitor();
+    final boolean b = !p.isEnabled();
+    if (b) {
+      p.setEnabled(true);
       startService(context);
     } else {
-      enabled = false;
+      p.setEnabled(false);
       stopService(context);
 
       // Completely stop the service
@@ -72,7 +74,7 @@ public final class MonitorService extends ServiceBase {
   }
 
   @Override protected boolean isEnabled() {
-    return enabled;
+    return preferenceUtil.powerManagerMonitor().isEnabled();
   }
 
   @Override public void onCreate() {
