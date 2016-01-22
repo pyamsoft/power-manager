@@ -17,78 +17,75 @@
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/super_frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="@bool/fitsSystem"
     >
 
-  <FrameLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@android:color/white"
+      android:orientation="vertical"
       >
 
-    <LinearLayout
+    <View
+        android:id="@+id/statusbar_padding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="0dp"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         >
 
       <FrameLayout
+          android:id="@+id/fragment_place"
           android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_weight="1"
-          >
-
-        <FrameLayout
-            android:id="@+id/fragment_place"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            />
-
-        <View
-            android:id="@+id/upshadow"
-            android:layout_gravity="bottom"
-            style="@style/Style.PYDroid.DropShadow.Up"
-            />
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="top"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
-
-        <View
-            android:id="@+id/dropshadow"
-            android:layout_gravity="top"
-            android:layout_marginTop="?attr/actionBarSize"
-            style="@style/Style.PYDroid.DropShadow"
-            />
-
-
-      </FrameLayout>
-
-      <include
-          layout="@layout/layout_media_ads"
-          android:id="@+id/media_ads"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_gravity="bottom"
           />
-    </LinearLayout>
+
+      <View
+          android:id="@+id/upshadow"
+          android:layout_gravity="bottom"
+          style="@style/Style.PYDroid.DropShadow.Up"
+          />
+
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:layout_gravity="top"
+          android:background="?attr/colorPrimary"
+          android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          />
+
+      <View
+          android:id="@+id/dropshadow"
+          android:layout_gravity="top"
+          android:layout_marginTop="?attr/actionBarSize"
+          style="@style/Style.PYDroid.DropShadow"
+          />
+
+
+    </FrameLayout>
 
     <include
-        layout="@layout/layout_explain"
+        layout="@layout/layout_media_ads"
+        android:id="@+id/media_ads"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
         />
+  </LinearLayout>
 
-  </FrameLayout>
+  <include
+      layout="@layout/layout_explain"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:visibility="gone"
+      />
 
 </merge>
