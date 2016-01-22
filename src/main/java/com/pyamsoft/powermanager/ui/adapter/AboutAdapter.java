@@ -118,7 +118,7 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
         int animTime;
         if (position == POSITION_LICENSES) {
           animTime = 1000;
-        }               else {
+        } else {
           animTime = -1;
         }
 
@@ -163,7 +163,8 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
         final String picassoLicense = context.getString(R.string.picasso_license) + "\n\n";
 
         final String androidSupport = "Android Support Libraries" + "\n\n";
-        final String androidSupportLicense = context.getString(R.string.android_support_license) + "\n\n";
+        final String androidSupportLicense =
+            context.getString(R.string.android_support_license) + "\n\n";
 
         final String pydroid = "PYDroid" + "\n\n";
         final String pydroidLicense = context.getString(R.string.pydroid_license) + "\n\n";

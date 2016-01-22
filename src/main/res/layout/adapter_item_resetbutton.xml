@@ -65,8 +65,8 @@
 
       <TextView
           android:layout_width="match_parent"
-          android:text="@string/reset_explain"
           android:layout_height="wrap_content"
+          android:text="@string/reset_explain"
           android:textAppearance="?android:attr/textAppearanceSmall"
           />
     </LinearLayout>
