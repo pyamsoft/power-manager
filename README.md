@@ -10,16 +10,6 @@ it to manage. The application can be configured to start up when your device
 starts, and can even be configured to periodically turn your device on to  
 check for things like messages and emails.
 
-Power Manager is developed in the Open on GitHub at:  
-
-```
-https://github.com/pyamsoft/power-manager
-```
-
-If you know a few things about Android programming and are wanting to help  
-out with development you can do so by creating issue tickets to squash bugs,  
-and propose feature requests for future inclusion.
-
 ## Permissions
 
 Power Manager uses the requested permissions in order to control and manage  
@@ -37,6 +27,20 @@ viewed if desired by selecting the redeem icon on the top right hand side of
 the screen. Aside from that single optional advertisement, Power Manager does  
 not access the internet or utilize device resources in any other way.
 
+## Development
+
+Power Manager is developed in the Open on GitHub at:  
+```
+https://github.com/pyamsoft/power-manager
+```
+If you know a few things about Android programming and are wanting to help  
+out with development you can do so by creating issue tickets to squash bugs,  
+and propose feature requests for future inclusion.
+
+Power Manager has a publicly viewable Trello board available at:  
+```
+https://trello.com/b/44nuGT7D
+```
 # Issues or Questions
 
 Please post any issues with the code in the Issues section on GitHub. Pull  
