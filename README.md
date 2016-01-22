@@ -13,7 +13,7 @@ check for things like messages and emails.
 Power Manager is developed in the Open on GitHub at:  
 
 ```
-https://github.com/pyamsoft/power-manager.
+https://github.com/pyamsoft/power-manager
 ```
 
 If you know a few things about Android programming and are wanting to help  
