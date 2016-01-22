@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2013 - 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:paddingEnd="12dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingStart="12dp"
+    >
+
+  <FrameLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_vertical"
+      android:layout_marginEnd="12dp"
+      android:layout_marginRight="12dp"
+      >
+
+    <ImageView
+        android:id="@+id/go_app"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/oval_primary"
+        android:contentDescription="@string/blank"
+        android:scaleType="center"
+        android:src="@drawable/ic_settings_white_24dp"
+        />
+
+  </FrameLayout>
+
+  <TextView
+      android:id="@+id/remoteViewTitle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginEnd="8dp"
+      android:layout_marginRight="8dp"
+      android:gravity="center"
+      android:text="@string/app_name"
+      android:textAppearance="@style/TextAppearance.PYDroid.Notification.Title"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <FrameLayout
+        android:id="@+id/remoteViewWifi"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/notification_button_background"
+        >
+
+      <ImageView
+          android:id="@+id/remoteViewWifiImg"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/remoteViewData"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/notification_button_background"
+        >
+
+      <ImageView
+          android:id="@+id/remoteViewDataImg"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/remoteViewBluetooth"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/notification_button_background"
+        >
+
+      <ImageView
+          android:id="@+id/remoteViewBluetoothImg"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/remoteViewSync"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/notification_button_background"
+        >
+
+      <ImageView
+          android:id="@+id/remoteViewSyncImg"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/remoteViewDivider"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
+        android:background="@android:color/white"
+        />
+
+    <FrameLayout
+        android:id="@+id/remoteViewToggle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/notification_button_background"
+        >
+
+      <ImageView
+          android:id="@+id/remoteViewToggleImg"
+          android:layout_width="28dp"
+          android:layout_height="28dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          android:scaleType="fitXY"
+          />
+
+    </FrameLayout>
+
+  </LinearLayout>
+
+</LinearLayout>
+

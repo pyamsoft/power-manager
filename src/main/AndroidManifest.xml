@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2013 - 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pyamsoft.powermanager">
+
+  <!-- For WiFi -->
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <!-- For Data -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <!-- For Bluetooth -->
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+  <uses-permission android:name="android.permission.BLUETOOTH"/>
+  <!-- For Sync -->
+  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+  <!-- For Google Ad Implementation -->
+  <uses-permission android:name="android.permission.INTERNET"/>
+  <!-- For Boot Receiver -->
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+  <application
+      android:allowBackup="false"
+      android:fullBackupContent="false"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:name=".PowerManager"
+      android:supportsRtl="false"
+      android:theme="@style/Theme.PowerManager.Light">
+
+    <activity
+        android:exported="true"
+        android:label="@string/app_name"
+        android:launchMode="singleInstance"
+        android:name=".ui.activity.MainActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/Theme.PowerManager.Light.Splash">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+
+    <!-- Power Manager -->
+    <service
+        android:exported="false"
+        android:name=".backend.service.MonitorService"/>
+    <service
+        android:exported="false"
+        android:name=".backend.service.ActiveService"/>
+
+    <!--Toggle from Notification -->
+    <service
+        android:exported="false"
+        android:name=".backend.notification.PersistentNotification$Toggle"/>
+
+    <!-- Interval reopen -->
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerWifi$Interval"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerData$Interval"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerBluetooth$Interval"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerSync$Interval"/>
+
+    <!-- Oneshot services -->
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerWifi$Toggle"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerData$Toggle"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerBluetooth$Toggle"/>
+    <service
+        android:exported="false"
+        android:name=".backend.manager.ManagerSync$Toggle"/>
+
+    <receiver
+        android:enabled="false"
+        android:exported="false"
+        android:name=".backend.receiver.BootActionReceiver">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      </intent-filter>
+    </receiver>
+
+  </application>
+</manifest>
