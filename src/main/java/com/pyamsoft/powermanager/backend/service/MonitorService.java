@@ -41,7 +41,7 @@ public final class MonitorService extends ServiceBase {
     final boolean b = !p.isEnabled();
     if (b) {
       p.setEnabled(true);
-      ServiceBase.startService(context);
+      startService(context);
     } else {
       p.setEnabled(false);
       stopService(context);
@@ -68,6 +68,9 @@ public final class MonitorService extends ServiceBase {
     if (!batteryStateReceiver.unregister(getApplicationContext())) {
       LogUtil.e(TAG, getString(R.string.battery_state_unregister));
     }
+
+    // Completely stop the service
+    stopSelf();
   }
 
   @Override protected boolean isEnabled() {

@@ -46,6 +46,9 @@ public final class PowerManager extends ApplicationBase {
     if (p.powerManagerMonitor().isEnabled()) {
       // Start service
       MonitorService.startService(getApplicationContext());
+    } else if (p.powerManagerMonitor().isNotificationEnabled()) {
+      // Just update notification from service
+      MonitorService.updateService(getApplicationContext());
     }
   }
 

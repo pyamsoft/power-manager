@@ -15,7 +15,6 @@
  */
 package com.pyamsoft.powermanager.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
@@ -24,7 +23,6 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +36,6 @@ import com.pyamsoft.pydroid.util.AdUtil;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
-import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class MainActivity extends ActivityBase {
@@ -64,26 +61,7 @@ public class MainActivity extends ActivityBase {
 
   private void setupStatusBar() {
     statusBarPadding = findViewById(R.id.statusbar_padding);
-    int result;
-    final int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-    if (!AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
-      LogUtil.d(TAG, "Lollipop doesnt need coloring");
-      result = 0;
-    } else if (!AppUtil.androidVersionLessThan(Build.VERSION_CODES.KITKAT)) {
-      if (resourceId > 0) {
-        LogUtil.d(TAG, "Found status bar resourceId");
-        result = getResources().getDimensionPixelSize(resourceId);
-      } else {
-        LogUtil.d(TAG, "Fall back to status bar height");
-        result = (int) AppUtil.convertToDP(this, 24);
-      }
-    } else {
-      LogUtil.d(TAG, "Sub Kitkat doesnt need coloring");
-      result = 0;
-    }
-    final ViewGroup.LayoutParams p = statusBarPadding.getLayoutParams();
-    p.height = result;
-    statusBarPadding.setLayoutParams(p);
+    super.setupStatusBar(statusBarPadding);
   }
 
   public final void colorizeStatusBar(final int color) {
