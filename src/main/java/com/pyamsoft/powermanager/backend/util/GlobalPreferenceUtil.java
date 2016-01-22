@@ -314,21 +314,12 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
   public static final class PowerManagerMonitor extends PreferenceBase {
 
     private static final String TAG = PowerManagerMonitor.class.getName();
-    public static final String ENABLED = TAG + ".enabled";
     public static final String FOREGROUND = TAG + ".foreground";
     public static final String NOTIFICATION = TAG + ".notification";
     private static final String PREFERENCE = PowerManager.createPreferenceFileName(TAG);
 
     public PowerManagerMonitor() {
       super(PREFERENCE);
-    }
-
-    public boolean isEnabled() {
-      return getBoolean(ENABLED, false);
-    }
-
-    public void setEnabled(final boolean b) {
-      putBoolean(ENABLED, b);
     }
 
     public boolean isForeground() {

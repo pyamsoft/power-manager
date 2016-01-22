@@ -35,22 +35,14 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
 
   private static final String TAG = BatteryStateReceiver.class.getSimpleName();
 
-  private static BatteryStateReceiver instance = null;
   private final IntentFilter filter;
   private boolean isRegistered;
 
-  private BatteryStateReceiver() {
+  public BatteryStateReceiver() {
     filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     filter.addAction(Intent.ACTION_BATTERY_LOW);
     filter.addAction(Intent.ACTION_BATTERY_OKAY);
     isRegistered = false;
-  }
-
-  public synchronized static BatteryStateReceiver get() {
-    if (instance == null) {
-      instance = new BatteryStateReceiver();
-    }
-    return instance;
   }
 
   private static void setTrigger(final ManagerBase manager, final int managed, final int state) {

@@ -28,21 +28,13 @@ public final class ScreenStateReceiver extends BroadcastReceiver {
   private static final String TAG = ScreenStateReceiver.class.getSimpleName();
   private static final boolean SCREEN_OFF = true;
   private static final boolean SCREEN_ON = false;
-  private static ScreenStateReceiver instance = null;
   private final IntentFilter filter;
   private boolean isRegistered;
 
-  private ScreenStateReceiver() {
+  public ScreenStateReceiver() {
     filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
     filter.addAction(Intent.ACTION_SCREEN_ON);
     isRegistered = false;
-  }
-
-  public synchronized static ScreenStateReceiver get() {
-    if (instance == null) {
-      instance = new ScreenStateReceiver();
-    }
-    return instance;
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {

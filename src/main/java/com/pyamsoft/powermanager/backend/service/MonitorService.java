@@ -30,21 +30,22 @@ import com.pyamsoft.pydroid.util.LogUtil;
 public final class MonitorService extends ServiceBase {
 
   private static final String TAG = MonitorService.class.getSimpleName();
-  private final ScreenStateReceiver screenStateReceiver = ScreenStateReceiver.get();
-  private final BatteryStateReceiver batteryStateReceiver = BatteryStateReceiver.get();
+  private static boolean enabled;
+  private ScreenStateReceiver screenStateReceiver;
+  private BatteryStateReceiver batteryStateReceiver;
   private GlobalPreferenceUtil preferenceUtil;
   private PersistentNotification persistentNotification;
 
   public static void powerManagerService(final Context context) {
-    final GlobalPreferenceUtil.PowerManagerMonitor p =
-        GlobalPreferenceUtil.get().powerManagerMonitor();
-    final boolean b = !p.isEnabled();
-    if (b) {
-      p.setEnabled(true);
+    if (enabled) {
+      enabled = true;
       startService(context);
     } else {
-      p.setEnabled(false);
+      enabled = false;
       stopService(context);
+
+      // Completely stop the service
+      killService(context);
     }
   }
 
@@ -68,17 +69,16 @@ public final class MonitorService extends ServiceBase {
     if (!batteryStateReceiver.unregister(getApplicationContext())) {
       LogUtil.e(TAG, getString(R.string.battery_state_unregister));
     }
-
-    // Completely stop the service
-    stopSelf();
   }
 
   @Override protected boolean isEnabled() {
-    return preferenceUtil.powerManagerMonitor().isEnabled();
+    return enabled;
   }
 
   @Override public void onCreate() {
     super.onCreate();
+    screenStateReceiver = new ScreenStateReceiver();
+    batteryStateReceiver = new BatteryStateReceiver();
     preferenceUtil = GlobalPreferenceUtil.get();
     persistentNotification = PersistentNotification.get();
   }
@@ -87,6 +87,15 @@ public final class MonitorService extends ServiceBase {
     return runServiceHook(intent, preferenceUtil.powerManagerMonitor().isNotificationEnabled(),
         preferenceUtil.powerManagerMonitor().isForeground(), persistentNotification.notification(),
         PersistentNotification.ID);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    serviceStopHook();
+    screenStateReceiver = null;
+    batteryStateReceiver = null;
+    preferenceUtil = null;
+    persistentNotification = null;
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
