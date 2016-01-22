@@ -38,10 +38,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:background="@drawable/oval_primary"
         android:contentDescription="@string/blank"
-        android:scaleType="center"
-        android:src="@drawable/ic_settings_white_24dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher"
         />
 
   </FrameLayout>
