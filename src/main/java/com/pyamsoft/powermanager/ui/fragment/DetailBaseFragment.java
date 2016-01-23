@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,16 +41,18 @@ import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import java.util.concurrent.Callable;
 
 public final class DetailBaseFragment extends Fragment {
 
   public static final String EXTRA_PARAM_ID = "TARGET_ID";
   public static final String EXTRA_PARAM_IMAGE = "TARGET_IMAGE";
   private static final String TAG = DetailBaseFragment.class.getSimpleName();
-  private String targetType;
-  private ImageView image;
-  private FloatingActionButton fab;
-  private FABBase fabBase;
+  private static final int FIELD_NOOP = -1;
+  private static final int IMAGE_NONE = -1;
+  private String targetString;
+  private int targetImageResId;
+  private int backgroundColor;
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
@@ -61,14 +62,45 @@ public final class DetailBaseFragment extends Fragment {
 
         @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
             final String key) {
-          if (fabBase != null) {
-            fabBase.setChecked(fabBase.isChecked());
+          if (largeFABBase != null) {
+            largeFABBase.setChecked(largeFABBase.isChecked());
           }
         }
       };
-  private FloatingActionButton fabMini;
-  private FABBase fabBaseMini;
-  private int backgroundColor;
+  private ExplanationFragment fragment;
+  private FloatingActionButton largeFAB;
+  private FloatingActionButton smallFAB;
+  private TextView title;
+  private ImageView image;
+  private int powerPlanField;
+  private Callable<Boolean> isReopen;
+  private Callable<Boolean> isManage;
+  private BooleanRunnable setReopen;
+  private BooleanRunnable setManage;
+  private int largeFABIconOn;
+  private int largeFABIconOff;
+  private int smallFABIconOn;
+  private int smallFABIconOff;
+  private FABBase largeFABBase;
+  private FABBase smallFABBase;
+
+  public static abstract class BooleanRunnable implements Runnable {
+
+    private boolean state;
+
+    public final void run(final boolean newState) {
+      setState(newState);
+      run();
+    }
+
+    public final void setState(boolean state) {
+      this.state = state;
+    }
+
+    public final boolean isState() {
+      return state;
+    }
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -79,171 +111,295 @@ public final class DetailBaseFragment extends Fragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    targetType =
-        getArguments().getString(EXTRA_PARAM_ID, GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI);
+    initialize(view);
     setupContentArea();
-    setupHeroImage(view);
-    setupFAB(view);
-    setupFABMini(view);
-    setupDetailName(view);
+    setupFAB();
+    setupFABMini();
   }
 
-  private void setupHeroImage(final View view) {
-    final int imageType = getArguments().getInt(EXTRA_PARAM_IMAGE, 0);
-    image = (ImageView) view.findViewById(R.id.detail_image);
-    final int width = getActivity().getWindow().getDecorView().getMeasuredWidth();
-    final int height = (int) AppUtil.convertToDP(getContext(), 240);
-    Picasso.with(getContext()).load(imageType).resize(width, height).into(image, new Callback() {
-
-      @Override public void onSuccess() {
-        applyStatusBarColor(false);
-      }
-
-      @Override public void onError() {
-        LogUtil.e(TAG, "Picasso image load failure");
-      }
-    });
+  private boolean shouldShowFAB() {
+    return isReopen != null && isManage != null && setReopen != null && setManage != null;
   }
 
-  private void setupContentArea() {
-    final FragmentManager fm = getChildFragmentManager();
-    ExplanationFragment fragment;
-    switch (targetType) {
+  private void initialize(final View v) {
+    targetString = getArguments().getString(EXTRA_PARAM_ID);
+    targetImageResId = getArguments().getInt(EXTRA_PARAM_IMAGE, 0);
+    largeFAB = (FloatingActionButton) v.findViewById(R.id.detail_fab);
+    smallFAB = (FloatingActionButton) v.findViewById(R.id.detail_fab_small);
+    title = (TextView) v.findViewById(R.id.detail_title);
+    image = (ImageView) v.findViewById(R.id.detail_image);
+
+    switch (targetString) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
         fragment = new WifiRadioFragment();
+        powerPlanField = PowerPlanUtil.FIELD_MANAGE_WIFI;
+        isReopen = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().intervalDisableService().isWifiReopen();
+          }
+        };
+        isManage = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().powerManagerActive().isManagedWifi();
+          }
+        };
+        setReopen = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().intervalDisableService().setWifiReopen(isState());
+          }
+        };
+        setManage = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().powerManagerActive().setManagedWifi(isState());
+          }
+        };
+        largeFABIconOn = R.drawable.ic_network_wifi_white_24dp;
+        largeFABIconOff = R.drawable.ic_signal_wifi_off_white_24dp;
+        smallFABIconOn = R.drawable.ic_check_white_24dp;
+        smallFABIconOff = R.drawable.ic_close_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
         fragment = new DataRadioFragment();
+        powerPlanField = PowerPlanUtil.FIELD_MANAGE_DATA;
+        isReopen = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().intervalDisableService().isDataReopen();
+          }
+        };
+        isManage = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().powerManagerActive().isManagedData();
+          }
+        };
+        setReopen = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().intervalDisableService().setDataReopen(isState());
+          }
+        };
+        setManage = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().powerManagerActive().setManagedData(isState());
+          }
+        };
+        largeFABIconOn = R.drawable.ic_network_cell_white_24dp;
+        largeFABIconOff = R.drawable.ic_signal_cellular_off_white_24dp;
+        smallFABIconOn = R.drawable.ic_check_white_24dp;
+        smallFABIconOff = R.drawable.ic_close_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
         fragment = new BluetoothRadioFragment();
+        powerPlanField = PowerPlanUtil.FIELD_MANAGE_BLUETOOTH;
+        isReopen = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().intervalDisableService().isBluetoothReopen();
+          }
+        };
+        isManage = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().powerManagerActive().isManagedBluetooth();
+          }
+        };
+        setReopen = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().intervalDisableService().setBluetoothReopen(isState());
+          }
+        };
+        setManage = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().powerManagerActive().setManagedBluetooth(isState());
+          }
+        };
+        largeFABIconOn = R.drawable.ic_bluetooth_white_24dp;
+        largeFABIconOff = R.drawable.ic_bluetooth_disabled_white_24dp;
+        smallFABIconOn = R.drawable.ic_check_white_24dp;
+        smallFABIconOff = R.drawable.ic_close_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
         fragment = new SyncRadioFragment();
+        powerPlanField = PowerPlanUtil.FIELD_MANAGE_SYNC;
+        isReopen = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().intervalDisableService().isSyncReopen();
+          }
+        };
+        isManage = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return GlobalPreferenceUtil.get().powerManagerActive().isManagedSync();
+          }
+        };
+        setReopen = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().intervalDisableService().setSyncReopen(isState());
+          }
+        };
+        setManage = new BooleanRunnable() {
+          @Override public void run() {
+            GlobalPreferenceUtil.get().powerManagerActive().setManagedSync(isState());
+          }
+        };
+        largeFABIconOn = R.drawable.ic_sync_white_24dp;
+        largeFABIconOff = R.drawable.ic_sync_disabled_white_24dp;
+        smallFABIconOn = R.drawable.ic_check_white_24dp;
+        smallFABIconOff = R.drawable.ic_close_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
         fragment = new PowerPlanFragment();
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
         fragment = new PowerTriggerFragment();
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
         fragment = new BatteryInfoFragment();
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
         fragment = new SettingsFragment();
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
+        powerPlanField = FIELD_NOOP;
         fragment = new HelpFragment();
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
         fragment = new AboutFragment();
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
         break;
       default:
         fragment = null;
-    }
-    if (fragment != null) {
-      backgroundColor = fragment.getBackgroundColor();
-      fm.beginTransaction().replace(R.id.detail_content, fragment).commit();
-    } else {
-      backgroundColor = R.color.shadow_scrim45;
+        powerPlanField = FIELD_NOOP;
+        isReopen = null;
+        isManage = null;
+        setReopen = null;
+        setManage = null;
+        largeFABIconOn = IMAGE_NONE;
+        largeFABIconOff = IMAGE_NONE;
+        smallFABIconOn = IMAGE_NONE;
+        smallFABIconOff = IMAGE_NONE;
     }
   }
 
-  private void setupDetailName(final View v) {
-    final TextView detailName = (TextView) v.findViewById(R.id.detail_title);
-    detailName.setText(targetType);
+  private void setupContentArea() {
+    final int width = getActivity().getWindow().getDecorView().getMeasuredWidth();
+    final int height = (int) AppUtil.convertToDP(getContext(), 240);
+    Picasso.with(getContext())
+        .load(targetImageResId)
+        .resize(width, height)
+        .into(image, new Callback() {
+
+          @Override public void onSuccess() {
+            applyStatusBarColor(false);
+          }
+
+          @Override public void onError() {
+            LogUtil.e(TAG, "Picasso image load failure");
+          }
+        });
+
+    title.setText(targetString);
+
+    backgroundColor = fragment.getBackgroundColor();
+    getChildFragmentManager().beginTransaction().replace(R.id.detail_content, fragment).commit();
   }
 
-  private void setupFABMini(final View v) {
-    fabMini = (FloatingActionButton) v.findViewById(R.id.detail_fab_small);
-    FABBase.setupFAB(fabMini, R.color.lightblueA200);
-    fabBaseMini = new FABBase(fabMini) {
+  private void setupFABMini() {
+    FABBase.setupFAB(smallFAB, R.color.lightblueA200);
+    smallFABBase = new FABBase(smallFAB) {
 
       @Override public boolean isChecked() {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
-        boolean r;
-        switch (targetType) {
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-            r = p.intervalDisableService().isWifiReopen();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-            r = p.intervalDisableService().isDataReopen();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-            r = p.intervalDisableService().isBluetoothReopen();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            r = p.intervalDisableService().isSyncReopen();
-            break;
-          default:
-            r = false;
+        if (isReopen != null) {
+          try {
+            return isReopen.call();
+          } catch (final Exception e) {
+            return false;
+          }
+        } else {
+          return false;
         }
-        return r;
       }
 
       @Override public void setChecked(boolean checked) {
-        int d;
-        switch (targetType) {
-          // fall through
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            d = checked ? R.drawable.ic_check_white_24dp : R.drawable.ic_close_white_24dp;
-            break;
-          default:
-            d = 0;
-        }
-        if (d != 0) {
-          setFabImage(d);
+        if (shouldShowFAB()) {
+          final int image = checked ? smallFABIconOn : smallFABIconOff;
+          setFabImage(image);
         } else {
-          fabMini.setVisibility(View.GONE);
+          smallFAB.setVisibility(View.GONE);
         }
       }
 
       @Override public void startService() {
-        int field;
         final boolean state = !isChecked();
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
-        switch (targetType) {
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-            p.intervalDisableService().setWifiReopen(state);
-            field = PowerPlanUtil.FIELD_REOPEN_WIFI;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-            p.intervalDisableService().setDataReopen(state);
-            field = PowerPlanUtil.FIELD_REOPEN_DATA;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-            p.intervalDisableService().setBluetoothReopen(state);
-            field = PowerPlanUtil.FIELD_REOPEN_BLUETOOTH;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            p.intervalDisableService().setSyncReopen(state);
-            field = PowerPlanUtil.FIELD_REOPEN_SYNC;
-            break;
-          default:
-            field = -1;
+        if (setReopen != null) {
+          setReopen.run(state);
         }
 
-        if (field >= 0) {
+        if (powerPlanField != FIELD_NOOP) {
           final PowerPlanUtil powerPlan = PowerPlanUtil.get();
-          powerPlan.updateCustomPlan(field, state);
+          powerPlan.updateCustomPlan(powerPlanField, state);
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
         }
       }
     };
 
-    fabMini.setOnClickListener(new View.OnClickListener() {
+    smallFAB.setOnClickListener(new View.OnClickListener() {
 
       @Override public void onClick(final View v) {
-        fabBaseMini.setChecked(!fabBaseMini.isChecked());
-        fabBaseMini.startService();
+        smallFABBase.setChecked(!smallFABBase.isChecked());
+        smallFABBase.startService();
       }
     });
-    fabMini.setOnLongClickListener(new View.OnLongClickListener() {
+
+    smallFAB.setOnLongClickListener(new View.OnLongClickListener() {
       @Override public boolean onLongClick(final View v) {
         new AlertDialog.Builder(v.getContext()).setPositiveButton("Okay",
             new DialogInterface.OnClickListener() {
@@ -251,116 +407,67 @@ public final class DetailBaseFragment extends Fragment {
                 dialog.dismiss();
               }
             })
-            .setTitle(StringUtil.formatString("%s Interval", targetType))
+            .setTitle(StringUtil.formatString("%s Interval", targetString))
             .setMessage(
                 StringUtil.formatResString(v.getContext().getResources(), R.string.interval_explain,
-                    targetType, targetType))
+                    targetString, targetString))
             .create()
             .show();
         return true;
       }
     });
 
-    fabBaseMini.setChecked(fabBaseMini.isChecked());
+    smallFABBase.setChecked(smallFABBase.isChecked());
   }
 
-  private void setupFAB(final View v) {
-    fab = (FloatingActionButton) v.findViewById(R.id.detail_fab);
-    FABBase.setupFAB(fab, R.color.lightblueA200);
-    fabBase = new FABBase(fab) {
+  private void setupFAB() {
+    FABBase.setupFAB(largeFAB, R.color.lightblueA200);
+    largeFABBase = new FABBase(largeFAB) {
 
       @Override public boolean isChecked() {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
-        boolean r;
-        switch (targetType) {
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-            r = p.powerManagerActive().isManagedWifi();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-            r = p.powerManagerActive().isManagedData();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-            r = p.powerManagerActive().isManagedBluetooth();
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            r = p.powerManagerActive().isManagedSync();
-            break;
-          default:
-            r = false;
+        if (isManage != null) {
+          try {
+            return isManage.call();
+          } catch (Exception e) {
+            return false;
+          }
         }
-        return r;
+        return false;
       }
 
       @Override public void setChecked(boolean checked) {
-        int d;
-        switch (targetType) {
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-            d = checked ? R.drawable.ic_network_wifi_white_24dp
-                : R.drawable.ic_signal_wifi_off_white_24dp;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-            d = checked ? R.drawable.ic_network_cell_white_24dp
-                : R.drawable.ic_signal_cellular_off_white_24dp;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-            d = checked ? R.drawable.ic_bluetooth_white_24dp
-                : R.drawable.ic_bluetooth_disabled_white_24dp;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            d = checked ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp;
-            break;
-          default:
-            d = 0;
-        }
-        if (d != 0) {
-          setFabImage(d);
+        if (shouldShowFAB()) {
+          final int image = checked ? largeFABIconOn : largeFABIconOff;
+          setFabImage(image);
         } else {
-          fab.setVisibility(View.GONE);
+          largeFAB.setVisibility(View.GONE);
         }
       }
 
       @Override public void startService() {
-        int field;
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
         final boolean state = !isChecked();
-        switch (targetType) {
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-            p.powerManagerActive().setManagedWifi(state);
-            field = PowerPlanUtil.FIELD_MANAGE_WIFI;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-            p.powerManagerActive().setManagedData(state);
-            field = PowerPlanUtil.FIELD_MANAGE_DATA;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-            p.powerManagerActive().setManagedBluetooth(state);
-            field = PowerPlanUtil.FIELD_MANAGE_BLUETOOTH;
-            break;
-          case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-            p.powerManagerActive().setManagedSync(state);
-            field = PowerPlanUtil.FIELD_MANAGE_SYNC;
-            break;
-          default:
-            field = -1;
+        if (setManage != null) {
+          setManage.run(state);
         }
-        if (field >= 0) {
+        if (powerPlanField != FIELD_NOOP) {
           final PowerPlanUtil powerPlan = PowerPlanUtil.get();
-          powerPlan.updateCustomPlan(field, state);
+          powerPlan.updateCustomPlan(powerPlanField, state);
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
         }
       }
     };
 
-    fab.setOnClickListener(new View.OnClickListener() {
+    largeFAB.setOnClickListener(new View.OnClickListener() {
 
       @Override public void onClick(View v) {
-        fabBase.setChecked(!fabBase.isChecked());
-        fabBase.startService();
+        largeFABBase.setChecked(!largeFABBase.isChecked());
+        largeFABBase.startService();
         MonitorService.updateService(v.getContext());
       }
     });
-    fab.setOnLongClickListener(new View.OnLongClickListener() {
+
+    largeFAB.setOnLongClickListener(new View.OnLongClickListener() {
       @Override public boolean onLongClick(final View v) {
         new AlertDialog.Builder(v.getContext()).setPositiveButton("Okay",
             new DialogInterface.OnClickListener() {
@@ -368,10 +475,10 @@ public final class DetailBaseFragment extends Fragment {
                 dialog.dismiss();
               }
             })
-            .setTitle(StringUtil.formatString("%s Manage", targetType))
+            .setTitle(StringUtil.formatString("%s Manage", targetString))
             .setMessage(
                 StringUtil.formatResString(v.getContext().getResources(), R.string.manage_explain,
-                    targetType, targetType))
+                    targetString, targetString))
             .create()
             .show();
 
@@ -379,23 +486,23 @@ public final class DetailBaseFragment extends Fragment {
       }
     });
 
-    fabBase.setChecked(fabBase.isChecked());
+    largeFABBase.setChecked(largeFABBase.isChecked());
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    fab.setOnClickListener(null);
-    AppUtil.nullifyCallback(fab);
-    fabMini.setOnClickListener(null);
-    AppUtil.nullifyCallback(fabMini);
+    largeFAB.setOnClickListener(null);
+    AppUtil.nullifyCallback(largeFAB);
+    smallFAB.setOnClickListener(null);
+    AppUtil.nullifyCallback(smallFAB);
     AppUtil.nullifyCallback(image);
   }
 
   @Override public void onResume() {
     super.onResume();
     listener.register(GlobalPreferenceUtil.get().powerManagerActive());
-    AnimUtil.pop(fab, 500, 300).start();
-    AnimUtil.pop(fabMini, 800, 300).start();
+    AnimUtil.pop(largeFAB, 500, 300).start();
+    AnimUtil.pop(smallFAB, 800, 300).start();
 
     final MainActivity a = ((MainActivity) getActivity());
     if (a != null) {
