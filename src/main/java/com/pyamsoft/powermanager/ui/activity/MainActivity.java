@@ -32,7 +32,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.fragment.GridFragment;
 import com.pyamsoft.pydroid.base.ActivityBase;
-import com.pyamsoft.pydroid.util.AdUtil;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
@@ -51,12 +50,11 @@ public class MainActivity extends ActivityBase {
     setContentView(R.layout.activity_main);
     setupStatusBar();
     setupToolbar();
-    setupMediaViews();
     setupViewElevation();
     getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_place, new GridFragment())
         .commit();
-    setupAds(PowerManager.PREFERENCES);
+    setupGiftAd();
   }
 
   private void setupStatusBar() {
@@ -111,22 +109,6 @@ public class MainActivity extends ActivityBase {
     button.setOnClickListener(null);
   }
 
-  @Override protected void setupMediaViews() {
-    final ImageView gplay = (ImageView) findViewById(R.id.google_play);
-    final ImageView gplus = (ImageView) findViewById(R.id.google_plus);
-    final ImageView blogger = (ImageView) findViewById(R.id.blogger);
-    final ImageView facebook = (ImageView) findViewById(R.id.facebook);
-    setupSocialMediaViews(gplay, gplus, blogger, facebook);
-  }
-
-  @Override protected void destroyMediaViews() {
-    final ImageView gplay = (ImageView) findViewById(R.id.google_play);
-    final ImageView gplus = (ImageView) findViewById(R.id.google_plus);
-    final ImageView blogger = (ImageView) findViewById(R.id.blogger);
-    final ImageView facebook = (ImageView) findViewById(R.id.facebook);
-    destroySocialMediaViews(gplay, gplus, blogger, facebook);
-  }
-
   private void setupViewElevation() {
     final View shadow = findViewById(R.id.dropshadow);
     if (toolbar != null && shadow != null) {
@@ -179,7 +161,7 @@ public class MainActivity extends ActivityBase {
 
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
     final MenuItem proStatus = menu.findItem(R.id.menu_is_pro);
-    final boolean pro = AdUtil.isProVersion(this, PowerManager.PREFERENCES);
+    final boolean pro = isKeyInstalled(getPackageName());
     proStatus.setTitle(pro ? "PRO" : "FREE");
     return true;
   }
