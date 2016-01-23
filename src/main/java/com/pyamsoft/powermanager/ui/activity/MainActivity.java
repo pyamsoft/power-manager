@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.BuildConfig;
@@ -40,7 +39,6 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 public class MainActivity extends ActivityBase {
 
   private static final int EXPLANATION_ANIM_TIME = 600;
-  private static final String TAG = MainActivity.class.getSimpleName();
   private View statusBarPadding;
   private Toolbar toolbar;
 
@@ -48,9 +46,12 @@ public class MainActivity extends ActivityBase {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    setupSocialMediaViews();
     setupStatusBar();
     setupToolbar();
     setupViewElevation();
+
     getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_place, new GridFragment())
         .commit();
