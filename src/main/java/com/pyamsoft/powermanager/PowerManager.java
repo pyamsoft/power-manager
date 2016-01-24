@@ -24,7 +24,6 @@ public final class PowerManager extends ApplicationBase {
 
   public static final String RATE = "market://details?id=com.pyamsoft.powermanager";
   private static final String TAG = PowerManager.class.getName();
-  public static final String PREFERENCES = createPreferenceFileName(TAG);
 
   @Override public final boolean isBuildConfigDebug() {
     return BuildConfig.DEBUG;

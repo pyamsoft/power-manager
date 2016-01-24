@@ -23,12 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.controller.DismissViewController;
 import com.pyamsoft.powermanager.ui.fragment.GridFragment;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
@@ -38,22 +35,17 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class MainActivity extends ActivityBase {
 
-  @Bind(R.id.statusbar_padding) View statusBarPadding;
-  @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.dropshadow) View shadow;
-  @Bind(R.id.media_ads) LinearLayout adMediaViews;
-  @Bind(R.id.fragment_place) View fragmentPlace;
-  private DismissViewController controller;
+  private View statusBarPadding;
+  private Toolbar toolbar;
+  private View shadow;
+  private LinearLayout adMediaViews;
+  private View fragmentPlace;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    ButterKnife.bind(this);
-    controller = new DismissViewController();
-    controller.bind(this);
-
-    setupSocialMediaViews();
+    findViews();
     setupStatusBar(statusBarPadding);
     setupToolbar();
     setupViewElevation();
@@ -64,11 +56,19 @@ public class MainActivity extends ActivityBase {
     setupGiftAd();
   }
 
+  /**
+   * Butterknife leaks the activity?
+   */
+  private void findViews() {
+    statusBarPadding = findViewById(R.id.statusbar_padding);
+    toolbar = (Toolbar) findViewById(R.id.toolbar);
+    shadow = findViewById(R.id.dropshadow);
+    adMediaViews = (LinearLayout) findViewById(R.id.media_ads);
+    fragmentPlace = findViewById(R.id.fragment_place);
+  }
+
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (controller != null) {
-      controller.unbind();
-    }
   }
 
   public final void colorizeStatusBar(final int color) {
@@ -78,9 +78,6 @@ public class MainActivity extends ActivityBase {
   }
 
   public final void showExplanation(final Spannable explanationText, final int backgroundColor) {
-    if (controller != null) {
-      controller.showView(explanationText, backgroundColor);
-    }
   }
 
   private void setupViewElevation() {
@@ -157,14 +154,8 @@ public class MainActivity extends ActivityBase {
   }
 
   @Override protected void onBackPressedActivityHook() {
-    if (controller != null) {
-      controller.hideView();
-    }
   }
 
   @Override protected void onBackPressedFragmentHook() {
-    if (controller != null) {
-      controller.dismissView();
-    }
   }
 }
