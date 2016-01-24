@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.fragment.GridFragment;
 import com.pyamsoft.pydroid.base.ActivityBase;
+import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
@@ -40,6 +41,7 @@ public class MainActivity extends ActivityBase {
   private View shadow;
   private LinearLayout adMediaViews;
   private View fragmentPlace;
+  private SocialMediaViewBase socialMediaViewBase;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -54,6 +56,9 @@ public class MainActivity extends ActivityBase {
         .add(R.id.fragment_place, new GridFragment())
         .commit();
     setupGiftAd();
+
+    socialMediaViewBase = new SocialMediaViewBase();
+    socialMediaViewBase.bind(getWindow().getDecorView());
   }
 
   /**
@@ -69,6 +74,9 @@ public class MainActivity extends ActivityBase {
 
   @Override protected void onDestroy() {
     super.onDestroy();
+    if (socialMediaViewBase != null) {
+      socialMediaViewBase.unbind();
+    }
   }
 
   public final void colorizeStatusBar(final int color) {
