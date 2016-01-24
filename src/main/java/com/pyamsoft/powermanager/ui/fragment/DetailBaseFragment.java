@@ -135,22 +135,24 @@ public final class DetailBaseFragment extends Fragment {
         powerPlanField = PowerPlanUtil.FIELD_MANAGE_WIFI;
         isReopen = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().intervalDisableService().isWifiReopen();
+            return GlobalPreferenceUtil.with(getContext()).intervalDisableService().isWifiReopen();
           }
         };
         isManage = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().powerManagerActive().isManagedWifi();
+            return GlobalPreferenceUtil.with(getContext()).powerManagerActive().isManagedWifi();
           }
         };
         setReopen = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().intervalDisableService().setWifiReopen(isState());
+            GlobalPreferenceUtil.with(getContext())
+                .intervalDisableService()
+                .setWifiReopen(isState());
           }
         };
         setManage = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().powerManagerActive().setManagedWifi(isState());
+            GlobalPreferenceUtil.with(getContext()).powerManagerActive().setManagedWifi(isState());
           }
         };
         largeFABIconOn = R.drawable.ic_network_wifi_white_24dp;
@@ -163,22 +165,24 @@ public final class DetailBaseFragment extends Fragment {
         powerPlanField = PowerPlanUtil.FIELD_MANAGE_DATA;
         isReopen = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().intervalDisableService().isDataReopen();
+            return GlobalPreferenceUtil.with(getContext()).intervalDisableService().isDataReopen();
           }
         };
         isManage = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().powerManagerActive().isManagedData();
+            return GlobalPreferenceUtil.with(getContext()).powerManagerActive().isManagedData();
           }
         };
         setReopen = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().intervalDisableService().setDataReopen(isState());
+            GlobalPreferenceUtil.with(getContext())
+                .intervalDisableService()
+                .setDataReopen(isState());
           }
         };
         setManage = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().powerManagerActive().setManagedData(isState());
+            GlobalPreferenceUtil.with(getContext()).powerManagerActive().setManagedData(isState());
           }
         };
         largeFABIconOn = R.drawable.ic_network_cell_white_24dp;
@@ -191,22 +195,30 @@ public final class DetailBaseFragment extends Fragment {
         powerPlanField = PowerPlanUtil.FIELD_MANAGE_BLUETOOTH;
         isReopen = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().intervalDisableService().isBluetoothReopen();
+            return GlobalPreferenceUtil.with(getContext())
+                .intervalDisableService()
+                .isBluetoothReopen();
           }
         };
         isManage = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().powerManagerActive().isManagedBluetooth();
+            return GlobalPreferenceUtil.with(getContext())
+                .powerManagerActive()
+                .isManagedBluetooth();
           }
         };
         setReopen = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().intervalDisableService().setBluetoothReopen(isState());
+            GlobalPreferenceUtil.with(getContext())
+                .intervalDisableService()
+                .setBluetoothReopen(isState());
           }
         };
         setManage = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().powerManagerActive().setManagedBluetooth(isState());
+            GlobalPreferenceUtil.with(getContext())
+                .powerManagerActive()
+                .setManagedBluetooth(isState());
           }
         };
         largeFABIconOn = R.drawable.ic_bluetooth_white_24dp;
@@ -219,22 +231,24 @@ public final class DetailBaseFragment extends Fragment {
         powerPlanField = PowerPlanUtil.FIELD_MANAGE_SYNC;
         isReopen = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().intervalDisableService().isSyncReopen();
+            return GlobalPreferenceUtil.with(getContext()).intervalDisableService().isSyncReopen();
           }
         };
         isManage = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.get().powerManagerActive().isManagedSync();
+            return GlobalPreferenceUtil.with(getContext()).powerManagerActive().isManagedSync();
           }
         };
         setReopen = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().intervalDisableService().setSyncReopen(isState());
+            GlobalPreferenceUtil.with(getContext())
+                .intervalDisableService()
+                .setSyncReopen(isState());
           }
         };
         setManage = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.get().powerManagerActive().setManagedSync(isState());
+            GlobalPreferenceUtil.with(getContext()).powerManagerActive().setManagedSync(isState());
           }
         };
         largeFABIconOn = R.drawable.ic_sync_white_24dp;
@@ -352,8 +366,7 @@ public final class DetailBaseFragment extends Fragment {
   }
 
   private void setupFABMini() {
-    FABBase.setupFAB(smallFAB, R.color.lightblueA200);
-    smallFABBase = new FABBase(smallFAB) {
+    smallFABBase = new FABBase(smallFAB, R.color.lightblueA200) {
 
       @Override public boolean isChecked() {
         if (isReopen != null) {
@@ -421,8 +434,7 @@ public final class DetailBaseFragment extends Fragment {
   }
 
   private void setupFAB() {
-    FABBase.setupFAB(largeFAB, R.color.lightblueA200);
-    largeFABBase = new FABBase(largeFAB) {
+    largeFABBase = new FABBase(largeFAB, R.color.lightblueA200) {
 
       @Override public boolean isChecked() {
         if (isManage != null) {
@@ -500,7 +512,7 @@ public final class DetailBaseFragment extends Fragment {
 
   @Override public void onResume() {
     super.onResume();
-    listener.register(GlobalPreferenceUtil.get().powerManagerActive());
+    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerActive());
     AnimUtil.pop(largeFAB, 500, 300).start();
     AnimUtil.pop(smallFAB, 800, 300).start();
 
@@ -532,6 +544,6 @@ public final class DetailBaseFragment extends Fragment {
 
   @Override public void onPause() {
     super.onPause();
-    listener.unregister(GlobalPreferenceUtil.get().powerManagerActive());
+    listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerActive());
   }
 }

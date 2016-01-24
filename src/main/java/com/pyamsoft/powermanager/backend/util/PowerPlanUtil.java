@@ -331,7 +331,7 @@ public final class PowerPlanUtil {
 
   public final void setPlan(final int plan) {
     final Object[] powerPlan = getPowerPlan(plan);
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
 
     final GlobalPreferenceUtil.PowerManagerActive active = preferenceUtil.powerManagerActive();
     active.setManagedWifi(toBoolean(powerPlan[FIELD_MANAGE_WIFI]));
@@ -369,7 +369,7 @@ public final class PowerPlanUtil {
   }
 
   private void updateCustomPlanToCurrent() {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final GlobalPreferenceUtil.PowerManagerActive active = preferenceUtil.powerManagerActive();
 
     POWER_PLAN_CUSTOM[FIELD_MANAGE_WIFI] = active.isManagedWifi();

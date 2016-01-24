@@ -91,13 +91,13 @@ public abstract class ManagerBase {
     @Override protected final void onHandleIntent(final Intent intent) {
       final ManagerBase manager = getTargetManager();
       manager.enable();
-      final long delay = getTargetCloseTime(GlobalPreferenceUtil.get());
+      final long delay = getTargetCloseTime(GlobalPreferenceUtil.with(getApplicationContext()));
       LogUtil.d(manager.getTag(),
           StringUtil.formatString(getString(R.string.disable_in_time), delay));
       manager.disable(delay);
       final AlarmManager alarmManager =
           (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-      final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+      final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(getApplicationContext());
       final long interval = preferenceUtil.powerManagerActive().getIntervalTime();
       LogUtil.d(TAG, getApplicationContext().getString(R.string.set_alarm_for_interval), interval);
       alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
@@ -127,7 +127,7 @@ public abstract class ManagerBase {
     }
 
     @Override protected void onHandleIntent(Intent intent) {
-      setManageState(GlobalPreferenceUtil.get());
+      setManageState(GlobalPreferenceUtil.with(getApplicationContext()));
       PowerPlanUtil.get()
           .setPlan(PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
       MonitorService.updateService(getApplicationContext());

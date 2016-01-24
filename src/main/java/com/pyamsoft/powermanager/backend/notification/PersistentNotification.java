@@ -65,7 +65,7 @@ public final class PersistentNotification {
     LogUtil.d(TAG, "Initialize PersistentNotification");
     final Context context = c.getApplicationContext();
     builder = new NotificationCompat.Builder(context);
-    preferenceUtil = GlobalPreferenceUtil.get();
+    preferenceUtil = GlobalPreferenceUtil.with(c);
 
         /* Pending intents for click */
     toggle = PendingIntent.getService(context, RQ + 1, new Intent(context, Toggle.class),

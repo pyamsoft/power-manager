@@ -29,29 +29,24 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
   private final GridOrder gridOrder;
   private final PowerPlans powerPlans;
 
-  private GlobalPreferenceUtil() {
-    super(PowerManager.PREFERENCES);
-    intervalDisableService = new IntervalDisableService();
-    powerManagerActive = new PowerManagerActive();
-    powerManagerMonitor = new PowerManagerMonitor();
-    gridOrder = new GridOrder();
-    powerPlans = new PowerPlans();
-  }
-
-  public static synchronized GlobalPreferenceUtil get() {
+  public static GlobalPreferenceUtil with(final Context context) {
     if (instance == null) {
-      instance = new GlobalPreferenceUtil();
+      synchronized (GlobalPreferenceUtil.class) {
+        if (instance == null) {
+          instance = new GlobalPreferenceUtil(context);
+        }
+      }
     }
     return instance;
   }
 
-  @Override public void init(final Context c) {
-    super.init(c);
-    intervalDisableService.init(c);
-    powerManagerActive.init(c);
-    powerManagerMonitor.init(c);
-    gridOrder.init(c);
-    powerPlans.init(c);
+  private GlobalPreferenceUtil(final Context context) {
+    super(context);
+    intervalDisableService = new IntervalDisableService(context);
+    powerManagerActive = new PowerManagerActive(context);
+    powerManagerMonitor = new PowerManagerMonitor(context);
+    gridOrder = new GridOrder(context);
+    powerPlans = new PowerPlans(context);
   }
 
   public final IntervalDisableService intervalDisableService() {
@@ -106,8 +101,8 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     private static final String REOPEN_DATA = TAG + ".reopen_data";
     private static final String REOPEN_SYNC = TAG + ".reopen_sync";
 
-    public IntervalDisableService() {
-      super(PREFERENCE);
+    public IntervalDisableService(final Context context) {
+      super(context);
     }
 
     public long getBluetoothReopenTime() {
@@ -194,8 +189,8 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     private static final String DELAY_BLUETOOTH = TAG + ".delay_bluetooth";
     private static final String DELAY_SYNC = TAG + ".delay_sync";
 
-    public PowerManagerActive() {
-      super(PREFERENCE);
+    public PowerManagerActive(final Context context) {
+      super(context);
     }
 
     public boolean isSuspendPlugged() {
@@ -319,8 +314,8 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     public static final String NOTIFICATION = TAG + ".notification";
     private static final String PREFERENCE = PowerManager.createPreferenceFileName(TAG);
 
-    public PowerManagerMonitor() {
-      super(PREFERENCE);
+    public PowerManagerMonitor(final Context context) {
+      super(context);
     }
 
     public boolean isEnabled() {
@@ -373,8 +368,8 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     private static final String NINE = TAG + ".nine";
     private static final String TEN = TAG + ".ten";
 
-    GridOrder() {
-      super(PREFERENCE);
+    protected GridOrder(final Context context) {
+      super(context);
     }
 
     public String getOne() {
@@ -540,8 +535,8 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     private static final String PREFERENCE = PowerManager.createPreferenceFileName(TAG);
     private static final String ACTIVE = TAG + ".active";
 
-    PowerPlans() {
-      super(PREFERENCE);
+    protected PowerPlans(final Context context) {
+      super(context);
     }
 
     public int getActivePlan() {

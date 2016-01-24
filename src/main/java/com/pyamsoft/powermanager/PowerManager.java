@@ -42,7 +42,7 @@ public final class PowerManager extends ApplicationBase {
     super.onCreate();
     initializeBackendSingletons();
     MonitorService.updateService(getApplicationContext());
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
     if (p.powerManagerMonitor().isEnabled()) {
       // Start service
       MonitorService.startService(getApplicationContext());
@@ -61,7 +61,6 @@ public final class PowerManager extends ApplicationBase {
     PowerTriggerDataSource.get().init(this);
     BatteryUtil.get().init(this);
     PowerPlanUtil.get().init(this);
-    GlobalPreferenceUtil.get().init(this);
   }
 
   @Override protected Class<? extends ServiceBase> setServiceClass() {

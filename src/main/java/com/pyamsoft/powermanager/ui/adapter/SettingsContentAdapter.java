@@ -90,7 +90,7 @@ public final class SettingsContentAdapter
       source.deleteAllTriggers();
       source.close();
     }
-    GlobalPreferenceUtil.get().clear();
+    GlobalPreferenceUtil.with(c).clear();
     android.os.Process.killProcess(android.os.Process.myPid());
   }
 
@@ -162,7 +162,7 @@ public final class SettingsContentAdapter
     Spannable span;
     String title;
     String explain;
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
     switch (position) {
       case POSITION_BOOT:
         enabled = BootActionReceiver.isBootEnabled(c);
@@ -212,7 +212,7 @@ public final class SettingsContentAdapter
     final Context c = holder.itemView.getContext();
     boolean enabled;
     int resId;
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
     switch (position) {
       case POSITION_BOOT:
         enabled = BootActionReceiver.isBootEnabled(c);
@@ -245,7 +245,7 @@ public final class SettingsContentAdapter
     holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
       @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
         boolean update;
         switch (position) {
           case POSITION_BOOT:

@@ -15,7 +15,9 @@
  */
 package com.pyamsoft.powermanager.ui.helper;
 
+import android.content.Context;
+
 public interface ItemTouchHelperInterface {
 
-  boolean onItemMoved(final int fromPosition, final int toPosition);
+  boolean onItemMoved(final Context context, final int fromPosition, final int toPosition);
 }

@@ -15,7 +15,9 @@
  */
 package com.pyamsoft.powermanager.ui.adapter;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,14 +46,14 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
   private final DetailBaseFragment detailFragment;
   private final Bundle detailArgs;
 
-  public GridContentAdapter(final FragmentManager fm) {
-    this.fm = fm;
+  public GridContentAdapter(final Fragment f) {
+    this.fm = f.getFragmentManager();
 
     detailArgs = new Bundle();
     detailFragment = new DetailBaseFragment();
     items = new ArrayList<>(NUMBER_ITEMS);
 
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(f.getContext());
     items.add(preferenceUtil.gridOrder().getOne());
     items.add(preferenceUtil.gridOrder().getTwo());
     items.add(preferenceUtil.gridOrder().getThree());
@@ -139,9 +141,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     return items.size();
   }
 
-  @Override public boolean onItemMoved(int fromPosition, int toPosition) {
+  @Override
+  public boolean onItemMoved(final Context context, final int fromPosition, final int toPosition) {
     Collections.swap(items, fromPosition, toPosition);
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     preferenceUtil.gridOrder().set(toPosition, items.get(toPosition));
     preferenceUtil.gridOrder().set(fromPosition, items.get(fromPosition));
     // KLUDGE

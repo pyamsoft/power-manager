@@ -61,7 +61,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void disableWifi(final Context context, final boolean isCharging) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled =
         disable(context, ManagerWifi.get(), preferenceUtil.powerManagerActive().isManagedWifi(),
             isCharging, preferenceUtil.powerManagerActive().getDelayWifi());
@@ -73,7 +73,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void disableData(final Context context, final boolean isCharging) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled =
         disable(context, ManagerData.get(), preferenceUtil.powerManagerActive().isManagedData(),
             isCharging, preferenceUtil.powerManagerActive().getDelayData());
@@ -85,7 +85,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void disableBluetooth(final Context context, final boolean isCharging) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled = disable(context, ManagerBluetooth.get(),
         preferenceUtil.powerManagerActive().isManagedBluetooth(), isCharging,
         preferenceUtil.powerManagerActive().getDelayBluetooth());
@@ -97,7 +97,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void disableSync(final Context context, final boolean isCharging) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled =
         disable(context, ManagerSync.get(), preferenceUtil.powerManagerActive().isManagedSync(),
             isCharging, preferenceUtil.powerManagerActive().getDelaySync());
@@ -109,7 +109,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void enableSync(final Context context) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     enable(context, ManagerSync.get(), preferenceUtil.powerManagerActive().isManagedSync(),
         preferenceUtil.powerManagerActive().isControlledSync());
     preferenceUtil.powerManagerActive().setControlledSync(false);
@@ -120,7 +120,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void enableBluetooth(final Context context) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     enable(context, ManagerBluetooth.get(),
         preferenceUtil.powerManagerActive().isManagedBluetooth(),
         preferenceUtil.powerManagerActive().isControlledBluetooth());
@@ -132,7 +132,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void enableData(final Context context) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     enable(context, ManagerData.get(), preferenceUtil.powerManagerActive().isManagedData(),
         preferenceUtil.powerManagerActive().isControlledData());
     preferenceUtil.powerManagerActive().setControlledData(false);
@@ -143,7 +143,7 @@ public final class ActiveService extends IntentService {
   }
 
   private static void enableWifi(final Context context) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     enable(context, ManagerWifi.get(), preferenceUtil.powerManagerActive().isManagedWifi(),
         preferenceUtil.powerManagerActive().isControlledWifi());
     preferenceUtil.powerManagerActive().setControlledWifi(false);
@@ -165,7 +165,7 @@ public final class ActiveService extends IntentService {
 
   private static boolean disable(final Context context, final ManagerBase manager,
       final boolean isManaged, final boolean isCharging, final long waitTime) {
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean suspendOnPlugged =
         preferenceUtil.powerManagerActive().isSuspendPlugged() && isCharging;
     boolean controlled = false;
@@ -183,7 +183,7 @@ public final class ActiveService extends IntentService {
       final boolean shouldSetAlarm) {
     if (shouldSetAlarm) {
       final Context app = context.getApplicationContext();
-      final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.get();
+      final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
       final long interval = preferenceUtil.powerManagerActive().getIntervalTime();
       final PendingIntent pendingIntent =
           PendingIntent.getService(app, 0, disableIntent, PendingIntent.FLAG_CANCEL_CURRENT);

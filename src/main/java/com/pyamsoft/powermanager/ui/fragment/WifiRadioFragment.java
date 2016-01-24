@@ -26,7 +26,7 @@ public final class WifiRadioFragment extends BaseRadioFragment
     implements RadioContentAdapter.RadioInterface {
 
   @Override public void setRadioReopen(long reopen) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.intervalDisableService().setWifiReopenTime(reopen);
     PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_WIFI, reopen);
   }
@@ -36,18 +36,18 @@ public final class WifiRadioFragment extends BaseRadioFragment
   }
 
   @Override public long getRadioDelay() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     return p.powerManagerActive().getDelayWifi();
   }
 
   @Override public void setRadioDelay(final long delay) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.powerManagerActive().setDelayWifi(delay);
     PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_DELAY_WIFI, delay);
   }
 
   @Override public long getReOpenTime() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     return p.intervalDisableService().getWifiReopenTime();
   }
 

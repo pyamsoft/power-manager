@@ -37,7 +37,7 @@ public final class MonitorService extends ServiceBase {
 
   public static void powerManagerService(final Context context) {
     final GlobalPreferenceUtil.PowerManagerMonitor p =
-        GlobalPreferenceUtil.get().powerManagerMonitor();
+        GlobalPreferenceUtil.with(context).powerManagerMonitor();
     final boolean b = !p.isEnabled();
     if (b) {
       p.setEnabled(true);
@@ -81,7 +81,7 @@ public final class MonitorService extends ServiceBase {
     super.onCreate();
     screenStateReceiver = new ScreenStateReceiver();
     batteryStateReceiver = new BatteryStateReceiver();
-    preferenceUtil = GlobalPreferenceUtil.get();
+    preferenceUtil = GlobalPreferenceUtil.with(this);
     persistentNotification = PersistentNotification.get();
   }
 

@@ -30,23 +30,23 @@ public final class DataRadioFragment extends BaseRadioFragment
   }
 
   @Override public long getRadioDelay() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     return p.powerManagerActive().getDelayData();
   }
 
   @Override public void setRadioDelay(final long delay) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.powerManagerActive().setDelayData(delay);
     PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_DELAY_DATA, delay);
   }
 
   @Override public long getReOpenTime() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     return p.intervalDisableService().getDataReopenTime();
   }
 
   @Override public void setRadioReopen(final long reopen) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.intervalDisableService().setDataReopenTime(reopen);
     PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_DATA, reopen);
   }

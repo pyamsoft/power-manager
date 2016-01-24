@@ -159,13 +159,12 @@ public final class GridFragment extends ExplanationFragment {
 
   private void setupFAB(final View v) {
     fab = (FloatingActionButton) v.findViewById(R.id.fab);
-    FABBase.setupFAB(fab, R.color.lightblueA200);
-    fabBase = new FABBase(fab) {
+    fabBase = new FABBase(fab, R.color.lightblueA200) {
 
       private final WeakReference<GridFragment> wA = new WeakReference<>(GridFragment.this);
 
       @Override public boolean isChecked() {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.get();
+        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
         return p.powerManagerMonitor().isEnabled();
       }
 
@@ -206,11 +205,11 @@ public final class GridFragment extends ExplanationFragment {
   }
 
   private void registerListener() {
-    listener.register(GlobalPreferenceUtil.get().powerManagerMonitor());
+    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
   }
 
   private void unregisterListener() {
-    listener.unregister(GlobalPreferenceUtil.get().powerManagerMonitor());
+    listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
   }
 
   @Override public void onResume() {
@@ -237,7 +236,7 @@ public final class GridFragment extends ExplanationFragment {
   }
 
   private void setupRecyclerView(final View v) {
-    final GridContentAdapter mainAdapter = new GridContentAdapter(getFragmentManager());
+    final GridContentAdapter mainAdapter = new GridContentAdapter(this);
     recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
     final StaggeredGridLayoutManager staggeredGridLayoutManager =
         new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

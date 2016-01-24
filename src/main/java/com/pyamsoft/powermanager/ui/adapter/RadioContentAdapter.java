@@ -195,7 +195,7 @@ public final class RadioContentAdapter
             final CheckedTextView cv = (CheckedTextView) v;
             final boolean newChecked = !cv.isChecked();
             cv.setChecked(newChecked);
-            setPreference(ii, position);
+            setPreference(cv.getContext(), ii, position);
             setRadioImageState(holder, position);
             setupRadioButtons(holder, position);
             PowerPlanUtil.get()
@@ -227,7 +227,7 @@ public final class RadioContentAdapter
         compare = DELAY_VALUES[i];
         break;
       case POSITION_INTERVAL:
-        time = GlobalPreferenceUtil.get().powerManagerActive().getIntervalTime();
+        time = GlobalPreferenceUtil.with(chtv.getContext()).powerManagerActive().getIntervalTime();
         compare = INTERVAL_VALUES[i];
         break;
       case POSITION_REOPEN:
@@ -251,7 +251,9 @@ public final class RadioContentAdapter
         time = radioInterface.getRadioDelay() / 1000;
         break;
       case POSITION_INTERVAL:
-        time = GlobalPreferenceUtil.get().powerManagerActive().getIntervalTime() / 1000;
+        time = GlobalPreferenceUtil.with(holder.itemView.getContext())
+            .powerManagerActive()
+            .getIntervalTime() / 1000;
         break;
       case POSITION_REOPEN:
         time = radioInterface.getReOpenTime() / 1000;
@@ -266,13 +268,13 @@ public final class RadioContentAdapter
     }
   }
 
-  private void setPreference(final int i, final int position) {
+  private void setPreference(final Context context, final int i, final int position) {
     switch (position) {
       case POSITION_DELAY:
         radioInterface.setRadioDelay(DELAY_VALUES[i]);
         break;
       case POSITION_INTERVAL:
-        GlobalPreferenceUtil.get().powerManagerActive().setIntervalTime(INTERVAL_VALUES[i]);
+        GlobalPreferenceUtil.with(context).powerManagerActive().setIntervalTime(INTERVAL_VALUES[i]);
         break;
       case POSITION_REOPEN:
         radioInterface.setRadioReopen(INTERVAL_VALUES[i]);

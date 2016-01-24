@@ -185,7 +185,8 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
          made */
     holder.select.setOnCheckedChangeListener(null);
 
-    final int currentPlan = GlobalPreferenceUtil.get().powerPlans().getActivePlan();
+    final int currentPlan =
+        GlobalPreferenceUtil.with(holder.itemView.getContext()).powerPlans().getActivePlan();
     final Object[] current = PowerPlanUtil.get().getPowerPlan(currentPlan);
     holder.select.setChecked(current == plan);
     holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
