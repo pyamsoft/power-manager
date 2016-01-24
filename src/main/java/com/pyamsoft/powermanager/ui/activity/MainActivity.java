@@ -16,19 +16,19 @@
 package com.pyamsoft.powermanager.ui.activity;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.controller.DismissViewController;
 import com.pyamsoft.powermanager.ui.fragment.GridFragment;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
@@ -38,17 +38,23 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class MainActivity extends ActivityBase {
 
-  private static final int EXPLANATION_ANIM_TIME = 600;
-  private View statusBarPadding;
-  private Toolbar toolbar;
+  @Bind(R.id.statusbar_padding) View statusBarPadding;
+  @Bind(R.id.toolbar) Toolbar toolbar;
+  @Bind(R.id.dropshadow) View shadow;
+  @Bind(R.id.media_ads) LinearLayout adMediaViews;
+  @Bind(R.id.fragment_place) View fragmentPlace;
+  private DismissViewController controller;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    ButterKnife.bind(this);
+    controller = new DismissViewController();
+    controller.bind(this);
 
     setupSocialMediaViews();
-    setupStatusBar();
+    setupStatusBar(statusBarPadding);
     setupToolbar();
     setupViewElevation();
 
@@ -58,9 +64,11 @@ public class MainActivity extends ActivityBase {
     setupGiftAd();
   }
 
-  private void setupStatusBar() {
-    statusBarPadding = findViewById(R.id.statusbar_padding);
-    super.setupStatusBar(statusBarPadding);
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    if (controller != null) {
+      controller.unbind();
+    }
   }
 
   public final void colorizeStatusBar(final int color) {
@@ -70,72 +78,32 @@ public class MainActivity extends ActivityBase {
   }
 
   public final void showExplanation(final Spannable explanationText, final int backgroundColor) {
-    final View explainView = findViewById(R.id.explain_view);
-    explainView.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
-    AnimUtil.expand(explainView, EXPLANATION_ANIM_TIME);
-    final Button button = (Button) explainView.findViewById(R.id.explain_read);
-    final TextView text = (TextView) explainView.findViewById(R.id.explain_text);
-
-    text.setText(explanationText);
-    button.setOnClickListener(new View.OnClickListener() {
-
-      @Override public void onClick(final View v) {
-        dismissExplanation();
-      }
-    });
-  }
-
-  private boolean isExplanationShown() {
-    final View explainView = findViewById(R.id.explain_view);
-    return explainView.isShown();
-  }
-
-  private void dismissExplanation() {
-    final View explainView = findViewById(R.id.explain_view);
-    AnimUtil.collapse(explainView, EXPLANATION_ANIM_TIME);
-    final Button button = (Button) explainView.findViewById(R.id.explain_read);
-    final TextView text = (TextView) explainView.findViewById(R.id.explain_text);
-
-    text.setText(null);
-    button.setOnClickListener(null);
-  }
-
-  private void hideExplanation() {
-    final View explainView = findViewById(R.id.explain_view);
-    explainView.setVisibility(View.GONE);
-    final Button button = (Button) explainView.findViewById(R.id.explain_read);
-    final TextView text = (TextView) explainView.findViewById(R.id.explain_text);
-
-    text.setText(null);
-    button.setOnClickListener(null);
+    if (controller != null) {
+      controller.showView(explanationText, backgroundColor);
+    }
   }
 
   private void setupViewElevation() {
-    final View shadow = findViewById(R.id.dropshadow);
     if (toolbar != null && shadow != null) {
       enableShadows(toolbar, shadow);
     }
 
     final int dp = (int) AppUtil.convertToDP(this, ElevationUtil.ELEVATION_APP_BAR);
-    final LinearLayout adMediaViews = (LinearLayout) findViewById(R.id.media_ads);
     if (adMediaViews != null) {
       ViewCompat.setElevation(adMediaViews, dp);
     }
-    final View content = findViewById(R.id.fragment_place);
-    if (content != null) {
-      ViewCompat.setElevation(content, ElevationUtil.ELEVATION_NONE);
+    if (fragmentPlace != null) {
+      ViewCompat.setElevation(fragmentPlace, ElevationUtil.ELEVATION_NONE);
     }
   }
 
   private void setupToolbar() {
-    toolbar = (Toolbar) findViewById(R.id.toolbar);
     toolbar.setVisibility(View.GONE);
     setSupportActionBar(toolbar);
     AnimUtil.expand(toolbar);
   }
 
   public final void colorizeActionBarToolbar(final boolean color) {
-    final View shadow = findViewById(R.id.dropshadow);
     colorizeActionBarToolbar(toolbar, shadow, color ? R.color.amber500 : 0,
         color ? R.string.app_name : 0);
   }
@@ -189,14 +157,14 @@ public class MainActivity extends ActivityBase {
   }
 
   @Override protected void onBackPressedActivityHook() {
-    if (isExplanationShown()) {
-      hideExplanation();
+    if (controller != null) {
+      controller.hideView();
     }
   }
 
   @Override protected void onBackPressedFragmentHook() {
-    if (isExplanationShown()) {
-      dismissExplanation();
+    if (controller != null) {
+      controller.dismissView();
     }
   }
 }
