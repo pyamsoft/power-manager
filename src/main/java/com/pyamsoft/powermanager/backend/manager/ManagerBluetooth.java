@@ -16,8 +16,6 @@
 package com.pyamsoft.powermanager.backend.manager;
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -27,23 +25,22 @@ public final class ManagerBluetooth extends ManagerBase {
   private static final String BLUETOOTH_MANAGER = "BluetoothManager";
   private static ManagerBase instance = null;
   private final BluetoothAdapter bluetooth;
-  private Context context;
 
   private ManagerBluetooth() {
     super();
+    LogUtil.d(BLUETOOTH_MANAGER, "Initialize ManagerBluetooth");
     this.bluetooth = BluetoothAdapter.getDefaultAdapter();
   }
 
-  public synchronized static ManagerBase get() {
+  public static ManagerBase get() {
     if (instance == null) {
-      instance = new ManagerBluetooth();
+      synchronized (ManagerBluetooth.class) {
+        if (instance == null) {
+          instance = new ManagerBluetooth();
+        }
+      }
     }
     return instance;
-  }
-
-  @Override public final void init(final Context context) {
-    LogUtil.d(BLUETOOTH_MANAGER, "Initialize ManagerBluetooth");
-    this.context = context.getApplicationContext();
   }
 
   private synchronized boolean isNull() {
@@ -53,7 +50,7 @@ public final class ManagerBluetooth extends ManagerBase {
   @Override synchronized void disable() {
     if (!isNull()) {
       bluetooth.disable();
-      LogUtil.i(BLUETOOTH_MANAGER, context.getString(R.string.set_bluetooth_false));
+      LogUtil.i(BLUETOOTH_MANAGER, "setBluetoothEnabled: false");
     }
   }
 
@@ -64,7 +61,7 @@ public final class ManagerBluetooth extends ManagerBase {
   @Override synchronized void enable() {
     if (!isNull()) {
       bluetooth.enable();
-      LogUtil.i(BLUETOOTH_MANAGER, context.getString(R.string.set_bluetooth_true));
+      LogUtil.i(BLUETOOTH_MANAGER, "setBluetoothEnabled: true");
     }
   }
 

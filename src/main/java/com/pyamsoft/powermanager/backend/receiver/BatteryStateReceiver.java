@@ -55,12 +55,12 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
     }
   }
 
-  private static void setWifi(final PowerTrigger trigger) {
-    setTrigger(ManagerWifi.get(), trigger.getManageWifi(), trigger.getStateWifi());
+  private static void setWifi(final Context context, final PowerTrigger trigger) {
+    setTrigger(ManagerWifi.with(context), trigger.getManageWifi(), trigger.getStateWifi());
   }
 
-  private static void setData(final PowerTrigger trigger) {
-    setTrigger(ManagerData.get(), trigger.getManageData(), trigger.getStateData());
+  private static void setData(final Context context, final PowerTrigger trigger) {
+    setTrigger(ManagerData.with(context), trigger.getManageData(), trigger.getStateData());
   }
 
   private static void setBluetooth(final PowerTrigger trigger) {
@@ -90,8 +90,8 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
           && trigger.getAvailable() == PowerTrigger.AVAILABLE) {
         LogUtil.d(TAG, "Trigger: [", trigger.getId(), "]", trigger.getName(),
             " is Available, run and set not available");
-        setWifi(trigger);
-        setData(trigger);
+        setWifi(c, trigger);
+        setData(c, trigger);
         setBluetooth(trigger);
         setSync(trigger);
         trigger.setAvailable(PowerTrigger.UNAVAILABLE);

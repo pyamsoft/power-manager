@@ -70,8 +70,6 @@ public abstract class ManagerBase {
     }
   }
 
-  public abstract void init(final Context context);
-
   public abstract String getTag();
 
   abstract void disable();

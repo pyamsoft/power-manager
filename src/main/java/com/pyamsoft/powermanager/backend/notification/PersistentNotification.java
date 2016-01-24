@@ -51,21 +51,11 @@ public final class PersistentNotification {
   private PendingIntent sync;
   private RemoteViews remoteViews;
 
-  private PersistentNotification() {
-  }
-
-  public static synchronized PersistentNotification get() {
-    if (instance == null) {
-      instance = new PersistentNotification();
-    }
-    return instance;
-  }
-
-  public final void init(final Context c) {
+  private PersistentNotification(final Context c) {
     LogUtil.d(TAG, "Initialize PersistentNotification");
     final Context context = c.getApplicationContext();
     builder = new NotificationCompat.Builder(context);
-    preferenceUtil = GlobalPreferenceUtil.with(c);
+    preferenceUtil = GlobalPreferenceUtil.with(context);
 
         /* Pending intents for click */
     toggle = PendingIntent.getService(context, RQ + 1, new Intent(context, Toggle.class),
@@ -93,6 +83,17 @@ public final class PersistentNotification {
     if (!AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
       builder.setColor(ContextCompat.getColor(context, R.color.amber700));
     }
+  }
+
+  public static PersistentNotification with(final Context context) {
+    if (instance == null) {
+      synchronized (PersistentNotification.class) {
+        if (instance == null) {
+          instance = new PersistentNotification(context);
+        }
+      }
+    }
+    return instance;
   }
 
   private int getToggle() {

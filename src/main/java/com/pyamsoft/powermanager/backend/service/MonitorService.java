@@ -82,7 +82,7 @@ public final class MonitorService extends ServiceBase {
     screenStateReceiver = new ScreenStateReceiver();
     batteryStateReceiver = new BatteryStateReceiver();
     preferenceUtil = GlobalPreferenceUtil.with(this);
-    persistentNotification = PersistentNotification.get();
+    persistentNotification = PersistentNotification.with(getApplicationContext());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {

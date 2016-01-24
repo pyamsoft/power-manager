@@ -53,11 +53,6 @@ public final class PowerManager extends ApplicationBase {
   }
 
   private void initializeBackendSingletons() {
-    ManagerWifi.get().init(this);
-    ManagerData.get().init(this);
-    ManagerBluetooth.get().init(this);
-    ManagerSync.get().init(this);
-    PersistentNotification.get().init(this);
     PowerTriggerDataSource.get().init(this);
     BatteryUtil.get().init(this);
     PowerPlanUtil.get().init(this);

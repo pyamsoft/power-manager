@@ -17,7 +17,6 @@ package com.pyamsoft.powermanager.backend.manager;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -26,24 +25,24 @@ public final class ManagerWifi extends ManagerBase {
 
   private static final String WIFI_MANAGER = "WifiManager";
   private static ManagerBase instance = null;
-  private Context context;
   private WifiManager wifi;
 
-  private ManagerWifi() {
+  private ManagerWifi(final Context context) {
     super();
+    LogUtil.d(WIFI_MANAGER, "Initialize ManagerWifi");
+    this.wifi =
+        (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
-  public static synchronized ManagerBase get() {
+  public static ManagerBase with(final Context context) {
     if (instance == null) {
-      instance = new ManagerWifi();
+      synchronized (ManagerWifi.class) {
+        if (instance == null) {
+          instance = new ManagerWifi(context);
+        }
+      }
     }
     return instance;
-  }
-
-  @Override public final void init(final Context context) {
-    LogUtil.d(WIFI_MANAGER, "Initialize ManagerWifi");
-    this.context = context.getApplicationContext();
-    this.wifi = (WifiManager) this.context.getSystemService(Context.WIFI_SERVICE);
   }
 
   @Override public String getTag() {
@@ -53,14 +52,14 @@ public final class ManagerWifi extends ManagerBase {
   @Override synchronized void disable() {
     if (!isNull()) {
       wifi.setWifiEnabled(false);
-      LogUtil.i(WIFI_MANAGER, context.getString(R.string.set_wifi_false));
+      LogUtil.i(WIFI_MANAGER, "setWifiEnabled: false");
     }
   }
 
   @Override synchronized void enable() {
     if (!isNull()) {
       wifi.setWifiEnabled(true);
-      LogUtil.i(WIFI_MANAGER, context.getString(R.string.set_wifi_true));
+      LogUtil.i(WIFI_MANAGER, "setWifiEnabled: true");
     }
   }
 
@@ -83,7 +82,7 @@ public final class ManagerWifi extends ManagerBase {
     }
 
     @Override protected ManagerBase getTargetManager() {
-      return get();
+      return with(getApplicationContext());
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {

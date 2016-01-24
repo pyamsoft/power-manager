@@ -16,8 +16,6 @@
 package com.pyamsoft.powermanager.backend.manager;
 
 import android.content.ContentResolver;
-import android.content.Context;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -26,32 +24,31 @@ public final class ManagerSync extends ManagerBase {
 
   private static final String SYNC_MANAGER = "SyncManager";
   private static ManagerBase instance = null;
-  private Context context;
 
   private ManagerSync() {
     super();
+    LogUtil.d(SYNC_MANAGER, "Initialize ManagerSync");
   }
 
-  public static synchronized ManagerBase get() {
+  public static ManagerBase get() {
     if (instance == null) {
-      instance = new ManagerSync();
+      synchronized (ManagerSync.class) {
+        if (instance == null) {
+          instance = new ManagerSync();
+        }
+      }
     }
     return instance;
   }
 
-  @Override public void init(final Context context) {
-    LogUtil.d(SYNC_MANAGER, "Initialize ManagerSync");
-    this.context = context.getApplicationContext();
-  }
-
   @Override synchronized void disable() {
     ContentResolver.setMasterSyncAutomatically(false);
-    LogUtil.i(SYNC_MANAGER, context.getString(R.string.set_sync_false));
+    LogUtil.i(SYNC_MANAGER, "setMasterSyncAutomatically: false");
   }
 
   @Override synchronized void enable() {
     ContentResolver.setMasterSyncAutomatically(true);
-    LogUtil.i(SYNC_MANAGER, context.getString(R.string.set_sync_true));
+    LogUtil.i(SYNC_MANAGER, "setMasterSyncAutomatically: true");
   }
 
   @Override public final synchronized boolean isEnabled() {

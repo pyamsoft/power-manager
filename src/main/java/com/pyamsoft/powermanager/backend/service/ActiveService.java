@@ -63,7 +63,7 @@ public final class ActiveService extends IntentService {
   private static void disableWifi(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled =
-        disable(context, ManagerWifi.get(), preferenceUtil.powerManagerActive().isManagedWifi(),
+        disable(context, ManagerWifi.with(context), preferenceUtil.powerManagerActive().isManagedWifi(),
             isCharging, preferenceUtil.powerManagerActive().getDelayWifi());
     preferenceUtil.powerManagerActive().setControlledWifi(controlled);
     final Intent disable = IntentPool.acquire();
@@ -75,7 +75,7 @@ public final class ActiveService extends IntentService {
   private static void disableData(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     final boolean controlled =
-        disable(context, ManagerData.get(), preferenceUtil.powerManagerActive().isManagedData(),
+        disable(context, ManagerData.with(context), preferenceUtil.powerManagerActive().isManagedData(),
             isCharging, preferenceUtil.powerManagerActive().getDelayData());
     preferenceUtil.powerManagerActive().setControlledData(controlled);
     final Intent disable = IntentPool.acquire();
@@ -133,7 +133,7 @@ public final class ActiveService extends IntentService {
 
   private static void enableData(final Context context) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    enable(context, ManagerData.get(), preferenceUtil.powerManagerActive().isManagedData(),
+    enable(context, ManagerData.with(context), preferenceUtil.powerManagerActive().isManagedData(),
         preferenceUtil.powerManagerActive().isControlledData());
     preferenceUtil.powerManagerActive().setControlledData(false);
     final Intent disable = IntentPool.acquire();
@@ -144,7 +144,7 @@ public final class ActiveService extends IntentService {
 
   private static void enableWifi(final Context context) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    enable(context, ManagerWifi.get(), preferenceUtil.powerManagerActive().isManagedWifi(),
+    enable(context, ManagerWifi.with(context), preferenceUtil.powerManagerActive().isManagedWifi(),
         preferenceUtil.powerManagerActive().isControlledWifi());
     preferenceUtil.powerManagerActive().setControlledWifi(false);
     final Intent disable = IntentPool.acquire();

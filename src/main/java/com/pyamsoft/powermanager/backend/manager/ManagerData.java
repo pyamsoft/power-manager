@@ -38,13 +38,20 @@ public final class ManagerData extends ManagerBase {
   private Context context;
   private ConnectivityManager data;
 
-  private ManagerData() {
+  private ManagerData(final Context context) {
     super();
+    LogUtil.d(DATA_MANAGER, "Initialize ManagerData");
+    this.context = context.getApplicationContext();
+    this.data = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
-  public static synchronized ManagerBase get() {
+  public static ManagerBase with(final Context context) {
     if (instance == null) {
-      instance = new ManagerData();
+      synchronized (ManagerData.class) {
+        if (instance == null) {
+          instance = new ManagerData(context);
+        }
+      }
     }
     return instance;
   }
@@ -91,12 +98,6 @@ public final class ManagerData extends ManagerBase {
       }
     }
     return null;
-  }
-
-  @Override public void init(final Context context) {
-    LogUtil.d(DATA_MANAGER, "Initialize ManagerData");
-    this.context = context.getApplicationContext();
-    this.data = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
   private synchronized boolean isNull() {
@@ -195,7 +196,7 @@ public final class ManagerData extends ManagerBase {
     }
 
     @Override protected ManagerBase getTargetManager() {
-      return get();
+      return with(getApplicationContext());
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {
