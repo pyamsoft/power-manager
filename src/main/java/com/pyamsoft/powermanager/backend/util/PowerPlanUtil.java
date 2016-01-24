@@ -248,10 +248,12 @@ public final class PowerPlanUtil {
   private static PowerPlanUtil instance = null;
   private Context context;
 
-  private PowerPlanUtil() {
+  private PowerPlanUtil(final Context context) {
+    LogUtil.d(TAG, "Initialized PowerPlanUtil");
     POWER_PLAN_CUSTOM[FIELD_INDEX] = 0;
     POWER_PLAN_CUSTOM[FIELD_NAME] = "Custom";
-    context = null;
+    this.context = context.getApplicationContext();
+    updateCustomPlanToCurrent();
   }
 
   public static String toString(final Object o) {
@@ -282,17 +284,15 @@ public final class PowerPlanUtil {
     throw new RuntimeException("Can't cast object to Integer");
   }
 
-  public static synchronized PowerPlanUtil get() {
+  public static PowerPlanUtil with(final Context context) {
     if (instance == null) {
-      instance = new PowerPlanUtil();
+      synchronized (PowerPlanUtil.class) {
+        if (instance == null) {
+          instance = new PowerPlanUtil(context);
+        }
+      }
     }
     return instance;
-  }
-
-  public void init(final Context context) {
-    LogUtil.d(TAG, "Initialized PowerPlanUtil");
-    this.context = context.getApplicationContext();
-    updateCustomPlanToCurrent();
   }
 
   public final Object[] getPowerPlan(final int index) {

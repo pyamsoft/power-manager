@@ -37,7 +37,7 @@ public final class DataRadioFragment extends BaseRadioFragment
   @Override public void setRadioDelay(final long delay) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.powerManagerActive().setDelayData(delay);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_DELAY_DATA, delay);
+    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_DELAY_DATA, delay);
   }
 
   @Override public long getReOpenTime() {
@@ -48,7 +48,7 @@ public final class DataRadioFragment extends BaseRadioFragment
   @Override public void setRadioReopen(final long reopen) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.intervalDisableService().setDataReopenTime(reopen);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_DATA, reopen);
+    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_DATA, reopen);
   }
 
   @Override protected RadioContentAdapter.RadioInterface getRadio() {

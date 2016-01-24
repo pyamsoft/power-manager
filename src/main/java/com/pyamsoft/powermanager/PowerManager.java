@@ -15,16 +15,8 @@
  */
 package com.pyamsoft.powermanager;
 
-import com.pyamsoft.powermanager.backend.manager.ManagerBluetooth;
-import com.pyamsoft.powermanager.backend.manager.ManagerData;
-import com.pyamsoft.powermanager.backend.manager.ManagerSync;
-import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
-import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
-import com.pyamsoft.powermanager.backend.util.BatteryUtil;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.base.ApplicationBase;
 import com.pyamsoft.pydroid.base.ServiceBase;
 
@@ -40,7 +32,6 @@ public final class PowerManager extends ApplicationBase {
 
   @Override public final void onCreate() {
     super.onCreate();
-    initializeBackendSingletons();
     MonitorService.updateService(getApplicationContext());
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
     if (p.powerManagerMonitor().isEnabled()) {
@@ -50,12 +41,6 @@ public final class PowerManager extends ApplicationBase {
       // Just update notification from service
       MonitorService.updateService(getApplicationContext());
     }
-  }
-
-  private void initializeBackendSingletons() {
-    PowerTriggerDataSource.get().init(this);
-    BatteryUtil.get().init(this);
-    PowerPlanUtil.get().init(this);
   }
 
   @Override protected Class<? extends ServiceBase> setServiceClass() {

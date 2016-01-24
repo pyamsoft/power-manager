@@ -33,7 +33,7 @@ public final class SyncRadioFragment extends BaseRadioFragment
   @Override public void setRadioDelay(final long delay) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.powerManagerActive().setDelaySync(delay);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_DELAY_SYNC, delay);
+    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_DELAY_SYNC, delay);
   }
 
   @Override public long getReOpenTime() {
@@ -48,7 +48,7 @@ public final class SyncRadioFragment extends BaseRadioFragment
   @Override public void setRadioReopen(final long reopen) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.intervalDisableService().setSyncReopenTime(reopen);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_SYNC, reopen);
+    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_SYNC, reopen);
   }
 
   @Override protected RadioContentAdapter.RadioInterface getRadio() {

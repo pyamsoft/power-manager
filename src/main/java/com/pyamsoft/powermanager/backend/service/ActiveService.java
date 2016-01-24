@@ -62,9 +62,9 @@ public final class ActiveService extends IntentService {
 
   private static void disableWifi(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    final boolean controlled =
-        disable(context, ManagerWifi.with(context), preferenceUtil.powerManagerActive().isManagedWifi(),
-            isCharging, preferenceUtil.powerManagerActive().getDelayWifi());
+    final boolean controlled = disable(context, ManagerWifi.with(context),
+        preferenceUtil.powerManagerActive().isManagedWifi(), isCharging,
+        preferenceUtil.powerManagerActive().getDelayWifi());
     preferenceUtil.powerManagerActive().setControlledWifi(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerWifi.Interval.class);
@@ -74,9 +74,9 @@ public final class ActiveService extends IntentService {
 
   private static void disableData(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    final boolean controlled =
-        disable(context, ManagerData.with(context), preferenceUtil.powerManagerActive().isManagedData(),
-            isCharging, preferenceUtil.powerManagerActive().getDelayData());
+    final boolean controlled = disable(context, ManagerData.with(context),
+        preferenceUtil.powerManagerActive().isManagedData(), isCharging,
+        preferenceUtil.powerManagerActive().getDelayData());
     preferenceUtil.powerManagerActive().setControlledData(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerData.Interval.class);
@@ -206,7 +206,7 @@ public final class ActiveService extends IntentService {
 
   private static void runPowerManager(final Context context, final boolean isScreenOff) {
     if (isScreenOff) {
-      final BatteryUtil batteryUtil = BatteryUtil.get();
+      final BatteryUtil batteryUtil = BatteryUtil.with(context);
       batteryUtil.updateBatteryInformation();
       final boolean isCharging = batteryUtil.isCharging();
       disableWifi(context, isCharging);

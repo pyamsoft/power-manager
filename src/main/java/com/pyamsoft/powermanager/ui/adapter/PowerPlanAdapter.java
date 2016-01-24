@@ -98,7 +98,7 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
         }
       }
     });
-    final Object[] plan = PowerPlanUtil.get().getPowerPlan(position);
+    final Object[] plan = PowerPlanUtil.with(holder.itemView.getContext()).getPowerPlan(position);
     setupCurrentLayoutForPlan(holder, plan);
   }
 
@@ -187,14 +187,16 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
 
     final int currentPlan =
         GlobalPreferenceUtil.with(holder.itemView.getContext()).powerPlans().getActivePlan();
-    final Object[] current = PowerPlanUtil.get().getPowerPlan(currentPlan);
+    final Object[] current =
+        PowerPlanUtil.with(holder.itemView.getContext()).getPowerPlan(currentPlan);
     holder.select.setChecked(current == plan);
     holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
       @Override
       public final void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 /* Set the power plan */
-        PowerPlanUtil.get().setPlan(PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]));
+        PowerPlanUtil.with(buttonView.getContext())
+            .setPlan(PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]));
 
         notifyDataSetChanged();
 

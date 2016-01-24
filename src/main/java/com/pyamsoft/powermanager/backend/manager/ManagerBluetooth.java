@@ -97,7 +97,8 @@ public final class ManagerBluetooth extends ManagerBase {
     @Override protected void setManageState(GlobalPreferenceUtil preferenceUtil) {
       final boolean managed = preferenceUtil.powerManagerActive().isManagedBluetooth();
       preferenceUtil.powerManagerActive().setManagedBluetooth(!managed);
-      PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_BLUETOOTH, !managed);
+      PowerPlanUtil.with(getApplicationContext())
+          .updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_BLUETOOTH, !managed);
     }
   }
 }

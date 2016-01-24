@@ -84,7 +84,7 @@ public final class SettingsContentAdapter
     LogUtil.i(TAG, c.getString(R.string.close_app_msg));
     // Boot is handled outside of preferences, explicitly set it back to false, the default
     BootActionReceiver.setBootEnabled(c, false);
-    final PowerTriggerDataSource source = PowerTriggerDataSource.get();
+    final PowerTriggerDataSource source = PowerTriggerDataSource.with(c);
     source.open();
     if (source.isOpened()) {
       source.deleteAllTriggers();
@@ -268,7 +268,7 @@ public final class SettingsContentAdapter
             update = false;
         }
         if (update) {
-          final PowerPlanUtil powerPlan = PowerPlanUtil.get();
+          final PowerPlanUtil powerPlan = PowerPlanUtil.with(holder.itemView.getContext());
           powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
           powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_SUSPEND, isChecked);
           powerPlan.setPlan(

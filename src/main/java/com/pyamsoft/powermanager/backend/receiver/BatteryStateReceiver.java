@@ -71,8 +71,8 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
     setTrigger(ManagerSync.get(), trigger.getManageSync(), trigger.getStateSync());
   }
 
-  private static void updateTriggerState(final PowerTrigger trigger) {
-    final PowerTriggerDataSource source = PowerTriggerDataSource.get();
+  private static void updateTriggerState(final Context context, final PowerTrigger trigger) {
+    final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
     if (!source.isOpened()) {
       source.open();
       source.createTrigger(trigger);
@@ -95,7 +95,7 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
         setBluetooth(trigger);
         setSync(trigger);
         trigger.setAvailable(PowerTrigger.UNAVAILABLE);
-        updateTriggerState(trigger);
+        updateTriggerState(c, trigger);
         Toast.makeText(c.getApplicationContext(), "Running power trigger:" + trigger.getName(),
             Toast.LENGTH_SHORT).show();
         ret = true;
@@ -110,7 +110,8 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
     return ret;
   }
 
-  private static boolean triggerOnCharging(final PowerTrigger trigger, final int batteryPercent) {
+  private static boolean triggerOnCharging(final Context c, final PowerTrigger trigger,
+      final int batteryPercent) {
     boolean ret = false;
     if (trigger.getEnabled() == PowerTrigger.ENABLED) {
       if (trigger.getAvailable() == PowerTrigger.UNAVAILABLE
@@ -118,7 +119,7 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
         LogUtil.d(TAG, "Trigger: [", trigger.getId(), "]", trigger.getName(),
             " is not Available, set Availability");
         trigger.setAvailable(PowerTrigger.AVAILABLE);
-        updateTriggerState(trigger);
+        updateTriggerState(c, trigger);
         ret = true;
       } else if (trigger.getAvailable() == PowerTrigger.AVAILABLE
           && batteryPercent >= trigger.getLevel()) {
@@ -154,24 +155,26 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
   @Override public final void onReceive(final Context context, final Intent intent) {
     if (intent != null) {
       final String action = intent.getAction();
-      final BatteryUtil bs = BatteryUtil.get();
+      final BatteryUtil bs = BatteryUtil.with(context);
       bs.updateBatteryInformation();
       switch (action) {
         case Intent.ACTION_BATTERY_CHANGED:
           final int batteryPercent = (int) bs.getPercent();
           boolean ret = false;
           if (bs.isCharging()) {
-            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.get().asSet()) {
+            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.with(context)
+                .asSet()) {
               if (trigger.getId() == PowerTriggerDataSource.TriggerSet.PLACEHOLDER_ID) {
                 continue;
               }
-              ret = triggerOnCharging(trigger, batteryPercent);
+              ret = triggerOnCharging(context, trigger, batteryPercent);
               if (ret) {
                 break;
               }
             }
           } else {
-            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.get().asSet()) {
+            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.with(context)
+                .asSet()) {
               if (trigger.getId() == PowerTriggerDataSource.TriggerSet.PLACEHOLDER_ID) {
                 continue;
               }

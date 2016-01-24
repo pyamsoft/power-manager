@@ -213,7 +213,8 @@ public final class ManagerData extends ManagerBase {
     @Override protected void setManageState(GlobalPreferenceUtil preferenceUtil) {
       final boolean managed = preferenceUtil.powerManagerActive().isManagedData();
       preferenceUtil.powerManagerActive().setManagedData(!managed);
-      PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_DATA, !managed);
+      PowerPlanUtil.with(getApplicationContext())
+          .updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_DATA, !managed);
     }
   }
 }

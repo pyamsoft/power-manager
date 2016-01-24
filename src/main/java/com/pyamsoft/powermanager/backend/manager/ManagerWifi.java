@@ -99,7 +99,8 @@ public final class ManagerWifi extends ManagerBase {
     @Override protected void setManageState(GlobalPreferenceUtil preferenceUtil) {
       final boolean managed = preferenceUtil.powerManagerActive().isManagedWifi();
       preferenceUtil.powerManagerActive().setManagedWifi(!managed);
-      PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_WIFI, !managed);
+      PowerPlanUtil.with(getApplicationContext())
+          .updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_WIFI, !managed);
     }
   }
 }

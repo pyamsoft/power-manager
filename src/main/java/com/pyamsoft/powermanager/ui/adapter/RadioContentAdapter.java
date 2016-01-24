@@ -198,7 +198,7 @@ public final class RadioContentAdapter
             setPreference(cv.getContext(), ii, position);
             setRadioImageState(holder, position);
             setupRadioButtons(holder, position);
-            PowerPlanUtil.get()
+            PowerPlanUtil.with(cv.getContext())
                 .setPlan(PowerPlanUtil.toInt(
                     PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
           }

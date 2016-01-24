@@ -34,14 +34,19 @@ public final class BatteryUtil {
   private float temperature = -1;
   private Context context;
 
-  private BatteryUtil() {
+  private BatteryUtil(final Context context) {
+    LogUtil.d(TAG, "Initialized BatteryUtil");
     filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-    context = null;
+    this.context = context.getApplicationContext();
   }
 
-  public static synchronized BatteryUtil get() {
+  public static BatteryUtil with(final Context context) {
     if (instance == null) {
-      instance = new BatteryUtil();
+      synchronized (BatteryUtil.class) {
+        if (instance == null) {
+          instance = new BatteryUtil(context);
+        }
+      }
     }
     return instance;
   }
@@ -71,11 +76,6 @@ public final class BatteryUtil {
     } else {
       return JellyBeanMR1.isWirelessCharging(charge);
     }
-  }
-
-  public final void init(final Context context) {
-    LogUtil.d(TAG, "Initialized BatteryUtil");
-    this.context = context.getApplicationContext();
   }
 
   public final double getPercent() {

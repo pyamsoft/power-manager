@@ -54,20 +54,16 @@ public final class PowerTriggerDataSource {
   private int nextId = 0;
   private int refCount = 0;
 
-  private PowerTriggerDataSource() {
-    context = null;
-  }
-
-  public static synchronized PowerTriggerDataSource get() {
-    if (instance == null) {
-      instance = new PowerTriggerDataSource();
-    }
-    return instance;
-  }
-
-  public final void init(final Context context) {
+  private PowerTriggerDataSource(final Context context) {
     LogUtil.d(TAG, "Initialize PowerTriggerDataSource");
     this.context = context.getApplicationContext();
+  }
+
+  public static PowerTriggerDataSource with(final Context context) {
+    if (instance == null) {
+      instance = new PowerTriggerDataSource(context);
+    }
+    return instance;
   }
 
   public void open() {
@@ -138,10 +134,10 @@ public final class PowerTriggerDataSource {
       LogUtil.d(TAG, "Update id: ", id);
       database.update(PowerTriggerTable.TABLE_NAME, values,
           PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null);
-      final PowerTrigger removeMe = TriggerSet.get().contains(name);
-      TriggerSet.get().remove(removeMe.getName());
+      final PowerTrigger removeMe = TriggerSet.with(context).contains(name);
+      TriggerSet.with(context).remove(removeMe.getName());
     }
-    TriggerSet.get().add(trigger);
+    TriggerSet.with(context).add(trigger);
   }
 
   private PowerTrigger getTriggerByUnique(final int id, final String name, final int level) {
@@ -171,7 +167,7 @@ public final class PowerTriggerDataSource {
       database.delete(PowerTriggerTable.TABLE_NAME, PowerTriggerTable.Entry.COLUMN_ID + " = " + id,
           null);
       LogUtil.d(TAG, "Trigger: ", id, "deleted");
-      TriggerSet.get().remove(trigger.getName());
+      TriggerSet.with(context).remove(trigger.getName());
     }
   }
 
@@ -304,11 +300,11 @@ public final class PowerTriggerDataSource {
     private static TriggerSet instance = null;
     private final Set<PowerTrigger> allTriggers = new HashSet<>();
 
-    private TriggerSet() {
+    private TriggerSet(final Context context) {
       final PowerTrigger placeHolder =
           new PowerTrigger(PLACEHOLDER_ID, PLACEHOLDER_NAME, PLACEHOLDER_LEVEL);
       add(placeHolder);
-      final PowerTriggerDataSource source = PowerTriggerDataSource.get();
+      final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
       source.open();
       if (source.isOpened()) {
         final Set<PowerTrigger> triggers = source.getAllTriggers();
@@ -319,9 +315,13 @@ public final class PowerTriggerDataSource {
       }
     }
 
-    public static synchronized TriggerSet get() {
+    public static TriggerSet with(final Context context) {
       if (instance == null) {
-        instance = new TriggerSet();
+        synchronized (TriggerSet.class) {
+          if (instance == null) {
+            instance = new TriggerSet(context);
+          }
+        }
       }
       return instance;
     }

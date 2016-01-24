@@ -53,20 +53,6 @@ public final class DetailBaseFragment extends Fragment {
   private String targetString;
   private int targetImageResId;
   private int backgroundColor;
-  private final PreferenceBase.OnSharedPreferenceChangeListener listener =
-      new PreferenceBase.OnSharedPreferenceChangeListener(
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_DATA,
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_BLUETOOTH,
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC) {
-
-        @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
-            final String key) {
-          if (largeFABBase != null) {
-            largeFABBase.setChecked(largeFABBase.isChecked());
-          }
-        }
-      };
   private ExplanationFragment fragment;
   private FloatingActionButton largeFAB;
   private FloatingActionButton smallFAB;
@@ -82,25 +68,21 @@ public final class DetailBaseFragment extends Fragment {
   private int smallFABIconOn;
   private int smallFABIconOff;
   private FABBase largeFABBase;
+  private final PreferenceBase.OnSharedPreferenceChangeListener listener =
+      new PreferenceBase.OnSharedPreferenceChangeListener(
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_DATA,
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_BLUETOOTH,
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC) {
+
+        @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
+            final String key) {
+          if (largeFABBase != null) {
+            largeFABBase.setChecked(largeFABBase.isChecked());
+          }
+        }
+      };
   private FABBase smallFABBase;
-
-  public static abstract class BooleanRunnable implements Runnable {
-
-    private boolean state;
-
-    public final void run(final boolean newState) {
-      setState(newState);
-      run();
-    }
-
-    public final void setState(boolean state) {
-      this.state = state;
-    }
-
-    public final boolean isState() {
-      return state;
-    }
-  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -396,7 +378,7 @@ public final class DetailBaseFragment extends Fragment {
         }
 
         if (powerPlanField != FIELD_NOOP) {
-          final PowerPlanUtil powerPlan = PowerPlanUtil.get();
+          final PowerPlanUtil powerPlan = PowerPlanUtil.with(getContext());
           powerPlan.updateCustomPlan(powerPlanField, state);
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
@@ -462,7 +444,7 @@ public final class DetailBaseFragment extends Fragment {
           setManage.run(state);
         }
         if (powerPlanField != FIELD_NOOP) {
-          final PowerPlanUtil powerPlan = PowerPlanUtil.get();
+          final PowerPlanUtil powerPlan = PowerPlanUtil.with(getContext());
           powerPlan.updateCustomPlan(powerPlanField, state);
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
@@ -545,5 +527,23 @@ public final class DetailBaseFragment extends Fragment {
   @Override public void onPause() {
     super.onPause();
     listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerActive());
+  }
+
+  public static abstract class BooleanRunnable implements Runnable {
+
+    private boolean state;
+
+    public final void run(final boolean newState) {
+      setState(newState);
+      run();
+    }
+
+    public final boolean isState() {
+      return state;
+    }
+
+    public final void setState(boolean state) {
+      this.state = state;
+    }
   }
 }

@@ -16,6 +16,7 @@
 package com.pyamsoft.powermanager.ui.adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -158,7 +159,7 @@ public final class PowerTriggerAdapter
               .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 
                 @Override public void onClick(final DialogInterface dialog, final int which) {
-                  removeItem(trigger);
+                  removeItem(v.getContext(), trigger);
                 }
               })
               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -179,13 +180,13 @@ public final class PowerTriggerAdapter
     return triggerList.size();
   }
 
-  private void removeItem(final PowerTrigger trigger) {
+  private void removeItem(final Context context, final PowerTrigger trigger) {
     final int index = triggerList.indexOf(trigger);
     if (index == PowerTriggerDataSource.TriggerSet.NO_INDEX) {
       return;
     }
 
-    final PowerTriggerDataSource source = PowerTriggerDataSource.get();
+    final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
     source.open();
     if (source.isOpened()) {
       source.deleteTrigger(trigger);
@@ -195,14 +196,14 @@ public final class PowerTriggerAdapter
     notifyItemRemoved(index);
   }
 
-  public final void refreshDataSet() {
+  public final void refreshDataSet(final Context context) {
     // sorts the triggers/triggerNames list and then calls notifyDataSetChanged
     // merge sort
     // before the merge, set the placeholder (ID -1) to the largest ID possible
     // which is size + 1;
     //        merge(triggers);
     triggerList.clear();
-    final Set<PowerTrigger> triggers = PowerTriggerDataSource.TriggerSet.get().asSet();
+    final Set<PowerTrigger> triggers = PowerTriggerDataSource.TriggerSet.with(context).asSet();
     for (final PowerTrigger trigger : triggers) {
       triggerList.add(trigger);
     }

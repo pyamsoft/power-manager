@@ -167,7 +167,7 @@ public class PowerTriggerDialogFragment extends DialogFragment {
         }
 
         // fetch all adapter values
-        final PowerTriggerDataSource source = PowerTriggerDataSource.get();
+        final PowerTriggerDataSource source = PowerTriggerDataSource.with(v.getContext());
         source.open();
         if (!source.isOpened()) {
           return;
@@ -184,7 +184,8 @@ public class PowerTriggerDialogFragment extends DialogFragment {
         createNewTrigger(newTrigger, adapter);
 
         PowerTrigger trigger = null;
-        final Set<PowerTrigger> triggers = PowerTriggerDataSource.TriggerSet.get().asSet();
+        final Set<PowerTrigger> triggers =
+            PowerTriggerDataSource.TriggerSet.with(v.getContext()).asSet();
         for (final PowerTrigger t : triggers) {
           if (t.getId() == newTrigger.getId()) {
             LogUtil.d(TAG, "Found matching trigger by ID");
@@ -216,7 +217,7 @@ public class PowerTriggerDialogFragment extends DialogFragment {
         source.close();
 
         if (parentAdapter != null) {
-          parentAdapter.refreshDataSet();
+          parentAdapter.refreshDataSet(v.getContext());
         }
 
         dismiss();

@@ -28,7 +28,8 @@ public final class BluetoothRadioFragment extends BaseRadioFragment
   @Override public void setRadioReopen(final long reopen) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.intervalDisableService().setBluetoothReopenTime(reopen);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_BLUETOOTH, reopen);
+    PowerPlanUtil.with(getContext())
+        .updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_BLUETOOTH, reopen);
   }
 
   @Override public String getRadioNameString() {
@@ -43,7 +44,7 @@ public final class BluetoothRadioFragment extends BaseRadioFragment
   @Override public void setRadioDelay(final long delay) {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
     p.powerManagerActive().setDelayBluetooth(delay);
-    PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_DELAY_BLUETOOTH, delay);
+    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_DELAY_BLUETOOTH, delay);
   }
 
   @Override public long getReOpenTime() {

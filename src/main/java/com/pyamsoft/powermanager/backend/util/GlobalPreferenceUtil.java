@@ -29,6 +29,15 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
   private final GridOrder gridOrder;
   private final PowerPlans powerPlans;
 
+  private GlobalPreferenceUtil(final Context context) {
+    super(context);
+    intervalDisableService = new IntervalDisableService(context);
+    powerManagerActive = new PowerManagerActive(context);
+    powerManagerMonitor = new PowerManagerMonitor(context);
+    gridOrder = new GridOrder(context);
+    powerPlans = new PowerPlans(context);
+  }
+
   public static GlobalPreferenceUtil with(final Context context) {
     if (instance == null) {
       synchronized (GlobalPreferenceUtil.class) {
@@ -38,15 +47,6 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
       }
     }
     return instance;
-  }
-
-  private GlobalPreferenceUtil(final Context context) {
-    super(context);
-    intervalDisableService = new IntervalDisableService(context);
-    powerManagerActive = new PowerManagerActive(context);
-    powerManagerMonitor = new PowerManagerMonitor(context);
-    gridOrder = new GridOrder(context);
-    powerPlans = new PowerPlans(context);
   }
 
   public final IntervalDisableService intervalDisableService() {

@@ -87,7 +87,8 @@ public final class ManagerSync extends ManagerBase {
     @Override protected void setManageState(GlobalPreferenceUtil preferenceUtil) {
       final boolean managed = preferenceUtil.powerManagerActive().isManagedSync();
       preferenceUtil.powerManagerActive().setManagedSync(!managed);
-      PowerPlanUtil.get().updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_SYNC, !managed);
+      PowerPlanUtil.with(getApplicationContext())
+          .updateCustomPlan(PowerPlanUtil.FIELD_MANAGE_SYNC, !managed);
     }
   }
 }

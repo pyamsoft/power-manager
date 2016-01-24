@@ -40,7 +40,7 @@ public final class BatteryInfoAdapter extends RecyclerView.Adapter<BatteryInfoAd
   }
 
   @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
-    final BatteryUtil bs = BatteryUtil.get();
+    final BatteryUtil bs = BatteryUtil.with(holder.itemView.getContext());
     bs.updateBatteryInformation();
     switch (position) {
       case POSITION_PERCENT:
