@@ -31,7 +31,6 @@ public final class PowerManager extends ApplicationBase {
 
   @Override public final void onCreate() {
     super.onCreate();
-    MonitorService.updateService(getApplicationContext());
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
     if (p.powerManagerMonitor().isEnabled()) {
       // Start service
