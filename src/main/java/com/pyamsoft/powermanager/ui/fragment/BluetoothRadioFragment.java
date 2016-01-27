@@ -56,7 +56,7 @@ public final class BluetoothRadioFragment extends BaseRadioFragment
     return this;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.blue500
         : R.color.scrim45_blue500;
   }

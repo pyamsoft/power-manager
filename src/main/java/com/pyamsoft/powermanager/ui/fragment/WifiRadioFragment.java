@@ -55,7 +55,7 @@ public final class WifiRadioFragment extends BaseRadioFragment
     return this;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.green500
         : R.color.scrim45_green500;
   }

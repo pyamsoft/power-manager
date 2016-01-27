@@ -55,7 +55,7 @@ public final class SyncRadioFragment extends BaseRadioFragment
     return this;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.purple500
         : R.color.scrim45_purple500;
   }

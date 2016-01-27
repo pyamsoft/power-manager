@@ -169,7 +169,7 @@ public final class BatteryInfoFragment extends ExplanationFragment {
     return explanation;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.pink500
         : R.color.scrim45_pink500;
   }

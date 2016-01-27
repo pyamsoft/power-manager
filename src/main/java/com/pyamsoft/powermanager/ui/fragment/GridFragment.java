@@ -129,7 +129,7 @@ public final class GridFragment extends ExplanationFragment {
     return explanation;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.amber500
         : R.color.amber700;
   }

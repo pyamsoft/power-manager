@@ -55,7 +55,7 @@ public final class DataRadioFragment extends BaseRadioFragment
     return this;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.teal500
         : R.color.scrim45_teal500;
   }

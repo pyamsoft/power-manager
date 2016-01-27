@@ -122,7 +122,7 @@ public final class SettingsFragment extends ExplanationFragment {
     return explanation;
   }
 
-  @Override int getBackgroundColor() {
+  @Override public int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.lightgreen500
         : R.color.scrim45_lightgreen500;
   }
