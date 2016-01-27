@@ -44,4 +44,15 @@ public class GridPresenter extends Presenter<GridInterface> {
     model.moveItems(reference.getItems(), fromPosition, toPosition);
     reference.onItemMoved(fromPosition, toPosition);
   }
+
+  public void clickFAB() {
+    final GridInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "Null reference");
+      return;
+    }
+    LogUtil.d(TAG, "onFABClicked");
+    model.clickFAB();
+    reference.onFABClicked();
+  }
 }

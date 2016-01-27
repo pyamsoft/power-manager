@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
+import com.pyamsoft.pydroid.base.Presenter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.util.ArrayList;
@@ -163,6 +164,11 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
 
   @Override public List<String> getItems() {
     return items;
+  }
+
+  @Override public void onFABClicked() {
+    // No FAB here
+    throw new Presenter.IllegalBindException("No Fab Here");
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

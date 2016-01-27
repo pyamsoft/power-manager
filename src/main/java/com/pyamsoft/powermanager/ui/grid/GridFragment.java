@@ -30,17 +30,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
+import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
+import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
+import java.util.List;
 
-public final class GridFragment extends ExplanationFragment {
+public final class GridFragment extends ExplanationFragment implements GridInterface {
 
   /* Views */
   private FloatingActionButton fab;
@@ -57,9 +58,12 @@ public final class GridFragment extends ExplanationFragment {
   private RecyclerView recyclerView;
   private ItemTouchHelper helper;
   private GridContentAdapter adapter;
+  private GridPresenter presenter;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
+    presenter = new GridPresenter();
     setupFAB(view);
     setupRecyclerView(view);
   }
@@ -163,17 +167,9 @@ public final class GridFragment extends ExplanationFragment {
     fab.setOnClickListener(new View.OnClickListener() {
 
       @Override public void onClick(View v) {
-        MonitorService.powerManagerService(v.getContext());
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(v.getContext());
-        if (p.powerManagerMonitor().isNotificationEnabled()) {
-          if (p.powerManagerMonitor().isForeground()) {
-            MonitorService.startForeground(v.getContext());
-          } else {
-            PersistentNotification.update(v.getContext());
-          }
+        if (presenter != null) {
+          presenter.clickFAB();
         }
-
-        setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
       }
     });
 
@@ -186,17 +182,19 @@ public final class GridFragment extends ExplanationFragment {
     setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
 
-  private void registerListener() {
+  private void register() {
     listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
+    presenter.bind(getContext(), this);
   }
 
-  private void unregisterListener() {
+  private void unregister() {
     listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
+    presenter.unbind();
   }
 
   @Override public void onResume() {
     super.onResume();
-    registerListener();
+    register();
     showFAB();
     final MainActivity a = ((MainActivity) getActivity());
     if (a != null) {
@@ -208,7 +206,7 @@ public final class GridFragment extends ExplanationFragment {
 
   @Override public void onPause() {
     super.onPause();
-    unregisterListener();
+    unregister();
   }
 
   @Nullable @Override
@@ -239,5 +237,21 @@ public final class GridFragment extends ExplanationFragment {
       fab.setImageDrawable(ContextCompat.getDrawable(getContext(),
           enabled ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp));
     }
+  }
+
+  @Override public void onItemClicked(DetailBaseFragment fragment) {
+    throw new Presenter.IllegalBindException("No items");
+  }
+
+  @Override public void onItemMoved(int fromPosition, int toPosition) {
+    throw new Presenter.IllegalBindException("No items");
+  }
+
+  @Override public List<String> getItems() {
+    return null;
+  }
+
+  @Override public void onFABClicked() {
+    setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
 }

@@ -10,4 +10,6 @@ public interface GridInterface {
   void onItemMoved(final int fromPosition, final int toPosition);
 
   List<String> getItems();
+
+  void onFABClicked();
 }

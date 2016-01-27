@@ -2,6 +2,8 @@ package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.Context;
 import android.os.Bundle;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
+import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
 import java.lang.ref.WeakReference;
@@ -29,7 +31,7 @@ public class GridModel {
 
   public boolean moveItems(final List<String> items, final int from, final int to) {
     final Context context = weakContext.get();
-    if (context != null) {
+    if (context != null && items != null && !items.isEmpty()) {
       Collections.swap(items, from, to);
       final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
       preferenceUtil.gridOrder().set(to, items.get(to));
@@ -37,6 +39,21 @@ public class GridModel {
       return true;
     } else {
       return false;
+    }
+  }
+
+  public void clickFAB() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      MonitorService.powerManagerService(context);
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      if (p.powerManagerMonitor().isNotificationEnabled()) {
+        if (p.powerManagerMonitor().isForeground()) {
+          MonitorService.startForeground(context);
+        } else {
+          PersistentNotification.update(context);
+        }
+      }
     }
   }
 }
