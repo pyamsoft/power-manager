@@ -15,6 +15,7 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
     throw new IllegalBindException("Cannot bind without position and Context");
   }
 
+  // TODO Remove position call from constructor
   public void bind(final Context context, final SettingsInterface reference, final int position) {
     super.bind(reference);
     this.context = new WeakReference<>(context);

@@ -13,9 +13,9 @@ public final class PowerPlanPresenter extends Presenter<PowerPlanInterface> {
     throw new IllegalBindException("Cannot bind without position and Context");
   }
 
-  public void bind(final Context context, final PowerPlanInterface reference, final int position) {
+  public void bind(final Context context, final PowerPlanInterface reference) {
     super.bind(reference);
-    model = new PowerPlanModel(context, position);
+    model = new PowerPlanModel(context);
   }
 
   @Override public void unbind() {
@@ -23,98 +23,98 @@ public final class PowerPlanPresenter extends Presenter<PowerPlanInterface> {
     model = null;
   }
 
-  public String getName() {
-    return model.getName();
+  public String getName(final int position) {
+    return model.getName(position);
   }
 
-  public int getIndex() {
-    return model.getIndex();
+  public int getIndex(final int position) {
+    return model.getIndex(position);
   }
 
-  public boolean isWifiManaged() {
-    return model.isWifiManaged();
+  public boolean isWifiManaged(final int position) {
+    return model.isWifiManaged(position);
   }
 
-  public boolean isDataManaged() {
-    return model.isDataManaged();
+  public boolean isDataManaged(final int position) {
+    return model.isDataManaged(position);
   }
 
-  public boolean isBluetoothManaged() {
-    return model.isBluetoothManaged();
+  public boolean isBluetoothManaged(final int position) {
+    return model.isBluetoothManaged(position);
   }
 
-  public boolean isSyncManaged() {
-    return model.isSyncManaged();
+  public boolean isSyncManaged(final int position) {
+    return model.isSyncManaged(position);
   }
 
-  public boolean isActivePlan() {
-    return model.isActivePlan();
+  public boolean isActivePlan(final int position) {
+    return model.isActivePlan(position);
   }
 
-  public long getWifiDelay() {
-    return model.getWifiDelay();
+  public long getWifiDelay(final int position) {
+    return model.getWifiDelay(position);
   }
 
-  public long getDataDelay() {
-    return model.getDataDelay();
+  public long getDataDelay(final int position) {
+    return model.getDataDelay(position);
   }
 
-  public long getBluetoothDelay() {
-    return model.getBluetoothDelay();
+  public long getBluetoothDelay(final int position) {
+    return model.getBluetoothDelay(position);
   }
 
-  public long getSyncDelay() {
-    return model.getSyncDelay();
+  public long getSyncDelay(final int position) {
+    return model.getSyncDelay(position);
   }
 
-  public boolean isBootEnabled() {
-    return model.isBootEnabled();
+  public boolean isBootEnabled(final int position) {
+    return model.isBootEnabled(position);
   }
 
-  public boolean isSuspendEnabled() {
-    return model.isSuspendEnabled();
+  public boolean isSuspendEnabled(final int position) {
+    return model.isSuspendEnabled(position);
   }
 
-  public boolean isWifiReOpenEnabled() {
-    return model.isWifiReOpenEnabled();
+  public boolean isWifiReOpenEnabled(final int position) {
+    return model.isWifiReOpenEnabled(position);
   }
 
-  public boolean isDataReOpenEnabled() {
-    return model.isDataReOpenEnabled();
+  public boolean isDataReOpenEnabled(final int position) {
+    return model.isDataReOpenEnabled(position);
   }
 
-  public boolean isBluetoothReOpenEnabled() {
-    return model.isBluetoothReOpenEnabled();
+  public boolean isBluetoothReOpenEnabled(final int position) {
+    return model.isBluetoothReOpenEnabled(position);
   }
 
-  public boolean isSyncReOpenEnabled() {
-    return model.isSyncReOpenEnabled();
+  public boolean isSyncReOpenEnabled(final int position) {
+    return model.isSyncReOpenEnabled(position);
   }
 
-  public long getWifiReOpenTime() {
-    return model.getWifiReOpenTime();
+  public long getWifiReOpenTime(final int position) {
+    return model.getWifiReOpenTime(position);
   }
 
-  public long getDataReOpenTime() {
-    return model.getDataReOpenTime();
+  public long getDataReOpenTime(final int position) {
+    return model.getDataReOpenTime(position);
   }
 
-  public long getBluetoothReOpenTime() {
-    return model.getBluetoothReOpenTime();
+  public long getBluetoothReOpenTime(final int position) {
+    return model.getBluetoothReOpenTime(position);
   }
 
-  public long getSyncReOpenTime() {
-    return model.getSyncReOpenTime();
+  public long getSyncReOpenTime(final int position) {
+    return model.getSyncReOpenTime(position);
   }
 
-  public void setActivePlan() {
+  public void setActivePlan(final int position) {
     final PowerPlanInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.d(TAG, "Reference is NULL");
       return;
     }
 
-    model.setActivePlan();
+    model.setActivePlan(position);
     reference.onSetAsActivePlan();
   }
 }

@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.helper;
+package com.pyamsoft.powermanager.ui.grid;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import com.pyamsoft.powermanager.ui.adapter.GridContentAdapter;
+import com.pyamsoft.powermanager.ui.grid.GridContentAdapter;
 
-public final class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+public final class GridItemTouchCallback extends ItemTouchHelper.SimpleCallback {
 
   private final GridContentAdapter adapter;
 
-  public ItemTouchHelperCallback(final GridContentAdapter adapter) {
+  public GridItemTouchCallback(final GridContentAdapter adapter) {
     super(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT |
         ItemTouchHelper.RIGHT, 0);
     this.adapter = adapter;
@@ -32,8 +32,7 @@ public final class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallbac
   @Override
   public boolean onMove(final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder,
       final RecyclerView.ViewHolder target) {
-    return adapter.onItemMoved(recyclerView.getContext(), viewHolder.getAdapterPosition(),
-        target.getAdapterPosition());
+    return adapter.onMoveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
   }
 
   @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {

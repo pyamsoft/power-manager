@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.grid;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,29 +32,26 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
-import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperInterface;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAdapter.ViewHolder>
-    implements ItemTouchHelperInterface {
+    implements GridItemTouchInterface, GridInterface {
 
   private static final int NUMBER_ITEMS = 10;
   private static final String TAG = GridContentAdapter.class.getSimpleName();
 
   private final List<String> items;
   private final FragmentManager fm;
-  private final DetailBaseFragment detailFragment;
-  private final Bundle detailArgs;
+  private GridPresenter presenter;
 
   public GridContentAdapter(final Fragment f) {
     this.fm = f.getFragmentManager();
+    presenter = new GridPresenter();
+    presenter.bind(f.getContext(), this);
 
-    detailArgs = new Bundle();
-    detailFragment = new DetailBaseFragment();
     items = new ArrayList<>(NUMBER_ITEMS);
 
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(f.getContext());
@@ -70,6 +65,12 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     items.add(preferenceUtil.gridOrder().getEight());
     items.add(preferenceUtil.gridOrder().getNine());
     items.add(preferenceUtil.gridOrder().getTen());
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
+    }
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -127,32 +128,30 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
       holder.mainHolder.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          onItemClicked(name, javaPlease);
+          presenter.clickItem(name, javaPlease);
         }
       });
     }
-  }
-
-  private void onItemClicked(final String name, final int image) {
-    detailArgs.putString(DetailBaseFragment.EXTRA_PARAM_ID, name);
-    detailArgs.putInt(DetailBaseFragment.EXTRA_PARAM_IMAGE, image);
-    detailFragment.setArguments(detailArgs);
-    fm.beginTransaction()
-        .replace(R.id.fragment_place, detailFragment)
-        .addToBackStack(null)
-        .commit();
   }
 
   @Override public int getItemCount() {
     return items.size();
   }
 
-  @Override
-  public boolean onItemMoved(final Context context, final int fromPosition, final int toPosition) {
-    Collections.swap(items, fromPosition, toPosition);
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    preferenceUtil.gridOrder().set(toPosition, items.get(toPosition));
-    preferenceUtil.gridOrder().set(fromPosition, items.get(fromPosition));
+  @Override public boolean onMoveItem(final int fromPosition, final int toPosition) {
+    if (presenter != null) {
+      presenter.moveItem(fromPosition, toPosition);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @Override public void onItemClicked(DetailBaseFragment fragment) {
+    fm.beginTransaction().replace(R.id.fragment_place, fragment).addToBackStack(null).commit();
+  }
+
+  @Override public void onItemMoved(final int fromPosition, final int toPosition) {
     // KLUDGE
     // This is buggy and creates duplicated views as a result.
     //        notifyItemMoved(fromPosition, toPosition);
@@ -160,7 +159,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     // This halts the move after it exchanges one place
     // Maybe this is what we want?
     notifyDataSetChanged();
-    return true;
+  }
+
+  @Override public List<String> getItems() {
+    return items;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

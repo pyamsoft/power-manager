@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.helper;
+package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.Context;
 
-public interface ItemTouchHelperInterface {
+public interface GridItemTouchInterface {
 
-  boolean onItemMoved(final Context context, final int fromPosition, final int toPosition);
+  boolean onMoveItem(final int fromPosition, final int toPosition);
 }

@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.fragment.GridFragment;
+import com.pyamsoft.powermanager.ui.grid.GridFragment;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AnimUtil;

@@ -15,6 +15,7 @@
  */
 package com.pyamsoft.powermanager.ui.plan;
 
+import android.content.Context;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,6 +40,16 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
   private static final int POWER_PLAN_NUMBER = 9;
   private static final String TAG = PowerPlanAdapter.class.getSimpleName();
   private final Set<Integer> expandedPositions = new HashSet<>(POWER_PLAN_NUMBER);
+  private PowerPlanPresenter presenter;
+
+  public PowerPlanAdapter(final Context context) {
+    presenter = new PowerPlanPresenter();
+    presenter.bind(context, this);
+  }
+
+  public void destroy() {
+    presenter.unbind();
+  }
 
   @Override public final ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -101,77 +112,75 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
   }
 
   private void setupCurrentLayoutForPlan(final ViewHolder holder, final int position) {
-    final PowerPlanPresenter presenter = new PowerPlanPresenter();
-    presenter.bind(holder.itemView.getContext(), this, position);
-    holder.name.setText(presenter.getName());
+    holder.name.setText(presenter.getName(position));
     holder.image.setImageResource(R.drawable.ic_settings_white_24dp);
 
-    final boolean wifiManaged = presenter.isWifiManaged();
+    final boolean wifiManaged = presenter.isWifiManaged(position);
     holder.imageWifi.setEnabled(wifiManaged);
     holder.imageWifi.setImageResource(wifiManaged ? R.drawable.ic_network_wifi_white_24dp
         : R.drawable.ic_signal_wifi_off_white_24dp);
 
-    final boolean dataManaged = presenter.isDataManaged();
+    final boolean dataManaged = presenter.isDataManaged(position);
     holder.imageData.setEnabled(dataManaged);
     holder.imageData.setImageResource(dataManaged ? R.drawable.ic_network_cell_white_24dp
         : R.drawable.ic_signal_cellular_off_white_24dp);
 
-    final boolean bluetoothManaged = presenter.isBluetoothManaged();
+    final boolean bluetoothManaged = presenter.isBluetoothManaged(position);
     holder.imageBluetooth.setEnabled(bluetoothManaged);
     holder.imageBluetooth.setImageResource(bluetoothManaged ? R.drawable.ic_bluetooth_white_24dp
         : R.drawable.ic_bluetooth_disabled_white_24dp);
 
-    final boolean syncManaged = presenter.isSyncManaged();
+    final boolean syncManaged = presenter.isSyncManaged(position);
     holder.imageSync.setEnabled(syncManaged);
     holder.imageSync.setImageResource(
         syncManaged ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
 
-    holder.textWifi.setText(String.format("%d", presenter.getWifiDelay() / 1000));
-    holder.textData.setText(String.format("%d", presenter.getDataDelay() / 1000));
-    holder.textBluetooth.setText(String.format("%d", presenter.getBluetoothDelay() / 1000));
-    holder.textSync.setText(String.format("%d", presenter.getSyncDelay() / 1000));
+    holder.textWifi.setText(String.format("%d", presenter.getWifiDelay(position) / 1000));
+    holder.textData.setText(String.format("%d", presenter.getDataDelay(position) / 1000));
+    holder.textBluetooth.setText(String.format("%d", presenter.getBluetoothDelay(position) / 1000));
+    holder.textSync.setText(String.format("%d", presenter.getSyncDelay(position) / 1000));
 
-    holder.boot.setChecked(presenter.isBootEnabled());
-    holder.suspend.setChecked(presenter.isSuspendEnabled());
+    holder.boot.setChecked(presenter.isBootEnabled(position));
+    holder.suspend.setChecked(presenter.isSuspendEnabled(position));
 
-    final boolean wifiReopen = presenter.isWifiReOpenEnabled();
+    final boolean wifiReopen = presenter.isWifiReOpenEnabled(position);
     holder.imageReOpenWifi.setEnabled(wifiReopen);
     holder.imageReOpenWifi.setImageResource(wifiReopen ? R.drawable.ic_network_wifi_white_24dp
         : R.drawable.ic_signal_wifi_off_white_24dp);
 
-    final boolean dataReopen = presenter.isDataReOpenEnabled();
+    final boolean dataReopen = presenter.isDataReOpenEnabled(position);
     holder.imageReOpenData.setEnabled(dataReopen);
     holder.imageReOpenData.setImageResource(dataReopen ? R.drawable.ic_network_cell_white_24dp
         : R.drawable.ic_signal_cellular_off_white_24dp);
 
-    final boolean bluetoothReopen = presenter.isBluetoothReOpenEnabled();
+    final boolean bluetoothReopen = presenter.isBluetoothReOpenEnabled(position);
     holder.imageReOpenBluetooth.setEnabled(bluetoothReopen);
     holder.imageReOpenBluetooth.setImageResource(
         bluetoothReopen ? R.drawable.ic_bluetooth_white_24dp
             : R.drawable.ic_bluetooth_disabled_white_24dp);
 
-    final boolean syncReopen = presenter.isSyncReOpenEnabled();
+    final boolean syncReopen = presenter.isSyncReOpenEnabled(position);
     holder.imageReOpenSync.setEnabled(syncReopen);
     holder.imageReOpenSync.setImageResource(
         syncReopen ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
 
-    holder.textReOpenWifi.setText(String.format("%d", presenter.getWifiReOpenTime() / 1000));
-    holder.textReOpenData.setText(String.format("%d", presenter.getDataReOpenTime() / 1000));
+    holder.textReOpenWifi.setText(String.format("%d", presenter.getWifiReOpenTime(position) / 1000));
+    holder.textReOpenData.setText(String.format("%d", presenter.getDataReOpenTime(position) / 1000));
     holder.textReOpenBluetooth.setText(
-        String.format("%d", presenter.getBluetoothReOpenTime() / 1000));
-    holder.textReOpenSync.setText(String.format("%d", presenter.getSyncReOpenTime() / 1000));
+        String.format("%d", presenter.getBluetoothReOpenTime(position) / 1000));
+    holder.textReOpenSync.setText(String.format("%d", presenter.getSyncReOpenTime(position) / 1000));
 
 
         /* Need to do this or RecyclerView throws an error about updating while layouts are being
          made */
     holder.select.setOnCheckedChangeListener(null);
-    holder.select.setChecked(presenter.isActivePlan());
+    holder.select.setChecked(presenter.isActivePlan(position));
     holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
       @Override
       public final void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 /* Set the power plan */
-        presenter.setActivePlan();
+        presenter.setActivePlan(position);
       }
     });
   }

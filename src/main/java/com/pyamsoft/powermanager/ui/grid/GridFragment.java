@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -34,8 +35,6 @@ import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
-import com.pyamsoft.powermanager.ui.adapter.GridContentAdapter;
-import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperCallback;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -46,17 +45,18 @@ public final class GridFragment extends ExplanationFragment {
   /* Views */
   private FloatingActionButton fab;
   /* Listeners */
-  // TODO move into presenter
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerMonitor.ENABLED) {
 
         @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
             final String key) {
+          onEnabledStateChanged(sharedPreferences, key);
         }
       };
   private RecyclerView recyclerView;
   private ItemTouchHelper helper;
+  private GridContentAdapter adapter;
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
@@ -146,6 +146,9 @@ public final class GridFragment extends ExplanationFragment {
       recyclerView.setLayoutManager(null);
       recyclerView.setAdapter(null);
     }
+    if (adapter != null) {
+      adapter.destroy();
+    }
   }
 
   private void showFAB() {
@@ -169,6 +172,8 @@ public final class GridFragment extends ExplanationFragment {
             PersistentNotification.update(v.getContext());
           }
         }
+
+        setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
       }
     });
 
@@ -177,6 +182,8 @@ public final class GridFragment extends ExplanationFragment {
         return true;
       }
     });
+
+    setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
 
   private void registerListener() {
@@ -211,14 +218,26 @@ public final class GridFragment extends ExplanationFragment {
   }
 
   private void setupRecyclerView(final View v) {
-    final GridContentAdapter mainAdapter = new GridContentAdapter(this);
+    adapter = new GridContentAdapter(this);
     recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
     final StaggeredGridLayoutManager staggeredGridLayoutManager =
         new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(mainAdapter);
-    helper = new ItemTouchHelper(new ItemTouchHelperCallback(mainAdapter));
+    recyclerView.setAdapter(adapter);
+    helper = new ItemTouchHelper(new GridItemTouchCallback(adapter));
     helper.attachToRecyclerView(recyclerView);
+  }
+
+  public void onEnabledStateChanged(final SharedPreferences preferences, final String key) {
+    final boolean state = preferences.getBoolean(key, false);
+    setFABImage(state);
+  }
+
+  private void setFABImage(final boolean enabled) {
+    if (fab != null) {
+      fab.setImageDrawable(ContextCompat.getDrawable(getContext(),
+          enabled ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp));
+    }
   }
 }

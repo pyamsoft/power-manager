@@ -33,6 +33,7 @@ import com.pyamsoft.pydroid.util.StringUtil;
 public final class PowerPlanFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
+  private PowerPlanAdapter adapter;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -42,11 +43,12 @@ public final class PowerPlanFragment extends ExplanationFragment {
 
   @Override public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    adapter = new PowerPlanAdapter(getContext());
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(new PowerPlanAdapter());
+    recyclerView.setAdapter(adapter);
 
     setupExplanationString();
   }
@@ -56,6 +58,10 @@ public final class PowerPlanFragment extends ExplanationFragment {
     if (recyclerView != null) {
       recyclerView.setLayoutManager(null);
       recyclerView.setAdapter(null);
+    }
+
+    if (adapter != null) {
+      adapter.destroy();
     }
   }
 
