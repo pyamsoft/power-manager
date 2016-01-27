@@ -1,25 +1,17 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
-import java.lang.ref.WeakReference;
 
 /**
  * Detail interfaces have two floating action buttons
  */
-public class DetailPresenter extends Presenter<DetailInterface> {
+public final class DetailPresenter extends Presenter<DetailInterface> {
 
   private static final String TAG = DetailPresenter.class.getSimpleName();
   private DetailModel smallModel;
   private DetailModel largeModel;
-
-  public DetailPresenter() {
-    super();
-  }
 
   @Override public void bind(DetailInterface reference) {
     throw new IllegalBindException("Can't use bind without a context");
@@ -57,7 +49,6 @@ public class DetailPresenter extends Presenter<DetailInterface> {
     LogUtil.d(TAG, "onClickSmallFAB");
     final boolean newChecked = !smallModel.isFABChecked();
     smallModel.setFABChecked(newChecked);
-    // TODO update power plan and notification
     if (newChecked) {
       detail.onSmallFABChecked();
     } else {

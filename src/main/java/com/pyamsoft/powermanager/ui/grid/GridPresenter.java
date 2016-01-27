@@ -4,7 +4,7 @@ import android.content.Context;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public class GridPresenter extends Presenter<GridInterface> {
+public final class GridPresenter extends Presenter<GridInterface> {
 
   private static final String TAG = GridPresenter.class.getSimpleName();
   private GridModel model;

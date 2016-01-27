@@ -3,6 +3,7 @@ package com.pyamsoft.powermanager.ui.detail;
 import android.content.Context;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.powermanager.ui.BooleanRunnable;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
@@ -271,6 +272,9 @@ public final class DetailModel {
         final Context context = weakContext.get();
         if (context != null) {
           PersistentNotification.update(context);
+          final int index =
+              PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]);
+          PowerPlanUtil.with(context).setPlan(index);
         }
       }
     }

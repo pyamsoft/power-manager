@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
 
-public class GridModel {
+public final class GridModel {
 
   private final WeakReference<Context> weakContext;
 
