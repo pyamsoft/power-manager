@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.adapter.PowerPlanAdapter;
+import com.pyamsoft.powermanager.ui.plan.PowerPlanAdapter;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 

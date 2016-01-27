@@ -1,4 +1,4 @@
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.plan;
 
 public interface PowerPlanInterface {
 

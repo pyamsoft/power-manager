@@ -1,4 +1,4 @@
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.backend.service.MonitorService;

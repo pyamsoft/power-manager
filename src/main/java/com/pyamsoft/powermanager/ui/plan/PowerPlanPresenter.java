@@ -1,4 +1,4 @@
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
 import com.pyamsoft.pydroid.base.Presenter;
