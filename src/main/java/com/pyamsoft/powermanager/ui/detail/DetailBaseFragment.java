@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.fragment.AboutFragment;
@@ -327,12 +328,14 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
   @Override public void onLargeFABChecked() {
     if (largeFAB != null) {
       largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), largeIconOn));
+      MonitorService.updateService(getContext());
     }
   }
 
   @Override public void onLargeFABUnchecked() {
     if (largeFAB != null) {
       largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), largeIconOff));
+      MonitorService.updateService(getContext());
     }
   }
 

@@ -1,6 +1,7 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
+import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
 
@@ -96,7 +97,6 @@ public class DetailPresenter extends Presenter<DetailInterface> {
     LogUtil.d(TAG, "onClickLargeFAB");
     final boolean newChecked = !largeModel.isFABChecked();
     largeModel.setFABChecked(newChecked);
-    // TODO update power plan and notification
     if (newChecked) {
       detail.onLargeFABChecked();
     } else {
