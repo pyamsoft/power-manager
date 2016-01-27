@@ -1,6 +1,7 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
+import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.concurrent.Callable;
@@ -8,6 +9,8 @@ import java.util.concurrent.Callable;
 public final class DetailModel {
 
   private static final String TAG = DetailModel.class.getSimpleName();
+  private final Context context;
+  private int type;
 
   public static abstract class BooleanRunnable implements Runnable {
 
@@ -34,7 +37,8 @@ public final class DetailModel {
   private Callable<Boolean> getProp;
 
   public DetailModel(final Context c, final String target, final int type) {
-    final Context context = c.getApplicationContext();
+    context = c.getApplicationContext();
+    this.type = type;
     switch (type) {
       case FAB_TYPE_SMALL:
         LogUtil.d(TAG, "Initialize model for small FAB");
@@ -230,6 +234,9 @@ public final class DetailModel {
     if (setProp != null) {
       LogUtil.d(TAG, "FAB set checked: ", checked);
       setProp.run(checked);
+      if (type == FAB_TYPE_LARGE) {
+        MonitorService.updateNotification(context);
+      }
     }
   }
 }

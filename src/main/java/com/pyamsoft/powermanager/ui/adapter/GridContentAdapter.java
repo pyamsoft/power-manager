@@ -15,8 +15,13 @@
  */
 package com.pyamsoft.powermanager.ui.adapter;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +36,7 @@ import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
 import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperInterface;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -114,7 +120,7 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     }
 
     if (image != 0) {
-      Picasso.with(holder.image.getContext()).load(image).into(holder.image);
+      Picasso.with(holder.image.getContext()).load(image).into(holder);
 
       // KLUDGE because java.
       final int javaPlease = image;
@@ -157,8 +163,9 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     return true;
   }
 
-  public static final class ViewHolder extends RecyclerView.ViewHolder {
+  public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {
 
+    private final Handler handler = new Handler();
     public final LinearLayout mainHolder;
     public final ImageView image;
     public final TextView name;
@@ -168,6 +175,30 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
       mainHolder = (LinearLayout) itemView.findViewById(R.id.card_main_holder);
       name = (TextView) itemView.findViewById(R.id.card_name);
       image = (ImageView) itemView.findViewById(R.id.card_image);
+    }
+
+    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+      if (image != null) {
+        final Drawable drawable = new BitmapDrawable(image.getResources(), bitmap);
+        drawable.setAlpha(0);
+        image.setImageDrawable(drawable);
+        handler.post(new Runnable() {
+          @Override public void run() {
+            final ObjectAnimator animator = ObjectAnimator.ofInt(drawable, "alpha", 255);
+            animator.setTarget(drawable);
+            animator.setDuration(600L);
+            animator.start();
+          }
+        });
+      }
+    }
+
+    @Override public void onBitmapFailed(Drawable errorDrawable) {
+
+    }
+
+    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+
     }
   }
 }

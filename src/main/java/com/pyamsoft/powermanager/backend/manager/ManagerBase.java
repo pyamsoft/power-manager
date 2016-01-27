@@ -129,7 +129,7 @@ public abstract class ManagerBase {
       setManageState(GlobalPreferenceUtil.with(getApplicationContext()));
       PowerPlanUtil.with(getApplicationContext())
           .setPlan(PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
-      MonitorService.updateService(getApplicationContext());
+      MonitorService.updateNotification(getApplicationContext());
     }
 
     protected abstract void setManageState(GlobalPreferenceUtil preferenceUtil);

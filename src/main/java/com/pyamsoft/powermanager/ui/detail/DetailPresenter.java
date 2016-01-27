@@ -1,7 +1,6 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
 
@@ -24,7 +23,6 @@ public class DetailPresenter extends Presenter<DetailInterface> {
 
   public void bind(final Context context, DetailInterface reference) {
     super.bind(reference);
-    LogUtil.d(TAG, "Bind to reference: ", reference);
     smallModel = new DetailModel(context, reference.getTarget(), DetailModel.FAB_TYPE_SMALL);
     largeModel = new DetailModel(context, reference.getTarget(), DetailModel.FAB_TYPE_LARGE);
   }
@@ -33,8 +31,6 @@ public class DetailPresenter extends Presenter<DetailInterface> {
     super.unbind();
     smallModel = null;
     largeModel = null;
-
-    LogUtil.d(TAG, "Unbind from reference");
   }
 
   public boolean isSmallFABChecked() {

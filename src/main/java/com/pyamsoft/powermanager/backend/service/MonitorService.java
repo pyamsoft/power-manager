@@ -26,14 +26,19 @@ import com.pyamsoft.powermanager.backend.receiver.ScreenStateReceiver;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.pydroid.base.ServiceBase;
 import com.pyamsoft.pydroid.util.LogUtil;
+import com.pyamsoft.pydroid.util.NotificationUtil;
 
 public final class MonitorService extends ServiceBase {
 
   private static final String TAG = MonitorService.class.getSimpleName();
+  private static final String OTHER_CMD = MonitorService.class.getName() + ".other_cmd";
+  private static final String NOTIFICATION_ON = MonitorService.class.getName() + ".notification_on";
+  private static final String NOTIFICATION_OFF =
+      MonitorService.class.getName() + ".notification_off";
   private ScreenStateReceiver screenStateReceiver;
   private BatteryStateReceiver batteryStateReceiver;
   private GlobalPreferenceUtil preferenceUtil;
-  private PersistentNotification persistentNotification;
+  private PersistentNotification notification;
 
   public static void powerManagerService(final Context context) {
     final GlobalPreferenceUtil.PowerManagerMonitor p =
@@ -49,6 +54,32 @@ public final class MonitorService extends ServiceBase {
       // Completely stop the service
       killService(context);
     }
+  }
+
+  public static void stopService(final Context context) {
+    stopService(context, MonitorService.class);
+  }
+
+  public static void startService(final Context context) {
+    startService(context, MonitorService.class);
+  }
+
+  public static void killService(final Context context) {
+    killService(context, MonitorService.class);
+  }
+
+  public static void startPersistentNotification(final Context c) {
+    final Context context = c.getApplicationContext();
+    final Intent intent = new Intent(context, MonitorService.class);
+    intent.putExtra(OTHER_CMD, NOTIFICATION_ON);
+    context.startService(intent);
+  }
+
+  public static void stopPersistentNotification(final Context c) {
+    final Context context = c.getApplicationContext();
+    final Intent intent = new Intent(context, MonitorService.class);
+    intent.putExtra(OTHER_CMD, NOTIFICATION_OFF);
+    context.startService(intent);
   }
 
   @Override protected Class<? extends ServiceBase> getServiceClass() {
@@ -82,13 +113,30 @@ public final class MonitorService extends ServiceBase {
     screenStateReceiver = new ScreenStateReceiver();
     batteryStateReceiver = new BatteryStateReceiver();
     preferenceUtil = GlobalPreferenceUtil.with(this);
-    persistentNotification = PersistentNotification.with(getApplicationContext());
+    notification = PersistentNotification.with(this);
+  }
+
+  private void updatePersistentNotification(final Intent intent) {
+    if (intent == null) {
+      LogUtil.d(TAG, "Intent is NULL");
+      return;
+    }
+
+    final String state = intent.getStringExtra(OTHER_CMD);
+    if (state.equals(NOTIFICATION_ON)) {
+      LogUtil.e(TAG, "Start foreground notification");
+      startForeground(PersistentNotification.ID, notification.notification());
+    } else if (state.equals(NOTIFICATION_OFF)) {
+      LogUtil.e(TAG, "Stop foreground notification");
+      stopForeground(true);
+    } else {
+      LogUtil.e(TAG, "Invalid command");
+    }
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    return runServiceHook(intent, preferenceUtil.powerManagerMonitor().isNotificationEnabled(),
-        preferenceUtil.powerManagerMonitor().isForeground(), persistentNotification.notification(),
-        PersistentNotification.ID);
+    updatePersistentNotification(intent);
+    return runServiceHook(intent);
   }
 
   @Override public void onDestroy() {
@@ -97,11 +145,26 @@ public final class MonitorService extends ServiceBase {
     screenStateReceiver = null;
     batteryStateReceiver = null;
     preferenceUtil = null;
-    persistentNotification = null;
+    notification = null;
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
+  }
+
+  public static void updateNotification(final Context context) {
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+    // If user wants notification, figure out which notification
+    if (p.powerManagerMonitor().isNotificationEnabled()) {
+      if (p.powerManagerMonitor().isForeground()) {
+        MonitorService.startPersistentNotification(context);
+      } else {
+        NotificationUtil.start(context, PersistentNotification.with(context).notification(),
+            PersistentNotification.ID);
+      }
+    } else {
+      LogUtil.d(TAG, "Notification is not enabled, do nothing");
+    }
   }
 }
 

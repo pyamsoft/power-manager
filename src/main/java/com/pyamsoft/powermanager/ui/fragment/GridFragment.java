@@ -34,7 +34,6 @@ import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.adapter.GridContentAdapter;
 import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperCallback;
-import com.pyamsoft.pydroid.base.FABBase;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -45,7 +44,6 @@ public final class GridFragment extends ExplanationFragment {
 
   /* Views */
   private FloatingActionButton fab;
-  private FABBase fabBase;
   /* Listeners */
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
@@ -53,9 +51,6 @@ public final class GridFragment extends ExplanationFragment {
 
         @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
             final String key) {
-          if (fabBase != null) {
-            fabBase.setChecked(fabBase.isChecked());
-          }
         }
       };
   private RecyclerView recyclerView;
@@ -159,49 +154,21 @@ public final class GridFragment extends ExplanationFragment {
 
   private void setupFAB(final View v) {
     fab = (FloatingActionButton) v.findViewById(R.id.fab);
-    fabBase = new FABBase(fab, R.color.lightblueA200) {
-
-      private final WeakReference<GridFragment> wA = new WeakReference<>(GridFragment.this);
-
-      @Override public boolean isChecked() {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
-        return p.powerManagerMonitor().isEnabled();
-      }
-
-      @Override public void setChecked(boolean checked) {
-        final int d =
-            checked ? R.drawable.ic_pause_white_24dp : R.drawable.ic_play_arrow_white_24dp;
-        setFabImage(d);
-      }
-
-      @Override public void startService() {
-        final GridFragment a = wA.get();
-        if (a != null) {
-          MonitorService.powerManagerService(a.getContext());
-        }
-      }
-    };
 
     fab.setOnClickListener(new View.OnClickListener() {
 
       private final WeakReference<GridFragment> wA = new WeakReference<>(GridFragment.this);
 
       @Override public void onClick(View v) {
-        final GridFragment a = wA.get();
-        if (a != null) {
-          final FABBase f = a.fabBase;
-          f.setChecked(!f.isChecked());
-          f.startService();
-        }
+        MonitorService.powerManagerService(v.getContext());
       }
     });
+
     fab.setOnLongClickListener(new View.OnLongClickListener() {
       @Override public boolean onLongClick(View v) {
         return true;
       }
     });
-
-    fabBase.setChecked(fabBase.isChecked());
   }
 
   private void registerListener() {

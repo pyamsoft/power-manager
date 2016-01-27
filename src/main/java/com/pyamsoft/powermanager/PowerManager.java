@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.pydroid.base.ApplicationBase;
-import com.pyamsoft.pydroid.base.ServiceBase;
 
 public final class PowerManager extends ApplicationBase {
 
@@ -37,12 +36,8 @@ public final class PowerManager extends ApplicationBase {
       MonitorService.startService(getApplicationContext());
     } else if (p.powerManagerMonitor().isNotificationEnabled()) {
       // Just update notification from service
-      MonitorService.updateService(getApplicationContext());
+      MonitorService.updateNotification(getApplicationContext());
     }
-  }
-
-  @Override protected Class<? extends ServiceBase> setServiceClass() {
-    return MonitorService.class;
   }
 
   @Override protected String setRateString() {

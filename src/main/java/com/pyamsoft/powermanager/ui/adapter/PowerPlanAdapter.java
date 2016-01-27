@@ -27,15 +27,13 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapter.ViewHolder> {
+public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapter.ViewHolder>
+    implements PowerPlanInterface {
 
   private static final float SCALE_Y = 1f;
   private static final int POWER_PLAN_NUMBER = 9;
@@ -98,112 +96,89 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
         }
       }
     });
-    final Object[] plan = PowerPlanUtil.with(holder.itemView.getContext()).getPowerPlan(position);
-    setupCurrentLayoutForPlan(holder, plan);
+
+    setupCurrentLayoutForPlan(holder, position);
   }
 
-  private void setupCurrentLayoutForPlan(final ViewHolder holder, final Object[] plan) {
-    holder.name.setText(PowerPlanUtil.toString(plan[PowerPlanUtil.FIELD_NAME]));
+  private void setupCurrentLayoutForPlan(final ViewHolder holder, final int position) {
+    final PowerPlanPresenter presenter = new PowerPlanPresenter();
+    presenter.bind(holder.itemView.getContext(), this, position);
+    holder.name.setText(presenter.getName());
     holder.image.setImageResource(R.drawable.ic_settings_white_24dp);
 
-    final boolean wifiManaged = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MANAGE_WIFI]);
+    final boolean wifiManaged = presenter.isWifiManaged();
     holder.imageWifi.setEnabled(wifiManaged);
     holder.imageWifi.setImageResource(wifiManaged ? R.drawable.ic_network_wifi_white_24dp
         : R.drawable.ic_signal_wifi_off_white_24dp);
 
-    final boolean dataManaged = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MANAGE_DATA]);
+    final boolean dataManaged = presenter.isDataManaged();
     holder.imageData.setEnabled(dataManaged);
     holder.imageData.setImageResource(dataManaged ? R.drawable.ic_network_cell_white_24dp
         : R.drawable.ic_signal_cellular_off_white_24dp);
 
-    final boolean bluetoothManaged =
-        PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MANAGE_BLUETOOTH]);
+    final boolean bluetoothManaged = presenter.isBluetoothManaged();
     holder.imageBluetooth.setEnabled(bluetoothManaged);
     holder.imageBluetooth.setImageResource(bluetoothManaged ? R.drawable.ic_bluetooth_white_24dp
         : R.drawable.ic_bluetooth_disabled_white_24dp);
 
-    final boolean syncManaged = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MANAGE_SYNC]);
+    final boolean syncManaged = presenter.isSyncManaged();
     holder.imageSync.setEnabled(syncManaged);
     holder.imageSync.setImageResource(
         syncManaged ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
 
-    final long delayWifi = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_DELAY_WIFI]);
-    holder.textWifi.setText(String.format("%d", delayWifi / 1000));
+    holder.textWifi.setText(String.format("%d", presenter.getWifiDelay() / 1000));
+    holder.textData.setText(String.format("%d", presenter.getDataDelay() / 1000));
+    holder.textBluetooth.setText(String.format("%d", presenter.getBluetoothDelay() / 1000));
+    holder.textSync.setText(String.format("%d", presenter.getSyncDelay() / 1000));
 
-    final long delayData = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_DELAY_DATA]);
-    holder.textData.setText(String.format("%d", delayData / 1000));
+    holder.boot.setChecked(presenter.isBootEnabled());
+    holder.suspend.setChecked(presenter.isSuspendEnabled());
 
-    final long delayBluetooth = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_DELAY_BLUETOOTH]);
-    holder.textBluetooth.setText(String.format("%d", delayBluetooth / 1000));
-
-    final long delaySync = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_DELAY_SYNC]);
-    holder.textSync.setText(String.format("%d", delaySync / 1000));
-
-    final boolean bootEnabled = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MISC_BOOT]);
-    holder.boot.setChecked(bootEnabled);
-
-    final boolean suspendPlugged = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_MISC_SUSPEND]);
-    holder.suspend.setChecked(suspendPlugged);
-
-    final boolean wifiReopen = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_REOPEN_WIFI]);
+    final boolean wifiReopen = presenter.isWifiReOpenEnabled();
     holder.imageReOpenWifi.setEnabled(wifiReopen);
     holder.imageReOpenWifi.setImageResource(wifiReopen ? R.drawable.ic_network_wifi_white_24dp
         : R.drawable.ic_signal_wifi_off_white_24dp);
 
-    final boolean dataReopen = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_REOPEN_DATA]);
+    final boolean dataReopen = presenter.isDataReOpenEnabled();
     holder.imageReOpenData.setEnabled(dataReopen);
     holder.imageReOpenData.setImageResource(dataReopen ? R.drawable.ic_network_cell_white_24dp
         : R.drawable.ic_signal_cellular_off_white_24dp);
 
-    final boolean bluetoothReopen =
-        PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_REOPEN_BLUETOOTH]);
+    final boolean bluetoothReopen = presenter.isBluetoothReOpenEnabled();
     holder.imageReOpenBluetooth.setEnabled(bluetoothReopen);
     holder.imageReOpenBluetooth.setImageResource(
         bluetoothReopen ? R.drawable.ic_bluetooth_white_24dp
             : R.drawable.ic_bluetooth_disabled_white_24dp);
 
-    final boolean syncReopen = PowerPlanUtil.toBoolean(plan[PowerPlanUtil.FIELD_REOPEN_SYNC]);
+    final boolean syncReopen = presenter.isSyncReOpenEnabled();
     holder.imageReOpenSync.setEnabled(syncReopen);
     holder.imageReOpenSync.setImageResource(
         syncReopen ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
 
-    final long timeWifi = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_REOPEN_TIME_WIFI]);
-    holder.textReOpenWifi.setText(String.format("%d", timeWifi / 1000));
-
-    final long timeData = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_REOPEN_TIME_DATA]);
-    holder.textReOpenData.setText(String.format("%d", timeData / 1000));
-
-    final long timeBluetooth =
-        PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_REOPEN_TIME_BLUETOOTH]);
-    holder.textReOpenBluetooth.setText(String.format("%d", timeBluetooth / 1000));
-
-    final long timeSync = PowerPlanUtil.toLong(plan[PowerPlanUtil.FIELD_REOPEN_TIME_SYNC]);
-    holder.textReOpenSync.setText(String.format("%d", timeSync / 1000));
+    holder.textReOpenWifi.setText(String.format("%d", presenter.getWifiReOpenTime() / 1000));
+    holder.textReOpenData.setText(String.format("%d", presenter.getDataReOpenTime() / 1000));
+    holder.textReOpenBluetooth.setText(
+        String.format("%d", presenter.getBluetoothReOpenTime() / 1000));
+    holder.textReOpenSync.setText(String.format("%d", presenter.getSyncReOpenTime() / 1000));
 
 
         /* Need to do this or RecyclerView throws an error about updating while layouts are being
          made */
     holder.select.setOnCheckedChangeListener(null);
-
-    final int currentPlan =
-        GlobalPreferenceUtil.with(holder.itemView.getContext()).powerPlans().getActivePlan();
-    final Object[] current =
-        PowerPlanUtil.with(holder.itemView.getContext()).getPowerPlan(currentPlan);
-    holder.select.setChecked(current == plan);
+    holder.select.setChecked(presenter.isActivePlan());
     holder.select.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
       @Override
       public final void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 /* Set the power plan */
-        PowerPlanUtil.with(buttonView.getContext())
-            .setPlan(PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]));
-
-        notifyDataSetChanged();
-
-                /* Update notification */
-        MonitorService.updateService(buttonView.getContext());
+        presenter.setActivePlan();
       }
     });
+  }
+
+  @Override public void onSetAsActivePlan() {
+    LogUtil.d(TAG, "onSetAsActivePlan");
+    notifyDataSetChanged();
   }
 
   @Override public int getItemCount() {

@@ -185,7 +185,7 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
             }
           }
           if (ret) {
-            MonitorService.updateService(context);
+            MonitorService.updateNotification(context);
           }
           break;
         case Intent.ACTION_POWER_CONNECTED:

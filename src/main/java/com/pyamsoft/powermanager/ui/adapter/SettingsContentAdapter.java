@@ -274,7 +274,7 @@ public final class SettingsContentAdapter
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
         } else {
-          MonitorService.updateService(buttonView.getContext());
+          MonitorService.updateNotification(buttonView.getContext());
         }
         setIcon(holder, position);
       }
