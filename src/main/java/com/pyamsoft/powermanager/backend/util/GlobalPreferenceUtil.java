@@ -309,13 +309,21 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
   public static final class PowerManagerMonitor extends PreferenceBase {
 
     private static final String TAG = PowerManagerMonitor.class.getName();
+    public static final String STARTED_BY_NOTIFICATION = TAG + ".started_by_notification";
     public static final String ENABLED = TAG + ".enabled";
     public static final String FOREGROUND = TAG + ".foreground";
     public static final String NOTIFICATION = TAG + ".notification";
-    private static final String PREFERENCE = PowerManager.createPreferenceFileName(TAG);
 
     public PowerManagerMonitor(final Context context) {
       super(context);
+    }
+
+    public boolean isStartedByNotification() {
+      return getBoolean(STARTED_BY_NOTIFICATION, false);
+    }
+
+    public void setStartedByNotification(final boolean started) {
+      putBoolean(STARTED_BY_NOTIFICATION, started);
     }
 
     public boolean isEnabled() {

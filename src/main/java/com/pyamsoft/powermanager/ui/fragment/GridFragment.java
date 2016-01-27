@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
@@ -38,13 +39,13 @@ import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
-import java.lang.ref.WeakReference;
 
 public final class GridFragment extends ExplanationFragment {
 
   /* Views */
   private FloatingActionButton fab;
   /* Listeners */
+  // TODO move into presenter
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerMonitor.ENABLED) {
@@ -157,10 +158,16 @@ public final class GridFragment extends ExplanationFragment {
 
     fab.setOnClickListener(new View.OnClickListener() {
 
-      private final WeakReference<GridFragment> wA = new WeakReference<>(GridFragment.this);
-
       @Override public void onClick(View v) {
         MonitorService.powerManagerService(v.getContext());
+        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(v.getContext());
+        if (p.powerManagerMonitor().isNotificationEnabled()) {
+          if (p.powerManagerMonitor().isForeground()) {
+            MonitorService.startForeground(v.getContext());
+          } else {
+            PersistentNotification.update(v.getContext());
+          }
+        }
       }
     });
 

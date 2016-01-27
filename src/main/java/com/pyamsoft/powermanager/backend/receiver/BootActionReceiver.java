@@ -27,12 +27,10 @@ import com.pyamsoft.pydroid.util.LogUtil;
 public final class BootActionReceiver extends BroadcastReceiver {
 
   private static final String TAG = BootActionReceiver.class.getSimpleName();
-  private static ComponentName cmp = null;
 
   public static void setBootEnabled(final Context context, final boolean bootEnabled) {
-    if (cmp == null) {
-      cmp = new ComponentName(context.getApplicationContext(), BootActionReceiver.class);
-    }
+    final ComponentName cmp =
+        new ComponentName(context.getApplicationContext(), BootActionReceiver.class);
     final int componentState = bootEnabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
         : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
     context.getApplicationContext()
@@ -42,9 +40,8 @@ public final class BootActionReceiver extends BroadcastReceiver {
   }
 
   public static boolean isBootEnabled(final Context context) {
-    if (cmp == null) {
-      cmp = new ComponentName(context.getApplicationContext(), BootActionReceiver.class);
-    }
+    final ComponentName cmp =
+        new ComponentName(context.getApplicationContext(), BootActionReceiver.class);
     final int componentState =
         context.getApplicationContext().getPackageManager().getComponentEnabledSetting(cmp);
     return componentState == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;

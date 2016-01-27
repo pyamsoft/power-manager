@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
@@ -129,7 +130,7 @@ public abstract class ManagerBase {
       setManageState(GlobalPreferenceUtil.with(getApplicationContext()));
       PowerPlanUtil.with(getApplicationContext())
           .setPlan(PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
-      MonitorService.updateNotification(getApplicationContext());
+      PersistentNotification.update(getApplicationContext());
     }
 
     protected abstract void setManageState(GlobalPreferenceUtil preferenceUtil);

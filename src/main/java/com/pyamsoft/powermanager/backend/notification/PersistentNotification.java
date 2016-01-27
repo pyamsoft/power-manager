@@ -96,6 +96,12 @@ public final class PersistentNotification {
     return instance;
   }
 
+  public static void update(final Context context) {
+    LogUtil.d(TAG, "Update persistent notification");
+    NotificationUtil.start(context, PersistentNotification.with(context).notification(),
+        PersistentNotification.ID);
+  }
+
   private int getToggle() {
     return preferenceUtil.powerManagerMonitor().isEnabled() ? R.drawable.ic_pause_white_24dp
         : R.drawable.ic_play_arrow_white_24dp;
@@ -149,6 +155,14 @@ public final class PersistentNotification {
 
     @Override protected void onHandleIntent(Intent intent) {
       MonitorService.powerManagerService(getApplicationContext());
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
+      if (p.powerManagerMonitor().isNotificationEnabled()) {
+        if (p.powerManagerMonitor().isForeground()) {
+          MonitorService.startForeground(this);
+        } else {
+          PersistentNotification.update(this);
+        }
+      }
     }
   }
 }

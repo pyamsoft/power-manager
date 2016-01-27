@@ -69,6 +69,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
   private int smallIconOff;
   private AlertDialog largeFABDialog;
   private AlertDialog smallFABDialog;
+  // TODO move into presenter
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,

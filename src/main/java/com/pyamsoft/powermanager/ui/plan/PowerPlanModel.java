@@ -1,6 +1,7 @@
 package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
@@ -47,7 +48,7 @@ public final class PowerPlanModel {
   public void setActivePlan() {
     LogUtil.d(TAG, "setActivePlan: ", index);
     PowerPlanUtil.with(context).setPlan(index);
-    MonitorService.updateNotification(context);
+    PersistentNotification.update(context);
   }
 
   public boolean isActivePlan() {

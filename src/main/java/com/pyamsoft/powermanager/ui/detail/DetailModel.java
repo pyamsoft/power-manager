@@ -1,8 +1,10 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.BooleanRunnable;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.concurrent.Callable;
 
@@ -11,24 +13,6 @@ public final class DetailModel {
   private static final String TAG = DetailModel.class.getSimpleName();
   private final Context context;
   private int type;
-
-  public static abstract class BooleanRunnable implements Runnable {
-
-    private boolean state;
-
-    public final void run(final boolean newState) {
-      setState(newState);
-      run();
-    }
-
-    public final boolean isState() {
-      return state;
-    }
-
-    public final void setState(boolean state) {
-      this.state = state;
-    }
-  }
 
   public static final int FAB_TYPE_SMALL = 0;
   public static final int FAB_TYPE_LARGE = 1;
@@ -235,7 +219,7 @@ public final class DetailModel {
       LogUtil.d(TAG, "FAB set checked: ", checked);
       setProp.run(checked);
       if (type == FAB_TYPE_LARGE) {
-        MonitorService.updateNotification(context);
+        PersistentNotification.update(context);
       }
     }
   }

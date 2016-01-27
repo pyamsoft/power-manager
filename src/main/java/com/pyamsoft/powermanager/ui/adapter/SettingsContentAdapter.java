@@ -29,75 +29,24 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.receiver.BootActionReceiver;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
+import com.pyamsoft.powermanager.ui.fragment.SettingsInterface;
+import com.pyamsoft.powermanager.ui.fragment.SettingsModel;
+import com.pyamsoft.powermanager.ui.fragment.SettingsPresenter;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
-import com.pyamsoft.pydroid.util.LogUtil;
-import com.pyamsoft.pydroid.util.NotificationUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
+import java.lang.ref.WeakReference;
 
 public final class SettingsContentAdapter
-    extends RecyclerView.Adapter<SettingsContentAdapter.ViewHolder> {
-
-  private static final int POSITION_BOOT = 0;
-  private static final int POSITION_SUSPEND = 1;
-  private static final int POSITION_NOTIFICATION = 2;
-  private static final int POSITION_FOREGROUND = 3;
-  private static final int POSITION_RESET = 4;
+    extends RecyclerView.Adapter<SettingsContentAdapter.ViewHolder> implements SettingsInterface {
   private static final int TYPE_NORMAL = 0;
   private static final int TYPE_RESET = 1;
-  private static final int NUMBER_ITEMS = 5;
-  private static final String TAG = SettingsContentAdapter.class.getSimpleName();
-
-  private static void showResetDialog(final Context c) {
-    new AlertDialog.Builder(c).setTitle(c.getString(R.string.reset_settings_title))
-        .setCancelable(false)
-        .setIcon(R.drawable.ic_warning_white_24dp)
-        .setMessage(c.getString(R.string.reset_settings_msg))
-        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-          @Override public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-            factoryReset(c);
-          }
-        })
-        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-
-          @Override public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        })
-        .create()
-        .show();
-  }
-
-  private static void factoryReset(final Context c) {
-    MonitorService.stopService(c);
-    NotificationUtil.stop(c, PersistentNotification.ID);
-    MonitorService.killService(c);
-    LogUtil.i(TAG, c.getString(R.string.close_app_msg));
-    // Boot is handled outside of preferences, explicitly set it back to false, the default
-    BootActionReceiver.setBootEnabled(c, false);
-    final PowerTriggerDataSource source = PowerTriggerDataSource.with(c);
-    source.open();
-    if (source.isOpened()) {
-      source.deleteAllTriggers();
-      source.close();
-    }
-    GlobalPreferenceUtil.with(c).clear();
-    android.os.Process.killProcess(android.os.Process.myPid());
-  }
 
   @Override public int getItemViewType(int position) {
     int type;
     switch (position) {
-      case POSITION_RESET:
+      case SettingsModel.POSITION_RESET:
         type = TYPE_RESET;
         break;
       default:
@@ -123,208 +72,153 @@ public final class SettingsContentAdapter
 
   @Override
   public void onBindViewHolder(final SettingsContentAdapter.ViewHolder holder, final int position) {
-    switch (position) {
-      case POSITION_RESET:
-        setResetButtonIcon(holder);
-        setResetButtonOnClick(holder);
-        break;
-      default:
-        setIcon(holder, position);
-        setIconEnabledState(holder, position);
-        setOnClick(holder, position);
-        break;
+    final Context context = holder.itemView.getContext();
+    final SettingsPresenter presenter = new SettingsPresenter();
+    presenter.bind(holder, this, position);
+
+    final boolean isReset = presenter.isViewTypeReset();
+    final String title = presenter.getTitle();
+    final String explanation = presenter.getExplanation();
+    final Spannable span = StringUtil.createBuilder(title, explanation);
+    fillSpannable(context, span, title.length());
+
+    final int resId =
+        isReset ? R.drawable.ic_warning_white_24dp : R.drawable.ic_settings_white_24dp;
+    if (isReset) {
+      holder.resetButton.setText(span);
+      holder.image.setBackground(DrawableUtil.createOval(context, R.color.red500));
+      holder.resetButton.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          presenter.onClick();
+        }
+      });
+    } else {
+      holder.image.setEnabled(presenter.isChecked() && presenter.isEnabled());
+      holder.switchCompat.setOnCheckedChangeListener(null);
+      holder.switchCompat.setText(span);
+      holder.switchCompat.setChecked(presenter.isChecked());
+      holder.switchCompat.setEnabled(presenter.isEnabled());
+      holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+          presenter.onClick(isChecked);
+        }
+      });
     }
-  }
 
-  private void setResetButtonIcon(final ViewHolder holder) {
-    holder.image.setBackground(DrawableUtil.createOval(holder.image.getContext(), R.color.red500));
-    holder.image.setImageResource(R.drawable.ic_warning_white_24dp);
-  }
-
-  private void setResetButtonOnClick(final ViewHolder holder) {
-    final String text = holder.resetButton.getContext().getString(R.string.reset_all_settings);
-    holder.resetButton.setText(text);
-    holder.resetButton.setOnClickListener(new View.OnClickListener() {
-
-      @Override public void onClick(View v) {
-        SettingsContentAdapter.showResetDialog(v.getContext());
-      }
-    });
+    holder.image.setImageResource(resId);
   }
 
   @Override public int getItemCount() {
-    return NUMBER_ITEMS;
+    return SettingsModel.NUMBER_ITEMS;
   }
 
-  private void setIconEnabledState(final ViewHolder holder, final int position) {
-    final Context c = holder.itemView.getContext();
-    boolean enabled;
-    Spannable span;
-    String title;
-    String explain;
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
-    switch (position) {
-      case POSITION_BOOT:
-        enabled = BootActionReceiver.isBootEnabled(c);
-        title = c.getString(R.string.boot_enabled) + "\n";
-        explain = "Start Power Manager when device starts";
-        break;
-      case POSITION_SUSPEND:
-        enabled = p.powerManagerActive().isSuspendPlugged();
-        title = c.getString(R.string.suspend_charging) + "\n";
-        explain = "Suspend Power Manager functions while charging";
-        break;
-      case POSITION_NOTIFICATION:
-        enabled = p.powerManagerMonitor().isNotificationEnabled();
-        title = c.getString(R.string.enable_notification) + "\n";
-        explain = "Show a persistent notification in the Notification Drawer";
-        break;
-      case POSITION_FOREGROUND:
-        enabled = p.powerManagerMonitor().isForeground();
-        title = c.getString(R.string.enable_foreground) + "\n";
-        explain = "Increase the memory used by Power Manager in exchange for better performance";
-        break;
-      default:
-        enabled = false;
-        title = null;
-        explain = null;
+  private void fillSpannable(final Context context, final Spannable span, final int titleLength) {
+    final int smallColor =
+        StringUtil.getTextColorFromAppearance(context, android.R.attr.textAppearanceSmall);
+    final int smallSize =
+        StringUtil.getTextSizeFromAppearance(context, android.R.attr.textAppearanceSmall);
+    if (smallColor != -1) {
+      StringUtil.colorSpan(span, titleLength, span.length(), smallColor);
     }
-    if (title != null) {
-      span = StringUtil.createBuilder(title, explain);
-      final int smallColor =
-          StringUtil.getTextColorFromAppearance(c, android.R.attr.textAppearanceSmall);
-      final int smallSize =
-          StringUtil.getTextSizeFromAppearance(c, android.R.attr.textAppearanceSmall);
-      if (smallColor != -1) {
-        StringUtil.colorSpan(span, title.length(), span.length(), smallColor);
-      }
 
-      if (smallSize != -1) {
-        StringUtil.sizeSpan(span, title.length(), span.length(), smallSize);
-      }
-
-      holder.switchCompat.setText(span);
-      holder.switchCompat.setChecked(enabled);
+    if (smallSize != -1) {
+      StringUtil.sizeSpan(span, titleLength, span.length(), smallSize);
     }
   }
 
-  private void setIcon(final ViewHolder holder, final int position) {
-    final Context c = holder.itemView.getContext();
-    boolean enabled;
-    int resId;
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
-    switch (position) {
-      case POSITION_BOOT:
-        enabled = BootActionReceiver.isBootEnabled(c);
-        resId = R.drawable.ic_settings_white_24dp;
-        break;
-      case POSITION_SUSPEND:
-        enabled = p.powerManagerActive().isSuspendPlugged();
-        resId = R.drawable.ic_settings_white_24dp;
-        break;
-      case POSITION_NOTIFICATION:
-        enabled = p.powerManagerMonitor().isNotificationEnabled();
-        resId = R.drawable.ic_settings_white_24dp;
-        break;
-      case POSITION_FOREGROUND:
-        enabled = p.powerManagerMonitor().isForeground();
-        resId = R.drawable.ic_settings_white_24dp;
-        break;
-      default:
-        enabled = false;
-        resId = 0;
-    }
+  @Override
+  public void onResetRequested(final SettingsPresenter presenter, final ViewHolder holder) {
+    final Context context = holder.itemView.getContext();
+    new AlertDialog.Builder(context).setTitle(context.getString(R.string.reset_settings_title))
+        .setCancelable(false)
+        .setIcon(R.drawable.ic_warning_white_24dp)
+        .setMessage(context.getString(R.string.reset_settings_msg))
+        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-    if (resId != 0) {
-      holder.image.setEnabled(enabled);
-      holder.image.setImageResource(resId);
-    }
-  }
+          private final WeakReference<SettingsPresenter> weakPresenter =
+              new WeakReference<>(presenter);
 
-  private void setOnClick(final ViewHolder holder, final int position) {
-    holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-      @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
-        final boolean oldNotificationState = p.powerManagerMonitor().isNotificationEnabled();
-        final boolean oldForegroundState = p.powerManagerMonitor().isForeground();
-
-        boolean changeNotification;
-        boolean updateNotification;
-        switch (position) {
-          case POSITION_BOOT:
-            BootActionReceiver.setBootEnabled(buttonView.getContext(), isChecked);
-            updateNotification = true;
-            changeNotification = false;
-            break;
-          case POSITION_SUSPEND:
-            p.powerManagerActive().setSuspendPlugged(isChecked);
-            updateNotification = true;
-            changeNotification = false;
-            break;
-          case POSITION_NOTIFICATION:
-            p.powerManagerMonitor().setNotificationEnabled(isChecked);
-            updateNotification = false;
-            changeNotification = true;
-            break;
-          case POSITION_FOREGROUND:
-            p.powerManagerMonitor().setForeground(isChecked);
-            updateNotification = false;
-            changeNotification = true;
-            break;
-          default:
-            updateNotification = false;
-            changeNotification = false;
-        }
-        if (updateNotification) {
-          LogUtil.d(TAG, "Update state of running notification");
-          final PowerPlanUtil powerPlan = PowerPlanUtil.with(holder.itemView.getContext());
-          powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
-          powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_SUSPEND, isChecked);
-          powerPlan.setPlan(
-              PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
-        } else {
-          // If either notification or foreground were selected
-          if (changeNotification) {
-            LogUtil.d(TAG, "Change state of running notification");
-            // Notification may need to be stopped if it was running before and is not now
-            // Some delay may make these values unreliable if we read them here after they were applied.
-            // Check the current index to see which is safe to read and which we should just flip from above
-            final boolean isEnabled = (position == POSITION_NOTIFICATION) ? isChecked
-                : p.powerManagerMonitor().isNotificationEnabled();
-            final boolean isForeground = (position == POSITION_FOREGROUND) ? isChecked
-                : p.powerManagerMonitor().isForeground();
-            if (oldNotificationState && !isEnabled) {
-              LogUtil.d(TAG, "Notification was enabled but is no longer");
-              stopNotification(buttonView.getContext(), false, oldForegroundState);
-            } else if (oldForegroundState && !isForeground) {
-              LogUtil.d(TAG, "Notification was foreground but is no longer");
-              stopNotification(buttonView.getContext(), isEnabled, true);
-            } else {
-              LogUtil.d(TAG, "Notification was either enabled or pushed to foreground");
-              MonitorService.updateNotification(buttonView.getContext());
+          @Override public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+            final SettingsPresenter p = weakPresenter.get();
+            if (p != null) {
+              p.onResetConfirmed();
             }
           }
-        }
-        setIcon(holder, position);
-      }
-    });
+        })
+        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+          @Override public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        })
+        .create()
+        .show();
   }
 
-  private static void stopNotification(final Context context, final boolean isEnabled,
-      final boolean wasForeground) {
-    // If it was in the foreground, we need to call stop persistent first
-    if (wasForeground) {
-      LogUtil.d(TAG, "Notification was in foreground");
-      MonitorService.stopPersistentNotification(context);
+  @Override public void onBootEnabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(true);
+      }
     }
+  }
 
-    if (isEnabled) {
-      LogUtil.d(TAG, "Foreground was stopped but notification is still active");
-      MonitorService.updateNotification(context);
-    } else {
-      LogUtil.d(TAG, "Stop normal notification");
-      NotificationUtil.stop(context, PersistentNotification.ID);
+  @Override public void onBootDisabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(false);
+      }
+    }
+  }
+
+  @Override public void onSuspendEnabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(true);
+      }
+    }
+  }
+
+  @Override public void onSuspendDisabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(false);
+      }
+    }
+  }
+
+  @Override public void onNotificationEnabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(true);
+      }
+    }
+    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+  }
+
+  @Override public void onNotificationDisabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(false);
+      }
+    }
+    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+  }
+
+  @Override public void onForegroundEnabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(true);
+      }
+    }
+  }
+
+  @Override public void onForegroundDisabled(ViewHolder holder) {
+    if (holder != null) {
+      if (holder.image != null) {
+        holder.image.setEnabled(false);
+      }
     }
   }
 

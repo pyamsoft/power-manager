@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.backend.manager.ManagerBluetooth;
 import com.pyamsoft.powermanager.backend.manager.ManagerData;
 import com.pyamsoft.powermanager.backend.manager.ManagerSync;
 import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
+import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
@@ -185,7 +186,7 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
             }
           }
           if (ret) {
-            MonitorService.updateNotification(context);
+            PersistentNotification.update(context);
           }
           break;
         case Intent.ACTION_POWER_CONNECTED:
