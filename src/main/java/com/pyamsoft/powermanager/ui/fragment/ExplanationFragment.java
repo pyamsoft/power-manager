@@ -34,7 +34,7 @@ public abstract class ExplanationFragment extends Fragment {
 
   abstract Spannable setupExplanationString();
 
-  abstract int getBackgroundColor();
+  public abstract int getBackgroundColor();
 
   @Override public boolean onOptionsItemSelected(final MenuItem item) {
     final int itemId = item.getItemId();

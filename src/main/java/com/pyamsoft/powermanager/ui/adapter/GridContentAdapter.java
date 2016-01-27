@@ -28,7 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.ui.fragment.DetailBaseFragment;
+import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
 import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperInterface;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;

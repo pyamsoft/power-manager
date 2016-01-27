@@ -166,15 +166,18 @@ public final class ActiveService extends IntentService {
   private static boolean disable(final Context context, final ManagerBase manager,
       final boolean isManaged, final boolean isCharging, final long waitTime) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    final boolean suspendOnPlugged =
-        preferenceUtil.powerManagerActive().isSuspendPlugged() && isCharging;
+    final boolean suspendOnPlugged = preferenceUtil.powerManagerActive().isSuspendPlugged();
     boolean controlled = false;
-    if (isManaged && !suspendOnPlugged && manager.isEnabled()) {
-      manager.disable(waitTime);
-      LogUtil.d(TAG, manager.getTag(), context.getString(R.string.radio_disable_in), waitTime);
-      controlled = true;
+    if (suspendOnPlugged && isCharging) {
+      LogUtil.d(TAG, manager.getTag(), "Disabled while charging");
     } else {
-      LogUtil.d(TAG, manager.getTag(), context.getString(R.string.radio_not_managed));
+      if (isManaged && manager.isEnabled()) {
+        manager.disable(waitTime);
+        LogUtil.d(TAG, manager.getTag(), context.getString(R.string.radio_disable_in), waitTime);
+        controlled = true;
+      } else {
+        LogUtil.d(TAG, manager.getTag(), context.getString(R.string.radio_not_managed));
+      }
     }
     return controlled;
   }
