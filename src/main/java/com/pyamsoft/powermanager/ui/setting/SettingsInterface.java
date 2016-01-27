@@ -21,4 +21,6 @@ public interface SettingsInterface {
   void onForegroundEnabled();
 
   void onForegroundDisabled();
+
+  void onForegroundAffected();
 }

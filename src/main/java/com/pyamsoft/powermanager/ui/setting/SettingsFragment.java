@@ -15,6 +15,7 @@
  */
 package com.pyamsoft.powermanager.ui.setting;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,13 +27,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
+import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class SettingsFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
+  private SettingsContentAdapter adapter;
+  private PreferenceBase.OnSharedPreferenceChangeListener listener =
+      new PreferenceBase.OnSharedPreferenceChangeListener(
+          GlobalPreferenceUtil.PowerManagerMonitor.ENABLED,
+          GlobalPreferenceUtil.PowerManagerMonitor.NOTIFICATION) {
+        @Override
+        protected void preferenceChanged(SharedPreferences sharedPreferences, String key) {
+          if (adapter != null) {
+            adapter.onForegroundAffected();
+          }
+        }
+      };
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -40,13 +55,24 @@ public final class SettingsFragment extends ExplanationFragment {
     return inflater.inflate(R.layout.fragment_recyclerview, container, false);
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    adapter = new SettingsContentAdapter();
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(new SettingsContentAdapter());
+    recyclerView.setAdapter(adapter);
 
     setupExplanationString();
   }

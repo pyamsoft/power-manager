@@ -240,6 +240,10 @@ public final class SettingsContentAdapter
     notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
   }
 
+  @Override public void onForegroundAffected() {
+    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+  }
+
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     private final ImageView image;
