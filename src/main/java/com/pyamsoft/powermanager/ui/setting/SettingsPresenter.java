@@ -3,32 +3,25 @@ package com.pyamsoft.powermanager.ui.setting;
 import android.content.Context;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
-import java.lang.ref.WeakReference;
 
 public final class SettingsPresenter extends Presenter<SettingsInterface> {
 
   private static final String TAG = SettingsPresenter.class.getSimpleName();
   private SettingsModel model;
-  private WeakReference<Context> context;
 
   @Override public void bind(SettingsInterface reference) {
     throw new IllegalBindException("Cannot bind without position and Context");
   }
 
   // TODO Remove position call from constructor
-  public void bind(final Context context, final SettingsInterface reference, final int position) {
+  public void bind(final Context context, final SettingsInterface reference) {
     super.bind(reference);
-    this.context = new WeakReference<>(context);
-    this.model = new SettingsModel(context, position);
+    this.model = new SettingsModel(context);
   }
 
   @Override public void unbind() {
     super.unbind();
     model = null;
-    if (context != null) {
-      context.clear();
-      context = null;
-    }
   }
 
   public boolean isBootEnabled() {
@@ -134,10 +127,7 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
       return;
     }
 
-    final Context c = context.get();
-    if (c != null) {
-      reference.onResetRequested(this, c);
-    }
+    reference.onResetRequested(this, model.provideResetContext());
   }
 
   public void onResetConfirmed() {
@@ -149,11 +139,11 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
     model.doReset();
   }
 
-  public String getTitle() {
-    return model.getTitle();
+  public String getTitle(final int position) {
+    return model.getTitle(position);
   }
 
-  public String getExplanation() {
-    return model.getExplanation();
+  public String getExplanation(final int position) {
+    return model.getExplanation(position);
   }
 }

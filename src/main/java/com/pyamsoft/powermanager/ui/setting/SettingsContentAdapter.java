@@ -40,6 +40,16 @@ public final class SettingsContentAdapter
     extends RecyclerView.Adapter<SettingsContentAdapter.ViewHolder> implements SettingsInterface {
   private static final int TYPE_NORMAL = 0;
   private static final int TYPE_RESET = 1;
+  private SettingsPresenter presenter;
+
+  public SettingsContentAdapter(final Context context) {
+    presenter = new SettingsPresenter();
+    presenter.bind(context, this);
+  }
+
+  public void destroy() {
+    presenter.unbind();
+  }
 
   @Override public int getItemViewType(int position) {
     int type;
@@ -71,12 +81,10 @@ public final class SettingsContentAdapter
   @Override
   public void onBindViewHolder(final SettingsContentAdapter.ViewHolder holder, final int position) {
     final Context context = holder.itemView.getContext();
-    final SettingsPresenter presenter = new SettingsPresenter();
-    presenter.bind(context, this, position);
 
     final boolean isReset = presenter.isViewTypeReset(position);
-    final String title = presenter.getTitle();
-    final String explanation = presenter.getExplanation();
+    final String title = presenter.getTitle(position);
+    final String explanation = presenter.getExplanation(position);
     final Spannable span = StringUtil.createBuilder(title, explanation);
     fillSpannable(context, span, title.length());
 
