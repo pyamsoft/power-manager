@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.plan;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -26,7 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.plan.PowerPlanAdapter;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -59,7 +59,7 @@ public final class PowerPlanFragment extends ExplanationFragment {
     }
   }
 
-  @Override Spannable setupExplanationString() {
+  @Override public Spannable setupExplanationString() {
     final String[] strings = {
         "Power Plans" + "\n\n",
 

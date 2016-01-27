@@ -31,22 +31,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
+import com.pyamsoft.powermanager.ui.PicassoTargetFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.fragment.AboutFragment;
 import com.pyamsoft.powermanager.ui.fragment.BatteryInfoFragment;
 import com.pyamsoft.powermanager.ui.fragment.BluetoothRadioFragment;
 import com.pyamsoft.powermanager.ui.fragment.DataRadioFragment;
-import com.pyamsoft.powermanager.ui.fragment.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.fragment.HelpFragment;
-import com.pyamsoft.powermanager.ui.fragment.PicassoTargetFragment;
-import com.pyamsoft.powermanager.ui.fragment.PowerPlanFragment;
 import com.pyamsoft.powermanager.ui.fragment.PowerTriggerFragment;
-import com.pyamsoft.powermanager.ui.fragment.SettingsFragment;
 import com.pyamsoft.powermanager.ui.fragment.SyncRadioFragment;
 import com.pyamsoft.powermanager.ui.fragment.WifiRadioFragment;
+import com.pyamsoft.powermanager.ui.plan.PowerPlanFragment;
+import com.pyamsoft.powermanager.ui.setting.SettingsFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import com.squareup.picasso.Picasso;
 
@@ -54,6 +55,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
 
   public static final String EXTRA_PARAM_ID = "TARGET_ID";
   public static final String EXTRA_PARAM_IMAGE = "TARGET_IMAGE";
+  private static final String TAG = DetailBaseFragment.class.getSimpleName();
   private String targetString;
   private int targetImageResId;
   private int backgroundColor;
@@ -69,21 +71,16 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
   private int smallIconOff;
   private AlertDialog largeFABDialog;
   private AlertDialog smallFABDialog;
-  // TODO move into presenter
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_DATA,
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_BLUETOOTH,
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC) {
-
-        @Override protected void preferenceChanged(final SharedPreferences sharedPreferences,
-            final String key) {
-          if (largeFAB != null && largeIconOn != 0 && largeIconOff != 0) {
-            final int drawable =
-                sharedPreferences.getBoolean(key, false) ? largeIconOn : largeIconOff;
-            largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), drawable));
-          }
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC
+      ) {
+        @Override
+        protected void preferenceChanged(SharedPreferences sharedPreferences, String key) {
+          onPreferenceChanged(sharedPreferences, key);
         }
       };
 
@@ -278,9 +275,9 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
 
   @Override public void onResume() {
     super.onResume();
-    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerActive());
     AnimUtil.pop(largeFAB, 500, 300).start();
     AnimUtil.pop(smallFAB, 800, 300).start();
+    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerActive());
 
     final MainActivity a = ((MainActivity) getActivity());
     if (a != null) {
@@ -343,6 +340,17 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
 
   @Override public void onLongClickLargeFAB() {
     largeFABDialog.show();
+  }
+
+  @Override public void onPreferenceChanged(SharedPreferences preferences, String key) {
+    LogUtil.d(TAG, "onPreferenceChanged");
+    if (largeFAB != null) {
+      final boolean state = preferences.getBoolean(key, false);
+      if (largeIconOn != 0 && largeIconOff != 0) {
+        LogUtil.d(TAG, "largeFAB setImage");
+        largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), state ? largeIconOn : largeIconOff));
+      }
+    }
   }
 
   @Override public String getTarget() {

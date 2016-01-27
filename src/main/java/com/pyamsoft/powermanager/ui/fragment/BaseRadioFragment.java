@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.adapter.RadioContentAdapter;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -60,7 +61,7 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
     }
   }
 
-  @Override Spannable setupExplanationString() {
+  @Override public Spannable setupExplanationString() {
     final String[] strings = {
         "%s Interface" + "\n\n",
 

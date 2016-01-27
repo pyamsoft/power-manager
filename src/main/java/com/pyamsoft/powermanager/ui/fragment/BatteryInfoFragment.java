@@ -32,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.adapter.BatteryInfoAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -126,7 +127,7 @@ public final class BatteryInfoFragment extends ExplanationFragment {
     }
   }
 
-  @Override Spannable setupExplanationString() {
+  @Override public Spannable setupExplanationString() {
     final String[] strings = {
         "Battery Info" + "\n\n",
 

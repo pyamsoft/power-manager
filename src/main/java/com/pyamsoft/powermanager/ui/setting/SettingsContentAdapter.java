@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,9 +29,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.fragment.SettingsInterface;
-import com.pyamsoft.powermanager.ui.fragment.SettingsModel;
-import com.pyamsoft.powermanager.ui.fragment.SettingsPresenter;
+import com.pyamsoft.powermanager.ui.BooleanRunnable;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
@@ -74,9 +72,9 @@ public final class SettingsContentAdapter
   public void onBindViewHolder(final SettingsContentAdapter.ViewHolder holder, final int position) {
     final Context context = holder.itemView.getContext();
     final SettingsPresenter presenter = new SettingsPresenter();
-    presenter.bind(holder, this, position);
+    presenter.bind(context, this, position);
 
-    final boolean isReset = presenter.isViewTypeReset();
+    final boolean isReset = presenter.isViewTypeReset(position);
     final String title = presenter.getTitle();
     final String explanation = presenter.getExplanation();
     final Spannable span = StringUtil.createBuilder(title, explanation);
@@ -89,23 +87,79 @@ public final class SettingsContentAdapter
       holder.image.setBackground(DrawableUtil.createOval(context, R.color.red500));
       holder.resetButton.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
-          presenter.onClick();
+          presenter.onResetClicked();
         }
       });
     } else {
-      holder.image.setEnabled(presenter.isChecked() && presenter.isEnabled());
-      holder.switchCompat.setOnCheckedChangeListener(null);
-      holder.switchCompat.setText(span);
-      holder.switchCompat.setChecked(presenter.isChecked());
-      holder.switchCompat.setEnabled(presenter.isEnabled());
-      holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-        @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-          presenter.onClick(isChecked);
-        }
-      });
+      setupViewHolder(presenter, holder, span, position);
     }
 
     holder.image.setImageResource(resId);
+  }
+
+  private void setupViewHolder(final SettingsPresenter presenter, final ViewHolder holder,
+      final Spannable span, final int position) {
+    boolean isClickable;
+    boolean isChecked;
+    BooleanRunnable onClick;
+    switch (position) {
+      case SettingsModel.POSITION_BOOT:
+        isClickable = presenter.isBootClickable();
+        isChecked = presenter.isBootEnabled();
+        onClick = new BooleanRunnable() {
+          @Override public void run() {
+            presenter.onBootClicked(isState());
+          }
+        };
+        break;
+      case SettingsModel.POSITION_SUSPEND:
+        isClickable = presenter.isSuspendClickable();
+        isChecked = presenter.isSuspendEnabled();
+        onClick = new BooleanRunnable() {
+          @Override public void run() {
+            presenter.onSuspendClicked(isState());
+          }
+        };
+        break;
+      case SettingsModel.POSITION_NOTIFICATION:
+        isClickable = presenter.isNotificationClickable();
+        isChecked = presenter.isNotificationEnabled();
+        onClick = new BooleanRunnable() {
+          @Override public void run() {
+            presenter.onNotificationClicked(isState());
+          }
+        };
+        break;
+      case SettingsModel.POSITION_FOREGROUND:
+        isClickable = presenter.isForegroundClickable();
+        isChecked = presenter.isForegroundEnabled();
+        onClick = new BooleanRunnable() {
+          @Override public void run() {
+            presenter.onForegroundClicked(isState());
+          }
+        };
+        break;
+      default:
+        isClickable = false;
+        isChecked = false;
+        onClick = null;
+    }
+
+    // Java you beautiful monster
+    holder.image.setEnabled(isClickable && isChecked);
+    holder.switchCompat.setOnCheckedChangeListener(null);
+    holder.switchCompat.setText(span);
+    holder.switchCompat.setChecked(isChecked);
+    holder.switchCompat.setEnabled(isClickable);
+
+    final BooleanRunnable finalOnClick = onClick;
+    holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (finalOnClick != null) {
+          finalOnClick.run(isChecked);
+        }
+      }
+    });
   }
 
   @Override public int getItemCount() {
@@ -126,9 +180,7 @@ public final class SettingsContentAdapter
     }
   }
 
-  @Override
-  public void onResetRequested(final SettingsPresenter presenter, final ViewHolder holder) {
-    final Context context = holder.itemView.getContext();
+  @Override public void onResetRequested(final SettingsPresenter presenter, final Context context) {
     new AlertDialog.Builder(context).setTitle(context.getString(R.string.reset_settings_title))
         .setCancelable(false)
         .setIcon(R.drawable.ic_warning_white_24dp)
@@ -156,70 +208,36 @@ public final class SettingsContentAdapter
         .show();
   }
 
-  @Override public void onBootEnabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(true);
-      }
-    }
+  @Override public void onBootEnabled() {
+    notifyItemChanged(SettingsModel.POSITION_BOOT);
   }
 
-  @Override public void onBootDisabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(false);
-      }
-    }
+  @Override public void onBootDisabled() {
+    notifyItemChanged(SettingsModel.POSITION_BOOT);
   }
 
-  @Override public void onSuspendEnabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(true);
-      }
-    }
+  @Override public void onSuspendEnabled() {
+    notifyItemChanged(SettingsModel.POSITION_SUSPEND);
   }
 
-  @Override public void onSuspendDisabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(false);
-      }
-    }
+  @Override public void onSuspendDisabled() {
+    notifyItemChanged(SettingsModel.POSITION_SUSPEND);
   }
 
-  @Override public void onNotificationEnabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(true);
-      }
-    }
+  @Override public void onNotificationEnabled() {
+    notifyItemChanged(SettingsModel.POSITION_NOTIFICATION);
+  }
+
+  @Override public void onNotificationDisabled() {
+    notifyItemChanged(SettingsModel.POSITION_NOTIFICATION);
+  }
+
+  @Override public void onForegroundEnabled() {
     notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
   }
 
-  @Override public void onNotificationDisabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(false);
-      }
-    }
+  @Override public void onForegroundDisabled() {
     notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
-  }
-
-  @Override public void onForegroundEnabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(true);
-      }
-    }
-  }
-
-  @Override public void onForegroundDisabled(ViewHolder holder) {
-    if (holder != null) {
-      if (holder.image != null) {
-        holder.image.setEnabled(false);
-      }
-    }
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

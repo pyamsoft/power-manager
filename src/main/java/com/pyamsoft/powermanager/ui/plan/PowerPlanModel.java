@@ -2,21 +2,21 @@ package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
+import java.lang.ref.WeakReference;
 
 public final class PowerPlanModel {
 
   private static final String TAG = PowerPlanModel.class.getSimpleName();
-  private Context context;
+  private final WeakReference<Context> weakContext;
   private final Object[] plan;
   private final int index;
 
   public PowerPlanModel(Context context, int position) {
     LogUtil.d(TAG, "Create new PowerPlanModel");
-    this.context = context.getApplicationContext();
+    weakContext = new WeakReference<>(context.getApplicationContext());
     plan = PowerPlanUtil.with(context).getPowerPlan(position);
     index = PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]);
   }
@@ -47,12 +47,22 @@ public final class PowerPlanModel {
 
   public void setActivePlan() {
     LogUtil.d(TAG, "setActivePlan: ", index);
-    PowerPlanUtil.with(context).setPlan(index);
-    PersistentNotification.update(context);
+    final Context context = weakContext.get();
+    if (context != null) {
+      PowerPlanUtil.with(context).setPlan(index);
+      PersistentNotification.update(context);
+    }
   }
 
   public boolean isActivePlan() {
-    final int activeIndex = GlobalPreferenceUtil.with(context).powerPlans().getActivePlan();
+    int activeIndex;
+    final Context context = weakContext.get();
+    if (context != null) {
+      activeIndex = GlobalPreferenceUtil.with(context).powerPlans().getActivePlan();
+    } else {
+      activeIndex =
+          PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_STANDARD[PowerPlanUtil.FIELD_INDEX]);
+    }
     return activeIndex == index;
   }
 

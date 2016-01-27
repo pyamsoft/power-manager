@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.adapter.GridContentAdapter;
 import com.pyamsoft.powermanager.ui.helper.ItemTouchHelperCallback;
@@ -63,7 +64,7 @@ public final class GridFragment extends ExplanationFragment {
     setupRecyclerView(view);
   }
 
-  @Override Spannable setupExplanationString() {
+  @Override public Spannable setupExplanationString() {
     final String[] strings = {
         "Overview" + "\n\n",
 

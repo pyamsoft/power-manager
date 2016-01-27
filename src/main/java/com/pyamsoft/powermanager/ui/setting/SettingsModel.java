@@ -1,4 +1,4 @@
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.R;
@@ -11,6 +11,7 @@ import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.powermanager.ui.BooleanRunnable;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NotificationUtil;
+import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
 
 public final class SettingsModel {
@@ -25,72 +26,94 @@ public final class SettingsModel {
   private String title;
   private String explain;
   private Callable<Boolean> getProp;
-  private Context context;
+  private WeakReference<Context> weakContext;
   private BooleanRunnable setProp;
 
   public SettingsModel(final Context c, int position) {
-    context = c.getApplicationContext();
+    weakContext = new WeakReference<>(c.getApplicationContext());
     switch (position) {
       case POSITION_BOOT:
-        title = context.getString(R.string.boot_enabled) + "\n";
+        title = c.getString(R.string.boot_enabled) + "\n";
         explain = "Start Power Manager when device starts";
         getProp = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return BootActionReceiver.isBootEnabled(context);
+            final Context context = weakContext.get();
+            return context != null && BootActionReceiver.isBootEnabled(context);
           }
         };
         setProp = new BooleanRunnable() {
           @Override public void run() {
-            BootActionReceiver.setBootEnabled(context, isState());
+            final Context context = weakContext.get();
+            if (context != null) {
+              BootActionReceiver.setBootEnabled(context, isState());
+            }
           }
         };
         break;
       case POSITION_SUSPEND:
-        title = context.getString(R.string.suspend_charging) + "\n";
+        title = c.getString(R.string.suspend_charging) + "\n";
         explain = "Suspend Power Manager functions while charging";
         getProp = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.with(context).powerManagerActive().isSuspendPlugged();
+            final Context context = weakContext.get();
+            return context != null && GlobalPreferenceUtil.with(context)
+                .powerManagerActive()
+                .isSuspendPlugged();
           }
         };
         setProp = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.with(context).powerManagerActive().setSuspendPlugged(isState());
+            final Context context = weakContext.get();
+            if (context != null) {
+              GlobalPreferenceUtil.with(context).powerManagerActive().setSuspendPlugged(isState());
+            }
           }
         };
         break;
       case POSITION_NOTIFICATION:
-        title = context.getString(R.string.enable_notification) + "\n";
+        title = c.getString(R.string.enable_notification) + "\n";
         explain = "Show a persistent notification in the Notification Drawer";
         getProp = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.with(context).powerManagerMonitor().isNotificationEnabled();
+            final Context context = weakContext.get();
+            return context != null && GlobalPreferenceUtil.with(context)
+                .powerManagerMonitor()
+                .isNotificationEnabled();
           }
         };
         setProp = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.with(context)
-                .powerManagerMonitor()
-                .setNotificationEnabled(isState());
+            final Context context = weakContext.get();
+            if (context != null) {
+              GlobalPreferenceUtil.with(context)
+                  .powerManagerMonitor()
+                  .setNotificationEnabled(isState());
+            }
           }
         };
         break;
       case POSITION_FOREGROUND:
-        title = context.getString(R.string.enable_foreground) + "\n";
+        title = c.getString(R.string.enable_foreground) + "\n";
         explain = "Increase the memory used by Power Manager in exchange for better performance";
         getProp = new Callable<Boolean>() {
           @Override public Boolean call() throws Exception {
-            return GlobalPreferenceUtil.with(context).powerManagerMonitor().isForeground();
+            final Context context = weakContext.get();
+            return context != null && GlobalPreferenceUtil.with(context)
+                .powerManagerMonitor()
+                .isForeground();
           }
         };
         setProp = new BooleanRunnable() {
           @Override public void run() {
-            GlobalPreferenceUtil.with(context).powerManagerMonitor().setForeground(isState());
+            final Context context = weakContext.get();
+            if (context != null) {
+              GlobalPreferenceUtil.with(context).powerManagerMonitor().setForeground(isState());
+            }
           }
         };
         break;
       case POSITION_RESET:
-        title = context.getString(R.string.reset_all_settings);
+        title = c.getString(R.string.reset_all_settings);
         explain = null;
         setProp = null;
         getProp = null;
@@ -133,7 +156,10 @@ public final class SettingsModel {
   public void setBootEnabled(final boolean enabled) {
     LogUtil.d(TAG, "Set boot enabled: ", enabled);
     setProp(enabled);
-    propagatePowerPlanChanges(enabled);
+    final Context context = weakContext.get();
+    if (context != null) {
+      propagatePowerPlanChanges(context, enabled);
+    }
   }
 
   public boolean isSuspendEnabled() {
@@ -145,7 +171,10 @@ public final class SettingsModel {
   public void setSuspendEnabled(final boolean enabled) {
     LogUtil.d(TAG, "Set suspend enabled: ", enabled);
     setProp(enabled);
-    propagatePowerPlanChanges(enabled);
+    final Context context = weakContext.get();
+    if (context != null) {
+      propagatePowerPlanChanges(context, enabled);
+    }
   }
 
   public boolean isNotificationEnabled() {
@@ -155,12 +184,15 @@ public final class SettingsModel {
   }
 
   public void setNotificationEnabled(final boolean enabled) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
-    final boolean oldForeground = p.powerManagerMonitor().isForeground();
-    final boolean oldNotification = p.powerManagerMonitor().isNotificationEnabled();
-    LogUtil.d(TAG, "Set notification enabled: ", enabled);
-    setProp(enabled);
-    propagateNotificationChanges(oldNotification, oldForeground, true, enabled);
+    final Context context = weakContext.get();
+    if (context != null) {
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      final boolean oldForeground = p.powerManagerMonitor().isForeground();
+      final boolean oldNotification = p.powerManagerMonitor().isNotificationEnabled();
+      LogUtil.d(TAG, "Set notification enabled: ", enabled);
+      setProp(enabled);
+      propagateNotificationChanges(context, oldNotification, oldForeground, true, enabled);
+    }
   }
 
   public boolean isForegroundEnabled() {
@@ -171,24 +203,33 @@ public final class SettingsModel {
 
   public boolean isForegroundClickable() {
     // Foreground relies on a present service and notification
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
-    final boolean checked =
-        p.powerManagerMonitor().isEnabled() && p.powerManagerMonitor().isNotificationEnabled();
-    LogUtil.d(TAG, "Foreground clickable: ", checked);
-    return checked;
+    final Context context = weakContext.get();
+    if (context != null) {
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      final boolean checked =
+          p.powerManagerMonitor().isEnabled() && p.powerManagerMonitor().isNotificationEnabled();
+      LogUtil.d(TAG, "Foreground clickable: ", checked);
+      return checked;
+    } else {
+      return false;
+    }
   }
 
   public void setForegroundEnabled(final boolean enabled) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
-    final boolean oldForeground = p.powerManagerMonitor().isForeground();
-    final boolean oldNotification = p.powerManagerMonitor().isNotificationEnabled();
-    LogUtil.d(TAG, "Set notification enabled: ", enabled);
-    setProp(enabled);
-    propagateNotificationChanges(oldNotification, oldForeground, false, enabled);
+    final Context context = weakContext.get();
+    if (context != null) {
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      final boolean oldForeground = p.powerManagerMonitor().isForeground();
+      final boolean oldNotification = p.powerManagerMonitor().isNotificationEnabled();
+      LogUtil.d(TAG, "Set notification enabled: ", enabled);
+      setProp(enabled);
+      propagateNotificationChanges(context, oldNotification, oldForeground, false, enabled);
+    }
   }
 
-  private void propagateNotificationChanges(final boolean oldNotification,
-      final boolean oldForeground, final boolean fromNotification, final boolean isChecked) {
+  private static void propagateNotificationChanges(final Context context,
+      final boolean oldNotification, final boolean oldForeground, final boolean fromNotification,
+      final boolean isChecked) {
     LogUtil.d(TAG, "Change state of running notification");
     // Notification may need to be stopped if it was running before and is not now
     // Some delay may make these values unreliable if we read them here after they were applied.
@@ -218,7 +259,7 @@ public final class SettingsModel {
     }
   }
 
-  private void propagatePowerPlanChanges(final boolean isChecked) {
+  private static void propagatePowerPlanChanges(final Context context, final boolean isChecked) {
     LogUtil.d(TAG, "Update state of running notification");
     final PowerPlanUtil powerPlan = PowerPlanUtil.with(context);
     powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
@@ -245,31 +286,34 @@ public final class SettingsModel {
   }
 
   public void doReset() {
-    // Stop the notification
-    MonitorService.stopForeground(context);
-    NotificationUtil.stop(context, PersistentNotification.ID);
+    final Context context = weakContext.get();
+    if (context != null) {
+      // Stop the notification
+      MonitorService.stopForeground(context);
+      NotificationUtil.stop(context, PersistentNotification.ID);
 
-    // Clean stop the service
-    MonitorService.stop(context);
+      // Clean stop the service
+      MonitorService.stop(context);
 
-    // Boot is handled outside of preferences, explicitly set it back to false, the default
-    BootActionReceiver.setBootEnabled(context, false);
+      // Boot is handled outside of preferences, explicitly set it back to false, the default
+      BootActionReceiver.setBootEnabled(context, false);
 
-    // Remove all Power Triggers
-    final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-    source.open();
-    if (source.isOpened()) {
-      source.deleteAllTriggers();
-      source.close();
+      // Remove all Power Triggers
+      final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
+      source.open();
+      if (source.isOpened()) {
+        source.deleteAllTriggers();
+        source.close();
+      }
+
+      // Now clear everything
+      GlobalPreferenceUtil.with(context).clear();
+
+      // Log the reset
+      LogUtil.i(TAG, context.getString(R.string.close_app_msg));
+
+      // Kill ourselves
+      android.os.Process.killProcess(android.os.Process.myPid());
     }
-
-    // Now clear everything
-    GlobalPreferenceUtil.with(context).clear();
-
-    // Log the reset
-    LogUtil.i(TAG, context.getString(R.string.close_app_msg));
-
-    // Kill ourselves
-    android.os.Process.killProcess(android.os.Process.myPid());
   }
 }

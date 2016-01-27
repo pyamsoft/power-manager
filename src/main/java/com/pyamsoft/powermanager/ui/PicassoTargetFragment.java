@@ -1,4 +1,4 @@
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui;
 
 import android.animation.ObjectAnimator;
 import android.graphics.Bitmap;

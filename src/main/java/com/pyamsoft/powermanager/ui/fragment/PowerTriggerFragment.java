@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.adapter.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -65,7 +66,7 @@ public final class PowerTriggerFragment extends ExplanationFragment {
     }
   }
 
-  @Override Spannable setupExplanationString() {
+  @Override public Spannable setupExplanationString() {
     final String[] strings = {
         "Power Triggers" + "\n\n",
 

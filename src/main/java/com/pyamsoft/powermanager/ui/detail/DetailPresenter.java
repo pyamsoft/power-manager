@@ -1,8 +1,12 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.Presenter;
 import com.pyamsoft.pydroid.util.LogUtil;
+import java.lang.ref.WeakReference;
 
 /**
  * Detail interfaces have two floating action buttons

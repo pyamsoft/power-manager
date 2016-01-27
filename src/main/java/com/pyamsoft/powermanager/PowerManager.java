@@ -19,6 +19,7 @@ import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.pydroid.base.ApplicationBase;
+import com.pyamsoft.pydroid.util.LogUtil;
 
 public final class PowerManager extends ApplicationBase {
 
@@ -34,9 +35,12 @@ public final class PowerManager extends ApplicationBase {
     final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
     if (p.powerManagerMonitor().isEnabled()) {
       // Start service
+      LogUtil.d(TAG, "Preference requested start service");
       MonitorService.start(getApplicationContext());
-    } else if (p.powerManagerMonitor().isNotificationEnabled()) {
+    }
+    if (p.powerManagerMonitor().isNotificationEnabled()) {
       // Just update notification from service
+      LogUtil.d(TAG, "Preference requested update notification");
       PersistentNotification.update(getApplicationContext());
     }
   }

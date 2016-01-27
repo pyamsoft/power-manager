@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -32,7 +32,7 @@ public abstract class ExplanationFragment extends Fragment {
 
   private Spannable explanation;
 
-  abstract Spannable setupExplanationString();
+  public abstract Spannable setupExplanationString();
 
   public abstract int getBackgroundColor();
 
