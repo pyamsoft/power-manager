@@ -123,18 +123,24 @@ public final class MonitorService extends ServiceBase {
     }
 
     final String state = intent.getStringExtra(OTHER_CMD);
-    if (state.equals(NOTIFICATION_ON)) {
-      LogUtil.e(TAG, "Start foreground notification");
-      startForeground(PersistentNotification.ID, notification.notification());
-    } else if (state.equals(NOTIFICATION_OFF)) {
-      LogUtil.e(TAG, "Stop foreground notification");
-      stopForeground(true);
+    if (state != null) {
+      if (state.equals(NOTIFICATION_ON)) {
+        LogUtil.d(TAG, "Start foreground notification");
+        startForeground(PersistentNotification.ID, notification.notification());
+      } else if (state.equals(NOTIFICATION_OFF)) {
+        LogUtil.d(TAG, "Stop foreground notification");
+        // Only remove the notification is it is also not enabled
+        stopForeground(!preferenceUtil.powerManagerMonitor().isNotificationEnabled());
+      } else {
+        LogUtil.e(TAG, "Invalid command");
+      }
     } else {
-      LogUtil.e(TAG, "Invalid command");
+      LogUtil.e(TAG, "NULL command passed in notification update");
     }
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    LogUtil.d(TAG, "onStartCommand");
     updatePersistentNotification(intent);
     return runServiceHook(intent);
   }
@@ -159,6 +165,7 @@ public final class MonitorService extends ServiceBase {
       if (p.powerManagerMonitor().isForeground()) {
         MonitorService.startPersistentNotification(context);
       } else {
+        LogUtil.d(TAG, "Start normal Notification");
         NotificationUtil.start(context, PersistentNotification.with(context).notification(),
             PersistentNotification.ID);
       }

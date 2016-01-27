@@ -246,39 +246,86 @@ public final class SettingsContentAdapter
 
       @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(holder.itemView.getContext());
-        boolean update;
+        final boolean oldNotificationState = p.powerManagerMonitor().isNotificationEnabled();
+        final boolean oldForegroundState = p.powerManagerMonitor().isForeground();
+
+        boolean changeNotification;
+        boolean updateNotification;
         switch (position) {
           case POSITION_BOOT:
             BootActionReceiver.setBootEnabled(buttonView.getContext(), isChecked);
-            update = true;
+            updateNotification = true;
+            changeNotification = false;
             break;
           case POSITION_SUSPEND:
             p.powerManagerActive().setSuspendPlugged(isChecked);
-            update = true;
+            updateNotification = true;
+            changeNotification = false;
             break;
           case POSITION_NOTIFICATION:
             p.powerManagerMonitor().setNotificationEnabled(isChecked);
-            update = false;
+            updateNotification = false;
+            changeNotification = true;
             break;
           case POSITION_FOREGROUND:
             p.powerManagerMonitor().setForeground(isChecked);
-            update = false;
+            updateNotification = false;
+            changeNotification = true;
             break;
           default:
-            update = false;
+            updateNotification = false;
+            changeNotification = false;
         }
-        if (update) {
+        if (updateNotification) {
+          LogUtil.d(TAG, "Update state of running notification");
           final PowerPlanUtil powerPlan = PowerPlanUtil.with(holder.itemView.getContext());
           powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
           powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_SUSPEND, isChecked);
           powerPlan.setPlan(
               PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
         } else {
-          MonitorService.updateNotification(buttonView.getContext());
+          // If either notification or foreground were selected
+          if (changeNotification) {
+            LogUtil.d(TAG, "Change state of running notification");
+            // Notification may need to be stopped if it was running before and is not now
+            // Some delay may make these values unreliable if we read them here after they were applied.
+            // Check the current index to see which is safe to read and which we should just flip from above
+            final boolean isEnabled = (position == POSITION_NOTIFICATION) ? isChecked
+                : p.powerManagerMonitor().isNotificationEnabled();
+            final boolean isForeground = (position == POSITION_FOREGROUND) ? isChecked
+                : p.powerManagerMonitor().isForeground();
+            if (oldNotificationState && !isEnabled) {
+              LogUtil.d(TAG, "Notification was enabled but is no longer");
+              stopNotification(buttonView.getContext(), false, oldForegroundState);
+            } else if (oldForegroundState && !isForeground) {
+              LogUtil.d(TAG, "Notification was foreground but is no longer");
+              stopNotification(buttonView.getContext(), isEnabled, true);
+            } else {
+              LogUtil.d(TAG, "Notification was either enabled or pushed to foreground");
+              MonitorService.updateNotification(buttonView.getContext());
+            }
+          }
         }
         setIcon(holder, position);
       }
     });
+  }
+
+  private static void stopNotification(final Context context, final boolean isEnabled,
+      final boolean wasForeground) {
+    // If it was in the foreground, we need to call stop persistent first
+    if (wasForeground) {
+      LogUtil.d(TAG, "Notification was in foreground");
+      MonitorService.stopPersistentNotification(context);
+    }
+
+    if (isEnabled) {
+      LogUtil.d(TAG, "Foreground was stopped but notification is still active");
+      MonitorService.updateNotification(context);
+    } else {
+      LogUtil.d(TAG, "Stop normal notification");
+      NotificationUtil.stop(context, PersistentNotification.ID);
+    }
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
