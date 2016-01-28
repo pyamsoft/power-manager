@@ -62,6 +62,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
   private static final int POSITION_DELAY = 0;
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
+  public static final int NUMBER_ITEMS = 3;
 
   private final RadioInterface radioInterface;
   private RadioPresenter presenter;
@@ -370,11 +371,11 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
         span = null;
     }
     holder.title.setText(span);
-    holder.iconText.setText(String.format("%s", Long.toString(values.realTime)));
+    holder.iconText.setText(String.format("%s", Long.toString(values.realTime / 1000)));
   }
 
   @Override public int getItemCount() {
-    return RadioModel.NUMBER_ITEMS;
+    return NUMBER_ITEMS;
   }
 
   @Override public void onRadioButtonCheckedChanged(int position) {
