@@ -25,7 +25,6 @@ import android.os.Looper;
 import android.os.SystemClock;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -73,6 +72,8 @@ public abstract class ManagerBase {
 
   public abstract String getTag();
 
+  public abstract String getName();
+
   abstract void disable();
 
   abstract void enable();
@@ -90,15 +91,15 @@ public abstract class ManagerBase {
     @Override protected final void onHandleIntent(final Intent intent) {
       final ManagerBase manager = getTargetManager();
       manager.enable();
-      final long delay = getTargetCloseTime(GlobalPreferenceUtil.with(getApplicationContext()));
+      final GlobalPreferenceUtil preferenceUtil =
+          GlobalPreferenceUtil.with(getApplicationContext());
+      final long delay = getTargetCloseTime(preferenceUtil);
       LogUtil.d(manager.getTag(),
           StringUtil.formatString(getString(R.string.disable_in_time), delay));
       manager.disable(delay);
       final AlarmManager alarmManager =
           (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-      final GlobalPreferenceUtil preferenceUtil =
-          GlobalPreferenceUtil.with(getApplicationContext());
-      final long interval = preferenceUtil.powerManagerActive().getIntervalTime();
+      final long interval = getTargetIntervalTime(preferenceUtil);
       LogUtil.d(TAG, getApplicationContext().getString(R.string.set_alarm_for_interval), interval);
       alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
           SystemClock.elapsedRealtime() + interval + delay,
@@ -106,6 +107,8 @@ public abstract class ManagerBase {
               new Intent(getApplicationContext(), getServiceClass()),
               PendingIntent.FLAG_CANCEL_CURRENT));
     }
+
+    protected abstract long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil);
 
     protected abstract Class<? extends Interval> getServiceClass();
 
@@ -128,8 +131,9 @@ public abstract class ManagerBase {
 
     @Override protected void onHandleIntent(Intent intent) {
       setManageState(GlobalPreferenceUtil.with(getApplicationContext()));
-      PowerPlanUtil.with(getApplicationContext())
-          .setPlan(PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
+      final int index =
+          PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]);
+      PowerPlanUtil.with(getApplicationContext()).setPlan(index);
       PersistentNotification.update(getApplicationContext());
     }
 

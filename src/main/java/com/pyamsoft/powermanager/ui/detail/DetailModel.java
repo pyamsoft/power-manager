@@ -4,7 +4,7 @@ import android.content.Context;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.powermanager.ui.BooleanRunnable;
+import com.pyamsoft.powermanager.ui.ValueRunnable;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
@@ -18,7 +18,7 @@ public final class DetailModel {
   public static final int FAB_TYPE_SMALL = 0;
   public static final int FAB_TYPE_LARGE = 1;
 
-  private BooleanRunnable setProp;
+  private ValueRunnable<Boolean> setProp;
   private Callable<Boolean> getProp;
 
   public DetailModel(final Context c, final String target, final int type) {
@@ -42,11 +42,11 @@ public final class DetailModel {
     LogUtil.d(TAG, "Initialize model for: ", target);
     switch (target) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(isState());
+              GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(getValue());
             }
           }
         };
@@ -60,11 +60,11 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(isState());
+              GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(getValue());
             }
           }
         };
@@ -78,13 +78,13 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
               GlobalPreferenceUtil.with(context)
                   .intervalDisableService()
-                  .setBluetoothReopen(isState());
+                  .setBluetoothReopen(getValue());
             }
           }
         };
@@ -98,11 +98,11 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(isState());
+              GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(getValue());
             }
           }
         };
@@ -149,11 +149,11 @@ public final class DetailModel {
     LogUtil.d(TAG, "Initialize model for: ", target);
     switch (target) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedWifi(isState());
+              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedWifi(getValue());
             }
           }
         };
@@ -167,11 +167,11 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedData(isState());
+              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedData(getValue());
             }
           }
         };
@@ -185,13 +185,13 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
               GlobalPreferenceUtil.with(context)
                   .powerManagerActive()
-                  .setManagedBluetooth(isState());
+                  .setManagedBluetooth(getValue());
             }
           }
         };
@@ -205,11 +205,11 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        setProp = new BooleanRunnable() {
+        setProp = new ValueRunnable<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
-              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedSync(isState());
+              GlobalPreferenceUtil.with(context).powerManagerActive().setManagedSync(getValue());
             }
           }
         };

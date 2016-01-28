@@ -177,9 +177,11 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     public static final String MANAGE_DATA = TAG + ".manage_data";
     public static final String MANAGE_BLUETOOTH = TAG + ".manage_bluetooth";
     public static final String MANAGE_SYNC = TAG + ".manage_sync";
-    private static final String PREFERENCE = PowerManager.createPreferenceFileName(TAG);
     private static final String SUSPEND_PLUGGED = TAG + ".suspend_plugged";
-    private static final String INTERVAL_TIME = TAG + ".interval_time";
+    private static final String INTERVAL_WIFI = TAG + ".interval_wifi";
+    private static final String INTERVAL_DATA = TAG + ".interval_data";
+    private static final String INTERVAL_BLUETOOTH = TAG + ".interval_bluetooth";
+    private static final String INTERVAL_SYNC = TAG + ".interval_sync";
     private static final String CONTROL_WIFI = TAG + ".control_wifi";
     private static final String CONTROL_DATA = TAG + ".control_data";
     private static final String CONTROL_BLUETOOTH = TAG + ".control_bluetooth";
@@ -193,20 +195,44 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
       super(context);
     }
 
+    public long getIntervalTimeWifi() {
+      return getLong(INTERVAL_WIFI, ActiveService.Constants.INTERVAL_REOPEN_SIXTY);
+    }
+
+    public void setIntervalTimeWifi(final long l) {
+      putLong(INTERVAL_WIFI, l);
+    }
+
+    public long getIntervalTimeData() {
+      return getLong(INTERVAL_DATA, ActiveService.Constants.INTERVAL_REOPEN_SIXTY);
+    }
+
+    public void setIntervalTimeData(final long l) {
+      putLong(INTERVAL_DATA, l);
+    }
+
+    public long getIntervalTimeBluetooth() {
+      return getLong(INTERVAL_BLUETOOTH, ActiveService.Constants.INTERVAL_REOPEN_SIXTY);
+    }
+
+    public void setIntervalTimeBluetooth(final long l) {
+      putLong(INTERVAL_BLUETOOTH, l);
+    }
+
+    public long getIntervalTimeSync() {
+      return getLong(INTERVAL_SYNC, ActiveService.Constants.INTERVAL_REOPEN_SIXTY);
+    }
+
+    public void setIntervalTimeSync(final long l) {
+      putLong(INTERVAL_SYNC, l);
+    }
+
     public boolean isSuspendPlugged() {
       return getBoolean(SUSPEND_PLUGGED, true);
     }
 
     public void setSuspendPlugged(final boolean b) {
       putBoolean(SUSPEND_PLUGGED, b);
-    }
-
-    public long getIntervalTime() {
-      return getLong(INTERVAL_TIME, ActiveService.Constants.DEFAULT_INTERVAL_TIME);
-    }
-
-    public void setIntervalTime(final long l) {
-      putLong(INTERVAL_TIME, l);
     }
 
     public long getDelayWifi() {

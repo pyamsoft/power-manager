@@ -169,6 +169,10 @@ public final class ManagerData extends ManagerBase {
     return DATA_MANAGER;
   }
 
+  @Override public String getName() {
+    return "Data";
+  }
+
   @SuppressWarnings("deprecation") private static class OldAndroid {
 
     private static boolean isAirplaneModeOn(final Context c) {
@@ -197,6 +201,10 @@ public final class ManagerData extends ManagerBase {
 
     @Override protected ManagerBase getTargetManager() {
       return with(getApplicationContext());
+    }
+
+    @Override protected long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil) {
+      return preferenceUtil.powerManagerActive().getIntervalTimeData();
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {

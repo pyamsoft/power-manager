@@ -13,42 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.radio;
 
 import android.os.Build;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.powermanager.ui.adapter.RadioContentAdapter;
 import com.pyamsoft.pydroid.util.AppUtil;
 
 public final class SyncRadioFragment extends BaseRadioFragment
     implements RadioContentAdapter.RadioInterface {
 
-  @Override public long getRadioDelay() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
-    return p.powerManagerActive().getDelaySync();
-  }
-
-  @Override public void setRadioDelay(final long delay) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
-    p.powerManagerActive().setDelaySync(delay);
-    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_DELAY_SYNC, delay);
-  }
-
-  @Override public long getReOpenTime() {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
-    return p.intervalDisableService().getSyncReopenTime();
-  }
-
-  @Override public String getRadioNameString() {
-    return getContext().getString(R.string.sync);
-  }
-
-  @Override public void setRadioReopen(final long reopen) {
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(getContext());
-    p.intervalDisableService().setSyncReopenTime(reopen);
-    PowerPlanUtil.with(getContext()).updateCustomPlan(PowerPlanUtil.FIELD_REOPEN_TIME_SYNC, reopen);
+  @Override public String getName() {
+    return SYNC;
   }
 
   @Override protected RadioContentAdapter.RadioInterface getRadio() {

@@ -32,16 +32,22 @@ public final class PowerPlanUtil {
   public static final int FIELD_DELAY_DATA = 7;
   public static final int FIELD_DELAY_BLUETOOTH = 8;
   public static final int FIELD_DELAY_SYNC = 9;
-  public static final int FIELD_REOPEN_WIFI = 11;
-  public static final int FIELD_REOPEN_DATA = 12;
-  public static final int FIELD_REOPEN_BLUETOOTH = 13;
-  public static final int FIELD_REOPEN_SYNC = 14;
-  public static final int FIELD_REOPEN_TIME_WIFI = 15;
-  public static final int FIELD_REOPEN_TIME_DATA = 16;
-  public static final int FIELD_REOPEN_TIME_BLUETOOTH = 17;
-  public static final int FIELD_REOPEN_TIME_SYNC = 18;
-  public static final int FIELD_MISC_BOOT = 19;
-  public static final int FIELD_MISC_SUSPEND = 20;
+  public static final int FIELD_INTERVAL_TIME_WIFI = 10;
+  public static final int FIELD_INTERVAL_TIME_DATA = 11;
+  public static final int FIELD_INTERVAL_TIME_BLUETOOTH = 12;
+  public static final int FIELD_INTERVAL_TIME_SYNC = 13;
+  public static final int FIELD_REOPEN_WIFI = 14;
+  public static final int FIELD_REOPEN_DATA = 15;
+  public static final int FIELD_REOPEN_BLUETOOTH = 16;
+  public static final int FIELD_REOPEN_SYNC = 17;
+  public static final int FIELD_REOPEN_TIME_WIFI = 18;
+  public static final int FIELD_REOPEN_TIME_DATA = 19;
+  public static final int FIELD_REOPEN_TIME_BLUETOOTH = 20;
+  public static final int FIELD_REOPEN_TIME_SYNC = 21;
+  public static final int FIELD_MISC_BOOT = 22;
+  public static final int FIELD_MISC_SUSPEND = 23;
+  private static final int PLAN_ELEMENT_SIZE = 24;
+  public static final Object[] POWER_PLAN_CUSTOM = new Object[PLAN_ELEMENT_SIZE];
   public static final Object[] POWER_PLAN_STANDARD = {
       // index
       1,
@@ -54,7 +60,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_FIFTEEN, ActiveService.Constants.DELAY_RADIO_SIXTY,
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_FIFTEEN,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, false, false, true,
       // reopen time
@@ -68,9 +75,6 @@ public final class PowerPlanUtil {
       // suspend
       true,
   };
-  private static final int PLAN_ELEMENT_SIZE = 21;
-  public static final Object[] POWER_PLAN_CUSTOM = new Object[PLAN_ELEMENT_SIZE];
-  private static final int FIELD_INTERVAL_TIME = 10;
   private static final Object[] POWER_PLAN_SUPER = {
       // index
       2,
@@ -82,7 +86,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_FIFTEEN, ActiveService.Constants.DELAY_RADIO_FIFTEEN,
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_FIFTEEN,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, false, false, true,
       // reopen time
@@ -107,7 +112,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_TEN, ActiveService.Constants.DELAY_RADIO_TEN,
       ActiveService.Constants.DELAY_RADIO_TEN, ActiveService.Constants.DELAY_RADIO_TEN,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, false, false, true,
       // reopen time
@@ -132,7 +138,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_NONE,
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_NONE,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       false, false, false, false,
       // reopen time
@@ -157,7 +164,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_THIRTY, ActiveService.Constants.DELAY_RADIO_THIRTY,
       ActiveService.Constants.DELAY_RADIO_THIRTY, ActiveService.Constants.DELAY_RADIO_THIRTY,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, true, true, true,
       // reopen time
@@ -180,7 +188,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_SIXTY,
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_SIXTY,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, false, false, true,
       // reopen time
@@ -205,7 +214,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_SIXTY, ActiveService.Constants.DELAY_RADIO_NONE,
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_SIXTY,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       true, false, false, true,
       // reopen time
@@ -230,7 +240,8 @@ public final class PowerPlanUtil {
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_NONE,
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_NONE,
       // interval time
-      ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
+      ActiveService.Constants.INTERVAL_REOPEN_SIXTY, ActiveService.Constants.INTERVAL_REOPEN_SIXTY,
       // reopen
       false, false, false, false,
       // reopen time
@@ -344,7 +355,10 @@ public final class PowerPlanUtil {
     active.setDelayBluetooth(toLong(powerPlan[FIELD_DELAY_BLUETOOTH]));
     active.setDelaySync(toLong(powerPlan[FIELD_DELAY_SYNC]));
 
-    active.setIntervalTime(toLong(powerPlan[FIELD_INTERVAL_TIME]));
+    active.setIntervalTimeWifi(toLong(powerPlan[FIELD_INTERVAL_TIME_WIFI]));
+    active.setIntervalTimeData(toLong(powerPlan[FIELD_INTERVAL_TIME_DATA]));
+    active.setIntervalTimeBluetooth(toLong(powerPlan[FIELD_INTERVAL_TIME_BLUETOOTH]));
+    active.setIntervalTimeSync(toLong(powerPlan[FIELD_INTERVAL_TIME_SYNC]));
     active.setSuspendPlugged(toBoolean(powerPlan[FIELD_MISC_SUSPEND]));
 
     final GlobalPreferenceUtil.IntervalDisableService interval =
@@ -382,7 +396,10 @@ public final class PowerPlanUtil {
     POWER_PLAN_CUSTOM[FIELD_DELAY_BLUETOOTH] = active.getDelayBluetooth();
     POWER_PLAN_CUSTOM[FIELD_DELAY_SYNC] = active.getDelaySync();
 
-    POWER_PLAN_CUSTOM[FIELD_INTERVAL_TIME] = active.getIntervalTime();
+    POWER_PLAN_CUSTOM[FIELD_INTERVAL_TIME_WIFI] = active.getIntervalTimeWifi();
+    POWER_PLAN_CUSTOM[FIELD_INTERVAL_TIME_DATA] = active.getIntervalTimeData();
+    POWER_PLAN_CUSTOM[FIELD_INTERVAL_TIME_BLUETOOTH] = active.getIntervalTimeBluetooth();
+    POWER_PLAN_CUSTOM[FIELD_INTERVAL_TIME_SYNC] = active.getIntervalTimeSync();
     POWER_PLAN_CUSTOM[FIELD_MISC_SUSPEND] = active.isSuspendPlugged();
 
     final GlobalPreferenceUtil.IntervalDisableService interval =

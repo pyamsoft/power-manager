@@ -59,6 +59,10 @@ public final class ManagerSync extends ManagerBase {
     return SYNC_MANAGER;
   }
 
+  @Override public String getName() {
+    return "Sync";
+  }
+
   public static final class Interval extends ManagerBase.Interval {
 
     public Interval() {
@@ -71,6 +75,10 @@ public final class ManagerSync extends ManagerBase {
 
     @Override protected ManagerBase getTargetManager() {
       return get();
+    }
+
+    @Override protected long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil) {
+      return preferenceUtil.powerManagerActive().getIntervalTimeSync();
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {

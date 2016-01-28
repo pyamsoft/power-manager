@@ -49,6 +49,10 @@ public final class ManagerWifi extends ManagerBase {
     return WIFI_MANAGER;
   }
 
+  @Override public String getName() {
+    return "WiFi";
+  }
+
   @Override synchronized void disable() {
     if (!isNull()) {
       wifi.setWifiEnabled(false);
@@ -83,6 +87,10 @@ public final class ManagerWifi extends ManagerBase {
 
     @Override protected ManagerBase getTargetManager() {
       return with(getApplicationContext());
+    }
+
+    @Override protected long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil) {
+      return preferenceUtil.powerManagerActive().getIntervalTimeWifi();
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {

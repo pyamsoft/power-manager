@@ -58,6 +58,10 @@ public final class ManagerBluetooth extends ManagerBase {
     return BLUETOOTH_MANAGER;
   }
 
+  @Override public String getName() {
+    return "Bluetooth";
+  }
+
   @Override synchronized void enable() {
     if (!isNull()) {
       bluetooth.enable();
@@ -73,6 +77,10 @@ public final class ManagerBluetooth extends ManagerBase {
 
     public Interval() {
       super(Interval.class.getName());
+    }
+
+    @Override protected long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil) {
+      return preferenceUtil.powerManagerActive().getIntervalTimeBluetooth();
     }
 
     @Override protected Class<? extends ManagerBase.Interval> getServiceClass() {

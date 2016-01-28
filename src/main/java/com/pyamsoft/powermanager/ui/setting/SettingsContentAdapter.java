@@ -29,7 +29,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.BooleanRunnable;
+import com.pyamsoft.powermanager.ui.ValueRunnable;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
@@ -109,41 +109,41 @@ public final class SettingsContentAdapter
       final Spannable span, final int position) {
     boolean isClickable;
     boolean isChecked;
-    BooleanRunnable onClick;
+    ValueRunnable<Boolean> onClick;
     switch (position) {
       case SettingsModel.POSITION_BOOT:
         isClickable = presenter.isBootClickable();
         isChecked = presenter.isBootEnabled();
-        onClick = new BooleanRunnable() {
+        onClick = new ValueRunnable<Boolean>() {
           @Override public void run() {
-            presenter.onBootClicked(isState());
+            presenter.onBootClicked(getValue());
           }
         };
         break;
       case SettingsModel.POSITION_SUSPEND:
         isClickable = presenter.isSuspendClickable();
         isChecked = presenter.isSuspendEnabled();
-        onClick = new BooleanRunnable() {
+        onClick = new ValueRunnable<Boolean>() {
           @Override public void run() {
-            presenter.onSuspendClicked(isState());
+            presenter.onSuspendClicked(getValue());
           }
         };
         break;
       case SettingsModel.POSITION_NOTIFICATION:
         isClickable = presenter.isNotificationClickable();
         isChecked = presenter.isNotificationEnabled();
-        onClick = new BooleanRunnable() {
+        onClick = new ValueRunnable<Boolean>() {
           @Override public void run() {
-            presenter.onNotificationClicked(isState());
+            presenter.onNotificationClicked(getValue());
           }
         };
         break;
       case SettingsModel.POSITION_FOREGROUND:
         isClickable = presenter.isForegroundClickable();
         isChecked = presenter.isForegroundEnabled();
-        onClick = new BooleanRunnable() {
+        onClick = new ValueRunnable<Boolean>() {
           @Override public void run() {
-            presenter.onForegroundClicked(isState());
+            presenter.onForegroundClicked(getValue());
           }
         };
         break;
@@ -160,7 +160,7 @@ public final class SettingsContentAdapter
     holder.switchCompat.setChecked(isChecked);
     holder.switchCompat.setEnabled(isClickable);
 
-    final BooleanRunnable finalOnClick = onClick;
+    final ValueRunnable<Boolean> finalOnClick = onClick;
     holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (finalOnClick != null) {

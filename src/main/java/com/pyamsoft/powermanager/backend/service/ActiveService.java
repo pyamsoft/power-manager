@@ -68,7 +68,8 @@ public final class ActiveService extends IntentService {
     preferenceUtil.powerManagerActive().setControlledWifi(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerWifi.Interval.class);
-    setDisableAlarm(context, disable, controlled);
+    setDisableAlarm(context, disable, preferenceUtil.powerManagerActive().getIntervalTimeWifi(),
+        controlled);
     IntentPool.release(disable);
   }
 
@@ -80,7 +81,8 @@ public final class ActiveService extends IntentService {
     preferenceUtil.powerManagerActive().setControlledData(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerData.Interval.class);
-    setDisableAlarm(context, disable, controlled);
+    setDisableAlarm(context, disable, preferenceUtil.powerManagerActive().getIntervalTimeData(),
+        controlled);
     IntentPool.release(disable);
   }
 
@@ -92,7 +94,8 @@ public final class ActiveService extends IntentService {
     preferenceUtil.powerManagerActive().setControlledBluetooth(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerBluetooth.Interval.class);
-    setDisableAlarm(context, disable, controlled);
+    setDisableAlarm(context, disable,
+        preferenceUtil.powerManagerActive().getIntervalTimeBluetooth(), controlled);
     IntentPool.release(disable);
   }
 
@@ -104,7 +107,8 @@ public final class ActiveService extends IntentService {
     preferenceUtil.powerManagerActive().setControlledSync(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerSync.Interval.class);
-    setDisableAlarm(context, disable, controlled);
+    setDisableAlarm(context, disable, preferenceUtil.powerManagerActive().getIntervalTimeSync(),
+        controlled);
     IntentPool.release(disable);
   }
 
@@ -183,17 +187,15 @@ public final class ActiveService extends IntentService {
   }
 
   private static void setDisableAlarm(final Context context, final Intent disableIntent,
-      final boolean shouldSetAlarm) {
+      final long intervalTime, final boolean shouldSetAlarm) {
     if (shouldSetAlarm) {
       final Context app = context.getApplicationContext();
-      final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-      final long interval = preferenceUtil.powerManagerActive().getIntervalTime();
       final PendingIntent pendingIntent =
           PendingIntent.getService(app, 0, disableIntent, PendingIntent.FLAG_CANCEL_CURRENT);
       final AlarmManager alarmManager = (AlarmManager) app.getSystemService(Context.ALARM_SERVICE);
       alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-          SystemClock.elapsedRealtime() + interval, pendingIntent);
-      LogUtil.d(TAG, app.getString(R.string.set_alarm_for_interval), interval);
+          SystemClock.elapsedRealtime() + intervalTime, pendingIntent);
+      LogUtil.d(TAG, app.getString(R.string.set_alarm_for_interval), intervalTime);
     } else {
       LogUtil.d(TAG, context.getString(R.string.interval_not_needed));
     }

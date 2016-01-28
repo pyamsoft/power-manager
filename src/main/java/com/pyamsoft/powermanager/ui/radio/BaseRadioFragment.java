@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.radio;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.adapter.RadioContentAdapter;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public abstract class BaseRadioFragment extends ExplanationFragment {
@@ -144,7 +143,7 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
 
   private void formatWithInterface(final String[] strings, final int index) {
     final String fmt = strings[index];
-    final String replace = StringUtil.formatString(fmt, getRadio().getRadioNameString());
+    final String replace = StringUtil.formatString(fmt, getRadio().getName());
     strings[index] = replace;
   }
 }
