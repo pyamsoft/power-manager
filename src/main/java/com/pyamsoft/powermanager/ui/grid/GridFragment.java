@@ -35,7 +35,7 @@ import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
@@ -240,11 +240,11 @@ public final class GridFragment extends ExplanationFragment implements GridInter
   }
 
   @Override public void onItemClicked(DetailBaseFragment fragment) {
-    throw new Presenter.IllegalBindException("No items");
+    throw new PresenterBase.IllegalBindException("No items");
   }
 
   @Override public void onItemMoved(int fromPosition, int toPosition) {
-    throw new Presenter.IllegalBindException("No items");
+    throw new PresenterBase.IllegalBindException("No items");
   }
 
   @Override public List<String> getItems() {

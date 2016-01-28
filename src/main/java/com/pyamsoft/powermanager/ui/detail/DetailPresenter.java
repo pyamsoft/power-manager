@@ -1,13 +1,13 @@
 package com.pyamsoft.powermanager.ui.detail;
 
 import android.content.Context;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
 /**
  * Detail interfaces have two floating action buttons
  */
-public final class DetailPresenter extends Presenter<DetailInterface> {
+public final class DetailPresenter extends PresenterBase<DetailInterface> {
 
   private static final String TAG = DetailPresenter.class.getSimpleName();
   private DetailModel smallModel;

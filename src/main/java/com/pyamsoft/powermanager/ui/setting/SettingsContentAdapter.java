@@ -29,7 +29,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.ValueRunnable;
+import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
@@ -144,12 +144,12 @@ public final class SettingsContentAdapter
       final Spannable span, final int position) {
     boolean isClickable;
     boolean isChecked;
-    ValueRunnable<Boolean> onClick;
+    ValueRunnableBase<Boolean> onClick;
     switch (position) {
       case POSITION_BOOT:
         isClickable = presenter.isBootClickable();
         isChecked = presenter.isBootEnabled();
-        onClick = new ValueRunnable<Boolean>() {
+        onClick = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.onBootClicked(getValue());
           }
@@ -158,7 +158,7 @@ public final class SettingsContentAdapter
       case POSITION_SUSPEND:
         isClickable = presenter.isSuspendClickable();
         isChecked = presenter.isSuspendEnabled();
-        onClick = new ValueRunnable<Boolean>() {
+        onClick = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.onSuspendClicked(getValue());
           }
@@ -167,7 +167,7 @@ public final class SettingsContentAdapter
       case POSITION_NOTIFICATION:
         isClickable = presenter.isNotificationClickable();
         isChecked = presenter.isNotificationEnabled();
-        onClick = new ValueRunnable<Boolean>() {
+        onClick = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.onNotificationClicked(getValue());
           }
@@ -176,7 +176,7 @@ public final class SettingsContentAdapter
       case POSITION_FOREGROUND:
         isClickable = presenter.isForegroundClickable();
         isChecked = presenter.isForegroundEnabled();
-        onClick = new ValueRunnable<Boolean>() {
+        onClick = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.onForegroundClicked(getValue());
           }
@@ -195,7 +195,7 @@ public final class SettingsContentAdapter
     holder.switchCompat.setChecked(isChecked);
     holder.switchCompat.setEnabled(isClickable);
 
-    final ValueRunnable<Boolean> finalOnClick = onClick;
+    final ValueRunnableBase<Boolean> finalOnClick = onClick;
     holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (finalOnClick != null) {

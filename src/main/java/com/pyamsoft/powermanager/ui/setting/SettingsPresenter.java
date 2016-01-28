@@ -1,10 +1,10 @@
 package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class SettingsPresenter extends Presenter<SettingsInterface> {
+public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
 
   private static final String TAG = SettingsPresenter.class.getSimpleName();
   private SettingsModel model;

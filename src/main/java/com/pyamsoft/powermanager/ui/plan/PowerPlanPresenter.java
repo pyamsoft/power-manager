@@ -1,10 +1,10 @@
 package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class PowerPlanPresenter extends Presenter<PowerPlanInterface> {
+public final class PowerPlanPresenter extends PresenterBase<PowerPlanInterface> {
 
   private static final String TAG = PowerPlanPresenter.class.getSimpleName();
   private PowerPlanModel model;

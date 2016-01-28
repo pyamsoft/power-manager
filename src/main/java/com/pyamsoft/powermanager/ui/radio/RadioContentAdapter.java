@@ -26,7 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
-import com.pyamsoft.powermanager.ui.ValueRunnable;
+import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContentAdapter.ViewHolder>
@@ -81,7 +81,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
 
   public static final class ValueHolder {
     private long realTime;
-    private ValueRunnable<Long> onClick;
+    private ValueRunnableBase<Long> onClick;
   }
 
   public RadioContentAdapter(final RadioInterface i) {
@@ -121,13 +121,13 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
 
   private void getTimeAndClickTarget(final ValueHolder values, final int position) {
     long realTime;
-    ValueRunnable<Long> onClick;
+    ValueRunnableBase<Long> onClick;
     switch (radioInterface.getName()) {
       case RadioInterface.WIFI:
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeWifi();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setDelayTimeWifi(getValue());
               }
@@ -135,7 +135,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_INTERVAL:
             realTime = presenter.getIntervalTimeWifi();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setIntervalTimeWifi(getValue());
               }
@@ -143,7 +143,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_REOPEN:
             realTime = presenter.getReOpenTimeWifi();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setReOpenTimeWifi(getValue());
               }
@@ -158,7 +158,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeData();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setDelayTimeData(getValue());
               }
@@ -166,7 +166,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_INTERVAL:
             realTime = presenter.getIntervalTimeData();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setIntervalTimeData(getValue());
               }
@@ -174,7 +174,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_REOPEN:
             realTime = presenter.getReOpenTimeData();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setReOpenTimeData(getValue());
               }
@@ -189,7 +189,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeBluetooth();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setDelayTimeBluetooth(getValue());
               }
@@ -197,7 +197,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_INTERVAL:
             realTime = presenter.getIntervalTimeBluetooth();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setIntervalTimeBluetooth(getValue());
               }
@@ -205,7 +205,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_REOPEN:
             realTime = presenter.getReOpenTimeBluetooth();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setReOpenTimeBluetooth(getValue());
               }
@@ -220,7 +220,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeSync();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setDelayTimeSync(getValue());
               }
@@ -228,7 +228,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_INTERVAL:
             realTime = presenter.getIntervalTimeSync();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setIntervalTimeSync(getValue());
               }
@@ -236,7 +236,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             break;
           case POSITION_REOPEN:
             realTime = presenter.getReOpenTimeSync();
-            onClick = new ValueRunnable<Long>() {
+            onClick = new ValueRunnableBase<Long>() {
               @Override public void run() {
                 presenter.setReOpenTimeSync(getValue());
               }

@@ -4,7 +4,7 @@ import android.content.Context;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.powermanager.ui.ValueRunnable;
+import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;
@@ -18,7 +18,7 @@ public final class DetailModel {
   public static final int FAB_TYPE_SMALL = 0;
   public static final int FAB_TYPE_LARGE = 1;
 
-  private ValueRunnable<Boolean> setProp;
+  private ValueRunnableBase<Boolean> setProp;
   private Callable<Boolean> getProp;
 
   public DetailModel(final Context c, final String target, final int type) {
@@ -42,7 +42,7 @@ public final class DetailModel {
     LogUtil.d(TAG, "Initialize model for: ", target);
     switch (target) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -60,7 +60,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -78,7 +78,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -98,7 +98,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -149,7 +149,7 @@ public final class DetailModel {
     LogUtil.d(TAG, "Initialize model for: ", target);
     switch (target) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -167,7 +167,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -185,7 +185,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {
@@ -205,7 +205,7 @@ public final class DetailModel {
         };
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        setProp = new ValueRunnable<Boolean>() {
+        setProp = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             final Context context = weakContext.get();
             if (context != null) {

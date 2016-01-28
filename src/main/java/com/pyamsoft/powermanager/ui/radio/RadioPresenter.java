@@ -2,10 +2,10 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class RadioPresenter extends Presenter<RadioInterface> {
+public final class RadioPresenter extends PresenterBase<RadioInterface> {
 
   private static final String TAG = RadioPresenter.class.getSimpleName();
   private RadioModel model;

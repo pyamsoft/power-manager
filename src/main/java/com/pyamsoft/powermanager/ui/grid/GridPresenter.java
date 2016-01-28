@@ -1,10 +1,10 @@
 package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.Context;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class GridPresenter extends Presenter<GridInterface> {
+public final class GridPresenter extends PresenterBase<GridInterface> {
 
   private static final String TAG = GridPresenter.class.getSimpleName();
   private GridModel model;
