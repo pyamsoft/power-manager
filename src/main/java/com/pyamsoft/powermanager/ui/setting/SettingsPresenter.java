@@ -13,7 +13,6 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
     throw new IllegalBindException("Cannot bind without position and Context");
   }
 
-  // TODO Remove position call from constructor
   public void bind(final Context context, final SettingsInterface reference) {
     super.bind(reference);
     this.model = new SettingsModel(context);
@@ -54,10 +53,6 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
 
   public boolean isForegroundClickable() {
     return model.isForegroundClickable();
-  }
-
-  public boolean isViewTypeReset(final int position) {
-    return position == SettingsModel.POSITION_RESET;
   }
 
   public void onBootClicked(final boolean isChecked) {
@@ -139,11 +134,43 @@ public final class SettingsPresenter extends Presenter<SettingsInterface> {
     model.doReset();
   }
 
-  public String getTitle(final int position) {
-    return model.getTitle(position);
+  public String getBootTitle() {
+    return model.getBootTitle();
   }
 
-  public String getExplanation(final int position) {
-    return model.getExplanation(position);
+  public String getSuspendTitle() {
+    return model.getSuspendTitle();
+  }
+
+  public String getNotificationTitle() {
+    return model.getNotificationTitle();
+  }
+
+  public String getForegroundTitle() {
+    return model.getForegroundTitle();
+  }
+
+  public String getResetTitle() {
+    return model.getResetTitle();
+  }
+
+  public String getBootExplanation() {
+    return model.getBootExplanation();
+  }
+
+  public String getSuspendExplanation() {
+    return model.getSuspendExplanation();
+  }
+
+  public String getNotificationExplanation() {
+    return model.getNotificationExplanation();
+  }
+
+  public String getForegroundExplanation() {
+    return model.getForegroundExplanation();
+  }
+
+  public String getResetExplanation() {
+    return null;
   }
 }

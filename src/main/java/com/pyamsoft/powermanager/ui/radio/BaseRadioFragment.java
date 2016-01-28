@@ -33,6 +33,7 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
   private final StaggeredGridLayoutManager staggeredGridLayoutManager =
       new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
   private RecyclerView recyclerView;
+  private RadioContentAdapter adapter;
 
   protected abstract RadioContentAdapter.RadioInterface getRadio();
 
@@ -44,10 +45,11 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    adapter = new RadioContentAdapter(getRadio());
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(staggeredGridLayoutManager);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(new RadioContentAdapter(getRadio()));
+    recyclerView.setAdapter(adapter);
 
     setupExplanationString();
   }
@@ -57,6 +59,9 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
     if (recyclerView != null) {
       recyclerView.setLayoutManager(null);
       recyclerView.setAdapter(null);
+    }
+    if (adapter != null) {
+      adapter.destroy();
     }
   }
 

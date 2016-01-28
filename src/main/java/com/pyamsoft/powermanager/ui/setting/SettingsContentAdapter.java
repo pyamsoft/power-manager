@@ -38,6 +38,13 @@ import java.lang.ref.WeakReference;
 
 public final class SettingsContentAdapter
     extends RecyclerView.Adapter<SettingsContentAdapter.ViewHolder> implements SettingsInterface {
+
+  public static final int POSITION_BOOT = 0;
+  public static final int POSITION_SUSPEND = 1;
+  public static final int POSITION_NOTIFICATION = 2;
+  public static final int POSITION_FOREGROUND = 3;
+  public static final int POSITION_RESET = 4;
+  public static final int NUMBER_ITEMS = 5;
   private static final int TYPE_NORMAL = 0;
   private static final int TYPE_RESET = 1;
   private SettingsPresenter presenter;
@@ -54,7 +61,7 @@ public final class SettingsContentAdapter
   @Override public int getItemViewType(int position) {
     int type;
     switch (position) {
-      case SettingsModel.POSITION_RESET:
+      case POSITION_RESET:
         type = TYPE_RESET;
         break;
       default:
@@ -82,11 +89,39 @@ public final class SettingsContentAdapter
   public void onBindViewHolder(final SettingsContentAdapter.ViewHolder holder, final int position) {
     final Context context = holder.itemView.getContext();
 
-    final boolean isReset = presenter.isViewTypeReset(position);
-    final String title = presenter.getTitle(position);
-    final String explanation = presenter.getExplanation(position);
+    final boolean isReset = holder.getItemViewType() == TYPE_RESET;
+    String title;
+    String explanation;
+    switch (position) {
+      case POSITION_BOOT:
+        title = presenter.getBootTitle();
+        explanation = presenter.getBootExplanation();
+        break;
+      case POSITION_SUSPEND:
+        title = presenter.getSuspendTitle();
+        explanation = presenter.getSuspendExplanation();
+        break;
+      case POSITION_NOTIFICATION:
+        title = presenter.getNotificationTitle();
+        explanation = presenter.getNotificationExplanation();
+        break;
+      case POSITION_FOREGROUND:
+        title = presenter.getForegroundTitle();
+        explanation = presenter.getForegroundExplanation();
+        break;
+      case POSITION_RESET:
+        title = presenter.getResetTitle();
+        explanation = presenter.getResetExplanation();
+        break;
+      default:
+        title = null;
+        explanation = null;
+    }
+
     final Spannable span = StringUtil.createBuilder(title, explanation);
-    fillSpannable(context, span, title.length());
+    if (title != null) {
+      fillSpannable(context, span, title.length());
+    }
 
     final int resId =
         isReset ? R.drawable.ic_warning_white_24dp : R.drawable.ic_settings_white_24dp;
@@ -111,7 +146,7 @@ public final class SettingsContentAdapter
     boolean isChecked;
     ValueRunnable<Boolean> onClick;
     switch (position) {
-      case SettingsModel.POSITION_BOOT:
+      case POSITION_BOOT:
         isClickable = presenter.isBootClickable();
         isChecked = presenter.isBootEnabled();
         onClick = new ValueRunnable<Boolean>() {
@@ -120,7 +155,7 @@ public final class SettingsContentAdapter
           }
         };
         break;
-      case SettingsModel.POSITION_SUSPEND:
+      case POSITION_SUSPEND:
         isClickable = presenter.isSuspendClickable();
         isChecked = presenter.isSuspendEnabled();
         onClick = new ValueRunnable<Boolean>() {
@@ -129,7 +164,7 @@ public final class SettingsContentAdapter
           }
         };
         break;
-      case SettingsModel.POSITION_NOTIFICATION:
+      case POSITION_NOTIFICATION:
         isClickable = presenter.isNotificationClickable();
         isChecked = presenter.isNotificationEnabled();
         onClick = new ValueRunnable<Boolean>() {
@@ -138,7 +173,7 @@ public final class SettingsContentAdapter
           }
         };
         break;
-      case SettingsModel.POSITION_FOREGROUND:
+      case POSITION_FOREGROUND:
         isClickable = presenter.isForegroundClickable();
         isChecked = presenter.isForegroundEnabled();
         onClick = new ValueRunnable<Boolean>() {
@@ -171,7 +206,7 @@ public final class SettingsContentAdapter
   }
 
   @Override public int getItemCount() {
-    return SettingsModel.NUMBER_ITEMS;
+    return NUMBER_ITEMS;
   }
 
   private void fillSpannable(final Context context, final Spannable span, final int titleLength) {
@@ -217,39 +252,39 @@ public final class SettingsContentAdapter
   }
 
   @Override public void onBootEnabled() {
-    notifyItemChanged(SettingsModel.POSITION_BOOT);
+    notifyItemChanged(POSITION_BOOT);
   }
 
   @Override public void onBootDisabled() {
-    notifyItemChanged(SettingsModel.POSITION_BOOT);
+    notifyItemChanged(POSITION_BOOT);
   }
 
   @Override public void onSuspendEnabled() {
-    notifyItemChanged(SettingsModel.POSITION_SUSPEND);
+    notifyItemChanged(POSITION_SUSPEND);
   }
 
   @Override public void onSuspendDisabled() {
-    notifyItemChanged(SettingsModel.POSITION_SUSPEND);
+    notifyItemChanged(POSITION_SUSPEND);
   }
 
   @Override public void onNotificationEnabled() {
-    notifyItemChanged(SettingsModel.POSITION_NOTIFICATION);
+    notifyItemChanged(POSITION_NOTIFICATION);
   }
 
   @Override public void onNotificationDisabled() {
-    notifyItemChanged(SettingsModel.POSITION_NOTIFICATION);
+    notifyItemChanged(POSITION_NOTIFICATION);
   }
 
   @Override public void onForegroundEnabled() {
-    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+    notifyItemChanged(POSITION_FOREGROUND);
   }
 
   @Override public void onForegroundDisabled() {
-    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+    notifyItemChanged(POSITION_FOREGROUND);
   }
 
   @Override public void onForegroundAffected() {
-    notifyItemChanged(SettingsModel.POSITION_FOREGROUND);
+    notifyItemChanged(POSITION_FOREGROUND);
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -78,6 +78,10 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     presenter.bind(i.getContext(), this);
   }
 
+  public void destroy() {
+    presenter.unbind();
+  }
+
   @Override public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
     final View view = inflater.inflate(R.layout.adapter_item_radiogroup, parent, false);

@@ -14,12 +14,6 @@ import java.lang.ref.WeakReference;
 
 public final class SettingsModel {
 
-  public static final int POSITION_BOOT = 0;
-  public static final int POSITION_SUSPEND = 1;
-  public static final int POSITION_NOTIFICATION = 2;
-  public static final int POSITION_FOREGROUND = 3;
-  public static final int POSITION_RESET = 4;
-  public static final int NUMBER_ITEMS = 5;
   private static final String TAG = SettingsModel.class.getSimpleName();
   private WeakReference<Context> weakContext;
 
@@ -31,57 +25,65 @@ public final class SettingsModel {
     weakContext = new WeakReference<>(c.getApplicationContext());
   }
 
-  public String getTitle(final int position) {
+  public String getBootTitle() {
     final Context c = weakContext.get();
-    String title;
     if (c != null) {
-      switch (position) {
-        case POSITION_BOOT:
-          title = c.getString(R.string.boot_enabled) + "\n";
-          break;
-        case POSITION_SUSPEND:
-          title = c.getString(R.string.suspend_charging) + "\n";
-          break;
-        case POSITION_NOTIFICATION:
-          title = c.getString(R.string.enable_notification) + "\n";
-          break;
-        case POSITION_FOREGROUND:
-          title = c.getString(R.string.enable_foreground) + "\n";
-          break;
-        case POSITION_RESET:
-          title = c.getString(R.string.reset_all_settings);
-          break;
-        default:
-          title = null;
-      }
-      return title;
+      return c.getString(R.string.boot_enabled) + "\n";
     } else {
       return null;
     }
   }
 
-  public String getExplanation(final int position) {
-    String explain;
-    switch (position) {
-      case POSITION_BOOT:
-        explain = "Start Power Manager when device starts";
-        break;
-      case POSITION_SUSPEND:
-        explain = "Suspend Power Manager functions while charging";
-        break;
-      case POSITION_NOTIFICATION:
-        explain = "Show a persistent notification in the Notification Drawer";
-        break;
-      case POSITION_FOREGROUND:
-        explain = "Increase the memory used by Power Manager in exchange for better performance";
-        break;
-      case POSITION_RESET:
-        explain = null;
-        break;
-      default:
-        explain = null;
+  public String getSuspendTitle() {
+    final Context c = weakContext.get();
+    if (c != null) {
+      return c.getString(R.string.suspend_charging) + "\n";
+    } else {
+      return null;
     }
-    return explain;
+  }
+
+  public String getNotificationTitle() {
+    final Context c = weakContext.get();
+    if (c != null) {
+      return c.getString(R.string.enable_notification) + "\n";
+    } else {
+      return null;
+    }
+  }
+
+  public String getForegroundTitle() {
+    final Context c = weakContext.get();
+    if (c != null) {
+      return c.getString(R.string.enable_foreground) + "\n";
+    } else {
+      return null;
+    }
+  }
+
+  public String getResetTitle() {
+    final Context c = weakContext.get();
+    if (c != null) {
+      return c.getString(R.string.reset_all_settings);
+    } else {
+      return null;
+    }
+  }
+
+  public String getBootExplanation() {
+    return "Start Power Manager when device starts";
+  }
+
+  public String getSuspendExplanation() {
+    return "Suspend Power Manager functions while charging";
+  }
+
+  public String getNotificationExplanation() {
+    return "Show a persistent notification in the Notification Drawer";
+  }
+
+  public String getForegroundExplanation() {
+    return "Increase the memory used by Power Manager in exchange for better performance";
   }
 
   public boolean isBootEnabled() {
