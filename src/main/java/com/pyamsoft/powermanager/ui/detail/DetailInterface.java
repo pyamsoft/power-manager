@@ -15,10 +15,6 @@ public interface DetailInterface {
 
   void onLargeFABUnchecked();
 
-  void onLongClickSmallFAB();
-
-  void onLongClickLargeFAB();
-
   void onPreferenceChanged(final SharedPreferences preferences, final String key);
 
   String getTarget();

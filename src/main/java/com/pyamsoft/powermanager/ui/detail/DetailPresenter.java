@@ -10,8 +10,7 @@ import com.pyamsoft.pydroid.util.LogUtil;
 public final class DetailPresenter extends PresenterBase<DetailInterface> {
 
   private static final String TAG = DetailPresenter.class.getSimpleName();
-  private DetailModel smallModel;
-  private DetailModel largeModel;
+  private DetailModel model;
 
   @Override public void bind(DetailInterface reference) {
     throw new IllegalBindException("Can't use bind without a context");
@@ -19,79 +18,195 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
 
   public void bind(final Context context, DetailInterface reference) {
     super.bind(reference);
-    smallModel = new DetailModel(context, reference.getTarget(), DetailModel.FAB_TYPE_SMALL);
-    largeModel = new DetailModel(context, reference.getTarget(), DetailModel.FAB_TYPE_LARGE);
+    model = new DetailModel(context);
   }
 
   @Override public void unbind() {
     super.unbind();
-    smallModel = null;
-    largeModel = null;
+    model = null;
   }
 
-  public boolean isSmallFABChecked() {
-    LogUtil.d(TAG, "isSmallFABChecked");
-    return smallModel.isFABChecked();
-  }
-
-  public boolean isLargeFABChecked() {
-    LogUtil.d(TAG, "isLargeFABChecked");
-    return largeModel.isFABChecked();
-  }
-
-  public void onClickSmallFAB() {
-    final DetailInterface detail = getBoundReference();
-    if (detail == null) {
-      LogUtil.d(TAG, "Null detail reference");
-      return;
-    }
-
-    LogUtil.d(TAG, "onClickSmallFAB");
-    final boolean newChecked = !smallModel.isFABChecked();
-    smallModel.setFABChecked(newChecked);
-    if (newChecked) {
-      detail.onSmallFABChecked();
-    } else {
-      detail.onSmallFABUnchecked();
-    }
-  }
-
-  public boolean onLongClickSmallFAB() {
-    final DetailInterface detail = getBoundReference();
-    if (detail == null) {
-      LogUtil.d(TAG, "Null detail reference");
+  public boolean isWifiManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
       return false;
     }
-    LogUtil.d(TAG, "onLongClickSmallFAB");
-    detail.onLongClickSmallFAB();
-    return true;
+    return model.isWifiManaged();
   }
 
-  public boolean onLongClickLargeFAB() {
-    final DetailInterface detail = getBoundReference();
-    if (detail == null) {
-      LogUtil.d(TAG, "Null detail reference");
+  public boolean isDataManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
       return false;
     }
-    LogUtil.d(TAG, "onLongClickLargeFAB");
-    detail.onLongClickLargeFAB();
-    return true;
+    return model.isDataManaged();
   }
 
-  public void onClickLargeFAB() {
-    final DetailInterface detail = getBoundReference();
-    if (detail == null) {
-      LogUtil.d(TAG, "Null detail reference");
+  public boolean isBluetoothManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isBluetoothManaged();
+  }
+
+  public boolean isSyncManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isSyncManaged();
+  }
+
+  public boolean isWifiReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isWifiReOpen();
+  }
+
+  public boolean isDataReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isDataReOpen();
+  }
+
+  public boolean isBluetoothReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isBluetoothReOpen();
+  }
+
+  public boolean isSyncReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isSyncReOpen();
+  }
+
+  public void setWifiManaged(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
       return;
     }
-
-    LogUtil.d(TAG, "onClickLargeFAB");
-    final boolean newChecked = !largeModel.isFABChecked();
-    largeModel.setFABChecked(newChecked);
-    if (newChecked) {
-      detail.onLargeFABChecked();
+    model.setWifiManaged(isChecked);
+    if (isChecked) {
+      reference.onLargeFABChecked();
     } else {
-      detail.onLargeFABUnchecked();
+      reference.onLargeFABUnchecked();
+    }
+  }
+
+  public void setDataManaged(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setDataManaged(isChecked);
+    if (isChecked) {
+      reference.onLargeFABChecked();
+    } else {
+      reference.onLargeFABUnchecked();
+    }
+  }
+
+  public void setBluetoothManaged(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setBluetoothManaged(isChecked);
+    if (isChecked) {
+      reference.onLargeFABChecked();
+    } else {
+      reference.onLargeFABUnchecked();
+    }
+  }
+
+  public void setSyncManaged(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setSyncManaged(isChecked);
+    if (isChecked) {
+      reference.onLargeFABChecked();
+    } else {
+      reference.onLargeFABUnchecked();
+    }
+  }
+
+  public void setWifiReOpen(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setWifiReOpen(isChecked);
+    if (isChecked) {
+      reference.onSmallFABChecked();
+    } else {
+      reference.onSmallFABUnchecked();
+    }
+  }
+
+  public void setDataReOpen(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setDataReOpen(isChecked);
+    if (isChecked) {
+      reference.onSmallFABChecked();
+    } else {
+      reference.onSmallFABUnchecked();
+    }
+  }
+
+  public void setBluetoothReOpen(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setBluetoothReOpen(isChecked);
+    if (isChecked) {
+      reference.onSmallFABChecked();
+    } else {
+      reference.onSmallFABUnchecked();
+    }
+  }
+
+  public void setSyncReOpen(final boolean isChecked) {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+    model.setSyncReOpen(isChecked);
+    if (isChecked) {
+      reference.onSmallFABChecked();
+    } else {
+      reference.onSmallFABUnchecked();
     }
   }
 }

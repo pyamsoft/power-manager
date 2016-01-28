@@ -36,20 +36,22 @@ import com.pyamsoft.powermanager.ui.PicassoTargetFragment;
 import com.pyamsoft.powermanager.ui.activity.MainActivity;
 import com.pyamsoft.powermanager.ui.fragment.AboutFragment;
 import com.pyamsoft.powermanager.ui.fragment.BatteryInfoFragment;
-import com.pyamsoft.powermanager.ui.radio.BluetoothRadioFragment;
-import com.pyamsoft.powermanager.ui.radio.DataRadioFragment;
 import com.pyamsoft.powermanager.ui.fragment.HelpFragment;
 import com.pyamsoft.powermanager.ui.fragment.PowerTriggerFragment;
+import com.pyamsoft.powermanager.ui.plan.PowerPlanFragment;
+import com.pyamsoft.powermanager.ui.radio.BluetoothRadioFragment;
+import com.pyamsoft.powermanager.ui.radio.DataRadioFragment;
 import com.pyamsoft.powermanager.ui.radio.SyncRadioFragment;
 import com.pyamsoft.powermanager.ui.radio.WifiRadioFragment;
-import com.pyamsoft.powermanager.ui.plan.PowerPlanFragment;
 import com.pyamsoft.powermanager.ui.setting.SettingsFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
+import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import com.squareup.picasso.Picasso;
+import java.util.concurrent.Callable;
 
 public final class DetailBaseFragment extends PicassoTargetFragment implements DetailInterface {
 
@@ -62,6 +64,10 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
   private ExplanationFragment fragment;
   private FloatingActionButton largeFAB;
   private FloatingActionButton smallFAB;
+  private ValueRunnableBase<Boolean> onClickLargeFAB;
+  private ValueRunnableBase<Boolean> onClickSmallFAB;
+  private Callable<Boolean> isClickedLargeFAB;
+  private Callable<Boolean> isClickedSmallFAB;
   private TextView title;
   private ImageView image;
   private DetailPresenter presenter;
@@ -76,8 +82,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_DATA,
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_BLUETOOTH,
-          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC
-      ) {
+          GlobalPreferenceUtil.PowerManagerActive.MANAGE_SYNC) {
         @Override
         protected void preferenceChanged(SharedPreferences sharedPreferences, String key) {
           onPreferenceChanged(sharedPreferences, key);
@@ -118,56 +123,164 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
     switch (targetString) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
         fragment = new WifiRadioFragment();
+        onClickLargeFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setWifiManaged(getValue());
+          }
+        };
+        onClickSmallFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setWifiReOpen(getValue());
+          }
+        };
+        isClickedLargeFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isWifiManaged();
+          }
+        };
+        isClickedSmallFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isWifiReOpen();
+          }
+        };
         largeIconOn = R.drawable.ic_network_wifi_white_24dp;
         largeIconOff = R.drawable.ic_signal_wifi_off_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
         fragment = new DataRadioFragment();
+        onClickLargeFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setDataManaged(getValue());
+          }
+        };
+        onClickSmallFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setDataReOpen(getValue());
+          }
+        };
+        isClickedLargeFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isDataManaged();
+          }
+        };
+        isClickedSmallFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isDataReOpen();
+          }
+        };
         largeIconOn = R.drawable.ic_network_cell_white_24dp;
         largeIconOff = R.drawable.ic_signal_cellular_off_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
         fragment = new BluetoothRadioFragment();
+        onClickLargeFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setBluetoothManaged(getValue());
+          }
+        };
+        onClickSmallFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setBluetoothReOpen(getValue());
+          }
+        };
+        isClickedLargeFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isBluetoothManaged();
+          }
+        };
+        isClickedSmallFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isBluetoothReOpen();
+          }
+        };
         largeIconOn = R.drawable.ic_bluetooth_white_24dp;
         largeIconOff = R.drawable.ic_bluetooth_disabled_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
         fragment = new SyncRadioFragment();
+        onClickLargeFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setSyncManaged(getValue());
+          }
+        };
+        onClickSmallFAB = new ValueRunnableBase<Boolean>() {
+          @Override public void run() {
+            presenter.setSyncReOpen(getValue());
+          }
+        };
+        isClickedLargeFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isSyncManaged();
+          }
+        };
+        isClickedSmallFAB = new Callable<Boolean>() {
+          @Override public Boolean call() throws Exception {
+            return presenter.isSyncReOpen();
+          }
+        };
         largeIconOn = R.drawable.ic_sync_white_24dp;
         largeIconOff = R.drawable.ic_sync_disabled_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
         fragment = new PowerPlanFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
         fragment = new PowerTriggerFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
         fragment = new BatteryInfoFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
         fragment = new SettingsFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
         fragment = new HelpFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
         fragment = new AboutFragment();
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
         break;
       default:
         fragment = null;
+        onClickLargeFAB = null;
+        onClickSmallFAB = null;
+        isClickedLargeFAB = null;
+        isClickedSmallFAB = null;
         largeIconOn = 0;
         largeIconOff = 0;
     }
@@ -222,19 +335,30 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
       smallFAB.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(final View v) {
-          presenter.onClickSmallFAB();
+          if (onClickSmallFAB != null && isClickedSmallFAB != null) {
+            try {
+              onClickSmallFAB.run(!isClickedSmallFAB.call());
+            } catch (Exception ignored) {
+            }
+          }
         }
       });
 
       smallFAB.setOnLongClickListener(new View.OnLongClickListener() {
         @Override public boolean onLongClick(final View v) {
-          return presenter.onLongClickSmallFAB();
+          if (smallFABDialog != null) {
+            smallFABDialog.show();
+          }
+          return true;
         }
       });
 
-      final boolean isChecked = presenter.isSmallFABChecked();
-      final int drawable = isChecked ? smallIconOn : smallIconOff;
-      smallFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), drawable));
+      try {
+        final boolean isChecked = isClickedSmallFAB.call();
+        final int drawable = isChecked ? smallIconOn : smallIconOff;
+        smallFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), drawable));
+      } catch (Exception ignored) {
+      }
     } else {
       smallFAB.setVisibility(View.GONE);
     }
@@ -245,19 +369,30 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
       largeFAB.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          presenter.onClickLargeFAB();
+          if (onClickLargeFAB != null && isClickedLargeFAB != null) {
+            try {
+              onClickLargeFAB.run(!isClickedLargeFAB.call());
+            } catch (Exception ignored) {
+            }
+          }
         }
       });
 
       largeFAB.setOnLongClickListener(new View.OnLongClickListener() {
         @Override public boolean onLongClick(final View v) {
-          return presenter.onLongClickLargeFAB();
+          if (largeFABDialog != null) {
+            largeFABDialog.show();
+          }
+          return true;
         }
       });
 
-      final boolean isChecked = presenter.isLargeFABChecked();
-      final int drawable = isChecked ? largeIconOn : largeIconOff;
-      largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), drawable));
+      try {
+        final boolean isChecked = isClickedLargeFAB.call();
+        final int drawable = isChecked ? largeIconOn : largeIconOff;
+        largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), drawable));
+      } catch (Exception ignored) {
+      }
     } else {
       largeFAB.setVisibility(View.GONE);
     }
@@ -334,21 +469,14 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
     }
   }
 
-  @Override public void onLongClickSmallFAB() {
-    smallFABDialog.show();
-  }
-
-  @Override public void onLongClickLargeFAB() {
-    largeFABDialog.show();
-  }
-
   @Override public void onPreferenceChanged(SharedPreferences preferences, String key) {
     LogUtil.d(TAG, "onPreferenceChanged");
     if (largeFAB != null) {
       final boolean state = preferences.getBoolean(key, false);
       if (largeIconOn != 0 && largeIconOff != 0) {
         LogUtil.d(TAG, "largeFAB setImage");
-        largeFAB.setImageDrawable(ContextCompat.getDrawable(getContext(), state ? largeIconOn : largeIconOff));
+        largeFAB.setImageDrawable(
+            ContextCompat.getDrawable(getContext(), state ? largeIconOn : largeIconOff));
       }
     }
   }
