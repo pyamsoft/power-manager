@@ -4,6 +4,10 @@ import com.pyamsoft.powermanager.backend.manager.ManagerBase;
 
 public interface RadioInterface {
 
-  void onRadioButtonCheckedChanged(final int position);
+  void onDelayTimeChanged();
+
+  void onIntervalTimeChanged();
+
+  void onReOpenTimeChanged();
 
 }

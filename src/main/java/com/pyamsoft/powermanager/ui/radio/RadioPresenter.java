@@ -144,7 +144,7 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     return model.getIntervalTimeSync();
   }
 
-  public void setDelayTimeWifi(final long value, final int position) {
+  public void setDelayTimeWifi(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -152,10 +152,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setDelayTimeWifi(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onDelayTimeChanged();
   }
 
-  public void setDelayTimeData(final long value, final int position) {
+  public void setDelayTimeData(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -163,10 +163,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setDelayTimeData(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onDelayTimeChanged();
   }
 
-  public void setDelayTimeBluetooth(final long value, final int position) {
+  public void setDelayTimeBluetooth(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -174,10 +174,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setDelayTimeBluetooth(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onDelayTimeChanged();
   }
 
-  public void setDelayTimeSync(final long value, final int position) {
+  public void setDelayTimeSync(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -185,10 +185,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setDelayTimeSync(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onDelayTimeChanged();
   }
 
-  public void setIntervalTimeWifi(final long value, final int position) {
+  public void setIntervalTimeWifi(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -196,10 +196,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setIntervalTimeWifi(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onIntervalTimeChanged();
   }
 
-  public void setIntervalTimeData(final long value, final int position) {
+  public void setIntervalTimeData(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -207,10 +207,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setIntervalTimeData(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onIntervalTimeChanged();
   }
 
-  public void setIntervalTimeBluetooth(final long value, final int position) {
+  public void setIntervalTimeBluetooth(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -218,10 +218,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setIntervalTimeBluetooth(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onIntervalTimeChanged();
   }
 
-  public void setIntervalTimeSync(final long value, final int position) {
+  public void setIntervalTimeSync(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -229,10 +229,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setIntervalTimeSync(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onIntervalTimeChanged();
   }
 
-  public void setReOpenTimeWifi(final long value, final int position) {
+  public void setReOpenTimeWifi(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -240,10 +240,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setReOpenTimeWifi(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onReOpenTimeChanged();
   }
 
-  public void setReOpenTimeData(final long value, final int position) {
+  public void setReOpenTimeData(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -251,10 +251,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setReOpenTimeData(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onReOpenTimeChanged();
   }
 
-  public void setReOpenTimeBluetooth(final long value, final int position) {
+  public void setReOpenTimeBluetooth(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -262,10 +262,10 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setReOpenTimeBluetooth(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onReOpenTimeChanged();
   }
 
-  public void setReOpenTimeSync(final long value, final int position) {
+  public void setReOpenTimeSync(final long value) {
     final RadioInterface reference = getBoundReference();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
@@ -273,6 +273,6 @@ public final class RadioPresenter extends Presenter<RadioInterface> {
     }
 
     model.setReOpenTimeSync(value);
-    reference.onRadioButtonCheckedChanged(position);
+    reference.onReOpenTimeChanged();
   }
 }

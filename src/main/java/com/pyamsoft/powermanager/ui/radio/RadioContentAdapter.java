@@ -67,6 +67,18 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
   private final RadioInterface radioInterface;
   private RadioPresenter presenter;
 
+  @Override public void onDelayTimeChanged() {
+    notifyItemChanged(POSITION_DELAY);
+  }
+
+  @Override public void onIntervalTimeChanged() {
+    notifyItemChanged(POSITION_INTERVAL);
+  }
+
+  @Override public void onReOpenTimeChanged() {
+    notifyItemChanged(POSITION_REOPEN);
+  }
+
   public static final class ValueHolder {
     private long realTime;
     private ValueRunnable<Long> onClick;
@@ -117,7 +129,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getDelayTimeWifi();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setDelayTimeWifi(getValue(), position);
+                presenter.setDelayTimeWifi(getValue());
               }
             };
             break;
@@ -125,7 +137,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getIntervalTimeWifi();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setIntervalTimeWifi(getValue(), position);
+                presenter.setIntervalTimeWifi(getValue());
               }
             };
             break;
@@ -133,7 +145,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getReOpenTimeWifi();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setReOpenTimeWifi(getValue(), position);
+                presenter.setReOpenTimeWifi(getValue());
               }
             };
             break;
@@ -148,7 +160,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getDelayTimeData();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setDelayTimeData(getValue(), position);
+                presenter.setDelayTimeData(getValue());
               }
             };
             break;
@@ -156,7 +168,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getIntervalTimeData();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setIntervalTimeData(getValue(), position);
+                presenter.setIntervalTimeData(getValue());
               }
             };
             break;
@@ -164,7 +176,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getReOpenTimeData();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setReOpenTimeData(getValue(), position);
+                presenter.setReOpenTimeData(getValue());
               }
             };
             break;
@@ -179,7 +191,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getDelayTimeBluetooth();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setDelayTimeBluetooth(getValue(), position);
+                presenter.setDelayTimeBluetooth(getValue());
               }
             };
             break;
@@ -187,7 +199,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getIntervalTimeBluetooth();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setIntervalTimeBluetooth(getValue(), position);
+                presenter.setIntervalTimeBluetooth(getValue());
               }
             };
             break;
@@ -195,7 +207,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getReOpenTimeBluetooth();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setReOpenTimeBluetooth(getValue(), position);
+                presenter.setReOpenTimeBluetooth(getValue());
               }
             };
             break;
@@ -210,7 +222,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getDelayTimeSync();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setDelayTimeSync(getValue(), position);
+                presenter.setDelayTimeSync(getValue());
               }
             };
             break;
@@ -218,7 +230,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getIntervalTimeSync();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setIntervalTimeSync(getValue(), position);
+                presenter.setIntervalTimeSync(getValue());
               }
             };
             break;
@@ -226,7 +238,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             realTime = presenter.getReOpenTimeSync();
             onClick = new ValueRunnable<Long>() {
               @Override public void run() {
-                presenter.setReOpenTimeSync(getValue(), position);
+                presenter.setReOpenTimeSync(getValue());
               }
             };
             break;
@@ -382,16 +394,12 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     return NUMBER_ITEMS;
   }
 
-  @Override public void onRadioButtonCheckedChanged(int position) {
-    notifyItemChanged(position);
-  }
-
   public interface RadioInterface {
 
-    final String WIFI = "WiFi";
-    final String DATA = "Data";
-    final String BLUETOOTH = "Bluetooth";
-    final String SYNC = "Sync";
+    String WIFI = "WiFi";
+    String DATA = "Data";
+    String BLUETOOTH = "Bluetooth";
+    String SYNC = "Sync";
 
     Context getContext();
 
