@@ -23,28 +23,6 @@ public final class GridPresenter extends PresenterBase<GridInterface> {
     model = null;
   }
 
-  public void clickItem(final String name, final int image) {
-    final GridInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "Null reference");
-      return;
-    }
-    LogUtil.d(TAG, "onItemClicked: ", name);
-    reference.onItemClicked(model.createFragment(name, image));
-  }
-
-  public void moveItem(final int fromPosition, final int toPosition) {
-    final GridInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "Null reference");
-      return;
-    }
-
-    LogUtil.d(TAG, "moveItem from: ", fromPosition, " to: ", toPosition);
-    model.moveItems(reference.getItems(), fromPosition, toPosition);
-    reference.onItemMoved(fromPosition, toPosition);
-  }
-
   public void clickFAB() {
     final GridInterface reference = getBoundReference();
     if (reference == null) {

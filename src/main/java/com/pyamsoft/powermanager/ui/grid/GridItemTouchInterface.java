@@ -19,5 +19,5 @@ import android.content.Context;
 
 public interface GridItemTouchInterface {
 
-  boolean onMoveItem(final int fromPosition, final int toPosition);
+  boolean onMoveItem(final Context context, final int fromPosition, final int toPosition);
 }

@@ -239,18 +239,6 @@ public final class GridFragment extends ExplanationFragment implements GridInter
     }
   }
 
-  @Override public void onItemClicked(DetailBaseFragment fragment) {
-    throw new PresenterBase.IllegalBindException("No items");
-  }
-
-  @Override public void onItemMoved(int fromPosition, int toPosition) {
-    throw new PresenterBase.IllegalBindException("No items");
-  }
-
-  @Override public List<String> getItems() {
-    return null;
-  }
-
   @Override public void onFABClicked() {
     setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
