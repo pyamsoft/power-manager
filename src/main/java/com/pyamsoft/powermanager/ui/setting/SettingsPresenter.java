@@ -133,44 +133,4 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     }
     model.doReset();
   }
-
-  public String getBootTitle() {
-    return model.getBootTitle();
-  }
-
-  public String getSuspendTitle() {
-    return model.getSuspendTitle();
-  }
-
-  public String getNotificationTitle() {
-    return model.getNotificationTitle();
-  }
-
-  public String getForegroundTitle() {
-    return model.getForegroundTitle();
-  }
-
-  public String getResetTitle() {
-    return model.getResetTitle();
-  }
-
-  public String getBootExplanation() {
-    return model.getBootExplanation();
-  }
-
-  public String getSuspendExplanation() {
-    return model.getSuspendExplanation();
-  }
-
-  public String getNotificationExplanation() {
-    return model.getNotificationExplanation();
-  }
-
-  public String getForegroundExplanation() {
-    return model.getForegroundExplanation();
-  }
-
-  public String getResetExplanation() {
-    return null;
-  }
 }

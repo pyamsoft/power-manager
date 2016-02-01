@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.trigger.dialog;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogBluetoothFragment;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogDataFragment;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogNameFragment;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogSyncFragment;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogWifiFragment;
 
 public final class PowerTriggerDialogAdapter extends FragmentStatePagerAdapter {
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.trigger;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -30,7 +30,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
-import com.pyamsoft.powermanager.ui.fragment.PowerTriggerDialogFragment;
+import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
 import java.util.List;

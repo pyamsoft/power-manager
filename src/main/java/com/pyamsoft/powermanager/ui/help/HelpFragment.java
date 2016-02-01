@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.help;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -27,12 +27,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.adapter.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class PowerTriggerFragment extends ExplanationFragment {
+public final class HelpFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
   private RecyclerView.ItemDecoration decor;
@@ -43,50 +42,44 @@ public final class PowerTriggerFragment extends ExplanationFragment {
     return inflater.inflate(R.layout.fragment_recyclerview, container, false);
   }
 
-  @Override public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setupExplanationString();
-    final PowerTriggerAdapter adapter = new PowerTriggerAdapter(this);
-    adapter.refreshDataSet(view.getContext());
     decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-    recyclerView.setHasFixedSize(false);
+    recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(decor);
-    recyclerView.setAdapter(adapter);
+    recyclerView.setAdapter(new HelpAdapter());
+
+    setupExplanationString();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     if (recyclerView != null) {
       recyclerView.setLayoutManager(null);
-      recyclerView.setAdapter(null);
       recyclerView.removeItemDecoration(decor);
+      recyclerView.setAdapter(null);
     }
   }
 
   @Override public Spannable setupExplanationString() {
     final String[] strings = {
-        "Power Triggers" + "\n\n",
+        "Help and FAQs" + "\n\n",
 
-        "Power Triggers are special,", " user configured", " commands that will be run ",
-        "automatically",
-        " by Power Manager when the battery drops to a cetrain percentage." + "\n\n",
-
-        "Triggers can change the current configuration of Power Manager"
-            + "in realtime, or toggle various", " device interfaces",
-        " either on or off automatically." + "\n\n",
-
-        "New triggers can be created by selecting the", "plus icon", " or deleted by performing a ",
-        "long press", " on the trigger entry in the list and confirming the ",
-        "deletion prompt." + "\n\n"
+        "This screen displays various application related ",
+        "Help and Frequently Asked Questions. ",
+        "Explains briefly about the goals and requested permissions for the app, ",
+        "and includes a link to the source code ",
+        "as well as instructions for how to start helping out." + "\n\n",
     };
 
     final int largeSize =
         StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceLarge);
     final int smallSize =
         StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceMedium);
+
     int length = strings[0].length();
 
     // Color all text white
@@ -112,24 +105,11 @@ public final class PowerTriggerFragment extends ExplanationFragment {
     // Bold view
     length += strings[2].length() + strings[3].length();
     StringUtil.boldSpan(explanation, length, length + strings[4].length());
-
-    // Bold Wifi
-    length += strings[4].length() + strings[5].length() + strings[6].length();
-    StringUtil.boldSpan(explanation, length, length + strings[7].length());
-
-    length += strings[7].length() + strings[8].length() + strings[9].length();
-    StringUtil.boldSpan(explanation, length, length + strings[10].length());
-
-    length += strings[10].length() + strings[11].length();
-    StringUtil.boldSpan(explanation, length, length + strings[12].length());
-
-    length += strings[12].length() + strings[13].length();
-    StringUtil.boldSpan(explanation, length, length + strings[14].length());
     return explanation;
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.yellow500
-        : R.color.scrim45_yellow500;
+    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.cyan500
+        : R.color.scrim45_cyan500;
   }
 }

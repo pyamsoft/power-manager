@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.about;
 
 import android.graphics.Color;
 import android.os.Build;
@@ -27,12 +27,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.adapter.HelpAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class HelpFragment extends ExplanationFragment {
+public final class AboutFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
   private RecyclerView.ItemDecoration decor;
@@ -51,7 +50,7 @@ public final class HelpFragment extends ExplanationFragment {
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(decor);
-    recyclerView.setAdapter(new HelpAdapter());
+    recyclerView.setAdapter(new AboutAdapter(getContext()));
 
     setupExplanationString();
   }
@@ -67,13 +66,13 @@ public final class HelpFragment extends ExplanationFragment {
 
   @Override public Spannable setupExplanationString() {
     final String[] strings = {
-        "Help and FAQs" + "\n\n",
+        "About Power Manager" + "\n\n",
 
-        "This screen displays various application related ",
-        "Help and Frequently Asked Questions. ",
-        "Explains briefly about the goals and requested permissions for the app, ",
-        "and includes a link to the source code ",
-        "as well as instructions for how to start helping out." + "\n\n",
+        "This screen displays various information about the application including ",
+        "application version and build codes. ",
+        "The screen also includes a quick shortcut to the ",
+        "Power Manager system application entry ",
+        "for quick access to information and permission controls." + "\n\n",
     };
 
     final int largeSize =
@@ -110,7 +109,7 @@ public final class HelpFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.cyan500
-        : R.color.scrim45_cyan500;
+    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.orange500
+        : R.color.scrim45_orange500;
   }
 }

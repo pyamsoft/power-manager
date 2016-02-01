@@ -25,67 +25,6 @@ public final class SettingsModel {
     weakContext = new WeakReference<>(c.getApplicationContext());
   }
 
-  public String getBootTitle() {
-    final Context c = weakContext.get();
-    if (c != null) {
-      return c.getString(R.string.boot_enabled) + "\n";
-    } else {
-      return null;
-    }
-  }
-
-  public String getSuspendTitle() {
-    final Context c = weakContext.get();
-    if (c != null) {
-      return c.getString(R.string.suspend_charging) + "\n";
-    } else {
-      return null;
-    }
-  }
-
-  public String getNotificationTitle() {
-    final Context c = weakContext.get();
-    if (c != null) {
-      return c.getString(R.string.enable_notification) + "\n";
-    } else {
-      return null;
-    }
-  }
-
-  public String getForegroundTitle() {
-    final Context c = weakContext.get();
-    if (c != null) {
-      return c.getString(R.string.enable_foreground) + "\n";
-    } else {
-      return null;
-    }
-  }
-
-  public String getResetTitle() {
-    final Context c = weakContext.get();
-    if (c != null) {
-      return c.getString(R.string.reset_all_settings);
-    } else {
-      return null;
-    }
-  }
-
-  public String getBootExplanation() {
-    return "Start Power Manager when device starts";
-  }
-
-  public String getSuspendExplanation() {
-    return "Suspend Power Manager functions while charging";
-  }
-
-  public String getNotificationExplanation() {
-    return "Show a persistent notification in the Notification Drawer";
-  }
-
-  public String getForegroundExplanation() {
-    return "Increase the memory used by Power Manager in exchange for better performance";
-  }
-
   public boolean isBootEnabled() {
     final Context context = weakContext.get();
     if (context != null) {

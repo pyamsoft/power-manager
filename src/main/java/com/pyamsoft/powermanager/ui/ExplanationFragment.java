@@ -26,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.activity.MainActivity;
 
 public abstract class ExplanationFragment extends Fragment {
 

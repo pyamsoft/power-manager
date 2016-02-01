@@ -32,14 +32,11 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.activity.MainActivity;
-import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
+import com.pyamsoft.powermanager.ui.MainActivity;
 import com.pyamsoft.pydroid.base.PreferenceBase;
-import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
-import java.util.List;
 
 public final class GridFragment extends ExplanationFragment implements GridInterface {
 

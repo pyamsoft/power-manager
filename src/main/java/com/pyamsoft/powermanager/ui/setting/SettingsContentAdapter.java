@@ -92,26 +92,28 @@ public final class SettingsContentAdapter
     final boolean isReset = holder.getItemViewType() == TYPE_RESET;
     String title;
     String explanation;
+    final Context c = holder.itemView.getContext();
     switch (position) {
       case POSITION_BOOT:
-        title = presenter.getBootTitle();
-        explanation = presenter.getBootExplanation();
+        title = c.getString(R.string.boot_enabled) + "\n";
+        explanation = "Start Power Manager when device starts";
         break;
       case POSITION_SUSPEND:
-        title = presenter.getSuspendTitle();
-        explanation = presenter.getSuspendExplanation();
+        title = c.getString(R.string.suspend_charging) + "\n";
+        explanation = "Suspend Power Manager functions while charging";
         break;
       case POSITION_NOTIFICATION:
-        title = presenter.getNotificationTitle();
-        explanation = presenter.getNotificationExplanation();
+        title = c.getString(R.string.enable_notification) + "\n";
+        explanation = "Show a persistent notification in the Notification Drawer";
         break;
       case POSITION_FOREGROUND:
-        title = presenter.getForegroundTitle();
-        explanation = presenter.getForegroundExplanation();
+        title = c.getString(R.string.enable_foreground) + "\n";
+        explanation =
+            "Increase the memory used by Power Manager in exchange for better performance";
         break;
       case POSITION_RESET:
-        title = presenter.getResetTitle();
-        explanation = presenter.getResetExplanation();
+        title = c.getString(R.string.reset_all_settings);
+        explanation = null;
         break;
       default:
         title = null;

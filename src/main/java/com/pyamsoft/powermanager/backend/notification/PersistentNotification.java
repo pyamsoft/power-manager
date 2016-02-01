@@ -31,7 +31,7 @@ import com.pyamsoft.powermanager.backend.manager.ManagerSync;
 import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.ui.activity.MainActivity;
+import com.pyamsoft.powermanager.ui.MainActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NotificationUtil;

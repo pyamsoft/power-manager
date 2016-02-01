@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.trigger;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
@@ -33,115 +27,65 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.adapter.BatteryInfoAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class BatteryInfoFragment extends ExplanationFragment {
+public final class PowerTriggerFragment extends ExplanationFragment {
 
-  private final IntentFilter filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-  private final BatteryInfoAdapter adapter = new BatteryInfoAdapter();
-  private final Handler handler = new Handler();
-  private final BroadcastReceiver batteryReceiver = new BroadcastReceiver() {
-
-    @Override public void onReceive(Context context, Intent intent) {
-      if (intent != null && adapter != null) {
-        adapter.notifyDataSetChanged();
-      }
-    }
-  };
-  private SwipeRefreshLayout swipeRefreshLayout;
-  private final Runnable runnable = new Runnable() {
-
-    @Override public void run() {
-      if (adapter != null) {
-        adapter.notifyDataSetChanged();
-      }
-      if (swipeRefreshLayout != null) {
-        swipeRefreshLayout.setRefreshing(false);
-      }
-    }
-  };
   private RecyclerView recyclerView;
   private RecyclerView.ItemDecoration decor;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_battery_info, container, false);
+    return inflater.inflate(R.layout.fragment_recyclerview, container, false);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @Override public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    filter.addAction(Intent.ACTION_POWER_CONNECTED);
-    filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-    swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
-    swipeRefreshLayout.setColorSchemeResources(R.color.amber500, R.color.lightblueA200,
-        R.color.amber700, R.color.cyan500);
-    setupSwipeRefresh();
+    setupExplanationString();
+    final PowerTriggerAdapter adapter = new PowerTriggerAdapter(this);
+    adapter.refreshDataSet(view.getContext());
     decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
-    recyclerView.setHasFixedSize(true);
+    recyclerView.setHasFixedSize(false);
     recyclerView.addItemDecoration(decor);
     recyclerView.setAdapter(adapter);
-
-    setupExplanationString();
-  }
-
-  private void setupSwipeRefresh() {
-    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
-      @Override public void onRefresh() {
-        handler.postDelayed(runnable, 1000);
-      }
-    });
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    if (adapter != null) {
-      adapter.notifyDataSetChanged();
-    }
-    getContext().registerReceiver(batteryReceiver, filter);
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    getContext().unregisterReceiver(batteryReceiver);
-    handler.removeCallbacksAndMessages(null);
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     if (recyclerView != null) {
       recyclerView.setLayoutManager(null);
-      recyclerView.removeItemDecoration(decor);
       recyclerView.setAdapter(null);
-    }
-    if (swipeRefreshLayout != null) {
-      swipeRefreshLayout.setOnClickListener(null);
-      swipeRefreshLayout.setOnRefreshListener(null);
+      recyclerView.removeItemDecoration(decor);
     }
   }
 
   @Override public Spannable setupExplanationString() {
     final String[] strings = {
-        "Battery Info" + "\n\n",
+        "Power Triggers" + "\n\n",
 
-        "This screen displays various information about the current state of the ",
-        "device's battery. ", "The screen includes information about the current battery ",
-        "percent, charging status, and temperature ",
-        "and can be updated by swiping downwards on the list of items." + "\n\n",
+        "Power Triggers are special,", " user configured", " commands that will be run ",
+        "automatically",
+        " by Power Manager when the battery drops to a cetrain percentage." + "\n\n",
+
+        "Triggers can change the current configuration of Power Manager"
+            + "in realtime, or toggle various", " device interfaces",
+        " either on or off automatically." + "\n\n",
+
+        "New triggers can be created by selecting the", "plus icon", " or deleted by performing a ",
+        "long press", " on the trigger entry in the list and confirming the ",
+        "deletion prompt." + "\n\n"
     };
 
     final int largeSize =
         StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceLarge);
     final int smallSize =
         StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceMedium);
-
     int length = strings[0].length();
 
     // Color all text white
@@ -167,11 +111,24 @@ public final class BatteryInfoFragment extends ExplanationFragment {
     // Bold view
     length += strings[2].length() + strings[3].length();
     StringUtil.boldSpan(explanation, length, length + strings[4].length());
+
+    // Bold Wifi
+    length += strings[4].length() + strings[5].length() + strings[6].length();
+    StringUtil.boldSpan(explanation, length, length + strings[7].length());
+
+    length += strings[7].length() + strings[8].length() + strings[9].length();
+    StringUtil.boldSpan(explanation, length, length + strings[10].length());
+
+    length += strings[10].length() + strings[11].length();
+    StringUtil.boldSpan(explanation, length, length + strings[12].length());
+
+    length += strings[12].length() + strings[13].length();
+    StringUtil.boldSpan(explanation, length, length + strings[14].length());
     return explanation;
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.pink500
-        : R.color.scrim45_pink500;
+    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.yellow500
+        : R.color.scrim45_yellow500;
   }
 }

@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.adapter;
+package com.pyamsoft.powermanager.ui.about;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -27,16 +26,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.BuildConfig;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.util.AnimUtil;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHolder> {
+public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHolder>
+    implements AboutInterface {
 
   private static final int NUMBER_ABOUT_ITEMS = 5;
   private static final int VIEW_TYPE_TEXT = 0;
@@ -48,14 +46,22 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
   private static final int POSITION_LICENSES = 4;
   private static final float SCALE_Y = 1.0F;
   private static final String TAG = AboutAdapter.class.getSimpleName();
-  private static final Intent detailIntent = AppUtil.getApplicationInfoIntent(PowerManager.class);
   private static final String VERSION_CODE = "Version Code: " + BuildConfig.VERSION_NAME;
   private static final String BUILD_CODE = "Build Code: " + BuildConfig.VERSION_CODE;
   private final Set<Integer> expandedPositions = new HashSet<>(NUMBER_ABOUT_ITEMS);
   private final String dateCode;
+  private AboutPresenter presenter;
 
   public AboutAdapter(final Context context) {
     dateCode = "Build Date: " + context.getString(R.string.app_date);
+    presenter = new AboutPresenter();
+    presenter.bind(context, this);
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
+    }
   }
 
   @Override public int getItemViewType(final int position) {
@@ -211,7 +217,9 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
         holder.buttonContent.setOnClickListener(new View.OnClickListener() {
 
           @Override public void onClick(final View v) {
-            v.getContext().startActivity(detailIntent);
+            if (presenter != null) {
+              presenter.onClickDetailButton();
+            }
           }
         });
       }
@@ -243,6 +251,10 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
 
   @Override public int getItemCount() {
     return NUMBER_ABOUT_ITEMS;
+  }
+
+  @Override public void onDetailActivityLaunched() {
+
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

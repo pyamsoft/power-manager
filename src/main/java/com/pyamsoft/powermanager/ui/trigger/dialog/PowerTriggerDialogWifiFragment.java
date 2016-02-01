@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pyamsoft.powermanager.ui.fragment;
+package com.pyamsoft.powermanager.ui.trigger.dialog;
 
 import com.pyamsoft.powermanager.R;
 
-public final class PowerTriggerDialogSyncFragment extends PowerTriggerDialogRadioFragment {
+public final class PowerTriggerDialogWifiFragment extends PowerTriggerDialogRadioFragment {
 
   @Override protected String getRadioName() {
-    return getString(R.string.sync);
+    return getString(R.string.wifi);
   }
 
   @Override protected int getRadioDrawable() {
-    return R.drawable.ic_sync_white_24dp;
+    return R.drawable.ic_network_wifi_white_24dp;
   }
 }
