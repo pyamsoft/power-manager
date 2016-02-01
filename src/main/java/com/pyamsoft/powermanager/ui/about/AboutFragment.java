@@ -35,6 +35,7 @@ public final class AboutFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
   private RecyclerView.ItemDecoration decor;
+  private AboutAdapter adapter;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,13 +45,14 @@ public final class AboutFragment extends ExplanationFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    adapter = new AboutAdapter(getContext());
     decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(decor);
-    recyclerView.setAdapter(new AboutAdapter(getContext()));
+    recyclerView.setAdapter(adapter);
 
     setupExplanationString();
   }
@@ -61,6 +63,9 @@ public final class AboutFragment extends ExplanationFragment {
       recyclerView.setLayoutManager(null);
       recyclerView.removeItemDecoration(decor);
       recyclerView.setAdapter(null);
+    }
+    if (adapter != null) {
+      adapter.destroy();
     }
   }
 

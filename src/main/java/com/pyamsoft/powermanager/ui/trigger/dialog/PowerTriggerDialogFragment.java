@@ -30,85 +30,27 @@ import android.widget.Button;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
-import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
+import com.pyamsoft.powermanager.ui.trigger.PowerTriggerInterface;
 import com.pyamsoft.pydroid.util.LogUtil;
+import java.lang.ref.WeakReference;
 import java.util.Set;
 
-public class PowerTriggerDialogFragment extends DialogFragment {
+public class PowerTriggerDialogFragment extends DialogFragment
+    implements PowerTriggerDialogInterface {
 
   private static final String TAG = PowerTriggerDialogFragment.class.getSimpleName();
   private TabLayout tabLayout;
   private ViewPager viewPager;
+  private PowerTriggerDialogPresenter presenter;
   private PowerTriggerDialogAdapter adapter;
-  private PowerTriggerAdapter parentAdapter;
+  private PowerTriggerInterface parentAdapter;
 
-  private static void createNewTrigger(final PowerTrigger newTrigger,
-      final PowerTriggerDialogAdapter adapter) {
-    newTrigger.setAvailable(PowerTrigger.AVAILABLE);
-    newTrigger.setEnabled(PowerTrigger.ENABLED);
+  public PowerTriggerDialogFragment() {
+    presenter = new PowerTriggerDialogPresenter();
+  }
 
-    newTrigger.setManageWifi(adapter.getManageEnabledWifi());
-    newTrigger.setManageData(adapter.getManageEnabledData());
-    newTrigger.setManageBluetooth(adapter.getManageEnabledBluetooth());
-    newTrigger.setManageSync(adapter.getManageEnabledSync());
-
-    newTrigger.setReopenWifi(adapter.getReOpenEnabledWifi());
-    newTrigger.setReopenData(adapter.getReOpenEnabledData());
-    newTrigger.setReopenBluetooth(adapter.getReOpenEnabledBluetooth());
-    newTrigger.setReopenSync(adapter.getReOpenEnabledSync());
-
-    int state = adapter.getStateWifi();
-    switch (state) {
-      case PowerTrigger.TOGGLE_STATE_OFF:
-        newTrigger.setStateOffWifi();
-        break;
-      case PowerTrigger.TOGGLE_STATE_ON:
-        newTrigger.setStateOnWifi();
-        break;
-      default:
-        newTrigger.setStateNoneWifi();
-    }
-
-    state = adapter.getStateData();
-    switch (state) {
-      case PowerTrigger.TOGGLE_STATE_OFF:
-        newTrigger.setStateOffData();
-        break;
-      case PowerTrigger.TOGGLE_STATE_ON:
-        newTrigger.setStateOnData();
-        break;
-      default:
-        newTrigger.setStateNoneData();
-    }
-
-    state = adapter.getStateBluetooth();
-    switch (state) {
-      case PowerTrigger.TOGGLE_STATE_OFF:
-        newTrigger.setStateOffBluetooth();
-        break;
-      case PowerTrigger.TOGGLE_STATE_ON:
-        newTrigger.setStateOnBluetooth();
-        break;
-      default:
-        newTrigger.setStateNoneBluetooth();
-    }
-
-    state = adapter.getStateSync();
-    switch (state) {
-      case PowerTrigger.TOGGLE_STATE_OFF:
-        newTrigger.setStateOffSync();
-        break;
-      case PowerTrigger.TOGGLE_STATE_ON:
-        newTrigger.setStateOnSync();
-        break;
-      default:
-        newTrigger.setStateNoneSync();
-    }
-
-    // TODO
-    newTrigger.setBrightnessLevel(0);
-    newTrigger.setAutoBrightness(0);
-    newTrigger.setVolume(0);
+  public void setContext(final Context context) {
+    presenter.bind(context, this);
   }
 
   public static void hideKeyboard(final Activity act) {
@@ -130,7 +72,7 @@ public class PowerTriggerDialogFragment extends DialogFragment {
     return inflater.inflate(R.layout.layout_new_trigger_dialog, container, false);
   }
 
-  public final void setParentAdapter(final PowerTriggerAdapter parentAdapter) {
+  public final void setParentAdapter(final PowerTriggerInterface parentAdapter) {
     this.parentAdapter = parentAdapter;
   }
 
@@ -141,86 +83,49 @@ public class PowerTriggerDialogFragment extends DialogFragment {
     setupButtons(view);
   }
 
+  private void dismissAndHideKeyboard() {
+    dismiss();
+    hideKeyboard(getActivity());
+  }
+
   private void setupButtons(final View view) {
     final Button cancel = (Button) view.findViewById(R.id.new_trigger_dialog_cancel_button);
     final Button create = (Button) view.findViewById(R.id.new_trigger_dialog_create_button);
 
     cancel.setOnClickListener(new View.OnClickListener() {
 
+      private WeakReference<PowerTriggerDialogFragment> weakFragment =
+          new WeakReference<>(PowerTriggerDialogFragment.this);
+
       @Override public void onClick(final View v) {
-        dismiss();
-        hideKeyboard(getActivity());
+        final PowerTriggerDialogFragment f = weakFragment.get();
+        if (f != null) {
+          f.dismissAndHideKeyboard();
+        }
       }
     });
 
     create.setOnClickListener(new View.OnClickListener() {
+      private WeakReference<PowerTriggerDialogFragment> weakFragment =
+          new WeakReference<>(PowerTriggerDialogFragment.this);
 
       @Override public void onClick(final View v) {
         // Create the new Trigger by reading all parts of the
         // layout for their current
         // states
+        final PowerTriggerDialogFragment f = weakFragment.get();
         if (adapter == null) {
-          dismiss();
-          hideKeyboard(getActivity());
-          return;
-        }
-
-        // fetch all adapter values
-        final PowerTriggerDataSource source = PowerTriggerDataSource.with(v.getContext());
-        source.open();
-        if (!source.isOpened()) {
+          if (f != null) {
+            f.dismissAndHideKeyboard();
+          }
           return;
         }
 
         final String name = adapter.getName();
         final int level = adapter.getLevel();
-        if (name == null || level == -1) {
-          source.close();
-          return;
+        if (presenter != null) {
+          presenter.onCreateClicked(name, level);
         }
-
-        final PowerTrigger newTrigger = new PowerTrigger(source.getNextId(), name, level);
-        createNewTrigger(newTrigger, adapter);
-
-        PowerTrigger trigger = null;
-        final Set<PowerTrigger> triggers =
-            PowerTriggerDataSource.TriggerSet.with(v.getContext()).asSet();
-        for (final PowerTrigger t : triggers) {
-          if (t.getId() == newTrigger.getId()) {
-            LogUtil.d(TAG, "Found matching trigger by ID");
-            trigger = t;
-            break;
-          }
-
-          if (t.getName().equalsIgnoreCase(newTrigger.getName())) {
-            LogUtil.d(TAG, "Found matching trigger by NAME");
-            trigger = t;
-            break;
-          }
-
-          if (t.getLevel() == newTrigger.getLevel()) {
-            LogUtil.d(TAG, "Found matching trigger by LEVEL");
-            trigger = t;
-            break;
-          }
-        }
-
-        if (trigger != null) {
-          LogUtil.d(TAG, "Adopt trigger ", newTrigger.getName());
-          trigger.adopt(newTrigger);
-        } else {
-          LogUtil.d(TAG, "Create trigger ", newTrigger.getName());
-          trigger = newTrigger;
-        }
-        source.createTrigger(trigger);
-        source.close();
-
-        if (parentAdapter != null) {
-          parentAdapter.refreshDataSet(v.getContext());
-        }
-
-        dismiss();
-        hideKeyboard(getActivity());
       }
     });
   }
@@ -287,6 +192,94 @@ public class PowerTriggerDialogFragment extends DialogFragment {
 
     if (viewPager != null) {
       viewPager.setAdapter(null);
+    }
+  }
+
+  @Override public void onTriggerCreateFailed() {
+    dismissAndHideKeyboard();
+  }
+
+  @Override public void onTriggerCreateSuccess() {
+    if (parentAdapter != null) {
+      parentAdapter.refreshDataSet(getContext());
+    }
+
+    dismissAndHideKeyboard();
+  }
+
+  @Override public void fillInNewTrigger(final PowerTrigger newTrigger) {
+    if (adapter == null) {
+      LogUtil.d(TAG, "Null adapter");
+      return;
+    }
+    newTrigger.setAvailable(PowerTrigger.AVAILABLE);
+    newTrigger.setEnabled(PowerTrigger.ENABLED);
+
+    newTrigger.setManageWifi(adapter.getManageEnabledWifi());
+    newTrigger.setManageData(adapter.getManageEnabledData());
+    newTrigger.setManageBluetooth(adapter.getManageEnabledBluetooth());
+    newTrigger.setManageSync(adapter.getManageEnabledSync());
+
+    newTrigger.setReopenWifi(adapter.getReOpenEnabledWifi());
+    newTrigger.setReopenData(adapter.getReOpenEnabledData());
+    newTrigger.setReopenBluetooth(adapter.getReOpenEnabledBluetooth());
+    newTrigger.setReopenSync(adapter.getReOpenEnabledSync());
+
+    int state = adapter.getStateWifi();
+    switch (state) {
+      case PowerTrigger.TOGGLE_STATE_OFF:
+        newTrigger.setStateOffWifi();
+        break;
+      case PowerTrigger.TOGGLE_STATE_ON:
+        newTrigger.setStateOnWifi();
+        break;
+      default:
+        newTrigger.setStateNoneWifi();
+    }
+
+    state = adapter.getStateData();
+    switch (state) {
+      case PowerTrigger.TOGGLE_STATE_OFF:
+        newTrigger.setStateOffData();
+        break;
+      case PowerTrigger.TOGGLE_STATE_ON:
+        newTrigger.setStateOnData();
+        break;
+      default:
+        newTrigger.setStateNoneData();
+    }
+
+    state = adapter.getStateBluetooth();
+    switch (state) {
+      case PowerTrigger.TOGGLE_STATE_OFF:
+        newTrigger.setStateOffBluetooth();
+        break;
+      case PowerTrigger.TOGGLE_STATE_ON:
+        newTrigger.setStateOnBluetooth();
+        break;
+      default:
+        newTrigger.setStateNoneBluetooth();
+    }
+
+    state = adapter.getStateSync();
+    switch (state) {
+      case PowerTrigger.TOGGLE_STATE_OFF:
+        newTrigger.setStateOffSync();
+        break;
+      case PowerTrigger.TOGGLE_STATE_ON:
+        newTrigger.setStateOnSync();
+        break;
+      default:
+        newTrigger.setStateNoneSync();
+    }
+
+    // TODO
+    newTrigger.setBrightnessLevel(0);
+    newTrigger.setAutoBrightness(0);
+    newTrigger.setVolume(0);
+
+    if (presenter != null) {
+      presenter.onNewTriggerFilled(newTrigger);
     }
   }
 }

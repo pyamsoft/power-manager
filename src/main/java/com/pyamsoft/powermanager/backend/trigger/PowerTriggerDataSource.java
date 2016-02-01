@@ -161,14 +161,17 @@ public final class PowerTriggerDataSource {
     return trigger;
   }
 
-  public final void deleteTrigger(final PowerTrigger trigger) {
+  public final boolean deleteTrigger(final PowerTrigger trigger) {
+    boolean removed = false;
     if (database != null) {
       final int id = trigger.getId();
-      database.delete(PowerTriggerTable.TABLE_NAME, PowerTriggerTable.Entry.COLUMN_ID + " = " + id,
-          null);
+      int deleted = database.delete(PowerTriggerTable.TABLE_NAME,
+          PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null);
       LogUtil.d(TAG, "Trigger: ", id, "deleted");
       TriggerSet.with(context).remove(trigger.getName());
+      removed = (deleted > 0);
     }
+    return removed;
   }
 
   public final void deleteAllTriggers() {

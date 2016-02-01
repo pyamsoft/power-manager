@@ -15,9 +15,7 @@
  */
 package com.pyamsoft.powermanager.ui.trigger;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -36,17 +34,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public final class PowerTriggerAdapter
-    extends RecyclerView.Adapter<PowerTriggerAdapter.ViewHolder> {
+public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTriggerAdapter.ViewHolder>
+    implements PowerTriggerInterface {
 
   private static final int VIEW_TYPE_NORMAL = 0;
   private static final int VIEW_TYPE_ADD = 1;
   private static final String TAG = PowerTriggerAdapter.class.getSimpleName();
   private final FragmentManager childManager;
   private final List<PowerTrigger> triggerList = new ArrayList<>();
+  private PowerTriggerPresenter presenter;
 
-  @SuppressLint("ShowToast") public PowerTriggerAdapter(final Fragment f) {
+  public PowerTriggerAdapter(final Fragment f) {
     childManager = f.getChildFragmentManager();
+    presenter = new PowerTriggerPresenter();
+    presenter.bind(f.getContext(), this);
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
+    }
   }
 
   public static void merge(final List<PowerTrigger> items) {
@@ -137,9 +144,9 @@ public final class PowerTriggerAdapter
       holder.addButton.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(final View v) {
-          final PowerTriggerDialogFragment fragment = new PowerTriggerDialogFragment();
-          fragment.setParentAdapter(PowerTriggerAdapter.this);
-          fragment.show(childManager, null);
+          if (presenter != null) {
+            presenter.onAddButtonClicked();
+          }
         }
       });
       // Add button does not react to long presses
@@ -152,25 +159,11 @@ public final class PowerTriggerAdapter
       holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 
         @Override public boolean onLongClick(final View v) {
-          new AlertDialog.Builder(v.getContext()).setCancelable(true)
-              .setMessage("Really delete trigger: [" + trigger.getId() + "] " +
-                  trigger.getName() + "?")
-              .setTitle("Delete Trigger")
-              .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-
-                @Override public void onClick(final DialogInterface dialog, final int which) {
-                  removeItem(v.getContext(), trigger);
-                }
-              })
-              .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-                @Override public void onClick(final DialogInterface dialog, final int which) {
-                  dialog.dismiss();
-                }
-              })
-              .create()
-              .show();
-          return true;
+          if (presenter != null) {
+            presenter.onLongClick(trigger);
+            return true;
+          }
+          return false;
         }
       });
     }
@@ -180,23 +173,7 @@ public final class PowerTriggerAdapter
     return triggerList.size();
   }
 
-  private void removeItem(final Context context, final PowerTrigger trigger) {
-    final int index = triggerList.indexOf(trigger);
-    if (index == PowerTriggerDataSource.TriggerSet.NO_INDEX) {
-      return;
-    }
-
-    final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-    source.open();
-    if (source.isOpened()) {
-      source.deleteTrigger(trigger);
-      source.close();
-    }
-    triggerList.remove(trigger);
-    notifyItemRemoved(index);
-  }
-
-  public final void refreshDataSet(final Context context) {
+  @Override public final void refreshDataSet(final Context context) {
     // sorts the triggers/triggerNames list and then calls notifyDataSetChanged
     // merge sort
     // before the merge, set the placeholder (ID -1) to the largest ID possible
@@ -210,6 +187,27 @@ public final class PowerTriggerAdapter
 
     merge(triggerList);
     notifyDataSetChanged();
+  }
+
+  @Override public void onDialogFragmentCreated(PowerTriggerDialogFragment fragment) {
+    if (fragment != null) {
+      fragment.show(childManager, null);
+    }
+  }
+
+  @Override public void onItemRemoved(PowerTrigger removed) {
+    final int index = triggerList.indexOf(removed);
+    if (index == PowerTriggerDataSource.TriggerSet.NO_INDEX) {
+      return;
+    }
+    triggerList.remove(removed);
+    notifyItemRemoved(index);
+  }
+
+  @Override public void onDeleteWarningDialogCreated(AlertDialog dialog) {
+    if (dialog != null) {
+      dialog.show();
+    }
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -16,6 +16,11 @@ public class AboutPresenter extends PresenterBase<AboutInterface> {
     model = new AboutModel(context);
   }
 
+  @Override public void unbind() {
+    super.unbind();
+    model = null;
+  }
+
   public void onClickDetailButton() {
     final AboutInterface reference = getBoundReference();
     if (reference == null) {
