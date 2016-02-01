@@ -53,6 +53,17 @@ public class PowerTriggerDialogFragment extends DialogFragment
     presenter.bind(context, this);
   }
 
+  @Override public void dismiss() {
+    super.dismiss();
+    destroy();
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
+    }
+  }
+
   public static void hideKeyboard(final Activity act) {
     if (act != null) {
       LogUtil.d(TAG, "Get current focus");

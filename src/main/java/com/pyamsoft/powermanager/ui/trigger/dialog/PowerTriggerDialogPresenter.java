@@ -39,4 +39,9 @@ public class PowerTriggerDialogPresenter extends PresenterBase<PowerTriggerDialo
     super.bind(reference);
     model = new PowerTriggerDialogModel(context);
   }
+
+  @Override public void unbind() {
+    super.unbind();
+    model = null;
+  }
 }
