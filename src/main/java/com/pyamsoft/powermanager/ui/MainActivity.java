@@ -16,6 +16,9 @@
 package com.pyamsoft.powermanager.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -37,6 +40,8 @@ import com.pyamsoft.pydroid.util.NetworkUtil;
 public class MainActivity extends ActivityBase {
 
   private View statusBarPadding;
+  private AppBarLayout appBarLayout;
+  private CollapsingToolbarLayout collapsingToolbarLayout;
   private Toolbar toolbar;
   private View shadow;
   private LinearLayout adMediaViews;
@@ -70,6 +75,8 @@ public class MainActivity extends ActivityBase {
     shadow = findViewById(R.id.dropshadow);
     adMediaViews = (LinearLayout) findViewById(R.id.media_ads);
     fragmentPlace = findViewById(R.id.fragment_place);
+    appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+    collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsebar);
   }
 
   @Override protected void onDestroy() {
@@ -83,9 +90,6 @@ public class MainActivity extends ActivityBase {
     if (statusBarPadding != null) {
       super.colorizeStatusBar(statusBarPadding, color);
     }
-  }
-
-  public final void showExplanation(final Spannable explanationText, final int backgroundColor) {
   }
 
   private void setupViewElevation() {
@@ -103,14 +107,20 @@ public class MainActivity extends ActivityBase {
   }
 
   private void setupToolbar() {
-    toolbar.setVisibility(View.GONE);
     setSupportActionBar(toolbar);
-    AnimUtil.expand(toolbar);
   }
 
-  public final void colorizeActionBarToolbar(final boolean color) {
-    colorizeActionBarToolbar(toolbar, shadow, color ? R.color.amber500 : 0,
-        color ? R.string.app_name : 0);
+  public final void colorizeAppBar(final int color) {
+    final boolean noColor = (color == 0);
+    final int stringRes = noColor ? 0 : R.string.app_name;
+    final int backgroundColor = noColor ? android.R.color.transparent : color;
+    if (noColor) {
+      disableShadows(toolbar, shadow);
+    } else {
+      enableShadows(toolbar, shadow);
+    }
+    collapsingToolbarLayout.setTitle(stringRes == 0 ? null : getString(stringRes));
+    appBarLayout.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
   }
 
   @Override protected void onResume() {
