@@ -198,7 +198,8 @@ public final class GridFragment extends ExplanationFragment implements GridInter
     final MainActivity a = ((MainActivity) getActivity());
     if (a != null) {
       a.setActionBarUp(false);
-      a.colorizeActionBarToolbar(true);
+      // TODO
+      //a.colorizeActionBarToolbar(true);
       a.colorizeStatusBar(R.color.amber700);
     }
   }
@@ -215,7 +216,7 @@ public final class GridFragment extends ExplanationFragment implements GridInter
   }
 
   private void setupRecyclerView(final View v) {
-    adapter = new GridContentAdapter(this);
+    adapter = new GridContentAdapter(v.getContext());
     recyclerView = (RecyclerView) v.findViewById(R.id.recyclerview);
     final StaggeredGridLayoutManager staggeredGridLayoutManager =
         new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

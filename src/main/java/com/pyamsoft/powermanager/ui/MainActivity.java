@@ -18,59 +18,75 @@ package com.pyamsoft.powermanager.ui;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.grid.GridFragment;
+import com.pyamsoft.powermanager.ui.grid.GridContentAdapter;
+import com.pyamsoft.powermanager.ui.grid.GridItemTouchCallback;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.base.SocialMediaViewBase;
-import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.pyamsoft.pydroid.util.ViewUtil;
 
 public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
 
-  private View statusBarPadding;
+  private RecyclerView recyclerView;
+  private final StaggeredGridLayoutManager gridLayoutManager =
+      new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+  private FloatingActionButton fab;
   private AppBarLayout appBarLayout;
+  private ItemTouchHelper helper;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private Toolbar toolbar;
-  private View shadow;
-  private LinearLayout adMediaViews;
-  private View fragmentPlace;
+  private View mediaLayout;
   private View googlePlay;
   private View googlePlus;
   private View blogger;
   private View facebook;
   private SocialMediaViewBase.SocialMediaPresenter presenter;
   private ExplanationDialog dialog;
+  private CoordinatorLayout coordinatorLayout;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     findViews();
-    setupStatusBar(statusBarPadding);
-    setupToolbar();
-    setupViewElevation();
+    setupAppBar();
     setupMediaViews();
     createExplanationDialog();
-
-    getSupportFragmentManager().beginTransaction()
-        .add(R.id.fragment_place, new GridFragment())
-        .commit();
     setupGiftAd();
+    setupRecyclerView();
+    setupFAB();
 
     presenter = new SocialMediaViewBase.SocialMediaPresenter();
     presenter.bind(this, this);
+  }
+
+  private void setupFAB() {
+    ViewUtil.fixFABMarginsCompat(fab);
+  }
+
+  private void setupRecyclerView() {
+    final GridContentAdapter adapter = new GridContentAdapter(this);
+    helper = new ItemTouchHelper(new GridItemTouchCallback(adapter));
+    helper.attachToRecyclerView(recyclerView);
+    recyclerView.setLayoutManager(gridLayoutManager);
+    recyclerView.setAdapter(adapter);
   }
 
   private void createExplanationDialog() {
@@ -119,13 +135,12 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     googlePlus = findViewById(R.id.google_plus);
     blogger = findViewById(R.id.blogger);
     facebook = findViewById(R.id.facebook);
-    statusBarPadding = findViewById(R.id.statusbar_padding);
     toolbar = (Toolbar) findViewById(R.id.toolbar);
-    shadow = findViewById(R.id.dropshadow);
-    adMediaViews = (LinearLayout) findViewById(R.id.media_ads);
-    fragmentPlace = findViewById(R.id.fragment_place);
     appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
     collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsebar);
+    recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+    fab = (FloatingActionButton) findViewById(R.id.fab);
+    mediaLayout = findViewById(R.id.media_ads);
   }
 
   @Override protected void onDestroy() {
@@ -142,40 +157,27 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   }
 
   public final void colorizeStatusBar(final int color) {
-    if (statusBarPadding != null) {
-      super.colorizeStatusBar(statusBarPadding, color);
-    }
+    //if (statusBarPadding != null) {
+    //  super.colorizeStatusBar(statusBarPadding, color);
+    //}
   }
 
-  private void setupViewElevation() {
-    if (toolbar != null && shadow != null) {
-      enableShadows(toolbar, shadow);
-    }
-
-    final int dp = (int) AppUtil.convertToDP(this, ElevationUtil.ELEVATION_APP_BAR);
-    if (adMediaViews != null) {
-      ViewCompat.setElevation(adMediaViews, dp);
-    }
-    if (fragmentPlace != null) {
-      ViewCompat.setElevation(fragmentPlace, ElevationUtil.ELEVATION_NONE);
-    }
-  }
-
-  private void setupToolbar() {
+  private void setupAppBar() {
     setSupportActionBar(toolbar);
+    collapsingToolbarLayout.setTitle(getString(R.string.app_name));
   }
 
   public final void colorizeAppBar(final int color) {
-    final boolean noColor = (color == 0);
-    final int stringRes = noColor ? 0 : R.string.app_name;
-    final int backgroundColor = noColor ? android.R.color.transparent : color;
-    if (noColor) {
-      disableShadows(toolbar, shadow);
-    } else {
-      enableShadows(toolbar, shadow);
-    }
-    collapsingToolbarLayout.setTitle(stringRes == 0 ? null : getString(stringRes));
-    appBarLayout.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
+    //final boolean noColor = (color == 0);
+    //final int stringRes = noColor ? 0 : R.string.app_name;
+    //final int backgroundColor = noColor ? android.R.color.transparent : color;
+    //if (noColor) {
+    //  disableShadows(toolbar, shadow);
+    //} else {
+    //  enableShadows(toolbar, shadow);
+    //}
+    //collapsingToolbarLayout.setTitle(stringRes == 0 ? null : getString(stringRes));
+    //appBarLayout.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
   }
 
   @Override protected void onResume() {
@@ -260,5 +262,12 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     if (dialog != null) {
       dialog.dismiss();
     }
+  }
+
+  public void click(final View v) {
+    if (coordinatorLayout == null) {
+      coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+    }
+    Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
   }
 }

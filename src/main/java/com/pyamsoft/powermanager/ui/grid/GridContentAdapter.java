@@ -48,17 +48,17 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
   private static final String TAG = GridContentAdapter.class.getSimpleName();
 
   private final List<String> items;
-  private final FragmentManager fm;
+  //private final FragmentManager fm;
   private GridPresenter presenter;
 
-  public GridContentAdapter(final Fragment f) {
-    this.fm = f.getFragmentManager();
+  public GridContentAdapter(final Context context) {
+    //this.fm = f.getFragmentManager();
     presenter = new GridPresenter();
-    presenter.bind(f.getContext(), this);
+    presenter.bind(context, this);
 
     items = new ArrayList<>(NUMBER_ITEMS);
 
-    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(f.getContext());
+    final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     items.add(preferenceUtil.gridOrder().getOne());
     items.add(preferenceUtil.gridOrder().getTwo());
     items.add(preferenceUtil.gridOrder().getThree());
@@ -138,10 +138,11 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
 
           final DetailBaseFragment detailFragment = new DetailBaseFragment();
           detailFragment.setArguments(detailArgs);
-          fm.beginTransaction()
-              .replace(R.id.fragment_place, detailFragment)
-              .addToBackStack(null)
-              .commit();
+          // TODO
+          //fm.beginTransaction()
+          //    .replace(R.id.fragment_place, detailFragment)
+          //    .addToBackStack(null)
+          //    .commit();
         }
       });
     }

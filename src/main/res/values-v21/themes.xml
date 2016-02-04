@@ -17,5 +17,7 @@
 <resources>
 
   <style name="Theme.PowerManager.Light" parent="@style/Base.Theme.PowerManager.Light">
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
   </style>
 </resources>

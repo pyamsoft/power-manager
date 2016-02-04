@@ -422,7 +422,8 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
     final MainActivity a = ((MainActivity) getActivity());
     if (a != null) {
       a.setActionBarUp(true);
-      a.colorizeActionBarToolbar(false);
+      // TODO
+      //a.colorizeActionBarToolbar(false);
     }
   }
 

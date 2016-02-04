@@ -14,87 +14,87 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<merge
+
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="@bool/fitsSystem"
+    android:fitsSystemWindows="true"
     >
 
-  <LinearLayout
+  <android.support.design.widget.AppBarLayout
+      android:id="@+id/appbar"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical"
+      android:layout_height="240dp"
+      android:fitsSystemWindows="true"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
       >
 
-    <View
-        android:id="@+id/statusbar_padding"
+    <android.support.design.widget.CollapsingToolbarLayout
+        android:id="@+id/collapsebar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        />
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        app:contentScrim="?attr/colorPrimary"
+        app:expandedTitleMarginEnd="64dp"
+        app:expandedTitleMarginStart="48dp"
+        app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
 
-      <FrameLayout
-          android:id="@+id/fragment_place"
+      <android.support.v7.widget.Toolbar
+          android:id="@+id/toolbar"
           android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:layout_gravity="bottom"
+          android:layout_height="?attr/actionBarSize"
+          app:layout_collapseMode="pin"
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
           />
 
-      <View
-          android:id="@+id/upshadow"
-          android:layout_gravity="bottom"
-          style="@style/Style.PYDroid.DropShadow.Up"
-          />
+    </android.support.design.widget.CollapsingToolbarLayout>
 
-      <android.support.design.widget.AppBarLayout
-          android:id="@+id/appbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="top"
-          >
+  </android.support.design.widget.AppBarLayout>
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsebar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            >
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recyclerview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      />
 
-          <android.support.v7.widget.Toolbar
-              android:id="@+id/toolbar"
-              android:layout_width="match_parent"
-              android:layout_height="?attr/actionBarSize"
-              android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-              app:layout_collapseMode="pin"
-              app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-              />
+  <!-- TODO Remove in favor of a material sheet-->
+  <include
+      layout="@layout/layout_media_ads"
+      android:id="@+id/media_ads"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:layout_anchor="@id/coordinator_layout"
+      app:layout_anchorGravity="bottom|right|end"
+      />
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="64dp"
+      android:layout_marginEnd="16dp"
+      android:layout_marginRight="16dp"
+      android:onClick="click"
+      app:fabSize="normal"
+      app:layout_anchor="@id/media_ads"
+      app:layout_anchorGravity="top|right|end"
+      />
 
-      </android.support.design.widget.AppBarLayout>
+  <android.support.design.widget.FloatingActionButton
+      android:id="@+id/fab_small"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="72dp"
+      android:layout_marginEnd="96dp"
+      android:layout_marginRight="96dp"
+      app:fabSize="mini"
+      app:layout_anchor="@id/media_ads"
+      app:layout_anchorGravity="top|right|end"
+      />
 
-      <View
-          android:id="@+id/dropshadow"
-          android:layout_gravity="top"
-          android:layout_marginTop="?attr/actionBarSize"
-          style="@style/Style.PYDroid.DropShadow"
-          />
-
-    </android.support.design.widget.CoordinatorLayout>
-
-    <include
-        layout="@layout/layout_media_ads"
-        android:id="@+id/media_ads"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-  </LinearLayout>
-
-</merge>
+</android.support.design.widget.CoordinatorLayout>
