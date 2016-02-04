@@ -354,7 +354,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         }
       });
 
-      ViewUtil.fixFABMarginsCompat(smallFAB);
+      ViewUtil.fixFABMargins(smallFAB);
 
       try {
         final boolean isChecked = isClickedSmallFAB.call();
@@ -390,7 +390,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         }
       });
 
-      ViewUtil.fixFABMarginsCompat(largeFAB);
+      ViewUtil.fixFABMargins(largeFAB);
 
       try {
         final boolean isChecked = isClickedLargeFAB.call();

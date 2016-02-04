@@ -30,6 +30,7 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -85,14 +86,34 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     tintManager.setStatusBarTintEnabled(true);
     tintManager.setNavigationBarTintEnabled(false);
 
-
     // TODO move into adapter
     colorizeStatusBar(R.color.amber700);
   }
 
   private void setupFAB() {
-    ViewUtil.fixFABMarginsCompat(fab);
-    ViewUtil.fixFABMarginsCompat(fabSmall);
+    ViewUtil.fixFABMargins(fab, new ViewUtil.ViewLayoutCallback() {
+      @Override public void onRetrieveLayoutParams(FloatingActionButton button,
+          ViewGroup.MarginLayoutParams params) {
+        int bottom = params.bottomMargin;
+        bottom = (bottom == 0) ? bottom : (button.getHeight() / 2);
+        final int top = 0;
+        final int right = 0;
+        final int left = 0;
+        params.setMargins(left, top, right, bottom);
+      }
+    });
+    ViewUtil.fixFABMargins(fabSmall, new ViewUtil.ViewLayoutCallback() {
+      @Override public void onRetrieveLayoutParams(FloatingActionButton button,
+          ViewGroup.MarginLayoutParams params) {
+        final int size = (int) AppUtil.convertToDP(button.getContext(), 52);
+        int bottom = params.bottomMargin;
+        bottom = (bottom == 0) ? bottom : size;
+        final int top = 0;
+        final int left = 0;
+        final int right = (int) (1.5 * size);
+        params.setMargins(left, top, right, bottom);
+      }
+    });
   }
 
   private void setupRecyclerView() {

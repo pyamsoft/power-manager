@@ -177,7 +177,7 @@ public final class GridFragment extends ExplanationFragment implements GridInter
       }
     });
 
-    ViewUtil.fixFABMarginsCompat(fab);
+    ViewUtil.fixFABMargins(fab);
     setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
 
