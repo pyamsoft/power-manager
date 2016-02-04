@@ -21,7 +21,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,7 +36,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
-public class MainActivity extends ActivityBase {
+public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
 
   private View statusBarPadding;
   private AppBarLayout appBarLayout;
@@ -46,7 +45,11 @@ public class MainActivity extends ActivityBase {
   private View shadow;
   private LinearLayout adMediaViews;
   private View fragmentPlace;
-  private SocialMediaViewBase socialMediaViewBase;
+  private View googlePlay;
+  private View googlePlus;
+  private View blogger;
+  private View facebook;
+  private SocialMediaViewBase.SocialMediaPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -56,20 +59,59 @@ public class MainActivity extends ActivityBase {
     setupStatusBar(statusBarPadding);
     setupToolbar();
     setupViewElevation();
+    setupMediaViews();
 
     getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_place, new GridFragment())
         .commit();
     setupGiftAd();
 
-    socialMediaViewBase = new SocialMediaViewBase();
-    socialMediaViewBase.bind(getWindow().getDecorView());
+    presenter = new SocialMediaViewBase.SocialMediaPresenter();
+    presenter.bind(this, this);
+  }
+
+  private void setupMediaViews() {
+    googlePlay.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (presenter != null) {
+          presenter.clickGooglePlay();
+        }
+      }
+    });
+
+    googlePlus.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (presenter != null) {
+          presenter.clickGooglePlus();
+        }
+      }
+    });
+
+    blogger.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (presenter != null) {
+          presenter.clickBlogger();
+        }
+      }
+    });
+
+    facebook.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (presenter != null) {
+          presenter.clickFacebook();
+        }
+      }
+    });
   }
 
   /**
    * Butterknife leaks the activity?
    */
   private void findViews() {
+    googlePlay = findViewById(R.id.google_play);
+    googlePlus = findViewById(R.id.google_plus);
+    blogger = findViewById(R.id.blogger);
+    facebook = findViewById(R.id.facebook);
     statusBarPadding = findViewById(R.id.statusbar_padding);
     toolbar = (Toolbar) findViewById(R.id.toolbar);
     shadow = findViewById(R.id.dropshadow);
@@ -81,9 +123,15 @@ public class MainActivity extends ActivityBase {
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (socialMediaViewBase != null) {
-      socialMediaViewBase.unbind();
-    }
+    googlePlay.setOnClickListener(null);
+    googlePlus.setOnClickListener(null);
+    blogger.setOnClickListener(null);
+    facebook.setOnClickListener(null);
+    AppUtil.nullifyCallback(googlePlay);
+    AppUtil.nullifyCallback(googlePlus);
+    AppUtil.nullifyCallback(blogger);
+    AppUtil.nullifyCallback(facebook);
+    presenter.unbind();
   }
 
   public final void colorizeStatusBar(final int color) {
@@ -175,5 +223,21 @@ public class MainActivity extends ActivityBase {
   }
 
   @Override protected void onBackPressedFragmentHook() {
+  }
+
+  @Override public void onGooglePlayClicked(String rateUsed) {
+
+  }
+
+  @Override public void onGooglePlusClicked() {
+
+  }
+
+  @Override public void onBloggerClicked() {
+
+  }
+
+  @Override public void onFacebookClicked() {
+
   }
 }
