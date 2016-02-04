@@ -21,6 +21,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -29,8 +30,6 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -41,13 +40,16 @@ import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.pyamsoft.pydroid.util.ViewUtil;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
 
   private RecyclerView recyclerView;
   private final StaggeredGridLayoutManager gridLayoutManager =
       new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+  private SystemBarTintManager tintManager;
   private FloatingActionButton fab;
+  private FloatingActionButton fabSmall;
   private AppBarLayout appBarLayout;
   private ItemTouchHelper helper;
   private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -65,6 +67,7 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    setupTintManager();
     findViews();
     setupAppBar();
     setupMediaViews();
@@ -77,8 +80,19 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     presenter.bind(this, this);
   }
 
+  private void setupTintManager() {
+    tintManager = new SystemBarTintManager(this);
+    tintManager.setStatusBarTintEnabled(true);
+    tintManager.setNavigationBarTintEnabled(false);
+
+
+    // TODO move into adapter
+    colorizeStatusBar(R.color.amber700);
+  }
+
   private void setupFAB() {
     ViewUtil.fixFABMarginsCompat(fab);
+    ViewUtil.fixFABMarginsCompat(fabSmall);
   }
 
   private void setupRecyclerView() {
@@ -140,6 +154,7 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsebar);
     recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
     fab = (FloatingActionButton) findViewById(R.id.fab);
+    fabSmall = (FloatingActionButton) findViewById(R.id.fab_small);
     mediaLayout = findViewById(R.id.media_ads);
   }
 
@@ -157,9 +172,9 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   }
 
   public final void colorizeStatusBar(final int color) {
-    //if (statusBarPadding != null) {
-    //  super.colorizeStatusBar(statusBarPadding, color);
-    //}
+    if (tintManager != null) {
+      tintManager.setStatusBarTintColor(ContextCompat.getColor(this, color));
+    }
   }
 
   private void setupAppBar() {

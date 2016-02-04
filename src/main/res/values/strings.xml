@@ -113,7 +113,7 @@
   <string name="boot">Boot:</string>
   <string name="suspend">Suspend:</string>
   <string name="interval">Interval</string>
-  <string name="reset_explain">Reset all application settings to defaults. This will also close the application and is not reversable.</string>
+  <string name="reset_explain">Reset all application settings to defaults. This will also close the application and is not reversible.</string>
   <string name="open_source_licenses">Open Source Licenses</string>
 </resources>
 
