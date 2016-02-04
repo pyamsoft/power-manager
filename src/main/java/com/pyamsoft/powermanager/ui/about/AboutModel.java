@@ -13,7 +13,8 @@ public class AboutModel {
 
   public AboutModel(final Context context) {
     this.weakContext = new WeakReference<>(context);
-    intent = AppUtil.getApplicationInfoIntent(PowerManager.class);
+    intent = AppUtil.getApplicationInfoIntent(PowerManager.class)
+        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }
 
   public boolean startApplicationDetailActivity() {
