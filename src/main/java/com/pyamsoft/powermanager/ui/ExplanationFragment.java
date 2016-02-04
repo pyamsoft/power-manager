@@ -43,7 +43,7 @@ public abstract class ExplanationFragment extends Fragment {
         final Activity a = getActivity();
         if (a instanceof MainActivity) {
           final MainActivity main = (MainActivity) a;
-          main.showExplanation(explanation, getBackgroundColor());
+          main.showExplainView(explanation, getBackgroundColor());
         }
         handled = true;
         break;

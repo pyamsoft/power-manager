@@ -103,7 +103,7 @@
   <string name="radio_delay_explain">Delay between when the screen turns off and when Power Manager turns off %s</string>
   <string name="reopen_interval_delay_explain">Length of time elapsed before Power Manager turns %s back on</string>
   <string name="reopen_interval_duration_explain">Length of time that %s will stay enabled before being turned off once again. This duration will cycle.</string>
-  <string name="okay_got_it">Okay, Got it</string>
+  <string name="okay">Okay</string>
     <string formatted="false" name="interval_explain">The Interval controls whether %s will be
         turned back on after it has been managed. Has no effect if %s is not managed</string>
     <string formatted="false" name="manage_explain">If %s is managed, Power Manager will

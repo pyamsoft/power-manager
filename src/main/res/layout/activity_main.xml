@@ -97,11 +97,4 @@
         />
   </LinearLayout>
 
-  <include
-      layout="@layout/layout_explain"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:visibility="gone"
-      />
-
 </merge>

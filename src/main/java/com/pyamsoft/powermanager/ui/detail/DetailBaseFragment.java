@@ -50,6 +50,7 @@ import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
+import com.pyamsoft.pydroid.util.ViewUtil;
 import com.squareup.picasso.Picasso;
 import java.util.concurrent.Callable;
 
@@ -353,6 +354,8 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         }
       });
 
+      ViewUtil.fixFABMarginsCompat(smallFAB);
+
       try {
         final boolean isChecked = isClickedSmallFAB.call();
         final int drawable = isChecked ? smallIconOn : smallIconOff;
@@ -386,6 +389,8 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
           return true;
         }
       });
+
+      ViewUtil.fixFABMarginsCompat(largeFAB);
 
       try {
         final boolean isChecked = isClickedLargeFAB.call();

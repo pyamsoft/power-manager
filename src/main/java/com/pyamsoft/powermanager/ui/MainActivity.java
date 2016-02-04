@@ -21,6 +21,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +51,7 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   private View blogger;
   private View facebook;
   private SocialMediaViewBase.SocialMediaPresenter presenter;
+  private ExplanationDialog dialog;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -60,6 +62,7 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     setupToolbar();
     setupViewElevation();
     setupMediaViews();
+    createExplanationDialog();
 
     getSupportFragmentManager().beginTransaction()
         .add(R.id.fragment_place, new GridFragment())
@@ -68,6 +71,10 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
 
     presenter = new SocialMediaViewBase.SocialMediaPresenter();
     presenter.bind(this, this);
+  }
+
+  private void createExplanationDialog() {
+    dialog = ExplanationDialog.createDialog(this);
   }
 
   private void setupMediaViews() {
@@ -220,9 +227,11 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   }
 
   @Override protected void onBackPressedActivityHook() {
+    hideExplainView();
   }
 
   @Override protected void onBackPressedFragmentHook() {
+    hideExplainView();
   }
 
   @Override public void onGooglePlayClicked(String rateUsed) {
@@ -239,5 +248,17 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
 
   @Override public void onFacebookClicked() {
 
+  }
+
+  public void showExplainView(Spannable explanation, int backgroundColor) {
+    if (dialog != null) {
+      dialog.setText(explanation).setBackgroundColor(backgroundColor).show();
+    }
+  }
+
+  private void hideExplainView() {
+    if (dialog != null) {
+      dialog.dismiss();
+    }
   }
 }
