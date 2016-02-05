@@ -30,7 +30,6 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -40,7 +39,6 @@ import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
-import com.pyamsoft.pydroid.util.ViewUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
@@ -51,11 +49,11 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   private SystemBarTintManager tintManager;
   private FloatingActionButton fab;
   private FloatingActionButton fabSmall;
+  private FloatingActionButton fabLarge;
   private AppBarLayout appBarLayout;
   private ItemTouchHelper helper;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private Toolbar toolbar;
-  private View mediaLayout;
   private View googlePlay;
   private View googlePlus;
   private View blogger;
@@ -71,11 +69,9 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     setupTintManager();
     findViews();
     setupAppBar();
-    setupMediaViews();
     createExplanationDialog();
     setupGiftAd();
     setupRecyclerView();
-    setupFAB();
 
     presenter = new SocialMediaViewBase.SocialMediaPresenter();
     presenter.bind(this, this);
@@ -90,32 +86,6 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     colorizeStatusBar(R.color.amber700);
   }
 
-  private void setupFAB() {
-    ViewUtil.fixFABMargins(fab, new ViewUtil.ViewLayoutCallback() {
-      @Override public void onRetrieveLayoutParams(FloatingActionButton button,
-          ViewGroup.MarginLayoutParams params) {
-        int bottom = params.bottomMargin;
-        bottom = (bottom == 0) ? bottom : (button.getHeight() / 2);
-        final int top = 0;
-        final int right = 0;
-        final int left = 0;
-        params.setMargins(left, top, right, bottom);
-      }
-    });
-    ViewUtil.fixFABMargins(fabSmall, new ViewUtil.ViewLayoutCallback() {
-      @Override public void onRetrieveLayoutParams(FloatingActionButton button,
-          ViewGroup.MarginLayoutParams params) {
-        final int size = (int) AppUtil.convertToDP(button.getContext(), 52);
-        int bottom = params.bottomMargin;
-        bottom = (bottom == 0) ? bottom : size;
-        final int top = 0;
-        final int left = 0;
-        final int right = (int) (1.5 * size);
-        params.setMargins(left, top, right, bottom);
-      }
-    });
-  }
-
   private void setupRecyclerView() {
     final GridContentAdapter adapter = new GridContentAdapter(this);
     helper = new ItemTouchHelper(new GridItemTouchCallback(adapter));
@@ -126,40 +96,6 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
 
   private void createExplanationDialog() {
     dialog = ExplanationDialog.createDialog(this);
-  }
-
-  private void setupMediaViews() {
-    googlePlay.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (presenter != null) {
-          presenter.clickGooglePlay();
-        }
-      }
-    });
-
-    googlePlus.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (presenter != null) {
-          presenter.clickGooglePlus();
-        }
-      }
-    });
-
-    blogger.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (presenter != null) {
-          presenter.clickBlogger();
-        }
-      }
-    });
-
-    facebook.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (presenter != null) {
-          presenter.clickFacebook();
-        }
-      }
-    });
   }
 
   /**
@@ -176,7 +112,7 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
     fab = (FloatingActionButton) findViewById(R.id.fab);
     fabSmall = (FloatingActionButton) findViewById(R.id.fab_small);
-    mediaLayout = findViewById(R.id.media_ads);
+    fabLarge = (FloatingActionButton) findViewById(R.id.fab_large);
   }
 
   @Override protected void onDestroy() {
