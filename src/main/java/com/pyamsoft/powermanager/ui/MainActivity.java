@@ -15,6 +15,7 @@
  */
 package com.pyamsoft.powermanager.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -29,6 +30,7 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -37,10 +39,12 @@ import com.pyamsoft.powermanager.ui.grid.GridItemTouchCallback;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
   private RecyclerView recyclerView;
   private final StaggeredGridLayoutManager gridLayoutManager =
       new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -125,18 +129,36 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    googlePlay.setOnClickListener(null);
-    googlePlus.setOnClickListener(null);
-    blogger.setOnClickListener(null);
-    facebook.setOnClickListener(null);
-    AppUtil.nullifyCallback(googlePlay);
-    AppUtil.nullifyCallback(googlePlus);
-    AppUtil.nullifyCallback(blogger);
-    AppUtil.nullifyCallback(facebook);
+    //googlePlay.setOnClickListener(null);
+    //googlePlus.setOnClickListener(null);
+    //blogger.setOnClickListener(null);
+    //facebook.setOnClickListener(null);
+    //AppUtil.nullifyCallback(googlePlay);
+    //AppUtil.nullifyCallback(googlePlus);
+    //AppUtil.nullifyCallback(blogger);
+    //AppUtil.nullifyCallback(facebook);
     presenter.unbind();
   }
 
   private void setupAppBar() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      // Find the statusbar height, add it to the height of the toolbar
+      // and as padding
+      int statusBarHeight;
+      int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+      if (resourceId > 0) {
+        LogUtil.d(TAG, "Found height via reflection");
+        statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+      } else {
+        LogUtil.e(TAG, "Assign fallback height");
+        statusBarHeight = (int) AppUtil.convertToDP(this, 25);
+      }
+      final ViewGroup.LayoutParams params = toolbar.getLayoutParams();
+      params.height += statusBarHeight;
+      toolbar.setLayoutParams(params);
+      toolbar.setPadding(0, statusBarHeight, 0, 0);
+      toolbar.requestLayout();
+    }
     setSupportActionBar(toolbar);
     collapsingToolbarLayout.setTitle(getString(R.string.app_name));
   }

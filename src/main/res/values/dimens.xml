@@ -24,11 +24,4 @@
   -->
   <dimen name="fab_far_margin">96dp</dimen>
 
-  <!-- This weird hack has a drawback and a plus
-    Drawback is hardcoded size, plus is that we
-    draw behind the status bar on 19+
-  -->
-  <dimen name="toolbar_height">80dp</dimen>
-  <dimen name="toolbar_top_padding">24dp</dimen>
-
 </resources>

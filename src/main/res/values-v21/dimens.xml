@@ -16,6 +16,4 @@
   -->
 
 <resources>
-  <dimen name="toolbar_height">56dp</dimen>
-  <dimen name="toolbar_top_padding">0dp</dimen>
 </resources>
