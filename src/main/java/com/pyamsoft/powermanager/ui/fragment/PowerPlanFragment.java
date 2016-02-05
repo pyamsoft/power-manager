@@ -102,7 +102,6 @@ public final class PowerPlanFragment extends ExplanationFragment {
     return explanation;
   }
 
-
   @Override int getBackgroundColor() {
     return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.red500
         : R.color.scrim45_red500;

@@ -17,7 +17,7 @@
 <resources>
 
   <string name="app_name">Power Manager</string>
-  <string name="app_date">January 21, 2016 19:01:25</string>
+  <string name="app_date">January 22, 2016 11:08:27</string>
 
   <string name="radio_delay">%s Timeout Delay</string>
   <string name="delay_none">No Delay</string>

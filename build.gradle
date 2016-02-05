@@ -25,8 +25,8 @@ android {
     applicationId "com.pyamsoft.powermanager"
     minSdkVersion 16
     targetSdkVersion 23
-    versionCode 39
-    versionName '5.0.0'
+    versionCode 40
+    versionName '5.0.1'
   }
 
   compileOptions {
