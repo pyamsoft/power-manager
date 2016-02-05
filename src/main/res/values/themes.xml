@@ -22,7 +22,10 @@
     <item name="colorAccent">@color/lightblueA200</item>
   </style>
 
-  <style name="Theme.PowerManager.Light" parent="@style/Base.Theme.PowerManager.Light"/>
+  <style name="Theme.PowerManager.Light" parent="@style/Base.Theme.PowerManager.Light">
+    <item name="android:windowActionBarOverlay">true</item>
+  </style>
+
 
   <style name="Theme.PowerManager.Light.Splash" parent="@style/Base.Theme.PowerManager.Light">
     <item name="android:windowBackground">@drawable/launch_screen</item>
