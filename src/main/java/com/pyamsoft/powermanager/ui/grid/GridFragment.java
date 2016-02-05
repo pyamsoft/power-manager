@@ -37,7 +37,6 @@ import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
-import com.pyamsoft.pydroid.util.ViewUtil;
 
 public final class GridFragment extends ExplanationFragment implements GridInterface {
 
@@ -177,7 +176,6 @@ public final class GridFragment extends ExplanationFragment implements GridInter
       }
     });
 
-    ViewUtil.fixFABMarginsCompat(fab);
     setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
 
