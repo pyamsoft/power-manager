@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui;
+package com.pyamsoft.powermanager.ui.radio;
 
-import android.content.Context;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 
-public interface RecyclerItemTouchInterface {
-
-  boolean onMoveItem(final Context context, final int fromPosition, final int toPosition);
+public abstract class RadioBase implements RadioContentInterface, StatusBarColor {
 }

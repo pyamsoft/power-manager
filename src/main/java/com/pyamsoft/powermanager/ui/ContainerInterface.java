@@ -18,9 +18,7 @@ package com.pyamsoft.powermanager.ui;
 
 public interface ContainerInterface {
 
-  void colorStatusBar(final int color);
-
-  void setCurrentView(final String viewCode);
+  void setCurrentView(final String viewCode, final int image);
 
   String popCurrentView();
 }

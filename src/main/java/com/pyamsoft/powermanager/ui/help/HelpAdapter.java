@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
@@ -160,6 +161,10 @@ public final class HelpAdapter extends BindableRecyclerAdapter<HelpAdapter.ViewH
 
   @Override protected void onUnbind() {
     // TODO NOOP
+  }
+
+  @Override public int getStatusBarColor() {
+    return R.color.cyan700;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -20,5 +20,5 @@ public interface GridInterface {
 
   void onFABClicked();
 
-  void onGridItemClicked(final String viewCode);
+  void onGridItemClicked(final String viewCode, final int image);
 }

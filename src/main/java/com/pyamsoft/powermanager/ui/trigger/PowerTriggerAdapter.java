@@ -30,6 +30,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
@@ -158,11 +159,8 @@ public final class PowerTriggerAdapter
       holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 
         @Override public boolean onLongClick(final View v) {
-          if (presenter != null) {
-            presenter.onLongClick(trigger);
-            return true;
-          }
-          return false;
+          presenter.onLongClick(trigger);
+          return true;
         }
       });
     }
@@ -215,6 +213,10 @@ public final class PowerTriggerAdapter
 
   @Override protected void onUnbind() {
     presenter.unbind();
+  }
+
+  @Override public int getStatusBarColor() {
+    return R.color.yellow700;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

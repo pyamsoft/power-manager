@@ -16,17 +16,16 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
-import android.os.Build;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 
-public final class RadioWifi implements RadioContentInterface {
+public final class RadioWifi extends RadioBase {
 
   @Override public String getName() {
     return WIFI;
   }
 
-  @Override public int getBackgroundColor() {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.green500
-        : R.color.scrim45_green500;
+  @Override public int getStatusBarColor() {
+    return R.color.green700;
   }
 }

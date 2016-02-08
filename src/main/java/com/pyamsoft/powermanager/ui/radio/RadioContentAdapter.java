@@ -28,11 +28,13 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class RadioContentAdapter
-    extends BindableRecyclerAdapter<RadioContentAdapter.ViewHolder> implements RadioInterface {
+    extends BindableRecyclerAdapter<RadioContentAdapter.ViewHolder>
+    implements RadioInterface {
 
   public static final long[] DELAY_VALUES = {
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_FIVE,
@@ -64,12 +66,12 @@ public final class RadioContentAdapter
   private static final int POSITION_DELAY = 0;
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
-  private final RadioContentInterface radioInterface;
+  private final RadioBase radio;
   private final RadioPresenter presenter;
   private final Context context;
 
-  public RadioContentAdapter(final Context context, final RadioContentInterface i) {
-    this.radioInterface = i;
+  public RadioContentAdapter(final Context context, final RadioBase i) {
+    this.radio = i;
     this.context = context;
     presenter = new RadioPresenter();
     bind();
@@ -123,7 +125,7 @@ public final class RadioContentAdapter
   private void getTimeAndClickTarget(final ValueHolder values, final int position) {
     long realTime;
     ValueRunnableBase<Long> onClick;
-    switch (radioInterface.getName()) {
+    switch (radio.getName()) {
       case RadioContentInterface.WIFI:
         switch (position) {
           case POSITION_DELAY:
@@ -317,7 +319,7 @@ public final class RadioContentAdapter
     String explain;
     String s;
     String ss;
-    final String name = radioInterface.getName();
+    final String name = radio.getName();
     s = context.getString(R.string.radio_delay);
     str = StringUtil.formatString(s, name) + "\n";
     ss = context.getString(R.string.radio_delay_explain);
@@ -329,7 +331,7 @@ public final class RadioContentAdapter
     String str;
     String explain;
     String s;
-    final String name = radioInterface.getName();
+    final String name = radio.getName();
     str = context.getString(R.string.reopen_interval_delay) + "\n";
     s = context.getString(R.string.reopen_interval_delay_explain);
     explain = StringUtil.formatString(s, name, name);
@@ -342,7 +344,7 @@ public final class RadioContentAdapter
     String s;
     str = context.getString(R.string.reopen_interval_duration) + "\n";
     s = context.getString(R.string.reopen_interval_duration_explain);
-    explain = StringUtil.formatString(s, radioInterface.getName());
+    explain = StringUtil.formatString(s, radio.getName());
     return createSpannable(context, str, explain);
   }
 
@@ -390,6 +392,10 @@ public final class RadioContentAdapter
 
   @Override public int getItemCount() {
     return NUMBER_ITEMS;
+  }
+
+  @Override public int getStatusBarColor() {
+    return radio.getStatusBarColor();
   }
 
   public static final class ValueHolder {

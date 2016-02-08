@@ -24,6 +24,4 @@ public interface RadioContentInterface {
   String SYNC = "Sync";
 
   String getName();
-
-  int getBackgroundColor();
 }

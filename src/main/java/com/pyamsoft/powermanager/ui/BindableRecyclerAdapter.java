@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.ui;
 import android.support.v7.widget.RecyclerView;
 
 public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
-    extends RecyclerView.Adapter<T> {
+    extends RecyclerView.Adapter<T> implements StatusBarColor {
 
   protected void bind() {
     onBind();

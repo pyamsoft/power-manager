@@ -222,9 +222,7 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
         holder.buttonContent.setOnClickListener(new View.OnClickListener() {
 
           @Override public void onClick(final View v) {
-            if (presenter != null) {
-              presenter.onClickDetailButton();
-            }
+            presenter.onClickDetailButton();
           }
         });
       }
@@ -260,6 +258,10 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
 
   @Override public void onDetailActivityLaunched() {
 
+  }
+
+  @Override public int getStatusBarColor() {
+    return R.color.orange700;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -33,9 +33,8 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
-import com.pyamsoft.powermanager.ui.RecyclerItemTouchInterface;
+import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.base.PresenterBase;
-import com.pyamsoft.pydroid.util.LogUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class GridContentAdapter extends BindableRecyclerAdapter<GridContentAdapter.ViewHolder>
-    implements RecyclerItemTouchInterface, GridInterface {
+    implements GridItemTouchInterface, GridInterface {
 
   private static final int NUMBER_ITEMS = 10;
   private static final String TAG = GridContentAdapter.class.getSimpleName();
@@ -132,10 +131,11 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     if (image != 0) {
       Picasso.with(holder.image.getContext()).load(image).into(holder);
 
+      final int javaPlease = image;
       holder.mainHolder.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          presenter.clickGridItem(name);
+          presenter.clickGridItem(name, javaPlease);
         }
       });
     }
@@ -168,8 +168,12 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     throw new PresenterBase.IllegalBindException("No Fab Here");
   }
 
-  @Override public void onGridItemClicked(String viewCode) {
-    container.setCurrentView(viewCode);
+  @Override public void onGridItemClicked(String viewCode, int image) {
+    container.setCurrentView(viewCode, image);
+  }
+
+  @Override public int getStatusBarColor() {
+    return R.color.amber700;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

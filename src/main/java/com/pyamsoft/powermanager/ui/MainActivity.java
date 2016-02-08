@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
@@ -60,6 +61,7 @@ import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
+import com.squareup.picasso.Picasso;
 
 public class MainActivity extends ActivityBase implements ContainerInterface {
 
@@ -74,6 +76,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   private FloatingActionButton fabLarge;
   private AppBarLayout appBarLayout;
   private CollapsingToolbarLayout collapsingToolbarLayout;
+  private ImageView heroImage;
   private Toolbar toolbar;
   private ExplanationDialog dialog;
   private CoordinatorLayout coordinatorLayout;
@@ -101,7 +104,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     setupGiftAd();
     setupViewElevations();
 
-    setCurrentView(null);
+    setCurrentView(null, 0);
   }
 
   private void setupViewElevations() {
@@ -130,6 +133,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     fab = (FloatingActionButton) findViewById(R.id.fab);
     fabSmall = (FloatingActionButton) findViewById(R.id.fab_small);
     fabLarge = (FloatingActionButton) findViewById(R.id.fab_large);
+    heroImage = (ImageView) collapsingToolbarLayout.findViewById(R.id.hero_image);
   }
 
   @Override protected void onDestroy() {
@@ -290,13 +294,13 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
   }
 
-  @Override public void colorStatusBar(int color) {
+  private void colorStatusBar(int color) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       getWindow().setStatusBarColor(ContextCompat.getColor(this, color));
     }
   }
 
-  @Override public void setCurrentView(final String viewCode) {
+  @Override public void setCurrentView(final String viewCode, final int image) {
     boolean up;
     if (helper != null) {
       // Remove helper
@@ -355,6 +359,12 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
 
     recyclerView.setLayoutManager(gridLayoutManager);
     recyclerView.setAdapter(adapter);
+    if (image == 0) {
+      heroImage.setImageResource(image);
+    } else {
+      Picasso.with(this).load(image).into(heroImage);
+    }
+    colorStatusBar(adapter.getStatusBarColor());
     if (helper != null) {
       helper.attachToRecyclerView(recyclerView);
     }
@@ -365,7 +375,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
 
   @Override public String popCurrentView() {
     final String oldCode = currentView;
-    setCurrentView(null);
+    setCurrentView(null, 0);
     return oldCode;
   }
 }

@@ -16,21 +16,7 @@
 
 package com.pyamsoft.powermanager.ui;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+public interface StatusBarColor {
 
-public final class NoopItemTouchCallback extends ItemTouchHelper.SimpleCallback {
-
-  public NoopItemTouchCallback() {
-    super(0, 0);
-  }
-
-  @Override
-  public boolean onMove(final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder,
-      final RecyclerView.ViewHolder target) {
-    return false;
-  }
-
-  @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
-  }
+  int getStatusBarColor();
 }

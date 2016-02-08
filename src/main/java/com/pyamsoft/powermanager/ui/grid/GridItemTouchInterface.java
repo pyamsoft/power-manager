@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.detail;
+package com.pyamsoft.powermanager.ui.grid;
 
-import android.content.SharedPreferences;
+import android.content.Context;
 
-/**
- * The detail interface has two Floating Action Buttons, a Title and an Image
- */
-public interface DetailInterface {
+public interface GridItemTouchInterface {
 
-  void onSmallFABChecked();
-
-  void onSmallFABUnchecked();
-
-  void onLargeFABChecked();
-
-  void onLargeFABUnchecked();
-
-  void onPreferenceChanged(final SharedPreferences preferences, final String key);
-
-  String getTarget();
+  boolean onMoveItem(final Context context, final int fromPosition, final int toPosition);
 }

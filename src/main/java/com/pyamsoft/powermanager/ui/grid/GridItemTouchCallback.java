@@ -18,13 +18,12 @@ package com.pyamsoft.powermanager.ui.grid;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import com.pyamsoft.powermanager.ui.RecyclerItemTouchInterface;
 
 public final class GridItemTouchCallback extends ItemTouchHelper.SimpleCallback {
 
-  private final RecyclerItemTouchInterface touchInterface;
+  private final GridItemTouchInterface touchInterface;
 
-  public GridItemTouchCallback(final RecyclerItemTouchInterface touchInterface) {
+  public GridItemTouchCallback(final GridItemTouchInterface touchInterface) {
     super(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT |
         ItemTouchHelper.RIGHT, 0);
     this.touchInterface = touchInterface;
