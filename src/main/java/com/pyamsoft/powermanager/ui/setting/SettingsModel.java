@@ -33,12 +33,70 @@ public final class SettingsModel {
   private static final String TAG = SettingsModel.class.getSimpleName();
   private WeakReference<Context> weakContext;
 
-  public Context provideResetContext() {
-    return weakContext.get();
-  }
-
   public SettingsModel(final Context c) {
     weakContext = new WeakReference<>(c.getApplicationContext());
+  }
+
+  private static void propagateNotificationChanges(final Context context,
+      final boolean oldNotification, final boolean oldForeground, final boolean fromNotification,
+      final boolean isChecked) {
+    LogUtil.d(TAG, "Change state of running notification");
+    // Notification may need to be stopped if it was running before and is not now
+    // Some delay may make these values unreliable if we read them here after they were applied.
+    // Check the current index to see which is safe to read and which we should just flip from above
+    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+    final boolean isEnabled =
+        fromNotification ? isChecked : p.powerManagerMonitor().isNotificationEnabled();
+    final boolean isForeground =
+        !fromNotification ? isChecked : p.powerManagerMonitor().isForeground();
+    if (oldNotification && !isEnabled) {
+      LogUtil.d(TAG, "Notification was enabled but is no longer");
+      stopNotification(context, false, oldForeground);
+    } else if (oldForeground && !isForeground) {
+      LogUtil.d(TAG, "Notification was foreground but is no longer");
+      stopNotification(context, isEnabled, true);
+    } else {
+      LogUtil.d(TAG, "Notification was either enabled or pushed to foreground");
+      if (isEnabled) {
+        if (isForeground) {
+          LogUtil.d(TAG, "Update foreground notification");
+          MonitorService.startForeground(context);
+        } else {
+          LogUtil.d(TAG, "Update normal notification");
+          PersistentNotification.update(context);
+        }
+      }
+    }
+  }
+
+  private static void propagatePowerPlanChanges(final Context context, final boolean isChecked) {
+    LogUtil.d(TAG, "Update state of running notification");
+    final PowerPlanUtil powerPlan = PowerPlanUtil.with(context);
+    powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
+    powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_SUSPEND, isChecked);
+    powerPlan.setPlan(
+        PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
+  }
+
+  private static void stopNotification(final Context context, final boolean isEnabled,
+      final boolean wasForeground) {
+    // If it was in the foreground, we need to call stop persistent first
+    if (wasForeground) {
+      LogUtil.d(TAG, "Notification was in foreground");
+      MonitorService.stopForeground(context);
+    }
+
+    if (isEnabled) {
+      LogUtil.d(TAG, "Foreground was stopped but notification is still active");
+      PersistentNotification.update(context);
+    } else {
+      LogUtil.d(TAG, "Stop normal notification");
+      NotificationUtil.stop(context, PersistentNotification.ID);
+    }
+  }
+
+  public Context provideResetContext() {
+    return weakContext.get();
   }
 
   public boolean isBootEnabled() {
@@ -118,20 +176,6 @@ public final class SettingsModel {
     }
   }
 
-  public boolean isForegroundClickable() {
-    // Foreground relies on a present service and notification
-    final Context context = weakContext.get();
-    if (context != null) {
-      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
-      final boolean checked =
-          p.powerManagerMonitor().isEnabled() && p.powerManagerMonitor().isNotificationEnabled();
-      LogUtil.d(TAG, "Foreground clickable: ", checked);
-      return checked;
-    } else {
-      return false;
-    }
-  }
-
   public void setForegroundEnabled(final boolean enabled) {
     final Context context = weakContext.get();
     if (context != null) {
@@ -144,61 +188,17 @@ public final class SettingsModel {
     }
   }
 
-  private static void propagateNotificationChanges(final Context context,
-      final boolean oldNotification, final boolean oldForeground, final boolean fromNotification,
-      final boolean isChecked) {
-    LogUtil.d(TAG, "Change state of running notification");
-    // Notification may need to be stopped if it was running before and is not now
-    // Some delay may make these values unreliable if we read them here after they were applied.
-    // Check the current index to see which is safe to read and which we should just flip from above
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
-    final boolean isEnabled =
-        fromNotification ? isChecked : p.powerManagerMonitor().isNotificationEnabled();
-    final boolean isForeground =
-        !fromNotification ? isChecked : p.powerManagerMonitor().isForeground();
-    if (oldNotification && !isEnabled) {
-      LogUtil.d(TAG, "Notification was enabled but is no longer");
-      stopNotification(context, false, oldForeground);
-    } else if (oldForeground && !isForeground) {
-      LogUtil.d(TAG, "Notification was foreground but is no longer");
-      stopNotification(context, isEnabled, true);
+  public boolean isForegroundClickable() {
+    // Foreground relies on a present service and notification
+    final Context context = weakContext.get();
+    if (context != null) {
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      final boolean checked =
+          p.powerManagerMonitor().isEnabled() && p.powerManagerMonitor().isNotificationEnabled();
+      LogUtil.d(TAG, "Foreground clickable: ", checked);
+      return checked;
     } else {
-      LogUtil.d(TAG, "Notification was either enabled or pushed to foreground");
-      if (isEnabled) {
-        if (isForeground) {
-          LogUtil.d(TAG, "Update foreground notification");
-          MonitorService.startForeground(context);
-        } else {
-          LogUtil.d(TAG, "Update normal notification");
-          PersistentNotification.update(context);
-        }
-      }
-    }
-  }
-
-  private static void propagatePowerPlanChanges(final Context context, final boolean isChecked) {
-    LogUtil.d(TAG, "Update state of running notification");
-    final PowerPlanUtil powerPlan = PowerPlanUtil.with(context);
-    powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_BOOT, isChecked);
-    powerPlan.updateCustomPlan(PowerPlanUtil.FIELD_MISC_SUSPEND, isChecked);
-    powerPlan.setPlan(
-        PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
-  }
-
-  private static void stopNotification(final Context context, final boolean isEnabled,
-      final boolean wasForeground) {
-    // If it was in the foreground, we need to call stop persistent first
-    if (wasForeground) {
-      LogUtil.d(TAG, "Notification was in foreground");
-      MonitorService.stopForeground(context);
-    }
-
-    if (isEnabled) {
-      LogUtil.d(TAG, "Foreground was stopped but notification is still active");
-      PersistentNotification.update(context);
-    } else {
-      LogUtil.d(TAG, "Stop normal notification");
-      NotificationUtil.stop(context, PersistentNotification.ID);
+      return false;
     }
   }
 

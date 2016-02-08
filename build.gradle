@@ -51,13 +51,6 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
     }
   }
-
-  lintOptions {
-    disable 'InvalidPackage'
-  }
-  packagingOptions {
-    exclude 'META-INF/services/javax.annotation.processing.Processor'
-  }
 }
 
 dependencies {

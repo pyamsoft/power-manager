@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.grid;
 
 import android.animation.ObjectAnimator;
@@ -177,10 +178,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {
 
-    private final Handler handler = new Handler();
     public final LinearLayout mainHolder;
     public final ImageView image;
     public final TextView name;
+    private final Handler handler = new Handler();
 
     public ViewHolder(final View itemView) {
       super(itemView);

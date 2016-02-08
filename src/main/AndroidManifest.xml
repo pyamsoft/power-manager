@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright 2013 - 2016 Peter Kenji Yamanaka
   ~
@@ -14,6 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyamsoft.powermanager">
@@ -36,19 +38,19 @@
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
   <application
+      android:name=".PowerManager"
       android:allowBackup="false"
       android:fullBackupContent="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
-      android:name=".PowerManager"
       android:supportsRtl="false"
       android:theme="@style/Theme.PowerManager.Light">
 
     <activity
+        android:name=".ui.MainActivity"
         android:exported="true"
         android:label="@string/app_name"
         android:launchMode="singleInstance"
-        android:name=".ui.MainActivity"
         android:theme="@style/Theme.PowerManager.Light.Splash">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -58,49 +60,49 @@
 
     <!-- Power Manager -->
     <service
-        android:exported="false"
-        android:name=".backend.service.MonitorService"/>
+        android:name=".backend.service.MonitorService"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.service.ActiveService"/>
+        android:name=".backend.service.ActiveService"
+        android:exported="false"/>
 
     <!--Toggle from Notification -->
     <service
-        android:exported="false"
-        android:name=".backend.notification.PersistentNotification$Toggle"/>
+        android:name=".backend.notification.PersistentNotification$Toggle"
+        android:exported="false"/>
 
     <!-- Interval reopen -->
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerWifi$Interval"/>
+        android:name=".backend.manager.ManagerWifi$Interval"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerData$Interval"/>
+        android:name=".backend.manager.ManagerData$Interval"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerBluetooth$Interval"/>
+        android:name=".backend.manager.ManagerBluetooth$Interval"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerSync$Interval"/>
+        android:name=".backend.manager.ManagerSync$Interval"
+        android:exported="false"/>
 
     <!-- Oneshot services -->
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerWifi$Toggle"/>
+        android:name=".backend.manager.ManagerWifi$Toggle"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerData$Toggle"/>
+        android:name=".backend.manager.ManagerData$Toggle"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerBluetooth$Toggle"/>
+        android:name=".backend.manager.ManagerBluetooth$Toggle"
+        android:exported="false"/>
     <service
-        android:exported="false"
-        android:name=".backend.manager.ManagerSync$Toggle"/>
+        android:name=".backend.manager.ManagerSync$Toggle"
+        android:exported="false"/>
 
     <receiver
+        android:name=".backend.receiver.BootActionReceiver"
         android:enabled="false"
-        android:exported="false"
-        android:name=".backend.receiver.BootActionReceiver">
+        android:exported="false">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
       </intent-filter>

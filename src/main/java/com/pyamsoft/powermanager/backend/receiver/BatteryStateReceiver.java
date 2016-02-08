@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.backend.receiver;
 
 import android.content.BroadcastReceiver;
@@ -26,7 +27,6 @@ import com.pyamsoft.powermanager.backend.manager.ManagerData;
 import com.pyamsoft.powermanager.backend.manager.ManagerSync;
 import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.backend.util.BatteryUtil;

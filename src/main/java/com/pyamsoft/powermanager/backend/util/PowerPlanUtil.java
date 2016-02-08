@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.backend.util;
 
 import android.content.Context;
@@ -46,8 +47,6 @@ public final class PowerPlanUtil {
   public static final int FIELD_REOPEN_TIME_SYNC = 21;
   public static final int FIELD_MISC_BOOT = 22;
   public static final int FIELD_MISC_SUSPEND = 23;
-  private static final int PLAN_ELEMENT_SIZE = 24;
-  public static final Object[] POWER_PLAN_CUSTOM = new Object[PLAN_ELEMENT_SIZE];
   public static final Object[] POWER_PLAN_STANDARD = {
       // index
       1,
@@ -75,6 +74,8 @@ public final class PowerPlanUtil {
       // suspend
       true,
   };
+  private static final int PLAN_ELEMENT_SIZE = 24;
+  public static final Object[] POWER_PLAN_CUSTOM = new Object[PLAN_ELEMENT_SIZE];
   private static final Object[] POWER_PLAN_SUPER = {
       // index
       2,

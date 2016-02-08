@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.SharedPreferences;
@@ -30,7 +31,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class SettingsFragment extends ExplanationFragment {
@@ -152,7 +152,7 @@ public final class SettingsFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.lightgreen500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.lightgreen500
         : R.color.scrim45_lightgreen500;
   }
 }

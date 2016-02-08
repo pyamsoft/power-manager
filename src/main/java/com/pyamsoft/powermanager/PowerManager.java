@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager;
 
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.backend.notification;
 
 import android.app.IntentService;
@@ -32,7 +33,6 @@ import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.MainActivity;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NotificationUtil;
 
@@ -80,7 +80,7 @@ public final class PersistentNotification {
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true)
         .setContentIntent(main);
-    if (!AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       builder.setColor(ContextCompat.getColor(context, R.color.amber700));
     }
   }

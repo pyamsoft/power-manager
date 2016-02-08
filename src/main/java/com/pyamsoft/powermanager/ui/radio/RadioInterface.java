@@ -16,8 +16,6 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
-import com.pyamsoft.powermanager.backend.manager.ManagerBase;
-
 public interface RadioInterface {
 
   void onDelayTimeChanged();
@@ -25,5 +23,4 @@ public interface RadioInterface {
   void onIntervalTimeChanged();
 
   void onReOpenTimeChanged();
-
 }

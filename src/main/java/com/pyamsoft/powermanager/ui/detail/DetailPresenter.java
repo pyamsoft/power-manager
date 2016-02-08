@@ -51,69 +51,6 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     return model.isWifiManaged();
   }
 
-  public boolean isDataManaged() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isDataManaged();
-  }
-
-  public boolean isBluetoothManaged() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isBluetoothManaged();
-  }
-
-  public boolean isSyncManaged() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isSyncManaged();
-  }
-
-  public boolean isWifiReOpen() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isWifiReOpen();
-  }
-
-  public boolean isDataReOpen() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isDataReOpen();
-  }
-
-  public boolean isBluetoothReOpen() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isBluetoothReOpen();
-  }
-
-  public boolean isSyncReOpen() {
-    final DetailInterface reference = getBoundReference();
-    if (reference == null) {
-      LogUtil.e(TAG, "reference is NULL");
-      return false;
-    }
-    return model.isSyncReOpen();
-  }
-
   public void setWifiManaged(final boolean isChecked) {
     final DetailInterface reference = getBoundReference();
     if (reference == null) {
@@ -126,6 +63,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     } else {
       reference.onLargeFABUnchecked();
     }
+  }
+
+  public boolean isDataManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isDataManaged();
   }
 
   public void setDataManaged(final boolean isChecked) {
@@ -142,6 +88,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     }
   }
 
+  public boolean isBluetoothManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isBluetoothManaged();
+  }
+
   public void setBluetoothManaged(final boolean isChecked) {
     final DetailInterface reference = getBoundReference();
     if (reference == null) {
@@ -154,6 +109,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     } else {
       reference.onLargeFABUnchecked();
     }
+  }
+
+  public boolean isSyncManaged() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isSyncManaged();
   }
 
   public void setSyncManaged(final boolean isChecked) {
@@ -170,6 +134,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     }
   }
 
+  public boolean isWifiReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isWifiReOpen();
+  }
+
   public void setWifiReOpen(final boolean isChecked) {
     final DetailInterface reference = getBoundReference();
     if (reference == null) {
@@ -182,6 +155,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     } else {
       reference.onSmallFABUnchecked();
     }
+  }
+
+  public boolean isDataReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isDataReOpen();
   }
 
   public void setDataReOpen(final boolean isChecked) {
@@ -198,6 +180,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     }
   }
 
+  public boolean isBluetoothReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isBluetoothReOpen();
+  }
+
   public void setBluetoothReOpen(final boolean isChecked) {
     final DetailInterface reference = getBoundReference();
     if (reference == null) {
@@ -210,6 +201,15 @@ public final class DetailPresenter extends PresenterBase<DetailInterface> {
     } else {
       reference.onSmallFABUnchecked();
     }
+  }
+
+  public boolean isSyncReOpen() {
+    final DetailInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+    return model.isSyncReOpen();
   }
 
   public void setSyncReOpen(final boolean isChecked) {

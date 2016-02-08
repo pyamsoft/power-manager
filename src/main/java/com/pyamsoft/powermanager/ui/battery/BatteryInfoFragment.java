@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.battery;
 
 import android.content.BroadcastReceiver;
@@ -33,9 +34,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.battery.BatteryInfoAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class BatteryInfoFragment extends ExplanationFragment {
@@ -171,7 +170,7 @@ public final class BatteryInfoFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.pink500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.pink500
         : R.color.scrim45_pink500;
   }
 }

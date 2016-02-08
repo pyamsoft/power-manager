@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.about;
 
 import android.graphics.Color;
@@ -28,7 +29,6 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class AboutFragment extends ExplanationFragment {
@@ -114,7 +114,7 @@ public final class AboutFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.orange500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.orange500
         : R.color.scrim45_orange500;
   }
 }

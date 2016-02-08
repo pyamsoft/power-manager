@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.trigger;
 
 import android.content.Context;
@@ -48,12 +49,6 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     childManager = f.getChildFragmentManager();
     presenter = new PowerTriggerPresenter();
     presenter.bind(f.getContext(), this);
-  }
-
-  public void destroy() {
-    if (presenter != null) {
-      presenter.unbind();
-    }
   }
 
   public static void merge(final List<PowerTrigger> items) {
@@ -113,6 +108,12 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     final int sortedLength = sortedItems.size();
     while (i < sortedLength) {
       items.set(sortedIndex++, sortedItems.get(i++));
+    }
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
     }
   }
 

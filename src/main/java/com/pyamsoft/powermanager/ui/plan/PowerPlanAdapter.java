@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.plan;
 
 import android.content.Context;
@@ -164,11 +165,14 @@ public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapte
     holder.imageReOpenSync.setImageResource(
         syncReopen ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
 
-    holder.textReOpenWifi.setText(String.format("%d", presenter.getWifiReOpenTime(position) / 1000));
-    holder.textReOpenData.setText(String.format("%d", presenter.getDataReOpenTime(position) / 1000));
+    holder.textReOpenWifi.setText(
+        String.format("%d", presenter.getWifiReOpenTime(position) / 1000));
+    holder.textReOpenData.setText(
+        String.format("%d", presenter.getDataReOpenTime(position) / 1000));
     holder.textReOpenBluetooth.setText(
         String.format("%d", presenter.getBluetoothReOpenTime(position) / 1000));
-    holder.textReOpenSync.setText(String.format("%d", presenter.getSyncReOpenTime(position) / 1000));
+    holder.textReOpenSync.setText(
+        String.format("%d", presenter.getSyncReOpenTime(position) / 1000));
 
 
         /* Need to do this or RecyclerView throws an error about updating while layouts are being

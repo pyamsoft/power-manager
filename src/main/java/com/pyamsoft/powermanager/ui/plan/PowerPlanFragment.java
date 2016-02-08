@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.plan;
 
 import android.graphics.Color;
@@ -27,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class PowerPlanFragment extends ExplanationFragment {
@@ -109,7 +109,7 @@ public final class PowerPlanFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.red500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.red500
         : R.color.scrim45_red500;
   }
 }

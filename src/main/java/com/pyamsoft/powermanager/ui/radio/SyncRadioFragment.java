@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.radio;
 
 import android.os.Build;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.pydroid.util.AppUtil;
 
 public final class SyncRadioFragment extends BaseRadioFragment
     implements RadioContentAdapter.RadioInterface {
@@ -33,7 +31,7 @@ public final class SyncRadioFragment extends BaseRadioFragment
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.purple500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.purple500
         : R.color.scrim45_purple500;
   }
 }

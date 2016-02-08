@@ -39,44 +39,20 @@ public final class DetailModel {
         PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
   }
 
-  public void setWifiReOpen(final boolean isChecked) {
-    final Context context = weakContext.get();
-    if (context != null) {
-      GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(isChecked);
-      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_WIFI, isChecked);
-    }
-  }
-
-  public void setDataReOpen(final boolean isChecked) {
-    final Context context = weakContext.get();
-    if (context != null) {
-      GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(isChecked);
-      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_DATA, isChecked);
-    }
-  }
-
-  public void setBluetoothReOpen(final boolean isChecked) {
-    final Context context = weakContext.get();
-    if (context != null) {
-      GlobalPreferenceUtil.with(context).intervalDisableService().setBluetoothReopen(isChecked);
-      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_BLUETOOTH, isChecked);
-    }
-  }
-
-  public void setSyncReOpen(final boolean isChecked) {
-    final Context context = weakContext.get();
-    if (context != null) {
-      GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(isChecked);
-      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_SYNC, isChecked);
-    }
-  }
-
   @SuppressWarnings("SimplifiableIfStatement") public boolean isWifiReOpen() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().isWifiReopen();
     } else {
       return true;
+    }
+  }
+
+  public void setWifiReOpen(final boolean isChecked) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(isChecked);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_WIFI, isChecked);
     }
   }
 
@@ -89,12 +65,28 @@ public final class DetailModel {
     }
   }
 
+  public void setDataReOpen(final boolean isChecked) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(isChecked);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_DATA, isChecked);
+    }
+  }
+
   @SuppressWarnings("SimplifiableIfStatement") public boolean isBluetoothReOpen() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().isBluetoothReopen();
     } else {
       return false;
+    }
+  }
+
+  public void setBluetoothReOpen(final boolean isChecked) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      GlobalPreferenceUtil.with(context).intervalDisableService().setBluetoothReopen(isChecked);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_BLUETOOTH, isChecked);
     }
   }
 
@@ -107,37 +99,18 @@ public final class DetailModel {
     }
   }
 
+  public void setSyncReOpen(final boolean isChecked) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(isChecked);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_SYNC, isChecked);
+    }
+  }
+
   @SuppressWarnings("SimplifiableIfStatement") public boolean isWifiManaged() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedWifi();
-    } else {
-      return true;
-    }
-  }
-
-  @SuppressWarnings("SimplifiableIfStatement") public boolean isDataManaged() {
-    final Context context = weakContext.get();
-    if (context != null) {
-      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedData();
-    } else {
-      return false;
-    }
-  }
-
-  @SuppressWarnings("SimplifiableIfStatement") public boolean isBluetoothManaged() {
-    final Context context = weakContext.get();
-    if (context != null) {
-      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedBluetooth();
-    } else {
-      return false;
-    }
-  }
-
-  @SuppressWarnings("SimplifiableIfStatement") public boolean isSyncManaged() {
-    final Context context = weakContext.get();
-    if (context != null) {
-      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedSync();
     } else {
       return true;
     }
@@ -151,6 +124,15 @@ public final class DetailModel {
     }
   }
 
+  @SuppressWarnings("SimplifiableIfStatement") public boolean isDataManaged() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedData();
+    } else {
+      return false;
+    }
+  }
+
   public void setDataManaged(final boolean isChecked) {
     final Context context = weakContext.get();
     if (context != null) {
@@ -159,11 +141,29 @@ public final class DetailModel {
     }
   }
 
+  @SuppressWarnings("SimplifiableIfStatement") public boolean isBluetoothManaged() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedBluetooth();
+    } else {
+      return false;
+    }
+  }
+
   public void setBluetoothManaged(final boolean isChecked) {
     final Context context = weakContext.get();
     if (context != null) {
       GlobalPreferenceUtil.with(context).powerManagerActive().setManagedBluetooth(isChecked);
       setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_BLUETOOTH, isChecked);
+    }
+  }
+
+  @SuppressWarnings("SimplifiableIfStatement") public boolean isSyncManaged() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedSync();
+    } else {
+      return true;
     }
   }
 

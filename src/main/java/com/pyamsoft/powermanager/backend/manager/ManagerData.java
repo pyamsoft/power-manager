@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.backend.manager;
 
 import android.annotation.TargetApi;
@@ -23,7 +24,6 @@ import android.provider.Settings;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.reflect.Method;
 
@@ -57,7 +57,7 @@ public final class ManagerData extends ManagerBase {
   }
 
   private static String getSetMethodName() {
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       return set;
     } else {
       return null;
@@ -65,7 +65,7 @@ public final class ManagerData extends ManagerBase {
   }
 
   private static String getGetMethodName() {
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       return get;
     } else {
       return null;
@@ -74,7 +74,7 @@ public final class ManagerData extends ManagerBase {
 
   private static synchronized Method reflectGetMethod() {
     final String get = getGetMethodName();
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) && get != null) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && get != null) {
       try {
         final Method method = ConnectivityManager.class.getDeclaredMethod(get);
         method.setAccessible(true);
@@ -88,7 +88,7 @@ public final class ManagerData extends ManagerBase {
 
   private static synchronized Method reflectSetMethod() {
     final String set = getSetMethodName();
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) && set != null) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP && set != null) {
       try {
         final Method method = ConnectivityManager.class.getDeclaredMethod(set, Boolean.TYPE);
         method.setAccessible(true);
@@ -108,8 +108,8 @@ public final class ManagerData extends ManagerBase {
     if (data != null) {
       if (getMobileDataEnabled != null) {
         try {
-          return (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)
-              ? (Boolean) getMobileDataEnabled.invoke(data) : false);
+          return (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+              ? (Boolean) getMobileDataEnabled.invoke(data) : false;
         } catch (final Exception e) {
           e.printStackTrace();
         }
@@ -119,7 +119,7 @@ public final class ManagerData extends ManagerBase {
   }
 
   private synchronized void setMobileData(final boolean state) {
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       if (data != null) {
         if (setMobileDataEnabled != null) {
           try {
@@ -156,7 +156,7 @@ public final class ManagerData extends ManagerBase {
 
   private boolean isAirplaneMode() {
     if (!isNull()) {
-      if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.JELLY_BEAN_MR1)) {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
         return OldAndroid.isAirplaneModeOn(context);
       } else {
         return JellyBeanMR1.isAirplaneModeOn(context);

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.SharedPreferences;
@@ -128,7 +129,7 @@ public final class GridFragment extends ExplanationFragment implements GridInter
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.amber500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.amber500
         : R.color.amber700;
   }
 
