@@ -186,7 +186,6 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     }
     setSupportActionBar(toolbar);
     setActionBarHomeEnabled(false);
-    collapsingToolbarLayout.setTitle(getString(R.string.app_name));
   }
 
   private void setActionBarHomeEnabled(final boolean enabled) {
@@ -306,8 +305,10 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     up = viewCode != null;
     if (image == 0) {
       heroImage.setImageResource(image);
+      collapsingToolbarLayout.setTitle(getString(R.string.app_name));
     } else {
       Picasso.with(this).load(image).into(heroImage);
+      collapsingToolbarLayout.setTitle(viewCode);
     }
 
     appBarLayout.setExpanded(up, true);
@@ -376,11 +377,11 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
           adapter = new HelpAdapter();
-          decoration = null;
+          decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
           adapter = new AboutAdapter(this);
-          decoration = null;
+          decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
           break;
         default:
           throw new RuntimeException("Invalid viewCode: " + viewCode);
