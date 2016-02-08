@@ -19,4 +19,6 @@ package com.pyamsoft.powermanager.ui.grid;
 public interface GridInterface {
 
   void onFABClicked();
+
+  void onGridItemClicked(final String viewCode);
 }

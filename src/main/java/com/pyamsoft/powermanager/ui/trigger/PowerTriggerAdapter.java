@@ -29,26 +29,30 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTriggerAdapter.ViewHolder>
+public final class PowerTriggerAdapter
+    extends BindableRecyclerAdapter<PowerTriggerAdapter.ViewHolder>
     implements PowerTriggerInterface {
 
   private static final int VIEW_TYPE_NORMAL = 0;
   private static final int VIEW_TYPE_ADD = 1;
   private static final String TAG = PowerTriggerAdapter.class.getSimpleName();
+  private final FragmentActivity activity;
   private final FragmentManager fm;
   private final List<PowerTrigger> triggerList = new ArrayList<>();
-  private PowerTriggerPresenter presenter;
+  private final PowerTriggerPresenter presenter;
 
   public PowerTriggerAdapter(final FragmentActivity activity) {
+    this.activity = activity;
     fm = activity.getSupportFragmentManager();
     presenter = new PowerTriggerPresenter();
-    presenter.bind(activity, this);
+    bind();
   }
 
   public static void merge(final List<PowerTrigger> items) {
@@ -108,12 +112,6 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     final int sortedLength = sortedItems.size();
     while (i < sortedLength) {
       items.set(sortedIndex++, sortedItems.get(i++));
-    }
-  }
-
-  public void destroy() {
-    if (presenter != null) {
-      presenter.unbind();
     }
   }
 
@@ -209,6 +207,14 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     if (dialog != null) {
       dialog.show();
     }
+  }
+
+  @Override protected void onBind() {
+    presenter.bind(activity, this);
+  }
+
+  @Override protected void onUnbind() {
+    presenter.unbind();
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

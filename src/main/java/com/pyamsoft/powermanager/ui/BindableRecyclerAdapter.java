@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.setting;
+package com.pyamsoft.powermanager.ui;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
-public interface SettingsInterface {
+public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
+    extends RecyclerView.Adapter<T> {
 
-  void onResetRequested(final SettingsPresenter presenter, final Context context);
+  protected void bind() {
+    onBind();
+  }
 
-  void onBootEnabled();
+  public void destroy() {
+    onUnbind();
+  }
 
-  void onBootDisabled();
+  protected abstract void onBind();
 
-  void onSuspendEnabled();
-
-  void onSuspendDisabled();
-
-  void onNotificationEnabled();
-
-  void onNotificationDisabled();
-
-  void onForegroundEnabled();
-
-  void onForegroundDisabled();
+  protected abstract void onUnbind();
 }

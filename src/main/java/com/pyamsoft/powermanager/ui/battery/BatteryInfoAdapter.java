@@ -24,10 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.BatteryUtil;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class BatteryInfoAdapter extends RecyclerView.Adapter<BatteryInfoAdapter.ViewHolder> {
+public final class BatteryInfoAdapter
+    extends BindableRecyclerAdapter<BatteryInfoAdapter.ViewHolder> {
 
   private static final int POSITION_PERCENT = 0;
   private static final int POSITION_CHARGE = 1;
@@ -80,6 +82,14 @@ public final class BatteryInfoAdapter extends RecyclerView.Adapter<BatteryInfoAd
 
   @Override public int getItemCount() {
     return NUMBER_ITEMS;
+  }
+
+  @Override protected void onBind() {
+    // TODO NOOP
+  }
+
+  @Override protected void onUnbind() {
+    // TODO NOOP
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

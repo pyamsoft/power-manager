@@ -28,13 +28,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHolder>
+public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.ViewHolder>
     implements AboutInterface {
 
   private static final int NUMBER_ABOUT_ITEMS = 5;
@@ -50,19 +51,22 @@ public final class AboutAdapter extends RecyclerView.Adapter<AboutAdapter.ViewHo
   private static final String VERSION_CODE = "Version Code: " + BuildConfig.VERSION_NAME;
   private static final String BUILD_CODE = "Build Code: " + BuildConfig.VERSION_CODE;
   private final Set<Integer> expandedPositions = new HashSet<>(NUMBER_ABOUT_ITEMS);
+  private final Context context;
   private final String dateCode;
-  private AboutPresenter presenter;
+  private final AboutPresenter presenter;
 
   public AboutAdapter(final Context context) {
     dateCode = "Build Date: " + context.getString(R.string.app_date);
+    this.context = context;
     presenter = new AboutPresenter();
+  }
+
+  @Override protected void onBind() {
     presenter.bind(context, this);
   }
 
-  public void destroy() {
-    if (presenter != null) {
-      presenter.unbind();
-    }
+  @Override protected void onUnbind() {
+    presenter.unbind();
   }
 
   @Override public int getItemViewType(final int position) {

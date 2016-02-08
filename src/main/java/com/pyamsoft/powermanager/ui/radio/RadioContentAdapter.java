@@ -27,11 +27,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContentAdapter.ViewHolder>
-    implements RadioInterface {
+public final class RadioContentAdapter
+    extends BindableRecyclerAdapter<RadioContentAdapter.ViewHolder> implements RadioInterface {
 
   public static final long[] DELAY_VALUES = {
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_FIVE,
@@ -64,14 +65,14 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
   private final RadioContentInterface radioInterface;
-  private RadioPresenter presenter;
+  private final RadioPresenter presenter;
   private final Context context;
 
   public RadioContentAdapter(final Context context, final RadioContentInterface i) {
     this.radioInterface = i;
     this.context = context;
     presenter = new RadioPresenter();
-    presenter.bind(this.context, this);
+    bind();
   }
 
   @Override public void onDelayTimeChanged() {
@@ -86,7 +87,11 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     notifyItemChanged(POSITION_REOPEN);
   }
 
-  public void destroy() {
+  @Override protected void onBind() {
+    presenter.bind(context, this);
+  }
+
+  @Override protected void onUnbind() {
     presenter.unbind();
   }
 

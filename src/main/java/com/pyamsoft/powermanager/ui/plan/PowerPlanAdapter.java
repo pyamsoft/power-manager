@@ -29,26 +29,33 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class PowerPlanAdapter extends RecyclerView.Adapter<PowerPlanAdapter.ViewHolder>
+public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAdapter.ViewHolder>
     implements PowerPlanInterface {
 
   private static final float SCALE_Y = 1f;
   private static final int POWER_PLAN_NUMBER = 9;
   private static final String TAG = PowerPlanAdapter.class.getSimpleName();
   private final Set<Integer> expandedPositions = new HashSet<>(POWER_PLAN_NUMBER);
-  private PowerPlanPresenter presenter;
+  private final Context context;
+  private final PowerPlanPresenter presenter;
 
   public PowerPlanAdapter(final Context context) {
+    this.context = context;
     presenter = new PowerPlanPresenter();
+    bind();
+  }
+
+  @Override protected void onBind() {
     presenter.bind(context, this);
   }
 
-  public void destroy() {
+  @Override protected void onUnbind() {
     presenter.unbind();
   }
 

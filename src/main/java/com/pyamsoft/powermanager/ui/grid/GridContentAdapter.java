@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
 import com.pyamsoft.powermanager.ui.RecyclerItemTouchInterface;
 import com.pyamsoft.pydroid.base.PresenterBase;
@@ -41,24 +42,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAdapter.ViewHolder>
+public final class GridContentAdapter extends BindableRecyclerAdapter<GridContentAdapter.ViewHolder>
     implements RecyclerItemTouchInterface, GridInterface {
 
   private static final int NUMBER_ITEMS = 10;
   private static final String TAG = GridContentAdapter.class.getSimpleName();
 
   private final List<String> items;
-  //private final FragmentManager fm;
-  private GridPresenter presenter;
-  private ContainerInterface container;
+  private final Context context;
+  private final GridPresenter presenter;
+  private final ContainerInterface container;
 
   public GridContentAdapter(final Context context, final ContainerInterface container) {
     this.container = container;
+    this.context = context;
     presenter = new GridPresenter();
-    presenter.bind(context, this);
 
     items = new ArrayList<>(NUMBER_ITEMS);
-
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
     items.add(preferenceUtil.gridOrder().getOne());
     items.add(preferenceUtil.gridOrder().getTwo());
@@ -70,12 +70,16 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     items.add(preferenceUtil.gridOrder().getEight());
     items.add(preferenceUtil.gridOrder().getNine());
     items.add(preferenceUtil.gridOrder().getTen());
+
+    bind();
   }
 
-  public void destroy() {
-    if (presenter != null) {
-      presenter.unbind();
-    }
+  @Override protected void onBind() {
+    presenter.bind(context, this);
+  }
+
+  @Override protected void onUnbind() {
+    presenter.unbind();
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -128,13 +132,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     if (image != 0) {
       Picasso.with(holder.image.getContext()).load(image).into(holder);
 
-      // KLUDGE because java.
-      final int javaPlease = image;
       holder.mainHolder.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          LogUtil.d(TAG, "onClick: ", position);
-          container.setCurrentView(name);
+          presenter.clickGridItem(name);
         }
       });
     }
@@ -165,6 +166,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
   @Override public void onFABClicked() {
     // No FAB here
     throw new PresenterBase.IllegalBindException("No Fab Here");
+  }
+
+  @Override public void onGridItemClicked(String viewCode) {
+    container.setCurrentView(viewCode);
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

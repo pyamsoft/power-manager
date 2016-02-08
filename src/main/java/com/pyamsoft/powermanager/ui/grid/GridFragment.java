@@ -241,4 +241,8 @@ public final class GridFragment extends ExplanationFragment implements GridInter
   @Override public void onFABClicked() {
     setFABImage(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor().isEnabled());
   }
+
+  @Override public void onGridItemClicked(String viewCode) {
+
+  }
 }

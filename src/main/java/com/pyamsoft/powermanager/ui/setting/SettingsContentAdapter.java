@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
@@ -39,7 +43,8 @@ import com.pyamsoft.pydroid.util.StringUtil;
 import java.lang.ref.WeakReference;
 
 public final class SettingsContentAdapter
-    extends RecyclerView.Adapter<SettingsContentAdapter.ViewHolder> implements SettingsInterface {
+    extends BindableRecyclerAdapter<SettingsContentAdapter.ViewHolder>
+    implements SettingsInterface {
 
   public static final int POSITION_BOOT = 0;
   public static final int POSITION_SUSPEND = 1;
@@ -49,15 +54,37 @@ public final class SettingsContentAdapter
   public static final int NUMBER_ITEMS = 5;
   private static final int TYPE_NORMAL = 0;
   private static final int TYPE_RESET = 1;
-  private SettingsPresenter presenter;
+  private final AppCompatActivity activity;
+  private final SettingsPresenter presenter;
+  private PreferenceBase.OnSharedPreferenceChangeListener listener =
+      new PreferenceBase.OnSharedPreferenceChangeListener(
+          GlobalPreferenceUtil.PowerManagerMonitor.ENABLED,
+          GlobalPreferenceUtil.PowerManagerMonitor.NOTIFICATION) {
+        @Override
+        protected void preferenceChanged(SharedPreferences sharedPreferences, String key) {
+          final boolean enabled = sharedPreferences.getBoolean(key, false);
+          if (enabled) {
+            onForegroundEnabled();
+          } else {
+            onForegroundDisabled();
+          }
+        }
+      };
 
   public SettingsContentAdapter(final AppCompatActivity activity) {
+    this.activity = activity;
     presenter = new SettingsPresenter();
-    presenter.bind(activity, this);
+    bind();
   }
 
-  public void destroy() {
+  @Override protected void onBind() {
+    presenter.bind(activity, this);
+    listener.register(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
+  }
+
+  @Override protected void onUnbind() {
     presenter.unbind();
+    listener.unregister(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
   }
 
   @Override public int getItemViewType(int position) {
@@ -284,10 +311,6 @@ public final class SettingsContentAdapter
   }
 
   @Override public void onForegroundDisabled() {
-    notifyItemChanged(POSITION_FOREGROUND);
-  }
-
-  @Override public void onForegroundAffected() {
     notifyItemChanged(POSITION_FOREGROUND);
   }
 

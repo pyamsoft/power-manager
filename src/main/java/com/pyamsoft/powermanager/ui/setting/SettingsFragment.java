@@ -37,17 +37,6 @@ public final class SettingsFragment extends ExplanationFragment {
 
   private RecyclerView recyclerView;
   private SettingsContentAdapter adapter;
-  private PreferenceBase.OnSharedPreferenceChangeListener listener =
-      new PreferenceBase.OnSharedPreferenceChangeListener(
-          GlobalPreferenceUtil.PowerManagerMonitor.ENABLED,
-          GlobalPreferenceUtil.PowerManagerMonitor.NOTIFICATION) {
-        @Override
-        protected void preferenceChanged(SharedPreferences sharedPreferences, String key) {
-          if (adapter != null) {
-            adapter.onForegroundAffected();
-          }
-        }
-      };
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,12 +46,10 @@ public final class SettingsFragment extends ExplanationFragment {
 
   @Override public void onResume() {
     super.onResume();
-    listener.register(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
   }
 
   @Override public void onPause() {
     super.onPause();
-    listener.unregister(GlobalPreferenceUtil.with(getContext()).powerManagerMonitor());
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

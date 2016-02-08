@@ -49,4 +49,14 @@ public final class GridPresenter extends PresenterBase<GridInterface> {
     model.clickFAB();
     reference.onFABClicked();
   }
+
+  public void clickGridItem(final String viewCode) {
+    final GridInterface reference = getBoundReference();
+    if (reference == null) {
+      LogUtil.e(TAG, "Null reference");
+      return;
+    }
+    LogUtil.d(TAG, "clickGridItem");
+    reference.onGridItemClicked(viewCode);
+  }
 }

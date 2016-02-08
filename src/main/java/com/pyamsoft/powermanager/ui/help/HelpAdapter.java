@@ -27,12 +27,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class HelpAdapter extends RecyclerView.Adapter<HelpAdapter.ViewHolder> {
+public final class HelpAdapter extends BindableRecyclerAdapter<HelpAdapter.ViewHolder> {
 
   private static final int POSITION_WHAT_IS = 0;
   private static final int POSITION_HOW_TO = 1;
@@ -151,6 +152,14 @@ public final class HelpAdapter extends RecyclerView.Adapter<HelpAdapter.ViewHold
 
   @Override public int getItemCount() {
     return NUMBER_HELP_ITEMS;
+  }
+
+  @Override protected void onBind() {
+    // TODO NOOP
+  }
+
+  @Override protected void onUnbind() {
+    // TODO NOOP
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

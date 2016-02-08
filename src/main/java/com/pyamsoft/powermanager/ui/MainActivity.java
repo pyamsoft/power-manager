@@ -68,6 +68,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   private RecyclerView recyclerView;
   private final StaggeredGridLayoutManager gridLayoutManager =
       new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+  private BindableRecyclerAdapter<? extends RecyclerView.ViewHolder> adapter;
   private FloatingActionButton fab;
   private FloatingActionButton fabSmall;
   private FloatingActionButton fabLarge;
@@ -148,6 +149,14 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     recyclerView.setOnClickListener(null);
     recyclerView.setLayoutManager(null);
     recyclerView.setAdapter(null);
+
+    if (adapter != null) {
+      adapter.destroy();
+    }
+
+    if (helper != null) {
+      helper.attachToRecyclerView(null);
+    }
   }
 
   private void setupAppBar() {
@@ -288,11 +297,13 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   }
 
   @Override public void setCurrentView(final String viewCode) {
-    RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter;
     boolean up;
     if (helper != null) {
       // Remove helper
       helper.attachToRecyclerView(null);
+    }
+    if (adapter != null) {
+      adapter.destroy();
     }
     if (viewCode == null) {
       final GridContentAdapter grid = new GridContentAdapter(this, this);
