@@ -128,7 +128,7 @@ public final class GridFragment extends ExplanationFragment implements GridInter
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.amber500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.amber500
         : R.color.amber700;
   }
 

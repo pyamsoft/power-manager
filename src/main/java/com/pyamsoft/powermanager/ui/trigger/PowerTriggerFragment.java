@@ -128,7 +128,7 @@ public final class PowerTriggerFragment extends ExplanationFragment {
   }
 
   @Override public int getBackgroundColor() {
-    return AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP) ? R.color.yellow500
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.yellow500
         : R.color.scrim45_yellow500;
   }
 }

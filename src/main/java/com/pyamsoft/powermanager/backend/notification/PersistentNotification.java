@@ -80,7 +80,7 @@ public final class PersistentNotification {
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .setOngoing(true)
         .setContentIntent(main);
-    if (!AppUtil.androidVersionLessThan(Build.VERSION_CODES.LOLLIPOP)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       builder.setColor(ContextCompat.getColor(context, R.color.amber700));
     }
   }

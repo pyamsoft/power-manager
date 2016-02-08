@@ -15,13 +15,16 @@
  */
 package com.pyamsoft.powermanager.ui;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
@@ -32,10 +35,12 @@ import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
+import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
 public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
 
+  private static final String TAG = MainActivity.class.getSimpleName();
   private View statusBarPadding;
   private Toolbar toolbar;
   private View shadow;
@@ -135,9 +140,37 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   }
 
   public final void colorizeStatusBar(final int color) {
-    if (statusBarPadding != null) {
-      super.colorizeStatusBar(statusBarPadding, color);
+    final int c = ContextCompat.getColor(this, color);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setStatusBarColor(c);
+    } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      statusBarPadding.setBackgroundColor(c);
+    } else {
+      LogUtil.d(TAG, "Version code too old to modify status bar");
     }
+  }
+
+  protected final void setupStatusBar(final View statusBarPadding) {
+    int result;
+    final int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      LogUtil.d(TAG, "Lollipop doesnt need coloring");
+      result = 0;
+    } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      if (resourceId > 0) {
+        LogUtil.d(TAG, "Found status bar resourceId");
+        result = getResources().getDimensionPixelSize(resourceId);
+      } else {
+        LogUtil.d(TAG, "Fall back to status bar height");
+        result = (int) AppUtil.convertToDP(this, 24);
+      }
+    } else {
+      LogUtil.d(TAG, "Sub Kitkat doesnt need coloring");
+      result = 0;
+    }
+    final ViewGroup.LayoutParams p = statusBarPadding.getLayoutParams();
+    p.height = result;
+    statusBarPadding.setLayoutParams(p);
   }
 
   private void setupViewElevation() {

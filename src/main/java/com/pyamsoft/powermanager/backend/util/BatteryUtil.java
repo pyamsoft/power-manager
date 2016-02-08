@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Build;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 
 public final class BatteryUtil {
@@ -71,7 +70,7 @@ public final class BatteryUtil {
   }
 
   private static boolean isWirelessCharging(final int charge) {
-    if (AppUtil.androidVersionLessThan(Build.VERSION_CODES.JELLY_BEAN_MR1)) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
       return OldAndroid.isWirelesCharging();
     } else {
       return JellyBeanMR1.isWirelessCharging(charge);
