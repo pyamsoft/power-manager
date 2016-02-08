@@ -34,7 +34,7 @@ public final class SettingsModel {
   private WeakReference<Context> weakContext;
 
   public SettingsModel(final Context c) {
-    weakContext = new WeakReference<>(c.getApplicationContext());
+    weakContext = new WeakReference<>(c);
   }
 
   private static void propagateNotificationChanges(final Context context,
