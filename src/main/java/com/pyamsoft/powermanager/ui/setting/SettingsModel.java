@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.ui.setting;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.powermanager.R;
