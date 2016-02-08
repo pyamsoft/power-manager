@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Spannable;
@@ -50,9 +51,9 @@ public final class SettingsContentAdapter
   private static final int TYPE_RESET = 1;
   private SettingsPresenter presenter;
 
-  public SettingsContentAdapter(final Context context) {
+  public SettingsContentAdapter(final AppCompatActivity activity) {
     presenter = new SettingsPresenter();
-    presenter.bind(context, this);
+    presenter.bind(activity, this);
   }
 
   public void destroy() {

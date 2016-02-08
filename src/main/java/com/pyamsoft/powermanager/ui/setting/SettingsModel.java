@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.ui.setting;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.receiver.BootActionReceiver;
@@ -31,10 +33,10 @@ import java.lang.ref.WeakReference;
 public final class SettingsModel {
 
   private static final String TAG = SettingsModel.class.getSimpleName();
-  private WeakReference<Context> weakContext;
+  private WeakReference<AppCompatActivity> weakContext;
 
-  public SettingsModel(final Context c) {
-    weakContext = new WeakReference<>(c.getApplicationContext());
+  public SettingsModel(final AppCompatActivity activity) {
+    weakContext = new WeakReference<>(activity);
   }
 
   private static void propagateNotificationChanges(final Context context,

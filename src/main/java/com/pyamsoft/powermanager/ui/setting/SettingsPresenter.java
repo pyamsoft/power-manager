@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
@@ -29,9 +30,9 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     throw new IllegalBindException("Cannot bind without position and Context");
   }
 
-  public void bind(final Context context, final SettingsInterface reference) {
+  public void bind(final AppCompatActivity activity, final SettingsInterface reference) {
     super.bind(reference);
-    this.model = new SettingsModel(context);
+    this.model = new SettingsModel(activity);
   }
 
   @Override public void unbind() {
