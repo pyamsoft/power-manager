@@ -17,7 +17,6 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import android.os.Build;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.pydroid.util.AppUtil;
 
 public final class DataRadioFragment extends BaseRadioFragment
     implements RadioContentAdapter.RadioInterface {

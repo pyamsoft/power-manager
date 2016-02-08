@@ -50,12 +50,6 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     presenter.bind(f.getContext(), this);
   }
 
-  public void destroy() {
-    if (presenter != null) {
-      presenter.unbind();
-    }
-  }
-
   public static void merge(final List<PowerTrigger> items) {
     final int size = items.size();
     if (size > 1) {
@@ -113,6 +107,12 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
     final int sortedLength = sortedItems.size();
     while (i < sortedLength) {
       items.set(sortedIndex++, sortedItems.get(i++));
+    }
+  }
+
+  public void destroy() {
+    if (presenter != null) {
+      presenter.unbind();
     }
   }
 

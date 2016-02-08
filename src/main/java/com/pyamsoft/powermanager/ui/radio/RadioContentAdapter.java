@@ -57,15 +57,19 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
       R.string.delay_sixty, R.string.delay_ninty, R.string.delay_twomin,
   };
   // TODO REOPEN_RESID REOPEN_VALUES
-
+  public static final int NUMBER_ITEMS = 3;
   private static final String TAG = RadioContentAdapter.class.getSimpleName();
   private static final int POSITION_DELAY = 0;
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
-  public static final int NUMBER_ITEMS = 3;
-
   private final RadioInterface radioInterface;
   private RadioPresenter presenter;
+
+  public RadioContentAdapter(final RadioInterface i) {
+    this.radioInterface = i;
+    presenter = new RadioPresenter();
+    presenter.bind(i.getContext(), this);
+  }
 
   @Override public void onDelayTimeChanged() {
     notifyItemChanged(POSITION_DELAY);
@@ -77,17 +81,6 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
 
   @Override public void onReOpenTimeChanged() {
     notifyItemChanged(POSITION_REOPEN);
-  }
-
-  public static final class ValueHolder {
-    private long realTime;
-    private ValueRunnableBase<Long> onClick;
-  }
-
-  public RadioContentAdapter(final RadioInterface i) {
-    this.radioInterface = i;
-    presenter = new RadioPresenter();
-    presenter.bind(i.getContext(), this);
   }
 
   public void destroy() {
@@ -404,6 +397,11 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     Context getContext();
 
     String getName();
+  }
+
+  public static final class ValueHolder {
+    private long realTime;
+    private ValueRunnableBase<Long> onClick;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

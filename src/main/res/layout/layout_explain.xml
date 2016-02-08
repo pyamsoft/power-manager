@@ -42,11 +42,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="end"
-      android:textAllCaps="true"
       android:layout_marginTop="16dp"
       android:text="@string/okay"
-      android:textColor="@android:color/white"
+      android:textAllCaps="true"
       android:textAppearance="?android:attr/textAppearanceLarge"
+      android:textColor="@android:color/white"
       style="?attr/buttonBarButtonStyle"
       />
 

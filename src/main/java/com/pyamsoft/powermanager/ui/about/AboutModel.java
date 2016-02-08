@@ -24,8 +24,8 @@ import java.lang.ref.WeakReference;
 
 public class AboutModel {
 
-  private WeakReference<Context> weakContext;
   private final Intent intent;
+  private WeakReference<Context> weakContext;
 
   public AboutModel(final Context context) {
     this.weakContext = new WeakReference<>(context);

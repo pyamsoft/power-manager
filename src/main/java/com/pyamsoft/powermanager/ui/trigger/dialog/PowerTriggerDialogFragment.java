@@ -29,11 +29,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerInterface;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
-import java.util.Set;
 
 public class PowerTriggerDialogFragment extends DialogFragment
     implements PowerTriggerDialogInterface {
@@ -49,6 +47,19 @@ public class PowerTriggerDialogFragment extends DialogFragment
     presenter = new PowerTriggerDialogPresenter();
   }
 
+  public static void hideKeyboard(final Activity act) {
+    if (act != null) {
+      LogUtil.d(TAG, "Get current focus");
+      final View view = act.getCurrentFocus();
+      if (view != null) {
+        LogUtil.d(TAG, "Attempt to hide keyboard");
+        final InputMethodManager imm =
+            ((InputMethodManager) act.getSystemService(Context.INPUT_METHOD_SERVICE));
+        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+      }
+    }
+  }
+
   public void setContext(final Context context) {
     presenter.bind(context, this);
   }
@@ -61,19 +72,6 @@ public class PowerTriggerDialogFragment extends DialogFragment
   public void destroy() {
     if (presenter != null) {
       presenter.unbind();
-    }
-  }
-
-  public static void hideKeyboard(final Activity act) {
-    if (act != null) {
-      LogUtil.d(TAG, "Get current focus");
-      final View view = act.getCurrentFocus();
-      if (view != null) {
-        LogUtil.d(TAG, "Attempt to hide keyboard");
-        final InputMethodManager imm =
-            ((InputMethodManager) act.getSystemService(Context.INPUT_METHOD_SERVICE));
-        imm.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-      }
     }
   }
 

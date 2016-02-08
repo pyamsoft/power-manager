@@ -32,18 +32,18 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.PicassoTargetFragment;
 import com.pyamsoft.powermanager.ui.MainActivity;
+import com.pyamsoft.powermanager.ui.PicassoTargetFragment;
 import com.pyamsoft.powermanager.ui.about.AboutFragment;
 import com.pyamsoft.powermanager.ui.battery.BatteryInfoFragment;
 import com.pyamsoft.powermanager.ui.help.HelpFragment;
-import com.pyamsoft.powermanager.ui.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.ui.plan.PowerPlanFragment;
 import com.pyamsoft.powermanager.ui.radio.BluetoothRadioFragment;
 import com.pyamsoft.powermanager.ui.radio.DataRadioFragment;
 import com.pyamsoft.powermanager.ui.radio.SyncRadioFragment;
 import com.pyamsoft.powermanager.ui.radio.WifiRadioFragment;
 import com.pyamsoft.powermanager.ui.setting.SettingsFragment;
+import com.pyamsoft.powermanager.ui.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
@@ -73,10 +73,6 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
   private DetailPresenter presenter;
   private int largeIconOn;
   private int largeIconOff;
-  private int smallIconOn;
-  private int smallIconOff;
-  private AlertDialog largeFABDialog;
-  private AlertDialog smallFABDialog;
   private final PreferenceBase.OnSharedPreferenceChangeListener listener =
       new PreferenceBase.OnSharedPreferenceChangeListener(
           GlobalPreferenceUtil.PowerManagerActive.MANAGE_WIFI,
@@ -88,6 +84,10 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
           onPreferenceChanged(sharedPreferences, key);
         }
       };
+  private int smallIconOn;
+  private int smallIconOff;
+  private AlertDialog largeFABDialog;
+  private AlertDialog smallFABDialog;
 
   public DetailBaseFragment() {
     presenter = new DetailPresenter();

@@ -17,9 +17,6 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import android.os.Build;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
-import com.pyamsoft.pydroid.util.AppUtil;
 
 public final class SyncRadioFragment extends BaseRadioFragment
     implements RadioContentAdapter.RadioInterface {

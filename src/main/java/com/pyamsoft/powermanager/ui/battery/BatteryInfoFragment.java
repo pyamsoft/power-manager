@@ -33,9 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
-import com.pyamsoft.powermanager.ui.battery.BatteryInfoAdapter;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class BatteryInfoFragment extends ExplanationFragment {

@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.ExplanationFragment;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class AboutFragment extends ExplanationFragment {

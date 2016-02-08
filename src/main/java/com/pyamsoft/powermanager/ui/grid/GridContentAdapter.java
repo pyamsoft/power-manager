@@ -176,10 +176,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {
 
-    private final Handler handler = new Handler();
     public final LinearLayout mainHolder;
     public final ImageView image;
     public final TextView name;
+    private final Handler handler = new Handler();
 
     public ViewHolder(final View itemView) {
       super(itemView);

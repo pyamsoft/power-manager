@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.backend.manager.ManagerData;
 import com.pyamsoft.powermanager.backend.manager.ManagerSync;
 import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.backend.util.BatteryUtil;
