@@ -30,7 +30,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
@@ -215,8 +214,12 @@ public final class PowerTriggerAdapter
     presenter.unbind();
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.yellow700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.yellow500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -394,8 +393,12 @@ public final class RadioContentAdapter
     return NUMBER_ITEMS;
   }
 
-  @Override public int getStatusBarColor() {
-    return radio.getStatusBarColor();
+  @Override public int getStatusbarColor() {
+    return radio.getStatusbarColor();
+  }
+
+  @Override public int getToolbarColor() {
+    return radio.getToolbarColor();
   }
 
   public static final class ValueHolder {

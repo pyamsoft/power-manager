@@ -30,7 +30,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
@@ -206,8 +205,12 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
     return POWER_PLAN_NUMBER;
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.red700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.red500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

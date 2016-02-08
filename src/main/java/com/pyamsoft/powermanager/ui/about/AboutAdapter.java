@@ -260,8 +260,12 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
 
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.orange700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.orange500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -301,7 +301,25 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   }
 
   @Override public void setCurrentView(final String viewCode, final int image) {
+    setCurrentAppBarState(viewCode, image);
+    setCurrentRecyclerViewContent(viewCode);
+  }
+
+  private void setCurrentAppBarState(final String viewCode, final int image) {
     boolean up;
+    up = viewCode != null;
+    if (image == 0) {
+      heroImage.setImageResource(image);
+    } else {
+      Picasso.with(this).load(image).into(heroImage);
+    }
+    colorStatusBar(adapter.getStatusbarColor());
+    appBarLayout.setExpanded(up, true);
+    collapsingToolbarLayout.setContentScrimColor(adapter.getToolbarColor());
+    setActionBarHomeEnabled(up);
+  }
+
+  private void setCurrentRecyclerViewContent(final String viewCode) {
     if (helper != null) {
       // Remove helper
       helper.attachToRecyclerView(null);
@@ -315,12 +333,10 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       helper = new ItemTouchHelper(new GridItemTouchCallback(grid));
       gridLayoutManager.setSpanCount(2);
       gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
-      up = false;
     } else {
       helper = null;
       gridLayoutManager.setSpanCount(1);
       gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
-      up = true;
       switch (viewCode) {
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
           adapter = new RadioContentAdapter(this, new RadioWifi());
@@ -359,17 +375,9 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
 
     recyclerView.setLayoutManager(gridLayoutManager);
     recyclerView.setAdapter(adapter);
-    if (image == 0) {
-      heroImage.setImageResource(image);
-    } else {
-      Picasso.with(this).load(image).into(heroImage);
-    }
-    colorStatusBar(adapter.getStatusBarColor());
     if (helper != null) {
       helper.attachToRecyclerView(recyclerView);
     }
-    appBarLayout.setExpanded(up, true);
-    setActionBarHomeEnabled(up);
     currentView = viewCode;
   }
 

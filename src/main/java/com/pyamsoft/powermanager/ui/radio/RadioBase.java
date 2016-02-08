@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
-import com.pyamsoft.powermanager.ui.StatusBarColor;
+import com.pyamsoft.powermanager.ui.Coloring;
 
-public abstract class RadioBase implements RadioContentInterface, StatusBarColor {
+public abstract class RadioBase implements RadioContentInterface, Coloring {
 }

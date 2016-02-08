@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.ui.radio;
 
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 
 public final class RadioWifi extends RadioBase {
 
@@ -25,7 +24,11 @@ public final class RadioWifi extends RadioBase {
     return WIFI;
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.green700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.green500;
   }
 }

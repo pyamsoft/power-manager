@@ -33,7 +33,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -172,8 +171,12 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     container.setCurrentView(viewCode, image);
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.amber700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.amber500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

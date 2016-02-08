@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.ui;
 
-public interface StatusBarColor {
+public interface Coloring {
 
-  int getStatusBarColor();
+  int getStatusbarColor();
+
+  int getToolbarColor();
 }

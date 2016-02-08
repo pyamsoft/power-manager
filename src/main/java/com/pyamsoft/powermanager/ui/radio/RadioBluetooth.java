@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.ui.radio;
 
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 
 public final class RadioBluetooth extends RadioBase {
 
@@ -25,7 +24,11 @@ public final class RadioBluetooth extends RadioBase {
     return BLUETOOTH;
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.blue700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.blue500;
   }
 }

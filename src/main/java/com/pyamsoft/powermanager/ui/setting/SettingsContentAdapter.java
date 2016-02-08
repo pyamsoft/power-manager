@@ -34,7 +34,6 @@ import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -315,8 +314,12 @@ public final class SettingsContentAdapter
     notifyItemChanged(POSITION_FOREGROUND);
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.lightgreen700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.lightgreen500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

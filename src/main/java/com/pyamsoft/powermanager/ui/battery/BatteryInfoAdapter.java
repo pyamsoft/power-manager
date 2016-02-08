@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.BatteryUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.powermanager.ui.StatusBarColor;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -93,8 +92,12 @@ public final class BatteryInfoAdapter
     // TODO NOOP
   }
 
-  @Override public int getStatusBarColor() {
+  @Override public int getStatusbarColor() {
     return R.color.pink700;
+  }
+
+  @Override public int getToolbarColor() {
+    return R.color.pink500;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
