@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.ui.trigger;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -41,14 +41,14 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
   private static final int VIEW_TYPE_NORMAL = 0;
   private static final int VIEW_TYPE_ADD = 1;
   private static final String TAG = PowerTriggerAdapter.class.getSimpleName();
-  private final FragmentManager childManager;
+  private final FragmentManager fm;
   private final List<PowerTrigger> triggerList = new ArrayList<>();
   private PowerTriggerPresenter presenter;
 
-  public PowerTriggerAdapter(final Fragment f) {
-    childManager = f.getChildFragmentManager();
+  public PowerTriggerAdapter(final FragmentActivity activity) {
+    fm = activity.getSupportFragmentManager();
     presenter = new PowerTriggerPresenter();
-    presenter.bind(f.getContext(), this);
+    presenter.bind(activity, this);
   }
 
   public static void merge(final List<PowerTrigger> items) {
@@ -192,7 +192,7 @@ public final class PowerTriggerAdapter extends RecyclerView.Adapter<PowerTrigger
 
   @Override public void onDialogFragmentCreated(PowerTriggerDialogFragment fragment) {
     if (fragment != null) {
-      fragment.show(childManager, null);
+      fragment.show(fm, null);
     }
   }
 

@@ -45,7 +45,7 @@ public final class PowerTriggerFragment extends ExplanationFragment {
   @Override public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     setupExplanationString();
-    final PowerTriggerAdapter adapter = new PowerTriggerAdapter(this);
+    final PowerTriggerAdapter adapter = new PowerTriggerAdapter(null);
     adapter.refreshDataSet(view.getContext());
     decor = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);

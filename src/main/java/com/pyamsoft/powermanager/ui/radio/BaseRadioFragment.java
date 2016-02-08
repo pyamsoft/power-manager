@@ -19,8 +19,6 @@ package com.pyamsoft.powermanager.ui.radio;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +29,6 @@ import com.pyamsoft.pydroid.util.StringUtil;
 
 public abstract class BaseRadioFragment extends ExplanationFragment {
 
-  private final StaggeredGridLayoutManager staggeredGridLayoutManager =
-      new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-  private RecyclerView recyclerView;
-  private RadioContentAdapter adapter;
-
-  protected abstract RadioContentAdapter.RadioInterface getRadio();
-
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -46,24 +37,10 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    adapter = new RadioContentAdapter(getRadio());
-    recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-    recyclerView.setLayoutManager(staggeredGridLayoutManager);
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(adapter);
-
-    setupExplanationString();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    if (recyclerView != null) {
-      recyclerView.setLayoutManager(null);
-      recyclerView.setAdapter(null);
-    }
-    if (adapter != null) {
-      adapter.destroy();
-    }
   }
 
   @Override public Spannable setupExplanationString() {
@@ -149,7 +126,7 @@ public abstract class BaseRadioFragment extends ExplanationFragment {
 
   private void formatWithInterface(final String[] strings, final int index) {
     final String fmt = strings[index];
-    final String replace = StringUtil.formatString(fmt, getRadio().getName());
+    final String replace = StringUtil.formatString(fmt, null);
     strings[index] = replace;
   }
 }

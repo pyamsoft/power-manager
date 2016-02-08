@@ -21,10 +21,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +31,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.powermanager.ui.detail.DetailBaseFragment;
+import com.pyamsoft.powermanager.ui.ContainerInterface;
+import com.pyamsoft.powermanager.ui.RecyclerItemTouchInterface;
 import com.pyamsoft.pydroid.base.PresenterBase;
+import com.pyamsoft.pydroid.util.LogUtil;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAdapter.ViewHolder>
-    implements GridItemTouchInterface, GridInterface {
+    implements RecyclerItemTouchInterface, GridInterface {
 
   private static final int NUMBER_ITEMS = 10;
   private static final String TAG = GridContentAdapter.class.getSimpleName();
@@ -51,9 +50,10 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
   private final List<String> items;
   //private final FragmentManager fm;
   private GridPresenter presenter;
+  private ContainerInterface container;
 
-  public GridContentAdapter(final Context context) {
-    //this.fm = f.getFragmentManager();
+  public GridContentAdapter(final Context context, final ContainerInterface container) {
+    this.container = container;
     presenter = new GridPresenter();
     presenter.bind(context, this);
 
@@ -85,7 +85,7 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
     return new ViewHolder(view);
   }
 
-  @Override public void onBindViewHolder(final ViewHolder holder, int position) {
+  @Override public void onBindViewHolder(final ViewHolder holder, final int position) {
     final String name = items.get(position);
     holder.name.setText(name);
 
@@ -133,17 +133,8 @@ public final class GridContentAdapter extends RecyclerView.Adapter<GridContentAd
       holder.mainHolder.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          final Bundle detailArgs = new Bundle();
-          detailArgs.putString(DetailBaseFragment.EXTRA_PARAM_ID, name);
-          detailArgs.putInt(DetailBaseFragment.EXTRA_PARAM_IMAGE, javaPlease);
-
-          final DetailBaseFragment detailFragment = new DetailBaseFragment();
-          detailFragment.setArguments(detailArgs);
-          // TODO
-          //fm.beginTransaction()
-          //    .replace(R.id.fragment_place, detailFragment)
-          //    .addToBackStack(null)
-          //    .commit();
+          LogUtil.d(TAG, "onClick: ", position);
+          container.setCurrentView(name);
         }
       });
     }

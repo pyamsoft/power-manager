@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.radio;
+package com.pyamsoft.powermanager.ui;
 
-import android.os.Build;
-import com.pyamsoft.powermanager.R;
+public interface ContainerInterface {
 
-public final class SyncRadioFragment extends BaseRadioFragment
-    implements RadioContentAdapter.RadioInterface {
+  void colorStatusBar(final int color);
 
-  @Override public String getName() {
-    return SYNC;
-  }
+  void setCurrentView(final String viewCode);
 
-  @Override protected RadioContentAdapter.RadioInterface getRadio() {
-    return this;
-  }
-
-  @Override public int getBackgroundColor() {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.purple500
-        : R.color.scrim45_purple500;
-  }
+  String popCurrentView();
 }

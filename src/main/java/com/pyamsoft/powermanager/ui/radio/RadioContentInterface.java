@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.grid;
+package com.pyamsoft.powermanager.ui.radio;
 
-import android.content.Context;
+public interface RadioContentInterface {
 
-public interface GridItemTouchInterface {
+  String WIFI = "WiFi";
+  String DATA = "Data";
+  String BLUETOOTH = "Bluetooth";
+  String SYNC = "Sync";
 
-  boolean onMoveItem(final Context context, final int fromPosition, final int toPosition);
+  String getName();
+
+  int getBackgroundColor();
 }

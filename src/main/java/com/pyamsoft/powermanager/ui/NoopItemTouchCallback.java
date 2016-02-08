@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.radio;
+package com.pyamsoft.powermanager.ui;
 
-import android.os.Build;
-import com.pyamsoft.powermanager.R;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
-public final class WifiRadioFragment extends BaseRadioFragment
-    implements RadioContentAdapter.RadioInterface {
+public final class NoopItemTouchCallback extends ItemTouchHelper.SimpleCallback {
 
-  @Override public String getName() {
-    return WIFI;
+  public NoopItemTouchCallback() {
+    super(0, 0);
   }
 
-  @Override protected RadioContentAdapter.RadioInterface getRadio() {
-    return this;
+  @Override
+  public boolean onMove(final RecyclerView recyclerView, final RecyclerView.ViewHolder viewHolder,
+      final RecyclerView.ViewHolder target) {
+    return false;
   }
 
-  @Override public int getBackgroundColor() {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.green500
-        : R.color.scrim45_green500;
+  @Override public void onSwiped(final RecyclerView.ViewHolder viewHolder, final int direction) {
   }
 }

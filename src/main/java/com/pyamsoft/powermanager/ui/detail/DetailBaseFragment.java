@@ -39,10 +39,6 @@ import com.pyamsoft.powermanager.ui.about.AboutFragment;
 import com.pyamsoft.powermanager.ui.battery.BatteryInfoFragment;
 import com.pyamsoft.powermanager.ui.help.HelpFragment;
 import com.pyamsoft.powermanager.ui.plan.PowerPlanFragment;
-import com.pyamsoft.powermanager.ui.radio.BluetoothRadioFragment;
-import com.pyamsoft.powermanager.ui.radio.DataRadioFragment;
-import com.pyamsoft.powermanager.ui.radio.SyncRadioFragment;
-import com.pyamsoft.powermanager.ui.radio.WifiRadioFragment;
 import com.pyamsoft.powermanager.ui.setting.SettingsFragment;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.base.PreferenceBase;
@@ -123,7 +119,6 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
 
     switch (targetString) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        fragment = new WifiRadioFragment();
         onClickLargeFAB = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.setWifiManaged(getValue());
@@ -148,7 +143,6 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         largeIconOff = R.drawable.ic_signal_wifi_off_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        fragment = new DataRadioFragment();
         onClickLargeFAB = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.setDataManaged(getValue());
@@ -173,7 +167,6 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         largeIconOff = R.drawable.ic_signal_cellular_off_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        fragment = new BluetoothRadioFragment();
         onClickLargeFAB = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.setBluetoothManaged(getValue());
@@ -198,7 +191,6 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         largeIconOff = R.drawable.ic_bluetooth_disabled_white_24dp;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        fragment = new SyncRadioFragment();
         onClickLargeFAB = new ValueRunnableBase<Boolean>() {
           @Override public void run() {
             presenter.setSyncManaged(getValue());
@@ -438,7 +430,7 @@ public final class DetailBaseFragment extends PicassoTargetFragment implements D
         }
       }
 
-      main.colorizeStatusBar(color);
+      main.colorStatusBar(color);
     }
   }
 

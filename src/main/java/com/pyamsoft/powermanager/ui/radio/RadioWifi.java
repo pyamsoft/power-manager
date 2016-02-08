@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.ui.radio;
 import android.os.Build;
 import com.pyamsoft.powermanager.R;
 
-public final class BluetoothRadioFragment extends BaseRadioFragment
-    implements RadioContentAdapter.RadioInterface {
+public final class RadioWifi implements RadioContentInterface {
 
   @Override public String getName() {
-    return BLUETOOTH;
-  }
-
-  @Override protected RadioContentAdapter.RadioInterface getRadio() {
-    return this;
+    return WIFI;
   }
 
   @Override public int getBackgroundColor() {
-    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.blue500
-        : R.color.scrim45_blue500;
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? R.color.green500
+        : R.color.scrim45_green500;
   }
 }

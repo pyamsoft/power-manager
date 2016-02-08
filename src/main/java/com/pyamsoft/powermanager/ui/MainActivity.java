@@ -16,13 +16,18 @@
 
 package com.pyamsoft.powermanager.ui;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -32,19 +37,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
+import com.pyamsoft.powermanager.ui.about.AboutAdapter;
+import com.pyamsoft.powermanager.ui.battery.BatteryInfoAdapter;
 import com.pyamsoft.powermanager.ui.grid.GridContentAdapter;
 import com.pyamsoft.powermanager.ui.grid.GridItemTouchCallback;
+import com.pyamsoft.powermanager.ui.help.HelpAdapter;
+import com.pyamsoft.powermanager.ui.plan.PowerPlanAdapter;
+import com.pyamsoft.powermanager.ui.radio.RadioBluetooth;
+import com.pyamsoft.powermanager.ui.radio.RadioContentAdapter;
+import com.pyamsoft.powermanager.ui.radio.RadioData;
+import com.pyamsoft.powermanager.ui.radio.RadioSync;
+import com.pyamsoft.powermanager.ui.radio.RadioWifi;
+import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
+import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.base.ActivityBase;
-import com.pyamsoft.pydroid.base.SocialMediaViewBase;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 
-public class MainActivity extends ActivityBase implements SocialMediaViewBase.SocialMediaInterface {
+public class MainActivity extends ActivityBase implements ContainerInterface {
 
+  private static final long DELAY = 1600L;
   private static final String TAG = MainActivity.class.getSimpleName();
   private RecyclerView recyclerView;
   private final StaggeredGridLayoutManager gridLayoutManager =
@@ -53,58 +72,46 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
   private FloatingActionButton fabSmall;
   private FloatingActionButton fabLarge;
   private AppBarLayout appBarLayout;
-  private ItemTouchHelper helper;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private Toolbar toolbar;
-  private View googlePlay;
-  private View googlePlus;
-  private View blogger;
-  private View facebook;
-  private SocialMediaViewBase.SocialMediaPresenter presenter;
   private ExplanationDialog dialog;
   private CoordinatorLayout coordinatorLayout;
+  private String currentView;
+  private Toast backToast;
+  private final Handler handler = new Handler();
+  private boolean backPressed = false;
+  private ItemTouchHelper helper;
+  private final Runnable runOnBackPressed = new Runnable() {
+
+    @Override public void run() {
+      backPressed = false;
+    }
+  };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     setupWindow();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    setupTintManager();
     findViews();
+    setupBackBeenPressedHandler();
     setupAppBar();
     createExplanationDialog();
     setupGiftAd();
-    setupRecyclerView();
+    setupViewElevations();
 
-    presenter = new SocialMediaViewBase.SocialMediaPresenter();
-    presenter.bind(this, this);
+    setCurrentView(null);
+  }
+
+  private void setupViewElevations() {
+    final int dp = (int) AppUtil.convertToDP(this, ElevationUtil.ELEVATION_APP_BAR);
+    ViewCompat.setElevation(appBarLayout, dp);
   }
 
   private void setupWindow() {
     getWindow().getDecorView()
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-  }
-
-  private void setupTintManager() {
-    //tintManager = new SystemBarTintManager(this);
-    //tintManager.setStatusBarTintEnabled(true);
-    //tintManager.setNavigationBarTintEnabled(false);
-
-    // TODO move into adapter
-    colorizeStatusBar(R.color.amber700);
-  }
-
-  private void setupRecyclerView() {
-    final GridContentAdapter adapter = new GridContentAdapter(this);
-    helper = new ItemTouchHelper(new GridItemTouchCallback(adapter));
-    helper.attachToRecyclerView(recyclerView);
-    recyclerView.setLayoutManager(gridLayoutManager);
-    recyclerView.setAdapter(adapter);
-  }
-
-  public void colorizeStatusBar(final int color) {
-
   }
 
   private void createExplanationDialog() {
@@ -115,10 +122,6 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
    * Butterknife leaks the activity?
    */
   private void findViews() {
-    googlePlay = findViewById(R.id.google_play);
-    googlePlus = findViewById(R.id.google_plus);
-    blogger = findViewById(R.id.blogger);
-    facebook = findViewById(R.id.facebook);
     toolbar = (Toolbar) findViewById(R.id.toolbar);
     appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
     collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsebar);
@@ -130,15 +133,21 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    //googlePlay.setOnClickListener(null);
-    //googlePlus.setOnClickListener(null);
-    //blogger.setOnClickListener(null);
-    //facebook.setOnClickListener(null);
-    //AppUtil.nullifyCallback(googlePlay);
-    //AppUtil.nullifyCallback(googlePlus);
-    //AppUtil.nullifyCallback(blogger);
-    //AppUtil.nullifyCallback(facebook);
-    presenter.unbind();
+    fab.setOnClickListener(null);
+    fab.setOnLongClickListener(null);
+    AppUtil.nullifyCallback(fab);
+
+    fabLarge.setOnClickListener(null);
+    fabLarge.setOnLongClickListener(null);
+    AppUtil.nullifyCallback(fabLarge);
+
+    fabSmall.setOnClickListener(null);
+    fabSmall.setOnLongClickListener(null);
+    AppUtil.nullifyCallback(fabSmall);
+
+    recyclerView.setOnClickListener(null);
+    recyclerView.setLayoutManager(null);
+    recyclerView.setAdapter(null);
   }
 
   private void setupAppBar() {
@@ -161,20 +170,16 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
       toolbar.requestLayout();
     }
     setSupportActionBar(toolbar);
+    setActionBarHomeEnabled(false);
     collapsingToolbarLayout.setTitle(getString(R.string.app_name));
   }
 
-  public final void colorizeAppBar(final int color) {
-    //final boolean noColor = (color == 0);
-    //final int stringRes = noColor ? 0 : R.string.app_name;
-    //final int backgroundColor = noColor ? android.R.color.transparent : color;
-    //if (noColor) {
-    //  disableShadows(toolbar, shadow);
-    //} else {
-    //  enableShadows(toolbar, shadow);
-    //}
-    //collapsingToolbarLayout.setTitle(stringRes == 0 ? null : getString(stringRes));
-    //appBarLayout.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
+  private void setActionBarHomeEnabled(final boolean enabled) {
+    final ActionBar bar = getSupportActionBar();
+    if (bar != null) {
+      bar.setHomeButtonEnabled(enabled);
+      bar.setDisplayHomeAsUpEnabled(enabled);
+    }
   }
 
   @Override protected void onResume() {
@@ -225,28 +230,36 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
     return handled;
   }
 
-  @Override protected void onBackPressedActivityHook() {
-    hideExplainView();
+  @Override public void onBackPressed() {
+    if (currentView == null) {
+      if (backPressed || !toastOnBackPressed()) {
+        backPressed = false;
+        super.onBackPressed();
+      } else {
+        setBackBeenPressed();
+      }
+    } else {
+      popCurrentView();
+    }
   }
 
-  @Override protected void onBackPressedFragmentHook() {
-    hideExplainView();
+  /**
+   * Override to use a single back press for exit
+   */
+  public boolean toastOnBackPressed() {
+    return true;
   }
 
-  @Override public void onGooglePlayClicked(String rateUsed) {
-
+  @SuppressLint("ShowToast") private void setupBackBeenPressedHandler() {
+    backToast = Toast.makeText(this, "Press again to Exit", Toast.LENGTH_SHORT);
+    handler.removeCallbacksAndMessages(null);
   }
 
-  @Override public void onGooglePlusClicked() {
-
-  }
-
-  @Override public void onBloggerClicked() {
-
-  }
-
-  @Override public void onFacebookClicked() {
-
+  private void setBackBeenPressed() {
+    backPressed = true;
+    backToast.show();
+    handler.removeCallbacksAndMessages(null);
+    handler.postDelayed(runOnBackPressed, DELAY);
   }
 
   public void showExplainView(Spannable explanation, int backgroundColor) {
@@ -266,5 +279,82 @@ public class MainActivity extends ActivityBase implements SocialMediaViewBase.So
       coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
     }
     Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
+  }
+
+  @Override public void colorStatusBar(int color) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setStatusBarColor(ContextCompat.getColor(this, color));
+    }
+  }
+
+  @Override public void setCurrentView(final String viewCode) {
+    RecyclerView.Adapter<? extends RecyclerView.ViewHolder> adapter;
+    boolean up;
+    if (helper != null) {
+      // Remove helper
+      helper.attachToRecyclerView(null);
+    }
+    if (viewCode == null) {
+      final GridContentAdapter grid = new GridContentAdapter(this, this);
+      adapter = grid;
+      helper = new ItemTouchHelper(new GridItemTouchCallback(grid));
+      gridLayoutManager.setSpanCount(2);
+      gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
+      up = false;
+    } else {
+      helper = null;
+      gridLayoutManager.setSpanCount(1);
+      gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
+      up = true;
+      switch (viewCode) {
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
+          adapter = new RadioContentAdapter(this, new RadioWifi());
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
+          adapter = new RadioContentAdapter(this, new RadioData());
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
+          adapter = new RadioContentAdapter(this, new RadioBluetooth());
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
+          adapter = new RadioContentAdapter(this, new RadioSync());
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
+          adapter = new PowerPlanAdapter(this);
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
+          adapter = new PowerTriggerAdapter(this);
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
+          adapter = new BatteryInfoAdapter();
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
+          adapter = new SettingsContentAdapter(this);
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
+          adapter = new HelpAdapter();
+          break;
+        case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
+          adapter = new AboutAdapter(this);
+          break;
+        default:
+          throw new RuntimeException("Invalid viewCode: " + viewCode);
+      }
+    }
+
+    recyclerView.setLayoutManager(gridLayoutManager);
+    recyclerView.setAdapter(adapter);
+    if (helper != null) {
+      helper.attachToRecyclerView(recyclerView);
+    }
+    appBarLayout.setExpanded(up, true);
+    setActionBarHomeEnabled(up);
+    currentView = viewCode;
+  }
+
+  @Override public String popCurrentView() {
+    final String oldCode = currentView;
+    setCurrentView(null);
+    return oldCode;
   }
 }

@@ -63,13 +63,15 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
   private static final int POSITION_DELAY = 0;
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
-  private final RadioInterface radioInterface;
+  private final RadioContentInterface radioInterface;
   private RadioPresenter presenter;
+  private final Context context;
 
-  public RadioContentAdapter(final RadioInterface i) {
+  public RadioContentAdapter(final Context context, final RadioContentInterface i) {
     this.radioInterface = i;
+    this.context = context;
     presenter = new RadioPresenter();
-    presenter.bind(i.getContext(), this);
+    presenter.bind(this.context, this);
   }
 
   @Override public void onDelayTimeChanged() {
@@ -117,7 +119,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     long realTime;
     ValueRunnableBase<Long> onClick;
     switch (radioInterface.getName()) {
-      case RadioInterface.WIFI:
+      case RadioContentInterface.WIFI:
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeWifi();
@@ -148,7 +150,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             onClick = null;
         }
         break;
-      case RadioInterface.DATA:
+      case RadioContentInterface.DATA:
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeData();
@@ -179,7 +181,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             onClick = null;
         }
         break;
-      case RadioInterface.BLUETOOTH:
+      case RadioContentInterface.BLUETOOTH:
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeBluetooth();
@@ -210,7 +212,7 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
             onClick = null;
         }
         break;
-      case RadioInterface.SYNC:
+      case RadioContentInterface.SYNC:
         switch (position) {
           case POSITION_DELAY:
             realTime = presenter.getDelayTimeSync();
@@ -310,7 +312,6 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     String explain;
     String s;
     String ss;
-    final Context context = radioInterface.getContext();
     final String name = radioInterface.getName();
     s = context.getString(R.string.radio_delay);
     str = StringUtil.formatString(s, name) + "\n";
@@ -323,7 +324,6 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     String str;
     String explain;
     String s;
-    final Context context = radioInterface.getContext();
     final String name = radioInterface.getName();
     str = context.getString(R.string.reopen_interval_delay) + "\n";
     s = context.getString(R.string.reopen_interval_delay_explain);
@@ -335,7 +335,6 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
     String str;
     String explain;
     String s;
-    final Context context = radioInterface.getContext();
     str = context.getString(R.string.reopen_interval_duration) + "\n";
     s = context.getString(R.string.reopen_interval_duration_explain);
     explain = StringUtil.formatString(s, radioInterface.getName());
@@ -386,18 +385,6 @@ public final class RadioContentAdapter extends RecyclerView.Adapter<RadioContent
 
   @Override public int getItemCount() {
     return NUMBER_ITEMS;
-  }
-
-  public interface RadioInterface {
-
-    String WIFI = "WiFi";
-    String DATA = "Data";
-    String BLUETOOTH = "Bluetooth";
-    String SYNC = "Sync";
-
-    Context getContext();
-
-    String getName();
   }
 
   public static final class ValueHolder {
