@@ -57,6 +57,7 @@ import com.pyamsoft.powermanager.ui.radio.RadioWifi;
 import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.base.ActivityBase;
+import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -71,6 +72,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   private final StaggeredGridLayoutManager gridLayoutManager =
       new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
   private BindableRecyclerAdapter<? extends RecyclerView.ViewHolder> adapter;
+  private RecyclerView.ItemDecoration decoration;
   private FloatingActionButton fab;
   private FloatingActionButton fabSmall;
   private FloatingActionButton fabLarge;
@@ -322,6 +324,9 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       // Remove helper
       helper.attachToRecyclerView(null);
     }
+    if (decoration != null) {
+      recyclerView.removeItemDecoration(decoration);
+    }
     if (adapter != null) {
       adapter.destroy();
     }
@@ -331,6 +336,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       helper = new ItemTouchHelper(new GridItemTouchCallback(grid));
       gridLayoutManager.setSpanCount(2);
       gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
+      decoration = null;
     } else {
       helper = null;
       gridLayoutManager.setSpanCount(1);
@@ -338,33 +344,43 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       switch (viewCode) {
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
           adapter = new RadioContentAdapter(this, new RadioWifi());
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
           adapter = new RadioContentAdapter(this, new RadioData());
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
           adapter = new RadioContentAdapter(this, new RadioBluetooth());
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
           adapter = new RadioContentAdapter(this, new RadioSync());
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
           adapter = new PowerPlanAdapter(this);
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
           adapter = new PowerTriggerAdapter(this);
+          decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
           adapter = new BatteryInfoAdapter();
+          decoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
           adapter = new SettingsContentAdapter(this);
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
           adapter = new HelpAdapter();
+          decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
           adapter = new AboutAdapter(this);
+          decoration = null;
           break;
         default:
           throw new RuntimeException("Invalid viewCode: " + viewCode);
@@ -375,6 +391,9 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     recyclerView.setAdapter(adapter);
     if (helper != null) {
       helper.attachToRecyclerView(recyclerView);
+    }
+    if (decoration != null) {
+      recyclerView.addItemDecoration(decoration);
     }
     currentView = viewCode;
   }
