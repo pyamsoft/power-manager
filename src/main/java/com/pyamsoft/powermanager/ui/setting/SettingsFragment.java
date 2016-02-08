@@ -67,7 +67,7 @@ public final class SettingsFragment extends ExplanationFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    adapter = new SettingsContentAdapter(getContext());
+    adapter = new SettingsContentAdapter(null);
     recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
     recyclerView.setLayoutManager(
         new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
