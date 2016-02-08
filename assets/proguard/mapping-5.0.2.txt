@@ -22393,8 +22393,8 @@ com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil$PowerPlans -> com.py
     void <init>(android.content.Context) -> <init>
     void <clinit>() -> <clinit>
 com.pyamsoft.powermanager.backend.util.PowerPlanUtil -> com.pyamsoft.powermanager.backend.b.h:
-    java.lang.Object[] POWER_PLAN_CUSTOM -> a
-    java.lang.Object[] POWER_PLAN_STANDARD -> b
+    java.lang.Object[] POWER_PLAN_STANDARD -> a
+    java.lang.Object[] POWER_PLAN_CUSTOM -> b
     java.lang.Object[] POWER_PLAN_SUPER -> c
     java.lang.Object[] POWER_PLAN_ULTRA -> d
     java.lang.Object[] POWER_PLAN_NOMERCY -> e
@@ -22545,8 +22545,8 @@ com.pyamsoft.powermanager.ui.about.AboutFragment -> com.pyamsoft.powermanager.ui
     int getBackgroundColor() -> u
 com.pyamsoft.powermanager.ui.about.AboutInterface -> com.pyamsoft.powermanager.ui.a.g:
 com.pyamsoft.powermanager.ui.about.AboutModel -> com.pyamsoft.powermanager.ui.a.h:
-    java.lang.ref.WeakReference weakContext -> a
-    android.content.Intent intent -> b
+    android.content.Intent intent -> a
+    java.lang.ref.WeakReference weakContext -> b
     void <init>(android.content.Context) -> <init>
 com.pyamsoft.powermanager.ui.about.AboutPresenter -> com.pyamsoft.powermanager.ui.a.i:
     com.pyamsoft.powermanager.ui.about.AboutModel model -> a
@@ -22615,11 +22615,11 @@ com.pyamsoft.powermanager.ui.detail.DetailBaseFragment -> com.pyamsoft.powermana
     com.pyamsoft.powermanager.ui.detail.DetailPresenter presenter -> ap
     int largeIconOn -> c
     int largeIconOff -> d
-    int smallIconOn -> aq
-    int smallIconOff -> ar
-    android.support.v7.app.AlertDialog largeFABDialog -> as
-    android.support.v7.app.AlertDialog smallFABDialog -> at
-    com.pyamsoft.pydroid.base.PreferenceBase$OnSharedPreferenceChangeListener listener -> au
+    com.pyamsoft.pydroid.base.PreferenceBase$OnSharedPreferenceChangeListener listener -> aq
+    int smallIconOn -> ar
+    int smallIconOff -> as
+    android.support.v7.app.AlertDialog largeFABDialog -> at
+    android.support.v7.app.AlertDialog smallFABDialog -> au
     void <init>() -> <init>
     android.view.View onCreateView$469ccb8a(android.view.LayoutInflater,android.view.ViewGroup) -> a
     void onViewCreated(android.view.View,android.os.Bundle) -> a
@@ -22772,10 +22772,10 @@ com.pyamsoft.powermanager.ui.grid.GridContentAdapter$1 -> com.pyamsoft.powermana
     void <init>(com.pyamsoft.powermanager.ui.grid.GridContentAdapter,java.lang.String,int) -> <init>
     void onClick(android.view.View) -> onClick
 com.pyamsoft.powermanager.ui.grid.GridContentAdapter$ViewHolder -> com.pyamsoft.powermanager.ui.d.c:
-    android.os.Handler handler -> o
     android.widget.LinearLayout mainHolder -> l
     android.widget.ImageView image -> m
     android.widget.TextView name -> n
+    android.os.Handler handler -> o
     void <init>(android.view.View) -> <init>
     void onBitmapLoaded$dc1124d(android.graphics.Bitmap) -> a
 com.pyamsoft.powermanager.ui.grid.GridContentAdapter$ViewHolder$1 -> com.pyamsoft.powermanager.ui.d.d:
@@ -23007,10 +23007,10 @@ com.pyamsoft.powermanager.ui.radio.RadioContentAdapter -> com.pyamsoft.powermana
     java.lang.String TAG -> h
     com.pyamsoft.powermanager.ui.radio.RadioContentAdapter$RadioInterface radioInterface -> i
     com.pyamsoft.powermanager.ui.radio.RadioPresenter presenter -> g
+    void <init>(com.pyamsoft.powermanager.ui.radio.RadioContentAdapter$RadioInterface) -> <init>
     void onDelayTimeChanged() -> b
     void onIntervalTimeChanged() -> c
     void onReOpenTimeChanged() -> d
-    void <init>(com.pyamsoft.powermanager.ui.radio.RadioContentAdapter$RadioInterface) -> <init>
     android.text.Spannable createSpannable(android.content.Context,java.lang.String,java.lang.String) -> a
     int getItemCount() -> a
     void onBindViewHolder(android.support.v7.widget.RecyclerView$ViewHolder,int) -> a
@@ -23312,8 +23312,8 @@ com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment -> com.py
     com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogAdapter adapter -> ao
     com.pyamsoft.powermanager.ui.trigger.PowerTriggerInterface parentAdapter -> ak
     void <init>() -> <init>
-    void dismiss() -> a
     void hideKeyboard(android.app.Activity) -> b
+    void dismiss() -> a
     android.view.View onCreateView$469ccb8a(android.view.LayoutInflater,android.view.ViewGroup) -> a
     void onViewCreated(android.view.View,android.os.Bundle) -> a
     void dismissAndHideKeyboard() -> w
