@@ -294,15 +294,9 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
   }
 
-  private void colorStatusBar(int color) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().setStatusBarColor(ContextCompat.getColor(this, color));
-    }
-  }
-
   @Override public void setCurrentView(final String viewCode, final int image) {
-    setCurrentAppBarState(viewCode, image);
     setCurrentRecyclerViewContent(viewCode);
+    setCurrentAppBarState(viewCode, image);
   }
 
   private void setCurrentAppBarState(final String viewCode, final int image) {
@@ -313,9 +307,13 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     } else {
       Picasso.with(this).load(image).into(heroImage);
     }
-    colorStatusBar(adapter.getStatusbarColor());
+
     appBarLayout.setExpanded(up, true);
-    collapsingToolbarLayout.setContentScrimColor(adapter.getToolbarColor());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setStatusBarColor(ContextCompat.getColor(this, adapter.getStatusbarColor()));
+    }
+    collapsingToolbarLayout.setContentScrimColor(
+        ContextCompat.getColor(this, adapter.getToolbarColor()));
     setActionBarHomeEnabled(up);
   }
 
