@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.ui;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -162,6 +163,14 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
 
     if (helper != null) {
       helper.attachToRecyclerView(null);
+    }
+  }
+
+  @Override public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    LogUtil.d(TAG, "onConfigurationChanged");
+    if (toolbar != null) {
+      toolbar.setTitleTextAppearance(this, R.style.TextAppearance_PYDroid_Toolbar_Title);
     }
   }
 
