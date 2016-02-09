@@ -60,6 +60,7 @@
           android:layout_height="?attr/actionBarSize"
           app:layout_collapseMode="pin"
           app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+          app:titleTextAppearance="@style/TextAppearance.PYDroid.Toolbar.Title"
           />
 
     </android.support.design.widget.CollapsingToolbarLayout>
