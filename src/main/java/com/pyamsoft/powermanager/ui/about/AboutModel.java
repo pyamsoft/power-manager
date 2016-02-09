@@ -20,10 +20,12 @@ import android.content.Context;
 import android.content.Intent;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 
 public class AboutModel {
 
+  private static final String TAG = AboutModel.class.getSimpleName();
   private final Intent intent;
   private WeakReference<Context> weakContext;
 
@@ -36,6 +38,7 @@ public class AboutModel {
   public boolean startApplicationDetailActivity() {
     final Context context = weakContext.get();
     if (context != null) {
+      LogUtil.d(TAG, "Start info activity");
       context.startActivity(intent);
       return true;
     } else {
