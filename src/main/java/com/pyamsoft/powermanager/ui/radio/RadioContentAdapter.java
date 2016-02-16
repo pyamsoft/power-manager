@@ -32,8 +32,7 @@ import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
 public final class RadioContentAdapter
-    extends BindableRecyclerAdapter<RadioContentAdapter.ViewHolder>
-    implements RadioInterface {
+    extends BindableRecyclerAdapter<RadioContentAdapter.ViewHolder> implements RadioInterface {
 
   public static final long[] DELAY_VALUES = {
       ActiveService.Constants.DELAY_RADIO_NONE, ActiveService.Constants.DELAY_RADIO_FIVE,

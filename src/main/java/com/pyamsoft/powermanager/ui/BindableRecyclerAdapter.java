@@ -17,19 +17,7 @@
 package com.pyamsoft.powermanager.ui;
 
 import android.support.v7.widget.RecyclerView;
+import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 
-public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
-    extends RecyclerView.Adapter<T> implements Coloring {
-
-  protected void bind() {
-    onBind();
-  }
-
-  public void destroy() {
-    onUnbind();
-  }
-
-  protected abstract void onBind();
-
-  protected abstract void onUnbind();
+public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder> extends BindableRecyclerAdapterBase<T> implements Coloring {
 }

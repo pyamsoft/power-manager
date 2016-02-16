@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.squareup.picasso.Picasso;

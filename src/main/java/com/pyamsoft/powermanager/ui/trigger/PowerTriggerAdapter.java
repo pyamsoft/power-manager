@@ -30,6 +30,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
