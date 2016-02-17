@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.ui.trigger.dialog;
 
 import com.pyamsoft.powermanager.R;
 
-public final class PowerTriggerDialogWifiFragment extends PowerTriggerDialogRadioFragment {
+final class PowerTriggerDialogWifiFragment extends PowerTriggerDialogRadioFragment {
 
   @Override protected String getRadioName() {
     return getString(R.string.wifi);

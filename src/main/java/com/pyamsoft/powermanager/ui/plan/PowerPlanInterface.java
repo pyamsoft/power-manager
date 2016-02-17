@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.plan;
 
-public interface PowerPlanInterface {
+interface PowerPlanInterface {
 
   void onSetAsActivePlan();
 }

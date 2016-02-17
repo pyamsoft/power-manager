@@ -18,33 +18,22 @@ package com.pyamsoft.powermanager.ui.trigger;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import java.lang.ref.WeakReference;
 
-public class PowerTriggerModel {
+final class PowerTriggerModel {
 
-  private WeakReference<Context> weakContext;
+  private final WeakReference<AppCompatActivity> weakActivity;
 
-  public PowerTriggerModel(final Context context) {
-    this.weakContext = new WeakReference<>(context);
+  PowerTriggerModel(final AppCompatActivity activity) {
+    this.weakActivity = new WeakReference<>(activity);
   }
 
-  public PowerTriggerDialogFragment createFragment(final PowerTriggerInterface triggerInterface) {
-    final Context context = weakContext.get();
-    if (context != null) {
-      final PowerTriggerDialogFragment fragment = new PowerTriggerDialogFragment();
-      fragment.setContext(context);
-      fragment.setParentAdapter(triggerInterface);
-      return fragment;
-    } else {
-      return null;
-    }
-  }
-
-  public boolean removeItem(final PowerTrigger trigger) {
-    final Context context = weakContext.get();
+  boolean removeItem(final PowerTrigger trigger) {
+    final Context context = weakActivity.get();
     if (context != null) {
       final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
       source.open();
@@ -57,17 +46,5 @@ public class PowerTriggerModel {
     }
 
     return false;
-  }
-
-  public AlertDialog.Builder createDeleteWarningDialog(final PowerTrigger trigger) {
-    final Context context = weakContext.get();
-    if (context == null) {
-      return null;
-    }
-
-    return new AlertDialog.Builder(context).setCancelable(true)
-        .setMessage("Really delete trigger: [" + trigger.getId() + "] " +
-            trigger.getName() + "?")
-        .setTitle("Delete Trigger");
   }
 }

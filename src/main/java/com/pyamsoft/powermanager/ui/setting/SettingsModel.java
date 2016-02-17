@@ -29,13 +29,13 @@ import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NotificationUtil;
 import java.lang.ref.WeakReference;
 
-public final class SettingsModel {
+final class SettingsModel {
 
   private static final String TAG = SettingsModel.class.getSimpleName();
-  private WeakReference<AppCompatActivity> weakContext;
+  private final WeakReference<AppCompatActivity> weakActivity;
 
-  public SettingsModel(final AppCompatActivity activity) {
-    weakContext = new WeakReference<>(activity);
+  SettingsModel(final AppCompatActivity activity) {
+    weakActivity = new WeakReference<>(activity);
   }
 
   private static void propagateNotificationChanges(final Context context,
@@ -96,12 +96,12 @@ public final class SettingsModel {
     }
   }
 
-  public Context provideResetContext() {
-    return weakContext.get();
+  Context provideResetContext() {
+    return weakActivity.get();
   }
 
-  public boolean isBootEnabled() {
-    final Context context = weakContext.get();
+  boolean isBootEnabled() {
+    final Context context = weakActivity.get();
     if (context != null) {
       final boolean checked = BootActionReceiver.isBootEnabled(context);
       LogUtil.d(TAG, "Boot enabled: ", checked);
@@ -111,8 +111,8 @@ public final class SettingsModel {
     }
   }
 
-  public void setBootEnabled(final boolean enabled) {
-    final Context context = weakContext.get();
+  void setBootEnabled(final boolean enabled) {
+    final Context context = weakActivity.get();
     if (context != null) {
       LogUtil.d(TAG, "Set boot enabled: ", enabled);
       BootActionReceiver.setBootEnabled(context, enabled);
@@ -120,8 +120,8 @@ public final class SettingsModel {
     }
   }
 
-  public boolean isSuspendEnabled() {
-    final Context context = weakContext.get();
+  boolean isSuspendEnabled() {
+    final Context context = weakActivity.get();
     if (context != null) {
       final boolean checked =
           GlobalPreferenceUtil.with(context).powerManagerActive().isSuspendPlugged();
@@ -132,8 +132,8 @@ public final class SettingsModel {
     }
   }
 
-  public void setSuspendEnabled(final boolean enabled) {
-    final Context context = weakContext.get();
+  void setSuspendEnabled(final boolean enabled) {
+    final Context context = weakActivity.get();
     if (context != null) {
       LogUtil.d(TAG, "Set suspend enabled: ", enabled);
       GlobalPreferenceUtil.with(context).powerManagerActive().setSuspendPlugged(enabled);
@@ -141,8 +141,8 @@ public final class SettingsModel {
     }
   }
 
-  public boolean isNotificationEnabled() {
-    final Context context = weakContext.get();
+  boolean isNotificationEnabled() {
+    final Context context = weakActivity.get();
     if (context != null) {
       final boolean checked =
           GlobalPreferenceUtil.with(context).powerManagerMonitor().isNotificationEnabled();
@@ -153,8 +153,8 @@ public final class SettingsModel {
     }
   }
 
-  public void setNotificationEnabled(final boolean enabled) {
-    final Context context = weakContext.get();
+  void setNotificationEnabled(final boolean enabled) {
+    final Context context = weakActivity.get();
     if (context != null) {
       final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
       final boolean oldForeground = p.powerManagerMonitor().isForeground();
@@ -165,8 +165,8 @@ public final class SettingsModel {
     }
   }
 
-  public boolean isForegroundEnabled() {
-    final Context context = weakContext.get();
+  boolean isForegroundEnabled() {
+    final Context context = weakActivity.get();
     if (context != null) {
       final boolean checked =
           GlobalPreferenceUtil.with(context).powerManagerMonitor().isForeground();
@@ -177,8 +177,8 @@ public final class SettingsModel {
     }
   }
 
-  public void setForegroundEnabled(final boolean enabled) {
-    final Context context = weakContext.get();
+  void setForegroundEnabled(final boolean enabled) {
+    final Context context = weakActivity.get();
     if (context != null) {
       final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
       final boolean oldForeground = p.powerManagerMonitor().isForeground();
@@ -189,9 +189,9 @@ public final class SettingsModel {
     }
   }
 
-  public boolean isForegroundClickable() {
+  boolean isForegroundClickable() {
     // Foreground relies on a present service and notification
-    final Context context = weakContext.get();
+    final Context context = weakActivity.get();
     if (context != null) {
       final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
       final boolean checked =
@@ -203,8 +203,8 @@ public final class SettingsModel {
     }
   }
 
-  public void doReset() {
-    final Context context = weakContext.get();
+  void doReset() {
+    final Context context = weakActivity.get();
     if (context != null) {
       // Stop the notification
       MonitorService.stopForeground(context);

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.grid;
 
-public interface GridInterface {
+interface GridInterface {
 
   void onFABClicked();
 

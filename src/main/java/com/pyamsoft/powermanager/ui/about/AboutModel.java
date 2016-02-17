@@ -20,17 +20,17 @@ import android.content.Intent;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.pydroid.util.AppUtil;
 
-public class AboutModel {
+final class AboutModel {
 
   private static final String TAG = AboutModel.class.getSimpleName();
   private final Intent intent;
 
-  public AboutModel() {
+  AboutModel() {
     intent = AppUtil.getApplicationInfoIntent(PowerManager.class)
         .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
   }
 
-  public Intent getInfoIntent() {
+  Intent getInfoIntent() {
     return intent;
   }
 }

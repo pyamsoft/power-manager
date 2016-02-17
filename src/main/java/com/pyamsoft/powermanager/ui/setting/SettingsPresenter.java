@@ -20,59 +20,50 @@ import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
+final class SettingsPresenter extends PresenterBase<SettingsInterface> {
 
   private static final String TAG = SettingsPresenter.class.getSimpleName();
-  private SettingsModel model;
+  private final SettingsModel model;
 
-  @Override public void bind(SettingsInterface reference) {
-    throw new IllegalBindException("Cannot bind without position and Context");
+  SettingsPresenter(final AppCompatActivity activity, SettingsInterface iface) {
+    super(iface);
+    model = new SettingsModel(activity);
   }
 
-  public void bind(final AppCompatActivity activity, final SettingsInterface reference) {
-    super.bind(reference);
-    this.model = new SettingsModel(activity);
-  }
-
-  @Override public void unbind() {
-    super.unbind();
-    model = null;
-  }
-
-  public boolean isBootEnabled() {
+  boolean isBootEnabled() {
     return model.isBootEnabled();
   }
 
-  public boolean isSuspendEnabled() {
+  boolean isSuspendEnabled() {
     return model.isSuspendEnabled();
   }
 
-  public boolean isNotificationEnabled() {
+  boolean isNotificationEnabled() {
     return model.isNotificationEnabled();
   }
 
-  public boolean isForegroundEnabled() {
+  boolean isForegroundEnabled() {
     return model.isForegroundEnabled();
   }
 
-  public boolean isBootClickable() {
+  boolean isBootClickable() {
     return true;
   }
 
-  public boolean isSuspendClickable() {
+  boolean isSuspendClickable() {
     return true;
   }
 
-  public boolean isNotificationClickable() {
+  boolean isNotificationClickable() {
     return true;
   }
 
-  public boolean isForegroundClickable() {
+  boolean isForegroundClickable() {
     return model.isForegroundClickable();
   }
 
-  public void onBootClicked(final boolean isChecked) {
-    final SettingsInterface reference = getBoundReference();
+  void onBootClicked(final boolean isChecked) {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;
@@ -86,8 +77,8 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     }
   }
 
-  public void onSuspendClicked(final boolean isChecked) {
-    final SettingsInterface reference = getBoundReference();
+  void onSuspendClicked(final boolean isChecked) {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;
@@ -101,8 +92,8 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     }
   }
 
-  public void onNotificationClicked(final boolean isChecked) {
-    final SettingsInterface reference = getBoundReference();
+  void onNotificationClicked(final boolean isChecked) {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;
@@ -116,8 +107,8 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     }
   }
 
-  public void onForegroundClicked(final boolean isChecked) {
-    final SettingsInterface reference = getBoundReference();
+  void onForegroundClicked(final boolean isChecked) {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;
@@ -131,8 +122,8 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     }
   }
 
-  public void onResetClicked() {
-    final SettingsInterface reference = getBoundReference();
+  void onResetClicked() {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;
@@ -141,8 +132,8 @@ public final class SettingsPresenter extends PresenterBase<SettingsInterface> {
     reference.onResetRequested(this, model.provideResetContext());
   }
 
-  public void onResetConfirmed() {
-    final SettingsInterface reference = getBoundReference();
+  void onResetConfirmed() {
+    final SettingsInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Reference is NULL");
       return;

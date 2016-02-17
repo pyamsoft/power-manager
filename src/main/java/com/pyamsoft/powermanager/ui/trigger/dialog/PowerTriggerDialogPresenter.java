@@ -20,12 +20,17 @@ import android.content.Context;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.pydroid.base.PresenterBase;
 
-public class PowerTriggerDialogPresenter extends PresenterBase<PowerTriggerDialogInterface> {
+class PowerTriggerDialogPresenter extends PresenterBase<PowerTriggerDialogInterface> {
 
-  private PowerTriggerDialogModel model;
+  private final PowerTriggerDialogModel model;
+
+  protected PowerTriggerDialogPresenter(final Context context, PowerTriggerDialogInterface iface) {
+    super(iface);
+    model = new PowerTriggerDialogModel(context);
+  }
 
   public void onCreateClicked(final String name, final int level) {
-    final PowerTriggerDialogInterface reference = getBoundReference();
+    final PowerTriggerDialogInterface reference = getInterface();
     if (reference == null) {
       return;
     }
@@ -39,7 +44,7 @@ public class PowerTriggerDialogPresenter extends PresenterBase<PowerTriggerDialo
   }
 
   public void onNewTriggerFilled(final PowerTrigger trigger) {
-    final PowerTriggerDialogInterface reference = getBoundReference();
+    final PowerTriggerDialogInterface reference = getInterface();
     if (reference == null) {
       return;
     }
@@ -49,15 +54,5 @@ public class PowerTriggerDialogPresenter extends PresenterBase<PowerTriggerDialo
     } else {
       reference.onTriggerCreateFailed();
     }
-  }
-
-  public void bind(Context context, PowerTriggerDialogInterface reference) {
-    super.bind(reference);
-    model = new PowerTriggerDialogModel(context);
-  }
-
-  @Override public void unbind() {
-    super.unbind();
-    model = null;
   }
 }

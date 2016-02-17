@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
-public interface RadioInterface {
+interface RadioInterface {
 
   void onDelayTimeChanged();
 

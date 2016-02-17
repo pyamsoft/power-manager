@@ -33,7 +33,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
-import com.pyamsoft.pydroid.base.PresenterBase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.util.ArrayList;
@@ -47,14 +46,12 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
   private static final String TAG = GridContentAdapter.class.getSimpleName();
 
   private final List<String> items;
-  private final Context context;
   private final GridPresenter presenter;
   private final ContainerInterface container;
 
   public GridContentAdapter(final Context context, final ContainerInterface container) {
     this.container = container;
-    this.context = context;
-    presenter = new GridPresenter();
+    presenter = new GridPresenter(context, this);
 
     items = new ArrayList<>(NUMBER_ITEMS);
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
@@ -73,11 +70,9 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
   }
 
   @Override protected void onCreate() {
-    presenter.bind(context, this);
   }
 
   @Override protected void onDestroy() {
-    presenter.unbind();
   }
 
   @Override protected void onStart() {
@@ -172,7 +167,7 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
 
   @Override public void onFABClicked() {
     // No FAB here
-    throw new PresenterBase.IllegalBindException("No Fab Here");
+    throw new RuntimeException("No Fab Here");
   }
 
   @Override public void onGridItemClicked(String viewCode, int image) {

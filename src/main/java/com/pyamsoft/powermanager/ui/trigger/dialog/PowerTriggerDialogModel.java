@@ -23,9 +23,9 @@ import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 import java.util.Set;
 
-public class PowerTriggerDialogModel {
+final class PowerTriggerDialogModel {
   private static final String TAG = PowerTriggerDialogModel.class.getSimpleName();
-  private WeakReference<Context> weakContext;
+  private final WeakReference<Context> weakContext;
 
   public PowerTriggerDialogModel(Context context) {
     this.weakContext = new WeakReference<>(context);

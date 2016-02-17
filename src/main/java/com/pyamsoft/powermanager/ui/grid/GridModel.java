@@ -22,15 +22,15 @@ import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import java.lang.ref.WeakReference;
 
-public final class GridModel {
+final class GridModel {
 
   private final WeakReference<Context> weakContext;
 
-  public GridModel(final Context context) {
+  GridModel(final Context context) {
     weakContext = new WeakReference<>(context);
   }
 
-  public void clickFAB() {
+  void launchPowerManagerService() {
     final Context context = weakContext.get();
     if (context != null) {
       MonitorService.powerManagerService(context);

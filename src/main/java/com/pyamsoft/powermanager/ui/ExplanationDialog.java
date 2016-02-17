@@ -27,7 +27,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import java.lang.ref.WeakReference;
 
-public final class ExplanationDialog {
+final class ExplanationDialog {
 
   private AlertDialog dialog;
   private View explainView;
@@ -38,7 +38,7 @@ public final class ExplanationDialog {
   }
 
   @SuppressLint("InflateParams")
-  public static ExplanationDialog createDialog(final Context context) {
+  static ExplanationDialog createDialog(final Context context) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(context).setCancelable(true);
     final LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -68,7 +68,7 @@ public final class ExplanationDialog {
     return dialog;
   }
 
-  public void show() {
+  void show() {
     if (dialog != null) {
       if (!dialog.isShowing()) {
         dialog.show();
@@ -76,7 +76,7 @@ public final class ExplanationDialog {
     }
   }
 
-  public void dismiss() {
+  void dismiss() {
     if (dialog != null) {
       if (dialog.isShowing()) {
         dialog.dismiss();
@@ -84,14 +84,14 @@ public final class ExplanationDialog {
     }
   }
 
-  public ExplanationDialog setText(final Spannable explanation) {
+  ExplanationDialog setText(final Spannable explanation) {
     if (explainText != null) {
       explainText.setText(explanation);
     }
     return this;
   }
 
-  public ExplanationDialog setBackgroundColor(final int color) {
+  ExplanationDialog setBackgroundColor(final int color) {
     if (explainView != null) {
       explainView.setBackgroundColor(ContextCompat.getColor(dialog.getContext(), color));
     }

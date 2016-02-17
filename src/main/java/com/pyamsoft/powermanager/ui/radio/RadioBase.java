@@ -18,5 +18,5 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import com.pyamsoft.powermanager.ui.Coloring;
 
-public abstract class RadioBase implements RadioContentInterface, Coloring {
+abstract class RadioBase implements RadioContentInterface, Coloring {
 }

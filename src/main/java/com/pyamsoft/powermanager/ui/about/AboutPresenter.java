@@ -19,29 +19,22 @@ package com.pyamsoft.powermanager.ui.about;
 import android.content.Intent;
 import com.pyamsoft.pydroid.base.PresenterBase;
 
-public class AboutPresenter extends PresenterBase<AboutInterface> {
+final class AboutPresenter extends PresenterBase<AboutInterface> {
 
-  private AboutModel model;
+  private final AboutModel model;
 
-  @Override public void bind(AboutInterface reference) {
-    super.bind(reference);
+  AboutPresenter(AboutInterface iface) {
+    super(iface);
     model = new AboutModel();
   }
 
-  @Override public void unbind() {
-    super.unbind();
-    model = null;
-  }
-
-  public void onClickDetailButton() {
-    final AboutInterface reference = getBoundReference();
+  void onClickDetailButton() {
+    final AboutInterface reference = getInterface();
     if (reference == null) {
       return;
     }
 
-    if (model != null) {
-      final Intent infoIntent = model.getInfoIntent();
-      reference.onReceiveInfoIntent(infoIntent);
-    }
+    final Intent infoIntent = model.getInfoIntent();
+    reference.onReceiveInfoIntent(infoIntent);
   }
 }

@@ -59,17 +59,17 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
   public AboutAdapter(final Context context) {
     dateCode = "Build Date: " + context.getString(R.string.app_date);
     this.context = context;
-    presenter = new AboutPresenter();
+    presenter = new AboutPresenter(this);
 
     create();
   }
 
   @Override protected void onCreate() {
-    presenter.bind(this);
+
   }
 
   @Override protected void onDestroy() {
-    presenter.unbind();
+
   }
 
   @Override protected void onStop() {

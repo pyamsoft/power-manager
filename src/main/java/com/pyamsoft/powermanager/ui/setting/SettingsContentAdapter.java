@@ -73,7 +73,7 @@ public final class SettingsContentAdapter
 
   public SettingsContentAdapter(final AppCompatActivity activity) {
     this.activity = activity;
-    presenter = new SettingsPresenter();
+    presenter = new SettingsPresenter(activity, this);
 
     create();
   }
@@ -314,11 +314,9 @@ public final class SettingsContentAdapter
   }
 
   @Override protected void onCreate() {
-    presenter.bind(activity, this);
   }
 
   @Override protected void onDestroy() {
-    presenter.unbind();
   }
 
   @Override protected void onStart() {

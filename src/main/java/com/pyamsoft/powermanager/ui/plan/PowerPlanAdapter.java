@@ -42,12 +42,10 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
   private static final int POWER_PLAN_NUMBER = 9;
   private static final String TAG = PowerPlanAdapter.class.getSimpleName();
   private final Set<Integer> expandedPositions = new HashSet<>(POWER_PLAN_NUMBER);
-  private final Context context;
   private final PowerPlanPresenter presenter;
 
   public PowerPlanAdapter(final Context context) {
-    this.context = context;
-    presenter = new PowerPlanPresenter();
+    presenter = new PowerPlanPresenter(context, this);
 
     create();
   }
@@ -207,11 +205,9 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
   }
 
   @Override protected void onCreate() {
-    presenter.bind(context, this);
   }
 
   @Override protected void onDestroy() {
-    presenter.unbind();
   }
 
   @Override protected void onStart() {

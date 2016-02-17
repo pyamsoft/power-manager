@@ -21,27 +21,18 @@ import com.pyamsoft.powermanager.backend.service.ActiveService;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.pyamsoft.pydroid.util.LogUtil;
 
-public final class RadioPresenter extends PresenterBase<RadioInterface> {
+final class RadioPresenter extends PresenterBase<RadioInterface> {
 
   private static final String TAG = RadioPresenter.class.getSimpleName();
-  private RadioModel model;
+  private final RadioModel model;
 
-  @Override public void bind(RadioInterface reference) {
-    throw new IllegalBindException("Need context to bind");
-  }
-
-  public void bind(final Context context, final RadioInterface reference) {
-    super.bind(reference);
+  RadioPresenter(final Context context, RadioInterface iface) {
+    super(iface);
     model = new RadioModel(context);
   }
 
-  @Override public void unbind() {
-    super.unbind();
-    model = null;
-  }
-
-  public long getDelayTimeWifi() {
-    final RadioInterface reference = getBoundReference();
+  long getDelayTimeWifi() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.DELAY_RADIO_FIFTEEN;
@@ -50,8 +41,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getDelayTimeWifi();
   }
 
-  public void setDelayTimeWifi(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setDelayTimeWifi(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -61,8 +52,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onDelayTimeChanged();
   }
 
-  public long getDelayTimeData() {
-    final RadioInterface reference = getBoundReference();
+  long getDelayTimeData() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.DELAY_RADIO_SIXTY;
@@ -71,8 +62,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getDelayTimeData();
   }
 
-  public void setDelayTimeData(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setDelayTimeData(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -82,8 +73,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onDelayTimeChanged();
   }
 
-  public long getDelayTimeBluetooth() {
-    final RadioInterface reference = getBoundReference();
+  long getDelayTimeBluetooth() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.DELAY_RADIO_SIXTY;
@@ -92,8 +83,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getDelayTimeBluetooth();
   }
 
-  public void setDelayTimeBluetooth(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setDelayTimeBluetooth(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -103,8 +94,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onDelayTimeChanged();
   }
 
-  public long getDelayTimeSync() {
-    final RadioInterface reference = getBoundReference();
+  long getDelayTimeSync() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.DELAY_RADIO_FIFTEEN;
@@ -113,8 +104,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getDelayTimeSync();
   }
 
-  public void setDelayTimeSync(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setDelayTimeSync(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -124,8 +115,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onDelayTimeChanged();
   }
 
-  public long getReOpenTimeWifi() {
-    final RadioInterface reference = getBoundReference();
+  long getReOpenTimeWifi() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_SIXTY;
@@ -134,8 +125,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getReOpenTimeWifi();
   }
 
-  public void setReOpenTimeWifi(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setReOpenTimeWifi(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -145,8 +136,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onReOpenTimeChanged();
   }
 
-  public long getReOpenTimeData() {
-    final RadioInterface reference = getBoundReference();
+  long getReOpenTimeData() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_FIFTEEN;
@@ -155,8 +146,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getReOpenTimeData();
   }
 
-  public void setReOpenTimeData(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setReOpenTimeData(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -166,8 +157,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onReOpenTimeChanged();
   }
 
-  public long getReOpenTimeBluetooth() {
-    final RadioInterface reference = getBoundReference();
+  long getReOpenTimeBluetooth() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_ONETWENTY;
@@ -176,8 +167,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getReOpenTimeBluetooth();
   }
 
-  public void setReOpenTimeBluetooth(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setReOpenTimeBluetooth(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -187,8 +178,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onReOpenTimeChanged();
   }
 
-  public long getReOpenTimeSync() {
-    final RadioInterface reference = getBoundReference();
+  long getReOpenTimeSync() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_ONETWENTY;
@@ -197,8 +188,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getReOpenTimeSync();
   }
 
-  public void setReOpenTimeSync(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setReOpenTimeSync(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -208,8 +199,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onReOpenTimeChanged();
   }
 
-  public long getIntervalTimeWifi() {
-    final RadioInterface reference = getBoundReference();
+  long getIntervalTimeWifi() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_SIXTY;
@@ -218,8 +209,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getIntervalTimeWifi();
   }
 
-  public void setIntervalTimeWifi(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setIntervalTimeWifi(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -229,8 +220,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onIntervalTimeChanged();
   }
 
-  public long getIntervalTimeData() {
-    final RadioInterface reference = getBoundReference();
+  long getIntervalTimeData() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_SIXTY;
@@ -239,8 +230,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getIntervalTimeData();
   }
 
-  public void setIntervalTimeData(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setIntervalTimeData(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -250,8 +241,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onIntervalTimeChanged();
   }
 
-  public long getIntervalTimeBluetooth() {
-    final RadioInterface reference = getBoundReference();
+  long getIntervalTimeBluetooth() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_SIXTY;
@@ -260,8 +251,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getIntervalTimeBluetooth();
   }
 
-  public void setIntervalTimeBluetooth(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setIntervalTimeBluetooth(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;
@@ -271,8 +262,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     reference.onIntervalTimeChanged();
   }
 
-  public long getIntervalTimeSync() {
-    final RadioInterface reference = getBoundReference();
+  long getIntervalTimeSync() {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return ActiveService.Constants.INTERVAL_REOPEN_SIXTY;
@@ -281,8 +272,8 @@ public final class RadioPresenter extends PresenterBase<RadioInterface> {
     return model.getIntervalTimeSync();
   }
 
-  public void setIntervalTimeSync(final long value) {
-    final RadioInterface reference = getBoundReference();
+  void setIntervalTimeSync(final long value) {
+    final RadioInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "reference is NULL");
       return;

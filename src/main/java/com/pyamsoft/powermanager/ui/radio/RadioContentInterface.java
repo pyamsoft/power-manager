@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
-public interface RadioContentInterface {
+interface RadioContentInterface {
 
   String WIFI = "WiFi";
   String DATA = "Data";

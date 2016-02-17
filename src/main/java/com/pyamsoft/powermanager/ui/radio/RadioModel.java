@@ -23,16 +23,16 @@ import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 
-public final class RadioModel {
+final class RadioModel {
   private static final String TAG = RadioModel.class.getSimpleName();
 
-  private WeakReference<Context> weakContext;
+  private final WeakReference<Context> weakContext;
 
-  public RadioModel(final Context context) {
+  RadioModel(final Context context) {
     this.weakContext = new WeakReference<>(context);
   }
 
-  public long getDelayTimeWifi() {
+  long getDelayTimeWifi() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getDelayWifi();
@@ -41,7 +41,7 @@ public final class RadioModel {
     }
   }
 
-  public void setDelayTimeWifi(long value) {
+  void setDelayTimeWifi(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set delay wifi: ", value);
@@ -50,7 +50,7 @@ public final class RadioModel {
     }
   }
 
-  public long getDelayTimeData() {
+  long getDelayTimeData() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getDelayData();
@@ -59,7 +59,7 @@ public final class RadioModel {
     }
   }
 
-  public void setDelayTimeData(long value) {
+  void setDelayTimeData(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set delay data: ", value);
@@ -68,7 +68,7 @@ public final class RadioModel {
     }
   }
 
-  public long getDelayTimeBluetooth() {
+  long getDelayTimeBluetooth() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getDelayBluetooth();
@@ -77,7 +77,7 @@ public final class RadioModel {
     }
   }
 
-  public void setDelayTimeBluetooth(long value) {
+  void setDelayTimeBluetooth(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set delay bluetooth: ", value);
@@ -86,7 +86,7 @@ public final class RadioModel {
     }
   }
 
-  public long getDelayTimeSync() {
+  long getDelayTimeSync() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getDelaySync();
@@ -95,7 +95,7 @@ public final class RadioModel {
     }
   }
 
-  public void setDelayTimeSync(long value) {
+  void setDelayTimeSync(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set delay sync: ", value);
@@ -104,7 +104,7 @@ public final class RadioModel {
     }
   }
 
-  public long getReOpenTimeWifi() {
+  long getReOpenTimeWifi() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().getWifiReopenTime();
@@ -113,7 +113,7 @@ public final class RadioModel {
     }
   }
 
-  public void setReOpenTimeWifi(long value) {
+  void setReOpenTimeWifi(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set reopen wifi: ", value);
@@ -122,7 +122,7 @@ public final class RadioModel {
     }
   }
 
-  public long getReOpenTimeData() {
+  long getReOpenTimeData() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().getDataReopenTime();
@@ -131,7 +131,7 @@ public final class RadioModel {
     }
   }
 
-  public void setReOpenTimeData(long value) {
+  void setReOpenTimeData(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set reopen data: ", value);
@@ -140,7 +140,7 @@ public final class RadioModel {
     }
   }
 
-  public long getReOpenTimeBluetooth() {
+  long getReOpenTimeBluetooth() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().getBluetoothReopenTime();
@@ -149,7 +149,7 @@ public final class RadioModel {
     }
   }
 
-  public void setReOpenTimeBluetooth(long value) {
+  void setReOpenTimeBluetooth(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set reopen bluetooth: ", value);
@@ -158,7 +158,7 @@ public final class RadioModel {
     }
   }
 
-  public long getReOpenTimeSync() {
+  long getReOpenTimeSync() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).intervalDisableService().getSyncReopenTime();
@@ -167,7 +167,7 @@ public final class RadioModel {
     }
   }
 
-  public void setReOpenTimeSync(long value) {
+  void setReOpenTimeSync(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set reopen sync: ", value);
@@ -176,7 +176,7 @@ public final class RadioModel {
     }
   }
 
-  public long getIntervalTimeWifi() {
+  long getIntervalTimeWifi() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getIntervalTimeWifi();
@@ -185,7 +185,7 @@ public final class RadioModel {
     }
   }
 
-  public void setIntervalTimeWifi(long value) {
+  void setIntervalTimeWifi(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set interval wifi: ", value);
@@ -194,7 +194,7 @@ public final class RadioModel {
     }
   }
 
-  public long getIntervalTimeData() {
+  long getIntervalTimeData() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getIntervalTimeData();
@@ -203,7 +203,7 @@ public final class RadioModel {
     }
   }
 
-  public void setIntervalTimeData(long value) {
+  void setIntervalTimeData(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set interval data: ", value);
@@ -212,7 +212,7 @@ public final class RadioModel {
     }
   }
 
-  public long getIntervalTimeBluetooth() {
+  long getIntervalTimeBluetooth() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getIntervalTimeBluetooth();
@@ -221,7 +221,7 @@ public final class RadioModel {
     }
   }
 
-  public void setIntervalTimeBluetooth(long value) {
+  void setIntervalTimeBluetooth(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set interval bluetooth: ", value);
@@ -230,7 +230,7 @@ public final class RadioModel {
     }
   }
 
-  public long getIntervalTimeSync() {
+  long getIntervalTimeSync() {
     final Context context = weakContext.get();
     if (context != null) {
       return GlobalPreferenceUtil.with(context).powerManagerActive().getIntervalTimeSync();
@@ -239,7 +239,7 @@ public final class RadioModel {
     }
   }
 
-  public void setIntervalTimeSync(long value) {
+  void setIntervalTimeSync(long value) {
     final Context context = weakContext.get();
     if (context != null) {
       LogUtil.d(TAG, "Set interval sync: ", value);

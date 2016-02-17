@@ -24,17 +24,17 @@ import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.lang.ref.WeakReference;
 
-public final class PowerPlanModel {
+final class PowerPlanModel {
 
   private static final String TAG = PowerPlanModel.class.getSimpleName();
   private final WeakReference<Context> weakContext;
 
-  public PowerPlanModel(Context context) {
+  PowerPlanModel(Context context) {
     LogUtil.d(TAG, "Create new PowerPlanModel");
     weakContext = new WeakReference<>(context.getApplicationContext());
   }
 
-  public String getName(final int position) {
+  String getName(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -44,18 +44,17 @@ public final class PowerPlanModel {
     }
   }
 
-  public int getIndex(final int position) {
+  int getIndex(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
-      final int index = PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]);
-      return index;
+      return PowerPlanUtil.toInt(plan[PowerPlanUtil.FIELD_INDEX]);
     } else {
       return PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_STANDARD[PowerPlanUtil.FIELD_INDEX]);
     }
   }
 
-  public boolean isWifiManaged(final int position) {
+  boolean isWifiManaged(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -65,7 +64,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isDataManaged(final int position) {
+  boolean isDataManaged(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -75,7 +74,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isBluetoothManaged(final int position) {
+  boolean isBluetoothManaged(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -85,7 +84,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isSyncManaged(final int position) {
+  boolean isSyncManaged(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -95,7 +94,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public void setActivePlan(final int position) {
+  void setActivePlan(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -106,7 +105,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isActivePlan(final int position) {
+  boolean isActivePlan(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -118,7 +117,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getWifiDelay(final int position) {
+  long getWifiDelay(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -128,7 +127,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getDataDelay(final int position) {
+  long getDataDelay(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -138,7 +137,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getBluetoothDelay(final int position) {
+  long getBluetoothDelay(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -148,7 +147,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getSyncDelay(final int position) {
+  long getSyncDelay(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -158,7 +157,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isBootEnabled(final int position) {
+  boolean isBootEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -168,7 +167,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isSuspendEnabled(final int position) {
+  boolean isSuspendEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -178,7 +177,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isWifiReOpenEnabled(final int position) {
+  boolean isWifiReOpenEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -188,7 +187,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isDataReOpenEnabled(final int position) {
+  boolean isDataReOpenEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -198,7 +197,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isBluetoothReOpenEnabled(final int position) {
+  boolean isBluetoothReOpenEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -208,7 +207,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public boolean isSyncReOpenEnabled(final int position) {
+  boolean isSyncReOpenEnabled(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -218,7 +217,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getWifiReOpenTime(final int position) {
+  long getWifiReOpenTime(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -228,7 +227,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getDataReOpenTime(final int position) {
+  long getDataReOpenTime(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -238,7 +237,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getBluetoothReOpenTime(final int position) {
+  long getBluetoothReOpenTime(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);
@@ -248,7 +247,7 @@ public final class PowerPlanModel {
     }
   }
 
-  public long getSyncReOpenTime(final int position) {
+  long getSyncReOpenTime(final int position) {
     final Context context = weakContext.get();
     if (context != null) {
       final Object[] plan = PowerPlanUtil.with(context).getPowerPlan(position);

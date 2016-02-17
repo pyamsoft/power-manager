@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.ui.trigger.dialog;
 
 import com.pyamsoft.powermanager.R;
 
-public final class PowerTriggerDialogSyncFragment extends PowerTriggerDialogRadioFragment {
+final class PowerTriggerDialogSyncFragment extends PowerTriggerDialogRadioFragment {
 
   @Override protected String getRadioName() {
     return getString(R.string.sync);

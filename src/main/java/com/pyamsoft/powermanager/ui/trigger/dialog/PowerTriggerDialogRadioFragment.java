@@ -32,7 +32,7 @@ import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 
-public abstract class PowerTriggerDialogRadioFragment extends Fragment {
+abstract class PowerTriggerDialogRadioFragment extends Fragment {
 
   private static final int TOGGLE_NONE = 0;
   private static final int TOGGLE_ON = 1;

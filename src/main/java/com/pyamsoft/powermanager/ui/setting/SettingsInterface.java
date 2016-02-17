@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.ui.setting;
 
 import android.content.Context;
 
-public interface SettingsInterface {
+interface SettingsInterface {
 
   void onResetRequested(final SettingsPresenter presenter, final Context context);
 

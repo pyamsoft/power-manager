@@ -71,7 +71,7 @@ public final class RadioContentAdapter
   public RadioContentAdapter(final Context context, final RadioBase i) {
     this.radio = i;
     this.context = context;
-    presenter = new RadioPresenter();
+    presenter = new RadioPresenter(context, this);
 
     create();
   }
@@ -394,11 +394,9 @@ public final class RadioContentAdapter
   }
 
   @Override protected void onCreate() {
-    presenter.bind(context, this);
   }
 
   @Override protected void onDestroy() {
-    presenter.unbind();
   }
 
   @Override protected void onStart() {

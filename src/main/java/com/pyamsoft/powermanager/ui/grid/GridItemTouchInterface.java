@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.ui.grid;
 
 import android.content.Context;
 
-public interface GridItemTouchInterface {
+interface GridItemTouchInterface {
 
   boolean onMoveItem(final Context context, final int fromPosition, final int toPosition);
 }

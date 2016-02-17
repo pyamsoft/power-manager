@@ -20,7 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 
-public final class PowerTriggerDialogAdapter extends FragmentStatePagerAdapter {
+final class PowerTriggerDialogAdapter extends FragmentStatePagerAdapter {
 
   private static final int POSITION_NAME = 0;
   private static final int POSITION_WIFI = 1;
