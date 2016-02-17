@@ -369,6 +369,20 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     currentView = viewCode;
   }
 
+  @Override protected void onStart() {
+    super.onStart();
+    if (adapter != null) {
+      adapter.start();
+    }
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    if (adapter != null) {
+      adapter.stop();
+    }
+  }
+
   @Override public String popCurrentView() {
     final String oldCode = currentView;
     setCurrentView(null, 0);

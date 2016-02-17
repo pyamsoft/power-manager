@@ -30,7 +30,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
@@ -49,15 +48,8 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
   public PowerPlanAdapter(final Context context) {
     this.context = context;
     presenter = new PowerPlanPresenter();
-    bind();
-  }
 
-  @Override protected void onBind() {
-    presenter.bind(context, this);
-  }
-
-  @Override protected void onUnbind() {
-    presenter.unbind();
+    create();
   }
 
   @Override public final ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -212,6 +204,22 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
 
   @Override public int getToolbarColor() {
     return R.color.red500;
+  }
+
+  @Override protected void onCreate() {
+    presenter.bind(context, this);
+  }
+
+  @Override protected void onDestroy() {
+    presenter.unbind();
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -72,7 +72,8 @@ public final class RadioContentAdapter
     this.radio = i;
     this.context = context;
     presenter = new RadioPresenter();
-    bind();
+
+    create();
   }
 
   @Override public void onDelayTimeChanged() {
@@ -85,14 +86,6 @@ public final class RadioContentAdapter
 
   @Override public void onReOpenTimeChanged() {
     notifyItemChanged(POSITION_REOPEN);
-  }
-
-  @Override protected void onBind() {
-    presenter.bind(context, this);
-  }
-
-  @Override protected void onUnbind() {
-    presenter.unbind();
   }
 
   @Override public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -398,6 +391,22 @@ public final class RadioContentAdapter
 
   @Override public int getToolbarColor() {
     return radio.getToolbarColor();
+  }
+
+  @Override protected void onCreate() {
+    presenter.bind(context, this);
+  }
+
+  @Override protected void onDestroy() {
+    presenter.unbind();
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
   }
 
   public static final class ValueHolder {

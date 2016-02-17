@@ -34,7 +34,6 @@ import android.widget.ImageView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.pydroid.base.PreferenceBase;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -75,17 +74,8 @@ public final class SettingsContentAdapter
   public SettingsContentAdapter(final AppCompatActivity activity) {
     this.activity = activity;
     presenter = new SettingsPresenter();
-    bind();
-  }
 
-  @Override protected void onBind() {
-    presenter.bind(activity, this);
-    listener.register(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
-  }
-
-  @Override protected void onUnbind() {
-    presenter.unbind();
-    listener.unregister(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
+    create();
   }
 
   @Override public int getItemViewType(int position) {
@@ -321,6 +311,22 @@ public final class SettingsContentAdapter
 
   @Override public int getToolbarColor() {
     return R.color.lightgreen500;
+  }
+
+  @Override protected void onCreate() {
+    presenter.bind(activity, this);
+  }
+
+  @Override protected void onDestroy() {
+    presenter.unbind();
+  }
+
+  @Override protected void onStart() {
+    listener.register(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
+  }
+
+  @Override protected void onStop() {
+    listener.unregister(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

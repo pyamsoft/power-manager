@@ -30,7 +30,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
 import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.ArrayList;
@@ -53,7 +52,8 @@ public final class PowerTriggerAdapter
     this.activity = activity;
     fm = activity.getSupportFragmentManager();
     presenter = new PowerTriggerPresenter();
-    bind();
+
+    create();
   }
 
   public static void merge(final List<PowerTrigger> items) {
@@ -207,20 +207,28 @@ public final class PowerTriggerAdapter
     }
   }
 
-  @Override protected void onBind() {
-    presenter.bind(activity, this);
-  }
-
-  @Override protected void onUnbind() {
-    presenter.unbind();
-  }
-
   @Override public int getStatusbarColor() {
     return R.color.yellow700;
   }
 
   @Override public int getToolbarColor() {
     return R.color.yellow500;
+  }
+
+  @Override protected void onCreate() {
+    presenter.bind(activity, this);
+  }
+
+  @Override protected void onDestroy() {
+    presenter.unbind();
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

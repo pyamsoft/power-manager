@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
@@ -155,20 +154,28 @@ public final class HelpAdapter extends BindableRecyclerAdapter<HelpAdapter.ViewH
     return NUMBER_HELP_ITEMS;
   }
 
-  @Override protected void onBind() {
-    // TODO NOOP
-  }
-
-  @Override protected void onUnbind() {
-    // TODO NOOP
-  }
-
   @Override public int getStatusbarColor() {
     return R.color.cyan700;
   }
 
   @Override public int getToolbarColor() {
     return R.color.cyan500;
+  }
+
+  @Override protected void onCreate() {
+
+  }
+
+  @Override protected void onDestroy() {
+
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

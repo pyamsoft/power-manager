@@ -29,7 +29,6 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
@@ -60,15 +59,24 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
     dateCode = "Build Date: " + context.getString(R.string.app_date);
     this.context = context;
     presenter = new AboutPresenter();
-    bind();
+
+    create();
   }
 
-  @Override protected void onBind() {
+  @Override protected void onCreate() {
     presenter.bind(context, this);
   }
 
-  @Override protected void onUnbind() {
+  @Override protected void onDestroy() {
     presenter.unbind();
+  }
+
+  @Override protected void onStop() {
+
+  }
+
+  @Override protected void onStart() {
+
   }
 
   @Override public int getItemViewType(final int position) {

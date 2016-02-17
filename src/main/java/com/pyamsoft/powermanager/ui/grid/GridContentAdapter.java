@@ -32,7 +32,6 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.base.BindableRecyclerAdapterBase;
 import com.pyamsoft.powermanager.ui.ContainerInterface;
 import com.pyamsoft.pydroid.base.PresenterBase;
 import com.squareup.picasso.Picasso;
@@ -70,15 +69,23 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     items.add(preferenceUtil.gridOrder().getNine());
     items.add(preferenceUtil.gridOrder().getTen());
 
-    bind();
+    create();
   }
 
-  @Override protected void onBind() {
+  @Override protected void onCreate() {
     presenter.bind(context, this);
   }
 
-  @Override protected void onUnbind() {
+  @Override protected void onDestroy() {
     presenter.unbind();
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
   }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
