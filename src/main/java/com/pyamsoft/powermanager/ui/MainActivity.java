@@ -36,6 +36,7 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
@@ -48,11 +49,8 @@ import com.pyamsoft.powermanager.ui.grid.GridContentAdapter;
 import com.pyamsoft.powermanager.ui.grid.GridItemTouchCallback;
 import com.pyamsoft.powermanager.ui.help.HelpAdapter;
 import com.pyamsoft.powermanager.ui.plan.PowerPlanAdapter;
-import com.pyamsoft.powermanager.ui.radio.RadioBluetooth;
 import com.pyamsoft.powermanager.ui.radio.RadioContentAdapter;
-import com.pyamsoft.powermanager.ui.radio.RadioData;
-import com.pyamsoft.powermanager.ui.radio.RadioSync;
-import com.pyamsoft.powermanager.ui.radio.RadioWifi;
+import com.pyamsoft.powermanager.ui.radio.RadioContentInterface;
 import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.base.ActivityBase;
@@ -117,9 +115,6 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     dialog = ExplanationDialog.createDialog(this);
   }
 
-  /**
-   * Butterknife leaks the activity?
-   */
   private void findViews() {
     toolbar = (Toolbar) findViewById(R.id.toolbar);
     appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
@@ -265,9 +260,58 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
   }
 
+  private void setupFABBehavior(final FloatingActionButton fab) {
+    if (fab != null) {
+      final ViewGroup.LayoutParams params = fab.getLayoutParams();
+      if (params instanceof CoordinatorLayout.LayoutParams) {
+        final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
+        if (adapter != null) {
+          final ScrollingFABBehavior behavior = new ScrollingFABBehavior(adapter);
+          coordParams.setBehavior(behavior);
+        } else {
+          coordParams.setBehavior(null);
+        }
+      }
+    }
+  }
+
+  private void setFABVisibility() {
+    if (adapter != null && fabLarge != null && fabSmall != null) {
+      if (adapter.isLargeFABShown()) {
+        final int icon = adapter.getLargeFABIcon();
+        if (icon != 0) {
+          fabLarge.show();
+          Picasso.with(this).load(icon).into(fabLarge);
+          fabLarge.setOnClickListener(adapter.getLargeFABOnClick());
+        } else {
+          fabLarge.hide();
+        }
+      } else {
+        fabLarge.hide();
+      }
+
+      if (adapter.isSmallFABShown()) {
+        final int icon = adapter.getSmallFABIcon();
+        if (icon != 0) {
+          fabSmall.show();
+          Picasso.with(this).load(icon).into(fabSmall);
+          fabSmall.setOnClickListener(adapter.getSmallFABOnClick());
+        } else {
+          fabSmall.hide();
+        }
+      } else {
+        fabSmall.hide();
+      }
+    }
+  }
+
   @Override public void setCurrentView(final String viewCode, final int image) {
     setCurrentRecyclerViewContent(viewCode);
     setCurrentAppBarState(viewCode, image);
+
+    setupFABBehavior(fabLarge);
+    setupFABBehavior(fabSmall);
+    setFABVisibility();
   }
 
   private void setCurrentAppBarState(final String viewCode, final int image) {
@@ -314,19 +358,19 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
       switch (viewCode) {
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-          adapter = new RadioContentAdapter(this, new RadioWifi());
+          adapter = new RadioContentAdapter(this, RadioContentInterface.WIFI);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-          adapter = new RadioContentAdapter(this, new RadioData());
+          adapter = new RadioContentAdapter(this, RadioContentInterface.DATA);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-          adapter = new RadioContentAdapter(this, new RadioBluetooth());
+          adapter = new RadioContentAdapter(this, RadioContentInterface.BLUETOOTH);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-          adapter = new RadioContentAdapter(this, new RadioSync());
+          adapter = new RadioContentAdapter(this, RadioContentInterface.SYNC);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:

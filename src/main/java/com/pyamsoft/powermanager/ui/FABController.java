@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.radio;
+package com.pyamsoft.powermanager.ui;
 
-public interface RadioContentInterface {
+import android.view.View;
 
-  String WIFI = "WiFi";
-  String DATA = "Data";
-  String BLUETOOTH = "Bluetooth";
-  String SYNC = "Sync";
+public interface FABController {
 
-  String getName();
+  int getSmallFABIcon();
+
+  int getLargeFABIcon();
+
+  View.OnClickListener getSmallFABOnClick();
+
+  View.OnClickListener getLargeFABOnClick();
 }

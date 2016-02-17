@@ -16,9 +16,14 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
+import android.view.View;
 import com.pyamsoft.powermanager.R;
 
 public final class RadioBluetooth extends RadioBase {
+
+  RadioBluetooth(RadioPresenter presenter) {
+    super(presenter);
+  }
 
   @Override public String getName() {
     return BLUETOOTH;
@@ -30,5 +35,55 @@ public final class RadioBluetooth extends RadioBase {
 
   @Override public int getToolbarColor() {
     return R.color.blue500;
+  }
+
+  @Override public int getSmallFABIcon() {
+    final RadioPresenter presenter = getPresenter();
+    if (presenter == null) {
+      return 0;
+    } else {
+      return presenter.isIntervalEnabledBluetooth() ? R.drawable.ic_check_white_24dp
+          : R.drawable.ic_close_white_24dp;
+    }
+  }
+
+  @Override public int getLargeFABIcon() {
+    final RadioPresenter presenter = getPresenter();
+    if (presenter == null) {
+      return 0;
+    } else {
+      return presenter.isManagedBluetooth() ? R.drawable.ic_bluetooth_white_24dp
+          : R.drawable.ic_bluetooth_disabled_white_24dp;
+    }
+  }
+
+  @Override public boolean isSmallFABShown() {
+    return true;
+  }
+
+  @Override public boolean isLargeFABShown() {
+    return true;
+  }
+
+  @Override public View.OnClickListener getSmallFABOnClick() {
+    return new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        final RadioPresenter presenter = getPresenter();
+        if (presenter != null) {
+          presenter.setIntervalEnabledBluetooth(!presenter.isIntervalEnabledBluetooth());
+        }
+      }
+    };
+  }
+
+  @Override public View.OnClickListener getLargeFABOnClick() {
+    return new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        final RadioPresenter presenter = getPresenter();
+        if (presenter != null) {
+          presenter.setManagedBluetooth(!presenter.isManagedBluetooth());
+        }
+      }
+    };
   }
 }

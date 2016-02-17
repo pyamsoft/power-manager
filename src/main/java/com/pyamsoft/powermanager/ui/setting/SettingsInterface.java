@@ -20,7 +20,7 @@ import android.content.Context;
 
 interface SettingsInterface {
 
-  void onResetRequested(final SettingsPresenter presenter, final Context context);
+  void onResetRequested();
 
   void onBootEnabled();
 

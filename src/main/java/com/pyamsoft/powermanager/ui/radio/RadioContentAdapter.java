@@ -68,10 +68,27 @@ public final class RadioContentAdapter
   private final RadioPresenter presenter;
   private final Context context;
 
-  public RadioContentAdapter(final Context context, final RadioBase i) {
-    this.radio = i;
+  public RadioContentAdapter(final Context context, final String type) {
     this.context = context;
     presenter = new RadioPresenter(context, this);
+    RadioBase radio;
+    switch (type) {
+      case RadioContentInterface.WIFI:
+        radio = new RadioWifi(presenter);
+        break;
+      case RadioContentInterface.DATA:
+        radio = new RadioData(presenter);
+        break;
+      case RadioContentInterface.BLUETOOTH:
+        radio = new RadioBluetooth(presenter);
+        break;
+      case RadioContentInterface.SYNC:
+        radio = new RadioSync(presenter);
+        break;
+      default:
+        throw new RuntimeException("Invalid Radio type: " + type);
+    }
+    this.radio = radio;
 
     create();
   }
@@ -86,6 +103,22 @@ public final class RadioContentAdapter
 
   @Override public void onReOpenTimeChanged() {
     notifyItemChanged(POSITION_REOPEN);
+  }
+
+  @Override public void onRadioManageEnabled() {
+
+  }
+
+  @Override public void onRadioManageDisabled() {
+
+  }
+
+  @Override public void onRadioIntervalEnabled() {
+
+  }
+
+  @Override public void onRadioIntervalDisabled() {
+
   }
 
   @Override public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -405,6 +438,30 @@ public final class RadioContentAdapter
 
   @Override protected void onStop() {
 
+  }
+
+  @Override public int getSmallFABIcon() {
+    return radio.getSmallFABIcon();
+  }
+
+  @Override public int getLargeFABIcon() {
+    return radio.getLargeFABIcon();
+  }
+
+  @Override public boolean isSmallFABShown() {
+    return radio.isSmallFABShown();
+  }
+
+  @Override public boolean isLargeFABShown() {
+    return radio.isLargeFABShown();
+  }
+
+  @Override public View.OnClickListener getSmallFABOnClick() {
+    return radio.getSmallFABOnClick();
+  }
+
+  @Override public View.OnClickListener getLargeFABOnClick() {
+    return radio.getLargeFABOnClick();
   }
 
   public static final class ValueHolder {

@@ -23,4 +23,12 @@ interface RadioInterface {
   void onIntervalTimeChanged();
 
   void onReOpenTimeChanged();
+
+  void onRadioManageEnabled();
+
+  void onRadioManageDisabled();
+
+  void onRadioIntervalEnabled();
+
+  void onRadioIntervalDisabled();
 }

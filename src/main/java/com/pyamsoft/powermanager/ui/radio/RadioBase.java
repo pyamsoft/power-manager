@@ -17,6 +17,20 @@
 package com.pyamsoft.powermanager.ui.radio;
 
 import com.pyamsoft.powermanager.ui.Coloring;
+import com.pyamsoft.powermanager.ui.FABController;
+import com.pyamsoft.powermanager.ui.FABVisibilityController;
+import java.lang.ref.WeakReference;
 
-abstract class RadioBase implements RadioContentInterface, Coloring {
+abstract class RadioBase
+    implements RadioContentInterface, Coloring, FABController, FABVisibilityController {
+
+  private final WeakReference<RadioPresenter> weakPresenter;
+
+  RadioBase(final RadioPresenter presenter) {
+    weakPresenter = new WeakReference<>(presenter);
+  }
+
+  public RadioPresenter getPresenter() {
+    return weakPresenter.get();
+  }
 }

@@ -129,7 +129,7 @@ final class SettingsPresenter extends PresenterBase<SettingsInterface> {
       return;
     }
 
-    reference.onResetRequested(this, model.provideResetContext());
+    reference.onResetRequested();
   }
 
   void onResetConfirmed() {

@@ -282,4 +282,204 @@ final class RadioPresenter extends PresenterBase<RadioInterface> {
     model.setIntervalTimeSync(value);
     reference.onIntervalTimeChanged();
   }
+
+  boolean isManagedWifi() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return true;
+    }
+
+    return model.isManagedWifi();
+  }
+
+  boolean isManagedData() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+
+    return model.isManagedData();
+  }
+
+  boolean isManagedBluetooth() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+
+    return model.isManagedBluetooth();
+  }
+
+  boolean isManagedSync() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return true;
+    }
+
+    return model.isManagedSync();
+  }
+
+  void setManagedWifi(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setManagedWifi(state);
+    if (state) {
+      reference.onRadioManageEnabled();
+    } else {
+      reference.onRadioManageDisabled();
+    }
+  }
+
+  void setManagedData(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setManagedData(state);
+    if (state) {
+      reference.onRadioManageEnabled();
+    } else {
+      reference.onRadioManageDisabled();
+    }
+  }
+
+  void setManagedBluetooth(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setManagedBluetooth(state);
+    if (state) {
+      reference.onRadioManageEnabled();
+    } else {
+      reference.onRadioManageDisabled();
+    }
+  }
+
+  void setManagedSync(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setManagedSync(state);
+    if (state) {
+      reference.onRadioManageEnabled();
+    } else {
+      reference.onRadioManageDisabled();
+    }
+  }
+
+  boolean isIntervalEnabledWifi() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return true;
+    }
+
+    return model.isIntervalEnabledWifi();
+  }
+
+  boolean isIntervalEnabledData() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+
+    return model.isIntervalEnabledData();
+  }
+
+  boolean isIntervalEnabledBluetooth() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return false;
+    }
+
+    return model.isIntervalEnabledBluetooth();
+  }
+
+  boolean isIntervalEnabledSync() {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return true;
+    }
+
+    return model.isIntervalEnabledSync();
+  }
+
+  void setIntervalEnabledWifi(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setIntervalEnabledWifi(state);
+    if (state) {
+      reference.onRadioIntervalEnabled();
+    } else {
+      reference.onRadioIntervalDisabled();
+    }
+  }
+
+  void setIntervalEnabledData(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setIntervalEnabledData(state);
+    if (state) {
+      reference.onRadioIntervalEnabled();
+    } else {
+      reference.onRadioIntervalDisabled();
+    }
+  }
+
+  void setIntervalEnabledBluetooth(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setIntervalEnabledBluetooth(state);
+    if (state) {
+      reference.onRadioIntervalEnabled();
+    } else {
+      reference.onRadioIntervalDisabled();
+    }
+  }
+
+  void setIntervalEnabledSync(final boolean state) {
+    final RadioInterface reference = getInterface();
+    if (reference == null) {
+      LogUtil.e(TAG, "reference is NULL");
+      return;
+    }
+
+    model.setIntervalEnabledSync(state);
+    if (state) {
+      reference.onRadioIntervalEnabled();
+    } else {
+      reference.onRadioIntervalDisabled();
+    }
+  }
 }

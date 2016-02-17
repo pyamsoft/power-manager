@@ -20,5 +20,5 @@ import android.support.v7.widget.RecyclerView;
 import com.pyamsoft.pydroid.base.ActivityRecyclerAdapterBase;
 
 public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder> extends
-    ActivityRecyclerAdapterBase<T> implements Coloring {
+    ActivityRecyclerAdapterBase<T> implements Coloring, FABController, FABVisibilityController {
 }

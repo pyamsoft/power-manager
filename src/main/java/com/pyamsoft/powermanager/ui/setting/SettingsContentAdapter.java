@@ -245,11 +245,11 @@ public final class SettingsContentAdapter
     }
   }
 
-  @Override public void onResetRequested(final SettingsPresenter presenter, final Context context) {
-    new AlertDialog.Builder(context).setTitle(context.getString(R.string.reset_settings_title))
+  @Override public void onResetRequested() {
+    new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.reset_settings_title))
         .setCancelable(false)
         .setIcon(R.drawable.ic_warning_white_24dp)
-        .setMessage(context.getString(R.string.reset_settings_msg))
+        .setMessage(activity.getString(R.string.reset_settings_msg))
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
           private final WeakReference<SettingsPresenter> weakPresenter =
@@ -325,6 +325,30 @@ public final class SettingsContentAdapter
 
   @Override protected void onStop() {
     listener.unregister(GlobalPreferenceUtil.with(activity).powerManagerMonitor());
+  }
+
+  @Override public int getSmallFABIcon() {
+    return 0;
+  }
+
+  @Override public int getLargeFABIcon() {
+    return 0;
+  }
+
+  @Override public boolean isSmallFABShown() {
+    return false;
+  }
+
+  @Override public boolean isLargeFABShown() {
+    return false;
+  }
+
+  @Override public View.OnClickListener getSmallFABOnClick() {
+    return null;
+  }
+
+  @Override public View.OnClickListener getLargeFABOnClick() {
+    return null;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

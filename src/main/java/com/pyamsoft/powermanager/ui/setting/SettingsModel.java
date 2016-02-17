@@ -96,10 +96,6 @@ final class SettingsModel {
     }
   }
 
-  Context provideResetContext() {
-    return weakActivity.get();
-  }
-
   boolean isBootEnabled() {
     final Context context = weakActivity.get();
     if (context != null) {

@@ -255,4 +255,156 @@ final class RadioModel {
     powerPlan.setPlan(
         PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
   }
+
+  private void setPowerPlan(final Context context, final int field, final boolean state) {
+    LogUtil.d(TAG, "Refreshing power plan");
+    final PowerPlanUtil powerPlan = PowerPlanUtil.with(context);
+    powerPlan.updateCustomPlan(field, state);
+    powerPlan.setPlan(
+        PowerPlanUtil.toInt(PowerPlanUtil.POWER_PLAN_CUSTOM[PowerPlanUtil.FIELD_INDEX]));
+  }
+
+  boolean isManagedWifi() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedWifi();
+    } else {
+      return true;
+    }
+  }
+
+  boolean isManagedData() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedData();
+    } else {
+      return false;
+    }
+  }
+
+  boolean isManagedBluetooth() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedBluetooth();
+    } else {
+      return false;
+    }
+  }
+
+  boolean isManagedSync() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).powerManagerActive().isManagedSync();
+    } else {
+      return true;
+    }
+  }
+
+  void setManagedWifi(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set managed wifi: ", state);
+      GlobalPreferenceUtil.with(context).powerManagerActive().setManagedWifi(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_WIFI, state);
+    }
+  }
+
+  void setManagedData(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set managed data: ", state);
+      GlobalPreferenceUtil.with(context).powerManagerActive().setManagedData(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_DATA, state);
+    }
+  }
+
+  void setManagedBluetooth(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set managed bluetooth: ", state);
+      GlobalPreferenceUtil.with(context).powerManagerActive().setManagedBluetooth(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_BLUETOOTH, state);
+    }
+  }
+
+  void setManagedSync(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set managed sync: ", state);
+      GlobalPreferenceUtil.with(context).powerManagerActive().setManagedSync(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_SYNC, state);
+    }
+  }
+
+  boolean isIntervalEnabledWifi() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).intervalDisableService().isWifiReopen();
+    } else {
+      return true;
+    }
+  }
+
+  boolean isIntervalEnabledData() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).intervalDisableService().isDataReopen();
+    } else {
+      return false;
+    }
+  }
+
+  boolean isIntervalEnabledBluetooth() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).intervalDisableService().isBluetoothReopen();
+    } else {
+      return false;
+    }
+  }
+
+  boolean isIntervalEnabledSync() {
+    final Context context = weakContext.get();
+    if (context != null) {
+      return GlobalPreferenceUtil.with(context).intervalDisableService().isSyncReopen();
+    } else {
+      return true;
+    }
+  }
+
+  void setIntervalEnabledWifi(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set interval wifi: ", state);
+      GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_WIFI, state);
+    }
+  }
+
+  void setIntervalEnabledData(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set interval data: ", state);
+      GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_DATA, state);
+    }
+  }
+
+  void setIntervalEnabledBluetooth(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set interval bluetooth: ", state);
+      GlobalPreferenceUtil.with(context).intervalDisableService().setBluetoothReopen(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_BLUETOOTH, state);
+    }
+  }
+
+  void setIntervalEnabledSync(boolean state) {
+    final Context context = weakContext.get();
+    if (context != null) {
+      LogUtil.d(TAG, "Set interval sync: ", state);
+      GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(state);
+      setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_SYNC, state);
+    }
+  }
 }

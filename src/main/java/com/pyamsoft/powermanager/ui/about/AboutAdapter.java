@@ -279,6 +279,30 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
     return R.color.orange500;
   }
 
+  @Override public int getSmallFABIcon() {
+    return 0;
+  }
+
+  @Override public int getLargeFABIcon() {
+    return 0;
+  }
+
+  @Override public boolean isSmallFABShown() {
+    return false;
+  }
+
+  @Override public boolean isLargeFABShown() {
+    return false;
+  }
+
+  @Override public View.OnClickListener getSmallFABOnClick() {
+    return null;
+  }
+
+  @Override public View.OnClickListener getLargeFABOnClick() {
+    return null;
+  }
+
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;
