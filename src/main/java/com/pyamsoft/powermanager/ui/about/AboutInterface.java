@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.ui.about;
 
+import android.content.Intent;
+
 public interface AboutInterface {
 
-  void onDetailActivityLaunched();
+  void onReceiveInfoIntent(Intent infoIntent);
 }

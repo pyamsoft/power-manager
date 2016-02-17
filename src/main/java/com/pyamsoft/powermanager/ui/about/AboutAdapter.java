@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.ui.about;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
@@ -64,7 +65,7 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
   }
 
   @Override protected void onCreate() {
-    presenter.bind(context, this);
+    presenter.bind(this);
   }
 
   @Override protected void onDestroy() {
@@ -266,8 +267,8 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
     return NUMBER_ABOUT_ITEMS;
   }
 
-  @Override public void onDetailActivityLaunched() {
-
+  @Override public void onReceiveInfoIntent(Intent infoIntent) {
+    context.getApplicationContext().startActivity(infoIntent);
   }
 
   @Override public int getStatusbarColor() {
