@@ -18,11 +18,14 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import com.pyamsoft.powermanager.ui.Coloring;
 import com.pyamsoft.powermanager.ui.FABController;
+import com.pyamsoft.powermanager.ui.FABMiniController;
+import com.pyamsoft.powermanager.ui.FABMiniVisibilityController;
 import com.pyamsoft.powermanager.ui.FABVisibilityController;
 import java.lang.ref.WeakReference;
 
 abstract class RadioBase
-    implements RadioContentInterface, Coloring, FABController, FABVisibilityController {
+    implements RadioContentInterface, Coloring, FABMiniController, FABVisibilityController,
+    FABController, FABMiniVisibilityController {
 
   private final WeakReference<RadioPresenter> weakPresenter;
 
@@ -32,5 +35,13 @@ abstract class RadioBase
 
   public RadioPresenter getPresenter() {
     return weakPresenter.get();
+  }
+
+  @Override public boolean isFABShown() {
+    return true;
+  }
+
+  @Override public boolean isFABMiniShown() {
+    return true;
   }
 }

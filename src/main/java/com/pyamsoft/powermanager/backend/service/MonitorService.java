@@ -69,7 +69,27 @@ public final class MonitorService extends AutoRestartServiceBase {
     context.getApplicationContext().startService(intent);
   }
 
-  public static void powerManagerService(final Context context) {
+  public static void launchPowerManagerService(final Context context) {
+    if (context != null) {
+      powerManagerService(context);
+      updateNotification(context);
+    }
+  }
+
+  public static void updateNotification(final Context context) {
+    if (context != null) {
+      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(context);
+      if (p.powerManagerMonitor().isNotificationEnabled()) {
+        if (p.powerManagerMonitor().isForeground()) {
+          MonitorService.startForeground(context);
+        } else {
+          PersistentNotification.update(context);
+        }
+      }
+    }
+  }
+
+  private static void powerManagerService(final Context context) {
     synchronized (MonitorService.class) {
       final GlobalPreferenceUtil.PowerManagerMonitor p =
           GlobalPreferenceUtil.with(context).powerManagerMonitor();

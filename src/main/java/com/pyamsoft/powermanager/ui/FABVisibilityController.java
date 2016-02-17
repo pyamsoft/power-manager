@@ -16,11 +16,7 @@
 
 package com.pyamsoft.powermanager.ui;
 
-import android.view.View;
-
 public interface FABVisibilityController {
 
-  boolean isSmallFABShown();
-
-  boolean isLargeFABShown();
+  boolean isFABShown();
 }

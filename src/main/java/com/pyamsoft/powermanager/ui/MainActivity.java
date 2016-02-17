@@ -166,6 +166,10 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     animateActionBarToolbar(toolbar);
   }
 
+  @Override protected void onPause() {
+    super.onPause();
+  }
+
   @Override protected String setGiftAdId() {
     return getString(R.string.AD_ID_GIFT);
   }
@@ -266,7 +270,7 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       if (params instanceof CoordinatorLayout.LayoutParams) {
         final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
         if (adapter != null) {
-          final ScrollingFABBehavior behavior = new ScrollingFABBehavior(adapter);
+          final ScrollingFABBehavior behavior = new ScrollingFABBehavior(adapter, adapter);
           coordParams.setBehavior(behavior);
         } else {
           coordParams.setBehavior(null);
@@ -277,12 +281,12 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
 
   private void setFABVisibility() {
     if (adapter != null && fabLarge != null && fabSmall != null) {
-      if (adapter.isLargeFABShown()) {
-        final int icon = adapter.getLargeFABIcon();
+      if (adapter.isFABShown()) {
+        final int icon = adapter.getFABIcon();
         if (icon != 0) {
           fabLarge.show();
           Picasso.with(this).load(icon).into(fabLarge);
-          fabLarge.setOnClickListener(adapter.getLargeFABOnClick());
+          fabLarge.setOnClickListener(adapter.getFABOnClickListener());
         } else {
           fabLarge.hide();
         }
@@ -290,12 +294,12 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
         fabLarge.hide();
       }
 
-      if (adapter.isSmallFABShown()) {
-        final int icon = adapter.getSmallFABIcon();
+      if (adapter.isFABMiniShown()) {
+        final int icon = adapter.getFABMiniIcon();
         if (icon != 0) {
           fabSmall.show();
           Picasso.with(this).load(icon).into(fabSmall);
-          fabSmall.setOnClickListener(adapter.getSmallFABOnClick());
+          fabSmall.setOnClickListener(adapter.getFABMiniOnClickListener());
         } else {
           fabSmall.hide();
         }

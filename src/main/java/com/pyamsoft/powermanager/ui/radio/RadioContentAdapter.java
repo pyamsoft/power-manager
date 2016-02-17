@@ -426,42 +426,28 @@ public final class RadioContentAdapter
     return radio.getToolbarColor();
   }
 
-  @Override protected void onCreate() {
+  @Override public int getFABIcon() {
+    return radio.getFABIcon();
   }
 
-  @Override protected void onDestroy() {
+  @Override public int getFABMiniIcon() {
+    return radio.getFABMiniIcon();
   }
 
-  @Override protected void onStart() {
-
+  @Override public View.OnClickListener getFABMiniOnClickListener() {
+    return radio.getFABMiniOnClickListener();
   }
 
-  @Override protected void onStop() {
-
+  @Override public View.OnClickListener getFABOnClickListener() {
+    return radio.getFABOnClickListener();
   }
 
-  @Override public int getSmallFABIcon() {
-    return radio.getSmallFABIcon();
+  @Override public boolean isFABMiniShown() {
+    return radio.isFABMiniShown();
   }
 
-  @Override public int getLargeFABIcon() {
-    return radio.getLargeFABIcon();
-  }
-
-  @Override public boolean isSmallFABShown() {
-    return radio.isSmallFABShown();
-  }
-
-  @Override public boolean isLargeFABShown() {
-    return radio.isLargeFABShown();
-  }
-
-  @Override public View.OnClickListener getSmallFABOnClick() {
-    return radio.getSmallFABOnClick();
-  }
-
-  @Override public View.OnClickListener getLargeFABOnClick() {
-    return radio.getLargeFABOnClick();
+  @Override public boolean isFABShown() {
+    return radio.isFABShown();
   }
 
   public static final class ValueHolder {

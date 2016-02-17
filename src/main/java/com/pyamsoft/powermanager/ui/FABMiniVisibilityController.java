@@ -16,14 +16,7 @@
 
 package com.pyamsoft.powermanager.ui;
 
-import android.view.View;
+public interface FABMiniVisibilityController {
 
-public interface FABController {
-
-  String ACTION_FAB_STATE_CHANGED = FABController.class.getName() + ".ACTION_FAB_STATE_CHANGED";
-
-  int getFABIcon();
-
-  View.OnClickListener getFABOnClickListener();
+  boolean isFABMiniShown();
 }
-

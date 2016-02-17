@@ -64,22 +64,6 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
     create();
   }
 
-  @Override protected void onCreate() {
-
-  }
-
-  @Override protected void onDestroy() {
-
-  }
-
-  @Override protected void onStop() {
-
-  }
-
-  @Override protected void onStart() {
-
-  }
-
   @Override public int getItemViewType(final int position) {
     int viewType;
     switch (position) {
@@ -277,30 +261,6 @@ public final class AboutAdapter extends BindableRecyclerAdapter<AboutAdapter.Vie
 
   @Override public int getToolbarColor() {
     return R.color.orange500;
-  }
-
-  @Override public int getSmallFABIcon() {
-    return 0;
-  }
-
-  @Override public int getLargeFABIcon() {
-    return 0;
-  }
-
-  @Override public boolean isSmallFABShown() {
-    return false;
-  }
-
-  @Override public boolean isLargeFABShown() {
-    return false;
-  }
-
-  @Override public View.OnClickListener getSmallFABOnClick() {
-    return null;
-  }
-
-  @Override public View.OnClickListener getLargeFABOnClick() {
-    return null;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

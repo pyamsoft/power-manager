@@ -178,11 +178,11 @@ public final class GlobalPreferenceUtil extends PreferenceBase {
     public static final String MANAGE_DATA = TAG + ".manage_data";
     public static final String MANAGE_BLUETOOTH = TAG + ".manage_bluetooth";
     public static final String MANAGE_SYNC = TAG + ".manage_sync";
+    public static final String INTERVAL_WIFI = TAG + ".interval_wifi";
+    public static final String INTERVAL_DATA = TAG + ".interval_data";
+    public static final String INTERVAL_BLUETOOTH = TAG + ".interval_bluetooth";
+    public static final String INTERVAL_SYNC = TAG + ".interval_sync";
     private static final String SUSPEND_PLUGGED = TAG + ".suspend_plugged";
-    private static final String INTERVAL_WIFI = TAG + ".interval_wifi";
-    private static final String INTERVAL_DATA = TAG + ".interval_data";
-    private static final String INTERVAL_BLUETOOTH = TAG + ".interval_bluetooth";
-    private static final String INTERVAL_SYNC = TAG + ".interval_sync";
     private static final String CONTROL_WIFI = TAG + ".control_wifi";
     private static final String CONTROL_DATA = TAG + ".control_data";
     private static final String CONTROL_BLUETOOTH = TAG + ".control_bluetooth";

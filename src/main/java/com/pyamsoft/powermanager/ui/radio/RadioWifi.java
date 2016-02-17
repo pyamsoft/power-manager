@@ -37,17 +37,7 @@ public final class RadioWifi extends RadioBase {
     return R.color.green500;
   }
 
-  @Override public int getSmallFABIcon() {
-    final RadioPresenter presenter = getPresenter();
-    if (presenter == null) {
-      return 0;
-    } else {
-      return presenter.isIntervalEnabledWifi() ? R.drawable.ic_check_white_24dp
-          : R.drawable.ic_close_white_24dp;
-    }
-  }
-
-  @Override public int getLargeFABIcon() {
+  @Override public int getFABIcon() {
     final RadioPresenter presenter = getPresenter();
     if (presenter == null) {
       return 0;
@@ -57,31 +47,33 @@ public final class RadioWifi extends RadioBase {
     }
   }
 
-  @Override public boolean isSmallFABShown() {
-    return true;
-  }
-
-  @Override public boolean isLargeFABShown() {
-    return true;
-  }
-
-  @Override public View.OnClickListener getSmallFABOnClick() {
-    return new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        final RadioPresenter presenter = getPresenter();
-        if (presenter != null) {
-          presenter.setIntervalEnabledWifi(!presenter.isIntervalEnabledWifi());
-        }
-      }
-    };
-  }
-
-  @Override public View.OnClickListener getLargeFABOnClick() {
+  @Override public View.OnClickListener getFABOnClickListener() {
     return new View.OnClickListener() {
       @Override public void onClick(View v) {
         final RadioPresenter presenter = getPresenter();
         if (presenter != null) {
           presenter.setManagedWifi(!presenter.isManagedWifi());
+        }
+      }
+    };
+  }
+
+  @Override public int getFABMiniIcon() {
+    final RadioPresenter presenter = getPresenter();
+    if (presenter == null) {
+      return 0;
+    } else {
+      return presenter.isIntervalEnabledWifi() ? R.drawable.ic_check_white_24dp
+          : R.drawable.ic_close_white_24dp;
+    }
+  }
+
+  @Override public View.OnClickListener getFABMiniOnClickListener() {
+    return new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        final RadioPresenter presenter = getPresenter();
+        if (presenter != null) {
+          presenter.setIntervalEnabledWifi(!presenter.isIntervalEnabledWifi());
         }
       }
     };

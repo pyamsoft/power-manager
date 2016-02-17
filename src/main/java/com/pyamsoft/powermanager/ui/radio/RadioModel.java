@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.ui.radio;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
+import com.pyamsoft.powermanager.backend.service.MonitorService;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -306,6 +307,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set managed wifi: ", state);
       GlobalPreferenceUtil.with(context).powerManagerActive().setManagedWifi(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_WIFI, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -315,6 +317,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set managed data: ", state);
       GlobalPreferenceUtil.with(context).powerManagerActive().setManagedData(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_DATA, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -324,6 +327,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set managed bluetooth: ", state);
       GlobalPreferenceUtil.with(context).powerManagerActive().setManagedBluetooth(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_BLUETOOTH, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -333,6 +337,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set managed sync: ", state);
       GlobalPreferenceUtil.with(context).powerManagerActive().setManagedSync(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_MANAGE_SYNC, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -378,6 +383,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set interval wifi: ", state);
       GlobalPreferenceUtil.with(context).intervalDisableService().setWifiReopen(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_WIFI, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -387,6 +393,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set interval data: ", state);
       GlobalPreferenceUtil.with(context).intervalDisableService().setDataReopen(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_DATA, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -396,6 +403,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set interval bluetooth: ", state);
       GlobalPreferenceUtil.with(context).intervalDisableService().setBluetoothReopen(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_BLUETOOTH, state);
+      MonitorService.updateNotification(context);
     }
   }
 
@@ -405,6 +413,7 @@ final class RadioModel {
       LogUtil.d(TAG, "Set interval sync: ", state);
       GlobalPreferenceUtil.with(context).intervalDisableService().setSyncReopen(state);
       setPowerPlan(context, PowerPlanUtil.FIELD_REOPEN_SYNC, state);
+      MonitorService.updateNotification(context);
     }
   }
 }

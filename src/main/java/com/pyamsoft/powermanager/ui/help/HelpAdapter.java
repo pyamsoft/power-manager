@@ -162,46 +162,6 @@ public final class HelpAdapter extends BindableRecyclerAdapter<HelpAdapter.ViewH
     return R.color.cyan500;
   }
 
-  @Override protected void onCreate() {
-
-  }
-
-  @Override protected void onDestroy() {
-
-  }
-
-  @Override protected void onStart() {
-
-  }
-
-  @Override protected void onStop() {
-
-  }
-
-  @Override public int getSmallFABIcon() {
-    return 0;
-  }
-
-  @Override public int getLargeFABIcon() {
-    return 0;
-  }
-
-  @Override public boolean isSmallFABShown() {
-    return false;
-  }
-
-  @Override public boolean isLargeFABShown() {
-    return false;
-  }
-
-  @Override public View.OnClickListener getSmallFABOnClick() {
-    return null;
-  }
-
-  @Override public View.OnClickListener getLargeFABOnClick() {
-    return null;
-  }
-
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     private final TextView title;

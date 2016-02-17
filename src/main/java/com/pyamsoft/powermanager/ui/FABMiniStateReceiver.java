@@ -16,14 +16,9 @@
 
 package com.pyamsoft.powermanager.ui;
 
-import android.view.View;
+public interface FABMiniStateReceiver {
 
-public interface FABController {
+  void onFABMiniStateEnabled();
 
-  String ACTION_FAB_STATE_CHANGED = FABController.class.getName() + ".ACTION_FAB_STATE_CHANGED";
-
-  int getFABIcon();
-
-  View.OnClickListener getFABOnClickListener();
+  void onFABMiniStateDisabled();
 }
-

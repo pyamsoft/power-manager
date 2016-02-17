@@ -17,8 +17,72 @@
 package com.pyamsoft.powermanager.ui;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.pydroid.base.ActivityRecyclerAdapterBase;
 
-public abstract class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder> extends
-    ActivityRecyclerAdapterBase<T> implements Coloring, FABController, FABVisibilityController {
+public class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
+    extends ActivityRecyclerAdapterBase<T>
+    implements Coloring, FABMiniController, FABController, FABVisibilityController,
+    FABMiniVisibilityController {
+
+  @Override protected void onCreate() {
+
+  }
+
+  @Override protected void onDestroy() {
+
+  }
+
+  @Override protected void onStart() {
+
+  }
+
+  @Override protected void onStop() {
+
+  }
+
+  @Override public T onCreateViewHolder(ViewGroup parent, int viewType) {
+    return null;
+  }
+
+  @Override public void onBindViewHolder(T holder, int position) {
+
+  }
+
+  @Override public int getItemCount() {
+    return 0;
+  }
+
+  @Override public int getStatusbarColor() {
+    return 0;
+  }
+
+  @Override public int getToolbarColor() {
+    return 0;
+  }
+
+  @Override public int getFABIcon() {
+    return 0;
+  }
+
+  @Override public View.OnClickListener getFABOnClickListener() {
+    return null;
+  }
+
+  @Override public int getFABMiniIcon() {
+    return 0;
+  }
+
+  @Override public View.OnClickListener getFABMiniOnClickListener() {
+    return null;
+  }
+
+  @Override public boolean isFABShown() {
+    return false;
+  }
+
+  @Override public boolean isFABMiniShown() {
+    return false;
+  }
 }

@@ -18,12 +18,13 @@ package com.pyamsoft.powermanager.ui;
 
 import android.view.View;
 
-public interface FABController {
+public interface FABMiniController {
 
-  String ACTION_FAB_STATE_CHANGED = FABController.class.getName() + ".ACTION_FAB_STATE_CHANGED";
+  String ACTION_FAB_MINI_STATE_CHANGED =
+      FABMiniController.class.getName() + ".ACTION_FAB_MINI_STATE_CHANGED";
 
-  int getFABIcon();
+  int getFABMiniIcon();
 
-  View.OnClickListener getFABOnClickListener();
+  View.OnClickListener getFABMiniOnClickListener();
 }
 

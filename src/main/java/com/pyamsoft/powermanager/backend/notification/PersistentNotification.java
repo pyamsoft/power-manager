@@ -154,15 +154,7 @@ public final class PersistentNotification {
     }
 
     @Override protected void onHandleIntent(Intent intent) {
-      MonitorService.powerManagerService(getApplicationContext());
-      final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
-      if (p.powerManagerMonitor().isNotificationEnabled()) {
-        if (p.powerManagerMonitor().isForeground()) {
-          MonitorService.startForeground(this);
-        } else {
-          PersistentNotification.update(this);
-        }
-      }
+      MonitorService.launchPowerManagerService(getApplicationContext());
     }
   }
 }

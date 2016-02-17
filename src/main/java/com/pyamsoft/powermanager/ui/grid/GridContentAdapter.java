@@ -69,20 +69,6 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     create();
   }
 
-  @Override protected void onCreate() {
-  }
-
-  @Override protected void onDestroy() {
-  }
-
-  @Override protected void onStart() {
-
-  }
-
-  @Override protected void onStop() {
-
-  }
-
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         /* Use the activity context to keep app themes */
     final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -180,30 +166,6 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
 
   @Override public int getToolbarColor() {
     return R.color.amber500;
-  }
-
-  @Override public int getSmallFABIcon() {
-    return 0;
-  }
-
-  @Override public int getLargeFABIcon() {
-    return 0;
-  }
-
-  @Override public boolean isSmallFABShown() {
-    return false;
-  }
-
-  @Override public boolean isLargeFABShown() {
-    return false;
-  }
-
-  @Override public View.OnClickListener getSmallFABOnClick() {
-    return null;
-  }
-
-  @Override public View.OnClickListener getLargeFABOnClick() {
-    return null;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {

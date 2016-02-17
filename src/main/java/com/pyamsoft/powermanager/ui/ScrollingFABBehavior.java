@@ -21,27 +21,51 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class ScrollingFABBehavior extends FloatingActionButton.Behavior {
 
   private WeakReference<FABVisibilityController> weakController;
+  private WeakReference<FABMiniVisibilityController> weakMiniController;
 
-  public ScrollingFABBehavior(final FABVisibilityController controller) {
+  public ScrollingFABBehavior(final FABVisibilityController controller,
+      final FABMiniVisibilityController miniController) {
     weakController = new WeakReference<>(controller);
+    weakMiniController = new WeakReference<>(miniController);
   }
 
   @Override
   public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton child,
       View dependency) {
-    final FABVisibilityController controller = weakController.get();
-    if (controller != null) {
-      if (dependency instanceof AppBarLayout) {
-        // If the adapter does not want to show the fab button, return false
-        if (!controller.isLargeFABShown() || !controller.isSmallFABShown()) {
+    if (dependency instanceof AppBarLayout) {
+      // If the adapter does not want to show the fab button, return false
+      final FABVisibilityController controller = weakController.get();
+      final FABMiniVisibilityController miniController = weakMiniController.get();
+      if (controller != null && miniController != null) {
+        if (!controller.isFABShown() || !miniController.isFABMiniShown()) {
           return false;
         }
       }
     }
     return super.onDependentViewChanged(parent, child, dependency);
+  }
+
+  @Override public boolean onLayoutChild(CoordinatorLayout parent, FloatingActionButton child,
+      int layoutDirection) {
+    final FABVisibilityController controller = weakController.get();
+    final FABMiniVisibilityController miniController = weakMiniController.get();
+    if (controller != null && miniController != null) {
+      final List<View> dependencies = parent.getDependencies(child);
+      for (int i = 0, count = dependencies.size(); i < count; i++) {
+        final View dependency = dependencies.get(i);
+        if (dependency instanceof AppBarLayout) {
+          if (!controller.isFABShown() || !miniController.isFABMiniShown()) {
+            return false;
+          }
+          break;
+        }
+      }
+    }
+    return super.onLayoutChild(parent, child, layoutDirection);
   }
 }
