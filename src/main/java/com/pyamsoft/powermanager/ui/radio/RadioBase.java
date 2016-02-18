@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.Coloring;
 import com.pyamsoft.powermanager.ui.FABController;
 import com.pyamsoft.powermanager.ui.FABMiniController;
@@ -43,5 +44,13 @@ abstract class RadioBase
 
   @Override public boolean isFABMiniShown() {
     return true;
+  }
+
+  @Override public int getFABMiniIconEnabled() {
+    return R.drawable.ic_check_white_24dp;
+  }
+
+  @Override public int getFABMiniIconDisabled() {
+    return R.drawable.ic_close_white_24dp;
   }
 }

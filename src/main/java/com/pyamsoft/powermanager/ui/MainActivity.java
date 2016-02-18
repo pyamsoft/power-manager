@@ -61,7 +61,8 @@ import com.pyamsoft.pydroid.util.LogUtil;
 import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
-public class MainActivity extends ActivityBase implements ContainerInterface {
+public class MainActivity extends ActivityBase
+    implements ContainerInterface, FABStateReceiver, FABMiniStateReceiver {
 
   private static final long DELAY = 1600L;
   private static final String TAG = MainActivity.class.getSimpleName();
@@ -282,7 +283,8 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
   private void setFABVisibility() {
     if (adapter != null && fabLarge != null && fabSmall != null) {
       if (adapter.isFABShown()) {
-        final int icon = adapter.getFABIcon();
+        final int icon =
+            adapter.isFABEnabled() ? adapter.getFABIconEnabled() : adapter.getFABIconDisabled();
         if (icon != 0) {
           fabLarge.show();
           Picasso.with(this).load(icon).into(fabLarge);
@@ -295,7 +297,8 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       }
 
       if (adapter.isFABMiniShown()) {
-        final int icon = adapter.getFABMiniIcon();
+        final int icon = adapter.isFABMiniEnabled() ? adapter.getFABMiniIconEnabled()
+            : adapter.getFABMiniIconDisabled();
         if (icon != 0) {
           fabSmall.show();
           Picasso.with(this).load(icon).into(fabSmall);
@@ -362,19 +365,19 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
       gridLayoutManager.setOrientation(StaggeredGridLayoutManager.VERTICAL);
       switch (viewCode) {
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-          adapter = new RadioContentAdapter(this, RadioContentInterface.WIFI);
+          adapter = new RadioContentAdapter(this, RadioContentInterface.WIFI, this, this);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-          adapter = new RadioContentAdapter(this, RadioContentInterface.DATA);
+          adapter = new RadioContentAdapter(this, RadioContentInterface.DATA, this, this);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-          adapter = new RadioContentAdapter(this, RadioContentInterface.BLUETOOTH);
+          adapter = new RadioContentAdapter(this, RadioContentInterface.BLUETOOTH, this, this);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-          adapter = new RadioContentAdapter(this, RadioContentInterface.SYNC);
+          adapter = new RadioContentAdapter(this, RadioContentInterface.SYNC, this, this);
           decoration = null;
           break;
         case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
@@ -435,5 +438,35 @@ public class MainActivity extends ActivityBase implements ContainerInterface {
     final String oldCode = currentView;
     setCurrentView(null, 0);
     return oldCode;
+  }
+
+  private static void setFABIcon(final FloatingActionButton fab, final int icon) {
+    if (icon != 0 && fab != null) {
+      Picasso.with(fab.getContext()).load(icon).into(fab);
+    }
+  }
+
+  @Override public void onFABMiniStateEnabled() {
+    if (adapter != null) {
+      setFABIcon(fabSmall, adapter.getFABMiniIconEnabled());
+    }
+  }
+
+  @Override public void onFABMiniStateDisabled() {
+    if (adapter != null) {
+      setFABIcon(fabSmall, adapter.getFABMiniIconDisabled());
+    }
+  }
+
+  @Override public void onFABStateEnabled() {
+    if (adapter != null) {
+      setFABIcon(fabLarge, adapter.getFABIconEnabled());
+    }
+  }
+
+  @Override public void onFABStateDisabled() {
+    if (adapter != null) {
+      setFABIcon(fabLarge, adapter.getFABIconDisabled());
+    }
   }
 }

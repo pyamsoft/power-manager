@@ -62,16 +62,32 @@ public class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
     return 0;
   }
 
-  @Override public int getFABIcon() {
+  @Override public int getFABIconEnabled() {
     return 0;
+  }
+
+  @Override public int getFABIconDisabled() {
+    return 0;
+  }
+
+  @Override public boolean isFABEnabled() {
+    return false;
   }
 
   @Override public View.OnClickListener getFABOnClickListener() {
     return null;
   }
 
-  @Override public int getFABMiniIcon() {
+  @Override public int getFABMiniIconEnabled() {
     return 0;
+  }
+
+  @Override public int getFABMiniIconDisabled() {
+    return 0;
+  }
+
+  @Override public boolean isFABMiniEnabled() {
+    return false;
   }
 
   @Override public View.OnClickListener getFABMiniOnClickListener() {

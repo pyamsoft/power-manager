@@ -37,14 +37,30 @@ public final class RadioWifi extends RadioBase {
     return R.color.green500;
   }
 
-  @Override public int getFABIcon() {
+  @Override public boolean isFABEnabled() {
     final RadioPresenter presenter = getPresenter();
     if (presenter == null) {
-      return 0;
+      return false;
     } else {
-      return presenter.isManagedWifi() ? R.drawable.ic_network_wifi_white_24dp
-          : R.drawable.ic_signal_wifi_off_white_24dp;
+      return presenter.isManagedWifi();
     }
+  }
+
+  @Override public boolean isFABMiniEnabled() {
+    final RadioPresenter presenter = getPresenter();
+    if (presenter == null) {
+      return false;
+    } else {
+      return presenter.isIntervalEnabledWifi();
+    }
+  }
+
+  @Override public int getFABIconDisabled() {
+    return R.drawable.ic_signal_wifi_off_white_24dp;
+  }
+
+  @Override public int getFABIconEnabled() {
+    return R.drawable.ic_network_wifi_white_24dp;
   }
 
   @Override public View.OnClickListener getFABOnClickListener() {
@@ -56,16 +72,6 @@ public final class RadioWifi extends RadioBase {
         }
       }
     };
-  }
-
-  @Override public int getFABMiniIcon() {
-    final RadioPresenter presenter = getPresenter();
-    if (presenter == null) {
-      return 0;
-    } else {
-      return presenter.isIntervalEnabledWifi() ? R.drawable.ic_check_white_24dp
-          : R.drawable.ic_close_white_24dp;
-    }
   }
 
   @Override public View.OnClickListener getFABMiniOnClickListener() {

@@ -37,13 +37,20 @@ public final class RadioBluetooth extends RadioBase {
     return R.color.blue500;
   }
 
-  @Override public int getFABIcon() {
+  @Override public int getFABIconEnabled() {
+    return R.drawable.ic_bluetooth_white_24dp;
+  }
+
+  @Override public int getFABIconDisabled() {
+    return R.drawable.ic_bluetooth_disabled_white_24dp;
+  }
+
+  @Override public boolean isFABEnabled() {
     final RadioPresenter presenter = getPresenter();
     if (presenter == null) {
-      return 0;
+      return false;
     } else {
-      return presenter.isManagedBluetooth() ? R.drawable.ic_bluetooth_white_24dp
-          : R.drawable.ic_bluetooth_disabled_white_24dp;
+      return presenter.isManagedBluetooth();
     }
   }
 
@@ -58,13 +65,12 @@ public final class RadioBluetooth extends RadioBase {
     };
   }
 
-  @Override public int getFABMiniIcon() {
+  @Override public boolean isFABMiniEnabled() {
     final RadioPresenter presenter = getPresenter();
     if (presenter == null) {
-      return 0;
+      return false;
     } else {
-      return presenter.isIntervalEnabledBluetooth() ? R.drawable.ic_check_white_24dp
-          : R.drawable.ic_close_white_24dp;
+      return presenter.isIntervalEnabledBluetooth();
     }
   }
 

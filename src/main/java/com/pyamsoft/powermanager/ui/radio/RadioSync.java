@@ -37,14 +37,30 @@ public final class RadioSync extends RadioBase {
     return R.color.purple500;
   }
 
-  @Override public int getFABIcon() {
+  @Override public boolean isFABEnabled() {
     final RadioPresenter presenter = getPresenter();
     if (presenter == null) {
-      return 0;
+      return false;
     } else {
-      return presenter.isManagedSync() ? R.drawable.ic_sync_white_24dp
-          : R.drawable.ic_sync_disabled_white_24dp;
+      return presenter.isManagedSync();
     }
+  }
+
+  @Override public boolean isFABMiniEnabled() {
+    final RadioPresenter presenter = getPresenter();
+    if (presenter == null) {
+      return false;
+    } else {
+      return presenter.isIntervalEnabledSync();
+    }
+  }
+
+  @Override public int getFABIconDisabled() {
+    return R.drawable.ic_sync_disabled_white_24dp;
+  }
+
+  @Override public int getFABIconEnabled() {
+    return R.drawable.ic_sync_white_24dp;
   }
 
   @Override public View.OnClickListener getFABOnClickListener() {
@@ -56,16 +72,6 @@ public final class RadioSync extends RadioBase {
         }
       }
     };
-  }
-
-  @Override public int getFABMiniIcon() {
-    final RadioPresenter presenter = getPresenter();
-    if (presenter == null) {
-      return 0;
-    } else {
-      return presenter.isIntervalEnabledSync() ? R.drawable.ic_check_white_24dp
-          : R.drawable.ic_close_white_24dp;
-    }
   }
 
   @Override public View.OnClickListener getFABMiniOnClickListener() {

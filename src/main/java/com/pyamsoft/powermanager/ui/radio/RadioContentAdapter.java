@@ -28,6 +28,8 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.service.ActiveService;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
+import com.pyamsoft.powermanager.ui.FABMiniStateReceiver;
+import com.pyamsoft.powermanager.ui.FABStateReceiver;
 import com.pyamsoft.pydroid.base.ValueRunnableBase;
 import com.pyamsoft.pydroid.util.StringUtil;
 
@@ -64,12 +66,17 @@ public final class RadioContentAdapter
   private static final int POSITION_DELAY = 0;
   private static final int POSITION_INTERVAL = 1;
   private static final int POSITION_REOPEN = 2;
+  private final FABMiniStateReceiver fabMiniStateReceiver;
+  private final FABStateReceiver fabStateReceiver;
   private final RadioBase radio;
   private final RadioPresenter presenter;
   private final Context context;
 
-  public RadioContentAdapter(final Context context, final String type) {
+  public RadioContentAdapter(final Context context, final String type,
+      final FABStateReceiver stateReceiver, final FABMiniStateReceiver miniStateReceiver) {
     this.context = context;
+    fabStateReceiver = stateReceiver;
+    fabMiniStateReceiver = miniStateReceiver;
     presenter = new RadioPresenter(context, this);
     RadioBase radio;
     switch (type) {
@@ -106,19 +113,27 @@ public final class RadioContentAdapter
   }
 
   @Override public void onRadioManageEnabled() {
-
+    if (fabStateReceiver != null) {
+      fabStateReceiver.onFABStateEnabled();
+    }
   }
 
   @Override public void onRadioManageDisabled() {
-
+    if (fabStateReceiver != null) {
+      fabStateReceiver.onFABStateDisabled();
+    }
   }
 
   @Override public void onRadioIntervalEnabled() {
-
+    if (fabMiniStateReceiver != null) {
+      fabMiniStateReceiver.onFABMiniStateEnabled();
+    }
   }
 
   @Override public void onRadioIntervalDisabled() {
-
+    if (fabMiniStateReceiver != null) {
+      fabMiniStateReceiver.onFABMiniStateDisabled();
+    }
   }
 
   @Override public ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
@@ -426,12 +441,28 @@ public final class RadioContentAdapter
     return radio.getToolbarColor();
   }
 
-  @Override public int getFABIcon() {
-    return radio.getFABIcon();
+  @Override public int getFABIconDisabled() {
+    return radio.getFABIconDisabled();
   }
 
-  @Override public int getFABMiniIcon() {
-    return radio.getFABMiniIcon();
+  @Override public boolean isFABEnabled() {
+    return radio.isFABEnabled();
+  }
+
+  @Override public boolean isFABMiniEnabled() {
+    return radio.isFABMiniEnabled();
+  }
+
+  @Override public int getFABIconEnabled() {
+    return radio.getFABIconEnabled();
+  }
+
+  @Override public int getFABMiniIconDisabled() {
+    return radio.getFABMiniIconDisabled();
+  }
+
+  @Override public int getFABMiniIconEnabled() {
+    return radio.getFABMiniIconEnabled();
   }
 
   @Override public View.OnClickListener getFABMiniOnClickListener() {

@@ -20,10 +20,11 @@ import android.view.View;
 
 public interface FABMiniController {
 
-  String ACTION_FAB_MINI_STATE_CHANGED =
-      FABMiniController.class.getName() + ".ACTION_FAB_MINI_STATE_CHANGED";
+  int getFABMiniIconEnabled();
 
-  int getFABMiniIcon();
+  int getFABMiniIconDisabled();
+
+  boolean isFABMiniEnabled();
 
   View.OnClickListener getFABMiniOnClickListener();
 }
