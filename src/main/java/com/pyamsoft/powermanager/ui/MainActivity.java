@@ -36,7 +36,6 @@ import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
@@ -54,6 +53,7 @@ import com.pyamsoft.powermanager.ui.radio.RadioContentInterface;
 import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.base.ActivityBase;
+import com.pyamsoft.pydroid.misc.ContainerInterface;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
 import com.pyamsoft.pydroid.misc.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -266,21 +266,6 @@ public class MainActivity extends ActivityBase
     Snackbar.make(coordinatorLayout, "Test Snackbar", Snackbar.LENGTH_SHORT).show();
   }
 
-  private void setupFABBehavior(final FloatingActionButton fab) {
-    if (fab != null) {
-      final ViewGroup.LayoutParams params = fab.getLayoutParams();
-      if (params instanceof CoordinatorLayout.LayoutParams) {
-        final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
-        if (adapter != null) {
-          final IgnoreAppBarLayoutFABBehavior behavior = new IgnoreAppBarLayoutFABBehavior(adapter);
-          coordParams.setBehavior(behavior);
-        } else {
-          coordParams.setBehavior(null);
-        }
-      }
-    }
-  }
-
   private void setFABVisibility() {
     if (adapter != null && fabLarge != null && fabSmall != null) {
       if (adapter.isFABShown(fabLarge)) {
@@ -317,8 +302,14 @@ public class MainActivity extends ActivityBase
     setCurrentRecyclerViewContent(viewCode);
     setCurrentAppBarState(viewCode, image);
 
-    setupFABBehavior(fabLarge);
-    setupFABBehavior(fabSmall);
+    IgnoreAppBarLayoutFABBehavior behavior;
+    if (adapter == null) {
+      behavior = null;
+    } else {
+      behavior = new IgnoreAppBarLayoutFABBehavior(adapter);
+    }
+    AppUtil.setupFABBehavior(fabLarge, behavior);
+    AppUtil.setupFABBehavior(fabSmall, behavior);
     setFABVisibility();
   }
 
