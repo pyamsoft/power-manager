@@ -55,6 +55,7 @@ import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.misc.DividerItemDecoration;
+import com.pyamsoft.pydroid.misc.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -271,7 +272,7 @@ public class MainActivity extends ActivityBase
       if (params instanceof CoordinatorLayout.LayoutParams) {
         final CoordinatorLayout.LayoutParams coordParams = (CoordinatorLayout.LayoutParams) params;
         if (adapter != null) {
-          final ScrollingFABBehavior behavior = new ScrollingFABBehavior(adapter, adapter);
+          final IgnoreAppBarLayoutFABBehavior behavior = new IgnoreAppBarLayoutFABBehavior(adapter);
           coordParams.setBehavior(behavior);
         } else {
           coordParams.setBehavior(null);
@@ -282,7 +283,7 @@ public class MainActivity extends ActivityBase
 
   private void setFABVisibility() {
     if (adapter != null && fabLarge != null && fabSmall != null) {
-      if (adapter.isFABShown()) {
+      if (adapter.isFABShown(fabLarge)) {
         final int icon =
             adapter.isFABEnabled() ? adapter.getFABIconEnabled() : adapter.getFABIconDisabled();
         if (icon != 0) {
@@ -296,7 +297,7 @@ public class MainActivity extends ActivityBase
         fabLarge.hide();
       }
 
-      if (adapter.isFABMiniShown()) {
+      if (adapter.isFABShown(fabSmall)) {
         final int icon = adapter.isFABMiniEnabled() ? adapter.getFABMiniIconEnabled()
             : adapter.getFABMiniIconDisabled();
         if (icon != 0) {

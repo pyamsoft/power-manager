@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.ui.radio;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.view.LayoutInflater;
@@ -473,12 +474,8 @@ public final class RadioContentAdapter
     return radio.getFABOnClickListener();
   }
 
-  @Override public boolean isFABMiniShown() {
-    return radio.isFABMiniShown();
-  }
-
-  @Override public boolean isFABShown() {
-    return radio.isFABShown();
+  @Override public boolean isFABShown(final FloatingActionButton fab) {
+    return radio.isFABShown(fab);
   }
 
   public static final class ValueHolder {

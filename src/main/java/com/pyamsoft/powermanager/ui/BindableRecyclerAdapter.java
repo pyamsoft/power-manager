@@ -16,15 +16,16 @@
 
 package com.pyamsoft.powermanager.ui;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pydroid.base.ActivityRecyclerAdapterBase;
+import com.pyamsoft.pydroid.misc.FABVisibilityController;
 
 public class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
     extends ActivityRecyclerAdapterBase<T>
-    implements Coloring, FABMiniController, FABController, FABVisibilityController,
-    FABMiniVisibilityController {
+    implements Coloring, FABMiniController, FABController, FABVisibilityController {
 
   @Override protected void onCreate() {
 
@@ -94,11 +95,7 @@ public class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
     return null;
   }
 
-  @Override public boolean isFABShown() {
-    return false;
-  }
-
-  @Override public boolean isFABMiniShown() {
+  @Override public boolean isFABShown(final FloatingActionButton fab) {
     return false;
   }
 }

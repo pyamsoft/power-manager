@@ -16,17 +16,17 @@
 
 package com.pyamsoft.powermanager.ui.radio;
 
+import android.support.design.widget.FloatingActionButton;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.Coloring;
 import com.pyamsoft.powermanager.ui.FABController;
 import com.pyamsoft.powermanager.ui.FABMiniController;
-import com.pyamsoft.powermanager.ui.FABMiniVisibilityController;
-import com.pyamsoft.powermanager.ui.FABVisibilityController;
+import com.pyamsoft.pydroid.misc.FABVisibilityController;
 import java.lang.ref.WeakReference;
 
 abstract class RadioBase
-    implements RadioContentInterface, Coloring, FABMiniController, FABVisibilityController,
-    FABController, FABMiniVisibilityController {
+    implements RadioContentInterface, Coloring, FABMiniController, FABController,
+    FABVisibilityController {
 
   private final WeakReference<RadioPresenter> weakPresenter;
 
@@ -38,11 +38,7 @@ abstract class RadioBase
     return weakPresenter.get();
   }
 
-  @Override public boolean isFABShown() {
-    return true;
-  }
-
-  @Override public boolean isFABMiniShown() {
+  @Override public boolean isFABShown(final FloatingActionButton fab) {
     return true;
   }
 
