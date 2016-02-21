@@ -38,8 +38,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.BuildConfig;
-import com.pyamsoft.powermanager.PowerManager;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.about.AboutAdapter;
@@ -59,11 +59,11 @@ import com.pyamsoft.pydroid.misc.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends ActivityBase
-    implements ContainerInterface, FABStateReceiver, FABMiniStateReceiver {
+    implements ContainerInterface, FABStateReceiver, FABMiniStateReceiver,
+    BillingProcessor.IBillingHandler {
 
   private static final long DELAY = 1600L;
   private static final String TAG = MainActivity.class.getSimpleName();
@@ -86,6 +86,7 @@ public class MainActivity extends ActivityBase
   private final Handler handler = new Handler();
   private boolean backPressed = false;
   private ItemTouchHelper helper;
+  private BillingProcessor billingProcessor = null;
   private final Runnable runOnBackPressed = new Runnable() {
 
     @Override public void run() {
@@ -98,11 +99,13 @@ public class MainActivity extends ActivityBase
     setupFakeFullscreenWindow();
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    billingProcessor =
+        new BillingProcessor(this, getString(R.string.google_billing_license_key), this);
     findViews();
-    setupBackBeenPressedHandler();
     setupFakeFullscreenToolbarPadding(toolbar);
+    setupBackBeenPressedHandler();
     createExplanationDialog();
-    setupGiftAd();
     setupViewElevations();
 
     setCurrentView(null, 0);
@@ -153,6 +156,10 @@ public class MainActivity extends ActivityBase
     if (helper != null) {
       helper.attachToRecyclerView(null);
     }
+
+    if (billingProcessor != null) {
+      billingProcessor.release();
+    }
   }
 
   @Override public void onConfigurationChanged(Configuration newConfig) {
@@ -166,20 +173,13 @@ public class MainActivity extends ActivityBase
   @Override protected void onResume() {
     super.onResume();
     animateActionBarToolbar(toolbar);
+    if (!BillingProcessor.isIabServiceAvailable(this)) {
+      createDonationUnavailableDialog();
+    }
   }
 
   @Override protected void onPause() {
     super.onPause();
-  }
-
-  @Override protected String setGiftAdId() {
-    return getString(R.string.AD_ID_GIFT);
-  }
-
-  @Override protected void addTestDevices() {
-    if (BuildConfig.DEBUG) {
-      addTestDevice(getString(R.string.dev_1)); // Nexus 6
-    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -188,9 +188,6 @@ public class MainActivity extends ActivityBase
   }
 
   @Override public boolean onPrepareOptionsMenu(Menu menu) {
-    final MenuItem proStatus = menu.findItem(R.id.menu_is_pro);
-    final boolean pro = isKeyInstalled(getPackageName());
-    proStatus.setTitle(pro ? "PRO" : "FREE");
     return true;
   }
 
@@ -202,12 +199,8 @@ public class MainActivity extends ActivityBase
         onBackPressed();
         handled = true;
         break;
-      case R.id.menu_is_pro:
-        NetworkUtil.newLink(getApplicationContext(), PowerManager.RATE + "pro");
-        handled = true;
-        break;
       case R.id.menu_gift_ad:
-        showGiftAd();
+        createDonationDialog(billingProcessor, getString(R.string.app_name));
         handled = true;
         break;
       default:
@@ -460,5 +453,21 @@ public class MainActivity extends ActivityBase
     if (adapter != null) {
       setFABIcon(fabLarge, adapter.getFABIconDisabled());
     }
+  }
+
+  @Override public void onProductPurchased(String productId, TransactionDetails details) {
+
+  }
+
+  @Override public void onPurchaseHistoryRestored() {
+
+  }
+
+  @Override public void onBillingError(int errorCode, Throwable error) {
+
+  }
+
+  @Override public void onBillingInitialized() {
+
   }
 }
