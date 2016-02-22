@@ -103,7 +103,11 @@ public class MainActivity extends ActivityBase
     billingProcessor =
         new BillingProcessor(this, getString(R.string.google_billing_license_key), this);
     findViews();
-    setupFakeFullscreenToolbarPadding(toolbar);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+        && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      setupFakeFullscreenToolbarPadding(toolbar);
+    }
+    setSupportActionBar(toolbar);
     setupBackBeenPressedHandler();
     createExplanationDialog();
     setupViewElevations();
