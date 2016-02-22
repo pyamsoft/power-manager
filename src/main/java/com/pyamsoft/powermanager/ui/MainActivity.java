@@ -103,7 +103,7 @@ public class MainActivity extends ActivityBase
     billingProcessor =
         new BillingProcessor(this, getString(R.string.google_billing_license_key), this);
     findViews();
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
         && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setupFakeFullscreenToolbarPadding(toolbar);
     }
