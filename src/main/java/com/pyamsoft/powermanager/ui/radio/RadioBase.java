@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.ui.Coloring;
 import com.pyamsoft.powermanager.ui.FABController;
 import com.pyamsoft.powermanager.ui.FABMiniController;
-import com.pyamsoft.pydroid.misc.FABVisibilityController;
+import com.pyamsoft.pydroid.FABVisibilityController;
 import java.lang.ref.WeakReference;
 
 abstract class RadioBase

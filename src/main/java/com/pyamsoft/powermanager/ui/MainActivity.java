@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.ui;
 
-import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -37,7 +35,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.pyamsoft.powermanager.R;
@@ -52,10 +49,10 @@ import com.pyamsoft.powermanager.ui.radio.RadioContentAdapter;
 import com.pyamsoft.powermanager.ui.radio.RadioContentInterface;
 import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
+import com.pyamsoft.pydroid.ContainerInterface;
+import com.pyamsoft.pydroid.DividerItemDecoration;
+import com.pyamsoft.pydroid.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.base.ActivityBase;
-import com.pyamsoft.pydroid.misc.ContainerInterface;
-import com.pyamsoft.pydroid.misc.DividerItemDecoration;
-import com.pyamsoft.pydroid.misc.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -82,17 +79,8 @@ public class MainActivity extends ActivityBase
   private ExplanationDialog dialog;
   private CoordinatorLayout coordinatorLayout;
   private String currentView;
-  private Toast backToast;
-  private final Handler handler = new Handler();
-  private boolean backPressed = false;
   private ItemTouchHelper helper;
   private BillingProcessor billingProcessor = null;
-  private final Runnable runOnBackPressed = new Runnable() {
-
-    @Override public void run() {
-      backPressed = false;
-    }
-  };
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -108,9 +96,9 @@ public class MainActivity extends ActivityBase
       setupFakeFullscreenToolbarPadding(toolbar);
     }
     setSupportActionBar(toolbar);
-    setupBackBeenPressedHandler();
     createExplanationDialog();
     setupViewElevations();
+    enablepBackBeenPressedConfirmation();
 
     setCurrentView(null, 0);
   }
@@ -191,10 +179,6 @@ public class MainActivity extends ActivityBase
     return true;
   }
 
-  @Override public boolean onPrepareOptionsMenu(Menu menu) {
-    return true;
-  }
-
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     final int itemId = item.getItemId();
     boolean handled = false;
@@ -203,23 +187,18 @@ public class MainActivity extends ActivityBase
         onBackPressed();
         handled = true;
         break;
-      case R.id.menu_gift_ad:
+      case R.id.menu_donate:
         createDonationDialog(billingProcessor, getString(R.string.app_name));
         handled = true;
         break;
       default:
     }
-    return handled;
+    return handled || super.onOptionsItemSelected(item);
   }
 
   @Override public void onBackPressed() {
     if (currentView == null) {
-      if (backPressed || !toastOnBackPressed()) {
-        backPressed = false;
-        super.onBackPressed();
-      } else {
-        setBackBeenPressed();
-      }
+      super.onBackPressed();
     } else {
       popCurrentView();
     }
@@ -228,20 +207,8 @@ public class MainActivity extends ActivityBase
   /**
    * Override to use a single back press for exit
    */
-  public boolean toastOnBackPressed() {
+  @Override protected boolean shouldConfirmBackPress() {
     return true;
-  }
-
-  @SuppressLint("ShowToast") private void setupBackBeenPressedHandler() {
-    backToast = Toast.makeText(this, "Press again to Exit", Toast.LENGTH_SHORT);
-    handler.removeCallbacksAndMessages(null);
-  }
-
-  private void setBackBeenPressed() {
-    backPressed = true;
-    backToast.show();
-    handler.removeCallbacksAndMessages(null);
-    handler.postDelayed(runOnBackPressed, DELAY);
   }
 
   public void showExplainView(Spannable explanation, int backgroundColor) {
@@ -473,5 +440,9 @@ public class MainActivity extends ActivityBase
 
   @Override public void onBillingInitialized() {
 
+  }
+
+  @Override protected String getPlayStoreAppPackage() {
+    return "com.pyamsoft.powermanager";
   }
 }

@@ -21,7 +21,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.pydroid.base.ActivityRecyclerAdapterBase;
-import com.pyamsoft.pydroid.misc.FABVisibilityController;
+import com.pyamsoft.pydroid.FABVisibilityController;
 
 public class BindableRecyclerAdapter<T extends RecyclerView.ViewHolder>
     extends ActivityRecyclerAdapterBase<T>
