@@ -2236,7 +2236,7 @@ android.support.design.widget.SnackbarManager$1 -> android.support.design.widget
     boolean handleMessage(android.os.Message) -> handleMessage
 android.support.design.widget.SnackbarManager$Callback -> android.support.design.widget.bb:
 android.support.design.widget.SnackbarManager$SnackbarRecord -> android.support.design.widget.bc:
-    java.lang.ref.WeakReference callback -> a
+    java.lang.ref.WeakReference pinCallback -> a
     int duration -> b
     boolean isSnackbar(android.support.design.widget.SnackbarManager$Callback) -> a
 android.support.design.widget.StateListAnimator -> android.support.design.widget.bd:
@@ -23720,7 +23720,7 @@ com.squareup.picasso.ContentStreamRequestHandler -> com.a.a.o:
 com.squareup.picasso.DeferredRequestCreator -> com.a.a.p:
     com.squareup.picasso.RequestCreator creator -> a
     java.lang.ref.WeakReference target -> b
-    com.squareup.picasso.Callback callback -> c
+    com.squareup.picasso.Callback pinCallback -> c
     void <init>(com.squareup.picasso.RequestCreator,android.widget.ImageView,com.squareup.picasso.Callback) -> <init>
     boolean onPreDraw() -> onPreDraw
 com.squareup.picasso.Dispatcher -> com.a.a.q:
@@ -23784,7 +23784,7 @@ com.squareup.picasso.FileRequestHandler -> com.a.a.y:
     boolean canHandleRequest(com.squareup.picasso.Request) -> a
     com.squareup.picasso.RequestHandler$Result load$71fa0c91(com.squareup.picasso.Request) -> b
 com.squareup.picasso.ImageViewAction -> com.a.a.z:
-    com.squareup.picasso.Callback callback -> m
+    com.squareup.picasso.Callback pinCallback -> m
     void <init>(com.squareup.picasso.Picasso,android.widget.ImageView,com.squareup.picasso.Request,int,int,int,android.graphics.drawable.Drawable,java.lang.String,java.lang.Object,com.squareup.picasso.Callback,boolean) -> <init>
     void complete(android.graphics.Bitmap,com.squareup.picasso.Picasso$LoadedFrom) -> a
     void error() -> a

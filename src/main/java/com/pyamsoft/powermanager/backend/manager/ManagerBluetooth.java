@@ -17,27 +17,29 @@
 package com.pyamsoft.powermanager.backend.manager;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 
 public final class ManagerBluetooth extends ManagerBase {
 
-  private static final String BLUETOOTH_MANAGER = "BluetoothManager";
-  private static ManagerBase instance = null;
+  private static final String BLUETOOTH_MANAGER = ManagerBluetooth.class.getSimpleName();
+  private static volatile ManagerBase instance = null;
+
   private final BluetoothAdapter bluetooth;
 
-  private ManagerBluetooth() {
-    super();
+  private ManagerBluetooth(final Context context) {
+    super(context);
     LogUtil.d(BLUETOOTH_MANAGER, "Initialize ManagerBluetooth");
     this.bluetooth = BluetoothAdapter.getDefaultAdapter();
   }
 
-  public static ManagerBase get() {
+  public static ManagerBase with(final Context context) {
     if (instance == null) {
       synchronized (ManagerBluetooth.class) {
         if (instance == null) {
-          instance = new ManagerBluetooth();
+          instance = new ManagerBluetooth(context);
         }
       }
     }
@@ -93,7 +95,7 @@ public final class ManagerBluetooth extends ManagerBase {
     }
 
     @Override protected ManagerBase getTargetManager() {
-      return get();
+      return with(this);
     }
   }
 

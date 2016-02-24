@@ -24,7 +24,7 @@ import com.pyamsoft.pydroid.util.LogUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class PowerTriggerDataSource {
+public final class PowerTriggerDB {
 
   private static final int ID = 0;
   private static final int NAME = 1;
@@ -46,63 +46,44 @@ public final class PowerTriggerDataSource {
   private static final int VOLUME = 14;
   private static final int ENABLED = 15;
   private static final int AVAILABLE = 16;
-  private static final String TAG = PowerTriggerDataSource.class.getSimpleName();
+  private static final String TAG = PowerTriggerDB.class.getSimpleName();
 
-  private static PowerTriggerDataSource instance = null;
-  private PowerTriggerTable dbHelper = null;
-  private SQLiteDatabase database = null;
-  private Context context;
+  private static volatile PowerTriggerDB instance = null;
+  private final PowerTriggerTable dbHelper;
+  private final Context context;
   private int nextId = 0;
-  private int refCount = 0;
 
-  private PowerTriggerDataSource(final Context context) {
+  private PowerTriggerDB(final Context context) {
     LogUtil.d(TAG, "Initialize PowerTriggerDataSource");
     this.context = context.getApplicationContext();
+    dbHelper = new PowerTriggerTable(context.getApplicationContext());
+    nextId = getAllTriggers().size();
   }
 
-  public static PowerTriggerDataSource with(final Context context) {
+  public static PowerTriggerDB with(final Context context) {
     if (instance == null) {
-      instance = new PowerTriggerDataSource(context);
+      synchronized (PowerTriggerDB.class) {
+        if (instance == null) {
+          instance = new PowerTriggerDB(context);
+        }
+      }
     }
     return instance;
   }
 
-  public void open() {
-    if (database == null) {
-      LogUtil.d(TAG, "Opening db");
-      dbHelper = new PowerTriggerTable(context.getApplicationContext());
-      database = dbHelper.getWritableDatabase();
-      nextId = getAllTriggers().size();
-    }
-    if (database != null) {
-      ++refCount;
-      LogUtil.d(TAG, "current refCount: ", refCount);
-    }
-  }
-
-  public void close() {
-    if (database != null) {
-      --refCount;
-      LogUtil.d(TAG, "current refCount: ", refCount);
-      if (refCount == 0) {
-        LogUtil.d(TAG, "Closing db");
-        dbHelper.close();
-        database.close();
-        database = null;
-        dbHelper = null;
-      }
-    }
-  }
-
-  public boolean isOpened() {
-    return database != null && database.isOpen();
-  }
-
-  public final int getNextId() {
+  public synchronized int getNextId() {
     return nextId;
   }
 
-  public final void createTrigger(final PowerTrigger trigger) {
+  public synchronized boolean createTrigger(final PowerTrigger trigger) {
+    final SQLiteDatabase database = dbHelper.getWritableDatabase();
+    final boolean ret = createTrigger(database, trigger);
+    database.close();
+    return ret;
+  }
+
+  private synchronized boolean createTrigger(final SQLiteDatabase database,
+      final PowerTrigger trigger) {
     final ContentValues values = new ContentValues();
     final int id = trigger.getId();
     final int level = trigger.getLevel();
@@ -127,23 +108,26 @@ public final class PowerTriggerDataSource {
     values.put(PowerTriggerTable.Entry.COLUMN_VOLUME, trigger.getVolume());
     values.put(PowerTriggerTable.Entry.COLUMN_ENABLED, trigger.getEnabled());
     values.put(PowerTriggerTable.Entry.COLUMN_AVAILABLE, trigger.getAvailable());
-    if (getTriggerByUnique(id, name, level) == null) {
+    long row;
+    if (getTriggerByUnique(database, id, name, level) == null) {
       LogUtil.d(TAG, "Insert id: ", id);
-      database.insert(PowerTriggerTable.TABLE_NAME, null, values);
+      row = database.insert(PowerTriggerTable.TABLE_NAME, null, values);
       ++nextId;
     } else {
       LogUtil.d(TAG, "Update id: ", id);
-      database.update(PowerTriggerTable.TABLE_NAME, values,
+      row = database.update(PowerTriggerTable.TABLE_NAME, values,
           PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null);
       final PowerTrigger removeMe = TriggerSet.with(context).contains(name);
       TriggerSet.with(context).remove(removeMe.getName());
     }
     TriggerSet.with(context).add(trigger);
+    return (row == -1);
   }
 
-  private PowerTrigger getTriggerByUnique(final int id, final String name, final int level) {
+  private synchronized PowerTrigger getTriggerByUnique(final SQLiteDatabase database, final int id,
+      final String name, final int level) {
     PowerTrigger trigger = null;
-    if (database != null) {
+    if (database.isOpen()) {
       final Cursor cursor =
           database.query(PowerTriggerTable.TABLE_NAME, PowerTriggerTable.getAllColumns(),
               PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null, null, null, null);
@@ -162,9 +146,17 @@ public final class PowerTriggerDataSource {
     return trigger;
   }
 
-  public final boolean deleteTrigger(final PowerTrigger trigger) {
+  public synchronized boolean deleteTrigger(final PowerTrigger trigger) {
+    final SQLiteDatabase database = dbHelper.getWritableDatabase();
+    final boolean ret = deleteTrigger(database, trigger);
+    database.close();
+    return ret;
+  }
+
+  private synchronized boolean deleteTrigger(final SQLiteDatabase database,
+      final PowerTrigger trigger) {
     boolean removed = false;
-    if (database != null) {
+    if (database.isOpen()) {
       final int id = trigger.getId();
       int deleted = database.delete(PowerTriggerTable.TABLE_NAME,
           PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null);
@@ -175,19 +167,21 @@ public final class PowerTriggerDataSource {
     return removed;
   }
 
-  public final void deleteAllTriggers() {
-    if (database != null) {
+  public synchronized void deleteAllTriggers() {
+    final SQLiteDatabase database = dbHelper.getWritableDatabase();
+    if (database.isOpen()) {
       final Set<PowerTrigger> allTriggers = getAllTriggers();
       if (allTriggers != null) {
         for (final PowerTrigger trigger : allTriggers) {
-          deleteTrigger(trigger);
+          deleteTrigger(database, trigger);
         }
         nextId = 0;
       }
     }
+    database.close();
   }
 
-  private PowerTrigger cursorToTrigger(final Cursor cursor) {
+  private synchronized PowerTrigger cursorToTrigger(final Cursor cursor) {
     LogUtil.d(TAG, "Populate trigger with value from cursor id: ", cursor.getInt(ID), ": ",
         cursor.getString(NAME));
     final PowerTrigger trigger =
@@ -257,9 +251,9 @@ public final class PowerTriggerDataSource {
     return trigger;
   }
 
-  private PowerTrigger getTriggerById(final int id) {
+  private synchronized PowerTrigger getTriggerById(final SQLiteDatabase database, final int id) {
     PowerTrigger trigger = null;
-    if (database != null) {
+    if (database.isOpen()) {
       final Cursor cursor =
           database.query(PowerTriggerTable.TABLE_NAME, PowerTriggerTable.getAllColumns(),
               PowerTriggerTable.Entry.COLUMN_ID + " = " + id, null, null, null, null);
@@ -277,9 +271,16 @@ public final class PowerTriggerDataSource {
     return trigger;
   }
 
-  private Set<PowerTrigger> getAllTriggers() {
+  public synchronized Set<PowerTrigger> getAllTriggers() {
+    final SQLiteDatabase database = dbHelper.getReadableDatabase();
+    final Set<PowerTrigger> triggers = getAllTriggers(database);
+    database.close();
+    return triggers;
+  }
+
+  private synchronized Set<PowerTrigger> getAllTriggers(final SQLiteDatabase database) {
     Set<PowerTrigger> triggers = null;
-    if (database != null) {
+    if (database.isOpen()) {
       triggers = new HashSet<>();
       final Cursor cursor =
           database.query(PowerTriggerTable.TABLE_NAME, PowerTriggerTable.getAllColumns(), null,
@@ -301,21 +302,17 @@ public final class PowerTriggerDataSource {
     public static final int PLACEHOLDER_ID = -1;
     public static final String PLACEHOLDER_NAME = "Add Item";
     public static final int PLACEHOLDER_LEVEL = -1;
-    private static TriggerSet instance = null;
+    private static volatile TriggerSet instance = null;
     private final Set<PowerTrigger> allTriggers = new HashSet<>();
 
     private TriggerSet(final Context context) {
       final PowerTrigger placeHolder =
           new PowerTrigger(PLACEHOLDER_ID, PLACEHOLDER_NAME, PLACEHOLDER_LEVEL);
       add(placeHolder);
-      final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-      source.open();
-      if (source.isOpened()) {
-        final Set<PowerTrigger> triggers = source.getAllTriggers();
-        for (final PowerTrigger trigger : triggers) {
-          add(trigger);
-        }
-        source.close();
+      final PowerTriggerDB source = PowerTriggerDB.with(context);
+      final Set<PowerTrigger> triggers = source.getAllTriggers();
+      for (final PowerTrigger trigger : triggers) {
+        add(trigger);
       }
     }
 
@@ -330,11 +327,11 @@ public final class PowerTriggerDataSource {
       return instance;
     }
 
-    public final Set<PowerTrigger> asSet() {
+    public synchronized Set<PowerTrigger> asSet() {
       return allTriggers;
     }
 
-    public final PowerTrigger contains(final String name) {
+    public synchronized PowerTrigger contains(final String name) {
       PowerTrigger trigger = null;
       for (final PowerTrigger test : allTriggers) {
         if (test.getName().equalsIgnoreCase(name)) {
@@ -345,7 +342,7 @@ public final class PowerTriggerDataSource {
       return trigger;
     }
 
-    private void add(final PowerTrigger entry) {
+    private synchronized void add(final PowerTrigger entry) {
       LogUtil.d(TAG, "Attempt to add trigger: " + entry.getName());
       if (contains(entry.getName()) == null) {
         LogUtil.d(TAG, "Add trigger: " + entry.getName());
@@ -366,7 +363,7 @@ public final class PowerTriggerDataSource {
       }
     }
 
-    public final int size() {
+    public synchronized int size() {
       return allTriggers.size();
     }
   }

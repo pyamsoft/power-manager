@@ -24,12 +24,13 @@ import com.pyamsoft.pydroid.util.LogUtil;
 
 public final class ManagerWifi extends ManagerBase {
 
-  private static final String WIFI_MANAGER = "WifiManager";
-  private static ManagerBase instance = null;
-  private WifiManager wifi;
+  private static final String WIFI_MANAGER = ManagerWifi.class.getSimpleName();
+  private static volatile ManagerBase instance = null;
+
+  private final WifiManager wifi;
 
   private ManagerWifi(final Context context) {
-    super();
+    super(context);
     LogUtil.d(WIFI_MANAGER, "Initialize ManagerWifi");
     this.wifi =
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);

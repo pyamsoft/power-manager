@@ -29,19 +29,18 @@ import java.lang.reflect.Method;
 
 public final class ManagerData extends ManagerBase {
 
-  private static final String DATA_MANAGER = "DataManager";
-  private static final String set = "setMobileDataEnabled";
-  private static final String get = "getMobileDataEnabled";
-  private static final Method setMobileDataEnabled = reflectSetMethod();
-  private static final Method getMobileDataEnabled = reflectGetMethod();
-  private static ManagerBase instance = null;
-  private Context context;
-  private ConnectivityManager data;
+  private static final String DATA_MANAGER = ManagerData.class.getSimpleName();
+  private static final String SET_MOBILE_DATA_ENABLED = "setMobileDataEnabled";
+  private static final String GET_MOBILE_DATA_ENABLED = "getMobileDataEnabled";
+  private static final Method setMobileDataEnabledMethod = reflectSetMethod();
+  private static final Method getMobileDataEnabledMethod = reflectGetMethod();
+  private static volatile ManagerBase instance = null;
+
+  private final ConnectivityManager data;
 
   private ManagerData(final Context context) {
-    super();
+    super(context);
     LogUtil.d(DATA_MANAGER, "Initialize ManagerData");
-    this.context = context.getApplicationContext();
     this.data = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
@@ -58,7 +57,7 @@ public final class ManagerData extends ManagerBase {
 
   private static String getSetMethodName() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      return set;
+      return SET_MOBILE_DATA_ENABLED;
     } else {
       return null;
     }
@@ -66,7 +65,7 @@ public final class ManagerData extends ManagerBase {
 
   private static String getGetMethodName() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      return get;
+      return GET_MOBILE_DATA_ENABLED;
     } else {
       return null;
     }
@@ -101,15 +100,15 @@ public final class ManagerData extends ManagerBase {
   }
 
   private synchronized boolean isNull() {
-    return (getMobileDataEnabled == null || setMobileDataEnabled == null);
+    return (getMobileDataEnabledMethod == null || setMobileDataEnabledMethod == null);
   }
 
   private synchronized boolean getMobileData() {
     if (data != null) {
-      if (getMobileDataEnabled != null) {
+      if (getMobileDataEnabledMethod != null) {
         try {
           return (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-              ? (Boolean) getMobileDataEnabled.invoke(data) : false;
+              ? (Boolean) getMobileDataEnabledMethod.invoke(data) : false;
         } catch (final Exception e) {
           e.printStackTrace();
         }
@@ -121,32 +120,32 @@ public final class ManagerData extends ManagerBase {
   private synchronized void setMobileData(final boolean state) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       if (data != null) {
-        if (setMobileDataEnabled != null) {
+        if (setMobileDataEnabledMethod != null) {
           try {
-            setMobileDataEnabled.invoke(data, state);
+            setMobileDataEnabledMethod.invoke(data, state);
           } catch (final Exception e) {
             e.printStackTrace();
           }
         } else {
-          LogUtil.e(DATA_MANAGER, context.getString(R.string.data_set_method_null));
+          LogUtil.e(DATA_MANAGER, getContext().getString(R.string.data_set_method_null));
         }
       }
     } else {
-      LogUtil.e(DATA_MANAGER, context.getString(R.string.data_lollipop_error));
+      LogUtil.e(DATA_MANAGER, getContext().getString(R.string.data_lollipop_error));
     }
   }
 
   @Override synchronized void disable() {
     if (!isNull()) {
       setMobileData(false);
-      LogUtil.i(DATA_MANAGER, context.getString(R.string.set_data_false));
+      LogUtil.i(DATA_MANAGER, getContext().getString(R.string.set_data_false));
     }
   }
 
   @Override synchronized void enable() {
     if (!isNull() && !isAirplaneMode()) {
       setMobileData(true);
-      LogUtil.i(DATA_MANAGER, context.getString(R.string.set_data_true));
+      LogUtil.i(DATA_MANAGER, getContext().getString(R.string.set_data_true));
     }
   }
 
@@ -157,9 +156,9 @@ public final class ManagerData extends ManagerBase {
   private boolean isAirplaneMode() {
     if (!isNull()) {
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        return OldAndroid.isAirplaneModeOn(context);
+        return OldAndroid.isAirplaneModeOn(getContext());
       } else {
-        return JellyBeanMR1.isAirplaneModeOn(context);
+        return JellyBeanMR1.isAirplaneModeOn(getContext());
       }
     }
     return true;

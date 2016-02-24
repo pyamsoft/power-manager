@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.receiver.BootActionReceiver;
 import com.pyamsoft.powermanager.backend.service.MonitorService;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
+import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDB;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -213,12 +213,7 @@ final class SettingsModel {
       BootActionReceiver.setBootEnabled(context, false);
 
       // Remove all Power Triggers
-      final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-      source.open();
-      if (source.isOpened()) {
-        source.deleteAllTriggers();
-        source.close();
-      }
+      PowerTriggerDB.with(context).deleteAllTriggers();
 
       // Now clear everything
       GlobalPreferenceUtil.with(context).clear();

@@ -37,10 +37,6 @@ public final class MonitorService extends AutoRestartServiceBase {
   private static final String NOTIFICATION = MonitorService.class.getName() + ".NOTIFICATION";
   private static final String NTF_ON = NOTIFICATION + ".NTF_ON";
   private static final String NTF_OFF = NOTIFICATION + ".NTF_OFF";
-  private static final String NOTIFICATION_STATE =
-      MonitorService.class.getName() + ".NOTIFICATION_STATE";
-  private static final String FOREGROUND_STATE =
-      MonitorService.class.getName() + ".FOREGROUND_STATE";
   private ScreenStateReceiver screenStateReceiver;
   private BatteryStateReceiver batteryStateReceiver;
 

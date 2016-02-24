@@ -17,11 +17,9 @@
 package com.pyamsoft.powermanager.ui.trigger;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
-import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
+import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDB;
 import java.lang.ref.WeakReference;
 
 final class PowerTriggerModel {
@@ -34,17 +32,6 @@ final class PowerTriggerModel {
 
   boolean removeItem(final PowerTrigger trigger) {
     final Context context = weakActivity.get();
-    if (context != null) {
-      final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-      source.open();
-      boolean removed = false;
-      if (source.isOpened()) {
-        removed = source.deleteTrigger(trigger);
-        source.close();
-      }
-      return removed;
-    }
-
-    return false;
+    return context != null && PowerTriggerDB.with(context).deleteTrigger(trigger);
   }
 }

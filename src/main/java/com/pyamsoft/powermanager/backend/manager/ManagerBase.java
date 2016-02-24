@@ -26,6 +26,7 @@ import android.os.Looper;
 import android.os.SystemClock;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
+import com.pyamsoft.powermanager.backend.util.BatteryUtil;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -33,11 +34,18 @@ import com.pyamsoft.pydroid.util.StringUtil;
 
 public abstract class ManagerBase {
 
+  private static final String TAG = ManagerBase.class.getSimpleName();
+  private final Context appContext;
   private final Handler handler;
   private final Runnable enableRun;
   private final Runnable disableRun;
 
-  ManagerBase() {
+  Context getContext() {
+    return appContext;
+  }
+
+  ManagerBase(final Context context) {
+    this.appContext = context.getApplicationContext();
     this.handler = new Handler(Looper.getMainLooper());
     enableRun = new Runnable() {
 
@@ -48,7 +56,17 @@ public abstract class ManagerBase {
     disableRun = new Runnable() {
 
       @Override public void run() {
-        disable();
+        final BatteryUtil batteryUtil = BatteryUtil.with(appContext);
+        batteryUtil.updateBatteryInformation();
+        final boolean charging = batteryUtil.isCharging();
+        final boolean suspendEnabled =
+            GlobalPreferenceUtil.with(appContext).powerManagerActive().isSuspendPlugged();
+        final boolean dontDisable = charging && suspendEnabled;
+        if (dontDisable) {
+          LogUtil.d(TAG, "Device is Plugged and Charging: Do not Disable");
+        } else {
+          disable();
+        }
       }
     };
   }
@@ -56,7 +74,7 @@ public abstract class ManagerBase {
   public final synchronized void enable(final long time) {
     handler.removeCallbacksAndMessages(null);
     if (time <= 0) {
-      enable();
+      handler.post(enableRun);
     } else {
       handler.postDelayed(enableRun, time);
     }
@@ -65,7 +83,7 @@ public abstract class ManagerBase {
   public final synchronized void disable(final long time) {
     handler.removeCallbacksAndMessages(null);
     if (time <= 0) {
-      disable();
+      handler.post(disableRun);
     } else {
       handler.postDelayed(disableRun, time);
     }

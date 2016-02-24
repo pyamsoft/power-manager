@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
+import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDB;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
 import com.pyamsoft.powermanager.ui.trigger.dialog.PowerTriggerDialogFragment;
 import com.pyamsoft.pydroid.util.LogUtil;
@@ -180,7 +180,7 @@ public final class PowerTriggerAdapter
     // which is size + 1;
     //        merge(triggers);
     triggerList.clear();
-    final Set<PowerTrigger> triggers = PowerTriggerDataSource.TriggerSet.with(context).asSet();
+    final Set<PowerTrigger> triggers = PowerTriggerDB.TriggerSet.with(context).asSet();
     for (final PowerTrigger trigger : triggers) {
       triggerList.add(trigger);
     }
@@ -199,7 +199,7 @@ public final class PowerTriggerAdapter
 
   @Override public void onItemRemoved(PowerTrigger removed) {
     final int index = triggerList.indexOf(removed);
-    if (index == PowerTriggerDataSource.TriggerSet.NO_INDEX) {
+    if (index == PowerTriggerDB.TriggerSet.NO_INDEX) {
       return;
     }
     triggerList.remove(removed);

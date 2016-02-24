@@ -41,15 +41,16 @@ public final class PersistentNotification {
   public static final int ID = NotificationUtil.BASE_ID + 5;
   private static final int RQ = NotificationUtil.BASE_RQ + 3;
   private static final String TAG = PersistentNotification.class.getSimpleName();
-  private static PersistentNotification instance = null;
-  private NotificationCompat.Builder builder;
-  private GlobalPreferenceUtil preferenceUtil;
-  private PendingIntent toggle;
-  private PendingIntent wifi;
-  private PendingIntent data;
-  private PendingIntent bluetooth;
-  private PendingIntent sync;
-  private RemoteViews remoteViews;
+  private static volatile PersistentNotification instance = null;
+
+  private final NotificationCompat.Builder builder;
+  private final GlobalPreferenceUtil preferenceUtil;
+  private final PendingIntent toggle;
+  private final PendingIntent wifi;
+  private final PendingIntent data;
+  private final PendingIntent bluetooth;
+  private final PendingIntent sync;
+  private final RemoteViews remoteViews;
 
   private PersistentNotification(final Context c) {
     LogUtil.d(TAG, "Initialize PersistentNotification");

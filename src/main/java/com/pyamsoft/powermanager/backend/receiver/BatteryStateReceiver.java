@@ -28,7 +28,7 @@ import com.pyamsoft.powermanager.backend.manager.ManagerSync;
 import com.pyamsoft.powermanager.backend.manager.ManagerWifi;
 import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
 import com.pyamsoft.powermanager.backend.trigger.PowerTrigger;
-import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDataSource;
+import com.pyamsoft.powermanager.backend.trigger.PowerTriggerDB;
 import com.pyamsoft.powermanager.backend.util.BatteryUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 
@@ -64,23 +64,17 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
     setTrigger(ManagerData.with(context), trigger.getManageData(), trigger.getStateData());
   }
 
-  private static void setBluetooth(final PowerTrigger trigger) {
-    setTrigger(ManagerBluetooth.get(), trigger.getManageBluetooth(), trigger.getStateBluetooth());
+  private static void setBluetooth(final Context context, final PowerTrigger trigger) {
+    setTrigger(ManagerBluetooth.with(context), trigger.getManageBluetooth(),
+        trigger.getStateBluetooth());
   }
 
-  private static void setSync(final PowerTrigger trigger) {
-    setTrigger(ManagerSync.get(), trigger.getManageSync(), trigger.getStateSync());
+  private static void setSync(final Context context, final PowerTrigger trigger) {
+    setTrigger(ManagerSync.with(context), trigger.getManageSync(), trigger.getStateSync());
   }
 
   private static void updateTriggerState(final Context context, final PowerTrigger trigger) {
-    final PowerTriggerDataSource source = PowerTriggerDataSource.with(context);
-    if (!source.isOpened()) {
-      source.open();
-      source.createTrigger(trigger);
-    }
-    if (source.isOpened()) {
-      source.close();
-    }
+    PowerTriggerDB.with(context).createTrigger(trigger);
   }
 
   private static boolean triggerOnDischarging(final Context c, final PowerTrigger trigger,
@@ -93,8 +87,8 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
             " is Available, run and set not available");
         setWifi(c, trigger);
         setData(c, trigger);
-        setBluetooth(trigger);
-        setSync(trigger);
+        setBluetooth(c, trigger);
+        setSync(c, trigger);
         trigger.setAvailable(PowerTrigger.UNAVAILABLE);
         updateTriggerState(c, trigger);
         Toast.makeText(c.getApplicationContext(), "Running power trigger:" + trigger.getName(),
@@ -163,9 +157,9 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
           final int batteryPercent = (int) bs.getPercent();
           boolean ret = false;
           if (bs.isCharging()) {
-            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.with(context)
+            for (final PowerTrigger trigger : PowerTriggerDB.TriggerSet.with(context)
                 .asSet()) {
-              if (trigger.getId() == PowerTriggerDataSource.TriggerSet.PLACEHOLDER_ID) {
+              if (trigger.getId() == PowerTriggerDB.TriggerSet.PLACEHOLDER_ID) {
                 continue;
               }
               ret = triggerOnCharging(context, trigger, batteryPercent);
@@ -174,9 +168,9 @@ public final class BatteryStateReceiver extends BroadcastReceiver {
               }
             }
           } else {
-            for (final PowerTrigger trigger : PowerTriggerDataSource.TriggerSet.with(context)
+            for (final PowerTrigger trigger : PowerTriggerDB.TriggerSet.with(context)
                 .asSet()) {
-              if (trigger.getId() == PowerTriggerDataSource.TriggerSet.PLACEHOLDER_ID) {
+              if (trigger.getId() == PowerTriggerDB.TriggerSet.PLACEHOLDER_ID) {
                 continue;
               }
               ret = triggerOnDischarging(context, trigger, batteryPercent);

@@ -17,25 +17,26 @@
 package com.pyamsoft.powermanager.backend.manager;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.backend.util.PowerPlanUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
 
 public final class ManagerSync extends ManagerBase {
 
-  private static final String SYNC_MANAGER = "SyncManager";
-  private static ManagerBase instance = null;
+  private static final String SYNC_MANAGER = ManagerSync.class.getSimpleName();
+  private static volatile ManagerBase instance = null;
 
-  private ManagerSync() {
-    super();
+  private ManagerSync(final Context context) {
+    super(context);
     LogUtil.d(SYNC_MANAGER, "Initialize ManagerSync");
   }
 
-  public static ManagerBase get() {
+  public static ManagerBase with(final Context context) {
     if (instance == null) {
       synchronized (ManagerSync.class) {
         if (instance == null) {
-          instance = new ManagerSync();
+          instance = new ManagerSync(context);
         }
       }
     }
@@ -75,7 +76,7 @@ public final class ManagerSync extends ManagerBase {
     }
 
     @Override protected ManagerBase getTargetManager() {
-      return get();
+      return with(this);
     }
 
     @Override protected long getTargetIntervalTime(GlobalPreferenceUtil preferenceUtil) {

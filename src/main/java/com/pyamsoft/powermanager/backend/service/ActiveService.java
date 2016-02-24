@@ -89,7 +89,7 @@ public final class ActiveService extends IntentService {
 
   private static void disableBluetooth(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    final boolean controlled = disable(context, ManagerBluetooth.get(),
+    final boolean controlled = disable(context, ManagerBluetooth.with(context),
         preferenceUtil.powerManagerActive().isManagedBluetooth(), isCharging,
         preferenceUtil.powerManagerActive().getDelayBluetooth());
     preferenceUtil.powerManagerActive().setControlledBluetooth(controlled);
@@ -102,9 +102,9 @@ public final class ActiveService extends IntentService {
 
   private static void disableSync(final Context context, final boolean isCharging) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    final boolean controlled =
-        disable(context, ManagerSync.get(), preferenceUtil.powerManagerActive().isManagedSync(),
-            isCharging, preferenceUtil.powerManagerActive().getDelaySync());
+    final boolean controlled = disable(context, ManagerSync.with(context),
+        preferenceUtil.powerManagerActive().isManagedSync(), isCharging,
+        preferenceUtil.powerManagerActive().getDelaySync());
     preferenceUtil.powerManagerActive().setControlledSync(controlled);
     final Intent disable = IntentPool.acquire();
     setIntervalDisableIntent(disable, context, ManagerSync.Interval.class);
@@ -115,7 +115,7 @@ public final class ActiveService extends IntentService {
 
   private static void enableSync(final Context context) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    enable(context, ManagerSync.get(), preferenceUtil.powerManagerActive().isManagedSync(),
+    enable(context, ManagerSync.with(context), preferenceUtil.powerManagerActive().isManagedSync(),
         preferenceUtil.powerManagerActive().isControlledSync());
     preferenceUtil.powerManagerActive().setControlledSync(false);
     final Intent disable = IntentPool.acquire();
@@ -126,7 +126,7 @@ public final class ActiveService extends IntentService {
 
   private static void enableBluetooth(final Context context) {
     final GlobalPreferenceUtil preferenceUtil = GlobalPreferenceUtil.with(context);
-    enable(context, ManagerBluetooth.get(),
+    enable(context, ManagerBluetooth.with(context),
         preferenceUtil.powerManagerActive().isManagedBluetooth(),
         preferenceUtil.powerManagerActive().isControlledBluetooth());
     preferenceUtil.powerManagerActive().setControlledBluetooth(false);
