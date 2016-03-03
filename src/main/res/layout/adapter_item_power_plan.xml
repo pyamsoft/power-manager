@@ -104,7 +104,7 @@
           android:layout_height="18dp"
           android:contentDescription="@string/blank"
           android:scaleType="center"
-          android:src="@drawable/ic_keyboard_arrow_down_grey_500_18dp"
+          android:src="@drawable/ic_keyboard_arrow_down_compat"
           />
     </LinearLayout>
 

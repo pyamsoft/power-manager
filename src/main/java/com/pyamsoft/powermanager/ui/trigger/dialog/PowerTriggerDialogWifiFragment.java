@@ -25,6 +25,6 @@ final class PowerTriggerDialogWifiFragment extends PowerTriggerDialogRadioFragme
   }
 
   @Override protected int getRadioDrawable() {
-    return R.drawable.ic_network_wifi_white_24dp;
+    return R.drawable.ic_network_wifi_compat;
   }
 }

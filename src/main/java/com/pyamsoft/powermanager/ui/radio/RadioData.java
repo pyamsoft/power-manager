@@ -38,11 +38,11 @@ public final class RadioData extends RadioBase {
   }
 
   @Override public int getFABIconEnabled() {
-    return R.drawable.ic_network_cell_white_24dp;
+    return R.drawable.ic_network_cell_compat;
   }
 
   @Override public int getFABIconDisabled() {
-    return R.drawable.ic_signal_cellular_off_white_24dp;
+    return R.drawable.ic_signal_cellular_off_compat;
   }
 
   @Override public boolean isFABEnabled() {

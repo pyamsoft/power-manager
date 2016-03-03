@@ -145,7 +145,7 @@ public final class SettingsContentAdapter
       fillSpannable(context, span, title.length());
     }
 
-    final int resId = isReset ? R.drawable.ic_warning_compat : R.drawable.ic_settings_white_24dp;
+    final int resId = isReset ? R.drawable.ic_warning_compat : R.drawable.ic_settings_compat;
     if (isReset) {
       holder.resetButton.setText(span);
       holder.image.setBackground(DrawableUtil.createOval(context, R.color.red500));

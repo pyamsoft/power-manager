@@ -61,21 +61,21 @@ public final class BatteryInfoAdapter
 
   private void setPercent(ViewHolder holder, double percent) {
     holder.image.setImageDrawable(DrawableUtil.tintDrawableFromRes(holder.itemView.getContext(),
-        R.drawable.ic_settings_white_24dp, R.color.grey500));
+        R.drawable.ic_settings_compat, R.color.grey500));
     final String s = holder.title.getContext().getString(R.string.bat_percent);
     holder.title.setText(StringUtil.formatString(s, (int) percent));
   }
 
   private void setCharging(ViewHolder holder, boolean charging) {
     holder.image.setImageDrawable(DrawableUtil.tintDrawableFromRes(holder.itemView.getContext(),
-        R.drawable.ic_settings_white_24dp, R.color.grey500));
+        R.drawable.ic_settings_compat, R.color.grey500));
     final String s = holder.title.getContext().getString(R.string.bat_charging);
     holder.title.setText(StringUtil.formatString(s, charging ? "Yes" : "No"));
   }
 
   private void setTemperature(ViewHolder holder, float temperature) {
     holder.image.setImageDrawable(DrawableUtil.tintDrawableFromRes(holder.itemView.getContext(),
-        R.drawable.ic_settings_white_24dp, R.color.grey500));
+        R.drawable.ic_settings_compat, R.color.grey500));
     final String s = holder.title.getContext().getString(R.string.bat_temperature);
     holder.title.setText(StringUtil.formatString(s, String.format("%.1f", temperature)));
   }

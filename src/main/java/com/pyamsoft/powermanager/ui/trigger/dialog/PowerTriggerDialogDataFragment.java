@@ -25,6 +25,6 @@ final class PowerTriggerDialogDataFragment extends PowerTriggerDialogRadioFragme
   }
 
   @Override protected int getRadioDrawable() {
-    return R.drawable.ic_network_cell_white_24dp;
+    return R.drawable.ic_network_cell_compat;
   }
 }

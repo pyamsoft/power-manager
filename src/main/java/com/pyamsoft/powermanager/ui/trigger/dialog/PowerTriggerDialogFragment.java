@@ -160,19 +160,19 @@ public class PowerTriggerDialogFragment extends DialogFragment
         int icon;
         switch (i) {
           case 1:
-            icon = R.drawable.ic_network_wifi_white_24dp;
+            icon = R.drawable.ic_network_wifi_compat;
             break;
           case 2:
-            icon = R.drawable.ic_network_cell_white_24dp;
+            icon = R.drawable.ic_network_cell_compat;
             break;
           case 3:
             icon = R.drawable.ic_bluetooth_compat;
             break;
           case 4:
-            icon = R.drawable.ic_sync_white_24dp;
+            icon = R.drawable.ic_sync_compat;
             break;
           default:
-            icon = R.drawable.ic_settings_white_24dp;
+            icon = R.drawable.ic_settings_compat;
         }
         tab.setIcon(icon);
       }

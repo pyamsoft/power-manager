@@ -112,17 +112,17 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
 
   private void setupCurrentLayoutForPlan(final ViewHolder holder, final int position) {
     holder.name.setText(presenter.getName(position));
-    holder.image.setImageResource(R.drawable.ic_settings_white_24dp);
+    holder.image.setImageResource(R.drawable.ic_settings_compat);
 
     final boolean wifiManaged = presenter.isWifiManaged(position);
     holder.imageWifi.setEnabled(wifiManaged);
-    holder.imageWifi.setImageResource(wifiManaged ? R.drawable.ic_network_wifi_white_24dp
-        : R.drawable.ic_signal_wifi_off_white_24dp);
+    holder.imageWifi.setImageResource(wifiManaged ? R.drawable.ic_network_wifi_compat
+        : R.drawable.ic_signal_wifi_off_compat);
 
     final boolean dataManaged = presenter.isDataManaged(position);
     holder.imageData.setEnabled(dataManaged);
-    holder.imageData.setImageResource(dataManaged ? R.drawable.ic_network_cell_white_24dp
-        : R.drawable.ic_signal_cellular_off_white_24dp);
+    holder.imageData.setImageResource(dataManaged ? R.drawable.ic_network_cell_compat
+        : R.drawable.ic_signal_cellular_off_compat);
 
     final boolean bluetoothManaged = presenter.isBluetoothManaged(position);
     holder.imageBluetooth.setEnabled(bluetoothManaged);
@@ -132,7 +132,7 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
     final boolean syncManaged = presenter.isSyncManaged(position);
     holder.imageSync.setEnabled(syncManaged);
     holder.imageSync.setImageResource(
-        syncManaged ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
+        syncManaged ? R.drawable.ic_sync_compat : R.drawable.ic_sync_disabled_compat);
 
     holder.textWifi.setText(String.format("%d", presenter.getWifiDelay(position) / 1000));
     holder.textData.setText(String.format("%d", presenter.getDataDelay(position) / 1000));
@@ -144,13 +144,13 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
 
     final boolean wifiReopen = presenter.isWifiReOpenEnabled(position);
     holder.imageReOpenWifi.setEnabled(wifiReopen);
-    holder.imageReOpenWifi.setImageResource(wifiReopen ? R.drawable.ic_network_wifi_white_24dp
-        : R.drawable.ic_signal_wifi_off_white_24dp);
+    holder.imageReOpenWifi.setImageResource(wifiReopen ? R.drawable.ic_network_wifi_compat
+        : R.drawable.ic_signal_wifi_off_compat);
 
     final boolean dataReopen = presenter.isDataReOpenEnabled(position);
     holder.imageReOpenData.setEnabled(dataReopen);
-    holder.imageReOpenData.setImageResource(dataReopen ? R.drawable.ic_network_cell_white_24dp
-        : R.drawable.ic_signal_cellular_off_white_24dp);
+    holder.imageReOpenData.setImageResource(dataReopen ? R.drawable.ic_network_cell_compat
+        : R.drawable.ic_signal_cellular_off_compat);
 
     final boolean bluetoothReopen = presenter.isBluetoothReOpenEnabled(position);
     holder.imageReOpenBluetooth.setEnabled(bluetoothReopen);
@@ -161,7 +161,7 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
     final boolean syncReopen = presenter.isSyncReOpenEnabled(position);
     holder.imageReOpenSync.setEnabled(syncReopen);
     holder.imageReOpenSync.setImageResource(
-        syncReopen ? R.drawable.ic_sync_white_24dp : R.drawable.ic_sync_disabled_white_24dp);
+        syncReopen ? R.drawable.ic_sync_compat : R.drawable.ic_sync_disabled_compat);
 
     holder.textReOpenWifi.setText(
         String.format("%d", presenter.getWifiReOpenTime(position) / 1000));

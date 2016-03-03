@@ -56,11 +56,11 @@ public final class RadioWifi extends RadioBase {
   }
 
   @Override public int getFABIconDisabled() {
-    return R.drawable.ic_signal_wifi_off_white_24dp;
+    return R.drawable.ic_signal_wifi_off_compat;
   }
 
   @Override public int getFABIconEnabled() {
-    return R.drawable.ic_network_wifi_white_24dp;
+    return R.drawable.ic_network_wifi_compat;
   }
 
   @Override public View.OnClickListener getFABOnClickListener() {

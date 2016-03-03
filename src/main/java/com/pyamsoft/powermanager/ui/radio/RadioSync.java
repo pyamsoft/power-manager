@@ -56,11 +56,11 @@ public final class RadioSync extends RadioBase {
   }
 
   @Override public int getFABIconDisabled() {
-    return R.drawable.ic_sync_disabled_white_24dp;
+    return R.drawable.ic_sync_disabled_compat;
   }
 
   @Override public int getFABIconEnabled() {
-    return R.drawable.ic_sync_white_24dp;
+    return R.drawable.ic_sync_compat;
   }
 
   @Override public View.OnClickListener getFABOnClickListener() {

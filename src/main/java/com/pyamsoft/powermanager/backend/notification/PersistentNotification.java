@@ -75,7 +75,7 @@ public final class PersistentNotification {
     remoteViews =
         new RemoteViews(context.getApplicationContext().getPackageName(), R.layout.notification);
     builder.setContentTitle(context.getString(R.string.app_name))
-        .setSmallIcon(R.drawable.ic_settings_white_24dp)
+        .setSmallIcon(R.drawable.ic_settings_compat)
         .setNumber(0)
         .setWhen(0)
         .setPriority(NotificationCompat.PRIORITY_MIN)
@@ -109,13 +109,13 @@ public final class PersistentNotification {
   }
 
   private int getWifi() {
-    return preferenceUtil.powerManagerActive().isManagedWifi()
-        ? R.drawable.ic_network_wifi_white_24dp : R.drawable.ic_signal_wifi_off_white_24dp;
+    return preferenceUtil.powerManagerActive().isManagedWifi() ? R.drawable.ic_network_wifi_compat
+        : R.drawable.ic_signal_wifi_off_compat;
   }
 
   private int getData() {
-    return preferenceUtil.powerManagerActive().isManagedData()
-        ? R.drawable.ic_network_cell_white_24dp : R.drawable.ic_signal_cellular_off_white_24dp;
+    return preferenceUtil.powerManagerActive().isManagedData() ? R.drawable.ic_network_cell_compat
+        : R.drawable.ic_signal_cellular_off_compat;
   }
 
   private int getBluetooth() {
@@ -124,8 +124,8 @@ public final class PersistentNotification {
   }
 
   private int getSync() {
-    return preferenceUtil.powerManagerActive().isManagedSync() ? R.drawable.ic_sync_white_24dp
-        : R.drawable.ic_sync_disabled_white_24dp;
+    return preferenceUtil.powerManagerActive().isManagedSync() ? R.drawable.ic_sync_compat
+        : R.drawable.ic_sync_disabled_compat;
   }
 
   private void setupRemoteViews() {

@@ -41,7 +41,7 @@
       android:layout_marginRight="16dp"
       android:contentDescription="@string/blank"
       android:scaleType="center"
-      android:src="@drawable/ic_add_grey_500_36dp"
+      android:src="@drawable/ic_add_compat"
       />
 
 </LinearLayout>

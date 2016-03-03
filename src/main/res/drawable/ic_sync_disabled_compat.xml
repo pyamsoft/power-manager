@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
   ~ Copyright 2013 - 2016 Peter Kenji Yamanaka
   ~
@@ -16,14 +15,9 @@
   ~ limitations under the License.
   -->
 
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <item
-      android:id="@+id/menu_help"
-      android:icon="@drawable/ic_help_compat"
-      android:title="@string/help"
-      app:showAsAction="ifRoom"/>
+  <item android:drawable="@drawable/ic_sync_disabled_24dp" />
 
-</menu>
+</layer-list>
