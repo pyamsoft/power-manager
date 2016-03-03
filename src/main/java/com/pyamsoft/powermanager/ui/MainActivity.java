@@ -176,6 +176,7 @@ public class MainActivity extends ActivityBase
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.main_donate, menu);
+    getMenuInflater().inflate(R.menu.menu_help, menu);
     return true;
   }
 
