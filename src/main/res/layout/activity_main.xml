@@ -41,14 +41,23 @@
         app:layout_scrollFlags="scroll|exitUntilCollapsed"
         >
 
-      <ImageView
-          android:id="@+id/hero_image"
+      <FrameLayout
+          android:id="@+id/hero_background"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:contentDescription="@string/blank"
-          android:scaleType="centerCrop"
           app:layout_collapseMode="parallax"
-          />
+          >
+
+        <ImageView
+            android:id="@+id/hero_image"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/blank"
+            android:scaleType="centerCrop"
+            />
+
+      </FrameLayout>
 
       <android.support.v7.widget.Toolbar
           android:id="@+id/toolbar"
@@ -81,13 +90,12 @@
       android:id="@+id/fab"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="bottom|right|end"
       android:layout_marginBottom="@dimen/fab_margin"
       android:layout_marginEnd="@dimen/fab_margin"
       android:layout_marginRight="@dimen/fab_margin"
       android:onClick="click"
       app:borderWidth="0dp"
-      app:layout_anchor="@id/coordinator_layout"
-      app:layout_anchorGravity="bottom|right|end"
       />
 
   <android.support.design.widget.FloatingActionButton

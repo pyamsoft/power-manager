@@ -43,10 +43,10 @@ abstract class RadioBase
   }
 
   @Override public int getFABMiniIconEnabled() {
-    return R.drawable.ic_check_white_24dp;
+    return R.drawable.ic_check_compat;
   }
 
   @Override public int getFABMiniIconDisabled() {
-    return R.drawable.ic_close_white_24dp;
+    return R.drawable.ic_close_compat;
   }
 }

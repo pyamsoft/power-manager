@@ -30,13 +30,22 @@
     card_view:cardUseCompatPadding="true"
     >
 
-  <ImageView
-      android:id="@+id/card_image"
+  <FrameLayout
+      android:id="@+id/card_image_background"
       android:layout_width="match_parent"
       android:layout_height="200dp"
-      android:contentDescription="@string/blank"
-      android:scaleType="centerCrop"
-      />
+      >
+
+    <ImageView
+        android:id="@+id/card_image"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/blank"
+        android:scaleType="centerCrop"
+        />
+
+  </FrameLayout>
 
   <!-- Used for the ripple effect on touch -->
   <LinearLayout

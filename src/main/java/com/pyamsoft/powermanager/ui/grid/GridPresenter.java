@@ -42,13 +42,13 @@ final class GridPresenter extends PresenterBase<GridInterface> {
     reference.onFABClicked();
   }
 
-  void clickGridItem(final String viewCode, final int image) {
+  void clickGridItem(final String viewCode, final int image, final int background) {
     final GridInterface reference = getInterface();
     if (reference == null) {
       LogUtil.e(TAG, "Null reference");
       return;
     }
     LogUtil.d(TAG, "clickGridItem");
-    reference.onGridItemClicked(viewCode, image);
+    reference.onGridItemClicked(viewCode, image, background);
   }
 }

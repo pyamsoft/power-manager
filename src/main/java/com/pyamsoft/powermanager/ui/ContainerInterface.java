@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.ui.grid;
+package com.pyamsoft.powermanager.ui;
 
-interface GridInterface {
+public interface ContainerInterface {
 
-  void onFABClicked();
+  void setCurrentView(String viewCode, int image, int background);
 
-  void onGridItemClicked(String viewCode, int image, int background);
+  String popCurrentView();
 }

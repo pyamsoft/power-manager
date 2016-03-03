@@ -49,14 +49,12 @@ import com.pyamsoft.powermanager.ui.radio.RadioContentAdapter;
 import com.pyamsoft.powermanager.ui.radio.RadioContentInterface;
 import com.pyamsoft.powermanager.ui.setting.SettingsContentAdapter;
 import com.pyamsoft.powermanager.ui.trigger.PowerTriggerAdapter;
-import com.pyamsoft.pydroid.ContainerInterface;
 import com.pyamsoft.pydroid.DividerItemDecoration;
 import com.pyamsoft.pydroid.IgnoreAppBarLayoutFABBehavior;
 import com.pyamsoft.pydroid.base.ActivityBase;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.ElevationUtil;
 import com.pyamsoft.pydroid.util.LogUtil;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends ActivityBase
     implements ContainerInterface, FABStateReceiver, FABMiniStateReceiver,
@@ -75,6 +73,7 @@ public class MainActivity extends ActivityBase
   private AppBarLayout appBarLayout;
   private CollapsingToolbarLayout collapsingToolbarLayout;
   private ImageView heroImage;
+  private View heroBackground;
   private Toolbar toolbar;
   private ExplanationDialog dialog;
   private CoordinatorLayout coordinatorLayout;
@@ -100,7 +99,7 @@ public class MainActivity extends ActivityBase
     setupViewElevations();
     enablepBackBeenPressedConfirmation();
 
-    setCurrentView(null, 0);
+    setCurrentView(null, 0, 0);
   }
 
   private void setupViewElevations() {
@@ -121,6 +120,7 @@ public class MainActivity extends ActivityBase
     fabSmall = (FloatingActionButton) findViewById(R.id.fab_small);
     fabLarge = (FloatingActionButton) findViewById(R.id.fab_large);
     heroImage = (ImageView) collapsingToolbarLayout.findViewById(R.id.hero_image);
+    heroBackground = collapsingToolbarLayout.findViewById(R.id.hero_background);
   }
 
   @Override protected void onDestroy() {
@@ -175,7 +175,7 @@ public class MainActivity extends ActivityBase
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.main_menu, menu);
+    getMenuInflater().inflate(R.menu.main_donate, menu);
     return true;
   }
 
@@ -237,7 +237,7 @@ public class MainActivity extends ActivityBase
             adapter.isFABEnabled() ? adapter.getFABIconEnabled() : adapter.getFABIconDisabled();
         if (icon != 0) {
           fabLarge.show();
-          Picasso.with(this).load(icon).into(fabLarge);
+          fabLarge.setImageResource(icon);
           fabLarge.setOnClickListener(adapter.getFABOnClickListener());
         } else {
           fabLarge.hide();
@@ -251,7 +251,7 @@ public class MainActivity extends ActivityBase
             : adapter.getFABMiniIconDisabled();
         if (icon != 0) {
           fabSmall.show();
-          Picasso.with(this).load(icon).into(fabSmall);
+          fabSmall.setImageResource(icon);
           fabSmall.setOnClickListener(adapter.getFABMiniOnClickListener());
         } else {
           fabSmall.hide();
@@ -262,9 +262,10 @@ public class MainActivity extends ActivityBase
     }
   }
 
-  @Override public void setCurrentView(final String viewCode, final int image) {
+  @Override
+  public void setCurrentView(final String viewCode, final int image, final int background) {
     setCurrentRecyclerViewContent(viewCode);
-    setCurrentAppBarState(viewCode, image);
+    setCurrentAppBarState(viewCode, image, background);
 
     IgnoreAppBarLayoutFABBehavior behavior;
     if (adapter == null) {
@@ -277,14 +278,16 @@ public class MainActivity extends ActivityBase
     setFABVisibility();
   }
 
-  private void setCurrentAppBarState(final String viewCode, final int image) {
+  private void setCurrentAppBarState(final String viewCode, final int image, final int background) {
     boolean up;
     up = viewCode != null;
     if (image == 0) {
       heroImage.setImageResource(image);
+      heroBackground.setBackgroundColor(ContextCompat.getColor(this, R.color.amber500));
       collapsingToolbarLayout.setTitle(getString(R.string.app_name));
     } else {
-      Picasso.with(this).load(image).into(heroImage);
+      heroImage.setImageResource(image);
+      heroBackground.setBackgroundColor(ContextCompat.getColor(this, background));
       collapsingToolbarLayout.setTitle(viewCode);
     }
 
@@ -392,13 +395,13 @@ public class MainActivity extends ActivityBase
 
   @Override public String popCurrentView() {
     final String oldCode = currentView;
-    setCurrentView(null, 0);
+    setCurrentView(null, 0, 0);
     return oldCode;
   }
 
   private static void setFABIcon(final FloatingActionButton fab, final int icon) {
     if (icon != 0 && fab != null) {
-      Picasso.with(fab.getContext()).load(icon).into(fab);
+      fab.setImageResource(icon);
     }
   }
 

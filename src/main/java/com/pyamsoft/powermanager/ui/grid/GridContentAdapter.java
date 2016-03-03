@@ -16,12 +16,8 @@
 
 package com.pyamsoft.powermanager.ui.grid;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +28,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
 import com.pyamsoft.powermanager.ui.BindableRecyclerAdapter;
-import com.pyamsoft.pydroid.ContainerInterface;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.pyamsoft.powermanager.ui.ContainerInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,49 +75,64 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     holder.name.setText(name);
 
     int image;
+    int background;
     switch (name) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
         image = R.drawable.hero_wifi;
+        background = R.color.green500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
         image = R.drawable.hero_cell;
+        background = R.color.teal500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
         image = R.drawable.hero_bluetooth;
+        background = R.color.blue500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
         image = R.drawable.hero_sync;
+        background = R.color.purple500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
         image = R.drawable.hero_plan;
+        background = R.color.red500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
         image = R.drawable.hero_trigger;
+        background = R.color.yellow500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
         image = R.drawable.hero_batteryinfo;
+        background = R.color.pink500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
         image = R.drawable.hero_settings;
+        background = R.color.lightgreen500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
         image = R.drawable.hero_help;
+        background = R.color.cyan500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:
-        image = R.drawable.hero_about;
+        image = R.drawable.ic_help_outline_compat;
+        background = R.color.orange500;
         break;
       default:
         image = 0;
+        background = 0;
     }
 
     if (image != 0) {
-      Picasso.with(holder.image.getContext()).load(image).into(holder);
+      holder.image.setImageResource(image);
+      holder.background.setBackgroundColor(
+          ContextCompat.getColor(holder.background.getContext(), background));
 
       final int javaPlease = image;
+      final int whyJavaWhy = background;
       holder.mainHolder.setOnClickListener(new View.OnClickListener() {
 
         @Override public void onClick(View v) {
-          presenter.clickGridItem(name, javaPlease);
+          presenter.clickGridItem(name, javaPlease, whyJavaWhy);
         }
       });
     }
@@ -156,8 +165,8 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     throw new RuntimeException("No Fab Here");
   }
 
-  @Override public void onGridItemClicked(String viewCode, int image) {
-    container.setCurrentView(viewCode, image);
+  @Override public void onGridItemClicked(String viewCode, int image, int background) {
+    container.setCurrentView(viewCode, image, background);
   }
 
   @Override public int getStatusbarColor() {
@@ -168,42 +177,19 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     return R.color.amber500;
   }
 
-  public static final class ViewHolder extends RecyclerView.ViewHolder implements Target {
+  public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     public final LinearLayout mainHolder;
     public final ImageView image;
+    public final View background;
     public final TextView name;
-    private final Handler handler = new Handler();
 
     public ViewHolder(final View itemView) {
       super(itemView);
       mainHolder = (LinearLayout) itemView.findViewById(R.id.card_main_holder);
       name = (TextView) itemView.findViewById(R.id.card_name);
       image = (ImageView) itemView.findViewById(R.id.card_image);
-    }
-
-    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-      if (image != null) {
-        final Drawable drawable = new BitmapDrawable(image.getResources(), bitmap);
-        drawable.setAlpha(0);
-        image.setImageDrawable(drawable);
-        handler.post(new Runnable() {
-          @Override public void run() {
-            final ObjectAnimator animator = ObjectAnimator.ofInt(drawable, "alpha", 255);
-            animator.setTarget(drawable);
-            animator.setDuration(600L);
-            animator.start();
-          }
-        });
-      }
-    }
-
-    @Override public void onBitmapFailed(Drawable errorDrawable) {
-
-    }
-
-    @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-
+      background = itemView.findViewById(R.id.card_image_background);
     }
   }
 }

@@ -104,8 +104,8 @@ public final class PersistentNotification {
   }
 
   private int getToggle() {
-    return preferenceUtil.powerManagerMonitor().isEnabled() ? R.drawable.ic_pause_white_24dp
-        : R.drawable.ic_play_arrow_white_24dp;
+    return preferenceUtil.powerManagerMonitor().isEnabled() ? R.drawable.ic_pause_compat
+        : R.drawable.ic_play_arrow_compat;
   }
 
   private int getWifi() {
