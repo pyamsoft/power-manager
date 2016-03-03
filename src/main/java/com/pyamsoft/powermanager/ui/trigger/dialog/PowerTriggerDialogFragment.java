@@ -166,7 +166,7 @@ public class PowerTriggerDialogFragment extends DialogFragment
             icon = R.drawable.ic_network_cell_white_24dp;
             break;
           case 3:
-            icon = R.drawable.ic_bluetooth_white_24dp;
+            icon = R.drawable.ic_bluetooth_compat;
             break;
           case 4:
             icon = R.drawable.ic_sync_white_24dp;

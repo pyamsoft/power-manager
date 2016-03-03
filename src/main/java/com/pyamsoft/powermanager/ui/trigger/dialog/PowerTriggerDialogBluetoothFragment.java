@@ -25,6 +25,6 @@ final class PowerTriggerDialogBluetoothFragment extends PowerTriggerDialogRadioF
   }
 
   @Override protected int getRadioDrawable() {
-    return R.drawable.ic_bluetooth_white_24dp;
+    return R.drawable.ic_bluetooth_compat;
   }
 }

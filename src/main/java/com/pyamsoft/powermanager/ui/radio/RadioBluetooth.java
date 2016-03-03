@@ -38,11 +38,11 @@ public final class RadioBluetooth extends RadioBase {
   }
 
   @Override public int getFABIconEnabled() {
-    return R.drawable.ic_bluetooth_white_24dp;
+    return R.drawable.ic_bluetooth_compat;
   }
 
   @Override public int getFABIconDisabled() {
-    return R.drawable.ic_bluetooth_disabled_white_24dp;
+    return R.drawable.ic_bluetooth_disabled_compat;
   }
 
   @Override public boolean isFABEnabled() {

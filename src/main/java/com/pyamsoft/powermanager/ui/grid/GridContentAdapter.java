@@ -78,39 +78,39 @@ public final class GridContentAdapter extends BindableRecyclerAdapter<GridConten
     int background;
     switch (name) {
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_WIFI:
-        image = R.drawable.hero_wifi;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.green500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_DATA:
-        image = R.drawable.hero_cell;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.teal500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BLUETOOTH:
-        image = R.drawable.hero_bluetooth;
+        image = R.drawable.ic_bluetooth_compat;
         background = R.color.blue500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SYNC:
-        image = R.drawable.hero_sync;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.purple500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_PLAN:
-        image = R.drawable.hero_plan;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.red500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_POWER_TRIGGER:
-        image = R.drawable.hero_trigger;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.yellow500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_BATTERY_INFO:
-        image = R.drawable.hero_batteryinfo;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.pink500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_SETTINGS:
-        image = R.drawable.hero_settings;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.lightgreen500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_HELP:
-        image = R.drawable.hero_help;
+        image = R.drawable.ic_help_outline_compat;
         background = R.color.cyan500;
         break;
       case GlobalPreferenceUtil.GridOrder.VIEW_POSITION_ABOUT:

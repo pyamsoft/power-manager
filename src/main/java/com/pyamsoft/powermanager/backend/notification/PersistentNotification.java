@@ -119,8 +119,8 @@ public final class PersistentNotification {
   }
 
   private int getBluetooth() {
-    return preferenceUtil.powerManagerActive().isManagedBluetooth()
-        ? R.drawable.ic_bluetooth_white_24dp : R.drawable.ic_bluetooth_disabled_white_24dp;
+    return preferenceUtil.powerManagerActive().isManagedBluetooth() ? R.drawable.ic_bluetooth_compat
+        : R.drawable.ic_bluetooth_disabled_compat;
   }
 
   private int getSync() {

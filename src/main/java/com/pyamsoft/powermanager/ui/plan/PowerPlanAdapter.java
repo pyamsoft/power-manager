@@ -126,8 +126,8 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
 
     final boolean bluetoothManaged = presenter.isBluetoothManaged(position);
     holder.imageBluetooth.setEnabled(bluetoothManaged);
-    holder.imageBluetooth.setImageResource(bluetoothManaged ? R.drawable.ic_bluetooth_white_24dp
-        : R.drawable.ic_bluetooth_disabled_white_24dp);
+    holder.imageBluetooth.setImageResource(bluetoothManaged ? R.drawable.ic_bluetooth_compat
+        : R.drawable.ic_bluetooth_disabled_compat);
 
     final boolean syncManaged = presenter.isSyncManaged(position);
     holder.imageSync.setEnabled(syncManaged);
@@ -155,8 +155,8 @@ public final class PowerPlanAdapter extends BindableRecyclerAdapter<PowerPlanAda
     final boolean bluetoothReopen = presenter.isBluetoothReOpenEnabled(position);
     holder.imageReOpenBluetooth.setEnabled(bluetoothReopen);
     holder.imageReOpenBluetooth.setImageResource(
-        bluetoothReopen ? R.drawable.ic_bluetooth_white_24dp
-            : R.drawable.ic_bluetooth_disabled_white_24dp);
+        bluetoothReopen ? R.drawable.ic_bluetooth_compat
+            : R.drawable.ic_bluetooth_disabled_compat);
 
     final boolean syncReopen = presenter.isSyncReOpenEnabled(position);
     holder.imageReOpenSync.setEnabled(syncReopen);
