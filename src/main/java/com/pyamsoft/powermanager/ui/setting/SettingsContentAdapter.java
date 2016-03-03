@@ -145,8 +145,7 @@ public final class SettingsContentAdapter
       fillSpannable(context, span, title.length());
     }
 
-    final int resId =
-        isReset ? R.drawable.ic_warning_white_24dp : R.drawable.ic_settings_white_24dp;
+    final int resId = isReset ? R.drawable.ic_warning_compat : R.drawable.ic_settings_white_24dp;
     if (isReset) {
       holder.resetButton.setText(span);
       holder.image.setBackground(DrawableUtil.createOval(context, R.color.red500));
@@ -248,7 +247,7 @@ public final class SettingsContentAdapter
   @Override public void onResetRequested() {
     new AlertDialog.Builder(activity).setTitle(activity.getString(R.string.reset_settings_title))
         .setCancelable(false)
-        .setIcon(R.drawable.ic_warning_white_24dp)
+        .setIcon(R.drawable.ic_warning_compat)
         .setMessage(activity.getString(R.string.reset_settings_msg))
         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
