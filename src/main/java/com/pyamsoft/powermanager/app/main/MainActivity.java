@@ -21,18 +21,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.manager.Manager;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class MainActivity extends DonationActivityBase implements RatingDialog.ChangeLogProvider {
 
   @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
+  @Nullable @BindView(R.id.toggle_wifi_test) Button toggleWifi;
+  @Nullable @BindView(R.id.toggle_data_test) Button toggleData;
+  @Nullable @BindView(R.id.toggle_bluetooth_test) Button toggleBluetooth;
+  @Nullable @BindView(R.id.toggle_sync_test) Button toggleSync;
+  @Nullable @BindView(R.id.toggle_all_off) Button toggleOff;
+  @Nullable @BindView(R.id.toggle_all_on) Button toggleOn;
+
+  @Nullable @Inject @Named("wifi") Manager managerWifi;
+  @Nullable @Inject @Named("data") Manager managerData;
+  @Nullable @Inject @Named("bluetooth") Manager managerBluetooth;
+  @Nullable @Inject @Named("sync") Manager managerSync;
   @Nullable private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,8 +56,12 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    PowerManager.powerManagerComponent(this).inject(this);
+
     unbinder = ButterKnife.bind(this);
     setupAppBar();
+
+    setupTestButton();
   }
 
   @Override protected void onDestroy() {
@@ -49,6 +69,72 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
 
     assert unbinder != null;
     unbinder.unbind();
+  }
+
+  private void setupTestButton() {
+    assert toggleWifi != null;
+    toggleWifi.setOnClickListener(v -> {
+      assert managerWifi != null;
+      if (managerWifi.isEnabled()) {
+        managerWifi.disable(this);
+      } else {
+        managerWifi.enable(this);
+      }
+    });
+
+    assert toggleData != null;
+    toggleData.setOnClickListener(v -> {
+      assert managerData != null;
+      if (managerData.isEnabled()) {
+        managerData.disable(this);
+      } else {
+        managerData.enable(this);
+      }
+    });
+
+    assert toggleBluetooth != null;
+    toggleBluetooth.setOnClickListener(v -> {
+      assert managerBluetooth != null;
+      if (managerBluetooth.isEnabled()) {
+        managerBluetooth.disable(this);
+      } else {
+        managerBluetooth.enable(this);
+      }
+    });
+
+    assert toggleSync != null;
+    toggleSync.setOnClickListener(v -> {
+      assert managerSync != null;
+      if (managerSync.isEnabled()) {
+        managerSync.disable(this);
+      } else {
+        managerSync.enable(this);
+      }
+    });
+
+    assert toggleOff != null;
+    toggleOff.setOnClickListener(v -> {
+      assert managerWifi != null;
+      managerWifi.disable(this);
+      assert managerData != null;
+      managerData.disable(this);
+      assert managerBluetooth != null;
+      managerBluetooth.disable(this);
+      assert managerSync != null;
+      managerSync.disable(this);
+    });
+
+    assert toggleOn != null;
+    toggleOn.setOnClickListener(v -> {
+      assert managerWifi != null;
+      managerWifi.enable(this);
+      assert managerData != null;
+      managerData.enable(this);
+      assert managerBluetooth != null;
+      managerBluetooth.enable(this);
+      assert managerSync != null;
+      managerSync.enable(this);
+    });
   }
 
   private void setupAppBar() {
