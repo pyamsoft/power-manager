@@ -68,5 +68,8 @@
       </intent-filter>
     </service>
 
+    <!-- Bound service -->
+    <service android:name=".app.service.ForegroundService"/>
+
   </application>
 </manifest>
