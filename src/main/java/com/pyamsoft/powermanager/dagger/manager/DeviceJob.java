@@ -27,7 +27,6 @@ import timber.log.Timber;
 
 abstract class DeviceJob extends Job {
 
-  static final int JOB_TYPE_NONE = 0;
   static final int JOB_TYPE_ENABLE = 1;
   static final int JOB_TYPE_DISABLE = 2;
   static final int PRIORITY = 1;
@@ -67,7 +66,9 @@ abstract class DeviceJob extends Job {
 
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
     Timber.w("Job is cancelled");
-    Timber.e(throwable, "JOB ERROR");
+    if (throwable != null) {
+      Timber.e(throwable, "JOB ERROR");
+    }
   }
 
   @Override

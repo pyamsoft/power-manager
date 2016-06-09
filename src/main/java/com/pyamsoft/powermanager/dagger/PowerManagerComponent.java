@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.manager.ManagerModule;
 import dagger.Component;
 import javax.inject.Named;
@@ -38,4 +39,6 @@ public interface PowerManagerComponent {
   @Named("io") Scheduler provideIoScheduler();
 
   void inject(MainActivity mainActivity);
+
+  void inject(ScreenOnOffReceiver receiver);
 }

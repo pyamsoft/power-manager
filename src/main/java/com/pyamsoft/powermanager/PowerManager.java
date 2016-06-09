@@ -30,6 +30,7 @@ import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.app.service.PowerManagerFrameworkJobSchedulerService;
 import com.pyamsoft.powermanager.app.service.PowerManagerGCMJobSchedulerService;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
@@ -41,6 +42,7 @@ import timber.log.Timber;
 public final class PowerManager extends ApplicationBase {
 
   @Nullable private PowerManagerComponent powerManagerComponent;
+  @Nullable ScreenOnOffReceiver screenOnOffReceiver;
   @Nullable JobManager jobManager;
 
   @NonNull @CheckResult
@@ -133,6 +135,16 @@ public final class PowerManager extends ApplicationBase {
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
         .build();
 
+    initializeJobManager();
+    registerScreenOnOffReceiver();
+  }
+
+  private void registerScreenOnOffReceiver() {
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    screenOnOffReceiver.register();
+  }
+
+  private void initializeJobManager() {
     final JobManager jobManager = getJobManager(this);
     Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
   }
