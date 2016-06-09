@@ -14,35 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager;
+package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 
-public interface PowerManagerPreferences {
+interface ForegroundInteractor {
 
-  @CheckResult long getWifiDelay();
-
-  void setWifiDelay(long time);
-
-  @CheckResult long getDataDelay();
-
-  void setDataDelay(long time);
-
-  @CheckResult long getBluetoothDelay();
-
-  void setBluetoothDelay(long time);
-
-  @CheckResult long getMasterSyncDelay();
-
-  void setMasterSyncDelay(long time);
-
-  @CheckResult int getNotificationPriority();
-
-  @CheckResult boolean isWifiManaged();
-
-  @CheckResult boolean isDataManaged();
-
-  @CheckResult boolean isBluetoothManaged();
-
-  @CheckResult boolean isSyncManaged();
+  @CheckResult @NonNull NotificationCompat.Builder createNotificationBuilder();
 }

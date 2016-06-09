@@ -31,10 +31,9 @@ import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.app.service.PowerManagerFrameworkJobSchedulerService;
-import com.pyamsoft.powermanager.app.service.PowerManagerGCMJobSchedulerService;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
@@ -44,7 +43,6 @@ import timber.log.Timber;
 public final class PowerManager extends ApplicationBase {
 
   @Nullable private PowerManagerComponent powerManagerComponent;
-  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
   @Nullable private JobManager jobManager;
 
   @NonNull @CheckResult
@@ -138,17 +136,11 @@ public final class PowerManager extends ApplicationBase {
         .build();
 
     initializeJobManager();
-    registerScreenOnOffReceiver();
     startForegroundService();
   }
 
   private void startForegroundService() {
     startService(new Intent(this, ForegroundService.class));
-  }
-
-  private void registerScreenOnOffReceiver() {
-    screenOnOffReceiver = new ScreenOnOffReceiver(this);
-    screenOnOffReceiver.register();
   }
 
   private void initializeJobManager() {

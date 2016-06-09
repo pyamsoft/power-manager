@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.app.service.job;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
+import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.pyamsoft.powermanager.PowerManager;
 import timber.log.Timber;
 
-public class PowerManagerFrameworkJobSchedulerService extends FrameworkJobSchedulerService {
+public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
   @NonNull @Override protected JobManager getJobManager() {
     return PowerManager.getJobManager(this);

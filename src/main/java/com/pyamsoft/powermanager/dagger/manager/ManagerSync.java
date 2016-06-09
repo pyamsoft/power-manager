@@ -41,8 +41,12 @@ final class ManagerSync extends ManagerBase {
   }
 
   @Override public void enable(@NonNull Application application, long time) {
-    PowerManager.getJobManager(application)
-        .addJobInBackground(new Job(application, time, DeviceJob.JOB_TYPE_ENABLE));
+    if (preferences.isSyncManaged()) {
+      Timber.d("Queue Sync enable");
+      PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
+    } else {
+      Timber.w("Sync is not managed");
+    }
   }
 
   @Override public void disable(@NonNull Application application) {
@@ -50,22 +54,44 @@ final class ManagerSync extends ManagerBase {
   }
 
   @Override public void disable(@NonNull Application application, long time) {
-    PowerManager.getJobManager(application)
-        .addJobInBackground(new Job(application, time, DeviceJob.JOB_TYPE_DISABLE));
+    if (preferences.isSyncManaged()) {
+      Timber.d("Queue Sync disable");
+      PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
+    } else {
+      Timber.w("Sync is not managed");
+    }
   }
 
   @Override public boolean isEnabled() {
     return ContentResolver.getMasterSyncAutomatically();
   }
 
-  static final class Job extends DeviceJob {
+  static final class EnableJob extends Job {
 
-    protected Job(@NonNull Context context, long delayTime, int jobType) {
+    protected EnableJob(@NonNull Context context, long delayTime) {
       super(context, new Params(PRIORITY).setGroupId(ManagerSync.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerSync.TAG)
-          .singleInstanceBy(ManagerSync.TAG), jobType);
+          .singleInstanceBy(ManagerSync.TAG), JOB_TYPE_ENABLE);
+    }
+  }
+
+  static final class DisableJob extends Job {
+
+    protected DisableJob(@NonNull Context context, long delayTime) {
+      super(context, new Params(PRIORITY).setGroupId(ManagerSync.TAG)
+          .setDelayMs(delayTime)
+          .setRequiresNetwork(false)
+          .setSingleId(ManagerSync.TAG)
+          .singleInstanceBy(ManagerSync.TAG), JOB_TYPE_DISABLE);
+    }
+  }
+
+  static abstract class Job extends DeviceJob {
+
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
+      super(context, params, jobType);
     }
 
     @Override protected void enable() {

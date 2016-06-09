@@ -14,35 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager;
+package com.pyamsoft.powermanager.app.service;
 
+import android.app.Notification;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.Presenter;
 
-public interface PowerManagerPreferences {
+public interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
 
-  @CheckResult long getWifiDelay();
+  @CheckResult @NonNull Notification createNotification();
 
-  void setWifiDelay(long time);
+  interface ForegroundProvider {
 
-  @CheckResult long getDataDelay();
-
-  void setDataDelay(long time);
-
-  @CheckResult long getBluetoothDelay();
-
-  void setBluetoothDelay(long time);
-
-  @CheckResult long getMasterSyncDelay();
-
-  void setMasterSyncDelay(long time);
-
-  @CheckResult int getNotificationPriority();
-
-  @CheckResult boolean isWifiManaged();
-
-  @CheckResult boolean isDataManaged();
-
-  @CheckResult boolean isBluetoothManaged();
-
-  @CheckResult boolean isSyncManaged();
+  }
 }

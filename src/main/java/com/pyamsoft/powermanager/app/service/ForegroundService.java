@@ -16,18 +16,20 @@
 
 package com.pyamsoft.powermanager.app.service;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.NotificationCompat;
-import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ForegroundService extends Service {
+public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
+
+  private static final int NOTIFICATION_ID = 1000;
+  @Nullable @Inject ForegroundPresenter presenter;
+  @Nullable ScreenOnOffReceiver screenOnOffReceiver;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -35,30 +37,39 @@ public class ForegroundService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    screenOnOffReceiver = new ScreenOnOffReceiver(getApplication());
+    screenOnOffReceiver.register();
+
+    PowerManager.powerManagerComponent(this).inject(this);
+
+    assert presenter != null;
+    presenter.bindView(this);
+
+    startForeground();
     Timber.d("onCreate");
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     Timber.d("onDestroy");
+
+    assert screenOnOffReceiver != null;
+    screenOnOffReceiver.unregister();
+
+    assert presenter != null;
+    presenter.unbindView();
+
     stopForeground(true);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("onStartCommand");
-    startForeground(1000, new NotificationCompat.Builder(this).setOngoing(true)
-        .setNumber(0)
-        .setAutoCancel(false)
-        .setWhen(0)
-        .setColor(ContextCompat.getColor(this, R.color.amber500))
-        .setContentIntent(
-            PendingIntent.getActivity(this, 1000, new Intent(this, MainActivity.class), 0))
-        .setPriority(NotificationCompat.PRIORITY_MIN)
-        .setSmallIcon(R.mipmap.ic_launcher)
-        .setContentTitle(getString(R.string.app_name))
-        .setContentInfo("Tap to launch application")
-        .setTicker("Tap to launch application")
-        .build());
     return START_STICKY;
+  }
+
+  private void startForeground() {
+    assert presenter != null;
+    startForeground(NOTIFICATION_ID, presenter.createNotification());
   }
 }

@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.app.NotificationCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
 import javax.inject.Inject;
@@ -60,5 +61,26 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public void setMasterSyncDelay(long time) {
     // TODO
+  }
+
+  @Override public int getNotificationPriority() {
+    // TODO
+    return NotificationCompat.PRIORITY_MIN;
+  }
+
+  @Override public boolean isBluetoothManaged() {
+    return false;
+  }
+
+  @Override public boolean isDataManaged() {
+    return false;
+  }
+
+  @Override public boolean isSyncManaged() {
+    return false;
+  }
+
+  @Override public boolean isWifiManaged() {
+    return false;
   }
 }

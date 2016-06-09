@@ -49,8 +49,12 @@ final class ManagerData extends ManagerBase {
   }
 
   @Override public void enable(@NonNull Application application, long time) {
-    PowerManager.getJobManager(application)
-        .addJobInBackground(new Job(application, time, DeviceJob.JOB_TYPE_ENABLE));
+    if (preferences.isDataManaged()) {
+      Timber.d("Queue Data enable");
+      PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
+    } else {
+      Timber.w("Data is not managed");
+    }
   }
 
   @Override public void disable(@NonNull Application application) {
@@ -58,8 +62,12 @@ final class ManagerData extends ManagerBase {
   }
 
   @Override public void disable(@NonNull Application application, long time) {
-    PowerManager.getJobManager(application)
-        .addJobInBackground(new Job(application, time, DeviceJob.JOB_TYPE_DISABLE));
+    if (preferences.isDataManaged()) {
+      Timber.d("Queue Data disable");
+      PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
+    } else {
+      Timber.w("Data is not managed");
+    }
   }
 
   @Override public boolean isEnabled() {
@@ -74,7 +82,29 @@ final class ManagerData extends ManagerBase {
     return enabled;
   }
 
-  static final class Job extends DeviceJob {
+  static final class EnableJob extends Job {
+
+    protected EnableJob(@NonNull Context context, long delayTime) {
+      super(context, new Params(PRIORITY).setGroupId(ManagerData.TAG)
+          .setDelayMs(delayTime)
+          .setRequiresNetwork(false)
+          .setSingleId(ManagerData.TAG)
+          .singleInstanceBy(ManagerData.TAG), JOB_TYPE_ENABLE);
+    }
+  }
+
+  static final class DisableJob extends Job {
+
+    protected DisableJob(@NonNull Context context, long delayTime) {
+      super(context, new Params(PRIORITY).setGroupId(ManagerData.TAG)
+          .setDelayMs(delayTime)
+          .setRequiresNetwork(false)
+          .setSingleId(ManagerData.TAG)
+          .singleInstanceBy(ManagerData.TAG), JOB_TYPE_DISABLE);
+    }
+  }
+
+  static abstract class Job extends DeviceJob {
 
     @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
     @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
@@ -86,12 +116,8 @@ final class ManagerData extends ManagerBase {
       GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
     }
 
-    protected Job(@NonNull Context context, long delayTime, int jobType) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerData.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerData.TAG)
-          .singleInstanceBy(ManagerData.TAG), jobType);
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
+      super(context, params, jobType);
     }
 
     @CheckResult @Nullable private static String resolveSetMethodName() {

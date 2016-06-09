@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.dagger.service;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.pyamsoft.powermanager.PowerManager;
-import timber.log.Timber;
+import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Singleton;
 
-public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
+@Module public class ForegroundModule {
 
-  @NonNull @Override protected JobManager getJobManager() {
-    return PowerManager.getJobManager(this);
+  @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
+      @NonNull ForegroundPresenterImpl presenter) {
+    return presenter;
   }
 
-  @Override public void onTaskRemoved(Intent rootIntent) {
-    super.onTaskRemoved(rootIntent);
-    Timber.d("onTaskRemoved");
+  @Singleton @Provides ForegroundInteractor provideForegroundInteractor(
+      @NonNull ForegroundInteractorImpl interactor) {
+    return interactor;
   }
 }
