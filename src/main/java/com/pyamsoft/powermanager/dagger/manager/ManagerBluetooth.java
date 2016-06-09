@@ -49,6 +49,7 @@ final class ManagerBluetooth extends ManagerBase {
   @Override public void enable(@NonNull Application application, long time) {
     if (preferences.isBluetoothManaged()) {
       Timber.d("Queue Bluetooth enable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
     } else {
       Timber.w("Bluetooth is not managed");
@@ -62,6 +63,7 @@ final class ManagerBluetooth extends ManagerBase {
   @Override public void disable(@NonNull Application application, long time) {
     if (preferences.isBluetoothManaged()) {
       Timber.d("Queue Bluetooth disable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
     } else {
       Timber.w("Bluetooth is not managed");

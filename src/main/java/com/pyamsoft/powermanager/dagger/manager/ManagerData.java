@@ -51,6 +51,7 @@ final class ManagerData extends ManagerBase {
   @Override public void enable(@NonNull Application application, long time) {
     if (preferences.isDataManaged()) {
       Timber.d("Queue Data enable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
     } else {
       Timber.w("Data is not managed");
@@ -64,6 +65,7 @@ final class ManagerData extends ManagerBase {
   @Override public void disable(@NonNull Application application, long time) {
     if (preferences.isDataManaged()) {
       Timber.d("Queue Data disable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
     } else {
       Timber.w("Data is not managed");

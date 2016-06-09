@@ -46,6 +46,7 @@ final class ManagerWifi extends ManagerBase {
   @Override public void enable(@NonNull Application application, long time) {
     if (preferences.isWifiManaged()) {
       Timber.d("Queue Wifi enable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
     } else {
       Timber.w("Wifi is not managed");
@@ -59,6 +60,7 @@ final class ManagerWifi extends ManagerBase {
   @Override public void disable(@NonNull Application application, long time) {
     if (preferences.isWifiManaged()) {
       Timber.d("Queue Wifi disable");
+      cancelJobs(application, TAG);
       PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
     } else {
       Timber.w("Wifi is not managed");
@@ -69,31 +71,33 @@ final class ManagerWifi extends ManagerBase {
     return androidWifiManager.isWifiEnabled();
   }
 
-  static final class EnableJob extends Job {
+  static final class EnableJob extends WifiJob {
 
     protected EnableJob(@NonNull Context context, long delayTime) {
       super(context, new Params(PRIORITY).setGroupId(ManagerWifi.TAG)
           .setDelayMs(delayTime)
+          .addTags(ManagerWifi.TAG)
           .setRequiresNetwork(false)
           .setSingleId(ManagerWifi.TAG)
           .singleInstanceBy(ManagerWifi.TAG), JOB_TYPE_ENABLE);
     }
   }
 
-  static final class DisableJob extends Job {
+  static final class DisableJob extends WifiJob {
 
     protected DisableJob(@NonNull Context context, long delayTime) {
       super(context, new Params(PRIORITY).setGroupId(ManagerWifi.TAG)
           .setDelayMs(delayTime)
+          .addTags(ManagerWifi.TAG)
           .setRequiresNetwork(false)
           .setSingleId(ManagerWifi.TAG)
           .singleInstanceBy(ManagerWifi.TAG), JOB_TYPE_DISABLE);
     }
   }
 
-  static abstract class Job extends DeviceJob {
+  static abstract class WifiJob extends DeviceJob {
 
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
+    protected WifiJob(@NonNull Context context, @NonNull Params params, int jobType) {
       super(context, params, jobType);
     }
 

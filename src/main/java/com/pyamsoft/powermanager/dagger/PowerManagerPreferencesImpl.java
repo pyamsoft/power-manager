@@ -32,7 +32,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public long getWifiDelay() {
     // TODO
-    return 1;
+    return 5;
   }
 
   @Override public void setWifiDelay(long time) {
@@ -40,7 +40,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getDataDelay() {
-    return 1;
+    return 5;
   }
 
   @Override public void setDataDelay(long time) {
@@ -48,7 +48,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getBluetoothDelay() {
-    return 1;
+    return 5;
   }
 
   @Override public void setBluetoothDelay(long time) {
@@ -56,7 +56,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getMasterSyncDelay() {
-    return 1;
+    return 5;
   }
 
   @Override public void setMasterSyncDelay(long time) {
@@ -81,6 +81,6 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isWifiManaged() {
-    return false;
+    return true;
   }
 }

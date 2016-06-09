@@ -17,10 +17,14 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.Service;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import com.birbit.android.jobqueue.TagConstraint;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
+import timber.log.Timber;
 
 abstract class ManagerBase implements Manager {
 
@@ -70,5 +74,10 @@ abstract class ManagerBase implements Manager {
 
   @Override public final void disable(@NonNull Service service, long time) {
     disable(service.getApplication(), time);
+  }
+
+  protected final void cancelJobs(@NonNull Application application, @NonNull String tag) {
+    Timber.d("Attempt job cancel");
+    PowerManager.getJobManager(application).cancelJobsInBackground(null, TagConstraint.ANY, tag);
   }
 }
