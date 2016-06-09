@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 - 2016 Peter Kenji Yamanaka
+ * Copyright 2016 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,31 @@
 
 package com.pyamsoft.powermanager;
 
-import com.pyamsoft.powermanager.backend.notification.PersistentNotification;
-import com.pyamsoft.powermanager.backend.service.MonitorService;
-import com.pyamsoft.powermanager.backend.util.GlobalPreferenceUtil;
-import com.pyamsoft.pydroid.base.ApplicationBase;
-import com.pyamsoft.pydroid.util.LogUtil;
+import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.app.ApplicationBase;
 
 public final class PowerManager extends ApplicationBase {
-
-  public static final String RATE = "market://details?id=com.pyamsoft.powermanager";
-  private static final String TAG = PowerManager.class.getName();
-
-  @Override public final boolean isBuildConfigDebug() {
+  @Override protected boolean buildConfigDebug() {
     return BuildConfig.DEBUG;
   }
 
-  @Override public final void onCreate() {
-    super.onCreate();
-    final GlobalPreferenceUtil p = GlobalPreferenceUtil.with(this);
-    if (p.powerManagerMonitor().isEnabled()) {
-      // Start service
-      LogUtil.d(TAG, "Preference requested start service");
-      MonitorService.start(getApplicationContext());
-    }
-    if (p.powerManagerMonitor().isNotificationEnabled()) {
-      // Just update notification from service
-      LogUtil.d(TAG, "Preference requested update notification");
-      PersistentNotification.update(getApplicationContext());
-    }
+  @NonNull @Override public String appName() {
+    return getString(R.string.app_name);
   }
 
-  @Override protected String setRateString() {
-    return RATE;
+  @NonNull @Override public String buildConfigApplicationId() {
+    return BuildConfig.APPLICATION_ID;
+  }
+
+  @NonNull @Override public String buildConfigVersionName() {
+    return BuildConfig.VERSION_NAME;
+  }
+
+  @Override public int buildConfigVersionCode() {
+    return BuildConfig.VERSION_CODE;
+  }
+
+  @NonNull @Override public String getApplicationPackageName() {
+    return getPackageName();
   }
 }
