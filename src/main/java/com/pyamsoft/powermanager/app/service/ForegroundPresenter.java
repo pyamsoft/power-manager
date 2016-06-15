@@ -25,6 +25,8 @@ public interface ForegroundPresenter extends Presenter<ForegroundPresenter.Foreg
 
   @CheckResult @NonNull Notification createNotification();
 
+  void updateWearableAction();
+
   interface ForegroundProvider {
 
   }

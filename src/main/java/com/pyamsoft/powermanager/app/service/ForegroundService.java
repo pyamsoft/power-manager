@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
@@ -27,6 +28,7 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
+  @NonNull public static final String EXTRA_WEARABLE = "wearable";
   private static final int NOTIFICATION_ID = 1000;
   @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
   @Nullable @Inject ForegroundPresenter presenter;
@@ -46,7 +48,6 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     assert presenter != null;
     presenter.bindView(this);
 
-    startForeground();
     Timber.d("onCreate");
   }
 
@@ -65,6 +66,15 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("onStartCommand");
+    if (intent != null) {
+      final boolean wearable = intent.getBooleanExtra(EXTRA_WEARABLE, false);
+      if (wearable) {
+        Timber.d("Update wearable status");
+        assert presenter != null;
+        presenter.updateWearableAction();
+      }
+    }
+    startForeground();
     return START_STICKY;
   }
 

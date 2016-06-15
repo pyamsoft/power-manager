@@ -24,7 +24,9 @@ import android.support.v4.app.NotificationCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 final class ForegroundInteractorImpl implements ForegroundInteractor {
 
@@ -40,11 +42,23 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
 
   @NonNull @Override public NotificationCompat.Builder createNotificationBuilder() {
     final Intent intent = new Intent(appContext, MainActivity.class);
+    final Intent wearIntent =
+        new Intent(appContext, ForegroundService.class).putExtra(ForegroundService.EXTRA_WEARABLE,
+            true);
     final PendingIntent pendingIntent =
         PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
+    final PendingIntent wearAction =
+        PendingIntent.getService(appContext, PENDING_RC + 4, wearIntent, 0);
     return new NotificationCompat.Builder(appContext).setContentTitle(
         appContext.getString(R.string.app_name))
         .setContentIntent(pendingIntent)
-        .setPriority(preferences.getNotificationPriority());
+        .setPriority(preferences.getNotificationPriority())
+        .addAction(R.drawable.ic_watch_black_24dp, "Wear", wearAction);
+  }
+
+  @Override public void updateWearablePreferenceStatus() {
+    final boolean state = preferences.isWearableManaged();
+    preferences.setWearableManaged(!state);
+    Timber.d("Update wearable managed from %s to %s", state, !state);
   }
 }

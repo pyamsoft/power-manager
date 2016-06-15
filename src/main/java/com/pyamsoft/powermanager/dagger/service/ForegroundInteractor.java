@@ -23,4 +23,6 @@ import android.support.v4.app.NotificationCompat;
 interface ForegroundInteractor {
 
   @CheckResult @NonNull NotificationCompat.Builder createNotificationBuilder();
+
+  void updateWearablePreferenceStatus();
 }

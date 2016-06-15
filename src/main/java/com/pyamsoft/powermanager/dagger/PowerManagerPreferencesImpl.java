@@ -32,10 +32,12 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String manageData;
   @NonNull private final String manageBluetooth;
   @NonNull private final String manageSync;
+  @NonNull private final String manageWearable;
   private final boolean manageWifiDefault;
   private final boolean manageDataDefault;
   private final boolean manageBluetoothDefault;
   private final boolean manageSyncDefault;
+  private final boolean manageWearableDefault;
 
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -45,10 +47,12 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageData = appContext.getString(R.string.manage_data_key);
     manageBluetooth = appContext.getString(R.string.manage_bluetooth_key);
     manageSync = appContext.getString(R.string.manage_sync_key);
+    manageWearable = appContext.getString(R.string.manage_wearable_key);
     manageWifiDefault = resources.getBoolean(R.bool.manage_wifi_default);
     manageDataDefault = resources.getBoolean(R.bool.manage_data_default);
     manageBluetoothDefault = resources.getBoolean(R.bool.manage_bluetooth_default);
     manageSyncDefault = resources.getBoolean(R.bool.manage_sync_default);
+    manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
   }
 
   @Override public long getWifiDelay() {
@@ -106,10 +110,10 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isWearableManaged() {
-    return false;
+    return get(manageWearable, manageWearableDefault);
   }
 
   @Override public void setWearableManaged(boolean enable) {
-    // TODO
+    put(manageWearable, enable);
   }
 }

@@ -57,4 +57,7 @@
   <string name="manage_sync_title">Manage Sync</string>
   <string name="manage_sync_summary">Manage Sync</string>
 
+  <bool name="manage_wearable_default">false</bool>
+  <string name="manage_wearable_key">manage_wearable</string>
+
 </resources>

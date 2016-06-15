@@ -40,6 +40,11 @@ final class ForegroundPresenterImpl extends PresenterImpl<ForegroundPresenter.Fo
         .setOngoing(true)
         .setAutoCancel(false)
         .setNumber(0);
+
     return builder.build();
+  }
+
+  @Override public void updateWearableAction() {
+    interactor.updateWearablePreferenceStatus();
   }
 }
