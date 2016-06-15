@@ -23,13 +23,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.MenuItem;
-import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
@@ -37,12 +35,6 @@ import com.pyamsoft.pydroid.util.StringUtil;
 public class MainActivity extends DonationActivityBase implements RatingDialog.ChangeLogProvider {
 
   @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
-  @Nullable @BindView(R.id.toggle_wifi_test) Button toggleWifi;
-  @Nullable @BindView(R.id.toggle_data_test) Button toggleData;
-  @Nullable @BindView(R.id.toggle_bluetooth_test) Button toggleBluetooth;
-  @Nullable @BindView(R.id.toggle_sync_test) Button toggleSync;
-  @Nullable @BindView(R.id.toggle_all_off) Button toggleOff;
-  @Nullable @BindView(R.id.toggle_all_on) Button toggleOn;
 
   @Nullable private Unbinder unbinder;
 
@@ -53,7 +45,9 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
 
     unbinder = ButterKnife.bind(this);
     setupAppBar();
-    setupButtons();
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_container, new MainFragment())
+        .commit();
   }
 
   @Override protected void onDestroy() {
@@ -66,44 +60,6 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
-  }
-
-  private void setupButtons() {
-    assert toggleWifi != null;
-    toggleWifi.setOnClickListener(view -> {
-      getSupportFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_WIFI))
-          .addToBackStack(null)
-          .commit();
-      setActionBarUpEnabled(true);
-    });
-
-    assert toggleData != null;
-    toggleData.setOnClickListener(view -> {
-      getSupportFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_DATA))
-          .addToBackStack(null)
-          .commit();
-      setActionBarUpEnabled(true);
-    });
-
-    assert toggleBluetooth != null;
-    toggleBluetooth.setOnClickListener(view -> {
-      getSupportFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_BLUETOOTH))
-          .addToBackStack(null)
-          .commit();
-      setActionBarUpEnabled(true);
-    });
-
-    assert toggleSync != null;
-    toggleSync.setOnClickListener(view -> {
-      getSupportFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_SYNC))
-          .addToBackStack(null)
-          .commit();
-      setActionBarUpEnabled(true);
-    });
   }
 
   private void setupAppBar() {

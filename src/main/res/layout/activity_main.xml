@@ -39,55 +39,18 @@
 
   </android.support.design.widget.AppBarLayout>
 
-  <LinearLayout
-      android:id="@+id/main_container"
+  <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:orientation="vertical"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       >
 
-    <Button
-        android:id="@+id/toggle_wifi_test"
+    <FrameLayout
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle Wifi"
+        android:layout_height="match_parent"
         />
 
-    <Button
-        android:id="@+id/toggle_data_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle Data"
-        />
-
-    <Button
-        android:id="@+id/toggle_bluetooth_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle Bluetooth"
-        />
-
-    <Button
-        android:id="@+id/toggle_sync_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle Sync"
-        />
-
-    <Button
-        android:id="@+id/toggle_all_off"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle All Off"
-        />
-
-    <Button
-        android:id="@+id/toggle_all_on"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Toggle All On"
-        />
-  </LinearLayout>
+  </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
