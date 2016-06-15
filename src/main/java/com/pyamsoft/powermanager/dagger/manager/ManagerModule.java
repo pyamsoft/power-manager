@@ -29,7 +29,9 @@ import com.pyamsoft.powermanager.app.manager.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 import javax.inject.Singleton;
+import rx.Scheduler;
 
 @Module public class ManagerModule {
 
@@ -71,20 +73,27 @@ import javax.inject.Singleton;
     return new ManagerInteractorSync(preferences, context);
   }
 
-  @Singleton @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi) {
-    return new ManagerWifiImpl(wifi);
+  @Singleton @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    return new ManagerWifiImpl(wifi, ioScheduler, mainScheduler);
   }
 
   @Singleton @Provides ManagerBluetooth provideManagerBluetooth(
-      @NonNull ManagerInteractorBluetooth bluetooth) {
-    return new ManagerBluetoothImpl(bluetooth);
+      @NonNull ManagerInteractorBluetooth bluetooth, @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    return new ManagerBluetoothImpl(bluetooth, ioScheduler, mainScheduler);
   }
 
-  @Singleton @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync) {
-    return new ManagerSyncImpl(sync);
+  @Singleton @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    return new ManagerSyncImpl(sync, ioScheduler, mainScheduler);
   }
 
-  @Singleton @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data) {
-    return new ManagerDataImpl(data);
+  @Singleton @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    return new ManagerDataImpl(data, ioScheduler, mainScheduler);
   }
 }
