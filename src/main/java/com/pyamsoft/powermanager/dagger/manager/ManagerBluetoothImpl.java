@@ -58,20 +58,31 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
 
   @Override public void disable() {
     unsubscribe();
-    final Subscription subscription =
-        Observable.defer(() -> Observable.just(interactor))
-            .filter(wearableManagerInteractor -> {
-              Timber.d("Check that manager isManaged");
-              return wearableManagerInteractor.isManaged();
-            })
-            .filter(wearableManagerInteractor -> {
-              if (wearableManagerInteractor.isWearableManaged()) {
-                Timber.d("Check that no wearable is currently connected");
-                return wearableManagerInteractor.isWearableConnected();
+    Observable<WearableManagerInteractor> observable =
+        Observable.defer(() -> Observable.just(interactor)).filter(wearableManagerInteractor -> {
+          Timber.d("Check that manager isManaged");
+          return wearableManagerInteractor.isManaged();
+        });
+    if (interactor.isWearableManaged()) {
+      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
+          (wearableManagerInteractor, isConnected) -> {
+            if (wearableManagerInteractor.isWearableManaged()) {
+              if (isConnected) {
+                Timber.d("Wearable is managed and connected, return NULL");
+                return null;
               } else {
-                return true;
+                Timber.d("Wearable is managed but not connected");
+                return wearableManagerInteractor;
               }
-            })
+            } else {
+              Timber.d("Wearable is not managed");
+              return wearableManagerInteractor;
+            }
+          });
+    }
+
+    final Subscription subscription =
+        observable.filter(wearableManagerInteractor -> wearableManagerInteractor != null)
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(wearableManagerInteractor -> {

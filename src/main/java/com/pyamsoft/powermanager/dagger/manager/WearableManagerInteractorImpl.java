@@ -17,10 +17,18 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import rx.Observable;
+import timber.log.Timber;
 
 abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
     implements WearableManagerInteractor {
@@ -41,8 +49,37 @@ abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
     return preferences.isWearableManaged();
   }
 
-  @Override public boolean isWearableConnected() {
-    boolean connected = false;
-    return false;
+  @NonNull @CheckResult @Override public Observable<Boolean> isWearableConnected() {
+    Timber.d("Check if wearable is connected");
+    final ConnectionResult connectionResult = googleApiClient.blockingConnect(1, TimeUnit.SECONDS);
+    boolean result;
+    if (connectionResult.isSuccess()) {
+      final NodeApi.GetConnectedNodesResult nodesResult =
+          Wearable.NodeApi.getConnectedNodes(googleApiClient).await(1, TimeUnit.SECONDS);
+      Node wearableNode = null;
+      final List<Node> nodes = nodesResult.getNodes();
+      Timber.d("Search node list of size : %d", nodes.size());
+      for (final Node node : nodes) {
+        if (node.isNearby()) {
+          Timber.d("Wearable node: %s %s", node.getDisplayName(), node.getId());
+          wearableNode = node;
+          break;
+        }
+      }
+
+      if (wearableNode == null) {
+        Timber.d("No wearable node was found");
+        result = false;
+      } else {
+        Timber.d("Found a wearable node");
+        result = true;
+      }
+    } else {
+      result = false;
+    }
+    return Observable.just(result).doOnCompleted(() -> {
+      Timber.d("Disconnected googleApiClient");
+      googleApiClient.disconnect();
+    });
   }
 }

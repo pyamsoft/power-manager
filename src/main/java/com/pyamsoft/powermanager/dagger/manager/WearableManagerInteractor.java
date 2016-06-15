@@ -17,10 +17,12 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
 interface WearableManagerInteractor extends ManagerInteractor {
 
   @CheckResult boolean isWearableManaged();
 
-  @CheckResult boolean isWearableConnected();
+  @NonNull @CheckResult Observable<Boolean> isWearableConnected();
 }

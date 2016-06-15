@@ -35,8 +35,4 @@ abstract class WearableManagerImpl extends ManagerBaseImpl implements WearableMa
   @Override public boolean isWearableManaged() {
     return interactor.isWearableManaged();
   }
-
-  @Override public boolean isWearableConnected() {
-    return interactor.isWearableConnected();
-  }
 }
