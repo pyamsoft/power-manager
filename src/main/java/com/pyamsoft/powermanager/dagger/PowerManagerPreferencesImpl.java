@@ -83,4 +83,12 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @Override public boolean isWifiManaged() {
     return false;
   }
+
+  @Override public boolean isWearableManaged() {
+    return false;
+  }
+
+  @Override public void setWearableManaged(boolean enable) {
+    // TODO
+  }
 }

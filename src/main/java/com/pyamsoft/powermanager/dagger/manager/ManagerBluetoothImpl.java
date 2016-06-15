@@ -17,41 +17,70 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
 import javax.inject.Inject;
 import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
-final class ManagerBluetoothImpl extends ManagerBaseImpl implements ManagerBluetooth {
+final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerBluetooth {
 
-  @NonNull private final ManagerInteractor interactor;
+  @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject ManagerBluetoothImpl(@NonNull @Named("bluetooth") ManagerInteractor interactor) {
+  @Inject ManagerBluetoothImpl(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerBluetooth");
     this.interactor = interactor;
   }
 
   @Override public void enable() {
-    enable(0);
-  }
-
-  @Override public void enable(long time) {
-    Timber.d("Queue Bluetooth enable");
-    interactor.cancelJobs();
-    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return wearableManagerInteractor.isManaged();
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(wearableManagerInteractor -> {
+              Timber.d("Queue Bluetooth enable");
+              enable(0);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public void disable() {
-    disable(interactor.getDelayTime() * 1000);
-  }
-
-  @Override public void disable(long time) {
-    Timber.d("Queue Bluetooth disable");
-    interactor.cancelJobs();
-    PowerManager.getInstance()
-        .getJobManager()
-        .addJobInBackground(interactor.createDisableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return wearableManagerInteractor.isManaged();
+            })
+            .filter(wearableManagerInteractor -> {
+              if (wearableManagerInteractor.isWearableManaged()) {
+                Timber.d("Check that no wearable is currently connected");
+                return wearableManagerInteractor.isWearableConnected();
+              } else {
+                return true;
+              }
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(wearableManagerInteractor -> {
+              Timber.d("Queue Bluetooth disable");
+              disable(wearableManagerInteractor.getDelayTime() * 1000);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public boolean isEnabled() {

@@ -16,5 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-abstract class WearableManagerBase extends ManagerBaseImpl {
+import android.support.annotation.CheckResult;
+
+interface WearableManagerInteractor extends ManagerInteractor {
+
+  @CheckResult boolean isWearableManaged();
+
+  @CheckResult boolean isWearableConnected();
 }

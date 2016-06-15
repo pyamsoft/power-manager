@@ -27,7 +27,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-final class ManagerInteractorBluetooth extends ManagerInteractorBase {
+final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "bluetooth_manager_job";
   @NonNull private final BluetoothAdapter androidBluetooth;
@@ -36,6 +36,7 @@ final class ManagerInteractorBluetooth extends ManagerInteractorBase {
 
   @Inject ManagerInteractorBluetooth(@NonNull PowerManagerPreferences preferences,
       @NonNull Context context, @NonNull BluetoothAdapter bluetoothAdapter) {
+    super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.androidBluetooth = bluetoothAdapter;

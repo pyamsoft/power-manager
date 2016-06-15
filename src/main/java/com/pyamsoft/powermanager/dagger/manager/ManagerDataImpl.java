@@ -17,41 +17,62 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.ManagerData;
 import javax.inject.Inject;
 import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerDataImpl(@NonNull @Named("data") ManagerInteractor interactor) {
+  @Inject ManagerDataImpl(@NonNull @Named("data") ManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerData");
     this.interactor = interactor;
   }
 
   @Override public void enable() {
-    enable(0);
-  }
-
-  @Override public void enable(long time) {
-    Timber.d("Queue Data enable");
-    interactor.cancelJobs();
-    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(managerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return managerInteractor.isManaged();
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue Data enable");
+              enable(0);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public void disable() {
-    disable(interactor.getDelayTime() * 1000);
-  }
-
-  @Override public void disable(long time) {
-    Timber.d("Queue Data disable");
-    interactor.cancelJobs();
-    PowerManager.getInstance()
-        .getJobManager()
-        .addJobInBackground(interactor.createDisableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(managerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return managerInteractor.isManaged();
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue Data disable");
+              disable(managerInteractor.getDelayTime() * 1000);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public boolean isEnabled() {

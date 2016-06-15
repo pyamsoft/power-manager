@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-final class ManagerInteractorWifi extends ManagerInteractorBase {
+final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "wifi_manager_job";
   @NonNull private final WifiManager wifiManager;
@@ -33,6 +33,7 @@ final class ManagerInteractorWifi extends ManagerInteractorBase {
 
   @Inject ManagerInteractorWifi(@NonNull PowerManagerPreferences preferences,
       @NonNull Context context, @NonNull WifiManager wifiManager) {
+    super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.wifiManager = wifiManager;

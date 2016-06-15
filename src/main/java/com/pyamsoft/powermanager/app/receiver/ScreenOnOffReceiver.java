@@ -77,54 +77,22 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   private void enableSync() {
     assert managerSync != null;
-    if (managerSync.isManaged()) {
-      if (managerSync.isEnabled()) {
-        Timber.e("Sync was already enabled, ignoring");
-      } else {
-        managerSync.enable();
-      }
-    } else {
-      Timber.e("Sync was not managed, ignoring");
-    }
+    managerSync.enable();
   }
 
   private void enableBluetooth() {
     assert managerBluetooth != null;
-    if (managerBluetooth.isManaged()) {
-      if (managerBluetooth.isEnabled()) {
-        Timber.e("Bluetooth was already enabled, ignoring");
-      } else {
-        managerBluetooth.enable();
-      }
-    } else {
-      Timber.e("Bluetooth was not managed, ignoring");
-    }
+    managerBluetooth.enable();
   }
 
   private void enableData() {
     assert managerData != null;
-    if (managerData.isManaged()) {
-      if (managerData.isEnabled()) {
-        Timber.e("Data was already enabled, ignoring");
-      } else {
-        managerData.enable();
-      }
-    } else {
-      Timber.e("Data was not managed, ignoring");
-    }
+    managerData.enable();
   }
 
   private void enableWifi() {
     assert managerWifi != null;
-    if (managerWifi.isManaged()) {
-      if (managerWifi.isEnabled()) {
-        Timber.e("Wifi was already enabled, ignoring");
-      } else {
-        managerWifi.enable();
-      }
-    } else {
-      Timber.e("Wifi was not managed, ignoring");
-    }
+    managerWifi.enable();
   }
 
   private void disableManagers() {
@@ -137,54 +105,22 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   private void disableSync() {
     assert managerSync != null;
-    if (managerSync.isManaged()) {
-      if (managerSync.isEnabled()) {
-        managerSync.disable();
-      } else {
-        Timber.e("Sync was already disabled, ignoring");
-      }
-    } else {
-      Timber.e("Sync was not managed, ignoring");
-    }
+    managerSync.disable();
   }
 
   private void disableBluetooth() {
     assert managerBluetooth != null;
-    if (managerBluetooth.isManaged()) {
-      if (managerBluetooth.isEnabled()) {
-        managerBluetooth.disable();
-      } else {
-        Timber.e("Bluetooth was already disabled, ignoring");
-      }
-    } else {
-      Timber.e("Bluetooth was not managed, ignoring");
-    }
+    managerBluetooth.disable();
   }
 
   private void disableData() {
     assert managerData != null;
-    if (managerData.isManaged()) {
-      if (managerData.isEnabled()) {
-        managerData.disable();
-      } else {
-        Timber.e("Data was already disabled, ignoring");
-      }
-    } else {
-      Timber.e("Data was not managed, ignoring");
-    }
+    managerData.disable();
   }
 
   private void disableWifi() {
     assert managerWifi != null;
-    if (managerWifi.isManaged()) {
-      if (managerWifi.isEnabled()) {
-        managerWifi.disable();
-      } else {
-        Timber.e("Wifi was already disabled, ignoring");
-      }
-    } else {
-      Timber.e("Wifi was not managed, ignoring");
-    }
+    managerWifi.disable();
   }
 
   public final void register() {

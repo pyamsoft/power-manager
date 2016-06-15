@@ -16,5 +16,11 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
+import android.support.annotation.CheckResult;
+
 public interface WearableManager extends Manager {
+
+  @CheckResult boolean isWearableManaged();
+
+  @CheckResult boolean isWearableConnected();
 }

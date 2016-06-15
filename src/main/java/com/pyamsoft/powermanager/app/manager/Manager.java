@@ -20,12 +20,24 @@ import android.support.annotation.CheckResult;
 
 public interface Manager {
 
+  /**
+   * Calls enable only if all checks pass
+   */
   void enable();
 
+  /**
+   * Calls directly to enable
+   */
   void enable(long time);
 
+  /**
+   * Calls disable only if all checks pass
+   */
   void disable();
 
+  /**
+   * Calls directly to disable
+   */
   void disable(long time);
 
   @CheckResult boolean isEnabled();

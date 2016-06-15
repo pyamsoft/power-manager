@@ -16,7 +16,57 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 abstract class ManagerBaseImpl implements Manager {
+
+  @NonNull private final ManagerInteractor interactor;
+  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private final Scheduler ioScheduler;
+  @NonNull private final Scheduler mainScheduler;
+
+  protected ManagerBaseImpl(@NonNull ManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    this.interactor = interactor;
+    this.ioScheduler = ioScheduler;
+    this.mainScheduler = mainScheduler;
+  }
+
+  @NonNull @CheckResult Scheduler getIoScheduler() {
+    return ioScheduler;
+  }
+
+  @NonNull @CheckResult Scheduler getMainScheduler() {
+    return mainScheduler;
+  }
+
+  void setSubscription(@NonNull Subscription subscription) {
+    this.subscription = subscription;
+  }
+
+  void unsubscribe() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
+  }
+
+  @Override public final void enable(long time) {
+    interactor.cancelJobs();
+    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+  }
+
+  @Override public final void disable(long time) {
+    interactor.cancelJobs();
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createDisableJob(time));
+  }
 }

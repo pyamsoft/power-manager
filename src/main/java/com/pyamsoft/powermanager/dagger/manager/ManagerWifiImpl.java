@@ -17,41 +17,70 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import javax.inject.Inject;
 import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
-final class ManagerWifiImpl extends ManagerBaseImpl implements ManagerWifi {
+final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
 
-  @NonNull private final ManagerInteractor interactor;
+  @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject ManagerWifiImpl(@NonNull @Named("wifi") ManagerInteractor interactor) {
+  @Inject ManagerWifiImpl(@NonNull @Named("wifi") WearableManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerWifi");
     this.interactor = interactor;
   }
 
   @Override public void enable() {
-    enable(0);
-  }
-
-  @Override public void enable(long time) {
-    Timber.d("Queue Wifi enable");
-    interactor.cancelJobs();
-    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return wearableManagerInteractor.isManaged();
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(wearableManagerInteractor -> {
+              Timber.d("Queue Wifi enable");
+              enable(0);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public void disable() {
-    disable(interactor.getDelayTime() * 1000L);
-  }
-
-  @Override public void disable(long time) {
-    Timber.d("Queue Wifi disable");
-    interactor.cancelJobs();
-    PowerManager.getInstance()
-        .getJobManager()
-        .addJobInBackground(interactor.createDisableJob(time));
+    unsubscribe();
+    final Subscription subscription =
+        Observable.defer(() -> Observable.just(interactor))
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isManaged");
+              return wearableManagerInteractor.isManaged();
+            })
+            .filter(wearableManagerInteractor -> {
+              if (wearableManagerInteractor.isWearableManaged()) {
+                Timber.d("Check that no wearable is currently connected");
+                return wearableManagerInteractor.isWearableConnected();
+              } else {
+                return true;
+              }
+            })
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(wearableManagerInteractor -> {
+              Timber.d("Queue Wifi disable");
+              disable(wearableManagerInteractor.getDelayTime() * 1000L);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            });
+    setSubscription(subscription);
   }
 
   @Override public boolean isEnabled() {
