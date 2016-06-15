@@ -19,23 +19,20 @@ package com.pyamsoft.powermanager.app.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
+import android.view.MenuItem;
 import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.ManagerData;
-import com.pyamsoft.powermanager.app.manager.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.ManagerWifi;
+import com.pyamsoft.powermanager.app.manager.ManagerFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
-import javax.inject.Inject;
 
 public class MainActivity extends DonationActivityBase implements RatingDialog.ChangeLogProvider {
 
@@ -47,22 +44,16 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
   @Nullable @BindView(R.id.toggle_all_off) Button toggleOff;
   @Nullable @BindView(R.id.toggle_all_on) Button toggleOn;
 
-  @Nullable @Inject ManagerWifi managerWifi;
-  @Nullable @Inject ManagerData managerData;
-  @Nullable @Inject ManagerBluetooth managerBluetooth;
-  @Nullable @Inject ManagerSync managerSync;
   @Nullable private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    PowerManager.getInstance().getPowerManagerComponent().inject(this);
 
     unbinder = ButterKnife.bind(this);
     setupAppBar();
-
-    setupTestButton();
+    setupButtons();
   }
 
   @Override protected void onDestroy() {
@@ -72,69 +63,46 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     unbinder.unbind();
   }
 
-  private void setupTestButton() {
+  @Override protected void onPostResume() {
+    super.onPostResume();
+    RatingDialog.showRatingDialog(this, this);
+  }
+
+  private void setupButtons() {
     assert toggleWifi != null;
-    toggleWifi.setOnClickListener(v -> {
-      assert managerWifi != null;
-      if (managerWifi.isEnabled()) {
-        managerWifi.disable(0);
-      } else {
-        managerWifi.enable(0);
-      }
+    toggleWifi.setOnClickListener(view -> {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_WIFI))
+          .addToBackStack(null)
+          .commit();
+      setActionBarUpEnabled(true);
     });
 
     assert toggleData != null;
-    toggleData.setOnClickListener(v -> {
-      assert managerData != null;
-      if (managerData.isEnabled()) {
-        managerData.disable(0);
-      } else {
-        managerData.enable(0);
-      }
+    toggleData.setOnClickListener(view -> {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_DATA))
+          .addToBackStack(null)
+          .commit();
+      setActionBarUpEnabled(true);
     });
 
     assert toggleBluetooth != null;
-    toggleBluetooth.setOnClickListener(v -> {
-      assert managerBluetooth != null;
-      if (managerBluetooth.isEnabled()) {
-        managerBluetooth.disable(0);
-      } else {
-        managerBluetooth.enable(0);
-      }
+    toggleBluetooth.setOnClickListener(view -> {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_BLUETOOTH))
+          .addToBackStack(null)
+          .commit();
+      setActionBarUpEnabled(true);
     });
 
     assert toggleSync != null;
-    toggleSync.setOnClickListener(v -> {
-      assert managerSync != null;
-      if (managerSync.isEnabled()) {
-        managerSync.disable(0);
-      } else {
-        managerSync.enable(0);
-      }
-    });
-
-    assert toggleOff != null;
-    toggleOff.setOnClickListener(v -> {
-      assert managerWifi != null;
-      managerWifi.disable(0);
-      assert managerData != null;
-      managerData.disable(0);
-      assert managerBluetooth != null;
-      managerBluetooth.disable(0);
-      assert managerSync != null;
-      managerSync.disable(0);
-    });
-
-    assert toggleOn != null;
-    toggleOn.setOnClickListener(v -> {
-      assert managerWifi != null;
-      managerWifi.enable(0);
-      assert managerData != null;
-      managerData.enable(0);
-      assert managerBluetooth != null;
-      managerBluetooth.enable(0);
-      assert managerSync != null;
-      managerSync.enable(0);
+    toggleSync.setOnClickListener(view -> {
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_SYNC))
+          .addToBackStack(null)
+          .commit();
+      setActionBarUpEnabled(true);
     });
   }
 
@@ -143,6 +111,32 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
     setActionBarUpEnabled(false);
+  }
+
+  @Override public void onBackPressed() {
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    final int count = fragmentManager.getBackStackEntryCount();
+    if (count > 0) {
+      if (count - 1 == 0) {
+        setActionBarUpEnabled(false);
+      }
+      fragmentManager.popBackStack();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    boolean handled;
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        handled = true;
+        onBackPressed();
+        break;
+      default:
+        handled = false;
+    }
+    return handled || super.onOptionsItemSelected(item);
   }
 
   @NonNull @Override protected String getPlayStoreAppPackage() {

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+  <string-array name="manage_times_titles">
+    <item name="manage_time_none">No Delay</item>
+    <item name="manage_time_five">Five Seconds</item>
+    <item name="manage_time_ten">Ten Seconds</item>
+    <item name="manage_time_fifteen">Fifteen Seconds</item>
+    <item name="manage_time_thirty">Thirty Seconds</item>
+    <item name="manage_time_sixty">Sixty Seconds</item>
+    <item name="manage_time_custom">Custom Time</item>
+  </string-array>
+
+  <string-array name="manage_times_values">
+    <item name="manage_time_none">0</item>
+    <item name="manage_time_five">5</item>
+    <item name="manage_time_ten">10</item>
+    <item name="manage_time_fifteen">15</item>
+    <item name="manage_time_thirty">30</item>
+    <item name="manage_time_sixty">60</item>
+    <item name="manage_time_custom">-1</item>
+  </string-array>
+
+  <bool name="manage_wifi_default">false</bool>
+  <string name="manage_wifi_key">manage_wifi</string>
+  <string name="manage_wifi_title">Manage Wifi</string>
+  <string name="manage_wifi_summary">Manage Wifi</string>
+
+  <bool name="manage_data_default">true</bool>
+  <string name="manage_data_key">manage_data</string>
+  <string name="manage_data_title">Manage Data</string>
+  <string name="manage_data_summary">Manage Data</string>
+
+  <bool name="manage_bluetooth_default">false</bool>
+  <string name="manage_bluetooth_key">manage_bluetooth</string>
+  <string name="manage_bluetooth_title">Manage Bluetooth</string>
+  <string name="manage_bluetooth_summary">Manage Bluetooth</string>
+
+  <bool name="manage_sync_default">true</bool>
+  <string name="manage_sync_key">manage_sync</string>
+  <string name="manage_sync_title">Manage Sync</string>
+  <string name="manage_sync_summary">Manage Sync</string>
+
+</resources>

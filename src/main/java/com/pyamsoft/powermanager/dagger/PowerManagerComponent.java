@@ -17,9 +17,7 @@
 package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.manager.ManagerModule;
@@ -33,15 +31,13 @@ import rx.Scheduler;
 @Component(modules = { PowerManagerModule.class, ManagerModule.class, ForegroundModule.class })
 public interface PowerManagerComponent {
 
-  @NonNull Context provideContext();
+  Context provideContext();
 
-  @NonNull PowerManagerPreferences providePreferences();
+  PowerManagerPreferences providePreferences();
 
   @Named("main") Scheduler provideMainScheduler();
 
   @Named("io") Scheduler provideIoScheduler();
-
-  void inject(MainActivity mainActivity);
 
   void inject(ForegroundService service);
 

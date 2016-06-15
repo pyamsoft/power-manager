@@ -17,17 +17,38 @@
 package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
 import javax.inject.Inject;
 
 final class PowerManagerPreferencesImpl extends ApplicationPreferences
     implements PowerManagerPreferences {
 
+  @NonNull private final String manageWifi;
+  @NonNull private final String manageData;
+  @NonNull private final String manageBluetooth;
+  @NonNull private final String manageSync;
+  private final boolean manageWifiDefault;
+  private final boolean manageDataDefault;
+  private final boolean manageBluetoothDefault;
+  private final boolean manageSyncDefault;
+
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
+    final Context appContext = context.getApplicationContext();
+    final Resources resources = appContext.getResources();
+    manageWifi = appContext.getString(R.string.manage_wifi_key);
+    manageData = appContext.getString(R.string.manage_data_key);
+    manageBluetooth = appContext.getString(R.string.manage_bluetooth_key);
+    manageSync = appContext.getString(R.string.manage_sync_key);
+    manageWifiDefault = resources.getBoolean(R.bool.manage_wifi_default);
+    manageDataDefault = resources.getBoolean(R.bool.manage_data_default);
+    manageBluetoothDefault = resources.getBoolean(R.bool.manage_bluetooth_default);
+    manageSyncDefault = resources.getBoolean(R.bool.manage_sync_default);
   }
 
   @Override public long getWifiDelay() {
@@ -69,19 +90,19 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isBluetoothManaged() {
-    return false;
+    return get(manageBluetooth, manageBluetoothDefault);
   }
 
   @Override public boolean isDataManaged() {
-    return false;
+    return get(manageData, manageDataDefault);
   }
 
   @Override public boolean isSyncManaged() {
-    return false;
+    return get(manageSync, manageSyncDefault);
   }
 
   @Override public boolean isWifiManaged() {
-    return false;
+    return get(manageWifi, manageWifiDefault);
   }
 
   @Override public boolean isWearableManaged() {
