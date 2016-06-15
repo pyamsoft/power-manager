@@ -16,7 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.app.manager.Manager;
+import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.TagConstraint;
+import com.pyamsoft.powermanager.PowerManager;
+import timber.log.Timber;
 
-abstract class ManagerBase implements Manager {
+abstract class ManagerInteractorBase implements ManagerInteractor {
+
+  protected final void cancelJobs(@NonNull String tag) {
+    Timber.d("Attempt job cancel");
+    PowerManager.getInstance().getJobManager().cancelJobsInBackground(null, TagConstraint.ANY, tag);
+  }
 }

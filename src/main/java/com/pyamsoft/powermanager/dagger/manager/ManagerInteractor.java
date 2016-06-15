@@ -16,7 +16,20 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.app.manager.Manager;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
-abstract class ManagerBase implements Manager {
+interface ManagerInteractor {
+
+  void cancelJobs();
+
+  @CheckResult boolean isEnabled();
+
+  @CheckResult boolean isManaged();
+
+  @CheckResult long getDelayTime();
+
+  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime);
+
+  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime);
 }

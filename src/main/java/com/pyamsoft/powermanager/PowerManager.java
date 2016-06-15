@@ -16,15 +16,12 @@
 
 package com.pyamsoft.powermanager;
 
-import android.app.Activity;
 import android.app.Application;
-import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
@@ -44,61 +41,35 @@ public final class PowerManager extends ApplicationBase {
 
   @Nullable private PowerManagerComponent powerManagerComponent;
   @Nullable private JobManager jobManager;
+  @Nullable private volatile static PowerManager instance = null;
 
-  @NonNull @CheckResult
-  public static PowerManagerComponent powerManagerComponent(@NonNull Application application) {
-    if (application instanceof PowerManager) {
-      final PowerManager powerManager = (PowerManager) application;
-      final PowerManagerComponent component = powerManager.powerManagerComponent;
-
-      assert component != null;
-      return component;
+  @NonNull @CheckResult public synchronized static PowerManager getInstance() {
+    if (instance == null) {
+      throw new NullPointerException("PowerManager instance is NULL");
     } else {
-      throw new ClassCastException("Cannot cast Application to PowerManager");
+      //noinspection ConstantConditions
+      return instance;
     }
   }
 
-  @NonNull @CheckResult
-  public static PowerManagerComponent powerManagerComponent(@NonNull Activity activity) {
-    return powerManagerComponent(activity.getApplication());
+  public synchronized static void setInstance(@Nullable PowerManager instance) {
+    PowerManager.instance = instance;
   }
 
-  @NonNull @CheckResult
-  public static PowerManagerComponent powerManagerComponent(@NonNull Fragment fragment) {
-    return powerManagerComponent(fragment.getActivity());
-  }
-
-  @NonNull @CheckResult
-  public static PowerManagerComponent powerManagerComponent(@NonNull Service service) {
-    return powerManagerComponent(service.getApplication());
-  }
-
-  @CheckResult @NonNull public static JobManager getJobManager(@NonNull Application application) {
-    if (application instanceof PowerManager) {
-      final PowerManager powerManager = (PowerManager) application;
-      if (powerManager.jobManager == null) {
-        synchronized (PowerManager.class) {
-          if (powerManager.jobManager == null) {
-            powerManager.jobManager = createJobManager(powerManager);
-          }
-        }
-      }
-      return powerManager.jobManager;
+  @NonNull @CheckResult public synchronized final PowerManagerComponent getPowerManagerComponent() {
+    if (powerManagerComponent == null) {
+      throw new NullPointerException("PowerManagerComponent is NULL");
     } else {
-      throw new ClassCastException("Cannot cast Application to PowerManager");
+      return powerManagerComponent;
     }
   }
 
-  @CheckResult @NonNull public static JobManager getJobManager(@NonNull Activity activity) {
-    return getJobManager(activity.getApplication());
-  }
-
-  @CheckResult @NonNull public static JobManager getJobManager(@NonNull Fragment fragment) {
-    return getJobManager(fragment.getActivity());
-  }
-
-  @CheckResult @NonNull public static JobManager getJobManager(@NonNull Service service) {
-    return getJobManager(service.getApplication());
+  @NonNull @CheckResult public synchronized final JobManager getJobManager() {
+    if (jobManager == null) {
+      throw new NullPointerException("JobManager is NULL");
+    } else {
+      return jobManager;
+    }
   }
 
   @CheckResult @NonNull
@@ -131,11 +102,16 @@ public final class PowerManager extends ApplicationBase {
   @Override public void onCreate() {
     super.onCreate();
 
+    // Initialize instance
     powerManagerComponent = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
         .build();
-
     initializeJobManager();
+
+    // Set instance
+    setInstance(this);
+
+    // Start stuff
     startForegroundService();
   }
 
@@ -144,7 +120,7 @@ public final class PowerManager extends ApplicationBase {
   }
 
   private void initializeJobManager() {
-    final JobManager jobManager = getJobManager(this);
+    final JobManager jobManager = createJobManager(this);
     Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
   }
 

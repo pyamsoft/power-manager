@@ -47,23 +47,45 @@ import javax.inject.Singleton;
     return adapter;
   }
 
-  @Singleton @Provides @Named("bluetooth") Manager provideManagerBluetooth(
-      @NonNull BluetoothAdapter bluetoothAdapter, @NonNull PowerManagerPreferences preferences) {
-    return new ManagerBluetooth(bluetoothAdapter, preferences);
+  @Singleton @Provides ManagerInteractorWifi provideManagerInteractorWifi(
+      @NonNull WifiManager wifiManager, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context) {
+    return new ManagerInteractorWifi(preferences, context, wifiManager);
   }
 
-  @Singleton @Provides @Named("wifi") Manager provideManagerWifi(@NonNull WifiManager wifiManager,
-      @NonNull PowerManagerPreferences preferences) {
-    return new ManagerWifi(wifiManager, preferences);
+  @Singleton @Provides ManagerInteractorData provideManagerInteractorData(
+      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
+    return new ManagerInteractorData(preferences, context);
+  }
+
+  @Singleton @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
+      @NonNull BluetoothAdapter bluetoothAdapter, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context) {
+    return new ManagerInteractorBluetooth(preferences, context, bluetoothAdapter);
+  }
+
+  @Singleton @Provides ManagerInteractorSync provideManagerInteractorSync(
+      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
+    return new ManagerInteractorSync(preferences, context);
+  }
+
+  @Singleton @Provides @Named("wifi") Manager provideManagerWifi(
+      @NonNull ManagerInteractorWifi wifi) {
+    return new ManagerWifi(wifi);
+  }
+
+  @Singleton @Provides @Named("bluetooth") Manager provideManagerBluetooth(
+      @NonNull ManagerInteractorBluetooth bluetooth) {
+    return new ManagerBluetooth(bluetooth);
   }
 
   @Singleton @Provides @Named("sync") Manager provideManagerSync(
-      @NonNull PowerManagerPreferences preferences) {
-    return new ManagerSync(preferences);
+      @NonNull ManagerInteractorSync sync) {
+    return new ManagerSync(sync);
   }
 
-  @Singleton @Provides @Named("data") Manager provideManagerData(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    return new ManagerData(context, preferences);
+  @Singleton @Provides @Named("data") Manager provideManagerData(
+      @NonNull ManagerInteractorData data) {
+    return new ManagerData(data);
   }
 }

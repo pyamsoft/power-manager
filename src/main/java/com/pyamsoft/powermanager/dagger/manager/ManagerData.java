@@ -16,217 +16,48 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.app.Application;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
-import java.lang.reflect.Method;
 import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 final class ManagerData extends ManagerBase {
 
-  @NonNull private static final String TAG = "data_manager_job";
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
-  @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerData(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Inject ManagerData(@NonNull @Named("data") ManagerInteractor interactor) {
     Timber.d("new ManagerData");
-    this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
+    this.interactor = interactor;
   }
 
-  @Override public void enable(@NonNull Application application) {
-    enable(application, 0);
+  @Override public void enable() {
+    enable(0);
   }
 
-  @Override public void enable(@NonNull Application application, long time) {
-    if (preferences.isDataManaged()) {
-      Timber.d("Queue Data enable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
-    } else {
-      Timber.w("Data is not managed");
-    }
+  @Override public void enable(long time) {
+    Timber.d("Queue Data enable");
+    interactor.cancelJobs();
+    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
   }
 
-  @Override public void disable(@NonNull Application application) {
-    disable(application, preferences.getDataDelay() * 1000L);
+  @Override public void disable() {
+    disable(interactor.getDelayTime() * 1000);
   }
 
-  @Override public void disable(@NonNull Application application, long time) {
-    if (preferences.isDataManaged()) {
-      Timber.d("Queue Data disable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
-    } else {
-      Timber.w("Data is not managed");
-    }
+  @Override public void disable(long time) {
+    Timber.d("Queue Data disable");
+    interactor.cancelJobs();
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createDisableJob(time));
   }
 
   @Override public boolean isEnabled() {
-    boolean enabled;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-    } else {
-      enabled =
-          Settings.Secure.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-    }
-    return enabled;
+    return interactor.isEnabled();
   }
 
-  static final class EnableJob extends Job {
-
-    protected EnableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerData.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerData.TAG)
-          .singleInstanceBy(ManagerData.TAG), JOB_TYPE_ENABLE);
-    }
-  }
-
-  static final class DisableJob extends Job {
-
-    protected DisableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerData.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerData.TAG)
-          .singleInstanceBy(ManagerData.TAG), JOB_TYPE_DISABLE);
-    }
-  }
-
-  static abstract class Job extends DeviceJob {
-
-    @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
-    @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
-    @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
-    @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
-
-    static {
-      SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
-      GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
-    }
-
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
-    }
-
-    @CheckResult @Nullable private static String resolveSetMethodName() {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        return SET_METHOD_NAME;
-      } else {
-        return null;
-      }
-    }
-
-    @CheckResult @Nullable private static String resolveGetMethodName() {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        return GET_METHOD_NAME;
-      } else {
-        return null;
-      }
-    }
-
-    @CheckResult @Nullable private static Method reflectGetMethod() {
-      final String getMethodName = resolveGetMethodName();
-      if (getMethodName != null) {
-        synchronized (Job.class) {
-          try {
-            final Method method = ConnectivityManager.class.getDeclaredMethod(getMethodName);
-            method.setAccessible(true);
-            return method;
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData reflectGetMethod ERROR");
-          }
-        }
-      }
-
-      Timber.e("Unable to resolve getMobileDataEnabled using reflection");
-      return null;
-    }
-
-    @CheckResult @Nullable private static Method reflectSetMethod() {
-      final String setMethodName = resolveSetMethodName();
-      if (setMethodName != null) {
-        synchronized (Job.class) {
-          try {
-            final Method method =
-                ConnectivityManager.class.getDeclaredMethod(setMethodName, Boolean.TYPE);
-            method.setAccessible(true);
-            return method;
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData reflectSetMethod ERROR");
-          }
-        }
-      }
-
-      Timber.e("Unable to resolve setMobileDataEnabled using reflection");
-      return null;
-    }
-
-    @CheckResult
-    private static boolean isEnabled(final @NonNull ConnectivityManager connectivityManager) {
-      if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
-        synchronized (Job.class) {
-          try {
-            return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData isEnabled ERROR");
-          }
-        }
-      }
-      Timber.e("Unable to resolve isEnabled using reflection");
-      return false;
-    }
-
-    private static void setMobileDataEnabled(@NonNull ConnectivityManager connectivityManager,
-        boolean enabled) {
-      if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
-        synchronized (Job.class) {
-          try {
-            SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
-          }
-        }
-      }
-    }
-
-    @Override protected void enable() {
-      Timber.d("Data job enable");
-      final ConnectivityManager connectivityManager =
-          (ConnectivityManager) getContext().getApplicationContext()
-              .getSystemService(Context.CONNECTIVITY_SERVICE);
-      if (!isEnabled(connectivityManager)) {
-        Timber.d("Turn on Data");
-        setMobileDataEnabled(connectivityManager, true);
-      } else {
-        Timber.e("Data is already on");
-      }
-    }
-
-    @Override protected void disable() {
-      Timber.d("Data job disable");
-      final ConnectivityManager connectivityManager =
-          (ConnectivityManager) getContext().getApplicationContext()
-              .getSystemService(Context.CONNECTIVITY_SERVICE);
-      if (isEnabled(connectivityManager)) {
-        Timber.d("Turn off Data");
-        setMobileDataEnabled(connectivityManager, false);
-      } else {
-        Timber.e("Data is already off");
-      }
-    }
+  @Override public boolean isManaged() {
+    return interactor.isManaged();
   }
 }

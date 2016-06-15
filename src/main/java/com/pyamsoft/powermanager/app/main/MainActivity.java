@@ -55,8 +55,7 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
-    PowerManager.powerManagerComponent(this).inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().inject(this);
 
     unbinder = ButterKnife.bind(this);
     setupAppBar();
@@ -76,9 +75,9 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     toggleWifi.setOnClickListener(v -> {
       assert managerWifi != null;
       if (managerWifi.isEnabled()) {
-        managerWifi.disable(this);
+        managerWifi.disable();
       } else {
-        managerWifi.enable(this);
+        managerWifi.enable();
       }
     });
 
@@ -86,9 +85,9 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     toggleData.setOnClickListener(v -> {
       assert managerData != null;
       if (managerData.isEnabled()) {
-        managerData.disable(this);
+        managerData.disable();
       } else {
-        managerData.enable(this);
+        managerData.enable();
       }
     });
 
@@ -96,9 +95,9 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     toggleBluetooth.setOnClickListener(v -> {
       assert managerBluetooth != null;
       if (managerBluetooth.isEnabled()) {
-        managerBluetooth.disable(this);
+        managerBluetooth.disable();
       } else {
-        managerBluetooth.enable(this);
+        managerBluetooth.enable();
       }
     });
 
@@ -106,34 +105,34 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     toggleSync.setOnClickListener(v -> {
       assert managerSync != null;
       if (managerSync.isEnabled()) {
-        managerSync.disable(this);
+        managerSync.disable();
       } else {
-        managerSync.enable(this);
+        managerSync.enable();
       }
     });
 
     assert toggleOff != null;
     toggleOff.setOnClickListener(v -> {
       assert managerWifi != null;
-      managerWifi.disable(this);
+      managerWifi.disable();
       assert managerData != null;
-      managerData.disable(this);
+      managerData.disable();
       assert managerBluetooth != null;
-      managerBluetooth.disable(this);
+      managerBluetooth.disable();
       assert managerSync != null;
-      managerSync.disable(this);
+      managerSync.disable();
     });
 
     assert toggleOn != null;
     toggleOn.setOnClickListener(v -> {
       assert managerWifi != null;
-      managerWifi.enable(this);
+      managerWifi.enable();
       assert managerData != null;
-      managerData.enable(this);
+      managerData.enable();
       assert managerBluetooth != null;
-      managerBluetooth.enable(this);
+      managerBluetooth.enable();
       assert managerSync != null;
-      managerSync.enable(this);
+      managerSync.enable();
     });
   }
 

@@ -16,46 +16,19 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Service;
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 
 public interface Manager {
 
-  void enable(@NonNull Activity activity);
+  void enable();
 
-  void enable(@NonNull Fragment fragment);
+  void enable(long time);
 
-  void enable(@NonNull Service service);
+  void disable();
 
-  void enable(@NonNull Application application);
-
-  void enable(@NonNull Activity activity, long time);
-
-  void enable(@NonNull Fragment fragment, long time);
-
-  void enable(@NonNull Service service, long time);
-
-  void enable(@NonNull Application application, long time);
-
-  void disable(@NonNull Activity activity);
-
-  void disable(@NonNull Fragment fragment);
-
-  void disable(@NonNull Service service);
-
-  void disable(@NonNull Application application);
-
-  void disable(@NonNull Activity activity, long time);
-
-  void disable(@NonNull Fragment fragment, long time);
-
-  void disable(@NonNull Service service, long time);
-
-  void disable(@NonNull Application application, long time);
+  void disable(long time);
 
   @CheckResult boolean isEnabled();
+
+  @CheckResult boolean isManaged();
 }

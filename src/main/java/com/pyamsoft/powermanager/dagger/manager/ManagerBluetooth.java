@@ -16,125 +16,48 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.app.Application;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.os.Build;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 final class ManagerBluetooth extends ManagerBase {
 
-  @NonNull private static final String TAG = "bluetooth_manager_job";
-  @NonNull private final BluetoothAdapter androidBluetooth;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerBluetooth(@NonNull BluetoothAdapter androidBluetooth,
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject ManagerBluetooth(@NonNull @Named("bluetooth") ManagerInteractor interactor) {
     Timber.d("new ManagerBluetooth");
-    this.androidBluetooth = androidBluetooth;
-    this.preferences = preferences;
+    this.interactor = interactor;
   }
 
-  @Override public void enable(@NonNull Application application) {
-    enable(application, 0);
+  @Override public void enable() {
+    enable(0);
   }
 
-  @Override public void enable(@NonNull Application application, long time) {
-    if (preferences.isBluetoothManaged()) {
-      Timber.d("Queue Bluetooth enable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
-    } else {
-      Timber.w("Bluetooth is not managed");
-    }
+  @Override public void enable(long time) {
+    Timber.d("Queue Bluetooth enable");
+    interactor.cancelJobs();
+    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
   }
 
-  @Override public void disable(@NonNull Application application) {
-    disable(application, preferences.getBluetoothDelay() * 1000L);
+  @Override public void disable() {
+    disable(interactor.getDelayTime() * 1000);
   }
 
-  @Override public void disable(@NonNull Application application, long time) {
-    if (preferences.isBluetoothManaged()) {
-      Timber.d("Queue Bluetooth disable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
-    } else {
-      Timber.w("Bluetooth is not managed");
-    }
+  @Override public void disable(long time) {
+    Timber.d("Queue Bluetooth disable");
+    interactor.cancelJobs();
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createDisableJob(time));
   }
 
   @Override public boolean isEnabled() {
-    return androidBluetooth.isEnabled();
+    return interactor.isEnabled();
   }
 
-  static final class EnableJob extends Job {
-
-    protected EnableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerBluetooth.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerBluetooth.TAG)
-          .singleInstanceBy(ManagerBluetooth.TAG), JOB_TYPE_ENABLE);
-    }
-  }
-
-  static final class DisableJob extends Job {
-
-    protected DisableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerBluetooth.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerBluetooth.TAG)
-          .singleInstanceBy(ManagerBluetooth.TAG), JOB_TYPE_DISABLE);
-    }
-  }
-
-  static abstract class Job extends DeviceJob {
-
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
-    }
-
-    @CheckResult @NonNull BluetoothAdapter getBluetoothAdapter() {
-      BluetoothAdapter adapter;
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        adapter = BluetoothAdapter.getDefaultAdapter();
-      } else {
-        final BluetoothManager bluetoothManager =
-            (BluetoothManager) getContext().getApplicationContext()
-                .getSystemService(Context.BLUETOOTH_SERVICE);
-        adapter = bluetoothManager.getAdapter();
-      }
-      return adapter;
-    }
-
-    @Override protected void enable() {
-      Timber.d("Bluetooth job enable");
-      final BluetoothAdapter adapter = getBluetoothAdapter();
-      if (!adapter.isEnabled()) {
-        Timber.d("Turn on Bluetooth");
-        adapter.enable();
-      } else {
-        Timber.e("Bluetooth is already on");
-      }
-    }
-
-    @Override protected void disable() {
-      Timber.d("Bluetooth job disable");
-      final BluetoothAdapter adapter = getBluetoothAdapter();
-      if (adapter.isEnabled()) {
-        Timber.d("Turn off Bluetooth");
-        adapter.disable();
-      } else {
-        Timber.e("Bluetooth is already off");
-      }
-    }
+  @Override public boolean isManaged() {
+    return interactor.isManaged();
   }
 }

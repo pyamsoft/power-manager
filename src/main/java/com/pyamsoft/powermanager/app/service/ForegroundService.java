@@ -28,8 +28,8 @@ import timber.log.Timber;
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
   private static final int NOTIFICATION_ID = 1000;
+  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
   @Nullable @Inject ForegroundPresenter presenter;
-  @Nullable ScreenOnOffReceiver screenOnOffReceiver;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -41,7 +41,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     screenOnOffReceiver = new ScreenOnOffReceiver(getApplication());
     screenOnOffReceiver.register();
 
-    PowerManager.powerManagerComponent(this).inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().inject(this);
 
     assert presenter != null;
     presenter.bindView(this);

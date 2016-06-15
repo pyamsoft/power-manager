@@ -16,106 +16,48 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.app.Application;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 final class ManagerSync extends ManagerBase {
 
-  @NonNull private static final String TAG = "sync_manager_job";
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerSync(@NonNull PowerManagerPreferences preferences) {
+  @Inject ManagerSync(@NonNull @Named("sync") ManagerInteractor interactor) {
     Timber.d("new ManagerSync");
-    this.preferences = preferences;
+    this.interactor = interactor;
   }
 
-  @Override public void enable(@NonNull Application application) {
-    enable(application, 0);
+  @Override public void enable() {
+    enable(0);
   }
 
-  @Override public void enable(@NonNull Application application, long time) {
-    if (preferences.isSyncManaged()) {
-      Timber.d("Queue Sync enable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new EnableJob(application, time));
-    } else {
-      Timber.w("Sync is not managed");
-    }
+  @Override public void enable(long time) {
+    Timber.d("Queue Sync enable");
+    interactor.cancelJobs();
+    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
   }
 
-  @Override public void disable(@NonNull Application application) {
-    disable(application, preferences.getMasterSyncDelay() * 1000L);
+  @Override public void disable() {
+    disable(interactor.getDelayTime() * 1000);
   }
 
-  @Override public void disable(@NonNull Application application, long time) {
-    if (preferences.isSyncManaged()) {
-      Timber.d("Queue Sync disable");
-      cancelJobs(application, TAG);
-      PowerManager.getJobManager(application).addJobInBackground(new DisableJob(application, time));
-    } else {
-      Timber.w("Sync is not managed");
-    }
+  @Override public void disable(long time) {
+    Timber.d("Queue Sync disable");
+    interactor.cancelJobs();
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createDisableJob(time));
   }
 
   @Override public boolean isEnabled() {
-    return ContentResolver.getMasterSyncAutomatically();
+    return interactor.isEnabled();
   }
 
-  static final class EnableJob extends Job {
-
-    protected EnableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerSync.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerSync.TAG)
-          .singleInstanceBy(ManagerSync.TAG), JOB_TYPE_ENABLE);
-    }
-  }
-
-  static final class DisableJob extends Job {
-
-    protected DisableJob(@NonNull Context context, long delayTime) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerSync.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerSync.TAG)
-          .singleInstanceBy(ManagerSync.TAG), JOB_TYPE_DISABLE);
-    }
-  }
-
-  static abstract class Job extends DeviceJob {
-
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
-    }
-
-    @Override protected void enable() {
-      Timber.d("Sync job enable");
-
-      if (!ContentResolver.getMasterSyncAutomatically()) {
-        Timber.d("Turn on Master Sync");
-        ContentResolver.setMasterSyncAutomatically(true);
-      } else {
-        Timber.e("Master Sync is already off");
-      }
-    }
-
-    @Override protected void disable() {
-      Timber.d("Sync job disable");
-
-      if (ContentResolver.getMasterSyncAutomatically()) {
-        Timber.d("Turn off Master Sync");
-        ContentResolver.setMasterSyncAutomatically(false);
-      } else {
-        Timber.e("Master Sync is already off");
-      }
-    }
+  @Override public boolean isManaged() {
+    return interactor.isManaged();
   }
 }

@@ -26,7 +26,7 @@ import timber.log.Timber;
 public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
   @NonNull @Override protected JobManager getJobManager() {
-    return PowerManager.getJobManager(this);
+    return PowerManager.getInstance().getJobManager();
   }
 
   @Override public void onTaskRemoved(Intent rootIntent) {

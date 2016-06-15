@@ -45,7 +45,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     filter.addAction(Intent.ACTION_SCREEN_ON);
     isRegistered = false;
 
-    PowerManager.powerManagerComponent(application).inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().inject(this);
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {
@@ -67,26 +67,122 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
-    assert managerWifi != null;
-    managerWifi.enable(application);
-    assert managerData != null;
-    managerData.enable(application);
-    assert managerBluetooth != null;
-    managerBluetooth.enable(application);
+    enableWifi();
+    enableData();
+    enableBluetooth();
+    enableSync();
+  }
+
+  private void enableSync() {
     assert managerSync != null;
-    managerSync.enable(application);
+    if (managerSync.isManaged()) {
+      if (managerSync.isEnabled()) {
+        Timber.e("Sync was already enabled, ignoring");
+      } else {
+        managerSync.enable();
+      }
+    } else {
+      Timber.e("Sync was not managed, ignoring");
+    }
+  }
+
+  private void enableBluetooth() {
+    assert managerBluetooth != null;
+    if (managerBluetooth.isManaged()) {
+      if (managerBluetooth.isEnabled()) {
+        Timber.e("Bluetooth was already enabled, ignoring");
+      } else {
+        managerBluetooth.enable();
+      }
+    } else {
+      Timber.e("Bluetooth was not managed, ignoring");
+    }
+  }
+
+  private void enableData() {
+    assert managerData != null;
+    if (managerData.isManaged()) {
+      if (managerData.isEnabled()) {
+        Timber.e("Data was already enabled, ignoring");
+      } else {
+        managerData.enable();
+      }
+    } else {
+      Timber.e("Data was not managed, ignoring");
+    }
+  }
+
+  private void enableWifi() {
+    assert managerWifi != null;
+    if (managerWifi.isManaged()) {
+      if (managerWifi.isEnabled()) {
+        Timber.e("Wifi was already enabled, ignoring");
+      } else {
+        managerWifi.enable();
+      }
+    } else {
+      Timber.e("Wifi was not managed, ignoring");
+    }
   }
 
   private void disableManagers() {
     Timber.d("Disable all managed managers");
-    assert managerWifi != null;
-    managerWifi.disable(application);
-    assert managerData != null;
-    managerData.disable(application);
-    assert managerBluetooth != null;
-    managerBluetooth.disable(application);
+    disableWifi();
+    disableData();
+    disableBluetooth();
+    disableSync();
+  }
+
+  private void disableSync() {
     assert managerSync != null;
-    managerSync.disable(application);
+    if (managerSync.isManaged()) {
+      if (managerSync.isEnabled()) {
+        managerSync.disable();
+      } else {
+        Timber.e("Sync was already disabled, ignoring");
+      }
+    } else {
+      Timber.e("Sync was not managed, ignoring");
+    }
+  }
+
+  private void disableBluetooth() {
+    assert managerBluetooth != null;
+    if (managerBluetooth.isManaged()) {
+      if (managerBluetooth.isEnabled()) {
+        managerBluetooth.disable();
+      } else {
+        Timber.e("Bluetooth was already disabled, ignoring");
+      }
+    } else {
+      Timber.e("Bluetooth was not managed, ignoring");
+    }
+  }
+
+  private void disableData() {
+    assert managerData != null;
+    if (managerData.isManaged()) {
+      if (managerData.isEnabled()) {
+        managerData.disable();
+      } else {
+        Timber.e("Data was already disabled, ignoring");
+      }
+    } else {
+      Timber.e("Data was not managed, ignoring");
+    }
+  }
+
+  private void disableWifi() {
+    assert managerWifi != null;
+    if (managerWifi.isManaged()) {
+      if (managerWifi.isEnabled()) {
+        managerWifi.disable();
+      } else {
+        Timber.e("Wifi was already disabled, ignoring");
+      }
+    } else {
+      Timber.e("Wifi was not managed, ignoring");
+    }
   }
 
   public final void register() {
