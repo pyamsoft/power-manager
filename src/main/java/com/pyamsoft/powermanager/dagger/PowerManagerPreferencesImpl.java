@@ -81,6 +81,6 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isWifiManaged() {
-    return true;
+    return false;
   }
 }

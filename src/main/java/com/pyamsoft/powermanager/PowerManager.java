@@ -120,7 +120,7 @@ public final class PowerManager extends ApplicationBase {
   }
 
   private void initializeJobManager() {
-    final JobManager jobManager = createJobManager(this);
+    jobManager = createJobManager(this);
     Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
   }
 
