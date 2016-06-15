@@ -23,10 +23,12 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.ManagerData;
+import com.pyamsoft.powermanager.app.manager.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Module public class ManagerModule {
@@ -69,23 +71,20 @@ import javax.inject.Singleton;
     return new ManagerInteractorSync(preferences, context);
   }
 
-  @Singleton @Provides @Named("wifi") Manager provideManagerWifi(
-      @NonNull ManagerInteractorWifi wifi) {
-    return new ManagerWifi(wifi);
+  @Singleton @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi) {
+    return new ManagerWifiImpl(wifi);
   }
 
-  @Singleton @Provides @Named("bluetooth") Manager provideManagerBluetooth(
+  @Singleton @Provides ManagerBluetooth provideManagerBluetooth(
       @NonNull ManagerInteractorBluetooth bluetooth) {
-    return new ManagerBluetooth(bluetooth);
+    return new ManagerBluetoothImpl(bluetooth);
   }
 
-  @Singleton @Provides @Named("sync") Manager provideManagerSync(
-      @NonNull ManagerInteractorSync sync) {
-    return new ManagerSync(sync);
+  @Singleton @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync) {
+    return new ManagerSyncImpl(sync);
   }
 
-  @Singleton @Provides @Named("data") Manager provideManagerData(
-      @NonNull ManagerInteractorData data) {
-    return new ManagerData(data);
+  @Singleton @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data) {
+    return new ManagerDataImpl(data);
   }
 }

@@ -18,15 +18,16 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-final class ManagerWifi extends ManagerBase {
+final class ManagerWifiImpl extends ManagerBaseImpl implements ManagerWifi {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerWifi(@NonNull @Named("wifi") ManagerInteractor interactor) {
+  @Inject ManagerWifiImpl(@NonNull @Named("wifi") ManagerInteractor interactor) {
     Timber.d("new ManagerWifi");
     this.interactor = interactor;
   }

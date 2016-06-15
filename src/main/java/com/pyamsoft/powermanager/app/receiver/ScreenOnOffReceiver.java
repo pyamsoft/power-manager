@@ -24,19 +24,21 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.ManagerData;
+import com.pyamsoft.powermanager.app.manager.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import javax.inject.Inject;
-import javax.inject.Named;
 import timber.log.Timber;
 
 public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   @NonNull private final IntentFilter filter;
   @NonNull private final Application application;
-  @Nullable @Inject @Named("wifi") Manager managerWifi;
-  @Nullable @Inject @Named("data") Manager managerData;
-  @Nullable @Inject @Named("bluetooth") Manager managerBluetooth;
-  @Nullable @Inject @Named("sync") Manager managerSync;
+  @Nullable @Inject ManagerWifi managerWifi;
+  @Nullable @Inject ManagerData managerData;
+  @Nullable @Inject ManagerBluetooth managerBluetooth;
+  @Nullable @Inject ManagerSync managerSync;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Application application) {

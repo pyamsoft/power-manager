@@ -18,15 +18,16 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-final class ManagerBluetooth extends ManagerBase {
+final class ManagerBluetoothImpl extends ManagerBaseImpl implements ManagerBluetooth {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerBluetooth(@NonNull @Named("bluetooth") ManagerInteractor interactor) {
+  @Inject ManagerBluetoothImpl(@NonNull @Named("bluetooth") ManagerInteractor interactor) {
     Timber.d("new ManagerBluetooth");
     this.interactor = interactor;
   }

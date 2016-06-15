@@ -16,7 +16,5 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.app.manager.Manager;
-
-abstract class ManagerBase implements Manager {
+abstract class WearableManagerBase extends ManagerBaseImpl {
 }

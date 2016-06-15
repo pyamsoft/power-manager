@@ -124,6 +124,10 @@ dependencies {
   compile 'com.birbit:android-priority-jobqueue:2.0.0-alpha3'
   compile 'com.google.android.gms:play-services-gcm:9.0.2'
 
+  // Google Play Services for other components
+  // Check if Android Wear is connected before handling Bluetooth/Wifi
+  compile 'com.google.android.gms:play-services-wearable:9.0.2'
+
   // JavaPoet to fix an issue
   apt 'com.squareup:javapoet:1.7.0'
 

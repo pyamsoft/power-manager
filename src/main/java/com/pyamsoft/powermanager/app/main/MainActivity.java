@@ -28,12 +28,14 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.ManagerData;
+import com.pyamsoft.powermanager.app.manager.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.ManagerWifi;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 public class MainActivity extends DonationActivityBase implements RatingDialog.ChangeLogProvider {
 
@@ -45,10 +47,10 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
   @Nullable @BindView(R.id.toggle_all_off) Button toggleOff;
   @Nullable @BindView(R.id.toggle_all_on) Button toggleOn;
 
-  @Nullable @Inject @Named("wifi") Manager managerWifi;
-  @Nullable @Inject @Named("data") Manager managerData;
-  @Nullable @Inject @Named("bluetooth") Manager managerBluetooth;
-  @Nullable @Inject @Named("sync") Manager managerSync;
+  @Nullable @Inject ManagerWifi managerWifi;
+  @Nullable @Inject ManagerData managerData;
+  @Nullable @Inject ManagerBluetooth managerBluetooth;
+  @Nullable @Inject ManagerSync managerSync;
   @Nullable private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -18,16 +18,17 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.manager.ManagerData;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-final class ManagerSync extends ManagerBase {
+final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerSync(@NonNull @Named("sync") ManagerInteractor interactor) {
-    Timber.d("new ManagerSync");
+  @Inject ManagerDataImpl(@NonNull @Named("data") ManagerInteractor interactor) {
+    Timber.d("new ManagerData");
     this.interactor = interactor;
   }
 
@@ -36,7 +37,7 @@ final class ManagerSync extends ManagerBase {
   }
 
   @Override public void enable(long time) {
-    Timber.d("Queue Sync enable");
+    Timber.d("Queue Data enable");
     interactor.cancelJobs();
     PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
   }
@@ -46,7 +47,7 @@ final class ManagerSync extends ManagerBase {
   }
 
   @Override public void disable(long time) {
-    Timber.d("Queue Sync disable");
+    Timber.d("Queue Data disable");
     interactor.cancelJobs();
     PowerManager.getInstance()
         .getJobManager()
