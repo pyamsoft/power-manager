@@ -63,7 +63,7 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
           Timber.d("Check that manager isManaged");
           return wearableManagerInteractor.isManaged();
         });
-    if (interactor.isWearableManaged()) {
+    if (interactor.isManaged() && interactor.isWearableManaged()) {
       observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
           (wearableManagerInteractor, isConnected) -> {
             if (wearableManagerInteractor.isWearableManaged()) {
