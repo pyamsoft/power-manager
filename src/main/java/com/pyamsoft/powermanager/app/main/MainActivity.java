@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.MenuItem;
@@ -50,6 +51,8 @@ public class MainActivity extends DonationActivityBase
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    setPreferenceDefaultValues();
+
     DaggerMainComponent.builder().build().inject(this);
 
     assert presenter != null;
@@ -60,6 +63,13 @@ public class MainActivity extends DonationActivityBase
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.main_container, new OverviewFragment())
         .commit();
+  }
+
+  private void setPreferenceDefaultValues() {
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_wifi, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_data, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_bluetooth, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_sync, false);
   }
 
   @Override protected void onDestroy() {

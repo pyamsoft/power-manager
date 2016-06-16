@@ -17,4 +17,9 @@
 
 <resources>
 
+  <bool name="manage_data_default">true</bool>
+  <string name="manage_data_key">manage_data</string>
+  <string name="manage_data_title">Manage Data</string>
+  <string name="manage_data_summary">Manage Data</string>
+
 </resources>
