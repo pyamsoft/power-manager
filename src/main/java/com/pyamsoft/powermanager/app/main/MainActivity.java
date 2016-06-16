@@ -60,9 +60,17 @@ public class MainActivity extends DonationActivityBase
 
     unbinder = ButterKnife.bind(this);
     setupAppBar();
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new OverviewFragment())
-        .commit();
+    showOverviewIfBlank();
+  }
+
+  private void showOverviewIfBlank() {
+    final FragmentManager fm = getSupportFragmentManager();
+    if (fm.findFragmentByTag(ManagerFragment.TYPE_WIFI) == null
+        && fm.findFragmentByTag(ManagerFragment.TYPE_DATA) == null
+        && fm.findFragmentByTag(ManagerFragment.TYPE_BLUETOOTH) == null
+        && fm.findFragmentByTag(ManagerFragment.TYPE_SYNC) == null) {
+      fm.beginTransaction().replace(R.id.main_container, new OverviewFragment()).commit();
+    }
   }
 
   private void setPreferenceDefaultValues() {
@@ -184,7 +192,7 @@ public class MainActivity extends DonationActivityBase
   @Override public void loadFragmentFromOverview(@NonNull String type) {
     setActionBarUpEnabled(true);
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, ManagerFragment.newInstance(type))
+        .replace(R.id.main_container, ManagerFragment.newInstance(type), type)
         .addToBackStack(null)
         .commit();
   }
