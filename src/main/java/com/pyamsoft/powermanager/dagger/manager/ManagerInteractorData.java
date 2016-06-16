@@ -67,32 +67,32 @@ final class ManagerInteractorData extends ManagerInteractorBase {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime) {
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorData.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorData.TAG)
-          .singleInstanceBy(ManagerInteractorData.TAG), JOB_TYPE_ENABLE);
+          .singleInstanceBy(ManagerInteractorData.TAG), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime) {
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorData.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorData.TAG)
-          .singleInstanceBy(ManagerInteractorData.TAG), JOB_TYPE_DISABLE);
+          .singleInstanceBy(ManagerInteractorData.TAG), JOB_TYPE_DISABLE, originalState);
     }
   }
 
@@ -108,8 +108,9 @@ final class ManagerInteractorData extends ManagerInteractorBase {
       GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
     }
 
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType,
+        boolean originalState) {
+      super(context, params, jobType, originalState);
     }
 
     @CheckResult @Nullable private static String resolveSetMethodName() {
@@ -195,14 +196,18 @@ final class ManagerInteractorData extends ManagerInteractorBase {
 
     @Override protected void enable() {
       Timber.d("Data job enable");
-      final ConnectivityManager connectivityManager =
-          (ConnectivityManager) getContext().getApplicationContext()
-              .getSystemService(Context.CONNECTIVITY_SERVICE);
-      if (!isEnabled(connectivityManager)) {
-        Timber.d("Turn on Data");
-        setMobileDataEnabled(connectivityManager, true);
+      if (isOriginalState()) {
+        final ConnectivityManager connectivityManager =
+            (ConnectivityManager) getContext().getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (!isEnabled(connectivityManager)) {
+          Timber.d("Turn on Data");
+          setMobileDataEnabled(connectivityManager, true);
+        } else {
+          Timber.e("Data is already on");
+        }
       } else {
-        Timber.e("Data is already on");
+        Timber.e("Data was not originally on");
       }
     }
 

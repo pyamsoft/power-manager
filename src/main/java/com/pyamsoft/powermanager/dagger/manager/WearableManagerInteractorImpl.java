@@ -54,6 +54,7 @@ abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
     final ConnectionResult connectionResult = googleApiClient.blockingConnect(1, TimeUnit.SECONDS);
     boolean result;
     if (connectionResult.isSuccess()) {
+      Timber.d("Connect Google APIs");
       final NodeApi.GetConnectedNodesResult nodesResult =
           Wearable.NodeApi.getConnectedNodes(googleApiClient).await(1, TimeUnit.SECONDS);
       Node wearableNode = null;
@@ -77,9 +78,11 @@ abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
     } else {
       result = false;
     }
-    return Observable.just(result).doOnCompleted(() -> {
-      Timber.d("Disconnected googleApiClient");
-      googleApiClient.disconnect();
-    });
+    return Observable.just(result);
+  }
+
+  @Override public void disconnectGoogleApis() {
+    Timber.d("Disconnect Google APIs");
+    googleApiClient.disconnect();
   }
 }

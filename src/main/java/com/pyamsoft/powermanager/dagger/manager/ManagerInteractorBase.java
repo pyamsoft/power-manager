@@ -23,8 +23,18 @@ import timber.log.Timber;
 
 abstract class ManagerInteractorBase implements ManagerInteractor {
 
+  private boolean originalState = false;
+
   protected final void cancelJobs(@NonNull String tag) {
     Timber.d("Attempt job cancel");
     PowerManager.getInstance().getJobManager().cancelJobsInBackground(null, TagConstraint.ANY, tag);
+  }
+
+  @Override public final void setOriginalState(boolean originalState) {
+    this.originalState = originalState;
+  }
+
+  @Override public final boolean isOriginalStateEnabled() {
+    return originalState;
   }
 }

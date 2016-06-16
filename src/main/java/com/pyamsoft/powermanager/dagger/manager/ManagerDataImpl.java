@@ -52,6 +52,9 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
               enable(0);
             }, throwable -> {
               Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.setOriginalState(false);
             });
     setSubscription(subscription);
   }
@@ -71,7 +74,7 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
               disable(managerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
-            });
+            }, () -> Timber.d("onComplete"));
     setSubscription(subscription);
   }
 

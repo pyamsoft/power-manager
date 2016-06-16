@@ -56,54 +56,59 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   static final class EnableJob extends WifiJob {
 
-    protected EnableJob(@NonNull Context context, long delayTime) {
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorWifi.TAG)
           .setDelayMs(delayTime)
           .addTags(ManagerInteractorWifi.TAG)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorWifi.TAG)
-          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_ENABLE);
+          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends WifiJob {
 
-    protected DisableJob(@NonNull Context context, long delayTime) {
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorWifi.TAG)
           .setDelayMs(delayTime)
           .addTags(ManagerInteractorWifi.TAG)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorWifi.TAG)
-          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_DISABLE);
+          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_DISABLE, originalState);
     }
   }
 
   static abstract class WifiJob extends DeviceJob {
 
-    protected WifiJob(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
+    protected WifiJob(@NonNull Context context, @NonNull Params params, int jobType,
+        boolean originalState) {
+      super(context, params, jobType, originalState);
     }
 
     @Override protected void enable() {
       Timber.d("Wifi job enable");
 
-      final WifiManager wifiManager =
-          (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-      // Only turn wifi on if it is off
-      if (!wifiManager.isWifiEnabled()) {
-        Timber.d("Turn on WiFi");
-        wifiManager.setWifiEnabled(true);
+      if (isOriginalState()) {
+        final WifiManager wifiManager =
+            (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        // Only turn wifi on if it is off
+        if (!wifiManager.isWifiEnabled()) {
+          Timber.d("Turn on WiFi");
+          wifiManager.setWifiEnabled(true);
+        } else {
+          Timber.e("Wifi is already on");
+        }
       } else {
-        Timber.e("Wifi is already on");
+        Timber.e("Wifi was not originally on");
       }
     }
 

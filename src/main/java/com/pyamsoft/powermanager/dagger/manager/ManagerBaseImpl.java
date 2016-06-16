@@ -64,6 +64,7 @@ abstract class ManagerBaseImpl implements Manager {
   }
 
   @Override public final void disable(long time) {
+    interactor.setOriginalState(interactor.isEnabled());
     interactor.cancelJobs();
     PowerManager.getInstance()
         .getJobManager()

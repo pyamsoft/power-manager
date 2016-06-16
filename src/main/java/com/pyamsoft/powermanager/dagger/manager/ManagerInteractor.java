@@ -23,6 +23,10 @@ interface ManagerInteractor {
 
   void cancelJobs();
 
+  void setOriginalState(boolean enabled);
+
+  @CheckResult boolean isOriginalStateEnabled();
+
   @CheckResult boolean isEnabled();
 
   @CheckResult boolean isManaged();

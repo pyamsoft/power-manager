@@ -22,6 +22,8 @@ import rx.Observable;
 
 interface WearableManagerInteractor extends ManagerInteractor {
 
+  void disconnectGoogleApis();
+
   @CheckResult boolean isWearableManaged();
 
   @NonNull @CheckResult Observable<Boolean> isWearableConnected();

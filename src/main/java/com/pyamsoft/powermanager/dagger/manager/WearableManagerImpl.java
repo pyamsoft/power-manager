@@ -16,10 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.WearableManager;
 import javax.inject.Named;
+import rx.Observable;
 import rx.Scheduler;
+import timber.log.Timber;
 
 abstract class WearableManagerImpl extends ManagerBaseImpl implements WearableManager {
 
@@ -34,5 +37,27 @@ abstract class WearableManagerImpl extends ManagerBaseImpl implements WearableMa
 
   @Override public boolean isWearableManaged() {
     return interactor.isWearableManaged();
+  }
+
+  @CheckResult @NonNull Observable<WearableManagerInteractor> zipWithWearableManagedState(
+      @NonNull Observable<WearableManagerInteractor> observable) {
+    if (interactor.isManaged() && interactor.isWearableManaged()) {
+      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
+          (wearableManagerInteractor, isConnected) -> {
+            if (wearableManagerInteractor.isWearableManaged()) {
+              if (isConnected) {
+                Timber.d("Wearable is managed and connected, return NULL");
+                return null;
+              } else {
+                Timber.d("Wearable is managed but not connected");
+                return wearableManagerInteractor;
+              }
+            } else {
+              Timber.d("Wearable is not managed");
+              return wearableManagerInteractor;
+            }
+          });
+    }
+    return observable;
   }
 }

@@ -59,39 +59,40 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime) {
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorBluetooth.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorBluetooth.TAG)
-          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_ENABLE);
+          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime) {
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorBluetooth.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorBluetooth.TAG)
-          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_DISABLE);
+          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_DISABLE, originalState);
     }
   }
 
   static abstract class Job extends DeviceJob {
 
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType,
+        boolean originalState) {
+      super(context, params, jobType, originalState);
     }
 
     @CheckResult @NonNull BluetoothAdapter getBluetoothAdapter() {
@@ -109,12 +110,18 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
     @Override protected void enable() {
       Timber.d("Bluetooth job enable");
-      final BluetoothAdapter adapter = getBluetoothAdapter();
-      if (!adapter.isEnabled()) {
-        Timber.d("Turn on Bluetooth");
-        adapter.enable();
+
+      // Only if it was originally enabled
+      if (isOriginalState()) {
+        final BluetoothAdapter adapter = getBluetoothAdapter();
+        if (!adapter.isEnabled()) {
+          Timber.d("Turn on Bluetooth");
+          adapter.enable();
+        } else {
+          Timber.e("Bluetooth is already on");
+        }
       } else {
-        Timber.e("Bluetooth is already on");
+        Timber.e("Bluetooth was not originally on");
       }
     }
 

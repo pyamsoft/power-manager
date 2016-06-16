@@ -52,6 +52,9 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
               enable(0);
             }, throwable -> {
               Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.setOriginalState(false);
             });
     setSubscription(subscription);
   }
@@ -63,23 +66,7 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
           Timber.d("Check that manager isManaged");
           return wearableManagerInteractor.isManaged();
         });
-    if (interactor.isManaged() && interactor.isWearableManaged()) {
-      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
-          (wearableManagerInteractor, isConnected) -> {
-            if (wearableManagerInteractor.isWearableManaged()) {
-              if (isConnected) {
-                Timber.d("Wearable is managed and connected, return NULL");
-                return null;
-              } else {
-                Timber.d("Wearable is managed but not connected");
-                return wearableManagerInteractor;
-              }
-            } else {
-              Timber.d("Wearable is not managed");
-              return wearableManagerInteractor;
-            }
-          });
-    }
+    observable = zipWithWearableManagedState(observable);
 
     final Subscription subscription =
         observable.filter(wearableManagerInteractor -> wearableManagerInteractor != null)
@@ -90,6 +77,9 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
               disable(wearableManagerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.disconnectGoogleApis();
             });
     setSubscription(subscription);
   }

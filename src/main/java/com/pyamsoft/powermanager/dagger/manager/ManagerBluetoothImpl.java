@@ -52,34 +52,22 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
               enable(0);
             }, throwable -> {
               Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.setOriginalState(false);
             });
     setSubscription(subscription);
   }
 
   @Override public void disable() {
     unsubscribe();
+
     Observable<WearableManagerInteractor> observable =
         Observable.defer(() -> Observable.just(interactor)).filter(wearableManagerInteractor -> {
           Timber.d("Check that manager isManaged");
           return wearableManagerInteractor.isManaged();
         });
-    if (interactor.isManaged() && interactor.isWearableManaged()) {
-      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
-          (wearableManagerInteractor, isConnected) -> {
-            if (wearableManagerInteractor.isWearableManaged()) {
-              if (isConnected) {
-                Timber.d("Wearable is managed and connected, return NULL");
-                return null;
-              } else {
-                Timber.d("Wearable is managed but not connected");
-                return wearableManagerInteractor;
-              }
-            } else {
-              Timber.d("Wearable is not managed");
-              return wearableManagerInteractor;
-            }
-          });
-    }
+    observable = zipWithWearableManagedState(observable);
 
     final Subscription subscription =
         observable.filter(wearableManagerInteractor -> wearableManagerInteractor != null)
@@ -90,6 +78,9 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
               disable(wearableManagerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.disconnectGoogleApis();
             });
     setSubscription(subscription);
   }

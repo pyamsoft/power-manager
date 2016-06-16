@@ -53,49 +53,54 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
   }
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime) {
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorSync.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorSync.TAG)
-          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_ENABLE);
+          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime) {
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
       super(context, new Params(PRIORITY).setGroupId(ManagerInteractorSync.TAG)
           .setDelayMs(delayTime)
           .setRequiresNetwork(false)
           .setSingleId(ManagerInteractorSync.TAG)
-          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_DISABLE);
+          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_DISABLE, originalState);
     }
   }
 
   static abstract class Job extends DeviceJob {
 
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType) {
-      super(context, params, jobType);
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType,
+        boolean originalState) {
+      super(context, params, jobType, originalState);
     }
 
     @Override protected void enable() {
       Timber.d("Sync job enable");
 
-      if (!ContentResolver.getMasterSyncAutomatically()) {
-        Timber.d("Turn on Master Sync");
-        ContentResolver.setMasterSyncAutomatically(true);
+      if (isOriginalState()) {
+        if (!ContentResolver.getMasterSyncAutomatically()) {
+          Timber.d("Turn on Master Sync");
+          ContentResolver.setMasterSyncAutomatically(true);
+        } else {
+          Timber.e("Master Sync is already off");
+        }
       } else {
-        Timber.e("Master Sync is already off");
+        Timber.e("Sync was not originally on");
       }
     }
 

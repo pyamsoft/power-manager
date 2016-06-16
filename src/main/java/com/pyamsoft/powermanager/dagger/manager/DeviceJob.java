@@ -32,16 +32,23 @@ abstract class DeviceJob extends Job {
   static final int PRIORITY = 1;
 
   @NonNull private final Context appContext;
-  private int jobType;
+  private final int jobType;
+  private final boolean originalState;
 
-  protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType) {
+  protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
+      boolean originalState) {
     super(params);
-    this.jobType = jobType;
     this.appContext = context.getApplicationContext();
+    this.jobType = jobType;
+    this.originalState = originalState;
   }
 
-  @CheckResult @NonNull Context getContext() {
+  @CheckResult @NonNull final Context getContext() {
     return appContext;
+  }
+
+  @CheckResult final boolean isOriginalState() {
+    return originalState;
   }
 
   @Override public void onRun() throws Throwable {
