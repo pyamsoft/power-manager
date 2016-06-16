@@ -20,6 +20,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyamsoft.powermanager">
 
+  <!-- For Billing Service -->
+  <uses-permission android:name="com.android.vending.BILLING"/>
+
   <!-- For WiFi -->
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
@@ -55,7 +58,7 @@
       </intent-filter>
     </activity>
 
-    <!-- Job Scheduling with GCM -->
+    <!-- Job Scheduling -->
     <service
         android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
         android:permission="android.permission.BIND_JOB_SERVICE"/>`
@@ -68,7 +71,7 @@
       </intent-filter>
     </service>
 
-    <!-- Bound service -->
+    <!-- Service -->
     <service android:name=".app.service.ForegroundService"/>
 
     <receiver

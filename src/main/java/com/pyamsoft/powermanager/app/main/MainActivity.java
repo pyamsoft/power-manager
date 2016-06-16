@@ -28,13 +28,20 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.manager.ManagerFragment;
+import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
+import javax.inject.Inject;
 
-public class MainActivity extends DonationActivityBase implements RatingDialog.ChangeLogProvider {
+public class MainActivity extends DonationActivityBase
+    implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
   @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
+  @Nullable @Inject MainPresenter presenter;
 
   @Nullable private Unbinder unbinder;
 
@@ -43,10 +50,15 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    DaggerMainComponent.builder().build().inject(this);
+
+    assert presenter != null;
+    presenter.bindView(this);
+
     unbinder = ButterKnife.bind(this);
     setupAppBar();
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, new MainFragment())
+        .replace(R.id.main_container, new OverviewFragment())
         .commit();
   }
 
@@ -55,6 +67,21 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
 
     assert unbinder != null;
     unbinder.unbind();
+
+    assert presenter != null;
+    presenter.unbindView();
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    assert presenter != null;
+    presenter.onResume();
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    assert presenter != null;
+    presenter.onPause();
   }
 
   @Override protected void onPostResume() {
@@ -142,5 +169,17 @@ public class MainActivity extends DonationActivityBase implements RatingDialog.C
 
   @Override public int getChangeLogVersion() {
     return BuildConfig.VERSION_CODE;
+  }
+
+  @Override public void loadFragmentFromOverview(@NonNull String type) {
+    setActionBarUpEnabled(true);
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_container, ManagerFragment.newInstance(type))
+        .addToBackStack(null)
+        .commit();
+  }
+
+  @Override public void overviewEventError() {
+    AppUtil.guaranteeSingleDialogFragment(this, new ErrorDialog(), "error");
   }
 }

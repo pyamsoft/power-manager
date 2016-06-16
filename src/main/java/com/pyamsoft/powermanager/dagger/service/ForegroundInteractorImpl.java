@@ -53,8 +53,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         appContext.getString(R.string.app_name))
         .setContentIntent(pendingIntent)
         .setPriority(preferences.getNotificationPriority())
-        .addAction(preferences.isWearableManaged() ? R.drawable.ic_watch_black_24dp
-                : R.drawable.ic_watch_black_off_24dp, preferences.isWearableManaged() ? "ON" : "OFF",
+        .addAction(preferences.isWearableManaged() ? R.drawable.ic_watch_24dp
+                : R.drawable.ic_watch_off_24dp, preferences.isWearableManaged() ? "ON" : "OFF",
             wearAction);
   }
 

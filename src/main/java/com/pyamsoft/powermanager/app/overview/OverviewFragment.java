@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.main;
+package com.pyamsoft.powermanager.app.overview;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerFragment;
 
-public class MainFragment extends Fragment {
+public class OverviewFragment extends Fragment {
 
+  @Nullable private RecyclerView.LayoutManager layoutManager;
+  @Nullable @BindView(R.id.main_fragment_recycler) RecyclerView recyclerView;
   @Nullable private Unbinder unbinder;
 
   @Nullable @Override
@@ -50,6 +51,15 @@ public class MainFragment extends Fragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    setupRecyclerView();
   }
 
+  private void setupRecyclerView() {
+    layoutManager = new GridLayoutManager(getActivity(), 2);
+
+    assert recyclerView != null;
+    recyclerView.setLayoutManager(layoutManager);
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setAdapter(new OverviewAdapter());
+  }
 }
