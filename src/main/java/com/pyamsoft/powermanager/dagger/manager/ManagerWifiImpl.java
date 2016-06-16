@@ -45,6 +45,10 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
               Timber.d("Check that manager isManaged");
               return wearableManagerInteractor.isManaged();
             })
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isEnabled");
+              return !wearableManagerInteractor.isEnabled();
+            })
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(wearableManagerInteractor -> {
@@ -65,6 +69,9 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
         Observable.defer(() -> Observable.just(interactor)).filter(wearableManagerInteractor -> {
           Timber.d("Check that manager isManaged");
           return wearableManagerInteractor.isManaged();
+        }).filter(wearableManagerInteractor -> {
+          Timber.d("Check that manager !isEnabled");
+          return wearableManagerInteractor.isEnabled();
         });
     observable = zipWithWearableManagedState(observable);
 

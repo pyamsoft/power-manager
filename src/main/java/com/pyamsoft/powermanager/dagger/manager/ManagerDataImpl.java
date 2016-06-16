@@ -45,6 +45,10 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
               Timber.d("Check that manager isManaged");
               return managerInteractor.isManaged();
             })
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isEnabled");
+              return !wearableManagerInteractor.isEnabled();
+            })
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
@@ -66,6 +70,10 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
             .filter(managerInteractor -> {
               Timber.d("Check that manager isManaged");
               return managerInteractor.isManaged();
+            })
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager !isEnabled");
+              return wearableManagerInteractor.isEnabled();
             })
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())

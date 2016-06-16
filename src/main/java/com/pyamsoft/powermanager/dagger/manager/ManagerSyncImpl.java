@@ -45,6 +45,10 @@ final class ManagerSyncImpl extends ManagerBaseImpl implements ManagerSync {
               Timber.d("Check that manager isManaged");
               return managerInteractor.isManaged();
             })
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isEnabled");
+              return !wearableManagerInteractor.isEnabled();
+            })
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
@@ -64,8 +68,12 @@ final class ManagerSyncImpl extends ManagerBaseImpl implements ManagerSync {
     final Subscription subscription =
         Observable.defer(() -> Observable.just(interactor))
             .filter(managerInteractor -> {
-              Timber.d("Check that manager isManaged");
+              Timber.d("Check that manager !isManaged");
               return managerInteractor.isManaged();
+            })
+            .filter(wearableManagerInteractor -> {
+              Timber.d("Check that manager isEnabled");
+              return wearableManagerInteractor.isEnabled();
             })
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
