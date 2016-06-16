@@ -111,7 +111,7 @@ public class MainActivity extends DonationActivityBase
     assert toolbar != null;
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
-    setActionBarUpEnabled(false);
+    setActionBarUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
   }
 
   @Override public void onBackPressed() {
