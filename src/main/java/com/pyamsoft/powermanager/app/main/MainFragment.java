@@ -32,13 +32,6 @@ import com.pyamsoft.powermanager.app.manager.ManagerFragment;
 
 public class MainFragment extends Fragment {
 
-  @Nullable @BindView(R.id.toggle_wifi_test) Button toggleWifi;
-  @Nullable @BindView(R.id.toggle_data_test) Button toggleData;
-  @Nullable @BindView(R.id.toggle_bluetooth_test) Button toggleBluetooth;
-  @Nullable @BindView(R.id.toggle_sync_test) Button toggleSync;
-  @Nullable @BindView(R.id.toggle_all_off) Button toggleOff;
-  @Nullable @BindView(R.id.toggle_all_on) Button toggleOn;
-
   @Nullable private Unbinder unbinder;
 
   @Nullable @Override
@@ -57,60 +50,6 @@ public class MainFragment extends Fragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    setupButtons();
   }
 
-  private void setupButtons() {
-    assert toggleWifi != null;
-    toggleWifi.setOnClickListener(view -> {
-      getFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_WIFI))
-          .addToBackStack(null)
-          .commit();
-      final FragmentActivity fragmentActivity = getActivity();
-      if (fragmentActivity instanceof MainActivity) {
-        final MainActivity mainActivity = (MainActivity) fragmentActivity;
-        mainActivity.setActionBarUpEnabled(true);
-      }
-    });
-
-    assert toggleData != null;
-    toggleData.setOnClickListener(view -> {
-      getFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_DATA))
-          .addToBackStack(null)
-          .commit();
-      final FragmentActivity fragmentActivity = getActivity();
-      if (fragmentActivity instanceof MainActivity) {
-        final MainActivity mainActivity = (MainActivity) fragmentActivity;
-        mainActivity.setActionBarUpEnabled(true);
-      }
-    });
-
-    assert toggleBluetooth != null;
-    toggleBluetooth.setOnClickListener(view -> {
-      getFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_BLUETOOTH))
-          .addToBackStack(null)
-          .commit();
-      final FragmentActivity fragmentActivity = getActivity();
-      if (fragmentActivity instanceof MainActivity) {
-        final MainActivity mainActivity = (MainActivity) fragmentActivity;
-        mainActivity.setActionBarUpEnabled(true);
-      }
-    });
-
-    assert toggleSync != null;
-    toggleSync.setOnClickListener(view -> {
-      getFragmentManager().beginTransaction()
-          .replace(R.id.main_container, ManagerFragment.newInstance(ManagerFragment.TYPE_SYNC))
-          .addToBackStack(null)
-          .commit();
-      final FragmentActivity fragmentActivity = getActivity();
-      if (fragmentActivity instanceof MainActivity) {
-        final MainActivity mainActivity = (MainActivity) fragmentActivity;
-        mainActivity.setActionBarUpEnabled(true);
-      }
-    });
-  }
 }
