@@ -39,50 +39,33 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
 
   @Override public void enable() {
     unsubscribe();
-    final Subscription subscription =
-        Observable.defer(() -> Observable.just(interactor))
-            .filter(wearableManagerInteractor -> {
-              Timber.d("Check that manager isManaged");
-              return wearableManagerInteractor.isManaged();
-            })
-            .filter(wearableManagerInteractor -> {
-              Timber.d("Check that manager isEnabled");
-              return !wearableManagerInteractor.isEnabled();
-            })
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(wearableManagerInteractor -> {
-              Timber.d("Queue Bluetooth enable");
-              enable(0);
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> {
-              Timber.d("onComplete");
-              interactor.setOriginalState(false);
-            });
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Bluetooth enable");
+          enable(0);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
     setSubscription(subscription);
   }
 
   @Override public void disable() {
     unsubscribe();
 
-    Observable<WearableManagerInteractor> observable =
-        Observable.defer(() -> Observable.just(interactor)).filter(wearableManagerInteractor -> {
-          Timber.d("Check that manager isManaged");
-          return wearableManagerInteractor.isManaged();
-        }).filter(wearableManagerInteractor -> {
-          Timber.d("Check that manager !isEnabled");
-          return wearableManagerInteractor.isEnabled();
-        });
+    Observable<ManagerInteractor> observable = baseDisableObservable();
     observable = zipWithWearableManagedState(observable);
 
     final Subscription subscription =
-        observable.filter(wearableManagerInteractor -> wearableManagerInteractor != null)
+        observable.filter(managerInteractor -> managerInteractor != null)
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
-            .subscribe(wearableManagerInteractor -> {
+            .subscribe(managerInteractor -> {
               Timber.d("Queue Bluetooth disable");
-              disable(wearableManagerInteractor.getDelayTime() * 1000);
+              disable(managerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
             }, () -> {

@@ -40,15 +40,7 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
   @Override public void enable() {
     unsubscribe();
     final Subscription subscription =
-        Observable.defer(() -> Observable.just(interactor))
-            .filter(managerInteractor -> {
-              Timber.d("Check that manager isManaged");
-              return managerInteractor.isManaged();
-            })
-            .filter(wearableManagerInteractor -> {
-              Timber.d("Check that manager isEnabled");
-              return !wearableManagerInteractor.isEnabled();
-            })
+        baseEnableObservable()
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
@@ -66,15 +58,7 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
   @Override public void disable() {
     unsubscribe();
     final Subscription subscription =
-        Observable.defer(() -> Observable.just(interactor))
-            .filter(managerInteractor -> {
-              Timber.d("Check that manager isManaged");
-              return managerInteractor.isManaged();
-            })
-            .filter(wearableManagerInteractor -> {
-              Timber.d("Check that manager !isEnabled");
-              return wearableManagerInteractor.isEnabled();
-            })
+        baseDisableObservable()
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {

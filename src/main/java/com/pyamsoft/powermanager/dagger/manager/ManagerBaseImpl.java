@@ -21,9 +21,11 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import javax.inject.Named;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 abstract class ManagerBaseImpl implements Manager {
 
@@ -40,19 +42,19 @@ abstract class ManagerBaseImpl implements Manager {
     this.mainScheduler = mainScheduler;
   }
 
-  @NonNull @CheckResult Scheduler getIoScheduler() {
+  @NonNull @CheckResult final Scheduler getIoScheduler() {
     return ioScheduler;
   }
 
-  @NonNull @CheckResult Scheduler getMainScheduler() {
+  @NonNull @CheckResult final Scheduler getMainScheduler() {
     return mainScheduler;
   }
 
-  void setSubscription(@NonNull Subscription subscription) {
+  final void setSubscription(@NonNull Subscription subscription) {
     this.subscription = subscription;
   }
 
-  void unsubscribe() {
+  final void unsubscribe() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
@@ -69,5 +71,25 @@ abstract class ManagerBaseImpl implements Manager {
     PowerManager.getInstance()
         .getJobManager()
         .addJobInBackground(interactor.createDisableJob(time));
+  }
+
+  @CheckResult @NonNull final Observable<ManagerInteractor> baseEnableObservable() {
+    return Observable.defer(() -> Observable.just(interactor)).filter(managerInteractor -> {
+      Timber.d("Check that manager isManaged");
+      return managerInteractor.isManaged();
+    }).filter(managerInteractor -> {
+      Timber.d("Check that manager isEnabled");
+      return !managerInteractor.isEnabled();
+    });
+  }
+
+  @CheckResult @NonNull final Observable<ManagerInteractor> baseDisableObservable() {
+    return Observable.defer(() -> Observable.just(interactor)).filter(managerInteractor -> {
+      Timber.d("Check that manager isManaged");
+      return managerInteractor.isManaged();
+    }).filter(wearableManagerInteractor -> {
+      Timber.d("Check that manager !isEnabled");
+      return wearableManagerInteractor.isEnabled();
+    });
   }
 }

@@ -39,22 +39,22 @@ abstract class WearableManagerImpl extends ManagerBaseImpl implements WearableMa
     return interactor.isWearableManaged();
   }
 
-  @CheckResult @NonNull Observable<WearableManagerInteractor> zipWithWearableManagedState(
-      @NonNull Observable<WearableManagerInteractor> observable) {
+  @CheckResult @NonNull final Observable<ManagerInteractor> zipWithWearableManagedState(
+      @NonNull Observable<ManagerInteractor> observable) {
     if (interactor.isManaged() && interactor.isWearableManaged()) {
       observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
-          (wearableManagerInteractor, isConnected) -> {
-            if (wearableManagerInteractor.isWearableManaged()) {
+          (managerInteractor, isConnected) -> {
+            if (interactor.isWearableManaged()) {
               if (isConnected) {
                 Timber.d("Wearable is managed and connected, return NULL");
                 return null;
               } else {
                 Timber.d("Wearable is managed but not connected");
-                return wearableManagerInteractor;
+                return managerInteractor;
               }
             } else {
               Timber.d("Wearable is not managed");
-              return wearableManagerInteractor;
+              return managerInteractor;
             }
           });
     }
