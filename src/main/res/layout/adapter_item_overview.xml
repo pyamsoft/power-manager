@@ -44,7 +44,8 @@
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"
       android:layout_margin="8dp"
-      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:textColor="@android:color/white"
       />
 
   <FrameLayout

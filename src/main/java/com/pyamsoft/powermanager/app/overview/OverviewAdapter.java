@@ -57,26 +57,26 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
     switch (position) {
       case POSITION_WIFI:
         title = "WiFi";
-        image = R.drawable.ic_wifi_24dp;
+        image = R.drawable.ic_network_wifi_24dp;
         background = R.color.green500;
         type = ManagerFragment.TYPE_WIFI;
         break;
       case POSITION_DATA:
         title = "Data";
-        image = R.drawable.ic_wifi_24dp;
-        background = R.color.green500;
+        image = R.drawable.ic_network_cell_24dp;
+        background = R.color.orange500;
         type = ManagerFragment.TYPE_DATA;
         break;
       case POSITION_BLUETOOTH:
         title = "Bluetooth";
-        image = R.drawable.ic_wifi_24dp;
-        background = R.color.green500;
+        image = R.drawable.ic_bluetooth_24dp;
+        background = R.color.blue500;
         type = ManagerFragment.TYPE_BLUETOOTH;
         break;
       case POSITION_SYNC:
         title = "Sync";
-        image = R.drawable.ic_wifi_24dp;
-        background = R.color.green500;
+        image = R.drawable.ic_sync_24dp;
+        background = R.color.yellow500;
         type = ManagerFragment.TYPE_SYNC;
         break;
       default:
