@@ -30,9 +30,9 @@ import timber.log.Timber;
 abstract class ManagerBaseImpl implements Manager {
 
   @NonNull private final ManagerInteractor interactor;
-  @NonNull private Subscription subscription = Subscriptions.empty();
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
   protected ManagerBaseImpl(@NonNull ManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,

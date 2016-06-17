@@ -41,9 +41,9 @@ import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
 
+  @Nullable private volatile static PowerManager instance = null;
   @Nullable private PowerManagerComponent powerManagerComponent;
   @Nullable private JobManager jobManager;
-  @Nullable private volatile static PowerManager instance = null;
 
   @NonNull @CheckResult public synchronized static PowerManager getInstance() {
     if (instance == null) {
@@ -56,22 +56,6 @@ public final class PowerManager extends ApplicationBase {
 
   public synchronized static void setInstance(@Nullable PowerManager instance) {
     PowerManager.instance = instance;
-  }
-
-  @NonNull @CheckResult public synchronized final PowerManagerComponent getPowerManagerComponent() {
-    if (powerManagerComponent == null) {
-      throw new NullPointerException("PowerManagerComponent is NULL");
-    } else {
-      return powerManagerComponent;
-    }
-  }
-
-  @NonNull @CheckResult public synchronized final JobManager getJobManager() {
-    if (jobManager == null) {
-      throw new NullPointerException("JobManager is NULL");
-    } else {
-      return jobManager;
-    }
   }
 
   @CheckResult @NonNull
@@ -99,6 +83,22 @@ public final class PowerManager extends ApplicationBase {
 
     Timber.d("Create a new JobManager");
     return new JobManager(builder.build());
+  }
+
+  @NonNull @CheckResult public synchronized final PowerManagerComponent getPowerManagerComponent() {
+    if (powerManagerComponent == null) {
+      throw new NullPointerException("PowerManagerComponent is NULL");
+    } else {
+      return powerManagerComponent;
+    }
+  }
+
+  @NonNull @CheckResult public synchronized final JobManager getJobManager() {
+    if (jobManager == null) {
+      throw new NullPointerException("JobManager is NULL");
+    } else {
+      return jobManager;
+    }
   }
 
   @Override public void onCreate() {

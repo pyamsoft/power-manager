@@ -31,8 +31,8 @@ import com.pyamsoft.powermanager.R;
 
 public class OverviewFragment extends Fragment {
 
-  @Nullable private RecyclerView.LayoutManager layoutManager;
   @Nullable @BindView(R.id.main_fragment_recycler) RecyclerView recyclerView;
+  @Nullable private RecyclerView.LayoutManager layoutManager;
   @Nullable private Unbinder unbinder;
 
   @Nullable @Override

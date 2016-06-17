@@ -38,34 +38,30 @@ final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
 
   @Override public void enable() {
     unsubscribe();
-    final Subscription subscription =
-        baseEnableObservable()
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(managerInteractor -> {
-              Timber.d("Queue Data enable");
-              enable(0);
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> {
-              Timber.d("onComplete");
-              interactor.setOriginalState(false);
-            });
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Data enable");
+          enable(0);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
     setSubscription(subscription);
   }
 
   @Override public void disable() {
     unsubscribe();
-    final Subscription subscription =
-        baseDisableObservable()
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(managerInteractor -> {
-              Timber.d("Queue Data disable");
-              disable(managerInteractor.getDelayTime() * 1000);
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> Timber.d("onComplete"));
+    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Data disable");
+          disable(managerInteractor.getDelayTime() * 1000);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> Timber.d("onComplete"));
     setSubscription(subscription);
   }
 

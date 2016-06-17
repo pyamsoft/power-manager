@@ -30,8 +30,8 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @NonNull public static final String EXTRA_WEARABLE = "wearable";
   private static final int NOTIFICATION_ID = 1000;
-  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
   @Nullable @Inject ForegroundPresenter presenter;
+  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;

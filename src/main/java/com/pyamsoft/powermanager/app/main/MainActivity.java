@@ -68,8 +68,9 @@ public class MainActivity extends DonationActivityBase
   private void showOverviewIfBlank() {
     boolean blank = true;
     final String[] fragmentTags = {
-        ManagerSettingsFragment.TYPE_WIFI, ManagerSettingsFragment.TYPE_DATA, ManagerSettingsFragment.TYPE_BLUETOOTH,
-        ManagerSettingsFragment.TYPE_SYNC, SettingsFragment.TAG
+        ManagerSettingsFragment.TYPE_WIFI, ManagerSettingsFragment.TYPE_DATA,
+        ManagerSettingsFragment.TYPE_BLUETOOTH, ManagerSettingsFragment.TYPE_SYNC,
+        SettingsFragment.TAG
     };
 
     final FragmentManager fm = getSupportFragmentManager();

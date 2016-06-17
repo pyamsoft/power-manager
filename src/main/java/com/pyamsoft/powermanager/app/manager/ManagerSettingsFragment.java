@@ -31,15 +31,23 @@ import timber.log.Timber;
 
 public class ManagerSettingsFragment extends PreferenceFragmentCompat {
 
-  @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
   @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
   @NonNull public static final String TYPE_SYNC = "sync";
+  @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @Nullable private ManageDelayPreference delayPreference;
 
   @XmlRes private int xmlResId;
   @StringRes private int timeKeyResId;
+
+  @CheckResult @NonNull public static ManagerSettingsFragment newInstance(@NonNull String type) {
+    final Bundle args = new Bundle();
+    final ManagerSettingsFragment fragment = new ManagerSettingsFragment();
+    args.putString(FRAGMENT_TYPE, type);
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,14 +64,6 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat {
 
     assert delayPreference != null;
     delayPreference.unbindView();
-  }
-
-  @CheckResult @NonNull public static ManagerSettingsFragment newInstance(@NonNull String type) {
-    final Bundle args = new Bundle();
-    final ManagerSettingsFragment fragment = new ManagerSettingsFragment();
-    args.putString(FRAGMENT_TYPE, type);
-    fragment.setArguments(args);
-    return fragment;
   }
 
   private void findCorrectPreferences() {

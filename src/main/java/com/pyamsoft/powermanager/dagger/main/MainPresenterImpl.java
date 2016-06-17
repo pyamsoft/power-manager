@@ -28,10 +28,10 @@ import timber.log.Timber;
 final class MainPresenterImpl extends PresenterImpl<MainPresenter.MainView>
     implements MainPresenter {
 
+  @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
+
   @Inject protected MainPresenterImpl() {
   }
-
-  @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
 
   @Override public void onResume() {
     super.onResume();
