@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.manager.backend;
 
-public interface ManagerSync extends Manager {
+public interface ManagerData extends Manager {
 
 }

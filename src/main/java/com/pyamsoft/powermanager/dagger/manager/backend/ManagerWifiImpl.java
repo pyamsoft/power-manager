@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -25,15 +25,15 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerBluetooth {
+final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
 
   @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject ManagerBluetoothImpl(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
+  @Inject ManagerWifiImpl(@NonNull @Named("wifi") WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
-    Timber.d("new ManagerBluetooth");
+    Timber.d("new ManagerWifi");
     this.interactor = interactor;
   }
 
@@ -42,7 +42,7 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
     final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
-          Timber.d("Queue Bluetooth enable");
+          Timber.d("Queue Wifi enable");
           enable(0);
         }, throwable -> {
           Timber.e(throwable, "onError");
@@ -55,7 +55,6 @@ final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerB
 
   @Override public void disable() {
     unsubscribe();
-
     Observable<ManagerInteractor> observable = baseDisableObservable();
     observable = zipWithWearableManagedState(observable);
 

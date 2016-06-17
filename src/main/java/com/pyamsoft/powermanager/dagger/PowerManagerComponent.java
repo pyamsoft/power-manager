@@ -20,7 +20,7 @@ import android.content.Context;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.dagger.manager.ManagerModule;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import dagger.Component;
 import javax.inject.Named;

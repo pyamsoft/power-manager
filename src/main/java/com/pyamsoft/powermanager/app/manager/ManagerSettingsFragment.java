@@ -19,23 +19,48 @@ package com.pyamsoft.powermanager.app.manager;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import timber.log.Timber;
 
-public class ManagerFragment extends PreferenceFragmentCompat {
+public class ManagerSettingsFragment extends PreferenceFragmentCompat {
 
   @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
   @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
   @NonNull public static final String TYPE_SYNC = "sync";
-  @XmlRes private int xmlResId;
+  @Nullable private ManageDelayPreference delayPreference;
 
-  @CheckResult @NonNull public static ManagerFragment newInstance(@NonNull String type) {
+  @XmlRes private int xmlResId;
+  @StringRes private int timeKeyResId;
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+
+    assert delayPreference != null;
+    delayPreference.unbindView();
+  }
+
+  @CheckResult @NonNull public static ManagerSettingsFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
-    final ManagerFragment fragment = new ManagerFragment();
+    final ManagerSettingsFragment fragment = new ManagerSettingsFragment();
     args.putString(FRAGMENT_TYPE, type);
     fragment.setArguments(args);
     return fragment;
@@ -47,18 +72,25 @@ public class ManagerFragment extends PreferenceFragmentCompat {
       case TYPE_WIFI:
         Timber.d("Manage fragment for Wifi");
         xmlResId = R.xml.manage_wifi;
+        timeKeyResId = R.string.wifi_time_key;
         break;
       case TYPE_DATA:
         Timber.d("Manage fragment for Data");
         xmlResId = R.xml.manage_data;
+        timeKeyResId = R.string.data_time_key;
+        //delayKeyResId = R.string.data_delay_key;
         break;
       case TYPE_BLUETOOTH:
         Timber.d("Manage fragment for Bluetooth");
         xmlResId = R.xml.manage_bluetooth;
+        timeKeyResId = R.string.bluetooth_time_key;
+        //delayKeyResId = R.string.bluetooth_delay_key;
         break;
       case TYPE_SYNC:
         Timber.d("Manage fragment for Sync");
         xmlResId = R.xml.manage_sync;
+        timeKeyResId = R.string.sync_time_key;
+        //delayKeyResId = R.string.sync_delay_key;
         break;
       default:
         throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
@@ -68,5 +100,8 @@ public class ManagerFragment extends PreferenceFragmentCompat {
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     findCorrectPreferences();
     addPreferencesFromResource(xmlResId);
+
+    delayPreference = (ManageDelayPreference) findPreference(getString(timeKeyResId));
+    delayPreference.bindView();
   }
 }

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.manager.backend;
 
-public interface ManagerData extends Manager {
+public interface ManagerWifi extends WearableManager {
 
 }

@@ -14,26 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
-interface ManagerInteractor {
+interface WearableManagerInteractor extends ManagerInteractor {
 
-  void cancelJobs();
+  void disconnectGoogleApis();
 
-  void setOriginalState(boolean enabled);
+  @CheckResult boolean isWearableManaged();
 
-  @CheckResult boolean isOriginalStateEnabled();
-
-  @CheckResult boolean isEnabled();
-
-  @CheckResult boolean isManaged();
-
-  @CheckResult long getDelayTime();
-
-  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime);
-
-  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime);
+  @NonNull @CheckResult Observable<Boolean> isWearableConnected();
 }

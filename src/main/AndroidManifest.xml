@@ -58,6 +58,19 @@
       </intent-filter>
     </activity>
 
+    <!-- Crash Log Activitiy -->
+    <activity
+        android:name="com.pyamsoft.pydroid.crash.CrashLogActivity"
+        android:excludeFromRecents="true"
+        android:exported="false"
+        android:launchMode="singleInstance"
+        android:windowSoftInputMode="stateHidden">
+      <intent-filter>
+        <action android:name="com.pyamsoft.powermanager.crash.SEND_LOG"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+      </intent-filter>
+    </activity>
+
     <!-- Job Scheduling -->
     <service
         android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
@@ -81,6 +94,17 @@
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
       </intent-filter>
     </receiver>
+
+    <!-- Crash Log Provider -->
+    <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="com.pyamsoft.powermanager.crash.LOG_PROVIDER"
+        android:exported="false"
+        android:grantUriPermissions="true">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/crashlog_provider"/>
+    </provider>
 
   </application>
 </manifest>

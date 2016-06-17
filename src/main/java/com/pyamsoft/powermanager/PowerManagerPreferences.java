@@ -17,8 +17,13 @@
 package com.pyamsoft.powermanager;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
+
+  @NonNull String KEY_DELAY_DATA = "delay_data";
+  @NonNull String KEY_DELAY_BLUETOOTH = "delay_bluetooth";
+  @NonNull String KEY_DELAY_SYNC = "delay_sync";
 
   @CheckResult long getWifiDelay();
 

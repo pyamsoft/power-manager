@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -23,10 +23,10 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.ManagerData;
-import com.pyamsoft.powermanager.app.manager.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.ManagerWifi;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

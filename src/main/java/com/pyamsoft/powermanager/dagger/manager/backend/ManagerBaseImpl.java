@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.powermanager.app.manager.backend.Manager;
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;

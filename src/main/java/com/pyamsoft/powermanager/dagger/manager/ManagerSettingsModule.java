@@ -17,24 +17,20 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
-import timber.log.Timber;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import dagger.Module;
+import dagger.Provides;
 
-abstract class ManagerInteractorBase implements ManagerInteractor {
+@Module public class ManagerSettingsModule {
 
-  private boolean originalState = false;
-
-  protected final void cancelJobs(@NonNull String tag) {
-    Timber.d("Attempt job cancel");
-    PowerManager.getInstance().getJobManager().cancelJobsInBackground(null, TagConstraint.ANY, tag);
+  @ActivityScope @Provides ManagerSettingsPresenter provideManagerSettingsPresenter(
+      @NonNull ManagerSettingsPresenterImpl presenter) {
+    return presenter;
   }
 
-  @Override public final void setOriginalState(boolean originalState) {
-    this.originalState = originalState;
-  }
-
-  @Override public final boolean isOriginalStateEnabled() {
-    return originalState;
+  @ActivityScope @Provides ManagerSettingsInteractor provideManagerSettingsInteractor(
+      @NonNull ManagerSettingsInteractorImpl presenter) {
+    return presenter;
   }
 }

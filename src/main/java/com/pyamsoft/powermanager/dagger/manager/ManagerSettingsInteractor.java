@@ -18,13 +18,10 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
 
-interface WearableManagerInteractor extends ManagerInteractor {
+interface ManagerSettingsInteractor {
 
-  void disconnectGoogleApis();
+  void setDelayTime(@NonNull String key, long time);
 
-  @CheckResult boolean isWearableManaged();
-
-  @NonNull @CheckResult Observable<Boolean> isWearableConnected();
+  @CheckResult long getDelayTime(@NonNull String key);
 }

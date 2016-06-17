@@ -14,54 +14,58 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-final class ManagerSyncImpl extends ManagerBaseImpl implements ManagerSync {
+final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject ManagerSyncImpl(@NonNull @Named("sync") ManagerInteractor interactor,
+  @Inject ManagerDataImpl(@NonNull @Named("data") ManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
-    Timber.d("new ManagerSync");
+    Timber.d("new ManagerData");
     this.interactor = interactor;
   }
 
   @Override public void enable() {
     unsubscribe();
-    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue Sync enable");
-          enable(0);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, () -> {
-          Timber.d("onComplete");
-          interactor.setOriginalState(false);
-        });
+    final Subscription subscription =
+        baseEnableObservable()
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue Data enable");
+              enable(0);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.setOriginalState(false);
+            });
     setSubscription(subscription);
   }
 
   @Override public void disable() {
     unsubscribe();
-    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue Sync disable");
-          disable(managerInteractor.getDelayTime() * 1000);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, () -> Timber.d("onComplete"));
+    final Subscription subscription =
+        baseDisableObservable()
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue Data disable");
+              disable(managerInteractor.getDelayTime() * 1000);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            }, () -> Timber.d("onComplete"));
     setSubscription(subscription);
   }
 

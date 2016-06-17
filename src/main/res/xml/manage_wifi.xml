@@ -21,12 +21,15 @@
   <PreferenceCategory
       android:title="Wifi Settings">
 
-  <SwitchPreferenceCompat
-      android:defaultValue="@bool/manage_wifi_default"
-      android:key="@string/manage_wifi_key"
-      android:summary="@string/manage_wifi_summary"
-      android:title="@string/manage_wifi_title"
-      />
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/manage_wifi_default"
+        android:key="@string/manage_wifi_key"
+        android:summary="@string/manage_wifi_summary"
+        android:title="@string/manage_wifi_title"
+        />
+
+    <com.pyamsoft.powermanager.app.manager.ManageDelayPreference
+        android:key="@string/wifi_time_key"/>
 
   </PreferenceCategory>
 

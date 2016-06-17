@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Build;
+import android.os.StrictMode;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
+import com.pyamsoft.pydroid.crash.CrashHandler;
 import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
@@ -102,6 +104,11 @@ public final class PowerManager extends ApplicationBase {
   @Override public void onCreate() {
     super.onCreate();
 
+    if (buildConfigDebug()) {
+      new CrashHandler(getApplicationContext(), this).register();
+      setStrictMode();
+    }
+
     // Initialize instance
     powerManagerComponent = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
@@ -113,6 +120,17 @@ public final class PowerManager extends ApplicationBase {
 
     // Start stuff
     startForegroundService();
+  }
+
+  private void setStrictMode() {
+    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
+        .penaltyLog()
+        .penaltyDeath()
+        .permitDiskWrites()
+        .permitDiskReads()
+        .penaltyFlashScreen()
+        .build());
+    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
   private void startForegroundService() {

@@ -24,10 +24,10 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.app.manager.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.ManagerData;
-import com.pyamsoft.powermanager.app.manager.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.ManagerWifi;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import javax.inject.Inject;
 import timber.log.Timber;
 

@@ -28,6 +28,9 @@
         android:title="@string/manage_bluetooth_title"
         />
 
+    <com.pyamsoft.powermanager.app.manager.ManageDelayPreference
+        android:key="@string/bluetooth_time_key"/>
+
   </PreferenceCategory>
 
 </PreferenceScreen>

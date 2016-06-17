@@ -17,6 +17,25 @@
 
 <resources>
 
+  <string-array name="wifi_time_names">
+    <item name="delay_none">No delay</item>
+    <item name="delay_five">5 Seconds</item>
+    <item name="delay_custom">Custom</item>
+  </string-array>
+
+  <string-array name="wifi_time_values">
+    <item name="delay_none">0</item>
+    <item name="delay_five">5</item>
+    <item name="delay_custom">-1</item>
+  </string-array>
+
+  <string name="wifi_category_title">Wifi Settings</string>
+
+  <string name="wifi_time_default">5</string>
+  <string name="wifi_time_key">wifi_time</string>
+  <string name="wifi_time_title">Wifi Time</string>
+  <string name="wifi_time_summary">Wifi Time</string>
+
   <bool name="manage_wifi_default">false</bool>
   <string name="manage_wifi_key">manage_wifi</string>
   <string name="manage_wifi_title">Manage Wifi</string>

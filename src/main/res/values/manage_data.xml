@@ -17,6 +17,25 @@
 
 <resources>
 
+  <string-array name="data_time_names">
+    <item name="delay_none">No delay</item>
+    <item name="delay_five">5 Seconds</item>
+    <item name="delay_custom">Custom</item>
+  </string-array>
+
+  <string-array name="data_time_values">
+    <item name="delay_none">0</item>
+    <item name="delay_five">5</item>
+    <item name="delay_custom">-1</item>
+  </string-array>
+
+  <string name="data_category_title">Data Settings</string>
+
+  <string name="data_time_default">5</string>
+  <string name="data_time_key">data_time</string>
+  <string name="data_time_title">Data Time</string>
+  <string name="data_time_summary">Data Time</string>
+
   <bool name="manage_data_default">true</bool>
   <string name="manage_data_key">manage_data</string>
   <string name="manage_data_title">Manage Data</string>

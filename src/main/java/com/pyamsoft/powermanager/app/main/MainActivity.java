@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerFragment;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
@@ -68,8 +68,8 @@ public class MainActivity extends DonationActivityBase
   private void showOverviewIfBlank() {
     boolean blank = true;
     final String[] fragmentTags = {
-        ManagerFragment.TYPE_WIFI, ManagerFragment.TYPE_DATA, ManagerFragment.TYPE_BLUETOOTH,
-        ManagerFragment.TYPE_SYNC, SettingsFragment.TAG
+        ManagerSettingsFragment.TYPE_WIFI, ManagerSettingsFragment.TYPE_DATA, ManagerSettingsFragment.TYPE_BLUETOOTH,
+        ManagerSettingsFragment.TYPE_SYNC, SettingsFragment.TAG
     };
 
     final FragmentManager fm = getSupportFragmentManager();
@@ -208,7 +208,7 @@ public class MainActivity extends DonationActivityBase
         fragment = new SettingsFragment();
         break;
       default:
-        fragment = ManagerFragment.newInstance(type);
+        fragment = ManagerSettingsFragment.newInstance(type);
     }
 
     getSupportFragmentManager().beginTransaction()

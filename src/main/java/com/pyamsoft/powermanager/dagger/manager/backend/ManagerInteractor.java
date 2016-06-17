@@ -14,8 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
-public interface ManagerBluetooth extends WearableManager {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
+interface ManagerInteractor {
+
+  void cancelJobs();
+
+  void setOriginalState(boolean enabled);
+
+  @CheckResult boolean isOriginalStateEnabled();
+
+  @CheckResult boolean isEnabled();
+
+  @CheckResult boolean isManaged();
+
+  @CheckResult long getDelayTime();
+
+  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime);
+
+  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime);
 }

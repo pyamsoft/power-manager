@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -25,48 +25,53 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-final class ManagerDataImpl extends ManagerBaseImpl implements ManagerData {
+final class ManagerBluetoothImpl extends WearableManagerImpl implements ManagerBluetooth {
 
-  @NonNull private final ManagerInteractor interactor;
+  @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject ManagerDataImpl(@NonNull @Named("data") ManagerInteractor interactor,
+  @Inject ManagerBluetoothImpl(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
-    Timber.d("new ManagerData");
+    Timber.d("new ManagerBluetooth");
     this.interactor = interactor;
   }
 
   @Override public void enable() {
     unsubscribe();
-    final Subscription subscription =
-        baseEnableObservable()
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(managerInteractor -> {
-              Timber.d("Queue Data enable");
-              enable(0);
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> {
-              Timber.d("onComplete");
-              interactor.setOriginalState(false);
-            });
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Bluetooth enable");
+          enable(0);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
     setSubscription(subscription);
   }
 
   @Override public void disable() {
     unsubscribe();
+
+    Observable<ManagerInteractor> observable = baseDisableObservable();
+    observable = zipWithWearableManagedState(observable);
+
     final Subscription subscription =
-        baseDisableObservable()
+        observable.filter(managerInteractor -> managerInteractor != null)
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
-              Timber.d("Queue Data disable");
+              Timber.d("Queue Bluetooth disable");
               disable(managerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
-            }, () -> Timber.d("onComplete"));
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.disconnectGoogleApis();
+            });
     setSubscription(subscription);
   }
 

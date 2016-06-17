@@ -14,33 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager;
 
-import android.support.annotation.CheckResult;
+import com.pyamsoft.powermanager.app.manager.ManageDelayPreference;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import dagger.Component;
 
-public interface Manager {
+@ActivityScope
+@Component(modules = ManagerSettingsModule.class, dependencies = PowerManagerComponent.class)
+public interface ManagerSettingsComponent {
 
-  /**
-   * Calls enable only if all checks pass
-   */
-  void enable();
-
-  /**
-   * Calls directly to enable
-   */
-  void enable(long time);
-
-  /**
-   * Calls disable only if all checks pass
-   */
-  void disable();
-
-  /**
-   * Calls directly to disable
-   */
-  void disable(long time);
-
-  @CheckResult boolean isEnabled();
-
-  @CheckResult boolean isManaged();
+  void inject(ManageDelayPreference preference);
 }
