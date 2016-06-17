@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
@@ -201,11 +202,20 @@ public class MainActivity extends DonationActivityBase
   }
 
   @Override public void loadFragmentFromOverview(@NonNull String type) {
-    setActionBarUpEnabled(true);
+    Fragment fragment;
+    switch (type) {
+      case SettingsFragment.TAG:
+        fragment = new SettingsFragment();
+        break;
+      default:
+        fragment = ManagerFragment.newInstance(type);
+    }
+
     getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, ManagerFragment.newInstance(type), type)
+        .replace(R.id.main_container, fragment, type)
         .addToBackStack(null)
         .commit();
+    setActionBarUpEnabled(true);
   }
 
   @Override public void overviewEventError() {

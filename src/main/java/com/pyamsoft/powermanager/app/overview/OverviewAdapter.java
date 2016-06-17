@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 
@@ -41,7 +42,8 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
   public static final int POSITION_DATA = 1;
   public static final int POSITION_BLUETOOTH = 2;
   public static final int POSITION_SYNC = 3;
-  private static final int NUMBER_ITEMS = 4;
+  public static final int POSITION_SETTINGS = 4;
+  private static final int NUMBER_ITEMS = 5;
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final View view = LayoutInflater.from(parent.getContext())
@@ -78,6 +80,12 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
         image = R.drawable.ic_sync_24dp;
         background = R.color.yellow500;
         type = ManagerFragment.TYPE_SYNC;
+        break;
+      case POSITION_SETTINGS:
+        title = "Settings";
+        image = R.drawable.ic_settings_24dp;
+        background = R.color.pink500;
+        type = SettingsFragment.TAG;
         break;
       default:
         throw new IllegalStateException("Position out of range");
