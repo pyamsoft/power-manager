@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +41,7 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     this.appContext = context.getApplicationContext();
   }
 
-  @NonNull @Override public NotificationCompat.Builder createNotificationBuilder() {
+  @NonNull @Override public Notification createNotification() {
     final Intent intent = new Intent(appContext, MainActivity.class);
     final Intent wearIntent =
         new Intent(appContext, ForegroundService.class).putExtra(ForegroundService.EXTRA_WEARABLE,
@@ -51,11 +52,17 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         PendingIntent.getService(appContext, PENDING_RC + 4, wearIntent, 0);
     return new NotificationCompat.Builder(appContext).setContentTitle(
         appContext.getString(R.string.app_name))
+        .setSmallIcon(R.mipmap.ic_launcher)
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setNumber(0)
         .setContentIntent(pendingIntent)
         .setPriority(preferences.getNotificationPriority())
         .addAction(preferences.isWearableManaged() ? R.drawable.ic_watch_24dp
                 : R.drawable.ic_watch_off_24dp, preferences.isWearableManaged() ? "ON" : "OFF",
-            wearAction);
+            wearAction)
+        .build();
   }
 
   @Override public void updateWearablePreferenceStatus() {

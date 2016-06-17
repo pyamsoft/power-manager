@@ -16,13 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
+import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 
 interface ForegroundInteractor {
 
-  @CheckResult @NonNull NotificationCompat.Builder createNotificationBuilder();
+  @CheckResult @NonNull Notification createNotification();
 
   void updateWearablePreferenceStatus();
 }

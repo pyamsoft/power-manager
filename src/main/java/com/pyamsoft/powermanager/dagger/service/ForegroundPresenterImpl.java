@@ -18,8 +18,6 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import com.pyamsoft.pydroid.base.PresenterImpl;
 import javax.inject.Inject;
@@ -34,14 +32,7 @@ final class ForegroundPresenterImpl extends PresenterImpl<ForegroundPresenter.Fo
   }
 
   @NonNull @Override public Notification createNotification() {
-    final NotificationCompat.Builder builder = interactor.createNotificationBuilder();
-    builder.setSmallIcon(R.mipmap.ic_launcher)
-        .setWhen(0)
-        .setOngoing(true)
-        .setAutoCancel(false)
-        .setNumber(0);
-
-    return builder.build();
+    return interactor.createNotification();
   }
 
   @Override public void updateWearableAction() {
