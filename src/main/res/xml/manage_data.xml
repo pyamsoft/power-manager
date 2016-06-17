@@ -21,15 +21,24 @@
   <PreferenceCategory
       android:title="Data Settings">
 
-  <SwitchPreferenceCompat
-      android:defaultValue="@bool/manage_data_default"
-      android:key="@string/manage_data_key"
-      android:summary="@string/manage_data_summary"
-      android:title="@string/manage_data_title"
-      />
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/manage_data_default"
+        android:key="@string/manage_data_key"
+        android:summary="@string/manage_data_summary"
+        android:title="@string/manage_data_title"
+        />
 
-    <com.pyamsoft.powermanager.app.manager.ManageDelayPreference
+    <ListPreference
+        android:defaultValue="@string/data_time_default"
         android:dependency="@string/manage_data_key"
+        android:entries="@array/preset_delay_data_names"
+        android:entryValues="@array/preset_delay_data_values"
+        android:key="@string/preset_delay_data_key"
+        android:summary="@string/manage_data_summary"
+        android:title="@string/manage_data_title"
+        />
+
+    <com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference
         android:key="@string/data_time_key"/>
 
   </PreferenceCategory>

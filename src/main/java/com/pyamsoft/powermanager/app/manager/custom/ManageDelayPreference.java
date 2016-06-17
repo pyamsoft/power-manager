@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.manager.custom;
 
 import android.content.Context;
 import android.os.Handler;
@@ -30,17 +30,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import com.pyamsoft.powermanager.dagger.manager.custom.DaggerManagerDelayComponent;
 import java.util.Locale;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class ManageDelayPreference extends Preference
-    implements ManagerSettingsPresenter.ManagerView {
+    implements ManagerDelayPresenter.ManagerDelayView {
 
   @NonNull private final Handler handler;
 
-  @Nullable @Inject ManagerSettingsPresenter presenter;
+  @Nullable @Inject ManagerDelayPresenter presenter;
   @Nullable private TextView summary;
   @Nullable private TextInputLayout textInputLayout;
   @Nullable private TextWatcher watcher;
@@ -50,7 +50,7 @@ public class ManageDelayPreference extends Preference
     super(context, attrs, defStyleAttr, defStyleRes);
     handler = new Handler();
 
-    DaggerManagerSettingsComponent.builder()
+    DaggerManagerDelayComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);

@@ -38,10 +38,18 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean manageSyncDefault;
 
   @NonNull private final String delayWifi;
-  @NonNull private final long delayWifiDefault;
-  @NonNull private final long delayDataDefault;
-  @NonNull private final long delayBluetoothDefault;
-  @NonNull private final long delaySyncDefault;
+  @NonNull private final String delayData;
+  @NonNull private final String delayBluetooth;
+  @NonNull private final String delaySync;
+  @NonNull private final String delayWifiDefault;
+  @NonNull private final String delayDataDefault;
+  @NonNull private final String delayBluetoothDefault;
+  @NonNull private final String delaySyncDefault;
+
+  @NonNull private final String presetWifi;
+  @NonNull private final String presetData;
+  @NonNull private final String presetBluetooth;
+  @NonNull private final String presetSync;
 
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
@@ -63,42 +71,66 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
 
     delayWifi = appContext.getString(R.string.wifi_time_key);
-    delayWifiDefault = Long.parseLong(appContext.getString(R.string.wifi_time_default));
-    delayDataDefault = Long.parseLong(appContext.getString(R.string.data_time_default));
-    delayBluetoothDefault = Long.parseLong(appContext.getString(R.string.bluetooth_time_default));
-    delaySyncDefault = Long.parseLong(appContext.getString(R.string.sync_time_default));
+    delayData = appContext.getString(R.string.data_time_key);
+    delayBluetooth = appContext.getString(R.string.bluetooth_time_key);
+    delaySync = appContext.getString(R.string.sync_time_key);
+    delayWifiDefault = appContext.getString(R.string.wifi_time_default);
+    delayDataDefault = appContext.getString(R.string.data_time_default);
+    delayBluetoothDefault = appContext.getString(R.string.bluetooth_time_default);
+    delaySyncDefault = appContext.getString(R.string.sync_time_default);
+
+    presetWifi = appContext.getString(R.string.preset_delay_wifi_key);
+    presetData = appContext.getString(R.string.preset_delay_wifi_key);
+    presetBluetooth = appContext.getString(R.string.preset_delay_wifi_key);
+    presetSync = appContext.getString(R.string.preset_delay_wifi_key);
+  }
+
+  @Override public boolean isCustomTimeWifi() {
+    return Long.parseLong(get(presetWifi, delayWifiDefault)) == -1;
+  }
+
+  @Override public boolean isCustomTimeData() {
+    return false;
+  }
+
+  @Override public boolean isCustomTimeBluetooth() {
+    return false;
+  }
+
+  @Override public boolean isCustomTimeSync() {
+    return false;
   }
 
   @Override public long getWifiDelay() {
-    return get(delayWifi, delayWifiDefault);
+    return Long.parseLong(get(delayWifi, delayWifiDefault));
   }
 
   @Override public void setWifiDelay(long time) {
-    put(delayWifi, time);
+    put(delayWifi, Long.toString(time));
   }
 
   @Override public long getDataDelay() {
-    return get(KEY_DELAY_DATA, delayDataDefault);
+    return Long.parseLong(get(delayData, delayDataDefault));
   }
 
   @Override public void setDataDelay(long time) {
-    put(KEY_DELAY_DATA, time);
+    put(delayData, Long.toString(time));
   }
 
   @Override public long getBluetoothDelay() {
-    return get(KEY_DELAY_BLUETOOTH, delayBluetoothDefault);
+    return Long.parseLong(get(delayBluetooth, delayBluetoothDefault));
   }
 
   @Override public void setBluetoothDelay(long time) {
-    put(KEY_DELAY_BLUETOOTH, time);
+    put(delayBluetooth, Long.toString(time));
   }
 
   @Override public long getMasterSyncDelay() {
-    return get(KEY_DELAY_SYNC, delaySyncDefault);
+    return Long.parseLong(get(delaySync, delaySyncDefault));
   }
 
   @Override public void setMasterSyncDelay(long time) {
-    put(KEY_DELAY_SYNC, time);
+    put(delaySync, Long.toString(time));
   }
 
   @Override public int getNotificationPriority() {

@@ -17,28 +17,29 @@
 
 <resources>
 
-  <string-array name="sync_time_names">
+  <string name="sync_category_title">Sync Settings</string>
+
+  <bool name="manage_sync_default">false</bool>
+  <string name="manage_sync_key">manage_sync</string>
+  <string name="manage_sync_title">Manage Sync</string>
+  <string name="manage_sync_summary">Manage Sync</string>
+
+  <string name="preset_delay_sync_key">preset_delay_sync</string>
+  <string-array name="preset_delay_sync_names">
     <item name="delay_none">No delay</item>
     <item name="delay_five">5 Seconds</item>
     <item name="delay_custom">Custom</item>
   </string-array>
 
-  <string-array name="sync_time_values">
+  <string-array name="preset_delay_sync_values">
     <item name="delay_none">0</item>
     <item name="delay_five">5</item>
     <item name="delay_custom">-1</item>
   </string-array>
 
-  <string name="sync_category_title">Sync Settings</string>
-
   <string name="sync_time_default">5</string>
   <string name="sync_time_key">sync_time</string>
   <string name="sync_time_title">Sync Time</string>
   <string name="sync_time_summary">Sync Time</string>
-
-  <bool name="manage_sync_default">true</bool>
-  <string name="manage_sync_key">manage_sync</string>
-  <string name="manage_sync_title">Manage Sync</string>
-  <string name="manage_sync_summary">Manage Sync</string>
 
 </resources>

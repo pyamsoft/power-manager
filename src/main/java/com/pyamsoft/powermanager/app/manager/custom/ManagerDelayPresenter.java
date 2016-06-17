@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.app.manager.custom;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.base.Presenter;
 
-interface ManagerSettingsInteractor {
+public interface ManagerDelayPresenter extends Presenter<ManagerDelayPresenter.ManagerDelayView> {
 
-  @CheckResult boolean isCustomTime(@NonNull String key);
+  void updateDelayTime(@NonNull String key, long time, boolean updateVisual, boolean updateSummary);
+
+  void setDelayTimeFromPreference(@NonNull String key);
+
+  interface ManagerDelayView {
+
+    void setDelayTimeText(long time);
+
+    void setDelayTimeSummary(long time);
+  }
 }

@@ -17,28 +17,29 @@
 
 <resources>
 
-  <string-array name="bluetooth_time_names">
-    <item name="delay_none">No delay</item>
-    <item name="delay_five">5 Seconds</item>
-    <item name="delay_custom">Custom</item>
-  </string-array>
-
-  <string-array name="bluetooth_time_values">
-    <item name="delay_none">0</item>
-    <item name="delay_five">5</item>
-    <item name="delay_custom">-1</item>
-  </string-array>
-
   <string name="bluetooth_category_title">Bluetooth Settings</string>
-
-  <string name="bluetooth_time_default">5</string>
-  <string name="bluetooth_time_key">bluetooth_time</string>
-  <string name="bluetooth_time_title">Bluetooth Time</string>
-  <string name="bluetooth_time_summary">Bluetooth Time</string>
 
   <bool name="manage_bluetooth_default">false</bool>
   <string name="manage_bluetooth_key">manage_bluetooth</string>
   <string name="manage_bluetooth_title">Manage Bluetooth</string>
   <string name="manage_bluetooth_summary">Manage Bluetooth</string>
+
+  <string name="preset_delay_bluetooth_key">preset_delay_bluetooth</string>
+  <string-array name="preset_delay_bluetooth_names">
+    <item name="delay_none">No delay</item>
+    <item name="delay_five">5 Seconds</item>
+    <item name="delay_custom">Custom</item>
+  </string-array>
+
+  <string-array name="preset_delay_bluetooth_values">
+    <item name="delay_none">0</item>
+    <item name="delay_five">5</item>
+    <item name="delay_custom">-1</item>
+  </string-array>
+
+  <string name="bluetooth_time_default">5</string>
+  <string name="bluetooth_time_key">bluetooth_time</string>
+  <string name="bluetooth_time_title">Bluetooth Time</string>
+  <string name="bluetooth_time_summary">Bluetooth Time</string>
 
 </resources>

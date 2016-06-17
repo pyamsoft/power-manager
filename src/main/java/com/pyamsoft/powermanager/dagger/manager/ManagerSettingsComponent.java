@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.app.manager.ManageDelayPreference;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;
@@ -25,5 +25,5 @@ import dagger.Component;
 @Component(modules = ManagerSettingsModule.class, dependencies = PowerManagerComponent.class)
 public interface ManagerSettingsComponent {
 
-  void inject(ManageDelayPreference preference);
+  void inject(ManagerSettingsFragment fragment);
 }

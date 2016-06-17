@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.custom;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import dagger.Component;
 
-interface ManagerSettingsInteractor {
+@ActivityScope
+@Component(modules = ManagerDelayModule.class, dependencies = PowerManagerComponent.class)
+public interface ManagerDelayComponent {
 
-  @CheckResult boolean isCustomTime(@NonNull String key);
+  void inject(ManageDelayPreference preference);
 }

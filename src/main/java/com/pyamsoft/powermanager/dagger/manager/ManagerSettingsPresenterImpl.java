@@ -21,29 +21,26 @@ import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
 import com.pyamsoft.pydroid.base.PresenterImpl;
 import javax.inject.Inject;
 
-final class ManagerSettingsPresenterImpl extends PresenterImpl<ManagerSettingsPresenter.ManagerView>
+final class ManagerSettingsPresenterImpl
+    extends PresenterImpl<ManagerSettingsPresenter.ManagerSettingsView>
     implements ManagerSettingsPresenter {
 
   @NonNull private final ManagerSettingsInteractor interactor;
 
-  @Inject public ManagerSettingsPresenterImpl(@NonNull ManagerSettingsInteractor interactor) {
+  @Inject ManagerSettingsPresenterImpl(@NonNull ManagerSettingsInteractor interactor) {
     this.interactor = interactor;
   }
 
-  @Override public void updateDelayTime(@NonNull String key, long time, boolean updateVisual,
-      boolean updateSummary) {
-    interactor.setDelayTime(key, time);
-    if (updateVisual) {
-      getView().setDelayTimeText(time);
-    }
-    if (updateSummary) {
-      getView().setDelayTimeSummary(time);
-    }
+  @Override public void setCustomDelayTimeStateFromPreference(@NonNull String key) {
+    final boolean customTime = interactor.isCustomTime(key);
+    updateManagedPreference(customTime);
   }
 
-  @Override public void setDelayTimeFromPreference(@NonNull String key) {
-    final long time = interactor.getDelayTime(key);
-    getView().setDelayTimeText(time);
-    getView().setDelayTimeSummary(time);
+  @Override public void updateManagedPreference(boolean newState) {
+    if (newState) {
+      getView().enableCustomDelayTime();
+    } else {
+      getView().disableCustomDelayTime();
+    }
   }
 }

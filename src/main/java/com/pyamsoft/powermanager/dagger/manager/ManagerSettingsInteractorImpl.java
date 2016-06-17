@@ -25,48 +25,34 @@ import javax.inject.Inject;
 final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
 
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final String KEY_DELAY_WIFI;
-  @NonNull private final String KEY_DELAY_DATA;
-  @NonNull private final String KEY_DELAY_BLUETOOTH;
-  @NonNull private final String KEY_DELAY_SYNC;
+  @NonNull private final String KEY_MANAGE_WIFI;
+  @NonNull private final String KEY_MANAGE_DATA;
+  @NonNull private final String KEY_MANAGE_BLUETOOTH;
+  @NonNull private final String KEY_MANAGE_SYNC;
 
   @Inject ManagerSettingsInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
     final Context appContext = context.getApplicationContext();
-    KEY_DELAY_WIFI = appContext.getString(R.string.wifi_time_key);
-    KEY_DELAY_DATA = appContext.getString(R.string.data_time_key);
-    KEY_DELAY_BLUETOOTH = appContext.getString(R.string.bluetooth_time_key);
-    KEY_DELAY_SYNC = appContext.getString(R.string.sync_time_key);
+    KEY_MANAGE_WIFI = appContext.getString(R.string.manage_wifi_key);
+    KEY_MANAGE_DATA = appContext.getString(R.string.manage_data_key);
+    KEY_MANAGE_BLUETOOTH = appContext.getString(R.string.manage_bluetooth_key);
+    KEY_MANAGE_SYNC = appContext.getString(R.string.manage_sync_key);
   }
 
-  @Override public void setDelayTime(@NonNull String key, long time) {
-    if (key.equals(KEY_DELAY_WIFI)) {
-      preferences.setWifiDelay(time);
-    } else if (key.equals(KEY_DELAY_DATA)) {
-      preferences.setDataDelay(time);
-    } else if (key.equals(KEY_DELAY_BLUETOOTH)) {
-      preferences.setBluetoothDelay(time);
-    } else if (key.equals(KEY_DELAY_SYNC)) {
-      preferences.setMasterSyncDelay(time);
+  @Override public boolean isCustomTime(@NonNull String key) {
+    boolean custom;
+    if (key.equals(KEY_MANAGE_WIFI)) {
+      custom = preferences.isCustomTimeWifi();
+    } else if (key.equals(KEY_MANAGE_DATA)) {
+      custom = preferences.isCustomTimeData();
+    } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
+      custom = preferences.isCustomTimeBluetooth();
+    } else if (key.equals(KEY_MANAGE_SYNC)) {
+      custom = preferences.isCustomTimeSync();
     } else {
-      throw new IllegalStateException("Invalid KEY: " + key);
+      throw new IllegalStateException("Invalid key");
     }
-  }
-
-  @Override public long getDelayTime(@NonNull String key) {
-    long time;
-    if (key.equals(KEY_DELAY_WIFI)) {
-      time = preferences.getWifiDelay();
-    } else if (key.equals(KEY_DELAY_DATA)) {
-      time = preferences.getDataDelay();
-    } else if (key.equals(KEY_DELAY_BLUETOOTH)) {
-      time = preferences.getBluetoothDelay();
-    } else if (key.equals(KEY_DELAY_SYNC)) {
-      time = preferences.getMasterSyncDelay();
-    } else {
-      throw new IllegalStateException("Invalid KEY: " + key);
-    }
-    return time;
+    return custom;
   }
 }

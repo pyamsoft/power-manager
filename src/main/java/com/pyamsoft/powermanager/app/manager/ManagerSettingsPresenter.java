@@ -19,16 +19,17 @@ package com.pyamsoft.powermanager.app.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.Presenter;
 
-public interface ManagerSettingsPresenter extends Presenter<ManagerSettingsPresenter.ManagerView> {
+public interface ManagerSettingsPresenter
+    extends Presenter<ManagerSettingsPresenter.ManagerSettingsView> {
 
-  void updateDelayTime(@NonNull String key, long time, boolean updateVisual, boolean updateSummary);
+  void setCustomDelayTimeStateFromPreference(@NonNull String key);
 
-  void setDelayTimeFromPreference(@NonNull String key);
+  void updateManagedPreference(boolean newState);
 
-  interface ManagerView {
+  interface ManagerSettingsView {
 
-    void setDelayTimeText(long time);
+    void enableCustomDelayTime();
 
-    void setDelayTimeSummary(long time);
+    void disableCustomDelayTime();
   }
 }

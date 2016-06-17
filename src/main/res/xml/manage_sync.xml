@@ -28,8 +28,17 @@
         android:title="@string/manage_sync_title"
         />
 
-    <com.pyamsoft.powermanager.app.manager.ManageDelayPreference
+    <ListPreference
+        android:defaultValue="@string/sync_time_default"
         android:dependency="@string/manage_sync_key"
+        android:entries="@array/preset_delay_sync_names"
+        android:entryValues="@array/preset_delay_sync_values"
+        android:key="@string/preset_delay_sync_key"
+        android:summary="@string/manage_sync_summary"
+        android:title="@string/manage_sync_title"
+        />
+
+    <com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference
         android:key="@string/sync_time_key"/>
 
   </PreferenceCategory>
