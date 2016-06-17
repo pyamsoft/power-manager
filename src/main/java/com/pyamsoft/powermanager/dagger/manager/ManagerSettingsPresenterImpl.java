@@ -30,11 +30,15 @@ final class ManagerSettingsPresenterImpl extends PresenterImpl<ManagerSettingsPr
     this.interactor = interactor;
   }
 
-  @Override public void setDelayTime(@NonNull String key, long time) {
+  @Override public void updateDelayTime(@NonNull String key, long time, boolean updateVisual) {
     interactor.setDelayTime(key, time);
+    if (updateVisual) {
+      setDelayTimeFromPreference(key);
+    }
   }
 
-  @Override public long getDelayTime(@NonNull String key) {
-    return interactor.getDelayTime(key);
+  @Override public void setDelayTimeFromPreference(@NonNull String key) {
+    final long time = interactor.getDelayTime(key);
+    getView().setDelayTimeText(time);
   }
 }

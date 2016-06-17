@@ -38,10 +38,10 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean manageSyncDefault;
 
   @NonNull private final String delayWifi;
-  @NonNull private final String delayWifiDefault;
-  @NonNull private final String delayDataDefault;
-  @NonNull private final String delayBluetoothDefault;
-  @NonNull private final String delaySyncDefault;
+  @NonNull private final long delayWifiDefault;
+  @NonNull private final long delayDataDefault;
+  @NonNull private final long delayBluetoothDefault;
+  @NonNull private final long delaySyncDefault;
 
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
@@ -63,14 +63,14 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
 
     delayWifi = appContext.getString(R.string.wifi_time_key);
-    delayWifiDefault = appContext.getString(R.string.wifi_time_default);
-    delayDataDefault = appContext.getString(R.string.data_time_default);
-    delayBluetoothDefault = appContext.getString(R.string.bluetooth_time_default);
-    delaySyncDefault = appContext.getString(R.string.sync_time_default);
+    delayWifiDefault = Long.parseLong(appContext.getString(R.string.wifi_time_default));
+    delayDataDefault = Long.parseLong(appContext.getString(R.string.data_time_default));
+    delayBluetoothDefault = Long.parseLong(appContext.getString(R.string.bluetooth_time_default));
+    delaySyncDefault = Long.parseLong(appContext.getString(R.string.sync_time_default));
   }
 
   @Override public long getWifiDelay() {
-    return Long.parseLong(get(delayWifi, delayWifiDefault));
+    return get(delayWifi, delayWifiDefault);
   }
 
   @Override public void setWifiDelay(long time) {
@@ -78,7 +78,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getDataDelay() {
-    return Long.parseLong(get(KEY_DELAY_DATA, delayDataDefault));
+    return get(KEY_DELAY_DATA, delayDataDefault);
   }
 
   @Override public void setDataDelay(long time) {
@@ -86,7 +86,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getBluetoothDelay() {
-    return Long.parseLong(get(KEY_DELAY_BLUETOOTH, delayBluetoothDefault));
+    return get(KEY_DELAY_BLUETOOTH, delayBluetoothDefault);
   }
 
   @Override public void setBluetoothDelay(long time) {
@@ -94,7 +94,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getMasterSyncDelay() {
-    return Long.parseLong(get(KEY_DELAY_SYNC, delaySyncDefault));
+    return get(KEY_DELAY_SYNC, delaySyncDefault);
   }
 
   @Override public void setMasterSyncDelay(long time) {

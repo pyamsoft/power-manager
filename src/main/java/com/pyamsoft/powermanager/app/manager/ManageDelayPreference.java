@@ -27,6 +27,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
+import android.widget.TextView;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
@@ -37,7 +38,9 @@ public class ManageDelayPreference extends Preference
     implements ManagerSettingsPresenter.ManagerView {
 
   @NonNull private final Handler handler;
+
   @Nullable @Inject ManagerSettingsPresenter presenter;
+  @Nullable private TextView summary;
   @Nullable private TextInputLayout textInputLayout;
   @Nullable private TextWatcher watcher;
 
@@ -71,8 +74,12 @@ public class ManageDelayPreference extends Preference
     Timber.d("onBindViewHolder");
     holder.itemView.setClickable(false);
 
+    summary = (TextView) holder.findViewById(R.id.preference_manage_delay_summary);
     textInputLayout = (TextInputLayout) holder.findViewById(R.id.preference_manage_delay_times);
     final EditText editText = textInputLayout.getEditText();
+
+    assert presenter != null;
+    presenter.setDelayTimeFromPreference(getKey());
 
     assert editText != null;
     editText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -90,10 +97,17 @@ public class ManageDelayPreference extends Preference
       }
 
       @Override public void afterTextChanged(Editable s) {
+        final String text = s.toString();
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(() -> {
           Timber.d("afterTextChanged");
-          // TODO set value here
+          long value;
+          if (text.isEmpty() || text.startsWith("-")) {
+            value = 0;
+          } else {
+            value = Long.parseLong(text);
+          }
+          presenter.updateDelayTime(getKey(), value, text.isEmpty());
         }, 600L);
       }
     };
@@ -126,5 +140,25 @@ public class ManageDelayPreference extends Preference
 
     assert presenter != null;
     presenter.unbindView();
+  }
+
+  @Override public void setDelayTimeSummary(long time) {
+    // TODO
+  }
+
+  @Override public void setDelayTimeText(long time) {
+    assert textInputLayout != null;
+    final EditText editText = textInputLayout.getEditText();
+
+    assert editText != null;
+    if (watcher != null) {
+      editText.removeTextChangedListener(watcher);
+    }
+
+    editText.setText(String.valueOf(time));
+
+    if (watcher != null) {
+      editText.addTextChangedListener(watcher);
+    }
   }
 }
