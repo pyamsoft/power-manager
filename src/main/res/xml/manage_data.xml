@@ -29,6 +29,7 @@
       />
 
     <com.pyamsoft.powermanager.app.manager.ManageDelayPreference
+        android:dependency="@string/manage_data_key"
         android:key="@string/data_time_key"/>
 
   </PreferenceCategory>

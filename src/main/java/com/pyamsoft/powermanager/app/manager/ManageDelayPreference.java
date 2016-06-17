@@ -31,6 +31,7 @@ import android.widget.TextView;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import java.util.Locale;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -81,12 +82,6 @@ public class ManageDelayPreference extends Preference
     assert presenter != null;
     presenter.setDelayTimeFromPreference(getKey());
 
-    assert editText != null;
-    editText.setOnFocusChangeListener((v, hasFocus) -> {
-      Timber.d("onFocusChange %s", hasFocus);
-      // TODO commit on focus lost
-    });
-
     watcher = new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -101,19 +96,17 @@ public class ManageDelayPreference extends Preference
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(() -> {
           Timber.d("afterTextChanged");
-          saveDelayTimeToPreference(text, text.isEmpty());
+          saveDelayTimeToPreference(text, text.isEmpty(), true);
         }, 600L);
       }
     };
-    editText.addTextChangedListener(watcher);
 
-    editText.setOnEditorActionListener((v, actionId, event) -> {
-      Timber.d("onEditorAction");
-      return true;
-    });
+    assert editText != null;
+    editText.addTextChangedListener(watcher);
   }
 
-  private void saveDelayTimeToPreference(@NonNull String text, boolean update) {
+  private void saveDelayTimeToPreference(@NonNull String text, boolean updateText,
+      boolean updateSummary) {
     long value;
     if (text.isEmpty() || text.startsWith("-")) {
       value = 0;
@@ -122,7 +115,7 @@ public class ManageDelayPreference extends Preference
     }
 
     assert presenter != null;
-    presenter.updateDelayTime(getKey(), value, update);
+    presenter.updateDelayTime(getKey(), value, updateText, updateSummary);
   }
 
   public final void bindView() {
@@ -146,14 +139,15 @@ public class ManageDelayPreference extends Preference
 
     // Save the last entered value to preferences
     final String text = editText.getText().toString();
-    saveDelayTimeToPreference(text, false);
+    saveDelayTimeToPreference(text, false, false);
 
     assert presenter != null;
     presenter.unbindView();
   }
 
   @Override public void setDelayTimeSummary(long time) {
-    // TODO
+    assert summary != null;
+    summary.setText(String.format(Locale.US, "Current delay: %d seconds", time));
   }
 
   @Override public void setDelayTimeText(long time) {

@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.base.Presenter;
 
 public interface ManagerSettingsPresenter extends Presenter<ManagerSettingsPresenter.ManagerView> {
 
-  void updateDelayTime(@NonNull String key, long time, boolean updateVisual);
+  void updateDelayTime(@NonNull String key, long time, boolean updateVisual, boolean updateSummary);
 
   void setDelayTimeFromPreference(@NonNull String key);
 
