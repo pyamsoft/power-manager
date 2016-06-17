@@ -31,6 +31,7 @@ import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -64,11 +65,20 @@ public class MainActivity extends DonationActivityBase
   }
 
   private void showOverviewIfBlank() {
+    boolean blank = true;
+    final String[] fragmentTags = {
+        ManagerFragment.TYPE_WIFI, ManagerFragment.TYPE_DATA, ManagerFragment.TYPE_BLUETOOTH,
+        ManagerFragment.TYPE_SYNC, SettingsFragment.TAG
+    };
+
     final FragmentManager fm = getSupportFragmentManager();
-    if (fm.findFragmentByTag(ManagerFragment.TYPE_WIFI) == null
-        && fm.findFragmentByTag(ManagerFragment.TYPE_DATA) == null
-        && fm.findFragmentByTag(ManagerFragment.TYPE_BLUETOOTH) == null
-        && fm.findFragmentByTag(ManagerFragment.TYPE_SYNC) == null) {
+    for (final String tag : fragmentTags) {
+      if (fm.findFragmentByTag(tag) != null) {
+        blank = false;
+        break;
+      }
+    }
+    if (blank) {
       fm.beginTransaction().replace(R.id.main_container, new OverviewFragment()).commit();
     }
   }
@@ -78,6 +88,7 @@ public class MainActivity extends DonationActivityBase
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_data, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_bluetooth, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_sync, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
   }
 
   @Override protected void onDestroy() {

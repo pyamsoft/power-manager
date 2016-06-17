@@ -18,11 +18,16 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+  <PreferenceCategory
+      android:title="Sync Settings">
+
   <SwitchPreferenceCompat
       android:defaultValue="@bool/manage_sync_default"
       android:key="@string/manage_sync_key"
       android:summary="@string/manage_sync_summary"
       android:title="@string/manage_sync_title"
       />
+
+  </PreferenceCategory>
 
 </PreferenceScreen>

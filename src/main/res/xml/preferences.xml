@@ -19,15 +19,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
   <PreferenceCategory
-      android:title="Data Settings">
+      android:title="Power Manager Settings">
 
-  <SwitchPreferenceCompat
-      android:defaultValue="@bool/manage_data_default"
-      android:key="@string/manage_data_key"
-      android:summary="@string/manage_data_summary"
-      android:title="@string/manage_data_title"
-      />
+    <CheckBoxPreference
+        android:key="@string/boot_key"
+        android:summary="@string/boot_summary"
+        android:title="@string/boot_title"
+        />
 
   </PreferenceCategory>
+
 
 </PreferenceScreen>

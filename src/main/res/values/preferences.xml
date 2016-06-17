@@ -15,19 +15,10 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
-  <PreferenceCategory
-      android:title="Data Settings">
+  <string name="boot_key">boot_key</string>
+  <string name="boot_summary">Start Power Manager on boot</string>
+  <string name="boot_title">Run on Startup</string>
 
-  <SwitchPreferenceCompat
-      android:defaultValue="@bool/manage_data_default"
-      android:key="@string/manage_data_key"
-      android:summary="@string/manage_data_summary"
-      android:title="@string/manage_data_title"
-      />
-
-  </PreferenceCategory>
-
-</PreferenceScreen>
+</resources>

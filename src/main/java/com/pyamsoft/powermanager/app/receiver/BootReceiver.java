@@ -17,11 +17,33 @@
 package com.pyamsoft.powermanager.app.receiver;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import timber.log.Timber;
 
 public final class BootReceiver extends BroadcastReceiver {
+
+  public static void setBootEnabled(final Context context, final boolean bootEnabled) {
+    Timber.d("set boot enabled state: %s", bootEnabled);
+    final ComponentName cmp =
+        new ComponentName(context.getApplicationContext(), BootReceiver.class);
+    final int componentState = bootEnabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+    context.getApplicationContext()
+        .getPackageManager()
+        .setComponentEnabledSetting(cmp, componentState, PackageManager.DONT_KILL_APP);
+  }
+
+  public static boolean isBootEnabled(final Context context) {
+    final ComponentName cmp =
+        new ComponentName(context.getApplicationContext(), BootReceiver.class);
+    final int componentState =
+        context.getApplicationContext().getPackageManager().getComponentEnabledSetting(cmp);
+    return componentState == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+  }
+
   @Override public void onReceive(Context context, Intent intent) {
     if (intent != null) {
       final String action = intent.getAction();
