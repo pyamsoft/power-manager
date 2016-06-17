@@ -69,22 +69,14 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
   static final class EnableJob extends Job {
 
     protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorBluetooth.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorBluetooth.TAG)
-          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_ENABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends Job {
 
     protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorBluetooth.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorBluetooth.TAG)
-          .singleInstanceBy(ManagerInteractorBluetooth.TAG), JOB_TYPE_DISABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState);
     }
   }
 
@@ -92,7 +84,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
         boolean originalState) {
-      super(context, params, jobType, originalState);
+      super(context, params.addTags(ManagerInteractorBluetooth.TAG), jobType, originalState);
     }
 
     @CheckResult @NonNull BluetoothAdapter getBluetoothAdapter() {

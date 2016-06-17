@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import java.util.Arrays;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -56,34 +57,28 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
+    final DeviceJob job = new EnableJob(appContext, delayTime, isOriginalStateEnabled());
+    Timber.d("TAGS: %s", Arrays.toString(job.getTags().toArray()));
+    return job;
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
+    final DeviceJob job = new DisableJob(appContext, delayTime, isOriginalStateEnabled());
+    Timber.d("TAGS: %s", Arrays.toString(job.getTags().toArray()));
+    return job;
   }
 
   static final class EnableJob extends WifiJob {
 
     protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorWifi.TAG)
-          .setDelayMs(delayTime)
-          .addTags(ManagerInteractorWifi.TAG)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorWifi.TAG)
-          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_ENABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends WifiJob {
 
     protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorWifi.TAG)
-          .setDelayMs(delayTime)
-          .addTags(ManagerInteractorWifi.TAG)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorWifi.TAG)
-          .singleInstanceBy(ManagerInteractorWifi.TAG), JOB_TYPE_DISABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState);
     }
   }
 
@@ -91,7 +86,7 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
     protected WifiJob(@NonNull Context context, @NonNull Params params, int jobType,
         boolean originalState) {
-      super(context, params, jobType, originalState);
+      super(context, params.addTags(ManagerInteractorWifi.TAG), jobType, originalState);
     }
 
     @Override protected void enable() {

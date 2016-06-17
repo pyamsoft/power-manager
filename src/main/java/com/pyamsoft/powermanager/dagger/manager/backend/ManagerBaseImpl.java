@@ -61,35 +61,35 @@ abstract class ManagerBaseImpl implements Manager {
   }
 
   @Override public final void enable(long time) {
-    interactor.cancelJobs();
     PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
   }
 
   @Override public final void disable(long time) {
     interactor.setOriginalState(interactor.isEnabled());
-    interactor.cancelJobs();
     PowerManager.getInstance()
         .getJobManager()
         .addJobInBackground(interactor.createDisableJob(time));
   }
 
   @CheckResult @NonNull final Observable<ManagerInteractor> baseEnableObservable() {
-    return Observable.defer(() -> Observable.just(interactor)).filter(managerInteractor -> {
+    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
+      Timber.d("Cancel any running jobs");
+      managerInteractor.cancelJobs();
+      return managerInteractor;
+    }).filter(managerInteractor -> {
       Timber.d("Check that manager isManaged");
       return managerInteractor.isManaged();
-    }).filter(managerInteractor -> {
-      Timber.d("Check that manager isEnabled");
-      return !managerInteractor.isEnabled();
     });
   }
 
   @CheckResult @NonNull final Observable<ManagerInteractor> baseDisableObservable() {
-    return Observable.defer(() -> Observable.just(interactor)).filter(managerInteractor -> {
+    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
+      Timber.d("Cancel any running jobs");
+      managerInteractor.cancelJobs();
+      return managerInteractor;
+    }).filter(managerInteractor -> {
       Timber.d("Check that manager isManaged");
       return managerInteractor.isManaged();
-    }).filter(wearableManagerInteractor -> {
-      Timber.d("Check that manager !isEnabled");
-      return wearableManagerInteractor.isEnabled();
     });
   }
 }

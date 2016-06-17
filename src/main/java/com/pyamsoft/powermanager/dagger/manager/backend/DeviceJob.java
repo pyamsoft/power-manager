@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
+import java.util.Arrays;
 import timber.log.Timber;
 
 abstract class DeviceJob extends Job {
@@ -37,7 +38,7 @@ abstract class DeviceJob extends Job {
 
   protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
       boolean originalState) {
-    super(params);
+    super(params.setRequiresNetwork(false));
     this.appContext = context.getApplicationContext();
     this.jobType = jobType;
     this.originalState = originalState;
@@ -72,7 +73,7 @@ abstract class DeviceJob extends Job {
   }
 
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-    Timber.w("Job is cancelled");
+    Timber.w("Job is cancelled %s %s", getId(), Arrays.toString(getTags().toArray()));
     if (throwable != null) {
       Timber.e(throwable, "JOB ERROR");
     }

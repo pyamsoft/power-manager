@@ -63,22 +63,14 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
   static final class EnableJob extends Job {
 
     protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorSync.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorSync.TAG)
-          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_ENABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState);
     }
   }
 
   static final class DisableJob extends Job {
 
     protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setGroupId(ManagerInteractorSync.TAG)
-          .setDelayMs(delayTime)
-          .setRequiresNetwork(false)
-          .setSingleId(ManagerInteractorSync.TAG)
-          .singleInstanceBy(ManagerInteractorSync.TAG), JOB_TYPE_DISABLE, originalState);
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState);
     }
   }
 
@@ -86,7 +78,7 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
         boolean originalState) {
-      super(context, params, jobType, originalState);
+      super(context, params.addTags(ManagerInteractorSync.TAG), jobType, originalState);
     }
 
     @Override protected void enable() {
