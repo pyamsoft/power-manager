@@ -78,7 +78,7 @@ public final class PowerManager extends ApplicationBase {
         .maxConsumerCount(4)
         .loadFactor(4)
         .consumerKeepAlive(120);
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(application,
           PowerManagerFrameworkJobSchedulerService.class));
     } else {
