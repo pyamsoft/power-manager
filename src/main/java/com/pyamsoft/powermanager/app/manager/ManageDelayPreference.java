@@ -101,13 +101,7 @@ public class ManageDelayPreference extends Preference
         handler.removeCallbacksAndMessages(null);
         handler.postDelayed(() -> {
           Timber.d("afterTextChanged");
-          long value;
-          if (text.isEmpty() || text.startsWith("-")) {
-            value = 0;
-          } else {
-            value = Long.parseLong(text);
-          }
-          presenter.updateDelayTime(getKey(), value, text.isEmpty());
+          saveDelayTimeToPreference(text, text.isEmpty());
         }, 600L);
       }
     };
@@ -117,6 +111,18 @@ public class ManageDelayPreference extends Preference
       Timber.d("onEditorAction");
       return true;
     });
+  }
+
+  private void saveDelayTimeToPreference(@NonNull String text, boolean update) {
+    long value;
+    if (text.isEmpty() || text.startsWith("-")) {
+      value = 0;
+    } else {
+      value = Long.parseLong(text);
+    }
+
+    assert presenter != null;
+    presenter.updateDelayTime(getKey(), value, update);
   }
 
   public final void bindView() {
@@ -137,6 +143,10 @@ public class ManageDelayPreference extends Preference
 
     editText.setOnFocusChangeListener(null);
     editText.setOnEditorActionListener(null);
+
+    // Save the last entered value to preferences
+    final String text = editText.getText().toString();
+    saveDelayTimeToPreference(text, false);
 
     assert presenter != null;
     presenter.unbindView();

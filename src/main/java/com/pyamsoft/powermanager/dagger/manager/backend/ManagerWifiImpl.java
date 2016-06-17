@@ -63,7 +63,7 @@ final class ManagerWifiImpl extends WearableManagerImpl implements ManagerWifi {
             .subscribeOn(getIoScheduler())
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
-              Timber.d("Queue Bluetooth disable");
+              Timber.d("Queue Wifi disable");
               disable(managerInteractor.getDelayTime() * 1000);
             }, throwable -> {
               Timber.e(throwable, "onError");
