@@ -34,11 +34,11 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="40dp"
       android:layout_marginLeft="16dp"
       android:layout_marginStart="16dp"
-      android:orientation="horizontal"
       android:baselineAligned="false"
+      android:orientation="horizontal"
       >
 
     <FrameLayout
@@ -50,10 +50,10 @@
         >
 
       <ImageView
-          android:layout_gravity="center"
           android:id="@+id/remoteview_notification_wifi_image"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
 
@@ -68,10 +68,10 @@
         >
 
       <ImageView
-          android:layout_gravity="center"
           android:id="@+id/remoteview_notification_data_image"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
 
@@ -86,10 +86,10 @@
         >
 
       <ImageView
-          android:layout_gravity="center"
           android:id="@+id/remoteview_notification_bluetooth_image"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
 
@@ -104,10 +104,34 @@
         >
 
       <ImageView
-          android:layout_gravity="center"
           android:id="@+id/remoteview_notification_sync_image"
-          android:layout_width="40dp"
-          android:layout_height="40dp"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        />
+
+    <FrameLayout
+        android:id="@+id/remoteview_notification_wear_touch"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/ic_notification_background_touched"
+        >
+
+      <ImageView
+          android:id="@+id/remoteview_notification_wear_image"
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
 
