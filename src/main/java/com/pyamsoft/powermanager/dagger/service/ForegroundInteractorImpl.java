@@ -30,6 +30,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -46,7 +47,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @NonNull @Override public Notification createNotification() {
-    final Intent intent = new Intent(appContext, MainActivity.class);
+    final Intent intent =
+        new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
     final PendingIntent pendingIntent =
         PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
     final RemoteViews customRemoteView = createCustomRemoteViews();
@@ -97,8 +99,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     final PendingIntent syncAction =
         PendingIntent.getService(appContext, PENDING_RC + 8, syncIntent, 0);
 
-    @DrawableRes final int wearIcon = preferences.isWearableManaged() ? R.drawable.ic_watch_24dp
-        : R.drawable.ic_watch_off_24dp;
+    @DrawableRes final int wearIcon =
+        preferences.isWearableManaged() ? R.drawable.ic_watch_24dp : R.drawable.ic_watch_off_24dp;
     @DrawableRes final int wifiIcon = preferences.isWifiManaged() ? R.drawable.ic_network_wifi_24dp
         : R.drawable.ic_signal_wifi_off_24dp;
     @DrawableRes final int dataIcon = preferences.isDataManaged() ? R.drawable.ic_network_cell_24dp
@@ -109,11 +111,16 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     @DrawableRes final int syncIcon =
         preferences.isSyncManaged() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
 
-    customView.setImageViewResource(R.id.remoteview_notification_wear_image, wearIcon);
-    customView.setImageViewResource(R.id.remoteview_notification_wifi_image, wifiIcon);
-    customView.setImageViewResource(R.id.remoteview_notification_data_image, dataIcon);
-    customView.setImageViewResource(R.id.remoteview_notification_bluetooth_image, bluetoothIcon);
-    customView.setImageViewResource(R.id.remoteview_notification_sync_image, syncIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_wear_image, wearIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_wifi_image, wifiIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_data_image, dataIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_bluetooth_image, bluetoothIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_sync_image, syncIcon);
 
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wear_touch, wearAction);
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wifi_touch, wifiAction);
