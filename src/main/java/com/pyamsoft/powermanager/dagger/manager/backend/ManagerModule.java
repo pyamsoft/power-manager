@@ -35,11 +35,7 @@ import rx.Scheduler;
 
 @Module public class ManagerModule {
 
-  @Singleton @Provides WifiManager provideWifiManager(@NonNull Context context) {
-    return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-  }
-
-  @Singleton @Provides BluetoothAdapter provideBluetoothAdapter(@NonNull Context context) {
+  final BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
     BluetoothAdapter adapter;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       adapter = BluetoothAdapter.getDefaultAdapter();
@@ -49,6 +45,15 @@ import rx.Scheduler;
       adapter = bluetoothManager.getAdapter();
     }
     return adapter;
+  }
+
+  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
+    return new BluetoothAdapterWrapper(getBluetoothAdapter(context));
+  }
+
+
+  @Singleton @Provides WifiManager provideWifiManager(@NonNull Context context) {
+    return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
   @Singleton @Provides ManagerInteractorWifi provideManagerInteractorWifi(
@@ -63,7 +68,7 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
-      @NonNull BluetoothAdapter bluetoothAdapter, @NonNull PowerManagerPreferences preferences,
+      @NonNull BluetoothAdapterWrapper bluetoothAdapter, @NonNull PowerManagerPreferences preferences,
       @NonNull Context context) {
     return new ManagerInteractorBluetooth(preferences, context, bluetoothAdapter);
   }

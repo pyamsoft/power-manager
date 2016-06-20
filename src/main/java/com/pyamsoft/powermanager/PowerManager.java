@@ -106,7 +106,7 @@ public final class PowerManager extends ApplicationBase {
 
     if (buildConfigDebug()) {
       new CrashHandler(getApplicationContext(), this).register();
-      setStrictMode();
+    //  setStrictMode();
     }
 
     // Initialize instance
