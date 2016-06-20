@@ -30,9 +30,9 @@ public final class ManagerSettingsPresenter
     this.interactor = interactor;
   }
 
-  public final void setCustomTimeStateFromPreference(@NonNull String key) {
+  public final void setCustomTimeStateFromPreference(@NonNull String key, boolean isManaged) {
     final boolean customTime = interactor.isCustomTime(key);
-    updateCustomTime(customTime);
+    updateCustomTime(customTime && isManaged);
   }
 
   public final void updateCustomTime(boolean newState) {

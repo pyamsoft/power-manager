@@ -81,7 +81,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     });
 
     assert presenter != null;
-    presenter.setCustomTimeStateFromPreference(getString(manageKeyResId));
+    presenter.setCustomTimeStateFromPreference(getString(manageKeyResId),
+        managePreference.isChecked());
   }
 
   @Override public void onDestroyView() {
