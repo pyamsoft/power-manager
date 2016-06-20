@@ -34,8 +34,8 @@
         android:entries="@array/preset_delay_sync_names"
         android:entryValues="@array/preset_delay_sync_values"
         android:key="@string/preset_delay_sync_key"
-        android:summary="@string/manage_sync_summary"
-        android:title="@string/manage_sync_title"
+        android:summary="@string/sync_time_summary"
+        android:title="@string/sync_time_title"
         />
 
     <com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference
