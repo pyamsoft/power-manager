@@ -177,4 +177,8 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @Override public void setWearableManaged(boolean enable) {
     put(manageWearable, enable);
   }
+
+  @Override public void clearAll() {
+    clear(true);
+  }
 }

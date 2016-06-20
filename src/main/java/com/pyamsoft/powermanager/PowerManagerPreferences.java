@@ -65,4 +65,6 @@ public interface PowerManagerPreferences {
   void setSyncManaged(boolean enable);
 
   void setWearableManaged(boolean enable);
+
+  void clearAll();
 }
