@@ -22,6 +22,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
@@ -30,12 +31,12 @@ import timber.log.Timber;
 final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "bluetooth_manager_job";
-  @NonNull private final BluetoothAdapter androidBluetooth;
+  @Nullable private final BluetoothAdapter androidBluetooth;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Context appContext;
 
   @Inject ManagerInteractorBluetooth(@NonNull PowerManagerPreferences preferences,
-      @NonNull Context context, @NonNull BluetoothAdapter bluetoothAdapter) {
+      @NonNull Context context, @Nullable BluetoothAdapter bluetoothAdapter) {
     super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
@@ -47,7 +48,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
   }
 
   @Override public boolean isEnabled() {
-    return androidBluetooth.isEnabled();
+    return androidBluetooth != null && androidBluetooth.isEnabled();
   }
 
   @Override public boolean isManaged() {
@@ -87,7 +88,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
       super(context, params.addTags(ManagerInteractorBluetooth.TAG), jobType, originalState);
     }
 
-    @CheckResult @NonNull BluetoothAdapter getBluetoothAdapter() {
+    @CheckResult @Nullable BluetoothAdapter getBluetoothAdapter() {
       BluetoothAdapter adapter;
       if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
         adapter = BluetoothAdapter.getDefaultAdapter();
@@ -106,7 +107,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
       // Only if it was originally enabled
       if (isOriginalState()) {
         final BluetoothAdapter adapter = getBluetoothAdapter();
-        if (!adapter.isEnabled()) {
+        if (adapter != null && !adapter.isEnabled()) {
           Timber.d("Turn on Bluetooth");
           adapter.enable();
         } else {
@@ -120,7 +121,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
     @Override protected void disable() {
       Timber.d("Bluetooth job disable");
       final BluetoothAdapter adapter = getBluetoothAdapter();
-      if (adapter.isEnabled()) {
+      if (adapter != null && adapter.isEnabled()) {
         Timber.d("Turn off Bluetooth");
         adapter.disable();
       } else {
