@@ -31,7 +31,7 @@
 
 
   <PreferenceCategory
-      android:title="Pasterino Settings">
+      android:title="Power Manager Settings">
 
     <Preference
         android:key="@string/upgrade_info_key"
