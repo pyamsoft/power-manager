@@ -19,13 +19,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:padding="12dp"
     >
 
   <ImageView
       android:id="@+id/remoteview_notification_icon"
       android:layout_width="40dp"
       android:layout_height="40dp"
+      android:layout_margin="12dp"
       android:background="@drawable/ic_notification_background_oval"
       android:contentDescription="@string/blank"
       android:scaleType="center"
@@ -34,9 +34,9 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="40dp"
-      android:layout_marginLeft="16dp"
-      android:layout_marginStart="16dp"
+      android:layout_height="64dp"
+      android:layout_marginEnd="12dp"
+      android:layout_marginRight="12dp"
       android:baselineAligned="false"
       android:orientation="horizontal"
       >
@@ -45,6 +45,8 @@
         android:id="@+id/remoteview_notification_wifi_touch"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:background="@drawable/ic_notification_background_touched"
         >
@@ -63,6 +65,8 @@
         android:id="@+id/remoteview_notification_data_touch"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:background="@drawable/ic_notification_background_touched"
         >
@@ -81,6 +85,8 @@
         android:id="@+id/remoteview_notification_bluetooth_touch"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:background="@drawable/ic_notification_background_touched"
         >
@@ -99,6 +105,8 @@
         android:id="@+id/remoteview_notification_sync_touch"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:background="@drawable/ic_notification_background_touched"
         >
@@ -123,6 +131,8 @@
         android:id="@+id/remoteview_notification_wear_touch"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_weight="1"
         android:background="@drawable/ic_notification_background_touched"
         >
