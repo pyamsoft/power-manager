@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.base.Presenter;
 
 public abstract class ManagerTimePresenter extends Presenter<ManagerTimePresenter.TimeView> {
 
-  protected abstract void updateDelayTime(@NonNull String key, long time, boolean updateVisual,
+  protected abstract void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary);
 
   protected abstract void setDelayTimeFromPreference(@NonNull String key);

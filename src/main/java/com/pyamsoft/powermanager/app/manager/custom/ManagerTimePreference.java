@@ -107,7 +107,12 @@ public abstract class ManagerTimePreference extends Preference
     }
 
     assert presenter != null;
-    presenter.updateDelayTime(getKey(), value, updateText, updateSummary);
+    presenter.updateTime(getKey(), value, updateText, updateSummary);
+  }
+
+  public final void updateTime(long value) {
+    assert presenter != null;
+    presenter.updateTime(getKey(), value, true, true);
   }
 
   final void bindView(@NonNull ManagerTimePresenter presenter) {

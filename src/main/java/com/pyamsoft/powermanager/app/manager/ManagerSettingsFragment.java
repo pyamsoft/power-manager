@@ -73,24 +73,30 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    assert managePreference != null;
-    managePreference.setOnPreferenceChangeListener((preference, o) -> {
-      assert presenter != null;
-      presenter.updateCustomTime((boolean) o);
-      return true;
-    });
-
     assert presetDelayPreference != null;
     presetDelayPreference.setOnPreferenceChangeListener((preference, o) -> {
       if (o instanceof String) {
         final String string = (String) o;
         final long time = Long.parseLong(string);
+
+        if (time != -1) {
+          assert delayPreference != null;
+          delayPreference.updateTime(time);
+        }
+
         assert presenter != null;
         assert managePreference != null;
         presenter.updateCustomTime(time == -1 && managePreference.isChecked());
         return true;
       }
       return false;
+    });
+
+    assert managePreference != null;
+    managePreference.setOnPreferenceChangeListener((preference, o) -> {
+      assert presenter != null;
+      presenter.updateCustomTime((boolean) o);
+      return true;
     });
 
     assert presenter != null;

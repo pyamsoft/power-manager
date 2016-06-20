@@ -28,7 +28,7 @@ final class ManagerDelayPresenter extends ManagerTimePresenter {
     this.interactor = interactor;
   }
 
-  @Override public void updateDelayTime(@NonNull String key, long time, boolean updateVisual,
+  @Override public void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary) {
     interactor.setDelayTime(key, time);
     if (updateVisual) {
