@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
@@ -52,7 +53,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         PendingIntent.getService(appContext, PENDING_RC + 4, wearIntent, 0);
     return new NotificationCompat.Builder(appContext).setContentTitle(
         appContext.getString(R.string.app_name))
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setSmallIcon(R.drawable.ic_notification)
+        .setColor(ContextCompat.getColor(appContext, R.color.amber500))
         .setWhen(0)
         .setOngoing(true)
         .setAutoCancel(false)
