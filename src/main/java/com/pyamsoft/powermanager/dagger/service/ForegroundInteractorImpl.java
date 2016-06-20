@@ -55,6 +55,7 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         appContext.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(ContextCompat.getColor(appContext, R.color.amber500))
+        .setContentText("Managing Power...")
         .setWhen(0)
         .setOngoing(true)
         .setAutoCancel(false)
