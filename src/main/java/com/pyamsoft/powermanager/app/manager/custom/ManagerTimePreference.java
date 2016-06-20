@@ -157,6 +157,7 @@ public abstract class ManagerTimePreference extends Preference
     }
 
     editText.setText(String.valueOf(time));
+    editText.setSelection(editText.getText().length());
 
     if (watcher != null) {
       editText.addTextChangedListener(watcher);
