@@ -80,6 +80,19 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
       return true;
     });
 
+    assert presetDelayPreference != null;
+    presetDelayPreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof String) {
+        final String string = (String) o;
+        final long time = Long.parseLong(string);
+        assert presenter != null;
+        assert managePreference != null;
+        presenter.updateCustomTime(time == -1 && managePreference.isChecked());
+        return true;
+      }
+      return false;
+    });
+
     assert presenter != null;
     presenter.setCustomTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
