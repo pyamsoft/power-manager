@@ -38,7 +38,7 @@ public class OverviewFragment extends Fragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_main, container, false);
+    final View view = inflater.inflate(R.layout.fragment_overview, container, false);
     unbinder = ButterKnife.bind(this, view);
     return view;
   }
