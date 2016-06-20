@@ -26,7 +26,7 @@ import javax.inject.Named;
 
 public final class ManagerDelayPreference extends ManagerTimePreference {
 
-  @Nullable @Named("delay") @Inject ManagerTimePresenter presenter;
+  @Nullable @Inject @Named("delay") ManagerTimePresenter presenter;
 
   public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -39,15 +39,15 @@ public final class ManagerDelayPreference extends ManagerTimePreference {
   }
 
   public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
+    this(context, attrs, defStyleAttr, 0);
   }
 
   public ManagerDelayPreference(Context context, AttributeSet attrs) {
-    super(context, attrs);
+    this(context, attrs, 0);
   }
 
   public ManagerDelayPreference(Context context) {
-    super(context);
+    this(context, null);
   }
 
   public final void bindView() {
