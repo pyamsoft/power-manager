@@ -158,6 +158,22 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(manageWearable, manageWearableDefault);
   }
 
+  @Override public void setWifiManaged(boolean enable) {
+    put(manageWifi, enable);
+  }
+
+  @Override public void setDataManaged(boolean enable) {
+    put(manageData, enable);
+  }
+
+  @Override public void setBluetoothManaged(boolean enable) {
+    put(manageBluetooth, enable);
+  }
+
+  @Override public void setSyncManaged(boolean enable) {
+    put(manageSync, enable);
+  }
+
   @Override public void setWearableManaged(boolean enable) {
     put(manageWearable, enable);
   }

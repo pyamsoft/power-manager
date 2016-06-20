@@ -25,4 +25,12 @@ public interface ForegroundInteractor {
   @CheckResult @NonNull Notification createNotification();
 
   void updateWearablePreferenceStatus();
+
+  void updateWifiPreferenceStatus();
+
+  void updateDataPreferenceStatus();
+
+  void updateBluetoothPreferenceStatus();
+
+  void updateSyncPreferenceStatus();
 }

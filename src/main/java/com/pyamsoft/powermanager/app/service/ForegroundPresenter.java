@@ -39,6 +39,22 @@ public final class ForegroundPresenter extends Presenter<ForegroundPresenter.For
     interactor.updateWearablePreferenceStatus();
   }
 
+  public final void updateWifiAction() {
+    interactor.updateWifiPreferenceStatus();
+  }
+
+  public final void updateDataAction() {
+    interactor.updateDataPreferenceStatus();
+  }
+
+  public final void updateBluetoothAction() {
+    interactor.updateBluetoothPreferenceStatus();
+  }
+
+  public final void updateSyncAction() {
+    interactor.updateSyncPreferenceStatus();
+  }
+
   public interface ForegroundProvider {
 
   }

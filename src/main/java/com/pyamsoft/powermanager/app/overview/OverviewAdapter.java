@@ -104,7 +104,7 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
     cancelAsyncTask(holder);
 
     assert holder.image != null;
-    holder.task = new AsyncVectorDrawableTask(holder.image);
+    holder.task = new AsyncVectorDrawableTask(holder.image, android.R.color.white);
     holder.task.execute(
         new AsyncDrawable(holder.itemView.getContext().getApplicationContext(), image));
   }

@@ -56,5 +56,13 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isWearableManaged();
 
+  void setWifiManaged(boolean enable);
+
+  void setDataManaged(boolean enable);
+
+  void setBluetoothManaged(boolean enable);
+
+  void setSyncManaged(boolean enable);
+
   void setWearableManaged(boolean enable);
 }

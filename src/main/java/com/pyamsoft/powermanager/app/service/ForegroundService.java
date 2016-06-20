@@ -29,6 +29,10 @@ import timber.log.Timber;
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
   @NonNull public static final String EXTRA_WEARABLE = "wearable";
+  @NonNull public static final String EXTRA_WIFI = "wifi";
+  @NonNull public static final String EXTRA_DATA = "data";
+  @NonNull public static final String EXTRA_BLUETOOTH = "bluetooth";
+  @NonNull public static final String EXTRA_SYNC = "sync";
   private static final int NOTIFICATION_ID = 1000;
   @Nullable @Inject ForegroundPresenter presenter;
   @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
@@ -67,11 +71,34 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("onStartCommand");
     if (intent != null) {
-      final boolean wearable = intent.getBooleanExtra(EXTRA_WEARABLE, false);
-      if (wearable) {
+      if (intent.getBooleanExtra(EXTRA_WEARABLE, false)) {
         Timber.d("Update wearable status");
         assert presenter != null;
         presenter.updateWearableAction();
+      }
+
+      if (intent.getBooleanExtra(EXTRA_WIFI, false)) {
+        Timber.d("Update wifi status");
+        assert presenter != null;
+        presenter.updateWifiAction();
+      }
+
+      if (intent.getBooleanExtra(EXTRA_DATA, false)) {
+        Timber.d("Update data status");
+        assert presenter != null;
+        presenter.updateDataAction();
+      }
+
+      if (intent.getBooleanExtra(EXTRA_BLUETOOTH, false)) {
+        Timber.d("Update bluetooth status");
+        assert presenter != null;
+        presenter.updateBluetoothAction();
+      }
+
+      if (intent.getBooleanExtra(EXTRA_SYNC, false)) {
+        Timber.d("Update sync status");
+        assert presenter != null;
+        presenter.updateSyncAction();
       }
     }
     startForeground();
