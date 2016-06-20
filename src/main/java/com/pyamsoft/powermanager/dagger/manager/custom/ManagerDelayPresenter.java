@@ -17,16 +17,14 @@
 package com.pyamsoft.powermanager.dagger.manager.custom;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPresenter;
-import com.pyamsoft.pydroid.base.PresenterImpl;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePresenter;
 import javax.inject.Inject;
 
-final class ManagerDelayPresenterImpl extends PresenterImpl<ManagerDelayPresenter.ManagerDelayView>
-    implements ManagerDelayPresenter {
+final class ManagerDelayPresenter extends ManagerTimePresenter {
 
   @NonNull private final ManagerDelayInteractor interactor;
 
-  @Inject public ManagerDelayPresenterImpl(@NonNull ManagerDelayInteractor interactor) {
+  @Inject public ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor) {
     this.interactor = interactor;
   }
 
@@ -34,16 +32,16 @@ final class ManagerDelayPresenterImpl extends PresenterImpl<ManagerDelayPresente
       boolean updateSummary) {
     interactor.setDelayTime(key, time);
     if (updateVisual) {
-      getView().setDelayTimeText(time);
+      getView().setTimeText(time);
     }
     if (updateSummary) {
-      getView().setDelayTimeSummary(time);
+      getView().setTimeSummary(time);
     }
   }
 
   @Override public void setDelayTimeFromPreference(@NonNull String key) {
     final long time = interactor.getDelayTime(key);
-    getView().setDelayTimeText(time);
-    getView().setDelayTimeSummary(time);
+    getView().setTimeText(time);
+    getView().setTimeSummary(time);
   }
 }

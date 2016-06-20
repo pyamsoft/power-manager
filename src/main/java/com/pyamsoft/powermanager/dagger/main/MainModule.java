@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.main;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.main.MainPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
@@ -24,8 +23,7 @@ import dagger.Provides;
 
 @Module public class MainModule {
 
-  @ActivityScope @Provides MainPresenter provideMainPresenter(
-      @NonNull MainPresenterImpl presenter) {
-    return presenter;
+  @ActivityScope @Provides MainPresenter provideMainPresenter() {
+    return new MainPresenter();
   }
 }

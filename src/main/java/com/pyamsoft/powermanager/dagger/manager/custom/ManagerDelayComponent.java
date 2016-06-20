@@ -16,14 +16,14 @@
 
 package com.pyamsoft.powermanager.dagger.manager.custom;
 
-import com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;
 
 @ActivityScope
-@Component(modules = ManagerDelayModule.class, dependencies = PowerManagerComponent.class)
+@Component(modules = ManagerTimeModule.class, dependencies = PowerManagerComponent.class)
 public interface ManagerDelayComponent {
 
-  void inject(ManageDelayPreference preference);
+  void inject(ManagerDelayPreference preference);
 }

@@ -28,45 +28,37 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.manager.custom.DaggerManagerDelayComponent;
 import java.util.Locale;
-import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ManageDelayPreference extends Preference
-    implements ManagerDelayPresenter.ManagerDelayView {
+public abstract class ManagerTimePreference extends Preference
+    implements ManagerTimePresenter.TimeView {
 
   @NonNull private final Handler handler;
 
-  @Nullable @Inject ManagerDelayPresenter presenter;
+  @Nullable private ManagerTimePresenter presenter;
   @Nullable private TextView summary;
   @Nullable private TextInputLayout textInputLayout;
   @Nullable private TextWatcher watcher;
 
-  public ManageDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     handler = new Handler();
 
-    DaggerManagerDelayComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
-
     setLayoutResource(R.layout.layout_manage_delay_time);
   }
 
-  public ManageDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     this(context, attrs, defStyleAttr, 0);
   }
 
-  public ManageDelayPreference(Context context, AttributeSet attrs) {
+  public ManagerTimePreference(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public ManageDelayPreference(Context context) {
+  public ManagerTimePreference(Context context) {
     this(context, null);
   }
 
@@ -118,10 +110,10 @@ public class ManageDelayPreference extends Preference
     presenter.updateDelayTime(getKey(), value, updateText, updateSummary);
   }
 
-  public final void bindView() {
+  final void bindView(@NonNull ManagerTimePresenter presenter) {
     Timber.d("bindView");
-    assert presenter != null;
     presenter.bindView(this);
+    this.presenter = presenter;
   }
 
   public final void unbindView() {
@@ -145,12 +137,12 @@ public class ManageDelayPreference extends Preference
     presenter.unbindView();
   }
 
-  @Override public void setDelayTimeSummary(long time) {
+  @Override public void setTimeSummary(long time) {
     assert summary != null;
     summary.setText(String.format(Locale.US, "Current delay: %d seconds", time));
   }
 
-  @Override public void setDelayTimeText(long time) {
+  @Override public void setTimeText(long time) {
     assert textInputLayout != null;
     final EditText editText = textInputLayout.getEditText();
 

@@ -25,8 +25,8 @@ import javax.inject.Singleton;
 @Module public class ForegroundModule {
 
   @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
-      @NonNull ForegroundPresenterImpl presenter) {
-    return presenter;
+      @NonNull ForegroundInteractor interactor) {
+    return new ForegroundPresenter(interactor);
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(

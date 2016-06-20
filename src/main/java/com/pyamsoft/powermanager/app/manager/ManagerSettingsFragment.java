@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -45,7 +45,7 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @Nullable @Inject ManagerSettingsPresenter presenter;
   @Nullable private SwitchPreferenceCompat managePreference;
-  @Nullable private ManageDelayPreference delayPreference;
+  @Nullable private ManagerDelayPreference delayPreference;
   @Nullable private ListPreference presetDelayPreference;
 
   @XmlRes private int xmlResId;
@@ -76,12 +76,12 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     assert managePreference != null;
     managePreference.setOnPreferenceChangeListener((preference, o) -> {
       assert presenter != null;
-      presenter.updateManagedPreference((boolean) o);
+      presenter.updateCustomTime((boolean) o);
       return true;
     });
 
     assert presenter != null;
-    presenter.setCustomDelayTimeStateFromPreference(getString(manageKeyResId));
+    presenter.setCustomTimeStateFromPreference(getString(manageKeyResId));
   }
 
   @Override public void onDestroyView() {
@@ -144,17 +144,17 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
 
   private void resolvePreferences() {
     managePreference = (SwitchPreferenceCompat) findPreference(getString(manageKeyResId));
-    delayPreference = (ManageDelayPreference) findPreference(getString(timeKeyResId));
+    delayPreference = (ManagerDelayPreference) findPreference(getString(timeKeyResId));
     presetDelayPreference = (ListPreference) findPreference(getString(presetTimeKeyResId));
   }
 
-  @Override public void enableCustomDelayTime() {
+  @Override public void enableCustomTime() {
     Timber.d("Enable custom");
     assert delayPreference != null;
     delayPreference.setEnabled(true);
   }
 
-  @Override public void disableCustomDelayTime() {
+  @Override public void disableCustomTime() {
     Timber.d("Disable custom");
     assert delayPreference != null;
     delayPreference.setEnabled(false);

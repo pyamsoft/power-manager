@@ -20,7 +20,7 @@ import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-interface ForegroundInteractor {
+public interface ForegroundInteractor {
 
   @CheckResult @NonNull Notification createNotification();
 

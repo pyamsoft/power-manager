@@ -17,11 +17,49 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
 import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Inject;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public interface MainPresenter extends Presenter<MainPresenter.MainView> {
+public final class MainPresenter extends Presenter<MainPresenter.MainView> {
 
-  interface MainView {
+  @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
+
+  @Inject public MainPresenter() {
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    registerToOverviewBus();
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    unregisterFromOverviewBus();
+  }
+
+  void registerToOverviewBus() {
+    unregisterFromOverviewBus();
+
+    overviewBusSubscription =
+        OverviewSelectionBus.get().register().subscribe(overviewSelectionEvent -> {
+          getView().loadFragmentFromOverview(overviewSelectionEvent.getType());
+        }, throwable -> {
+          Timber.e("onError");
+          getView().overviewEventError();
+        });
+  }
+
+  void unregisterFromOverviewBus() {
+    if (!overviewBusSubscription.isUnsubscribed()) {
+      overviewBusSubscription.unsubscribe();
+    }
+  }
+
+  public interface MainView {
 
     void loadFragmentFromOverview(@NonNull String type);
 

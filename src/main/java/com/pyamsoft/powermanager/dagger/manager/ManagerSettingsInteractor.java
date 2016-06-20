@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-interface ManagerSettingsInteractor {
+public interface ManagerSettingsInteractor {
 
   @CheckResult boolean isCustomTime(@NonNull String key);
 }

@@ -38,7 +38,7 @@
         android:title="@string/manage_wifi_title"
         />
 
-    <com.pyamsoft.powermanager.app.manager.custom.ManageDelayPreference
+    <com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference
         android:key="@string/wifi_time_key"/>
 
   </PreferenceCategory>

@@ -25,8 +25,8 @@ import dagger.Provides;
 @Module public class ManagerSettingsModule {
 
   @ActivityScope @Provides ManagerSettingsPresenter provideManagerSettingsPresenter(
-      @NonNull ManagerSettingsPresenterImpl presenter) {
-    return presenter;
+      @NonNull ManagerSettingsInteractor interactor) {
+    return new ManagerSettingsPresenter(interactor);
   }
 
   @ActivityScope @Provides ManagerSettingsInteractor provideManagerSettingsInteractor(

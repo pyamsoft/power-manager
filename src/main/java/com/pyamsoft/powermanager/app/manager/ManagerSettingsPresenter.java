@@ -17,19 +17,36 @@
 package com.pyamsoft.powermanager.app.manager;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Inject;
 
-public interface ManagerSettingsPresenter
+public final class ManagerSettingsPresenter
     extends Presenter<ManagerSettingsPresenter.ManagerSettingsView> {
 
-  void setCustomDelayTimeStateFromPreference(@NonNull String key);
+  @NonNull private final ManagerSettingsInteractor interactor;
 
-  void updateManagedPreference(boolean newState);
+  @Inject public ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor) {
+    this.interactor = interactor;
+  }
 
-  interface ManagerSettingsView {
+  public final void setCustomTimeStateFromPreference(@NonNull String key) {
+    final boolean customTime = interactor.isCustomTime(key);
+    updateCustomTime(customTime);
+  }
 
-    void enableCustomDelayTime();
+  public final void updateCustomTime(boolean newState) {
+    if (newState) {
+      getView().enableCustomTime();
+    } else {
+      getView().disableCustomTime();
+    }
+  }
 
-    void disableCustomDelayTime();
+  public interface ManagerSettingsView {
+
+    void enableCustomTime();
+
+    void disableCustomTime();
   }
 }

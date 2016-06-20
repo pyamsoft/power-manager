@@ -17,15 +17,16 @@
 package com.pyamsoft.powermanager.dagger.manager.custom;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPresenter;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 
-@Module public class ManagerDelayModule {
+@Module public class ManagerTimeModule {
 
-  @ActivityScope @Provides ManagerDelayPresenter provideManagerDelayPresenter(
-      @NonNull ManagerDelayPresenterImpl presenter) {
+  @ActivityScope @Provides @Named("delay") ManagerTimePresenter provideManagerDelayPresenter(
+      @NonNull ManagerDelayPresenter presenter) {
     return presenter;
   }
 

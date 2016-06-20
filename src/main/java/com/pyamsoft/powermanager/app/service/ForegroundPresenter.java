@@ -19,15 +19,27 @@ package com.pyamsoft.powermanager.app.service;
 import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.service.ForegroundInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Inject;
 
-public interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
+public final class ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
 
-  @CheckResult @NonNull Notification createNotification();
+  @NonNull private final ForegroundInteractor interactor;
 
-  void updateWearableAction();
+  @Inject public ForegroundPresenter(@NonNull ForegroundInteractor interactor) {
+    this.interactor = interactor;
+  }
 
-  interface ForegroundProvider {
+  @NonNull @CheckResult public final Notification createNotification() {
+    return interactor.createNotification();
+  }
+
+  public final void updateWearableAction() {
+    interactor.updateWearablePreferenceStatus();
+  }
+
+  public interface ForegroundProvider {
 
   }
 }
