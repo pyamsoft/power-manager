@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.service;
 
 import android.app.Notification;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.service.ForegroundInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
@@ -31,8 +30,9 @@ public final class ForegroundPresenter extends Presenter<ForegroundPresenter.For
     this.interactor = interactor;
   }
 
-  @NonNull @CheckResult public final Notification createNotification() {
-    return interactor.createNotification();
+  public final void onStartNotification() {
+    final Notification notification = interactor.createNotification();
+    getView().startNotificationInForeground(notification);
   }
 
   public final void updateWearableAction() {
@@ -57,5 +57,6 @@ public final class ForegroundPresenter extends Presenter<ForegroundPresenter.For
 
   public interface ForegroundProvider {
 
+    void startNotificationInForeground(@NonNull Notification notification);
   }
 }

@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface WearableManagerInteractor extends ManagerInteractor {
+public interface WearableManagerInteractor extends ManagerInteractor {
 
   void disconnectGoogleApis();
 

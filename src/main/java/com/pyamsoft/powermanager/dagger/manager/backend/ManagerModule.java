@@ -47,10 +47,10 @@ import rx.Scheduler;
     return adapter;
   }
 
-  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
+  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(
+      @NonNull Context context) {
     return new BluetoothAdapterWrapper(getBluetoothAdapter(context));
   }
-
 
   @Singleton @Provides WifiManager provideWifiManager(@NonNull Context context) {
     return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -68,8 +68,8 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
-      @NonNull BluetoothAdapterWrapper bluetoothAdapter, @NonNull PowerManagerPreferences preferences,
-      @NonNull Context context) {
+      @NonNull BluetoothAdapterWrapper bluetoothAdapter,
+      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
     return new ManagerInteractorBluetooth(preferences, context, bluetoothAdapter);
   }
 
@@ -81,24 +81,24 @@ import rx.Scheduler;
   @Singleton @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new ManagerWifiImpl(wifi, ioScheduler, mainScheduler);
+    return new ManagerWifi(wifi, ioScheduler, mainScheduler);
   }
 
   @Singleton @Provides ManagerBluetooth provideManagerBluetooth(
       @NonNull ManagerInteractorBluetooth bluetooth, @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new ManagerBluetoothImpl(bluetooth, ioScheduler, mainScheduler);
+    return new ManagerBluetooth(bluetooth, ioScheduler, mainScheduler);
   }
 
   @Singleton @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new ManagerSyncImpl(sync, ioScheduler, mainScheduler);
+    return new ManagerSync(sync, ioScheduler, mainScheduler);
   }
 
   @Singleton @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new ManagerDataImpl(data, ioScheduler, mainScheduler);
+    return new ManagerData(data, ioScheduler, mainScheduler);
   }
 }

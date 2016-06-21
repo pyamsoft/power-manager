@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.backend;
+package com.pyamsoft.powermanager.app.manager.backend;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+public interface ManagerView {
 
-public interface ManagerInteractor {
+  void stateEnabled();
 
-  void cancelJobs();
+  void stateDisabled();
 
-  void setOriginalState(boolean enabled);
+  void startManaging();
 
-  @CheckResult boolean isOriginalStateEnabled();
-
-  @CheckResult boolean isEnabled();
-
-  @CheckResult boolean isManaged();
-
-  @CheckResult long getDelayTime();
-
-  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime);
-
-  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime);
+  void stopManaging();
 }

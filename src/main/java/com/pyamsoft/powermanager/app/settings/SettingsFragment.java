@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.settings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
@@ -40,7 +39,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     implements SettingsPresenter.MainSettingsView {
 
   @NonNull public static final String TAG = "settings";
-  @Nullable @Inject SettingsPresenter presenter;
+  @Inject SettingsPresenter presenter;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     DaggerSettingsComponent.builder()
@@ -59,7 +58,6 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     final Preference resetAll = findPreference(getString(R.string.clear_all_key));
     resetAll.setOnPreferenceClickListener(preference -> {
       Timber.d("Reset settings onClick");
-      assert presenter != null;
       presenter.clearAll();
       return true;
     });
@@ -79,26 +77,22 @@ public final class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    assert presenter != null;
     presenter.bindView(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    assert presenter != null;
     presenter.unbindView();
   }
 
   @Override public void onResume() {
     super.onResume();
-    assert presenter != null;
     presenter.onResume();
   }
 
   @Override public void onPause() {
     super.onPause();
-    assert presenter != null;
     presenter.onPause();
   }
 

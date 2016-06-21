@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.manager.custom;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.dagger.manager.custom.DaggerManagerDelayComponent;
@@ -26,7 +25,7 @@ import javax.inject.Named;
 
 public final class ManagerDelayPreference extends ManagerTimePreference {
 
-  @Nullable @Inject @Named("delay") ManagerTimePresenter presenter;
+  @Inject @Named("delay") ManagerTimePresenter presenter;
 
   public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -51,7 +50,6 @@ public final class ManagerDelayPreference extends ManagerTimePreference {
   }
 
   public final void bindView() {
-    assert presenter != null;
     bindView(presenter);
   }
 }

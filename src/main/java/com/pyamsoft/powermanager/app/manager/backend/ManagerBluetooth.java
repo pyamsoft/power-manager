@@ -16,6 +16,62 @@
 
 package com.pyamsoft.powermanager.app.manager.backend;
 
-public interface ManagerBluetooth extends WearableManager {
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
+import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
+import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import timber.log.Timber;
 
+public final class ManagerBluetooth extends WearableManager {
+
+  @NonNull private final WearableManagerInteractor interactor;
+
+  @Inject public ManagerBluetooth(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler, @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
+    Timber.d("new ManagerBluetooth");
+    this.interactor = interactor;
+  }
+
+  @Override public void enable() {
+    unsubscribe();
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Bluetooth enable");
+          enable(0);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
+    setSubscription(subscription);
+  }
+
+  @Override public void disable() {
+    unsubscribe();
+
+    Observable<ManagerInteractor> observable = baseDisableObservable();
+    observable = zipWithWearableManagedState(observable);
+
+    final Subscription subscription =
+        observable.filter(managerInteractor -> managerInteractor != null)
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue Bluetooth disable");
+              disable(managerInteractor.getDelayTime() * 1000);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.disconnectGoogleApis();
+            });
+    setSubscription(subscription);
+  }
 }

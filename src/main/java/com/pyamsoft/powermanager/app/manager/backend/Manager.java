@@ -17,30 +17,108 @@
 package com.pyamsoft.powermanager.app.manager.backend;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
+import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public interface Manager {
+abstract class Manager<I extends ManagerView> extends Presenter<I> {
 
-  /**
-   * Calls enable only if all checks pass
-   */
-  void enable();
+  @NonNull private final ManagerInteractor interactor;
+  @NonNull private final Scheduler ioScheduler;
+  @NonNull private final Scheduler mainScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
-  /**
-   * Calls directly to enable
-   */
-  void enable(long time);
+  protected Manager(@NonNull ManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    this.interactor = interactor;
+    this.ioScheduler = ioScheduler;
+    this.mainScheduler = mainScheduler;
+  }
 
-  /**
-   * Calls disable only if all checks pass
-   */
-  void disable();
+  @NonNull @CheckResult final Scheduler getIoScheduler() {
+    return ioScheduler;
+  }
 
-  /**
-   * Calls directly to disable
-   */
-  void disable(long time);
+  @NonNull @CheckResult final Scheduler getMainScheduler() {
+    return mainScheduler;
+  }
 
-  @CheckResult boolean isEnabled();
+  final void setSubscription(@NonNull Subscription subscription) {
+    this.subscription = subscription;
+  }
 
-  @CheckResult boolean isManaged();
+  final void unsubscribe() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
+  }
+
+  @CheckResult @NonNull final Observable<ManagerInteractor> baseEnableObservable() {
+    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
+      Timber.d("Cancel any running jobs");
+      managerInteractor.cancelJobs();
+      return managerInteractor;
+    }).filter(managerInteractor -> {
+      Timber.d("Check that manager isManaged");
+      return managerInteractor.isManaged();
+    });
+  }
+
+  @CheckResult @NonNull final Observable<ManagerInteractor> baseDisableObservable() {
+    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
+      Timber.d("Cancel any running jobs");
+      managerInteractor.cancelJobs();
+      return managerInteractor;
+    }).filter(managerInteractor -> {
+      Timber.d("Check that manager isManaged");
+      return managerInteractor.isManaged();
+    });
+  }
+
+  public final void enable(long time) {
+    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+  }
+
+  public final void disable(long time) {
+    interactor.setOriginalState(interactor.isEnabled());
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createDisableJob(time));
+  }
+
+  @CheckResult final boolean isEnabled() {
+    return interactor.isEnabled();
+  }
+
+  @CheckResult final boolean isManaged() {
+    return interactor.isManaged();
+  }
+
+  public final void onStateChanged() {
+    if (isEnabled()) {
+      getView().stateEnabled();
+    } else {
+      getView().stateDisabled();
+    }
+  }
+
+  public final void onManagedChanged() {
+    if (isManaged()) {
+      getView().startManaging();
+    } else {
+      getView().stopManaging();
+    }
+  }
+
+  public abstract void enable();
+
+  public abstract void disable();
 }

@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.manager.custom;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
@@ -28,6 +27,9 @@ import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import java.util.Locale;
 import timber.log.Timber;
@@ -37,10 +39,11 @@ public abstract class ManagerTimePreference extends Preference
 
   @NonNull private final Handler handler;
 
-  @Nullable private ManagerTimePresenter presenter;
-  @Nullable private TextView summary;
-  @Nullable private TextInputLayout textInputLayout;
-  @Nullable private TextWatcher watcher;
+  @BindView(R.id.preference_manage_delay_summary) TextView summary;
+  @BindView(R.id.preference_manage_delay_times) TextInputLayout textInputLayout;
+  private ManagerTimePresenter presenter;
+  private TextWatcher watcher;
+  private Unbinder unbinder;
 
   public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -66,12 +69,7 @@ public abstract class ManagerTimePreference extends Preference
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
     holder.itemView.setClickable(false);
-
-    summary = (TextView) holder.findViewById(R.id.preference_manage_delay_summary);
-    textInputLayout = (TextInputLayout) holder.findViewById(R.id.preference_manage_delay_times);
-    final EditText editText = textInputLayout.getEditText();
-
-    assert presenter != null;
+    unbinder = ButterKnife.bind(this, holder.itemView);
     presenter.setDelayTimeFromPreference(getKey());
 
     watcher = new TextWatcher() {
@@ -93,8 +91,10 @@ public abstract class ManagerTimePreference extends Preference
       }
     };
 
-    assert editText != null;
-    editText.addTextChangedListener(watcher);
+    final EditText editText = textInputLayout.getEditText();
+    if (editText != null) {
+      editText.addTextChangedListener(watcher);
+    }
   }
 
   private void saveDelayTimeToPreference(@NonNull String text, boolean updateText,
@@ -106,12 +106,10 @@ public abstract class ManagerTimePreference extends Preference
       value = Long.parseLong(text);
     }
 
-    assert presenter != null;
     presenter.updateTime(getKey(), value, updateText, updateSummary);
   }
 
   public final void updateTime(long value) {
-    assert presenter != null;
     presenter.updateTime(getKey(), value, true, true);
   }
 
@@ -126,41 +124,36 @@ public abstract class ManagerTimePreference extends Preference
 
     handler.removeCallbacksAndMessages(null);
 
-    assert textInputLayout != null;
     final EditText editText = textInputLayout.getEditText();
-    assert editText != null;
-    editText.removeTextChangedListener(watcher);
+    if (editText != null) {
+      editText.removeTextChangedListener(watcher);
+      editText.setOnFocusChangeListener(null);
+      editText.setOnEditorActionListener(null);
 
-    editText.setOnFocusChangeListener(null);
-    editText.setOnEditorActionListener(null);
-
-    // Save the last entered value to preferences
-    final String text = editText.getText().toString();
-    saveDelayTimeToPreference(text, false, false);
-
-    assert presenter != null;
+      // Save the last entered value to preferences
+      final String text = editText.getText().toString();
+      saveDelayTimeToPreference(text, false, false);
+    }
     presenter.unbindView();
   }
 
   @Override public void setTimeSummary(long time) {
-    assert summary != null;
     summary.setText(String.format(Locale.US, "Current delay: %d seconds", time));
   }
 
   @Override public void setTimeText(long time) {
-    assert textInputLayout != null;
     final EditText editText = textInputLayout.getEditText();
 
-    assert editText != null;
-    if (watcher != null) {
-      editText.removeTextChangedListener(watcher);
-    }
+    if (editText != null) {
+      if (watcher != null) {
+        editText.removeTextChangedListener(watcher);
+      }
+      editText.setText(String.valueOf(time));
+      editText.setSelection(editText.getText().length());
 
-    editText.setText(String.valueOf(time));
-    editText.setSelection(editText.getText().length());
-
-    if (watcher != null) {
-      editText.addTextChangedListener(watcher);
+      if (watcher != null) {
+        editText.addTextChangedListener(watcher);
+      }
     }
   }
 }

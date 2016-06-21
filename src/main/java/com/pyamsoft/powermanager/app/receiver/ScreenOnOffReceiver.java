@@ -22,7 +22,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
@@ -35,10 +34,10 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   @NonNull private final IntentFilter filter;
   @NonNull private final Application application;
-  @Nullable @Inject ManagerWifi managerWifi;
-  @Nullable @Inject ManagerData managerData;
-  @Nullable @Inject ManagerBluetooth managerBluetooth;
-  @Nullable @Inject ManagerSync managerSync;
+  @Inject ManagerWifi managerWifi;
+  @Inject ManagerData managerData;
+  @Inject ManagerBluetooth managerBluetooth;
+  @Inject ManagerSync managerSync;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Application application) {
@@ -76,22 +75,18 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableSync() {
-    assert managerSync != null;
     managerSync.enable();
   }
 
   private void enableBluetooth() {
-    assert managerBluetooth != null;
     managerBluetooth.enable();
   }
 
   private void enableData() {
-    assert managerData != null;
     managerData.enable();
   }
 
   private void enableWifi() {
-    assert managerWifi != null;
     managerWifi.enable();
   }
 
@@ -104,22 +99,18 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void disableSync() {
-    assert managerSync != null;
     managerSync.disable();
   }
 
   private void disableBluetooth() {
-    assert managerBluetooth != null;
     managerBluetooth.disable();
   }
 
   private void disableData() {
-    assert managerData != null;
     managerData.disable();
   }
 
   private void disableWifi() {
-    assert managerWifi != null;
     managerWifi.disable();
   }
 

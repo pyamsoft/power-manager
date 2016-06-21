@@ -43,10 +43,10 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
   @NonNull public static final String TYPE_SYNC = "sync";
   @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
-  @Nullable @Inject ManagerSettingsPresenter presenter;
-  @Nullable private SwitchPreferenceCompat managePreference;
-  @Nullable private ManagerDelayPreference delayPreference;
-  @Nullable private ListPreference presetDelayPreference;
+  @Inject ManagerSettingsPresenter presenter;
+  private SwitchPreferenceCompat managePreference;
+  private ManagerDelayPreference delayPreference;
+  private ListPreference presetDelayPreference;
 
   @XmlRes private int xmlResId;
   @StringRes private int manageKeyResId;
@@ -63,9 +63,7 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    assert presenter != null;
     presenter.bindView(this);
-    assert delayPreference != null;
     delayPreference.bindView();
     return super.onCreateView(inflater, container, savedInstanceState);
   }
@@ -73,44 +71,33 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    assert presetDelayPreference != null;
     presetDelayPreference.setOnPreferenceChangeListener((preference, o) -> {
       if (o instanceof String) {
         final String string = (String) o;
         final long time = Long.parseLong(string);
 
         if (time != -1) {
-          assert delayPreference != null;
           delayPreference.updateTime(time);
         }
 
-        assert presenter != null;
-        assert managePreference != null;
         presenter.updateCustomTime(time == -1 && managePreference.isChecked());
         return true;
       }
       return false;
     });
 
-    assert managePreference != null;
     managePreference.setOnPreferenceChangeListener((preference, o) -> {
-      assert presenter != null;
       presenter.updateCustomTime((boolean) o);
       return true;
     });
 
-    assert presenter != null;
     presenter.setCustomTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
-    assert delayPreference != null;
     delayPreference.unbindView();
-
-    assert presenter != null;
     presenter.unbindView();
   }
 
@@ -170,13 +157,11 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
 
   @Override public void enableCustomTime() {
     Timber.d("Enable custom");
-    assert delayPreference != null;
     delayPreference.setEnabled(true);
   }
 
   @Override public void disableCustomTime() {
     Timber.d("Disable custom");
-    assert delayPreference != null;
     delayPreference.setEnabled(false);
   }
 }

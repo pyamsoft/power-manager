@@ -31,9 +31,8 @@ import com.pyamsoft.powermanager.R;
 
 public class OverviewFragment extends Fragment {
 
-  @Nullable @BindView(R.id.main_fragment_recycler) RecyclerView recyclerView;
-  @Nullable private RecyclerView.LayoutManager layoutManager;
-  @Nullable private Unbinder unbinder;
+  @BindView(R.id.main_fragment_recycler) RecyclerView recyclerView;
+  private Unbinder unbinder;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,7 +44,6 @@ public class OverviewFragment extends Fragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    assert unbinder != null;
     unbinder.unbind();
   }
 
@@ -55,9 +53,8 @@ public class OverviewFragment extends Fragment {
   }
 
   private void setupRecyclerView() {
-    layoutManager = new GridLayoutManager(getActivity(), 2);
+    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
 
-    assert recyclerView != null;
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(new OverviewAdapter());

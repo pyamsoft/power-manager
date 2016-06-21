@@ -17,8 +17,52 @@
 package com.pyamsoft.powermanager.app.manager.backend;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
+import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
+import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import timber.log.Timber;
 
-public interface WearableManager extends Manager {
+abstract class WearableManager extends Manager<WearableView> {
 
-  @CheckResult boolean isWearableManaged();
+  @NonNull private final WearableManagerInteractor interactor;
+
+  WearableManager(@NonNull WearableManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
+    this.interactor = interactor;
+  }
+
+  @CheckResult @NonNull final Observable<ManagerInteractor> zipWithWearableManagedState(
+      @NonNull Observable<ManagerInteractor> observable) {
+    if (interactor.isManaged() && interactor.isWearableManaged()) {
+      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
+          (managerInteractor, isConnected) -> {
+            if (interactor.isWearableManaged()) {
+              if (isConnected) {
+                Timber.d("Wearable is managed and connected, return NULL");
+                return null;
+              } else {
+                Timber.d("Wearable is managed but not connected");
+                return managerInteractor;
+              }
+            } else {
+              Timber.d("Wearable is not managed");
+              return managerInteractor;
+            }
+          });
+    }
+    return observable;
+  }
+
+  public final void onWearableManageChanged() {
+    if (interactor.isWearableManaged()) {
+      getView().startManagingWearable();
+    } else {
+      getView().stopManagingWearable();
+    }
+  }
 }

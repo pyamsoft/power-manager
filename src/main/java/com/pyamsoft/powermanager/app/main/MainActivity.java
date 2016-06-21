@@ -43,10 +43,9 @@ import javax.inject.Inject;
 public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
-  @Nullable @BindView(R.id.main_toolbar) Toolbar toolbar;
-  @Nullable @Inject MainPresenter presenter;
-
-  @Nullable private Unbinder unbinder;
+  @BindView(R.id.main_toolbar) Toolbar toolbar;
+  @Inject MainPresenter presenter;
+  private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -57,7 +56,6 @@ public class MainActivity extends DonationActivityBase
 
     DaggerMainComponent.builder().build().inject(this);
 
-    assert presenter != null;
     presenter.bindView(this);
 
     unbinder = ButterKnife.bind(this);
@@ -96,22 +94,18 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onDestroy() {
     super.onDestroy();
 
-    assert unbinder != null;
     unbinder.unbind();
 
-    assert presenter != null;
     presenter.unbindView();
   }
 
   @Override protected void onResume() {
     super.onResume();
-    assert presenter != null;
     presenter.onResume();
   }
 
   @Override protected void onPause() {
     super.onPause();
-    assert presenter != null;
     presenter.onPause();
   }
 
@@ -121,7 +115,6 @@ public class MainActivity extends DonationActivityBase
   }
 
   private void setupAppBar() {
-    assert toolbar != null;
     toolbar.setTitle(getString(R.string.app_name));
     setSupportActionBar(toolbar);
     setActionBarUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);

@@ -16,6 +16,51 @@
 
 package com.pyamsoft.powermanager.app.manager.backend;
 
-public interface ManagerData extends Manager {
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
+import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import timber.log.Timber;
 
+public final class ManagerData extends Manager<ManagerView> {
+
+  @NonNull private final ManagerInteractor interactor;
+
+  @Inject public ManagerData(@NonNull @Named("data") ManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler ioScheduler, @NonNull @Named("main") Scheduler mainScheduler) {
+    super(interactor, ioScheduler, mainScheduler);
+    Timber.d("new ManagerData");
+    this.interactor = interactor;
+  }
+
+  @Override public void enable() {
+    unsubscribe();
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Data enable");
+          enable(0);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
+    setSubscription(subscription);
+  }
+
+  @Override public void disable() {
+    unsubscribe();
+    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue Data disable");
+          disable(managerInteractor.getDelayTime() * 1000);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, () -> Timber.d("onComplete"));
+    setSubscription(subscription);
+  }
 }

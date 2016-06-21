@@ -57,6 +57,10 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     unsubscribeConfirm();
   }
 
+  public final void clearAll() {
+    getView().showConfirmDialog();
+  }
+
   void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
@@ -69,11 +73,7 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     }
   }
 
-  public final void clearAll() {
-    getView().showConfirmDialog();
-  }
-
-  private void registerOnConfirmEventBus() {
+  void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
         ConfirmationDialog.ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
