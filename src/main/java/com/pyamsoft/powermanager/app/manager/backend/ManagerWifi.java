@@ -26,12 +26,13 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-public final class ManagerWifi extends WearableManager {
+public final class ManagerWifi extends WearableManager<WifiView> {
 
   @NonNull private final WearableManagerInteractor interactor;
 
   @Inject public ManagerWifi(@NonNull @Named("wifi") WearableManagerInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler, @NonNull @Named("main") Scheduler mainScheduler) {
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerWifi");
     this.interactor = interactor;

@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.Scheduler;
 import timber.log.Timber;
 
-abstract class WearableManager extends Manager<WearableView> {
+abstract class WearableManager<I extends WearableManager.WearableView> extends Manager<I> {
 
   @NonNull private final WearableManagerInteractor interactor;
 
@@ -64,5 +64,12 @@ abstract class WearableManager extends Manager<WearableView> {
     } else {
       getView().stopManagingWearable();
     }
+  }
+
+  public static interface WearableView extends ManagerView {
+
+    void startManagingWearable();
+
+    void stopManagingWearable();
   }
 }

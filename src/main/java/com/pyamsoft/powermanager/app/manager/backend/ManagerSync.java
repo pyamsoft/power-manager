@@ -24,12 +24,13 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-public final class ManagerSync extends Manager<ManagerView> {
+public final class ManagerSync extends Manager<SyncView> {
 
   @NonNull private final ManagerInteractor interactor;
 
   @Inject public ManagerSync(@NonNull @Named("sync") ManagerInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler, @NonNull @Named("main") Scheduler mainScheduler) {
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerSync");
     this.interactor = interactor;

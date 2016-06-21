@@ -26,12 +26,13 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-public final class ManagerBluetooth extends WearableManager {
+public final class ManagerBluetooth extends WearableManager<BluetoothView> {
 
   @NonNull private final WearableManagerInteractor interactor;
 
   @Inject public ManagerBluetooth(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
-      @NonNull @Named("io") Scheduler ioScheduler, @NonNull @Named("main") Scheduler mainScheduler) {
+      @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerBluetooth");
     this.interactor = interactor;

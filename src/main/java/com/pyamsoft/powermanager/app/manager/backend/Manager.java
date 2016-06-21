@@ -28,7 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class Manager<I extends ManagerView> extends Presenter<I> {
+abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
 
   @NonNull private final ManagerInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
@@ -121,4 +121,15 @@ abstract class Manager<I extends ManagerView> extends Presenter<I> {
   public abstract void enable();
 
   public abstract void disable();
+
+  public static interface ManagerView {
+
+    void stateEnabled();
+
+    void stateDisabled();
+
+    void startManaging();
+
+    void stopManaging();
+  }
 }
