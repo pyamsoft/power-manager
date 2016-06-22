@@ -44,7 +44,7 @@ public final class ManagerBluetooth extends WearableManager<BluetoothView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Bluetooth enable");
-          enable(0);
+          enable(0, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> {
@@ -66,7 +66,7 @@ public final class ManagerBluetooth extends WearableManager<BluetoothView> {
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
               Timber.d("Queue Bluetooth disable");
-              disable(managerInteractor.getDelayTime() * 1000);
+              disable(managerInteractor.getDelayTime() * 1000, false);
             }, throwable -> {
               Timber.e(throwable, "onError");
             }, () -> {

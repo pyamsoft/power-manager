@@ -83,15 +83,17 @@ abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
     });
   }
 
-  public final void enable(long time) {
-    PowerManager.getInstance().getJobManager().addJobInBackground(interactor.createEnableJob(time));
+  public final void enable(long time, boolean periodic) {
+    PowerManager.getInstance()
+        .getJobManager()
+        .addJobInBackground(interactor.createEnableJob(time, periodic));
   }
 
-  public final void disable(long time) {
+  public final void disable(long time, boolean periodic) {
     interactor.setOriginalState(interactor.isEnabled());
     PowerManager.getInstance()
         .getJobManager()
-        .addJobInBackground(interactor.createDisableJob(time));
+        .addJobInBackground(interactor.createDisableJob(time, periodic));
   }
 
   @CheckResult final boolean isEnabled() {

@@ -33,7 +33,7 @@ public interface ManagerInteractor {
 
   @CheckResult long getDelayTime();
 
-  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime);
+  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime, boolean periodic);
 
-  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime);
+  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime, boolean periodic);
 }

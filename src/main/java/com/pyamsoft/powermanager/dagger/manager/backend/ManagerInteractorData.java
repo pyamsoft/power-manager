@@ -66,25 +66,29 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     return preferences.getDataDelay();
   }
 
-  @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled());
+  @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
   }
 
-  @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled());
+  @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
   }
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState);
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState,
+        boolean periodic) {
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState,
+          periodic);
     }
   }
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState);
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState,
+        boolean periodic) {
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState,
+          periodic);
     }
   }
 
@@ -101,8 +105,8 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     }
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
-        boolean originalState) {
-      super(context, params.addTags(ManagerInteractorData.TAG), jobType, originalState);
+        boolean originalState, boolean periodic) {
+      super(context, params.addTags(ManagerInteractorData.TAG), jobType, originalState, periodic);
     }
 
     @CheckResult @Nullable private static String resolveSetMethodName() {

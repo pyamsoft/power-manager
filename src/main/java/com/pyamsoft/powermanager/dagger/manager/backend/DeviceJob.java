@@ -24,6 +24,7 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
 import java.util.Arrays;
+import java.util.Set;
 import timber.log.Timber;
 
 abstract class DeviceJob extends Job {
@@ -35,13 +36,15 @@ abstract class DeviceJob extends Job {
   @NonNull private final Context appContext;
   private final int jobType;
   private final boolean originalState;
+  private final boolean periodic;
 
   protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
-      boolean originalState) {
+      boolean originalState, boolean periodic) {
     super(params.setRequiresNetwork(false));
     this.appContext = context.getApplicationContext();
     this.jobType = jobType;
     this.originalState = originalState;
+    this.periodic = periodic;
   }
 
   @CheckResult @NonNull final Context getContext() {
@@ -50,6 +53,10 @@ abstract class DeviceJob extends Job {
 
   @CheckResult final boolean isOriginalState() {
     return originalState;
+  }
+
+  @CheckResult final boolean isPeriodic() {
+    return periodic;
   }
 
   @Override public void onRun() throws Throwable {
@@ -73,9 +80,12 @@ abstract class DeviceJob extends Job {
   }
 
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-    Timber.w("Job is cancelled %s %s", getId(), Arrays.toString(getTags().toArray()));
+    final Set<String> tags = getTags();
+    if (tags != null) {
+      Timber.w("Job is cancelled %s %s", getId(), Arrays.toString(tags.toArray()));
+    }
     if (throwable != null) {
-      Timber.e(throwable, "JOB ERROR");
+      Timber.e(throwable, "JOB CANCELLED");
     }
   }
 

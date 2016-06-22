@@ -42,7 +42,7 @@ public final class ManagerData extends Manager<DataView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Data enable");
-          enable(0);
+          enable(0, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> {
@@ -58,7 +58,7 @@ public final class ManagerData extends Manager<DataView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Data disable");
-          disable(managerInteractor.getDelayTime() * 1000);
+          disable(managerInteractor.getDelayTime() * 1000, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> Timber.d("onComplete"));

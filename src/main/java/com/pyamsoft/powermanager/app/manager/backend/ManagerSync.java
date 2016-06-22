@@ -42,7 +42,7 @@ public final class ManagerSync extends Manager<SyncView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Sync enable");
-          enable(0);
+          enable(0, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> {
@@ -58,7 +58,7 @@ public final class ManagerSync extends Manager<SyncView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Sync disable");
-          disable(managerInteractor.getDelayTime() * 1000);
+          disable(managerInteractor.getDelayTime() * 1000, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> Timber.d("onComplete"));

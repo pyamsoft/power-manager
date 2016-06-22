@@ -44,7 +44,7 @@ public final class ManagerWifi extends WearableManager<WifiView> {
         .observeOn(getMainScheduler())
         .subscribe(managerInteractor -> {
           Timber.d("Queue Wifi enable");
-          enable(0);
+          enable(0, false);
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> {
@@ -65,7 +65,7 @@ public final class ManagerWifi extends WearableManager<WifiView> {
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
               Timber.d("Queue Wifi disable");
-              disable(managerInteractor.getDelayTime() * 1000);
+              disable(managerInteractor.getDelayTime() * 1000, false);
             }, throwable -> {
               Timber.e(throwable, "onError");
             }, () -> {

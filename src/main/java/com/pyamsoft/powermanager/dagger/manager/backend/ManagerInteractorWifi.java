@@ -21,7 +21,6 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import java.util.Arrays;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -56,37 +55,37 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     return preferences.getWifiDelay();
   }
 
-  @NonNull @Override public DeviceJob createEnableJob(long delayTime) {
-    final DeviceJob job = new EnableJob(appContext, delayTime, isOriginalStateEnabled());
-    Timber.d("TAGS: %s", Arrays.toString(job.getTags().toArray()));
-    return job;
+  @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
   }
 
-  @NonNull @Override public DeviceJob createDisableJob(long delayTime) {
-    final DeviceJob job = new DisableJob(appContext, delayTime, isOriginalStateEnabled());
-    Timber.d("TAGS: %s", Arrays.toString(job.getTags().toArray()));
-    return job;
+  @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
   }
 
-  static final class EnableJob extends WifiJob {
+  static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState);
+    protected EnableJob(@NonNull Context context, long delayTime, boolean originalState,
+        boolean periodic) {
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState,
+          periodic);
     }
   }
 
-  static final class DisableJob extends WifiJob {
+  static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState);
+    protected DisableJob(@NonNull Context context, long delayTime, boolean originalState,
+        boolean periodic) {
+      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState,
+          periodic);
     }
   }
 
-  static abstract class WifiJob extends DeviceJob {
+  static abstract class Job extends DeviceJob {
 
-    protected WifiJob(@NonNull Context context, @NonNull Params params, int jobType,
-        boolean originalState) {
-      super(context, params.addTags(ManagerInteractorWifi.TAG), jobType, originalState);
+    protected Job(@NonNull Context context, @NonNull Params params, int jobType,
+        boolean originalState, boolean periodic) {
+      super(context, params.addTags(ManagerInteractorWifi.TAG), jobType, originalState, periodic);
     }
 
     @Override protected void enable() {
