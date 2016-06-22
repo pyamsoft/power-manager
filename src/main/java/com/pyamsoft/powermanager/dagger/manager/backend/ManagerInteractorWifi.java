@@ -76,8 +76,7 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @Override public boolean isPeriodic() {
-    // TODO
-    return true;
+    return preferences.isPeriodicWifi();
   }
 
   static final class EnableJob extends Job {

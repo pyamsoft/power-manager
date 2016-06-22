@@ -54,4 +54,9 @@
   <string name="wifi_time_title">Wifi Time</string>
   <string name="wifi_time_summary">Wifi Time</string>
 
+  <bool name="periodic_wifi_default">true</bool>
+  <string name="periodic_wifi_key">wifi_periodic</string>
+  <string name="periodic_wifi_title">Wifi Periodic</string>
+  <string name="periodic_wifi_summary">Wifi Periodic</string>
+
 </resources>

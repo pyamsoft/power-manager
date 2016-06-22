@@ -67,4 +67,44 @@ public interface PowerManagerPreferences {
   void setWearableManaged(boolean enable);
 
   void clearAll();
+
+  @CheckResult boolean isPeriodicWifi();
+
+  @CheckResult boolean isPeriodicData();
+
+  @CheckResult boolean isPeriodicBluetooth();
+
+  @CheckResult boolean isPeriodicSync();
+
+  @CheckResult long getPeriodicDisableTimeWifi();
+
+  @CheckResult long getPeriodicDisableTimeData();
+
+  @CheckResult long getPeriodicDisableTimeBluetooth();
+
+  @CheckResult long getPeriodicDisableTimeSync();
+
+  void setPeriodicDisableTimeWifi();
+
+  void setPeriodicDisableTimeData();
+
+  void setPeriodicDisableTimeBluetooth();
+
+  void setPeriodicDisableTimeSync();
+
+  @CheckResult long getPeriodicEnableTimeWifi();
+
+  @CheckResult long getPeriodicEnableTimeData();
+
+  @CheckResult long getPeriodicEnableTimeBluetooth();
+
+  @CheckResult long getPeriodicEnableTimeSync();
+
+  void setPeriodicEnableTimeWifi();
+
+  void setPeriodicEnableTimeData();
+
+  void setPeriodicEnableTimeBluetooth();
+
+  void setPeriodicEnableTimeSync();
 }

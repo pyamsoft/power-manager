@@ -54,4 +54,9 @@
   <string name="sync_time_title">Sync Time</string>
   <string name="sync_time_summary">Sync Time</string>
 
+  <bool name="periodic_sync_default">true</bool>
+  <string name="periodic_sync_key">sync_periodic</string>
+  <string name="periodic_sync_title">Sync Periodic</string>
+  <string name="periodic_sync_summary">Sync Periodic</string>
+
 </resources>

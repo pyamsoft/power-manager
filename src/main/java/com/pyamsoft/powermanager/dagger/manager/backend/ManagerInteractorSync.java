@@ -73,8 +73,7 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
   }
 
   @Override public boolean isPeriodic() {
-    // TODO
-    return true;
+    return preferences.isPeriodicSync();
   }
 
   static final class EnableJob extends Job {

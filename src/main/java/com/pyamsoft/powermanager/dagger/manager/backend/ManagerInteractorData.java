@@ -62,11 +62,6 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     return preferences.isDataManaged();
   }
 
-  @Override public boolean isPeriodic() {
-    // TODO
-    return true;
-  }
-
   @Override public long getDelayTime() {
     return preferences.getDataDelay();
   }
@@ -89,6 +84,10 @@ final class ManagerInteractorData extends ManagerInteractorBase {
   @Override long getPeriodicDisableTime() {
     // TODO
     return 30;
+  }
+
+  @Override public boolean isPeriodic() {
+    return preferences.isPeriodicData();
   }
 
   static final class EnableJob extends Job {

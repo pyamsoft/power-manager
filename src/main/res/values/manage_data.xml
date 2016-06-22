@@ -54,4 +54,9 @@
   <string name="data_time_title">Data Time</string>
   <string name="data_time_summary">Data Time</string>
 
+  <bool name="periodic_data_default">true</bool>
+  <string name="periodic_data_key">data_periodic</string>
+  <string name="periodic_data_title">Data Periodic</string>
+  <string name="periodic_data_summary">Data Periodic</string>
+
 </resources>

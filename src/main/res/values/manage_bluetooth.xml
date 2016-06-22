@@ -54,4 +54,9 @@
   <string name="bluetooth_time_title">Bluetooth Time</string>
   <string name="bluetooth_time_summary">Bluetooth Time</string>
 
+  <bool name="periodic_bluetooth_default">true</bool>
+  <string name="periodic_bluetooth_key">bluetooth_periodic</string>
+  <string name="periodic_bluetooth_title">Bluetooth Periodic</string>
+  <string name="periodic_bluetooth_summary">Bluetooth Periodic</string>
+
 </resources>

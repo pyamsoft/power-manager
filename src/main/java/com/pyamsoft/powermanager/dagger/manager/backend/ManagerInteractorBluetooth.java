@@ -56,8 +56,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
   }
 
   @Override public boolean isPeriodic() {
-    // TODO
-    return true;
+    return preferences.isPeriodicBluetooth();
   }
 
   @Override public long getPeriodicEnableTime() {
