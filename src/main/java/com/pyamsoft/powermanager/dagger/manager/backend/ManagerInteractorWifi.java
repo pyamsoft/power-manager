@@ -83,17 +83,18 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   static abstract class Job extends DeviceJob {
 
+    @NonNull private final WifiManager wifiManager;
+
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
         boolean originalState, boolean periodic) {
       super(context, params.addTags(ManagerInteractorWifi.TAG), jobType, originalState, periodic);
+      wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override protected void enable() {
       Timber.d("Wifi job enable");
 
       if (isOriginalState()) {
-        final WifiManager wifiManager =
-            (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         // Only turn wifi on if it is off
         if (!wifiManager.isWifiEnabled()) {
           Timber.d("Turn on WiFi");
@@ -113,8 +114,6 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
       Timber.d("Wifi job disable");
 
       if (isOriginalState()) {
-        final WifiManager wifiManager =
-            (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
         // Only turn wifi on if it is off
         if (wifiManager.isWifiEnabled()) {
           Timber.d("Turn off WiFi");

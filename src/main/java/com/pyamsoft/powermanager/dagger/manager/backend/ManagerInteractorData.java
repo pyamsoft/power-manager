@@ -98,6 +98,7 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
     @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
     @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
+    @NonNull private final ConnectivityManager connectivityManager;
 
     static {
       SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
@@ -107,6 +108,8 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
         boolean originalState, boolean periodic) {
       super(context, params.addTags(ManagerInteractorData.TAG), jobType, originalState, periodic);
+      connectivityManager =
+          (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     @CheckResult @Nullable private static String resolveSetMethodName() {
@@ -193,9 +196,6 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     @Override protected void enable() {
       Timber.d("Data job enable");
       if (isOriginalState()) {
-        final ConnectivityManager connectivityManager =
-            (ConnectivityManager) getContext().getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (!isEnabled(connectivityManager)) {
           Timber.d("Turn on Data");
           setMobileDataEnabled(connectivityManager, true);
@@ -214,9 +214,6 @@ final class ManagerInteractorData extends ManagerInteractorBase {
       Timber.d("Data job disable");
 
       if (isOriginalState()) {
-        final ConnectivityManager connectivityManager =
-            (ConnectivityManager) getContext().getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (isEnabled(connectivityManager)) {
           Timber.d("Turn off Data");
           setMobileDataEnabled(connectivityManager, false);
