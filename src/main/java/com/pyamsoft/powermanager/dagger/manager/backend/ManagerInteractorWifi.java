@@ -98,6 +98,9 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
         if (!wifiManager.isWifiEnabled()) {
           Timber.d("Turn on WiFi");
           wifiManager.setWifiEnabled(true);
+          if (isPeriodic()) {
+            Timber.d("Wifi is periodic job");
+          }
         } else {
           Timber.e("Wifi is already on");
         }
@@ -109,14 +112,21 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     @Override protected void disable() {
       Timber.d("Wifi job disable");
 
-      final WifiManager wifiManager =
-          (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-      // Only turn wifi on if it is off
-      if (wifiManager.isWifiEnabled()) {
-        Timber.d("Turn off WiFi");
-        wifiManager.setWifiEnabled(false);
+      if (isOriginalState()) {
+        final WifiManager wifiManager =
+            (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        // Only turn wifi on if it is off
+        if (wifiManager.isWifiEnabled()) {
+          Timber.d("Turn off WiFi");
+          wifiManager.setWifiEnabled(false);
+          if (isPeriodic()) {
+            Timber.d("Wifi is periodic job");
+          }
+        } else {
+          Timber.e("Wifi is already off");
+        }
       } else {
-        Timber.e("Wifi is already off");
+        Timber.e("Wifi was not originally on");
       }
     }
   }

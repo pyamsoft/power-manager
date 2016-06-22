@@ -92,6 +92,9 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
         if (!ContentResolver.getMasterSyncAutomatically()) {
           Timber.d("Turn on Master Sync");
           ContentResolver.setMasterSyncAutomatically(true);
+          if (isPeriodic()) {
+            Timber.d("Sync is periodic job");
+          }
         } else {
           Timber.e("Master Sync is already off");
         }
@@ -103,11 +106,18 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
     @Override protected void disable() {
       Timber.d("Sync job disable");
 
-      if (ContentResolver.getMasterSyncAutomatically()) {
-        Timber.d("Turn off Master Sync");
-        ContentResolver.setMasterSyncAutomatically(false);
+      if (isOriginalState()) {
+        if (ContentResolver.getMasterSyncAutomatically()) {
+          Timber.d("Turn off Master Sync");
+          ContentResolver.setMasterSyncAutomatically(false);
+          if (isPeriodic()) {
+            Timber.d("Sync is periodic job");
+          }
+        } else {
+          Timber.e("Master Sync is already off");
+        }
       } else {
-        Timber.e("Master Sync is already off");
+        Timber.e("Sync was not originally on");
       }
     }
   }

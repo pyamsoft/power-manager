@@ -115,6 +115,9 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
         if (!adapter.isEnabled()) {
           Timber.d("Turn on Bluetooth");
           adapter.enable();
+          if (isPeriodic()) {
+            Timber.d("Bluetooth is periodic job");
+          }
         } else {
           Timber.e("Bluetooth is already on");
         }
@@ -125,12 +128,19 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
     @Override protected void disable() {
       Timber.d("Bluetooth job disable");
-      final BluetoothAdapterWrapper adapter = new BluetoothAdapterWrapper(getBluetoothAdapter());
-      if (adapter.isEnabled()) {
-        Timber.d("Turn off Bluetooth");
-        adapter.disable();
+      if (isOriginalState()) {
+        final BluetoothAdapterWrapper adapter = new BluetoothAdapterWrapper(getBluetoothAdapter());
+        if (adapter.isEnabled()) {
+          Timber.d("Turn off Bluetooth");
+          adapter.disable();
+          if (isPeriodic()) {
+            Timber.d("Bluetooth is periodic job");
+          }
+        } else {
+          Timber.e("Bluetooth is already off");
+        }
       } else {
-        Timber.e("Bluetooth is already off");
+        Timber.e("Bluetooth was not originally on");
       }
     }
   }

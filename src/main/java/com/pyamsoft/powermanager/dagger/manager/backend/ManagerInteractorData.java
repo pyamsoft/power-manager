@@ -199,6 +199,9 @@ final class ManagerInteractorData extends ManagerInteractorBase {
         if (!isEnabled(connectivityManager)) {
           Timber.d("Turn on Data");
           setMobileDataEnabled(connectivityManager, true);
+          if (isPeriodic()) {
+            Timber.d("Data is periodic");
+          }
         } else {
           Timber.e("Data is already on");
         }
@@ -209,14 +212,22 @@ final class ManagerInteractorData extends ManagerInteractorBase {
 
     @Override protected void disable() {
       Timber.d("Data job disable");
-      final ConnectivityManager connectivityManager =
-          (ConnectivityManager) getContext().getApplicationContext()
-              .getSystemService(Context.CONNECTIVITY_SERVICE);
-      if (isEnabled(connectivityManager)) {
-        Timber.d("Turn off Data");
-        setMobileDataEnabled(connectivityManager, false);
+
+      if (isOriginalState()) {
+        final ConnectivityManager connectivityManager =
+            (ConnectivityManager) getContext().getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (isEnabled(connectivityManager)) {
+          Timber.d("Turn off Data");
+          setMobileDataEnabled(connectivityManager, false);
+          if (isPeriodic()) {
+            Timber.d("Data is periodic");
+          }
+        } else {
+          Timber.e("Data is already off");
+        }
       } else {
-        Timber.e("Data is already off");
+        Timber.e("Data was not originally on");
       }
     }
   }
