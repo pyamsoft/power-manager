@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteracto
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 abstract class WearableManager<I extends WearableManager.WearableView> extends Manager<I> {
@@ -66,7 +67,31 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
     }
   }
 
-  public static interface WearableView extends ManagerView {
+  @Override public void disable() {
+    unsubscribe();
+
+    Observable<ManagerInteractor> observable = baseDisableObservable();
+    observable = zipWithWearableManagedState(observable);
+
+    final Subscription subscription =
+        observable.filter(managerInteractor -> managerInteractor != null)
+            .subscribeOn(getIoScheduler())
+            .observeOn(getMainScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue disable");
+              // TODO preference
+              boolean periodic = true;
+              disable(managerInteractor.getDelayTime() * 1000, periodic);
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            }, () -> {
+              Timber.d("onComplete");
+              interactor.disconnectGoogleApis();
+            });
+    setSubscription(subscription);
+  }
+
+  public interface WearableView extends ManagerView {
 
     void startManagingWearable();
 

@@ -21,7 +21,6 @@ import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
-import rx.Subscription;
 import timber.log.Timber;
 
 public final class ManagerData extends Manager<DataView> {
@@ -36,32 +35,11 @@ public final class ManagerData extends Manager<DataView> {
     this.interactor = interactor;
   }
 
-  @Override public void enable() {
-    unsubscribe();
-    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue Data enable");
-          enable(0, false);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, () -> {
-          Timber.d("onComplete");
-          interactor.setOriginalState(false);
-        });
-    setSubscription(subscription);
+  @Override void onEnableComplete() {
+
   }
 
-  @Override public void disable() {
-    unsubscribe();
-    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue Data disable");
-          disable(managerInteractor.getDelayTime() * 1000, false);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, () -> Timber.d("onComplete"));
-    setSubscription(subscription);
+  @Override void onDisableComplete() {
+
   }
 }

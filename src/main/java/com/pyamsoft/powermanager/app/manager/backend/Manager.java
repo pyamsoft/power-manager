@@ -120,11 +120,38 @@ abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
     }
   }
 
-  public abstract void enable();
+  public void enable() {
+    unsubscribe();
+    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue enable");
+          enable(0, false);
+        }, throwable -> Timber.e(throwable, "onError"), () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
+    setSubscription(subscription);
+  }
 
-  public abstract void disable();
+  public void disable() {
+    unsubscribe();
+    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
+        .observeOn(getMainScheduler())
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue disable");
+          // TODO preference
+          boolean periodic = true;
+          disable(managerInteractor.getDelayTime() * 1000, periodic);
+        }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
+    setSubscription(subscription);
+  }
 
-  public static interface ManagerView {
+  abstract void onEnableComplete();
+
+  abstract void onDisableComplete();
+
+  public interface ManagerView {
 
     void stateEnabled();
 

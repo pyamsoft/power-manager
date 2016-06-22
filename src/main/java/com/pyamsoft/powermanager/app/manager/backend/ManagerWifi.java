@@ -17,13 +17,10 @@
 package com.pyamsoft.powermanager.app.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
 import rx.Scheduler;
-import rx.Subscription;
 import timber.log.Timber;
 
 public final class ManagerWifi extends WearableManager<WifiView> {
@@ -38,42 +35,11 @@ public final class ManagerWifi extends WearableManager<WifiView> {
     this.interactor = interactor;
   }
 
-  @Override public void enable() {
-    unsubscribe();
-    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue Wifi enable");
-          enable(0, false);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, () -> {
-          Timber.d("onComplete");
-          interactor.setOriginalState(false);
-        });
-    setSubscription(subscription);
+  @Override void onEnableComplete() {
+
   }
 
-  @Override public void disable() {
-    unsubscribe();
-    Observable<ManagerInteractor> observable = baseDisableObservable();
-    observable = zipWithWearableManagedState(observable);
+  @Override void onDisableComplete() {
 
-    final Subscription subscription =
-        observable.filter(managerInteractor -> managerInteractor != null)
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(managerInteractor -> {
-              Timber.d("Queue Wifi disable");
-              // TODO preference
-              boolean shouldReOpen = true;
-              disable(managerInteractor.getDelayTime() * 1000, shouldReOpen);
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> {
-              Timber.d("onComplete");
-              interactor.disconnectGoogleApis();
-            });
-    setSubscription(subscription);
   }
 }
