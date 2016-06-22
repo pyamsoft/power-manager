@@ -16,14 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.manager.custom;
 
-import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
-@ActivityScope
-@Component(modules = ManagerTimeModule.class, dependencies = PowerManagerComponent.class)
-public interface ManagerDelayComponent {
+interface ManagerPeriodicInteractor {
 
-  void inject(ManagerDelayPreference preference);
+  void setPeriodicTime(@NonNull String key, long time);
+
+  @CheckResult long getPeriodicTime(@NonNull String key);
 }

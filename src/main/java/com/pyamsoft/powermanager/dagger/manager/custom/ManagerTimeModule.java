@@ -30,8 +30,18 @@ import javax.inject.Named;
     return presenter;
   }
 
-  @ActivityScope @Provides ManagerDelayInteractor provideManagerDelayInteractor(
-      @NonNull ManagerDelayInteractorImpl presenter) {
+  @ActivityScope @Provides @Named("periodic") ManagerTimePresenter provideManagerPeriodicPresenter(
+      @NonNull ManagerPeriodicPresenter presenter) {
     return presenter;
+  }
+
+  @ActivityScope @Provides ManagerDelayInteractor provideManagerDelayInteractor(
+      @NonNull ManagerDelayInteractorImpl interactor) {
+    return interactor;
+  }
+
+  @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(
+      @NonNull ManagerPeriodicInteractorImpl interactor) {
+    return interactor;
   }
 }

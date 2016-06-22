@@ -23,11 +23,11 @@ import com.pyamsoft.powermanager.dagger.manager.custom.DaggerManagerTimeComponen
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public final class ManagerDelayPreference extends ManagerTimePreference {
+public final class ManagerPeriodicPreference extends ManagerTimePreference {
 
-  @Inject @Named("delay") ManagerTimePresenter presenter;
+  @Inject @Named("periodic") ManagerTimePresenter presenter;
 
-  public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
 
@@ -37,15 +37,15 @@ public final class ManagerDelayPreference extends ManagerTimePreference {
         .inject(this);
   }
 
-  public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     this(context, attrs, defStyleAttr, 0);
   }
 
-  public ManagerDelayPreference(Context context, AttributeSet attrs) {
+  public ManagerPeriodicPreference(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public ManagerDelayPreference(Context context) {
+  public ManagerPeriodicPreference(Context context) {
     this(context, null);
   }
 

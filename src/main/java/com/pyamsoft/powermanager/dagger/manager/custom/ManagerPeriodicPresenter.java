@@ -20,22 +20,22 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePresenter;
 import javax.inject.Inject;
 
-final class ManagerDelayPresenter extends ManagerTimePresenter {
+final class ManagerPeriodicPresenter extends ManagerTimePresenter {
 
-  @NonNull private final ManagerDelayInteractor interactor;
+  @NonNull private final ManagerPeriodicInteractor interactor;
 
-  @Inject public ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor) {
+  @Inject public ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor) {
     this.interactor = interactor;
   }
 
   @Override public void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary) {
-    interactor.setDelayTime(key, time);
+    interactor.setPeriodicTime(key, time);
     updateTime(time, updateVisual, updateSummary);
   }
 
   @Override public void setTimeFromPreference(@NonNull String key) {
-    final long time = interactor.getDelayTime(key);
+    final long time = interactor.getPeriodicTime(key);
     setTimeText(time);
   }
 }

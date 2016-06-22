@@ -24,7 +24,21 @@ public abstract class ManagerTimePresenter extends Presenter<ManagerTimePresente
   protected abstract void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary);
 
-  protected abstract void setDelayTimeFromPreference(@NonNull String key);
+  protected abstract void setTimeFromPreference(@NonNull String key);
+
+  protected void updateTime(long time, boolean updateVisual, boolean updateSummary) {
+    if (updateVisual) {
+      getView().setTimeText(time);
+    }
+    if (updateSummary) {
+      getView().setTimeSummary(time);
+    }
+  }
+
+  protected void setTimeText(long time) {
+    getView().setTimeText(time);
+    getView().setTimeSummary(time);
+  }
 
   public interface TimeView {
 

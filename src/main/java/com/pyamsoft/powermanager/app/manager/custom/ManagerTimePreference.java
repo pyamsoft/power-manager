@@ -70,7 +70,7 @@ public abstract class ManagerTimePreference extends Preference
     Timber.d("onBindViewHolder");
     holder.itemView.setClickable(false);
     unbinder = ButterKnife.bind(this, holder.itemView);
-    presenter.setDelayTimeFromPreference(getKey());
+    presenter.setTimeFromPreference(getKey());
 
     watcher = new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
