@@ -62,33 +62,50 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     return preferences.isDataManaged();
   }
 
+  @Override public boolean isPeriodic() {
+    // TODO
+    return true;
+  }
+
   @Override public long getDelayTime() {
     return preferences.getDataDelay();
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+        getPeriodicDisableTime(), getPeriodicEnableTime());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+        getPeriodicDisableTime(), getPeriodicEnableTime());
+  }
+
+  @Override long getPeriodicEnableTime() {
+    // TODO
+    return 30;
+  }
+
+  @Override long getPeriodicDisableTime() {
+    // TODO
+    return 30;
   }
 
   static final class EnableJob extends Job {
 
     protected EnableJob(@NonNull Context context, long delayTime, boolean originalState,
-        boolean periodic) {
+        boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState,
-          periodic);
+          periodic, periodicDisableTime, periodicEnableTime);
     }
   }
 
   static final class DisableJob extends Job {
 
     protected DisableJob(@NonNull Context context, long delayTime, boolean originalState,
-        boolean periodic) {
+        boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState,
-          periodic);
+          periodic, periodicDisableTime, periodicEnableTime);
     }
   }
 
@@ -106,8 +123,10 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     }
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
-        boolean originalState, boolean periodic) {
-      super(context, params.addTags(ManagerInteractorData.TAG), jobType, originalState, periodic);
+        boolean originalState, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
+      super(context, params.addTags(ManagerInteractorData.TAG), jobType, originalState, periodic,
+          periodicDisableTime, periodicEnableTime);
       connectivityManager =
           (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
     }
@@ -165,8 +184,8 @@ final class ManagerInteractorData extends ManagerInteractorBase {
       return null;
     }
 
-    @CheckResult
-    private static boolean isMobileDataEnabled(final @NonNull ConnectivityManager connectivityManager) {
+    @CheckResult private static boolean isMobileDataEnabled(
+        final @NonNull ConnectivityManager connectivityManager) {
       if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
         synchronized (Job.class) {
           try {
@@ -210,12 +229,14 @@ final class ManagerInteractorData extends ManagerInteractorBase {
 
     @Override protected DeviceJob periodicDisableJob() {
       Timber.d("Periodic data disable job");
-      return new DisableJob(getContext(), 10 * 1000, isOriginalState(), true);
+      return new DisableJob(getContext(), getPeriodicDisableTime() * 1000, isOriginalState(), true,
+          getPeriodicDisableTime(), getPeriodicEnableTime());
     }
 
     @Override protected DeviceJob periodicEnableJob() {
       Timber.d("Periodic data enable job");
-      return new EnableJob(getContext(), 10 * 1000, isOriginalState(), true);
+      return new EnableJob(getContext(), getPeriodicEnableTime() * 1000, isOriginalState(), true,
+          getPeriodicDisableTime(), getPeriodicEnableTime());
     }
   }
 }

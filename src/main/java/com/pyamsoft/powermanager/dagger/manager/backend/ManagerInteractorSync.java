@@ -53,36 +53,55 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
   }
 
   @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
+    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+        getPeriodicDisableTime(), getPeriodicEnableTime());
   }
 
   @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic);
+    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+        getPeriodicDisableTime(), getPeriodicEnableTime());
+  }
+
+  @Override long getPeriodicEnableTime() {
+    // TODO
+    return 30;
+  }
+
+  @Override long getPeriodicDisableTime() {
+    // TODO
+    return 30;
+  }
+
+  @Override public boolean isPeriodic() {
+    // TODO
+    return true;
   }
 
   static final class EnableJob extends Job {
 
     protected EnableJob(@NonNull Context context, long delayTime, boolean originalState,
-        boolean periodic) {
+        boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, originalState,
-          periodic);
+          periodic, periodicDisableTime, periodicEnableTime);
     }
   }
 
   static final class DisableJob extends Job {
 
     protected DisableJob(@NonNull Context context, long delayTime, boolean originalState,
-        boolean periodic) {
+        boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, originalState,
-          periodic);
+          periodic, periodicDisableTime, periodicEnableTime);
     }
   }
 
   static abstract class Job extends DeviceJob {
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType,
-        boolean originalState, boolean periodic) {
-      super(context, params.addTags(ManagerInteractorSync.TAG), jobType, originalState, periodic);
+        boolean originalState, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
+      super(context, params.addTags(ManagerInteractorSync.TAG), jobType, originalState, periodic,
+          periodicDisableTime, periodicEnableTime);
     }
 
     @Override protected void callEnable() {
@@ -102,12 +121,14 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
 
     @Override protected DeviceJob periodicDisableJob() {
       Timber.d("Periodic sync disable job");
-      return new DisableJob(getContext(), 10 * 1000, isOriginalState(), true);
+      return new DisableJob(getContext(), getPeriodicDisableTime() * 1000, isOriginalState(), true,
+          getPeriodicDisableTime(), getPeriodicEnableTime());
     }
 
     @Override protected DeviceJob periodicEnableJob() {
       Timber.d("Periodic sync enable job");
-      return new EnableJob(getContext(), 10 * 1000, isOriginalState(), true);
+      return new EnableJob(getContext(), getPeriodicEnableTime() * 1000, isOriginalState(), true,
+          getPeriodicDisableTime(), getPeriodicEnableTime());
     }
   }
 }

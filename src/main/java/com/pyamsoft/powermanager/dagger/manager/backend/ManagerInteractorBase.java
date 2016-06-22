@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.TagConstraint;
@@ -35,7 +36,11 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     this.originalState = originalState;
   }
 
-  @Override public final boolean isOriginalStateEnabled() {
+  public final boolean isOriginalStateEnabled() {
     return originalState;
   }
+
+  @CheckResult abstract long getPeriodicEnableTime();
+
+  @CheckResult abstract long getPeriodicDisableTime();
 }

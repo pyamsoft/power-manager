@@ -38,10 +38,14 @@ abstract class DeviceJob extends Job {
   private final int jobType;
   private final boolean originalState;
   private final boolean periodic;
+  private final long periodicDisableTime;
+  private final long periodicEnableTime;
 
   protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
-      boolean originalState, boolean periodic) {
+      boolean originalState, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
     super(params.setRequiresNetwork(false));
+    this.periodicDisableTime = periodicDisableTime;
+    this.periodicEnableTime = periodicEnableTime;
     this.appContext = context.getApplicationContext();
     this.jobType = jobType;
     this.originalState = originalState;
@@ -58,6 +62,14 @@ abstract class DeviceJob extends Job {
 
   @CheckResult final boolean isPeriodic() {
     return periodic;
+  }
+
+  @CheckResult final long getPeriodicDisableTime() {
+    return periodicDisableTime;
+  }
+
+  @CheckResult final long getPeriodicEnableTime() {
+    return periodicEnableTime;
   }
 
   @Override public void onRun() throws Throwable {

@@ -79,9 +79,7 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
             .observeOn(getMainScheduler())
             .subscribe(managerInteractor -> {
               Timber.d("Queue disable");
-              // TODO preference
-              boolean periodic = true;
-              disable(managerInteractor.getDelayTime() * 1000, periodic);
+              disable(managerInteractor.getDelayTime() * 1000, interactor.isPeriodic());
             }, throwable -> {
               Timber.e(throwable, "onError");
             }, () -> {

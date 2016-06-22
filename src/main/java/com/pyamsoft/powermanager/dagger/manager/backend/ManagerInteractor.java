@@ -25,11 +25,11 @@ public interface ManagerInteractor {
 
   void setOriginalState(boolean enabled);
 
-  @CheckResult boolean isOriginalStateEnabled();
-
   @CheckResult boolean isEnabled();
 
   @CheckResult boolean isManaged();
+
+  @CheckResult boolean isPeriodic();
 
   @CheckResult long getDelayTime();
 
