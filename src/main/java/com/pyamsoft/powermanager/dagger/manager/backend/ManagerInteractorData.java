@@ -166,7 +166,7 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     }
 
     @CheckResult
-    private static boolean isEnabled(final @NonNull ConnectivityManager connectivityManager) {
+    private static boolean isMobileDataEnabled(final @NonNull ConnectivityManager connectivityManager) {
       if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
         synchronized (Job.class) {
           try {
@@ -193,39 +193,29 @@ final class ManagerInteractorData extends ManagerInteractorBase {
       }
     }
 
-    @Override protected void enable() {
-      Timber.d("Data job enable");
-      if (isOriginalState()) {
-        if (!isEnabled(connectivityManager)) {
-          Timber.d("Turn on Data");
-          setMobileDataEnabled(connectivityManager, true);
-          if (isPeriodic()) {
-            Timber.d("Data is periodic");
-          }
-        } else {
-          Timber.e("Data is already on");
-        }
-      } else {
-        Timber.e("Data was not originally on");
-      }
+    @Override protected void callEnable() {
+      Timber.d("Enable data");
+      setMobileDataEnabled(connectivityManager, true);
     }
 
-    @Override protected void disable() {
-      Timber.d("Data job disable");
+    @Override protected void callDisable() {
+      Timber.d("Disable data");
+      setMobileDataEnabled(connectivityManager, false);
+    }
 
-      if (isOriginalState()) {
-        if (isEnabled(connectivityManager)) {
-          Timber.d("Turn off Data");
-          setMobileDataEnabled(connectivityManager, false);
-          if (isPeriodic()) {
-            Timber.d("Data is periodic");
-          }
-        } else {
-          Timber.e("Data is already off");
-        }
-      } else {
-        Timber.e("Data was not originally on");
-      }
+    @Override protected boolean isEnabled() {
+      Timber.d("isDataEnabled");
+      return isMobileDataEnabled(connectivityManager);
+    }
+
+    @Override protected DeviceJob periodicDisableJob() {
+      Timber.d("Periodic data disable job");
+      return new DisableJob(getContext(), 10 * 1000, isOriginalState(), true);
+    }
+
+    @Override protected DeviceJob periodicEnableJob() {
+      Timber.d("Periodic data enable job");
+      return new EnableJob(getContext(), 10 * 1000, isOriginalState(), true);
     }
   }
 }

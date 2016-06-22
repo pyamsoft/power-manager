@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
+import com.pyamsoft.powermanager.PowerManager;
 import java.util.Arrays;
 import java.util.Set;
 import timber.log.Timber;
@@ -96,7 +97,47 @@ abstract class DeviceJob extends Job {
     return RetryConstraint.CANCEL;
   }
 
-  protected abstract void enable();
+  final void enable() {
+    if (isOriginalState()) {
+      // Only turn wifi on if it is off
+      if (!isEnabled()) {
+        callEnable();
+        if (isPeriodic()) {
+          Timber.d("Periodic job");
+          PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
+        }
+      } else {
+        Timber.e("Radio is already on");
+      }
+    } else {
+      Timber.e("Radio was not originally on");
+    }
+  }
 
-  protected abstract void disable();
+  final void disable() {
+    if (isOriginalState()) {
+      // Only turn wifi on if it is off
+      if (isEnabled()) {
+        callDisable();
+        if (isPeriodic()) {
+          Timber.d("Periodic job");
+          PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
+        }
+      } else {
+        Timber.e("Radio is already off");
+      }
+    } else {
+      Timber.e("Radio was not originally on");
+    }
+  }
+
+  protected abstract void callEnable();
+
+  protected abstract void callDisable();
+
+  @CheckResult protected abstract boolean isEnabled();
+
+  @CheckResult protected abstract DeviceJob periodicDisableJob();
+
+  @CheckResult protected abstract DeviceJob periodicEnableJob();
 }

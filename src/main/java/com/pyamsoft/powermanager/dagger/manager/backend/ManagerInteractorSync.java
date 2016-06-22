@@ -85,40 +85,29 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
       super(context, params.addTags(ManagerInteractorSync.TAG), jobType, originalState, periodic);
     }
 
-    @Override protected void enable() {
-      Timber.d("Sync job enable");
-
-      if (isOriginalState()) {
-        if (!ContentResolver.getMasterSyncAutomatically()) {
-          Timber.d("Turn on Master Sync");
-          ContentResolver.setMasterSyncAutomatically(true);
-          if (isPeriodic()) {
-            Timber.d("Sync is periodic job");
-          }
-        } else {
-          Timber.e("Master Sync is already off");
-        }
-      } else {
-        Timber.e("Sync was not originally on");
-      }
+    @Override protected void callEnable() {
+      Timber.d("Enable sync");
+      ContentResolver.setMasterSyncAutomatically(true);
     }
 
-    @Override protected void disable() {
-      Timber.d("Sync job disable");
+    @Override protected void callDisable() {
+      Timber.d("Disable sync");
+      ContentResolver.setMasterSyncAutomatically(false);
+    }
 
-      if (isOriginalState()) {
-        if (ContentResolver.getMasterSyncAutomatically()) {
-          Timber.d("Turn off Master Sync");
-          ContentResolver.setMasterSyncAutomatically(false);
-          if (isPeriodic()) {
-            Timber.d("Sync is periodic job");
-          }
-        } else {
-          Timber.e("Master Sync is already off");
-        }
-      } else {
-        Timber.e("Sync was not originally on");
-      }
+    @Override protected boolean isEnabled() {
+      Timber.d("isSyncEnabled");
+      return ContentResolver.getMasterSyncAutomatically();
+    }
+
+    @Override protected DeviceJob periodicDisableJob() {
+      Timber.d("Periodic sync disable job");
+      return new DisableJob(getContext(), 10 * 1000, isOriginalState(), true);
+    }
+
+    @Override protected DeviceJob periodicEnableJob() {
+      Timber.d("Periodic sync enable job");
+      return new EnableJob(getContext(), 10 * 1000, isOriginalState(), true);
     }
   }
 }

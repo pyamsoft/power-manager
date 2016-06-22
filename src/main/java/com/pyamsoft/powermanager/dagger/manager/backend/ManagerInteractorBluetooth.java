@@ -109,40 +109,29 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
       return adapter;
     }
 
-    @Override protected void enable() {
-      Timber.d("Bluetooth job enable");
-
-      // Only if it was originally enabled
-      if (isOriginalState()) {
-        if (!adapter.isEnabled()) {
-          Timber.d("Turn on Bluetooth");
-          adapter.enable();
-          if (isPeriodic()) {
-            Timber.d("Bluetooth is periodic job");
-          }
-        } else {
-          Timber.e("Bluetooth is already on");
-        }
-      } else {
-        Timber.e("Bluetooth was not originally on");
-      }
+    @Override protected void callEnable() {
+      Timber.d("Enable bluetooth");
+      adapter.enable();
     }
 
-    @Override protected void disable() {
-      Timber.d("Bluetooth job disable");
-      if (isOriginalState()) {
-        if (adapter.isEnabled()) {
-          Timber.d("Turn off Bluetooth");
-          adapter.disable();
-          if (isPeriodic()) {
-            Timber.d("Bluetooth is periodic job");
-          }
-        } else {
-          Timber.e("Bluetooth is already off");
-        }
-      } else {
-        Timber.e("Bluetooth was not originally on");
-      }
+    @Override protected void callDisable() {
+      Timber.d("Disable bluetooth");
+      adapter.disable();
+    }
+
+    @Override protected boolean isEnabled() {
+      Timber.d("isBluetoothEnabled");
+      return adapter.isEnabled();
+    }
+
+    @Override protected DeviceJob periodicDisableJob() {
+      Timber.d("Periodic bluetooth disable job");
+      return new DisableJob(getContext(), 10 * 1000, isOriginalState(), true);
+    }
+
+    @Override protected DeviceJob periodicEnableJob() {
+      Timber.d("Periodic bluetooth enable job");
+      return new EnableJob(getContext(), 10 * 1000, isOriginalState(), true);
     }
   }
 }
