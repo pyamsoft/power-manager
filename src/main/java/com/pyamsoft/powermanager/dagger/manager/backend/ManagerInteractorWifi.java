@@ -71,8 +71,7 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @Override long getPeriodicEnableTime() {
-    // TODO
-    return 30;
+    return preferences.getPeriodicDisableTimeWifi();
   }
 
   @Override public boolean isPeriodic() {

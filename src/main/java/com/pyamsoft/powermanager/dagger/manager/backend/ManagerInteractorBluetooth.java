@@ -65,8 +65,7 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
   }
 
   @Override public long getPeriodicDisableTime() {
-    // TODO
-    return 30;
+    return preferences.getPeriodicDisableTimeBluetooth();
   }
 
   @Override public long getDelayTime() {

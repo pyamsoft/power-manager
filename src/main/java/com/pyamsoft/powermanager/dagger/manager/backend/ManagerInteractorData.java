@@ -82,8 +82,7 @@ final class ManagerInteractorData extends ManagerInteractorBase {
   }
 
   @Override long getPeriodicDisableTime() {
-    // TODO
-    return 30;
+    return preferences.getPeriodicDisableTimeData();
   }
 
   @Override public boolean isPeriodic() {

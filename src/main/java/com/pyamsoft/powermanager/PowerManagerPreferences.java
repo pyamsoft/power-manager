@@ -84,13 +84,13 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getPeriodicDisableTimeSync();
 
-  void setPeriodicDisableTimeWifi();
+  void setPeriodicDisableTimeWifi(long time);
 
-  void setPeriodicDisableTimeData();
+  void setPeriodicDisableTimeData(long time);
 
-  void setPeriodicDisableTimeBluetooth();
+  void setPeriodicDisableTimeBluetooth(long time);
 
-  void setPeriodicDisableTimeSync();
+  void setPeriodicDisableTimeSync(long time);
 
   @CheckResult long getPeriodicEnableTimeWifi();
 
@@ -100,11 +100,11 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getPeriodicEnableTimeSync();
 
-  void setPeriodicEnableTimeWifi();
+  void setPeriodicEnableTimeWifi(long time);
 
-  void setPeriodicEnableTimeData();
+  void setPeriodicEnableTimeData(long time);
 
-  void setPeriodicEnableTimeBluetooth();
+  void setPeriodicEnableTimeBluetooth(long time);
 
-  void setPeriodicEnableTimeSync();
+  void setPeriodicEnableTimeSync(long time);
 }

@@ -60,6 +60,15 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean periodicBluetoothDefault;
   private final boolean periodicSyncDefault;
 
+  @NonNull private final String periodicDisableWifi;
+  @NonNull private final String periodicDisableData;
+  @NonNull private final String periodicDisableBluetooth;
+  @NonNull private final String periodicDisableSync;
+  @NonNull private final String periodicDisableWifiDefault;
+  @NonNull private final String periodicDisableDataDefault;
+  @NonNull private final String periodicDisableBluetoothDefault;
+  @NonNull private final String periodicDisableSyncDefault;
+
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
 
@@ -98,6 +107,16 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     periodicDataDefault = resources.getBoolean(R.bool.periodic_data_default);
     periodicBluetoothDefault = resources.getBoolean(R.bool.periodic_bluetooth_default);
     periodicSyncDefault = resources.getBoolean(R.bool.periodic_sync_default);
+
+    periodicDisableWifi = appContext.getString(R.string.periodic_wifi_disable_key);
+    periodicDisableData = appContext.getString(R.string.periodic_data_disable_key);
+    periodicDisableBluetooth = appContext.getString(R.string.periodic_bluetooth_disable_key);
+    periodicDisableSync = appContext.getString(R.string.periodic_sync_disable_key);
+    periodicDisableWifiDefault = appContext.getString(R.string.periodic_wifi_disable_default);
+    periodicDisableDataDefault = appContext.getString(R.string.periodic_data_disable_default);
+    periodicDisableBluetoothDefault =
+        appContext.getString(R.string.periodic_bluetooth_disable_default);
+    periodicDisableSyncDefault = appContext.getString(R.string.periodic_sync_disable_default);
 
     manageWearable = appContext.getString(R.string.manage_wearable_key);
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
@@ -216,35 +235,35 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getPeriodicDisableTimeWifi() {
-    return 0;
+    return Long.parseLong(get(periodicDisableWifi, periodicDisableWifiDefault));
   }
 
   @Override public long getPeriodicDisableTimeData() {
-    return 0;
+    return Long.parseLong(get(periodicDisableData, periodicDisableDataDefault));
   }
 
   @Override public long getPeriodicDisableTimeBluetooth() {
-    return 0;
+    return Long.parseLong(get(periodicDisableBluetooth, periodicDisableBluetoothDefault));
   }
 
   @Override public long getPeriodicDisableTimeSync() {
-    return 0;
+    return Long.parseLong(get(periodicDisableSync, periodicDisableSyncDefault));
   }
 
-  @Override public void setPeriodicDisableTimeWifi() {
-
+  @Override public void setPeriodicDisableTimeWifi(long time) {
+    put(periodicDisableWifi, String.valueOf(time));
   }
 
-  @Override public void setPeriodicDisableTimeData() {
-
+  @Override public void setPeriodicDisableTimeData(long time) {
+    put(periodicDisableData, String.valueOf(time));
   }
 
-  @Override public void setPeriodicDisableTimeBluetooth() {
-
+  @Override public void setPeriodicDisableTimeBluetooth(long time) {
+    put(periodicDisableBluetooth, String.valueOf(time));
   }
 
-  @Override public void setPeriodicDisableTimeSync() {
-
+  @Override public void setPeriodicDisableTimeSync(long time) {
+    put(periodicDisableSync, String.valueOf(time));
   }
 
   @Override public long getPeriodicEnableTimeWifi() {
@@ -263,19 +282,19 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return 0;
   }
 
-  @Override public void setPeriodicEnableTimeWifi() {
+  @Override public void setPeriodicEnableTimeWifi(long time) {
 
   }
 
-  @Override public void setPeriodicEnableTimeData() {
+  @Override public void setPeriodicEnableTimeData(long time) {
 
   }
 
-  @Override public void setPeriodicEnableTimeBluetooth() {
+  @Override public void setPeriodicEnableTimeBluetooth(long time) {
 
   }
 
-  @Override public void setPeriodicEnableTimeSync() {
+  @Override public void setPeriodicEnableTimeSync(long time) {
 
   }
 }
