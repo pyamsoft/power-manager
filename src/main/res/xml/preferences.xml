@@ -29,14 +29,19 @@
 
   </PreferenceCategory>
 
-
   <PreferenceCategory
-      android:title="Power Manager Settings">
+      android:title="System Settings">
 
     <Preference
         android:key="@string/battery_settings_key"
         android:summary="@string/battery_settings_summary"
         android:title="@string/battery_settings_title"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:title="Power Manager Settings">
+
 
     <Preference
         android:key="@string/upgrade_info_key"
