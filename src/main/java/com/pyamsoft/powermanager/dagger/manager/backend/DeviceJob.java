@@ -89,7 +89,14 @@ abstract class DeviceJob extends Job {
   }
 
   @Override public void onAdded() {
-    Timber.d("Job is Added");
+    final Set<String> tags = getTags();
+    String tagString;
+    if (tags == null) {
+      tagString = "NO TAGS";
+    } else {
+      tagString = Arrays.toString(tags.toArray());
+    }
+    Timber.d("Job is Added: %s %s will run in %d ms", getId(), tagString, getDelayInMs());
   }
 
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
