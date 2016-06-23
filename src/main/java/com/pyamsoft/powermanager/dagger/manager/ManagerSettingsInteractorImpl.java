@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
@@ -102,6 +103,36 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
   @Override public void updateNotificationOnManageStateChange() {
     final Intent serviceUpdateIntent = new Intent(appContext, ForegroundService.class);
     appContext.startService(serviceUpdateIntent);
+  }
+
+  @Override public void registerSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key) {
+    if (!key.equals(KEY_MANAGE_WIFI) && !key.equals(KEY_MANAGE_DATA) && !key.equals(
+        KEY_MANAGE_BLUETOOTH) && !key.equals(KEY_MANAGE_SYNC)) {
+      throw new IllegalStateException("Invalid key");
+    }
+    preferences.register(listener);
+  }
+
+  @Override public void unregisterSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    preferences.unregister(listener);
+  }
+
+  @Override public boolean isManaged(@NonNull String key) {
+    boolean managed;
+    if (key.equals(KEY_MANAGE_WIFI)) {
+      managed = preferences.isWifiManaged();
+    } else if (key.equals(KEY_MANAGE_DATA)) {
+      managed = preferences.isDataManaged();
+    } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
+      managed = preferences.isBluetoothManaged();
+    } else if (key.equals(KEY_MANAGE_SYNC)) {
+      managed = preferences.isSyncManaged();
+    } else {
+      throw new IllegalStateException("Invalid key");
+    }
+    return managed;
   }
 }
 

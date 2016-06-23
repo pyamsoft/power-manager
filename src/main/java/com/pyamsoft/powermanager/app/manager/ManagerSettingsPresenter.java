@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
@@ -28,6 +29,15 @@ public final class ManagerSettingsPresenter
 
   @Inject public ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor) {
     this.interactor = interactor;
+  }
+
+  public final void setManagedFromPreference(@NonNull String key) {
+    final boolean enabled = interactor.isManaged(key);
+    if (enabled) {
+      getView().enableManaged();
+    } else {
+      getView().disableManaged();
+    }
   }
 
   public final void setCustomDelayTimeStateFromPreference(@NonNull String key, boolean isManaged) {
@@ -75,7 +85,21 @@ public final class ManagerSettingsPresenter
     interactor.updateNotificationOnManageStateChange();
   }
 
+  public final void registerSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key) {
+    interactor.registerSharedPreferenceChangeListener(listener, key);
+  }
+
+  public final void unregisterSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    interactor.unregisterSharedPreferenceChangeListener(listener);
+  }
+
   public interface ManagerSettingsView {
+
+    void enableManaged();
+
+    void disableManaged();
 
     void enableCustomDelayTime();
 

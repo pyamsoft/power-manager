@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
@@ -123,4 +125,8 @@ public interface PowerManagerPreferences {
   void setPeriodicEnableTimeBluetooth(long time);
 
   void setPeriodicEnableTimeSync(long time);
+
+  void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+
+  void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 }

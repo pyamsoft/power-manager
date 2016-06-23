@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -66,6 +67,7 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @StringRes private int presetPeriodicDisableKeyResId;
   @StringRes private int periodicEnableKeyResId;
   @StringRes private int presetPeriodicEnableKeyResId;
+  private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
   @CheckResult @NonNull public static ManagerSettingsFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
@@ -275,6 +277,12 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     addPreferencesFromResource(xmlResId);
 
     resolvePreferences();
+    listener = (sharedPreferences, pref) -> {
+      final String key = getString(manageKeyResId);
+      if (pref.equals(key)) {
+        presenter.setManagedFromPreference(key);
+      }
+    };
   }
 
   private void resolvePreferences() {
@@ -320,5 +328,27 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @Override public void disablePeriodicEnableTime() {
     Timber.d("Disable custom periodic enable");
     periodicEnablePreference.setEnabled(false);
+  }
+
+  @Override public void enableManaged() {
+    Timber.d("Enable managed");
+    managePreference.setChecked(true);
+  }
+
+  @Override public void disableManaged() {
+    Timber.d("Disable managed");
+    managePreference.setChecked(false);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    presenter.onResume();
+    presenter.registerSharedPreferenceChangeListener(listener, getString(manageKeyResId));
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    presenter.onPause();
+    presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 }
