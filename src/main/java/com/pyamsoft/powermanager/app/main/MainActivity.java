@@ -16,15 +16,19 @@
 
 package com.pyamsoft.powermanager.app.main;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.MenuItem;
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -46,6 +50,8 @@ import timber.log.Timber;
 public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
+  @BindView(R.id.main_tablayout) TabLayout tabLayout;
+  @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   @BindView(R.id.main_pager) ViewPager viewPager;
   @Inject MainPresenter presenter;
@@ -65,22 +71,10 @@ public class MainActivity extends DonationActivityBase
     presenter.bindView(this);
 
     unbinder = ButterKnife.bind(this);
-    setupAppBar();
-
-    PagerAdapter adapter;
     final String storedType = adapterDataHolderFragment.pop(0);
-    if (storedType == null) {
-      Timber.d("No stored fragment, load overview");
-      adapter = new OverviewPagerAdapter(getSupportFragmentManager());
-    } else if (storedType.equals(SettingsFragment.TAG)) {
-      Timber.d("Stored fragment exists, is settings fragment");
-      adapter = new SettingsPagerAdapter(getSupportFragmentManager());
-    } else {
-      Timber.d("Stored fragment exists, is manager fragment");
-      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
-    }
-    viewPager.setAdapter(adapter);
-    setActionBarUpEnabled(storedType != null);
+    setupAppBar();
+    setupTabLayout(storedType);
+    setupViewPager(storedType);
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -106,11 +100,57 @@ public class MainActivity extends DonationActivityBase
     super.onSaveInstanceState(outState);
   }
 
+  private void setupViewPager(@Nullable String storedType) {
+    PagerAdapter adapter;
+    if (storedType == null) {
+      Timber.d("No stored fragment, load overview");
+      adapter = new OverviewPagerAdapter(getSupportFragmentManager());
+    } else if (storedType.equals(SettingsFragment.TAG)) {
+      Timber.d("Stored fragment exists, is settings fragment");
+      adapter = new SettingsPagerAdapter(getSupportFragmentManager());
+    } else {
+      Timber.d("Stored fragment exists, is manager fragment");
+      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
+    }
+    viewPager.setAdapter(adapter);
+    setActionBarUpEnabled(storedType != null);
+  }
+
+  private void setupTabLayout(@Nullable String storedType) {
+    ViewPager pager;
+    int visibility;
+    if (storedType == null) {
+      Timber.d("No stored fragment, no tabs");
+      pager = null;
+      visibility = View.GONE;
+    } else if (storedType.equals(SettingsFragment.TAG)) {
+      Timber.d("Stored fragment exists, is settings fragment. no tabs");
+      pager = null;
+      visibility = View.GONE;
+    } else {
+      Timber.d("Stored fragment exists, is manager fragment. has tabs");
+      pager = viewPager;
+      visibility = View.VISIBLE;
+    }
+    tabLayout.setVisibility(visibility);
+    tabLayout.setupWithViewPager(pager);
+  }
+
+  private void setupAppBar() {
+    toolbar.setTitle(getString(R.string.app_name));
+    setSupportActionBar(toolbar);
+    appBarLayout.getLayoutTransition().enableTransitionType(LayoutTransition.CHANGING);
+  }
+
   private void setPreferenceDefaultValues() {
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_wifi, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_data, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_bluetooth, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.manage_sync, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.periodic_wifi, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.periodic_data, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.periodic_bluetooth, false);
+    PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.periodic_sync, false);
     PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
   }
 
@@ -136,12 +176,6 @@ public class MainActivity extends DonationActivityBase
     RatingDialog.showRatingDialog(this, this);
   }
 
-  private void setupAppBar() {
-    toolbar.setTitle(getString(R.string.app_name));
-    setSupportActionBar(toolbar);
-    setActionBarUpEnabled(getSupportFragmentManager().getBackStackEntryCount() > 0);
-  }
-
   @Override public void onBackPressed() {
     final PagerAdapter adapter = viewPager.getAdapter();
     if (adapter instanceof OverviewPagerAdapter) {
@@ -150,6 +184,8 @@ public class MainActivity extends DonationActivityBase
     } else {
       Timber.d("Current pager does not hold overview, pop");
       viewPager.setAdapter(new OverviewPagerAdapter(getSupportFragmentManager()));
+      tabLayout.setVisibility(View.GONE);
+      tabLayout.setupWithViewPager(null);
       setActionBarUpEnabled(false);
     }
   }
@@ -218,14 +254,19 @@ public class MainActivity extends DonationActivityBase
 
   @Override public void loadFragmentFromOverview(@NonNull String type) {
     PagerAdapter adapter;
+    boolean showTabs;
     switch (type) {
       case SettingsFragment.TAG:
         adapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        showTabs = false;
         break;
       default:
         adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), type);
+        showTabs = true;
     }
     viewPager.setAdapter(adapter);
+    tabLayout.setVisibility(showTabs ? View.VISIBLE : View.GONE);
+    tabLayout.setupWithViewPager(showTabs ? viewPager : null);
     setActionBarUpEnabled(true);
   }
 

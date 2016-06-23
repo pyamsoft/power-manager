@@ -63,4 +63,19 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @Override public int getCount() {
     return 2;
   }
+
+  @Override public CharSequence getPageTitle(int position) {
+    CharSequence title;
+    switch (position) {
+      case 0:
+        title = "Manage";
+        break;
+      case 1:
+        title = "Periodic";
+        break;
+      default:
+        throw new IllegalStateException("Invalid index");
+    }
+    return title;
+  }
 }
