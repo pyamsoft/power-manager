@@ -65,6 +65,7 @@ public final class PowerManager extends ApplicationBase {
         .loadFactor(4)
         .consumerKeepAlive(120);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Timber.d("Create scheduler using JobScheduler framework");
       builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(application,
           PowerManagerFrameworkJobSchedulerService.class));
     } else {
