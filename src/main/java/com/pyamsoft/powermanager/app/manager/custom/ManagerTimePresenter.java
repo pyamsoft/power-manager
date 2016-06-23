@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.app.manager.custom;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.base.Presenter;
+import timber.log.Timber;
 
 public abstract class ManagerTimePresenter extends Presenter<ManagerTimePresenter.TimeView> {
 
@@ -28,14 +29,17 @@ public abstract class ManagerTimePresenter extends Presenter<ManagerTimePresente
 
   protected void updateTime(long time, boolean updateVisual, boolean updateSummary) {
     if (updateVisual) {
+      Timber.d("Visual update %d", time);
       getView().setTimeText(time);
     }
     if (updateSummary) {
+      Timber.d("Summary update %d", time);
       getView().setTimeSummary(time);
     }
   }
 
   protected void setTimeText(long time) {
+    Timber.d("Update time and summary to %d", time);
     getView().setTimeText(time);
     getView().setTimeSummary(time);
   }

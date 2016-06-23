@@ -57,15 +57,28 @@
     <ListPreference
         android:defaultValue="@string/periodic_sync_disable_default"
         android:dependency="@string/periodic_sync_key"
-        android:entries="@array/preset_periodic_sync_disable_names"
-        android:entryValues="@array/preset_periodic_sync_disable_values"
+        android:entries="@array/preset_periodic_sync_names"
+        android:entryValues="@array/preset_periodic_sync_values"
         android:key="@string/preset_periodic_sync_disable_key"
         android:summary="@string/periodic_sync_disable_summary"
         android:title="@string/periodic_sync_disable_title"
         />
 
-    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicDisablePreference
+    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
         android:key="@string/periodic_sync_disable_key"/>
+
+    <ListPreference
+        android:defaultValue="@string/periodic_sync_enable_default"
+        android:dependency="@string/periodic_sync_key"
+        android:entries="@array/preset_periodic_sync_names"
+        android:entryValues="@array/preset_periodic_sync_values"
+        android:key="@string/preset_periodic_sync_enable_key"
+        android:summary="@string/periodic_sync_enable_summary"
+        android:title="@string/periodic_sync_enable_title"
+        />
+
+    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
+        android:key="@string/periodic_sync_enable_key"/>
 
   </PreferenceCategory>
 

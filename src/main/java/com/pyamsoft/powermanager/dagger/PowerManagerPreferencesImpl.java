@@ -74,6 +74,20 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String presetPeriodicDisableBluetooth;
   @NonNull private final String presetPeriodicDisableSync;
 
+  @NonNull private final String periodicEnableWifi;
+  @NonNull private final String periodicEnableData;
+  @NonNull private final String periodicEnableBluetooth;
+  @NonNull private final String periodicEnableSync;
+  @NonNull private final String periodicEnableWifiDefault;
+  @NonNull private final String periodicEnableDataDefault;
+  @NonNull private final String periodicEnableBluetoothDefault;
+  @NonNull private final String periodicEnableSyncDefault;
+
+  @NonNull private final String presetPeriodicEnableWifi;
+  @NonNull private final String presetPeriodicEnableData;
+  @NonNull private final String presetPeriodicEnableBluetooth;
+  @NonNull private final String presetPeriodicEnableSync;
+
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
 
@@ -129,6 +143,22 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
         appContext.getString(R.string.preset_periodic_bluetooth_disable_key);
     presetPeriodicDisableSync = appContext.getString(R.string.preset_periodic_sync_disable_key);
 
+    periodicEnableWifi = appContext.getString(R.string.periodic_wifi_enable_key);
+    periodicEnableData = appContext.getString(R.string.periodic_data_enable_key);
+    periodicEnableBluetooth = appContext.getString(R.string.periodic_bluetooth_enable_key);
+    periodicEnableSync = appContext.getString(R.string.periodic_sync_enable_key);
+    periodicEnableWifiDefault = appContext.getString(R.string.periodic_wifi_enable_default);
+    periodicEnableDataDefault = appContext.getString(R.string.periodic_data_enable_default);
+    periodicEnableBluetoothDefault =
+        appContext.getString(R.string.periodic_bluetooth_enable_default);
+    periodicEnableSyncDefault = appContext.getString(R.string.periodic_sync_enable_default);
+
+    presetPeriodicEnableWifi = appContext.getString(R.string.preset_periodic_wifi_enable_key);
+    presetPeriodicEnableData = appContext.getString(R.string.preset_periodic_data_enable_key);
+    presetPeriodicEnableBluetooth =
+        appContext.getString(R.string.preset_periodic_bluetooth_enable_key);
+    presetPeriodicEnableSync = appContext.getString(R.string.preset_periodic_sync_enable_key);
+
     manageWearable = appContext.getString(R.string.manage_wearable_key);
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
   }
@@ -164,6 +194,22 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public boolean isCustomPeriodicDisableTimeSync() {
     return Long.parseLong(get(presetPeriodicDisableSync, periodicDisableSyncDefault)) == -1;
+  }
+
+  @Override public boolean isCustomPeriodicEnableTimeWifi() {
+    return Long.parseLong(get(presetPeriodicEnableWifi, periodicEnableWifiDefault)) == -1;
+  }
+
+  @Override public boolean isCustomPeriodicEnableTimeData() {
+    return Long.parseLong(get(presetPeriodicEnableData, periodicEnableDataDefault)) == -1;
+  }
+
+  @Override public boolean isCustomPeriodicEnableTimeBluetooth() {
+    return Long.parseLong(get(presetPeriodicEnableBluetooth, periodicEnableBluetoothDefault)) == -1;
+  }
+
+  @Override public boolean isCustomPeriodicEnableTimeSync() {
+    return Long.parseLong(get(presetPeriodicEnableSync, periodicEnableSyncDefault)) == -1;
   }
 
   @Override public long getWifiDelay() {
@@ -295,34 +341,34 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public long getPeriodicEnableTimeWifi() {
-    return 0;
+    return Long.parseLong(get(periodicEnableWifi, periodicEnableWifiDefault));
   }
 
   @Override public long getPeriodicEnableTimeData() {
-    return 0;
+    return Long.parseLong(get(periodicEnableData, periodicEnableDataDefault));
   }
 
   @Override public long getPeriodicEnableTimeBluetooth() {
-    return 0;
+    return Long.parseLong(get(periodicEnableBluetooth, periodicEnableBluetoothDefault));
   }
 
   @Override public long getPeriodicEnableTimeSync() {
-    return 0;
+    return Long.parseLong(get(periodicEnableSync, periodicEnableSyncDefault));
   }
 
   @Override public void setPeriodicEnableTimeWifi(long time) {
-
+    put(periodicEnableWifi, String.valueOf(time));
   }
 
   @Override public void setPeriodicEnableTimeData(long time) {
-
+    put(periodicEnableData, String.valueOf(time));
   }
 
   @Override public void setPeriodicEnableTimeBluetooth(long time) {
-
+    put(periodicEnableBluetooth, String.valueOf(time));
   }
 
   @Override public void setPeriodicEnableTimeSync(long time) {
-
+    put(periodicEnableSync, String.valueOf(time));
   }
 }

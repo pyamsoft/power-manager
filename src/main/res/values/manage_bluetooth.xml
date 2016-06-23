@@ -60,7 +60,8 @@
   <string name="periodic_bluetooth_summary">Bluetooth Periodic</string>
 
   <string name="preset_periodic_bluetooth_disable_key">preset_periodic_bluetooth_disable_key</string>
-  <string-array name="preset_periodic_bluetooth_disable_names">
+  <string name="preset_periodic_bluetooth_enable_key">preset_periodic_bluetooth_enable_key</string>
+  <string-array name="preset_periodic_bluetooth_names">
     <item name="delay_60">1 Minute</item>
     <item name="delay_120">2 Minutes</item>
     <item name="delay_300">5 Minutes</item>
@@ -69,7 +70,7 @@
     <item name="delay_custom">Custom</item>
   </string-array>
 
-  <string-array name="preset_periodic_bluetooth_disable_values">
+  <string-array name="preset_periodic_bluetooth_values">
     <item name="delay_60">60</item>
     <item name="delay_120">120</item>
     <item name="delay_300">300</item>
@@ -82,5 +83,10 @@
   <string name="periodic_bluetooth_disable_key">periodic_bluetooth_disable</string>
   <string name="periodic_bluetooth_disable_title">Periodic Bluetooth Disable</string>
   <string name="periodic_bluetooth_disable_summary">Periodic Bluetooth Disable</string>
+
+  <string name="periodic_bluetooth_enable_default">120</string>
+  <string name="periodic_bluetooth_enable_key">periodic_bluetooth_enable</string>
+  <string name="periodic_bluetooth_enable_title">Periodic Bluetooth Enable</string>
+  <string name="periodic_bluetooth_enable_summary">Periodic Bluetooth Enable</string>
 
 </resources>

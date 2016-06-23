@@ -57,6 +57,20 @@ public final class ManagerSettingsPresenter
     }
   }
 
+  public final void setCustomPeriodicEnableTimeStateFromPreference(@NonNull String key,
+      boolean isPeriodic) {
+    final boolean customTime = interactor.isCustomPeriodicEnableTime(key);
+    updateCustomPeriodicEnableTimeView(customTime && isPeriodic);
+  }
+
+  public final void updateCustomPeriodicEnableTimeView(boolean newState) {
+    if (newState) {
+      getView().enablePeriodicEnableTime();
+    } else {
+      getView().disablePeriodicEnableTime();
+    }
+  }
+
   public interface ManagerSettingsView {
 
     void enableCustomDelayTime();
@@ -66,5 +80,9 @@ public final class ManagerSettingsPresenter
     void enablePeriodicDisableTime();
 
     void disablePeriodicDisableTime();
+
+    void enablePeriodicEnableTime();
+
+    void disablePeriodicEnableTime();
   }
 }

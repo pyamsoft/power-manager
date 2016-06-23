@@ -124,15 +124,17 @@ public abstract class ManagerTimePreference extends Preference
 
     handler.removeCallbacksAndMessages(null);
 
-    final EditText editText = textInputLayout.getEditText();
-    if (editText != null) {
-      editText.removeTextChangedListener(watcher);
-      editText.setOnFocusChangeListener(null);
-      editText.setOnEditorActionListener(null);
+    if (textInputLayout != null) {
+      final EditText editText = textInputLayout.getEditText();
+      if (editText != null) {
+        editText.removeTextChangedListener(watcher);
+        editText.setOnFocusChangeListener(null);
+        editText.setOnEditorActionListener(null);
 
-      // Save the last entered value to preferences
-      final String text = editText.getText().toString();
-      saveDelayTimeToPreference(text, false, false);
+        // Save the last entered value to preferences
+        final String text = editText.getText().toString();
+        saveDelayTimeToPreference(text, false, false);
+      }
     }
     presenter.unbindView();
   }

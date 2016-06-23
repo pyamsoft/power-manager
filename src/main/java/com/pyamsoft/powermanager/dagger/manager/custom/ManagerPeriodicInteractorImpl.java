@@ -22,15 +22,19 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-final class ManagerPeriodicDisableInteractorImpl implements ManagerPeriodicDisableInteractor {
+final class ManagerPeriodicInteractorImpl implements ManagerPeriodicInteractor {
 
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String KEY_DISABLE_WIFI;
   @NonNull private final String KEY_DISABLE_DATA;
   @NonNull private final String KEY_DISABLE_BLUETOOTH;
   @NonNull private final String KEY_DISABLE_SYNC;
+  @NonNull private final String KEY_ENABLE_WIFI;
+  @NonNull private final String KEY_ENABLE_DATA;
+  @NonNull private final String KEY_ENABLE_BLUETOOTH;
+  @NonNull private final String KEY_ENABLE_SYNC;
 
-  @Inject ManagerPeriodicDisableInteractorImpl(@NonNull Context context,
+  @Inject ManagerPeriodicInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
     final Context appContext = context.getApplicationContext();
@@ -38,6 +42,10 @@ final class ManagerPeriodicDisableInteractorImpl implements ManagerPeriodicDisab
     KEY_DISABLE_DATA = appContext.getString(R.string.periodic_data_disable_key);
     KEY_DISABLE_BLUETOOTH = appContext.getString(R.string.periodic_bluetooth_disable_key);
     KEY_DISABLE_SYNC = appContext.getString(R.string.periodic_sync_disable_key);
+    KEY_ENABLE_WIFI = appContext.getString(R.string.periodic_wifi_enable_key);
+    KEY_ENABLE_DATA = appContext.getString(R.string.periodic_data_enable_key);
+    KEY_ENABLE_BLUETOOTH = appContext.getString(R.string.periodic_bluetooth_enable_key);
+    KEY_ENABLE_SYNC = appContext.getString(R.string.periodic_sync_enable_key);
   }
 
   @Override public void setPeriodicTime(@NonNull String key, long time) {
@@ -49,6 +57,14 @@ final class ManagerPeriodicDisableInteractorImpl implements ManagerPeriodicDisab
       preferences.setPeriodicDisableTimeBluetooth(time);
     } else if (key.equals(KEY_DISABLE_SYNC)) {
       preferences.setPeriodicDisableTimeSync(time);
+    } else if (key.equals(KEY_ENABLE_WIFI)) {
+      preferences.setPeriodicEnableTimeWifi(time);
+    } else if (key.equals(KEY_ENABLE_DATA)) {
+      preferences.setPeriodicEnableTimeData(time);
+    } else if (key.equals(KEY_ENABLE_BLUETOOTH)) {
+      preferences.setPeriodicEnableTimeBluetooth(time);
+    } else if (key.equals(KEY_ENABLE_SYNC)) {
+      preferences.setPeriodicEnableTimeSync(time);
     } else {
       throw new IllegalStateException("Invalid KEY: " + key);
     }
@@ -64,6 +80,14 @@ final class ManagerPeriodicDisableInteractorImpl implements ManagerPeriodicDisab
       time = preferences.getPeriodicDisableTimeBluetooth();
     } else if (key.equals(KEY_DISABLE_SYNC)) {
       time = preferences.getPeriodicDisableTimeSync();
+    } else if (key.equals(KEY_ENABLE_WIFI)) {
+      time = preferences.getPeriodicEnableTimeWifi();
+    } else if (key.equals(KEY_ENABLE_DATA)) {
+      time = preferences.getPeriodicEnableTimeData();
+    } else if (key.equals(KEY_ENABLE_BLUETOOTH)) {
+      time = preferences.getPeriodicEnableTimeBluetooth();
+    } else if (key.equals(KEY_ENABLE_SYNC)) {
+      time = preferences.getPeriodicEnableTimeSync();
     } else {
       throw new IllegalStateException("Invalid KEY: " + key);
     }

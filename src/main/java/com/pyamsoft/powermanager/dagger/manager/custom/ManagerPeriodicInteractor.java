@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager.custom;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-interface ManagerPeriodicDisableInteractor {
+interface ManagerPeriodicInteractor {
 
   void setPeriodicTime(@NonNull String key, long time);
 

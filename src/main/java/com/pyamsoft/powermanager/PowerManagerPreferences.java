@@ -36,6 +36,14 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isCustomPeriodicDisableTimeSync();
 
+  @CheckResult boolean isCustomPeriodicEnableTimeWifi();
+
+  @CheckResult boolean isCustomPeriodicEnableTimeData();
+
+  @CheckResult boolean isCustomPeriodicEnableTimeBluetooth();
+
+  @CheckResult boolean isCustomPeriodicEnableTimeSync();
+
   @CheckResult long getWifiDelay();
 
   void setWifiDelay(long time);

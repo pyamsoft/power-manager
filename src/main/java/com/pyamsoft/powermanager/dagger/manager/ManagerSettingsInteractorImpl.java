@@ -79,4 +79,21 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
     }
     return custom;
   }
+
+  @Override public boolean isCustomPeriodicEnableTime(@NonNull String key) {
+    boolean custom;
+    if (key.equals(KEY_PERIODIC_WIFI)) {
+      custom = preferences.isCustomPeriodicEnableTimeWifi();
+    } else if (key.equals(KEY_PERIODIC_DATA)) {
+      custom = preferences.isCustomPeriodicEnableTimeData();
+    } else if (key.equals(KEY_PERIODIC_BLUETOOTH)) {
+      custom = preferences.isCustomPeriodicEnableTimeBluetooth();
+    } else if (key.equals(KEY_PERIODIC_SYNC)) {
+      custom = preferences.isCustomPeriodicEnableTimeSync();
+    } else {
+      throw new IllegalStateException("Invalid key");
+    }
+    return custom;
+  }
 }
+

@@ -20,11 +20,11 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePresenter;
 import javax.inject.Inject;
 
-final class ManagerPeriodicDisablePresenter extends ManagerTimePresenter {
+final class ManagerPeriodicPresenter extends ManagerTimePresenter {
 
-  @NonNull private final ManagerPeriodicDisableInteractor interactor;
+  @NonNull private final ManagerPeriodicInteractor interactor;
 
-  @Inject public ManagerPeriodicDisablePresenter(@NonNull ManagerPeriodicDisableInteractor interactor) {
+  @Inject public ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor) {
     this.interactor = interactor;
   }
 

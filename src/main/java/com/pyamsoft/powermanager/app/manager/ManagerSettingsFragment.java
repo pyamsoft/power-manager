@@ -24,7 +24,6 @@ import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
@@ -33,8 +32,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicDisablePreference;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePreference;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -55,7 +53,9 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
 
   private CheckBoxPreference periodicPreference;
   private ListPreference presetPeriodicDisablePreference;
-  private ManagerPeriodicDisablePreference periodicDisablePreference;
+  private ManagerPeriodicPreference periodicDisablePreference;
+  private ListPreference presetPeriodicEnablePreference;
+  private ManagerPeriodicPreference periodicEnablePreference;
 
   @XmlRes private int xmlResId;
   @StringRes private int manageKeyResId;
@@ -64,6 +64,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @StringRes private int periodicKeyResId;
   @StringRes private int periodicDisableKeyResId;
   @StringRes private int presetPeriodicDisableKeyResId;
+  @StringRes private int periodicEnableKeyResId;
+  @StringRes private int presetPeriodicEnableKeyResId;
 
   @CheckResult @NonNull public static ManagerSettingsFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
@@ -78,74 +80,129 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     presenter.bindView(this);
     delayPreference.bindView();
     periodicDisablePreference.bindView();
+    periodicEnablePreference.bindView();
     return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
-  private void setUpCustomEditTextPreference(@NonNull ManagerTimePreference customPreference,
-      @NonNull Preference presetTimePreference, @NonNull Preference enablePreference,
-      @NonNull ValueWrapper<Long> presetPreferenceChangedValueWrapper,
-      @NonNull ValueWrapper<Boolean> enablePreferenceChangedValueWrapper) {
-    presetTimePreference.setOnPreferenceChangeListener((preference, o) -> {
-      if (o instanceof String) {
-        final String string = (String) o;
-        final long time = Long.parseLong(string);
-
-        if (time != -1) {
-          customPreference.updateTime(time);
-        }
-
-        presetPreferenceChangedValueWrapper.run(time);
-        return true;
-      }
-      return false;
-    });
-
-    enablePreference.setOnPreferenceChangeListener((preference, o) -> {
-      if (o instanceof Boolean) {
-        enablePreferenceChangedValueWrapper.run((Boolean) o);
-        return true;
-      }
-      return false;
-    });
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    setUpCustomEditTextPreference(delayPreference, presetDelayPreference, managePreference,
-        new ValueWrapper<Long>() {
-          @Override void run(Long param) {
-            presenter.updateCustomDelayTimeView(param == -1 && managePreference.isChecked());
-          }
-        }, new ValueWrapper<Boolean>() {
-          @Override void run(Boolean param) {
-            presenter.updateCustomDelayTimeView(param);
-          }
-        });
+    managePreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof Boolean) {
+        final boolean checked = (boolean) o;
 
-    setUpCustomEditTextPreference(periodicDisablePreference, presetPeriodicDisablePreference,
-        periodicPreference, new ValueWrapper<Long>() {
-          @Override void run(Long param) {
-            presenter.updateCustomPeriodicDisableTimeView(
-                param == -1 && periodicPreference.isChecked());
-          }
-        }, new ValueWrapper<Boolean>() {
-          @Override void run(Boolean param) {
-            presenter.updateCustomPeriodicDisableTimeView(param);
-          }
-        });
+        // Disable delay custom when unchecked
+        // Enable delay custom when checked and custom delay time
+        final String presetDelay = presetDelayPreference.getValue();
+        final long delayTime = Long.parseLong(presetDelay);
+        if (!checked || delayTime == -1) {
+          presenter.updateCustomDelayTimeView(checked);
+        }
+
+        // Disable delay custom when unchecked
+        // Enable delay custom when checked and custom delay time and periodic checked
+        final boolean periodicChecked = periodicPreference.isChecked();
+        final String presetDisable = presetPeriodicDisablePreference.getValue();
+        final long disableTime = Long.parseLong(presetDisable);
+        if (!checked || disableTime == -1 && periodicChecked) {
+          presenter.updateCustomPeriodicDisableTimeView(checked);
+        }
+
+        final String presetEnable = presetPeriodicEnablePreference.getValue();
+        final long enableTime = Long.parseLong(presetEnable);
+        if (!checked || enableTime == -1 && periodicChecked) {
+          presenter.updateCustomPeriodicEnableTimeView(checked);
+        }
+        return true;
+      }
+      return false;
+    });
+
+    presetDelayPreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof String) {
+        final String string = (String) o;
+        final long time = Long.parseLong(string);
+
+        if (time != -1) {
+          delayPreference.updateTime(time);
+        }
+
+        presenter.updateCustomDelayTimeView(time == -1 && managePreference.isChecked());
+        return true;
+      }
+      return false;
+    });
+
+    periodicPreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof Boolean) {
+        final boolean checked = (boolean) o;
+
+        // Disable delay custom when unchecked
+        // Enable delay custom when checked and custom delay time and periodic checked
+        final boolean manageChecked = managePreference.isChecked();
+        final String presetDisable = presetPeriodicDisablePreference.getValue();
+        final long disableTime = Long.parseLong(presetDisable);
+        if (!checked || disableTime == -1 && manageChecked) {
+          presenter.updateCustomPeriodicDisableTimeView(checked);
+        }
+
+        final String presetEnable = presetPeriodicEnablePreference.getValue();
+        final long enableTime = Long.parseLong(presetEnable);
+        if (!checked || enableTime == -1 && manageChecked) {
+          presenter.updateCustomPeriodicEnableTimeView(checked);
+        }
+        return true;
+      }
+      return false;
+    });
+
+    presetPeriodicDisablePreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof String) {
+        final String string = (String) o;
+        final long time = Long.parseLong(string);
+
+        if (time != -1) {
+          periodicDisablePreference.updateTime(time);
+        }
+
+        presenter.updateCustomPeriodicDisableTimeView(
+            time == -1 && managePreference.isChecked() && periodicPreference.isChecked());
+        return true;
+      }
+      return false;
+    });
+
+    presetPeriodicEnablePreference.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof String) {
+        final String string = (String) o;
+        final long time = Long.parseLong(string);
+
+        if (time != -1) {
+          periodicEnablePreference.updateTime(time);
+        }
+
+        presenter.updateCustomPeriodicEnableTimeView(
+            time == -1 && managePreference.isChecked() && periodicPreference.isChecked());
+        return true;
+      }
+      return false;
+    });
 
     presenter.setCustomDelayTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
 
     presenter.setCustomPeriodicDisableTimeStateFromPreference(getString(periodicKeyResId),
-        periodicPreference.isChecked());
+        periodicPreference.isChecked() && managePreference.isChecked());
+
+    presenter.setCustomPeriodicEnableTimeStateFromPreference(getString(periodicKeyResId),
+        periodicPreference.isChecked() && managePreference.isChecked());
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     delayPreference.unbindView();
     periodicDisablePreference.unbindView();
+    periodicEnablePreference.unbindView();
     presenter.unbindView();
   }
 
@@ -161,6 +218,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
         periodicKeyResId = R.string.periodic_wifi_key;
         periodicDisableKeyResId = R.string.periodic_wifi_disable_key;
         presetPeriodicDisableKeyResId = R.string.preset_periodic_wifi_disable_key;
+        periodicEnableKeyResId = R.string.periodic_wifi_enable_key;
+        presetPeriodicEnableKeyResId = R.string.preset_periodic_wifi_enable_key;
         break;
       case TYPE_DATA:
         Timber.d("Manage fragment for Data");
@@ -171,6 +230,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
         periodicKeyResId = R.string.periodic_data_key;
         periodicDisableKeyResId = R.string.periodic_data_disable_key;
         presetPeriodicDisableKeyResId = R.string.preset_periodic_data_disable_key;
+        periodicEnableKeyResId = R.string.periodic_data_enable_key;
+        presetPeriodicEnableKeyResId = R.string.preset_periodic_data_enable_key;
         break;
       case TYPE_BLUETOOTH:
         Timber.d("Manage fragment for Bluetooth");
@@ -181,6 +242,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
         periodicKeyResId = R.string.periodic_bluetooth_key;
         periodicDisableKeyResId = R.string.periodic_bluetooth_disable_key;
         presetPeriodicDisableKeyResId = R.string.preset_periodic_bluetooth_disable_key;
+        periodicEnableKeyResId = R.string.periodic_bluetooth_enable_key;
+        presetPeriodicEnableKeyResId = R.string.preset_periodic_bluetooth_enable_key;
         break;
       case TYPE_SYNC:
         Timber.d("Manage fragment for Sync");
@@ -191,6 +254,8 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
         periodicKeyResId = R.string.periodic_sync_key;
         periodicDisableKeyResId = R.string.periodic_sync_disable_key;
         presetPeriodicDisableKeyResId = R.string.preset_periodic_sync_disable_key;
+        periodicEnableKeyResId = R.string.periodic_sync_enable_key;
+        presetPeriodicEnableKeyResId = R.string.preset_periodic_sync_enable_key;
         break;
       default:
         throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
@@ -217,7 +282,11 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     presetPeriodicDisablePreference =
         (ListPreference) findPreference(getString(presetPeriodicDisableKeyResId));
     periodicDisablePreference =
-        (ManagerPeriodicDisablePreference) findPreference(getString(periodicDisableKeyResId));
+        (ManagerPeriodicPreference) findPreference(getString(periodicDisableKeyResId));
+    presetPeriodicEnablePreference =
+        (ListPreference) findPreference(getString(presetPeriodicEnableKeyResId));
+    periodicEnablePreference =
+        (ManagerPeriodicPreference) findPreference(getString(periodicEnableKeyResId));
   }
 
   @Override public void enableCustomDelayTime() {
@@ -238,6 +307,16 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
   @Override public void disablePeriodicDisableTime() {
     Timber.d("Disable custom periodic disable");
     periodicDisablePreference.setEnabled(false);
+  }
+
+  @Override public void enablePeriodicEnableTime() {
+    Timber.d("Enable custom periodic enable");
+    periodicEnablePreference.setEnabled(true);
+  }
+
+  @Override public void disablePeriodicEnableTime() {
+    Timber.d("Disable custom periodic enable");
+    periodicEnablePreference.setEnabled(false);
   }
 
   static abstract class ValueWrapper<T> {
