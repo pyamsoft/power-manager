@@ -17,13 +17,16 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import javax.inject.Inject;
 
 final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
 
+  @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String KEY_MANAGE_WIFI;
   @NonNull private final String KEY_MANAGE_DATA;
@@ -36,8 +39,8 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
 
   @Inject ManagerSettingsInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
+    appContext = context.getApplicationContext();
     this.preferences = preferences;
-    final Context appContext = context.getApplicationContext();
     KEY_MANAGE_WIFI = appContext.getString(R.string.manage_wifi_key);
     KEY_MANAGE_DATA = appContext.getString(R.string.manage_data_key);
     KEY_MANAGE_BLUETOOTH = appContext.getString(R.string.manage_bluetooth_key);
@@ -94,6 +97,11 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
       throw new IllegalStateException("Invalid key");
     }
     return custom;
+  }
+
+  @Override public void updateNotificationOnManageStateChange() {
+    final Intent serviceUpdateIntent = new Intent(appContext, ForegroundService.class);
+    appContext.startService(serviceUpdateIntent);
   }
 }
 

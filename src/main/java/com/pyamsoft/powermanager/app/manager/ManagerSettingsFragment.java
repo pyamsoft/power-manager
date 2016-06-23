@@ -113,6 +113,9 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
         if (!checked || enableTime == -1 && periodicChecked) {
           presenter.updateCustomPeriodicEnableTimeView(checked);
         }
+
+        // Last update the notification
+        presenter.updateNotificationOnManageStateChange();
         return true;
       }
       return false;

@@ -71,6 +71,10 @@ public final class ManagerSettingsPresenter
     }
   }
 
+  public final void updateNotificationOnManageStateChange() {
+    interactor.updateNotificationOnManageStateChange();
+  }
+
   public interface ManagerSettingsView {
 
     void enableCustomDelayTime();
