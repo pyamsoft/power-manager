@@ -17,10 +17,12 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -31,11 +33,13 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
-import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
+import com.pyamsoft.powermanager.app.overview.OverviewPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
@@ -44,8 +48,10 @@ public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
   @BindView(R.id.main_toolbar) Toolbar toolbar;
+  @BindView(R.id.main_pager) ViewPager viewPager;
   @Inject MainPresenter presenter;
   private Unbinder unbinder;
+  private DataHolderFragment<String> adapterDataHolderFragment;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -55,32 +61,41 @@ public class MainActivity extends DonationActivityBase
     setPreferenceDefaultValues();
 
     DaggerMainComponent.builder().build().inject(this);
+    adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
     presenter.bindView(this);
 
     unbinder = ButterKnife.bind(this);
     setupAppBar();
-    showOverviewIfBlank();
+
+    PagerAdapter adapter;
+    final String storedType = adapterDataHolderFragment.pop(0);
+    if (storedType == null) {
+      adapter = new OverviewPagerAdapter(getSupportFragmentManager());
+    } else {
+      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(),
+          getFragmentFromType(storedType), storedType);
+    }
+    viewPager.setAdapter(adapter);
+    setActionBarUpEnabled(storedType != null);
   }
 
-  private void showOverviewIfBlank() {
-    boolean blank = true;
-    final String[] fragmentTags = {
-        ManagerSettingsFragment.TYPE_WIFI, ManagerSettingsFragment.TYPE_DATA,
-        ManagerSettingsFragment.TYPE_BLUETOOTH, ManagerSettingsFragment.TYPE_SYNC,
-        SettingsFragment.TAG
-    };
-
-    final FragmentManager fm = getSupportFragmentManager();
-    for (final String tag : fragmentTags) {
-      if (fm.findFragmentByTag(tag) != null) {
-        blank = false;
-        break;
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    if (isChangingConfigurations()) {
+      String type;
+      final PagerAdapter pagerAdapter = viewPager.getAdapter();
+      if (pagerAdapter instanceof ManagerSettingsPagerAdapter) {
+        final ManagerSettingsPagerAdapter settingsPagerAdapter =
+            (ManagerSettingsPagerAdapter) pagerAdapter;
+        type = settingsPagerAdapter.getType();
+      } else {
+        type = null;
       }
+      adapterDataHolderFragment.put(0, type);
+    } else {
+      adapterDataHolderFragment.clear();
     }
-    if (blank) {
-      fm.beginTransaction().replace(R.id.main_container, new OverviewFragment()).commit();
-    }
+    super.onSaveInstanceState(outState);
   }
 
   private void setPreferenceDefaultValues() {
@@ -95,7 +110,6 @@ public class MainActivity extends DonationActivityBase
     super.onDestroy();
 
     unbinder.unbind();
-
     presenter.unbindView();
   }
 
@@ -121,15 +135,12 @@ public class MainActivity extends DonationActivityBase
   }
 
   @Override public void onBackPressed() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    final int count = fragmentManager.getBackStackEntryCount();
-    if (count > 0) {
-      if (count - 1 == 0) {
-        setActionBarUpEnabled(false);
-      }
-      fragmentManager.popBackStack();
-    } else {
+    final PagerAdapter adapter = viewPager.getAdapter();
+    if (adapter instanceof OverviewPagerAdapter) {
       super.onBackPressed();
+    } else {
+      viewPager.setAdapter(new OverviewPagerAdapter(getSupportFragmentManager()));
+      setActionBarUpEnabled(false);
     }
   }
 
@@ -195,7 +206,7 @@ public class MainActivity extends DonationActivityBase
     return BuildConfig.VERSION_CODE;
   }
 
-  @Override public void loadFragmentFromOverview(@NonNull String type) {
+  @NonNull @CheckResult Fragment getFragmentFromType(@NonNull String type) {
     Fragment fragment;
     switch (type) {
       case SettingsFragment.TAG:
@@ -204,11 +215,13 @@ public class MainActivity extends DonationActivityBase
       default:
         fragment = ManagerSettingsFragment.newInstance(type);
     }
+    return fragment;
+  }
 
-    getSupportFragmentManager().beginTransaction()
-        .replace(R.id.main_container, fragment, type)
-        .addToBackStack(null)
-        .commit();
+  @Override public void loadFragmentFromOverview(@NonNull String type) {
+    final Fragment fragment = getFragmentFromType(type);
+    viewPager.setAdapter(
+        new ManagerSettingsPagerAdapter(getSupportFragmentManager(), fragment, type));
     setActionBarUpEnabled(true);
   }
 
