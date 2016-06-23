@@ -318,9 +318,4 @@ public class ManagerSettingsFragment extends PreferenceFragmentCompat
     Timber.d("Disable custom periodic enable");
     periodicEnablePreference.setEnabled(false);
   }
-
-  static abstract class ValueWrapper<T> {
-
-    abstract void run(T param);
-  }
 }

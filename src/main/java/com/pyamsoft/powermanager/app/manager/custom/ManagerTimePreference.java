@@ -29,7 +29,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import java.util.Locale;
 import timber.log.Timber;
@@ -43,7 +42,6 @@ public abstract class ManagerTimePreference extends Preference
   @BindView(R.id.preference_manage_delay_times) TextInputLayout textInputLayout;
   private ManagerTimePresenter presenter;
   private TextWatcher watcher;
-  private Unbinder unbinder;
 
   public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -69,7 +67,7 @@ public abstract class ManagerTimePreference extends Preference
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
     holder.itemView.setClickable(false);
-    unbinder = ButterKnife.bind(this, holder.itemView);
+    ButterKnife.bind(this, holder.itemView);
     presenter.setTimeFromPreference(getKey());
 
     watcher = new TextWatcher() {
@@ -124,7 +122,10 @@ public abstract class ManagerTimePreference extends Preference
 
     handler.removeCallbacksAndMessages(null);
 
-    if (textInputLayout != null) {
+    if (textInputLayout == null) {
+      Timber.e(
+          "onBindViewHolder was never called for this preference. Maybe it never came into view?");
+    } else {
       final EditText editText = textInputLayout.getEditText();
       if (editText != null) {
         editText.removeTextChangedListener(watcher);
