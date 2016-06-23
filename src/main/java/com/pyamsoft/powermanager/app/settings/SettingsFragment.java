@@ -39,6 +39,8 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     implements SettingsPresenter.MainSettingsView {
 
   @NonNull public static final String TAG = "settings";
+  @NonNull private final Intent batterySettingsIntent =
+      new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
   @Inject SettingsPresenter presenter;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -71,6 +73,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       } else {
         throw new ClassCastException("Activity is not a change log provider");
       }
+      return true;
+    });
+
+    final Preference batterySettings = findPreference(getString(R.string.battery_settings_key));
+    batterySettings.setOnPreferenceClickListener(preference -> {
+      getActivity().startActivity(batterySettingsIntent);
       return true;
     });
   }

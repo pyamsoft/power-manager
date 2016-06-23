@@ -21,12 +21,17 @@
   <string name="boot_summary">Start Power Manager on boot</string>
   <string name="boot_title">Run on Startup</string>
 
-  <string name="clear_all_key">clear_all</string>
-  <string name="clear_all_title">Reset All Settings</string>
-  <string name="clear_all_summary">Reset all application settings to default</string>
+  <string name="battery_settings_key">battery_settings</string>
+  <string name="battery_settings_summary">Open the system battery settings screen</string>
+  <string name="battery_settings_title">Open Battery Settings</string>
 
   <string name="upgrade_info_key">upgrade_info</string>
   <string name="upgrade_info_title">Show Upgrade Information</string>
   <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
+
+  <string name="clear_all_key">clear_all</string>
+  <string name="clear_all_title">Reset All Settings</string>
+  <string name="clear_all_summary">Reset all application settings to default</string>
+
 
 </resources>

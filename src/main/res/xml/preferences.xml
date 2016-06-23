@@ -34,6 +34,11 @@
       android:title="Power Manager Settings">
 
     <Preference
+        android:key="@string/battery_settings_key"
+        android:summary="@string/battery_settings_summary"
+        android:title="@string/battery_settings_title"/>
+
+    <Preference
         android:key="@string/upgrade_info_key"
         android:summary="@string/upgrade_info_summary"
         android:title="@string/upgrade_info_title"/>
