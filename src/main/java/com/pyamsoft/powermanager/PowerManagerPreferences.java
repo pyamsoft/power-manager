@@ -20,13 +20,21 @@ import android.support.annotation.CheckResult;
 
 public interface PowerManagerPreferences {
 
-  @CheckResult boolean isCustomTimeWifi();
+  @CheckResult boolean isCustomDelayTimeWifi();
 
-  @CheckResult boolean isCustomTimeData();
+  @CheckResult boolean isCustomDelayTimeData();
 
-  @CheckResult boolean isCustomTimeBluetooth();
+  @CheckResult boolean isCustomDelayTimeBluetooth();
 
-  @CheckResult boolean isCustomTimeSync();
+  @CheckResult boolean isCustomDelayTimeSync();
+
+  @CheckResult boolean isCustomPeriodicDisableTimeWifi();
+
+  @CheckResult boolean isCustomPeriodicDisableTimeData();
+
+  @CheckResult boolean isCustomPeriodicDisableTimeBluetooth();
+
+  @CheckResult boolean isCustomPeriodicDisableTimeSync();
 
   @CheckResult long getWifiDelay();
 

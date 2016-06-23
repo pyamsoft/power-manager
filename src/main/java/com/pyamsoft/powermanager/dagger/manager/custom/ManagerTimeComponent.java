@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.manager.custom;
 
 import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference;
+import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicDisablePreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;
@@ -28,5 +28,5 @@ public interface ManagerTimeComponent {
 
   void inject(ManagerDelayPreference preference);
 
-  void inject(ManagerPeriodicPreference preference);
+  void inject(ManagerPeriodicDisablePreference preference);
 }

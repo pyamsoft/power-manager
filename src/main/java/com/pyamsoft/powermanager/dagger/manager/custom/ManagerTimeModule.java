@@ -30,8 +30,9 @@ import javax.inject.Named;
     return presenter;
   }
 
-  @ActivityScope @Provides @Named("periodic") ManagerTimePresenter provideManagerPeriodicPresenter(
-      @NonNull ManagerPeriodicPresenter presenter) {
+  @ActivityScope @Provides @Named("periodic_disable")
+  ManagerTimePresenter provideManagerPeriodicDisablePresenter(
+      @NonNull ManagerPeriodicDisablePresenter presenter) {
     return presenter;
   }
 
@@ -40,8 +41,8 @@ import javax.inject.Named;
     return interactor;
   }
 
-  @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(
-      @NonNull ManagerPeriodicInteractorImpl interactor) {
+  @ActivityScope @Provides ManagerPeriodicDisableInteractor provideManagerPeriodicInteractor(
+      @NonNull ManagerPeriodicDisableInteractorImpl interactor) {
     return interactor;
   }
 }

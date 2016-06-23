@@ -29,6 +29,10 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
   @NonNull private final String KEY_MANAGE_DATA;
   @NonNull private final String KEY_MANAGE_BLUETOOTH;
   @NonNull private final String KEY_MANAGE_SYNC;
+  @NonNull private final String KEY_PERIODIC_WIFI;
+  @NonNull private final String KEY_PERIODIC_DATA;
+  @NonNull private final String KEY_PERIODIC_BLUETOOTH;
+  @NonNull private final String KEY_PERIODIC_SYNC;
 
   @Inject ManagerSettingsInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
@@ -38,18 +42,38 @@ final class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
     KEY_MANAGE_DATA = appContext.getString(R.string.manage_data_key);
     KEY_MANAGE_BLUETOOTH = appContext.getString(R.string.manage_bluetooth_key);
     KEY_MANAGE_SYNC = appContext.getString(R.string.manage_sync_key);
+    KEY_PERIODIC_WIFI = appContext.getString(R.string.periodic_wifi_key);
+    KEY_PERIODIC_DATA = appContext.getString(R.string.periodic_data_key);
+    KEY_PERIODIC_BLUETOOTH = appContext.getString(R.string.periodic_bluetooth_key);
+    KEY_PERIODIC_SYNC = appContext.getString(R.string.periodic_sync_key);
   }
 
-  @Override public boolean isCustomTime(@NonNull String key) {
+  @Override public boolean isCustomDelayTime(@NonNull String key) {
     boolean custom;
     if (key.equals(KEY_MANAGE_WIFI)) {
-      custom = preferences.isCustomTimeWifi();
+      custom = preferences.isCustomDelayTimeWifi();
     } else if (key.equals(KEY_MANAGE_DATA)) {
-      custom = preferences.isCustomTimeData();
+      custom = preferences.isCustomDelayTimeData();
     } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
-      custom = preferences.isCustomTimeBluetooth();
+      custom = preferences.isCustomDelayTimeBluetooth();
     } else if (key.equals(KEY_MANAGE_SYNC)) {
-      custom = preferences.isCustomTimeSync();
+      custom = preferences.isCustomDelayTimeSync();
+    } else {
+      throw new IllegalStateException("Invalid key");
+    }
+    return custom;
+  }
+
+  @Override public boolean isCustomPeriodicDisableTime(@NonNull String key) {
+    boolean custom;
+    if (key.equals(KEY_PERIODIC_WIFI)) {
+      custom = preferences.isCustomPeriodicDisableTimeWifi();
+    } else if (key.equals(KEY_PERIODIC_DATA)) {
+      custom = preferences.isCustomPeriodicDisableTimeData();
+    } else if (key.equals(KEY_PERIODIC_BLUETOOTH)) {
+      custom = preferences.isCustomPeriodicDisableTimeBluetooth();
+    } else if (key.equals(KEY_PERIODIC_SYNC)) {
+      custom = preferences.isCustomPeriodicDisableTimeSync();
     } else {
       throw new IllegalStateException("Invalid key");
     }

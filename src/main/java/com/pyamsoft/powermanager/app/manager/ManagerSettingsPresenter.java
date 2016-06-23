@@ -30,23 +30,41 @@ public final class ManagerSettingsPresenter
     this.interactor = interactor;
   }
 
-  public final void setCustomTimeStateFromPreference(@NonNull String key, boolean isManaged) {
-    final boolean customTime = interactor.isCustomTime(key);
-    updateCustomTime(customTime && isManaged);
+  public final void setCustomDelayTimeStateFromPreference(@NonNull String key, boolean isManaged) {
+    final boolean customTime = interactor.isCustomDelayTime(key);
+    updateCustomDelayTimeView(customTime && isManaged);
   }
 
-  public final void updateCustomTime(boolean newState) {
+  public final void updateCustomDelayTimeView(boolean newState) {
     if (newState) {
-      getView().enableCustomTime();
+      getView().enableCustomDelayTime();
     } else {
-      getView().disableCustomTime();
+      getView().disableCustomDelayTime();
+    }
+  }
+
+  public final void setCustomPeriodicDisableTimeStateFromPreference(@NonNull String key,
+      boolean isPeriodic) {
+    final boolean customTime = interactor.isCustomPeriodicDisableTime(key);
+    updateCustomPeriodicDisableTimeView(customTime && isPeriodic);
+  }
+
+  public final void updateCustomPeriodicDisableTimeView(boolean newState) {
+    if (newState) {
+      getView().enablePeriodicDisableTime();
+    } else {
+      getView().disablePeriodicDisableTime();
     }
   }
 
   public interface ManagerSettingsView {
 
-    void enableCustomTime();
+    void enableCustomDelayTime();
 
-    void disableCustomTime();
+    void disableCustomDelayTime();
+
+    void enablePeriodicDisableTime();
+
+    void disablePeriodicDisableTime();
   }
 }

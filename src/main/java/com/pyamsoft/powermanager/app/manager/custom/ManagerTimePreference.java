@@ -50,7 +50,7 @@ public abstract class ManagerTimePreference extends Preference
     super(context, attrs, defStyleAttr, defStyleRes);
     handler = new Handler();
 
-    setLayoutResource(R.layout.layout_manage_delay_time);
+    setLayoutResource(R.layout.preference_custom_edittext_time);
   }
 
   public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {

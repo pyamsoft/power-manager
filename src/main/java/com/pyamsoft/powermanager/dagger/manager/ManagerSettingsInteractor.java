@@ -21,5 +21,7 @@ import android.support.annotation.NonNull;
 
 public interface ManagerSettingsInteractor {
 
-  @CheckResult boolean isCustomTime(@NonNull String key);
+  @CheckResult boolean isCustomDelayTime(@NonNull String key);
+
+  @CheckResult boolean isCustomPeriodicDisableTime(@NonNull String key);
 }
