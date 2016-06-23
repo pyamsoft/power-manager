@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.settings;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,38 +22,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import timber.log.Timber;
 
-public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter {
+public final class SettingsPagerAdapter extends FragmentStatePagerAdapter {
 
-  @NonNull private final Fragment settingsFragment;
-  @NonNull private final String type;
-
-  public ManagerSettingsPagerAdapter(@NonNull FragmentManager fm, @NonNull String type) {
+  public SettingsPagerAdapter(@NonNull FragmentManager fm) {
     super(fm);
-    Timber.d("new ManagerSettingsPagerAdapter");
-    settingsFragment = ManagerSettingsFragment.newInstance(type);
-    this.type = type;
-  }
-
-  @NonNull public final String getType() {
-    return type;
+    Timber.d("new SettingsPagerAdapter");
   }
 
   @NonNull @Override public Fragment getItem(int position) {
-    Fragment fragment;
-    switch (position) {
-      case 0:
-        fragment = settingsFragment;
-        break;
-      case 1:
-        fragment = new Fragment();
-        break;
-      default:
-        throw new IllegalStateException("Fragment index is OOB");
-    }
-    return fragment;
+    return new SettingsFragment();
   }
 
   @Override public int getCount() {
-    return 2;
+    return 1;
   }
 }

@@ -17,10 +17,8 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.PreferenceManager;
@@ -32,10 +30,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsPagerAdapter;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -43,6 +41,7 @@ import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
@@ -71,10 +70,14 @@ public class MainActivity extends DonationActivityBase
     PagerAdapter adapter;
     final String storedType = adapterDataHolderFragment.pop(0);
     if (storedType == null) {
+      Timber.d("No stored fragment, load overview");
       adapter = new OverviewPagerAdapter(getSupportFragmentManager());
+    } else if (storedType.equals(SettingsFragment.TAG)) {
+      Timber.d("Stored fragment exists, is settings fragment");
+      adapter = new SettingsPagerAdapter(getSupportFragmentManager());
     } else {
-      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(),
-          getFragmentFromType(storedType), storedType);
+      Timber.d("Stored fragment exists, is manager fragment");
+      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
     }
     viewPager.setAdapter(adapter);
     setActionBarUpEnabled(storedType != null);
@@ -88,7 +91,12 @@ public class MainActivity extends DonationActivityBase
         final ManagerSettingsPagerAdapter settingsPagerAdapter =
             (ManagerSettingsPagerAdapter) pagerAdapter;
         type = settingsPagerAdapter.getType();
+        Timber.d("Save type of manager fragment for later");
+      } else if (pagerAdapter instanceof SettingsPagerAdapter) {
+        type = SettingsFragment.TAG;
+        Timber.d("Save type of settings fragment for later");
       } else {
+        Timber.d("Fragment is overview");
         type = null;
       }
       adapterDataHolderFragment.put(0, type);
@@ -137,8 +145,10 @@ public class MainActivity extends DonationActivityBase
   @Override public void onBackPressed() {
     final PagerAdapter adapter = viewPager.getAdapter();
     if (adapter instanceof OverviewPagerAdapter) {
+      Timber.d("Current pager holds overview, do super onBackPressed");
       super.onBackPressed();
     } else {
+      Timber.d("Current pager does not hold overview, pop");
       viewPager.setAdapter(new OverviewPagerAdapter(getSupportFragmentManager()));
       setActionBarUpEnabled(false);
     }
@@ -206,22 +216,16 @@ public class MainActivity extends DonationActivityBase
     return BuildConfig.VERSION_CODE;
   }
 
-  @NonNull @CheckResult Fragment getFragmentFromType(@NonNull String type) {
-    Fragment fragment;
+  @Override public void loadFragmentFromOverview(@NonNull String type) {
+    PagerAdapter adapter;
     switch (type) {
       case SettingsFragment.TAG:
-        fragment = new SettingsFragment();
+        adapter = new SettingsPagerAdapter(getSupportFragmentManager());
         break;
       default:
-        fragment = ManagerSettingsFragment.newInstance(type);
+        adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), type);
     }
-    return fragment;
-  }
-
-  @Override public void loadFragmentFromOverview(@NonNull String type) {
-    final Fragment fragment = getFragmentFromType(type);
-    viewPager.setAdapter(
-        new ManagerSettingsPagerAdapter(getSupportFragmentManager(), fragment, type));
+    viewPager.setAdapter(adapter);
     setActionBarUpEnabled(true);
   }
 
