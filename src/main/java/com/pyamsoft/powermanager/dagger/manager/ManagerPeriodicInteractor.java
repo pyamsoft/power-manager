@@ -16,17 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-public interface ManagerSettingsInteractor {
+public interface ManagerPeriodicInteractor extends ManagerSettingsInteractor {
 
-  @CheckResult boolean isManaged(@NonNull String key);
+  @CheckResult boolean isCustomPeriodicDisableTime(@NonNull String key);
 
-  void registerSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key);
-
-  void unregisterSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+  @CheckResult boolean isCustomPeriodicEnableTime(@NonNull String key);
 }

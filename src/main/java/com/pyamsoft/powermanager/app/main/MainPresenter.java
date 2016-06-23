@@ -46,6 +46,7 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
 
     overviewBusSubscription =
         OverviewSelectionBus.get().register().subscribe(overviewSelectionEvent -> {
+          Timber.d("Load fragment %s", overviewSelectionEvent.getType());
           getView().loadFragmentFromOverview(overviewSelectionEvent.getType());
         }, throwable -> {
           Timber.e("onError");

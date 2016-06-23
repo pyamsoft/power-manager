@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class MainPresenterTest {
 
   @Test public void test_busResponse() {
     final MainPresenter presenter = getPresenter();
-    final String type = ManagerSettingsFragment.TYPE_WIFI;
+    final String type = ManagerSettingsPagerAdapter.TYPE_WIFI;
     final MainPresenter.MainView mockMainView = Mockito.mock(MainPresenter.MainView.class);
     Mockito.doAnswer(invocation -> {
       Assert.assertNotNull(invocation.getArguments());
@@ -61,7 +61,7 @@ public class MainPresenterTest {
 
   @Test public void test_busRegister() {
     final MainPresenter presenter = getPresenter();
-    final String type = ManagerSettingsFragment.TYPE_WIFI;
+    final String type = ManagerSettingsPagerAdapter.TYPE_WIFI;
     final MainPresenter.MainView mockMainView = Mockito.mock(MainPresenter.MainView.class);
     Mockito.doAnswer(invocation -> {
       throw new IllegalStateException("This should not be called");
@@ -80,7 +80,7 @@ public class MainPresenterTest {
 
   @Test public void test_busUnregister() {
     final MainPresenter presenter = getPresenter();
-    final String type = ManagerSettingsFragment.TYPE_WIFI;
+    final String type = ManagerSettingsPagerAdapter.TYPE_WIFI;
     final MainPresenter.MainView mockMainView = Mockito.mock(MainPresenter.MainView.class);
     Mockito.doAnswer(invocation -> {
       throw new IllegalStateException("This should not be called");

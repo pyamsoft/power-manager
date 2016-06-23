@@ -28,6 +28,11 @@
         android:title="@string/manage_sync_title"
         />
 
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:title="Sync Delay">
+
     <ListPreference
         android:defaultValue="@string/sync_time_default"
         android:dependency="@string/manage_sync_key"
@@ -40,45 +45,6 @@
 
     <com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference
         android:key="@string/sync_time_key"/>
-
-  </PreferenceCategory>
-
-  <PreferenceCategory
-      android:title="Periodic Sync Settings">
-
-    <CheckBoxPreference
-        android:defaultValue="@bool/periodic_sync_default"
-        android:dependency="@string/manage_sync_key"
-        android:key="@string/periodic_sync_key"
-        android:summary="@string/periodic_sync_summary"
-        android:title="@string/periodic_sync_title"
-        />
-
-    <ListPreference
-        android:defaultValue="@string/periodic_sync_disable_default"
-        android:dependency="@string/periodic_sync_key"
-        android:entries="@array/preset_periodic_sync_names"
-        android:entryValues="@array/preset_periodic_sync_values"
-        android:key="@string/preset_periodic_sync_disable_key"
-        android:summary="@string/periodic_sync_disable_summary"
-        android:title="@string/periodic_sync_disable_title"
-        />
-
-    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
-        android:key="@string/periodic_sync_disable_key"/>
-
-    <ListPreference
-        android:defaultValue="@string/periodic_sync_enable_default"
-        android:dependency="@string/periodic_sync_key"
-        android:entries="@array/preset_periodic_sync_names"
-        android:entryValues="@array/preset_periodic_sync_values"
-        android:key="@string/preset_periodic_sync_enable_key"
-        android:summary="@string/periodic_sync_enable_summary"
-        android:title="@string/periodic_sync_enable_title"
-        />
-
-    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
-        android:key="@string/periodic_sync_enable_key"/>
 
   </PreferenceCategory>
 

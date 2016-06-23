@@ -20,69 +20,14 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
-import javax.inject.Inject;
 
-public final class ManagerSettingsPresenter
-    extends Presenter<ManagerSettingsPresenter.ManagerSettingsView> {
+abstract class ManagerSettingsPresenter<I extends ManagerSettingsPresenter.ManagerSettingsView>
+    extends Presenter<I> {
 
   @NonNull private final ManagerSettingsInteractor interactor;
 
-  @Inject public ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor) {
+  protected ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor) {
     this.interactor = interactor;
-  }
-
-  public final void setManagedFromPreference(@NonNull String key) {
-    final boolean enabled = interactor.isManaged(key);
-    if (enabled) {
-      getView().enableManaged();
-    } else {
-      getView().disableManaged();
-    }
-  }
-
-  public final void setCustomDelayTimeStateFromPreference(@NonNull String key, boolean isManaged) {
-    final boolean customTime = interactor.isCustomDelayTime(key);
-    updateCustomDelayTimeView(customTime && isManaged);
-  }
-
-  public final void updateCustomDelayTimeView(boolean newState) {
-    if (newState) {
-      getView().enableCustomDelayTime();
-    } else {
-      getView().disableCustomDelayTime();
-    }
-  }
-
-  public final void setCustomPeriodicDisableTimeStateFromPreference(@NonNull String key,
-      boolean isPeriodic) {
-    final boolean customTime = interactor.isCustomPeriodicDisableTime(key);
-    updateCustomPeriodicDisableTimeView(customTime && isPeriodic);
-  }
-
-  public final void updateCustomPeriodicDisableTimeView(boolean newState) {
-    if (newState) {
-      getView().enablePeriodicDisableTime();
-    } else {
-      getView().disablePeriodicDisableTime();
-    }
-  }
-
-  public final void setCustomPeriodicEnableTimeStateFromPreference(@NonNull String key,
-      boolean isPeriodic) {
-    final boolean customTime = interactor.isCustomPeriodicEnableTime(key);
-    updateCustomPeriodicEnableTimeView(customTime && isPeriodic);
-  }
-
-  public final void updateCustomPeriodicEnableTimeView(boolean newState) {
-    if (newState) {
-      getView().enablePeriodicEnableTime();
-    } else {
-      getView().disablePeriodicEnableTime();
-    }
-  }
-
-  public final void updateNotificationOnManageStateChange() {
-    interactor.updateNotificationOnManageStateChange();
   }
 
   public final void registerSharedPreferenceChangeListener(
@@ -97,20 +42,5 @@ public final class ManagerSettingsPresenter
 
   public interface ManagerSettingsView {
 
-    void enableManaged();
-
-    void disableManaged();
-
-    void enableCustomDelayTime();
-
-    void disableCustomDelayTime();
-
-    void enablePeriodicDisableTime();
-
-    void disablePeriodicDisableTime();
-
-    void enablePeriodicEnableTime();
-
-    void disablePeriodicEnableTime();
   }
 }

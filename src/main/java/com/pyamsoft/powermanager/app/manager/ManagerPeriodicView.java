@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.app.manager;
 
-import android.content.SharedPreferences;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+public interface ManagerPeriodicView extends ManagerSettingsPresenter.ManagerSettingsView {
 
-public interface ManagerSettingsInteractor {
+  void enablePeriodic();
 
-  @CheckResult boolean isManaged(@NonNull String key);
+  void disablePeriodic();
 
-  void registerSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key);
+  void enablePeriodicDisableTime();
 
-  void unregisterSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+  void disablePeriodicDisableTime();
+
+  void enablePeriodicEnableTime();
+
+  void disablePeriodicEnableTime();
 }

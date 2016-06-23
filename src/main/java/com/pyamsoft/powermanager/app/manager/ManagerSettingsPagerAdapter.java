@@ -24,13 +24,20 @@ import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter {
 
-  @NonNull private final Fragment settingsFragment;
+  @NonNull public static final String TYPE_WIFI = "wifi";
+  @NonNull public static final String TYPE_DATA = "data";
+  @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
+  @NonNull public static final String TYPE_SYNC = "sync";
+  @NonNull static final String FRAGMENT_TYPE = "fragment_type";
+  @NonNull private final Fragment manageFragment;
+  @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
 
   public ManagerSettingsPagerAdapter(@NonNull FragmentManager fm, @NonNull String type) {
     super(fm);
     Timber.d("new ManagerSettingsPagerAdapter");
-    settingsFragment = ManagerSettingsFragment.newInstance(type);
+    manageFragment = ManagerManageFragment.newInstance(type);
+    periodicFragment = ManagerPeriodicFragment.newInstance(type);
     this.type = type;
   }
 
@@ -42,10 +49,10 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     Fragment fragment;
     switch (position) {
       case 0:
-        fragment = settingsFragment;
+        fragment = manageFragment;
         break;
       case 1:
-        fragment = new Fragment();
+        fragment = periodicFragment;
         break;
       default:
         throw new IllegalStateException("Fragment index is OOB");

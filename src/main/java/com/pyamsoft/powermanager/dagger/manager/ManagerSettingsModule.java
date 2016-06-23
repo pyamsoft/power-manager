@@ -17,20 +17,31 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
+import com.pyamsoft.powermanager.app.manager.ManagerManagePresenter;
+import com.pyamsoft.powermanager.app.manager.ManagerPeriodicPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 
 @Module public class ManagerSettingsModule {
 
-  @ActivityScope @Provides ManagerSettingsPresenter provideManagerSettingsPresenter(
-      @NonNull ManagerSettingsInteractor interactor) {
-    return new ManagerSettingsPresenter(interactor);
+  @ActivityScope @Provides ManagerManagePresenter provideManagerManagePresenter(
+      @NonNull ManagerManageInteractor interactor) {
+    return new ManagerManagePresenter(interactor);
   }
 
-  @ActivityScope @Provides ManagerSettingsInteractor provideManagerSettingsInteractor(
-      @NonNull ManagerSettingsInteractorImpl presenter) {
-    return presenter;
+  @ActivityScope @Provides ManagerManageInteractor provideManagerManageInteractor(
+      @NonNull ManagerManageInteractorImpl interactor) {
+    return interactor;
+  }
+
+  @ActivityScope @Provides ManagerPeriodicPresenter provideManagerPeriodicPresenter(
+      @NonNull ManagerPeriodicInteractor interactor) {
+    return new ManagerPeriodicPresenter(interactor);
+  }
+
+  @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(
+      @NonNull ManagerPeriodicInteractorImpl interactor) {
+    return interactor;
   }
 }

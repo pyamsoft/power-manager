@@ -31,7 +31,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsFragment;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
@@ -61,25 +61,25 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
         title = "WiFi";
         image = R.drawable.ic_network_wifi_24dp;
         background = R.color.green500;
-        type = ManagerSettingsFragment.TYPE_WIFI;
+        type = ManagerSettingsPagerAdapter.TYPE_WIFI;
         break;
       case POSITION_DATA:
         title = "Data";
         image = R.drawable.ic_network_cell_24dp;
         background = R.color.orange500;
-        type = ManagerSettingsFragment.TYPE_DATA;
+        type = ManagerSettingsPagerAdapter.TYPE_DATA;
         break;
       case POSITION_BLUETOOTH:
         title = "Bluetooth";
         image = R.drawable.ic_bluetooth_24dp;
         background = R.color.blue500;
-        type = ManagerSettingsFragment.TYPE_BLUETOOTH;
+        type = ManagerSettingsPagerAdapter.TYPE_BLUETOOTH;
         break;
       case POSITION_SYNC:
         title = "Sync";
         image = R.drawable.ic_sync_24dp;
         background = R.color.yellow500;
-        type = ManagerSettingsFragment.TYPE_SYNC;
+        type = ManagerSettingsPagerAdapter.TYPE_SYNC;
         break;
       case POSITION_SETTINGS:
         title = "Settings";
