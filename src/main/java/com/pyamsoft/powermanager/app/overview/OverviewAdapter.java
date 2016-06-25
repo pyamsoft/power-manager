@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 
@@ -42,8 +43,9 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
   public static final int POSITION_DATA = 1;
   public static final int POSITION_BLUETOOTH = 2;
   public static final int POSITION_SYNC = 3;
-  public static final int POSITION_SETTINGS = 4;
-  private static final int NUMBER_ITEMS = 5;
+  public static final int POSITION_TRIGGERS = 4;
+  public static final int POSITION_SETTINGS = 5;
+  private static final int NUMBER_ITEMS = 6;
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final View view = LayoutInflater.from(parent.getContext())
@@ -80,6 +82,12 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
         image = R.drawable.ic_sync_24dp;
         background = R.color.yellow500;
         type = ManagerSettingsPagerAdapter.TYPE_SYNC;
+        break;
+      case POSITION_TRIGGERS:
+        title = "Power Triggers";
+        image = R.drawable.ic_settings_24dp;
+        background = R.color.red500;
+        type = PowerTriggerFragment.TAG;
         break;
       case POSITION_SETTINGS:
         title = "Settings";

@@ -38,6 +38,8 @@ import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsPagerAdapter;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -89,6 +91,9 @@ public class MainActivity extends DonationActivityBase
       } else if (pagerAdapter instanceof SettingsPagerAdapter) {
         type = SettingsFragment.TAG;
         Timber.d("Save type of settings fragment for later");
+      } else if (pagerAdapter instanceof PowerTriggerPagerAdapter) {
+        type = PowerTriggerFragment.TAG;
+        Timber.d("Save type of power triggers fragment for later");
       } else {
         Timber.d("Fragment is overview");
         type = null;
@@ -108,6 +113,9 @@ public class MainActivity extends DonationActivityBase
     } else if (storedType.equals(SettingsFragment.TAG)) {
       Timber.d("Stored fragment exists, is settings fragment");
       adapter = new SettingsPagerAdapter(getSupportFragmentManager());
+    } else if (storedType.equals(PowerTriggerFragment.TAG)) {
+      Timber.d("Stored fragment exists, is power trigger fragment");
+      adapter = new PowerTriggerPagerAdapter(getSupportFragmentManager());
     } else {
       Timber.d("Stored fragment exists, is manager fragment");
       adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
@@ -123,8 +131,9 @@ public class MainActivity extends DonationActivityBase
       Timber.d("No stored fragment, no tabs");
       pager = null;
       visibility = View.GONE;
-    } else if (storedType.equals(SettingsFragment.TAG)) {
-      Timber.d("Stored fragment exists, is settings fragment. no tabs");
+    } else if (storedType.equals(SettingsFragment.TAG) || storedType.equals(
+        PowerTriggerFragment.TAG)) {
+      Timber.d("Stored fragment exists, is settings fragment or power trigger. no tabs");
       pager = null;
       visibility = View.GONE;
     } else {
@@ -258,6 +267,10 @@ public class MainActivity extends DonationActivityBase
     switch (type) {
       case SettingsFragment.TAG:
         adapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        showTabs = false;
+        break;
+      case PowerTriggerFragment.TAG:
+        adapter = new PowerTriggerPagerAdapter(getSupportFragmentManager());
         showTabs = false;
         break;
       default:
