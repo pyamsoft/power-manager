@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.trigger;
+package com.pyamsoft.powermanager.app.sql;
 
 import android.content.Context;
 import android.support.annotation.CheckResult;

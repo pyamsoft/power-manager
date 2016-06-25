@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.trigger;
+package com.pyamsoft.powermanager.model.sql;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
