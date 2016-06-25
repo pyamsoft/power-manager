@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.settings;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.google.auto.value.AutoValue;
 
-public interface SettingsInteractor {
+@AutoValue public abstract class ConfirmationEvent {
 
-  @CheckResult @NonNull Observable<Boolean> clearDatabase();
+  @CheckResult @NonNull public static ConfirmationEvent create(int type) {
+    return new AutoValue_ConfirmationEvent(type);
+  }
 
-  @CheckResult @NonNull Observable<Boolean> clearAll();
+  public abstract int type();
 }

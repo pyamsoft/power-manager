@@ -16,23 +16,38 @@
 
 package com.pyamsoft.powermanager.dagger.settings;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerOpenHelper;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 final class SettingsInteractorImpl implements SettingsInteractor {
 
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final Context appContext;
 
-  @Inject SettingsInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject public SettingsInteractorImpl(final @NonNull Context context,
+      final @NonNull PowerManagerPreferences preferences) {
+    appContext = context.getApplicationContext();
     this.preferences = preferences;
   }
 
-  @NonNull @Override public Observable<Boolean> clearAll() {
+  @NonNull @Override public Observable<Boolean> clearDatabase() {
     return Observable.defer(() -> {
-      preferences.clearAll();
+      Timber.d("Clear database of all entries");
+      PowerTriggerOpenHelper.deleteAll(appContext);
       return Observable.just(true);
     });
+  }
+
+  @NonNull @Override public Observable<Boolean> clearAll() {
+    return Observable.zip(clearDatabase(), Observable.defer(() -> {
+      Timber.d("Clear all preferences");
+      preferences.clearAll();
+      return Observable.just(true);
+    }), (aBoolean, aBoolean2) -> true);
   }
 }

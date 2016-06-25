@@ -28,6 +28,8 @@ import timber.log.Timber;
 
 public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSettingsView> {
 
+  public static final int CONFIRM_DATABASE = 0;
+  public static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
@@ -58,7 +60,11 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
   }
 
   public final void clearAll() {
-    getView().showConfirmDialog();
+    getView().showConfirmDialog(CONFIRM_ALL);
+  }
+
+  public final void clearDatabase() {
+    getView().showConfirmDialog(CONFIRM_DATABASE);
   }
 
   void unsubscribeConfirm() {
@@ -76,16 +82,34 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
   void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
-        ConfirmationDialog.ConfirmationDialogBus.get().register().subscribe(confirmationEvent -> {
-          unsubscribeConfirm();
-          confirmedSubscription = interactor.clearAll()
-              .subscribeOn(ioScheduler)
-              .observeOn(mainScheduler)
-              .subscribe(aBoolean -> {
-                getView().onClearAll();
-              }, throwable -> {
-                Timber.e(throwable, "onError");
-              });
+        ConfirmationDialog.Bus.get().register().subscribe(confirmationEvent -> {
+          switch (confirmationEvent.type()) {
+            case CONFIRM_DATABASE:
+              unsubscribeConfirm();
+              confirmedSubscription = interactor.clearDatabase()
+                  .subscribeOn(ioScheduler)
+                  .observeOn(mainScheduler)
+                  .subscribe(aBoolean -> {
+                    getView().onClearDatabase();
+                  }, throwable -> {
+                    Timber.e(throwable, "onError");
+                  });
+              break;
+            case CONFIRM_ALL:
+              unsubscribeConfirm();
+              confirmedSubscription = interactor.clearAll()
+                  .subscribeOn(ioScheduler)
+                  .observeOn(mainScheduler)
+                  .subscribe(aBoolean -> {
+                    getView().onClearAll();
+                  }, throwable -> {
+                    Timber.e(throwable, "onError");
+                  });
+              break;
+            default:
+              throw new IllegalStateException(
+                  "Received invalid confirmation event type: " + confirmationEvent.type());
+          }
         }, throwable -> {
           Timber.e(throwable, "onError");
         });
@@ -93,8 +117,10 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
 
   public interface MainSettingsView {
 
-    void showConfirmDialog();
+    void showConfirmDialog(int type);
 
     void onClearAll();
+
+    void onClearDatabase();
   }
 }

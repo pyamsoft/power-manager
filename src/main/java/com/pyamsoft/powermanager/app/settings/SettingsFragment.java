@@ -57,6 +57,13 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       return false;
     });
 
+    final Preference clearDb = findPreference(getString(R.string.clear_db_key));
+    clearDb.setOnPreferenceClickListener(preference -> {
+      Timber.d("Clear DB onClick");
+      presenter.clearDatabase();
+      return true;
+    });
+
     final Preference resetAll = findPreference(getString(R.string.clear_all_key));
     resetAll.setOnPreferenceClickListener(preference -> {
       Timber.d("Reset settings onClick");
@@ -104,14 +111,18 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     presenter.onPause();
   }
 
-  @Override public void showConfirmDialog() {
-    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new ConfirmationDialog(),
-        "confirm");
+  @Override public void showConfirmDialog(int type) {
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+        ConfirmationDialog.newInstance(type), "confirm");
   }
 
   @Override public void onClearAll() {
     getContext().getApplicationContext()
         .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
     android.os.Process.killProcess(android.os.Process.myPid());
+  }
+
+  @Override public void onClearDatabase() {
+
   }
 }

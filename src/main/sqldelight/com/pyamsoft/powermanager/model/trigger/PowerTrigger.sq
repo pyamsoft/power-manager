@@ -1,0 +1,26 @@
+-- Create the table for PowerTrigger objects
+CREATE TABLE power_triggers (
+  percent INTEGER NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  toggleWifi INTEGER AS Boolean DEFAULT 0,
+  toggleData INTEGER AS Boolean DEFAULT 0,
+  toggleBluetooth INTEGER AS Boolean DEFAULT 0,
+  toggleSync INTEGER AS Boolean DEFAULT 0,
+  enableWifi INTEGER AS Boolean DEFAULT 0,
+  enableData INTEGER AS Boolean DEFAULT 0,
+  enableBluetooth INTEGER AS Boolean DEFAULT 0,
+  enableSync INTEGER AS Boolean DEFAULT 0
+);
+
+-- Get all entries in the table
+all_entries:
+SELECT *
+FROM power_triggers;
+
+-- Get all entries with the given percent
+with_percent:
+SELECT *
+FROM power_triggers
+WHERE percent = ?
+LIMIT 1;
+
