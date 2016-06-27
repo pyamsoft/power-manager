@@ -52,7 +52,7 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     final PendingIntent pendingIntent =
         PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
     final RemoteViews customRemoteView = createCustomRemoteViews();
-    final Notification notification = new NotificationCompat.Builder(appContext).setContentTitle(
+    return new NotificationCompat.Builder(appContext).setContentTitle(
         appContext.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(ContextCompat.getColor(appContext, R.color.amber500))
@@ -63,10 +63,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         .setNumber(0)
         .setContentIntent(pendingIntent)
         .setPriority(preferences.getNotificationPriority())
+        .setCustomContentView(customRemoteView)
         .build();
-    notification.contentView = customRemoteView;
-    notification.bigContentView = customRemoteView;
-    return notification;
   }
 
   @CheckResult @NonNull final RemoteViews createCustomRemoteViews() {
