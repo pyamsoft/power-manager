@@ -19,10 +19,11 @@ package com.pyamsoft.powermanager.dagger.service;
 import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 public interface ForegroundInteractor {
 
-  @CheckResult @NonNull Notification createNotification();
+  @CheckResult @NonNull Observable<Notification> createNotification();
 
   void updateWearablePreferenceStatus();
 

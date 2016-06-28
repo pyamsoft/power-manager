@@ -18,21 +18,51 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.service.ForegroundInteractor;
-import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public final class ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
+public final class ForegroundPresenter
+    extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider> {
 
   @NonNull private final ForegroundInteractor interactor;
 
-  @Inject public ForegroundPresenter(@NonNull ForegroundInteractor interactor) {
+  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
+
+  @Inject public ForegroundPresenter(@NonNull ForegroundInteractor interactor,
+      @NonNull @Named("main") Scheduler mainScheduler,
+      @NonNull @Named("io") Scheduler ioScheduler) {
+    super(mainScheduler, ioScheduler);
     this.interactor = interactor;
   }
 
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubNotification();
+  }
+
+  private void unsubNotification() {
+    if (!notificationSubscription.isUnsubscribed()) {
+      notificationSubscription.unsubscribe();
+    }
+  }
+
   public final void onStartNotification() {
-    final Notification notification = interactor.createNotification();
-    getView().startNotificationInForeground(notification);
+    unsubNotification();
+    notificationSubscription = interactor.createNotification()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(notification -> {
+          getView().startNotificationInForeground(notification);
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO handle error
+        });
   }
 
   public final void updateWearableAction() {

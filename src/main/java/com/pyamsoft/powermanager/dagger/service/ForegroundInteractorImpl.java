@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
+import rx.Observable;
 import timber.log.Timber;
 
 final class ForegroundInteractorImpl implements ForegroundInteractor {
@@ -46,25 +47,29 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     this.appContext = context.getApplicationContext();
   }
 
-  @NonNull @Override public Notification createNotification() {
-    final Intent intent =
-        new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    final PendingIntent pendingIntent =
-        PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
-    final RemoteViews customRemoteView = createCustomRemoteViews();
-    return new NotificationCompat.Builder(appContext).setContentTitle(
-        appContext.getString(R.string.app_name))
-        .setSmallIcon(R.drawable.ic_notification)
-        .setColor(ContextCompat.getColor(appContext, R.color.amber500))
-        .setContentText("Managing Power...")
-        .setWhen(0)
-        .setOngoing(true)
-        .setAutoCancel(false)
-        .setNumber(0)
-        .setContentIntent(pendingIntent)
-        .setPriority(preferences.getNotificationPriority())
-        .setCustomContentView(customRemoteView)
-        .build();
+  @NonNull @Override public Observable<Notification> createNotification() {
+    return Observable.defer(() -> {
+      final Intent intent =
+          new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      final PendingIntent pendingIntent =
+          PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
+      final RemoteViews customRemoteView = createCustomRemoteViews();
+      final Notification notification = new NotificationCompat.Builder(appContext).setContentTitle(
+          appContext.getString(R.string.app_name))
+          .setSmallIcon(R.drawable.ic_notification)
+          .setColor(ContextCompat.getColor(appContext, R.color.amber500))
+          .setContentText("Managing Power...")
+          .setWhen(0)
+          .setOngoing(true)
+          .setAutoCancel(false)
+          .setNumber(0)
+          .setContentIntent(pendingIntent)
+          .setPriority(preferences.getNotificationPriority())
+          .setCustomContentView(customRemoteView)
+          .build();
+
+      return Observable.just(notification);
+    });
   }
 
   @CheckResult @NonNull final RemoteViews createCustomRemoteViews() {
