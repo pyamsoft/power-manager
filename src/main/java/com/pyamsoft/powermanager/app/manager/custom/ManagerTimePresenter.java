@@ -17,10 +17,18 @@
 package com.pyamsoft.powermanager.app.manager.custom;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import javax.inject.Named;
+import rx.Scheduler;
 import timber.log.Timber;
 
-public abstract class ManagerTimePresenter extends Presenter<ManagerTimePresenter.TimeView> {
+public abstract class ManagerTimePresenter
+    extends SchedulerPresenter<ManagerTimePresenter.TimeView> {
+
+  protected ManagerTimePresenter(@NonNull @Named("main") Scheduler observeScheduler,
+      @NonNull @Named("io") Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
+  }
 
   protected abstract void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary);

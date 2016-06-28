@@ -18,10 +18,11 @@ package com.pyamsoft.powermanager.dagger.manager.custom;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 interface ManagerPeriodicInteractor {
 
   void setPeriodicTime(@NonNull String key, long time);
 
-  @CheckResult long getPeriodicTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Long> getPeriodicTime(@NonNull String key);
 }

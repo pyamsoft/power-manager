@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
+import rx.Observable;
 
 final class ManagerDelayInteractorImpl implements ManagerDelayInteractor {
 
@@ -54,19 +55,21 @@ final class ManagerDelayInteractorImpl implements ManagerDelayInteractor {
     }
   }
 
-  @Override public long getDelayTime(@NonNull String key) {
-    long time;
-    if (key.equals(KEY_DELAY_WIFI)) {
-      time = preferences.getWifiDelay();
-    } else if (key.equals(KEY_DELAY_DATA)) {
-      time = preferences.getDataDelay();
-    } else if (key.equals(KEY_DELAY_BLUETOOTH)) {
-      time = preferences.getBluetoothDelay();
-    } else if (key.equals(KEY_DELAY_SYNC)) {
-      time = preferences.getMasterSyncDelay();
-    } else {
-      throw new IllegalStateException("Invalid KEY: " + key);
-    }
-    return time;
+  @Override @NonNull public Observable<Long> getDelayTime(@NonNull String key) {
+    return Observable.defer(() -> {
+      long time;
+      if (key.equals(KEY_DELAY_WIFI)) {
+        time = preferences.getWifiDelay();
+      } else if (key.equals(KEY_DELAY_DATA)) {
+        time = preferences.getDataDelay();
+      } else if (key.equals(KEY_DELAY_BLUETOOTH)) {
+        time = preferences.getBluetoothDelay();
+      } else if (key.equals(KEY_DELAY_SYNC)) {
+        time = preferences.getMasterSyncDelay();
+      } else {
+        throw new IllegalStateException("Invalid KEY: " + key);
+      }
+      return Observable.just(time);
+    });
   }
 }

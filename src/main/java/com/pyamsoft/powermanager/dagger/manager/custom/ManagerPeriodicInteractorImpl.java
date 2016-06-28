@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
+import rx.Observable;
 
 final class ManagerPeriodicInteractorImpl implements ManagerPeriodicInteractor {
 
@@ -70,27 +71,29 @@ final class ManagerPeriodicInteractorImpl implements ManagerPeriodicInteractor {
     }
   }
 
-  @Override public long getPeriodicTime(@NonNull String key) {
-    long time;
-    if (key.equals(KEY_DISABLE_WIFI)) {
-      time = preferences.getPeriodicDisableTimeWifi();
-    } else if (key.equals(KEY_DISABLE_DATA)) {
-      time = preferences.getPeriodicDisableTimeData();
-    } else if (key.equals(KEY_DISABLE_BLUETOOTH)) {
-      time = preferences.getPeriodicDisableTimeBluetooth();
-    } else if (key.equals(KEY_DISABLE_SYNC)) {
-      time = preferences.getPeriodicDisableTimeSync();
-    } else if (key.equals(KEY_ENABLE_WIFI)) {
-      time = preferences.getPeriodicEnableTimeWifi();
-    } else if (key.equals(KEY_ENABLE_DATA)) {
-      time = preferences.getPeriodicEnableTimeData();
-    } else if (key.equals(KEY_ENABLE_BLUETOOTH)) {
-      time = preferences.getPeriodicEnableTimeBluetooth();
-    } else if (key.equals(KEY_ENABLE_SYNC)) {
-      time = preferences.getPeriodicEnableTimeSync();
-    } else {
-      throw new IllegalStateException("Invalid KEY: " + key);
-    }
-    return time;
+  @Override @NonNull public Observable<Long> getPeriodicTime(@NonNull String key) {
+    return Observable.defer(() -> {
+      long time;
+      if (key.equals(KEY_DISABLE_WIFI)) {
+        time = preferences.getPeriodicDisableTimeWifi();
+      } else if (key.equals(KEY_DISABLE_DATA)) {
+        time = preferences.getPeriodicDisableTimeData();
+      } else if (key.equals(KEY_DISABLE_BLUETOOTH)) {
+        time = preferences.getPeriodicDisableTimeBluetooth();
+      } else if (key.equals(KEY_DISABLE_SYNC)) {
+        time = preferences.getPeriodicDisableTimeSync();
+      } else if (key.equals(KEY_ENABLE_WIFI)) {
+        time = preferences.getPeriodicEnableTimeWifi();
+      } else if (key.equals(KEY_ENABLE_DATA)) {
+        time = preferences.getPeriodicEnableTimeData();
+      } else if (key.equals(KEY_ENABLE_BLUETOOTH)) {
+        time = preferences.getPeriodicEnableTimeBluetooth();
+      } else if (key.equals(KEY_ENABLE_SYNC)) {
+        time = preferences.getPeriodicEnableTimeSync();
+      } else {
+        throw new IllegalStateException("Invalid KEY: " + key);
+      }
+      return Observable.just(time);
+    });
   }
 }

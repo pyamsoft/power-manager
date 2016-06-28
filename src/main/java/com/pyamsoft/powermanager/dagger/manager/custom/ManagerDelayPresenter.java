@@ -19,23 +19,47 @@ package com.pyamsoft.powermanager.dagger.manager.custom;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerTimePresenter;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 final class ManagerDelayPresenter extends ManagerTimePresenter {
 
   @NonNull private final ManagerDelayInteractor interactor;
+  @NonNull private Subscription delaySubscription = Subscriptions.empty();
 
-  @Inject public ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor) {
+  @Inject public ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    super(mainScheduler, ioScheduler);
     this.interactor = interactor;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubDelay();
+  }
+
+  private void unsubDelay() {
+    if (!delaySubscription.isUnsubscribed()) {
+      delaySubscription.unsubscribe();
+    }
+  }
+
+  @Override public void setTimeFromPreference(@NonNull String key) {
+    delaySubscription = interactor.getDelayTime(key)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(this::setTimeText, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO
+        });
   }
 
   @Override public void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary) {
     interactor.setDelayTime(key, time);
     updateTime(time, updateVisual, updateSummary);
-  }
-
-  @Override public void setTimeFromPreference(@NonNull String key) {
-    final long time = interactor.getDelayTime(key);
-    setTimeText(time);
   }
 }

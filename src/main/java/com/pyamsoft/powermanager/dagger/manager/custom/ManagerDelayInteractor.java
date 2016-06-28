@@ -18,10 +18,11 @@ package com.pyamsoft.powermanager.dagger.manager.custom;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 interface ManagerDelayInteractor {
 
   void setDelayTime(@NonNull String key, long time);
 
-  @CheckResult long getDelayTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Long> getDelayTime(@NonNull String key);
 }
