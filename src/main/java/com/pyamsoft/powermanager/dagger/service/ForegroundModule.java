@@ -20,13 +20,16 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 import javax.inject.Singleton;
+import rx.Scheduler;
 
 @Module public class ForegroundModule {
 
   @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
-      @NonNull ForegroundInteractor interactor) {
-    return new ForegroundPresenter(interactor);
+      @NonNull ForegroundInteractor interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new ForegroundPresenter(interactor, mainScheduler, ioScheduler);
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(
