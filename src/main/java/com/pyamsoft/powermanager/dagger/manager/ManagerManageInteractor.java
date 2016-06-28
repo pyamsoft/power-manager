@@ -18,10 +18,11 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 public interface ManagerManageInteractor extends ManagerSettingsInteractor {
 
-  @CheckResult boolean isCustomDelayTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Boolean> isCustomDelayTime(@NonNull String key);
 
   void updateNotificationOnManageStateChange();
 }

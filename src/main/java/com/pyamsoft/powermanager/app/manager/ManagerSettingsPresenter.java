@@ -18,15 +18,19 @@ package com.pyamsoft.powermanager.app.manager;
 
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
-import com.pyamsoft.pydroid.base.Presenter;
+import javax.inject.Named;
+import rx.Scheduler;
 
 abstract class ManagerSettingsPresenter<I extends ManagerSettingsPresenter.ManagerSettingsView>
-    extends Presenter<I> {
+    extends SchedulerPresenter<I> {
 
   @NonNull private final ManagerSettingsInteractor interactor;
 
-  protected ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor) {
+  protected ManagerSettingsPresenter(@NonNull ManagerSettingsInteractor interactor,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    super(mainScheduler, ioScheduler);
     this.interactor = interactor;
   }
 

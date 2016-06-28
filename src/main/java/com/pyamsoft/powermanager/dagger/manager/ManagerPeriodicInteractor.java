@@ -18,10 +18,11 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 public interface ManagerPeriodicInteractor extends ManagerSettingsInteractor {
 
-  @CheckResult boolean isCustomPeriodicDisableTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Boolean> isCustomPeriodicDisableTime(@NonNull String key);
 
-  @CheckResult boolean isCustomPeriodicEnableTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Boolean> isCustomPeriodicEnableTime(@NonNull String key);
 }

@@ -22,12 +22,15 @@ import com.pyamsoft.powermanager.app.manager.ManagerPeriodicPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
 @Module public class ManagerSettingsModule {
 
   @ActivityScope @Provides ManagerManagePresenter provideManagerManagePresenter(
-      @NonNull ManagerManageInteractor interactor) {
-    return new ManagerManagePresenter(interactor);
+      @NonNull ManagerManageInteractor interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new ManagerManagePresenter(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides ManagerManageInteractor provideManagerManageInteractor(
@@ -36,8 +39,9 @@ import dagger.Provides;
   }
 
   @ActivityScope @Provides ManagerPeriodicPresenter provideManagerPeriodicPresenter(
-      @NonNull ManagerPeriodicInteractor interactor) {
-    return new ManagerPeriodicPresenter(interactor);
+      @NonNull ManagerPeriodicInteractor interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new ManagerPeriodicPresenter(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(

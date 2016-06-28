@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import rx.Observable;
 
 abstract class ManagerSettingsInteractorImpl implements ManagerSettingsInteractor {
 
@@ -55,20 +56,22 @@ abstract class ManagerSettingsInteractorImpl implements ManagerSettingsInteracto
     preferences.unregister(listener);
   }
 
-  @Override public boolean isManaged(@NonNull String key) {
-    boolean managed;
-    if (key.equals(KEY_MANAGE_WIFI)) {
-      managed = preferences.isWifiManaged();
-    } else if (key.equals(KEY_MANAGE_DATA)) {
-      managed = preferences.isDataManaged();
-    } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
-      managed = preferences.isBluetoothManaged();
-    } else if (key.equals(KEY_MANAGE_SYNC)) {
-      managed = preferences.isSyncManaged();
-    } else {
-      throw new IllegalStateException("Invalid key");
-    }
-    return managed;
+  @NonNull @Override public Observable<Boolean> isManaged(@NonNull String key) {
+    return Observable.defer(() -> {
+      boolean managed;
+      if (key.equals(KEY_MANAGE_WIFI)) {
+        managed = preferences.isWifiManaged();
+      } else if (key.equals(KEY_MANAGE_DATA)) {
+        managed = preferences.isDataManaged();
+      } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
+        managed = preferences.isBluetoothManaged();
+      } else if (key.equals(KEY_MANAGE_SYNC)) {
+        managed = preferences.isSyncManaged();
+      } else {
+        throw new IllegalStateException("Invalid key");
+      }
+      return Observable.just(managed);
+    });
   }
 }
 

@@ -19,54 +19,121 @@ package com.pyamsoft.powermanager.app.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.manager.ManagerPeriodicInteractor;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 
 public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<ManagerPeriodicView> {
 
   @NonNull private final ManagerPeriodicInteractor interactor;
+  @NonNull private Subscription managedSubscription = Subscriptions.empty();
+  @NonNull private Subscription customEnableSubscription = Subscriptions.empty();
+  @NonNull private Subscription customDisableSubscription = Subscriptions.empty();
 
-  @Inject public ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor) {
-    super(interactor);
+  @Inject public ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    super(interactor, mainScheduler, ioScheduler);
     this.interactor = interactor;
   }
 
-  public final void setPeriodicFromPreference(@NonNull String key) {
-    final boolean enabled = interactor.isManaged(key);
-    if (enabled) {
-      getView().enablePeriodic();
-    } else {
-      getView().disablePeriodic();
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubManaged();
+    unsubCustomDisable();
+    unsubCustomEnable();
+  }
+
+  private void unsubManaged() {
+    if (!managedSubscription.isUnsubscribed()) {
+      managedSubscription.unsubscribe();
     }
+  }
+
+  private void unsubCustomEnable() {
+    if (!customEnableSubscription.isUnsubscribed()) {
+      customEnableSubscription.unsubscribe();
+    }
+  }
+
+  private void unsubCustomDisable() {
+    if (!customDisableSubscription.isUnsubscribed()) {
+      customDisableSubscription.unsubscribe();
+    }
+  }
+
+  public final void setPeriodicFromPreference(@NonNull String key) {
+    unsubManaged();
+    managedSubscription = interactor.isManaged(key)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(enabled -> {
+          if (enabled) {
+            getView().enablePeriodic();
+          } else {
+            getView().disablePeriodic();
+          }
+        }, throwable -> {
+          // TODO
+        });
   }
 
   public final void setCustomPeriodicDisableTimeStateFromPreference(@NonNull String managedKey,
       @NonNull String key, boolean isPeriodic) {
-    final boolean customTime = interactor.isCustomPeriodicDisableTime(key);
-    updateCustomPeriodicDisableTimeView(managedKey, customTime && isPeriodic);
+    unsubCustomDisable();
+    customDisableSubscription = interactor.isCustomPeriodicDisableTime(key)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(customTime -> {
+          updateCustomPeriodicDisableTimeView(managedKey, customTime && isPeriodic);
+        }, throwable -> {
+          // TODO
+        });
   }
 
   public final void updateCustomPeriodicDisableTimeView(@NonNull String managedKey,
       boolean newState) {
-    final boolean isManaged = interactor.isManaged(managedKey);
-    if (newState && isManaged) {
-      getView().enablePeriodicDisableTime();
-    } else {
-      getView().disablePeriodicDisableTime();
-    }
+    unsubManaged();
+    managedSubscription = interactor.isManaged(managedKey)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(isManaged -> {
+          if (newState && isManaged) {
+            getView().enablePeriodicDisableTime();
+          } else {
+            getView().disablePeriodicDisableTime();
+          }
+        }, throwable -> {
+          // TODO
+        });
   }
 
   public final void setCustomPeriodicEnableTimeStateFromPreference(@NonNull String managedKey,
       @NonNull String key, boolean isPeriodic) {
-    final boolean customTime = interactor.isCustomPeriodicEnableTime(key);
-    updateCustomPeriodicEnableTimeView(managedKey, customTime && isPeriodic);
+    unsubCustomEnable();
+    customEnableSubscription = interactor.isCustomPeriodicEnableTime(key)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(customTime -> {
+          updateCustomPeriodicEnableTimeView(managedKey, customTime && isPeriodic);
+        }, throwable -> {
+          // TODO
+        });
   }
 
   public final void updateCustomPeriodicEnableTimeView(@NonNull String managedKey,
       boolean newState) {
-    final boolean isManaged = interactor.isManaged(managedKey);
-    if (newState && isManaged) {
-      getView().enablePeriodicEnableTime();
-    } else {
-      getView().disablePeriodicEnableTime();
-    }
+    managedSubscription = interactor.isManaged(managedKey)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(isManaged -> {
+          if (newState && isManaged) {
+            getView().enablePeriodicEnableTime();
+          } else {
+            getView().disablePeriodicEnableTime();
+          }
+        }, throwable -> {
+          // TODO
+        });
   }
 }

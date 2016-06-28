@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import javax.inject.Inject;
+import rx.Observable;
 
 final class ManagerManageInteractorImpl extends ManagerSettingsInteractorImpl
     implements ManagerManageInteractor {
@@ -31,20 +32,22 @@ final class ManagerManageInteractorImpl extends ManagerSettingsInteractorImpl
     super(context, preferences);
   }
 
-  @Override public boolean isCustomDelayTime(@NonNull String key) {
-    boolean custom;
-    if (key.equals(KEY_MANAGE_WIFI)) {
-      custom = preferences.isCustomDelayTimeWifi();
-    } else if (key.equals(KEY_MANAGE_DATA)) {
-      custom = preferences.isCustomDelayTimeData();
-    } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
-      custom = preferences.isCustomDelayTimeBluetooth();
-    } else if (key.equals(KEY_MANAGE_SYNC)) {
-      custom = preferences.isCustomDelayTimeSync();
-    } else {
-      throw new IllegalStateException("Invalid key");
-    }
-    return custom;
+  @Override @NonNull public Observable<Boolean> isCustomDelayTime(@NonNull String key) {
+    return Observable.defer(() -> {
+      boolean custom;
+      if (key.equals(KEY_MANAGE_WIFI)) {
+        custom = preferences.isCustomDelayTimeWifi();
+      } else if (key.equals(KEY_MANAGE_DATA)) {
+        custom = preferences.isCustomDelayTimeData();
+      } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
+        custom = preferences.isCustomDelayTimeBluetooth();
+      } else if (key.equals(KEY_MANAGE_SYNC)) {
+        custom = preferences.isCustomDelayTimeSync();
+      } else {
+        throw new IllegalStateException("Invalid key");
+      }
+      return Observable.just(custom);
+    });
   }
 
   @Override public void updateNotificationOnManageStateChange() {
