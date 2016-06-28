@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import rx.Observable;
 
 public interface ManagerInteractor {
 
@@ -25,15 +26,15 @@ public interface ManagerInteractor {
 
   void setOriginalState(boolean enabled);
 
-  @CheckResult boolean isEnabled();
+  @CheckResult @NonNull Observable<Boolean> isEnabled();
 
-  @CheckResult boolean isManaged();
+  @CheckResult @NonNull Observable<Boolean> isManaged();
 
-  @CheckResult boolean isPeriodic();
+  @CheckResult @NonNull Observable<Boolean> isPeriodic();
 
-  @CheckResult long getDelayTime();
+  @CheckResult @NonNull Observable<Long> getDelayTime();
 
-  @CheckResult @NonNull DeviceJob createEnableJob(long delayTime, boolean periodic);
+  @CheckResult @NonNull Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic);
 
-  @CheckResult @NonNull DeviceJob createDisableJob(long delayTime, boolean periodic);
+  @CheckResult @NonNull Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic);
 }

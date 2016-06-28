@@ -23,9 +23,11 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
+import rx.Observable;
 import timber.log.Timber;
 
 final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
@@ -47,39 +49,42 @@ final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
     cancelJobs(TAG);
   }
 
-  @Override public boolean isEnabled() {
-    return androidBluetooth.isEnabled();
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    return Observable.defer(() -> Observable.just(androidBluetooth.isEnabled()));
   }
 
-  @Override public boolean isManaged() {
-    return preferences.isBluetoothManaged();
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return Observable.defer(() -> Observable.just(preferences.isBluetoothManaged()));
   }
 
-  @Override public boolean isPeriodic() {
-    return preferences.isPeriodicBluetooth();
+  @NonNull @Override public Observable<Boolean> isPeriodic() {
+    return Observable.defer(() -> Observable.just(preferences.isPeriodicBluetooth()));
   }
 
-  @Override public long getPeriodicEnableTime() {
-    // TODO
-    return 30;
+  @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicEnableTimeBluetooth()));
   }
 
-  @Override public long getPeriodicDisableTime() {
-    return preferences.getPeriodicDisableTimeBluetooth();
+  @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicDisableTimeBluetooth()));
   }
 
-  @Override public long getDelayTime() {
-    return preferences.getBluetoothDelay();
+  @NonNull @Override public Observable<Long> getDelayTime() {
+    return Observable.defer(() -> Observable.just(preferences.getBluetoothDelay()));
   }
 
-  @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @NonNull @Override
+  public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
-  @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @NonNull @Override
+  public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
   static final class EnableJob extends Job {

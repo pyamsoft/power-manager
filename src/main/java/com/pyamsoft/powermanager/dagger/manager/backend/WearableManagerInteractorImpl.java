@@ -45,40 +45,43 @@ abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
         new GoogleApiClient.Builder(appContext).addApiIfAvailable(Wearable.API).build();
   }
 
-  @Override public boolean isWearableManaged() {
-    return preferences.isWearableManaged();
+  @NonNull @Override public Observable<Boolean> isWearableManaged() {
+    return Observable.defer(() -> Observable.just(preferences.isWearableManaged()));
   }
 
   @NonNull @CheckResult @Override public Observable<Boolean> isWearableConnected() {
-    Timber.d("Check if wearable is connected");
-    final ConnectionResult connectionResult = googleApiClient.blockingConnect(1, TimeUnit.SECONDS);
-    boolean result;
-    if (connectionResult.isSuccess()) {
-      Timber.d("Connect Google APIs");
-      final NodeApi.GetConnectedNodesResult nodesResult =
-          Wearable.NodeApi.getConnectedNodes(googleApiClient).await(1, TimeUnit.SECONDS);
-      Node wearableNode = null;
-      final List<Node> nodes = nodesResult.getNodes();
-      Timber.d("Search node list of size : %d", nodes.size());
-      for (final Node node : nodes) {
-        if (node.isNearby()) {
-          Timber.d("Wearable node: %s %s", node.getDisplayName(), node.getId());
-          wearableNode = node;
-          break;
+    return Observable.defer(() -> {
+      Timber.d("Check if wearable is connected");
+      final ConnectionResult connectionResult =
+          googleApiClient.blockingConnect(1, TimeUnit.SECONDS);
+      boolean result;
+      if (connectionResult.isSuccess()) {
+        Timber.d("Connect Google APIs");
+        final NodeApi.GetConnectedNodesResult nodesResult =
+            Wearable.NodeApi.getConnectedNodes(googleApiClient).await(1, TimeUnit.SECONDS);
+        Node wearableNode = null;
+        final List<Node> nodes = nodesResult.getNodes();
+        Timber.d("Search node list of size : %d", nodes.size());
+        for (final Node node : nodes) {
+          if (node.isNearby()) {
+            Timber.d("Wearable node: %s %s", node.getDisplayName(), node.getId());
+            wearableNode = node;
+            break;
+          }
         }
-      }
 
-      if (wearableNode == null) {
-        Timber.d("No wearable node was found");
-        result = false;
+        if (wearableNode == null) {
+          Timber.d("No wearable node was found");
+          result = false;
+        } else {
+          Timber.d("Found a wearable node");
+          result = true;
+        }
       } else {
-        Timber.d("Found a wearable node");
-        result = true;
+        result = false;
       }
-    } else {
-      result = false;
-    }
-    return Observable.just(result);
+      return Observable.just(result);
+    });
   }
 
   @Override public void disconnectGoogleApis() {

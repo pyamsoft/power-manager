@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
+import rx.Observable;
 import timber.log.Timber;
 
 abstract class ManagerInteractorBase implements ManagerInteractor {
@@ -40,7 +41,7 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     return originalState;
   }
 
-  @CheckResult abstract long getPeriodicEnableTime();
+  @CheckResult @NonNull abstract Observable<Long> getPeriodicEnableTime();
 
-  @CheckResult abstract long getPeriodicDisableTime();
+  @CheckResult @NonNull abstract Observable<Long> getPeriodicDisableTime();
 }

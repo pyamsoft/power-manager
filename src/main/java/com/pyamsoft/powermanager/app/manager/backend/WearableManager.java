@@ -24,11 +24,13 @@ import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 abstract class WearableManager<I extends WearableManager.WearableView> extends Manager<I> {
 
   @NonNull private final WearableManagerInteractor interactor;
+  @NonNull private Subscription managedSubscription = Subscriptions.empty();
 
   WearableManager(@NonNull WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
@@ -37,56 +39,57 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
     this.interactor = interactor;
   }
 
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubManaged();
+  }
+
+  private void unsubManaged() {
+    if (!managedSubscription.isUnsubscribed()) {
+      managedSubscription.unsubscribe();
+    }
+  }
+
   @CheckResult @NonNull final Observable<ManagerInteractor> zipWithWearableManagedState(
       @NonNull Observable<ManagerInteractor> observable) {
-    if (interactor.isManaged() && interactor.isWearableManaged()) {
-      observable = observable.zipWith(Observable.defer(interactor::isWearableConnected),
-          (managerInteractor, isConnected) -> {
-            if (interactor.isWearableManaged()) {
-              if (isConnected) {
-                Timber.d("Wearable is managed and connected, return NULL");
-                return null;
-              } else {
-                Timber.d("Wearable is managed but not connected");
-                return managerInteractor;
-              }
-            } else {
-              Timber.d("Wearable is not managed");
-              return managerInteractor;
-            }
-          });
-    }
-    return observable;
+    final Observable<Boolean> connectedObservable =
+        interactor.isWearableManaged().flatMap(managed -> {
+          if (managed) {
+            return interactor.isWearableConnected();
+          } else {
+            return Observable.just(managed);
+          }
+        });
+
+    return Observable.zip(observable, connectedObservable, (managerInteractor, shouldPass) -> {
+      if (shouldPass) {
+        Timber.d("Wearable is managed and connected, return NULL");
+        return null;
+      } else {
+        Timber.d("Wearable is not managed or not connected, return NORMAL");
+        return managerInteractor;
+      }
+    });
   }
 
   public final void onWearableManageChanged() {
-    if (interactor.isWearableManaged()) {
-      getView().startManagingWearable();
-    } else {
-      getView().stopManagingWearable();
-    }
+    unsubManaged();
+    managedSubscription =  interactor.isWearableManaged().subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(managed -> {
+          if (managed) {
+            getView().startManagingWearable();
+          } else {
+            getView().stopManagingWearable();
+          }
+        }, throwable -> {
+         // TODO
+          Timber.e(throwable, "onError");
+        });
   }
 
   @Override public void disable() {
-    unsubscribe();
-
-    Observable<ManagerInteractor> observable = baseDisableObservable();
-    observable = zipWithWearableManagedState(observable);
-
-    final Subscription subscription =
-        observable.filter(managerInteractor -> managerInteractor != null)
-            .subscribeOn(getIoScheduler())
-            .observeOn(getMainScheduler())
-            .subscribe(managerInteractor -> {
-              Timber.d("Queue disable");
-              disable(managerInteractor.getDelayTime() * 1000, interactor.isPeriodic());
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, () -> {
-              Timber.d("onComplete");
-              interactor.disconnectGoogleApis();
-            });
-    setSubscription(subscription);
+    disable(zipWithWearableManagedState(baseDisableObservable()));
   }
 
   public interface WearableView extends ManagerView {

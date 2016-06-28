@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Set;
 import timber.log.Timber;
 
-abstract class DeviceJob extends Job {
+public abstract class DeviceJob extends Job {
 
   static final int JOB_TYPE_ENABLE = 1;
   static final int JOB_TYPE_DISABLE = 2;
@@ -41,7 +41,7 @@ abstract class DeviceJob extends Job {
   private final long periodicDisableTime;
   private final long periodicEnableTime;
 
-  protected DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
+  DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
       boolean originalState, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
     super(params.setRequiresNetwork(false));
     this.periodicDisableTime = periodicDisableTime;

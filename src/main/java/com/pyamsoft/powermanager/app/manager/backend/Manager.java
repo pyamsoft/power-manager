@@ -18,9 +18,10 @@ package com.pyamsoft.powermanager.app.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
-import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,36 +29,46 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
+abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter<I> {
 
   @NonNull private final ManagerInteractor interactor;
-  @NonNull private final Scheduler ioScheduler;
-  @NonNull private final Scheduler mainScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Subscription disableJobSubscription = Subscriptions.empty();
+  @NonNull private Subscription enableJobSubscription = Subscriptions.empty();
 
   protected Manager(@NonNull ManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
+    super(mainScheduler, ioScheduler);
     this.interactor = interactor;
-    this.ioScheduler = ioScheduler;
-    this.mainScheduler = mainScheduler;
   }
 
-  @NonNull @CheckResult final Scheduler getIoScheduler() {
-    return ioScheduler;
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubscribe();
+    unsubsDisable();
+    unsubsEnable();
   }
 
-  @NonNull @CheckResult final Scheduler getMainScheduler() {
-    return mainScheduler;
-  }
-
-  final void setSubscription(@NonNull Subscription subscription) {
+  private void setSubscription(@NonNull Subscription subscription) {
     this.subscription = subscription;
   }
 
-  final void unsubscribe() {
+  private void unsubscribe() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
+    }
+  }
+
+  private void unsubsDisable() {
+    if (!disableJobSubscription.isUnsubscribed()) {
+      disableJobSubscription.unsubscribe();
+    }
+  }
+
+  private void unsubsEnable() {
+    if (!enableJobSubscription.isUnsubscribed()) {
+      enableJobSubscription.unsubscribe();
     }
   }
 
@@ -66,9 +77,16 @@ abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
       Timber.d("Cancel any running jobs");
       managerInteractor.cancelJobs();
       return managerInteractor;
-    }).filter(managerInteractor -> {
+    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
       Timber.d("Check that manager isManaged");
-      return managerInteractor.isManaged();
+      if (managed) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
     });
   }
 
@@ -77,31 +95,55 @@ abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
       Timber.d("Cancel any running jobs");
       managerInteractor.cancelJobs();
       return managerInteractor;
-    }).filter(managerInteractor -> {
+    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
       Timber.d("Check that manager isManaged");
-      return managerInteractor.isManaged();
+      if (managed) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
     });
   }
 
   public final void enable(long time, boolean periodic) {
-    PowerManager.getInstance()
-        .getJobManager()
-        .addJobInBackground(interactor.createEnableJob(time, periodic));
+    unsubsEnable();
+    enableJobSubscription = interactor.createEnableJob(time, periodic)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(deviceJob -> {
+          PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
   }
 
   public final void disable(long time, boolean periodic) {
-    interactor.setOriginalState(interactor.isEnabled());
-    PowerManager.getInstance()
-        .getJobManager()
-        .addJobInBackground(interactor.createDisableJob(time, periodic));
+    unsubsDisable();
+    disableJobSubscription = interactor.isEnabled()
+        .flatMap(enabled -> {
+          interactor.setOriginalState(enabled);
+          return interactor.createDisableJob(time, periodic);
+        })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(deviceJob -> {
+          PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
   }
 
   @CheckResult final boolean isEnabled() {
-    return interactor.isEnabled();
+    return interactor.isEnabled().toBlocking().first();
   }
 
   @CheckResult final boolean isManaged() {
-    return interactor.isManaged();
+    return interactor.isManaged().toBlocking().first();
   }
 
   public final void onStateChanged() {
@@ -120,29 +162,45 @@ abstract class Manager<I extends Manager.ManagerView> extends Presenter<I> {
     }
   }
 
-  public void enable() {
+  protected void enable(@NonNull Observable<ManagerInteractor> observable) {
     unsubscribe();
-    final Subscription subscription = baseEnableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue enable");
-          enable(0, false);
-        }, throwable -> Timber.e(throwable, "onError"), () -> {
-          Timber.d("onComplete");
-          interactor.setOriginalState(false);
-        });
+    final Subscription subscription =
+        observable.filter(managerInteractor -> managerInteractor != null)
+            .subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(managerInteractor -> {
+              Timber.d("Queue enable");
+              enable(0, false);
+            }, throwable -> Timber.e(throwable, "onError"), () -> {
+              Timber.d("onComplete");
+              interactor.setOriginalState(false);
+            });
+    setSubscription(subscription);
+  }
+
+  public void enable() {
+    enable(baseEnableObservable());
+  }
+
+  protected void disable(@NonNull Observable<ManagerInteractor> observable) {
+    unsubscribe();
+    final Subscription subscription =
+        observable.filter(managerInteractor -> managerInteractor != null)
+            .flatMap(ManagerInteractor::isPeriodic)
+            .zipWith(interactor.getDelayTime(), (periodic, delayTime) -> {
+              return new Pair<>(periodic, delayTime * 1000);
+            })
+            .subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(pair -> {
+              Timber.d("Queue disable");
+              disable(pair.second, pair.first);
+            }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
     setSubscription(subscription);
   }
 
   public void disable() {
-    unsubscribe();
-    final Subscription subscription = baseDisableObservable().subscribeOn(getIoScheduler())
-        .observeOn(getMainScheduler())
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue disable");
-          disable(managerInteractor.getDelayTime() * 1000, interactor.isPeriodic());
-        }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
-    setSubscription(subscription);
+    disable(baseDisableObservable());
   }
 
   abstract void onEnableComplete();

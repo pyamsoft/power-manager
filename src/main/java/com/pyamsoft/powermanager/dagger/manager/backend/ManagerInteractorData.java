@@ -23,10 +23,12 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
+import rx.Observable;
 import timber.log.Timber;
 
 final class ManagerInteractorData extends ManagerInteractorBase {
@@ -46,47 +48,52 @@ final class ManagerInteractorData extends ManagerInteractorBase {
     cancelJobs(TAG);
   }
 
-  @Override public boolean isEnabled() {
-    boolean enabled;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-    } else {
-      enabled =
-          Settings.Secure.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-    }
-    return enabled;
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    return Observable.defer(() -> {
+      boolean enabled;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        enabled =
+            Settings.Global.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
+      } else {
+        enabled =
+            Settings.Secure.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
+      }
+      return Observable.just(enabled);
+    });
   }
 
-  @Override public boolean isManaged() {
-    return preferences.isDataManaged();
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return Observable.defer(() -> Observable.just(preferences.isDataManaged()));
   }
 
-  @Override public long getDelayTime() {
-    return preferences.getDataDelay();
+  @NonNull @Override public Observable<Boolean> isPeriodic() {
+    return Observable.defer(() -> Observable.just(preferences.isPeriodicData()));
   }
 
-  @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicEnableTimeData()));
   }
 
-  @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicDisableTimeData()));
   }
 
-  @Override long getPeriodicEnableTime() {
-    // TODO
-    return 30;
+  @NonNull @Override public Observable<Long> getDelayTime() {
+    return Observable.defer(() -> Observable.just(preferences.getDataDelay()));
   }
 
-  @Override long getPeriodicDisableTime() {
-    return preferences.getPeriodicDisableTimeData();
+  @NonNull @Override
+  public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
-  @Override public boolean isPeriodic() {
-    return preferences.isPeriodicData();
+  @NonNull @Override
+  public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
   static final class EnableJob extends Job {

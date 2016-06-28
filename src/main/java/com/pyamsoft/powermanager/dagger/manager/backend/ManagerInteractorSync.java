@@ -19,9 +19,11 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
+import rx.Observable;
 import timber.log.Timber;
 
 final class ManagerInteractorSync extends ManagerInteractorBase {
@@ -40,39 +42,42 @@ final class ManagerInteractorSync extends ManagerInteractorBase {
     cancelJobs(TAG);
   }
 
-  @Override public boolean isEnabled() {
-    return ContentResolver.getMasterSyncAutomatically();
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    return Observable.defer(() -> Observable.just(ContentResolver.getMasterSyncAutomatically()));
   }
 
-  @Override public boolean isManaged() {
-    return preferences.isSyncManaged();
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return Observable.defer(() -> Observable.just(preferences.isSyncManaged()));
   }
 
-  @Override public long getDelayTime() {
-    return preferences.getMasterSyncDelay();
+  @NonNull @Override public Observable<Boolean> isPeriodic() {
+    return Observable.defer(() -> Observable.just(preferences.isPeriodicSync()));
   }
 
-  @NonNull @Override public DeviceJob createEnableJob(long delayTime, boolean periodic) {
-    return new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicEnableTimeSync()));
   }
 
-  @NonNull @Override public DeviceJob createDisableJob(long delayTime, boolean periodic) {
-    return new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-        getPeriodicDisableTime(), getPeriodicEnableTime());
+  @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
+    return Observable.defer(() -> Observable.just(preferences.getPeriodicDisableTimeSync()));
   }
 
-  @Override long getPeriodicEnableTime() {
-    // TODO
-    return 30;
+  @NonNull @Override public Observable<Long> getDelayTime() {
+    return Observable.defer(() -> Observable.just(preferences.getMasterSyncDelay()));
   }
 
-  @Override long getPeriodicDisableTime() {
-    return preferences.getPeriodicDisableTimeSync();
+  @NonNull @Override
+  public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
-  @Override public boolean isPeriodic() {
-    return preferences.isPeriodicSync();
+  @NonNull @Override
+  public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
+    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
+        .map(times -> new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
+            times.first, times.second));
   }
 
   static final class EnableJob extends Job {
