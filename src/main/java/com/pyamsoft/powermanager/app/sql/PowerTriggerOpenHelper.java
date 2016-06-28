@@ -16,17 +16,11 @@
 
 package com.pyamsoft.powermanager.app.sql;
 
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.squareup.sqlbrite.BriteDatabase;
-import java.util.List;
-import rx.Observable;
 import timber.log.Timber;
 
 public final class PowerTriggerOpenHelper extends SQLiteOpenHelper {
@@ -35,57 +29,6 @@ public final class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
   public PowerTriggerOpenHelper(final @NonNull Context context) {
     super(context.getApplicationContext(), "power_trigger_db", null, DATABASE_VERSION);
-  }
-
-  @SuppressLint("NewApi") public static void newTransaction(final @NonNull Context context,
-      final @NonNull Runnable runnable) {
-    final Context appContext = context.getApplicationContext();
-    try (
-        final BriteDatabase.Transaction transaction = PowerTriggerDB.with(appContext)
-            .newTransaction()) {
-      runnable.run();
-      transaction.markSuccessful();
-    }
-  }
-
-  public static void insert(final @NonNull Context context,
-      final @NonNull ContentValues contentValues) {
-    final Context appContext = context.getApplicationContext();
-    PowerTriggerDB.with(appContext).insert(PowerTriggerEntry.TABLE_NAME, contentValues);
-  }
-
-  @NonNull @CheckResult
-  public static Observable<PowerTriggerEntry> queryWithPercent(final @NonNull Context context,
-      final int percent) {
-    final Context appContext = context.getApplicationContext();
-    return PowerTriggerDB.with(appContext)
-        .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-            Integer.toString(percent))
-        .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
-            PowerTriggerEntry.empty())
-        .filter(padLockEntry -> padLockEntry != null);
-  }
-
-  @NonNull @CheckResult
-  public static Observable<List<PowerTriggerEntry>> queryAll(final @NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    return PowerTriggerDB.with(appContext)
-        .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-        .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
-        .filter(padLockEntries -> padLockEntries != null);
-  }
-
-  public static void deleteWithPercent(final @NonNull Context context, final int percent) {
-    final Context appContext = context.getApplicationContext();
-    PowerTriggerDB.with(appContext)
-        .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
-            Integer.toString(percent));
-  }
-
-  public static void deleteAll(final @NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    PowerTriggerDB.with(appContext)
-        .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
   }
 
   @Override public void onCreate(@NonNull SQLiteDatabase sqLiteDatabase) {

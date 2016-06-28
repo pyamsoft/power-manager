@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.settings;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.sql.PowerTriggerOpenHelper;
+import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -38,7 +38,7 @@ final class SettingsInteractorImpl implements SettingsInteractor {
   @NonNull @Override public Observable<Boolean> clearDatabase() {
     return Observable.defer(() -> {
       Timber.d("Clear database of all entries");
-      PowerTriggerOpenHelper.deleteAll(appContext);
+      PowerTriggerDB.with(appContext).deleteAll();
       return Observable.just(true);
     });
   }

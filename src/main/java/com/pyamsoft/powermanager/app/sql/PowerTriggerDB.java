@@ -16,22 +16,23 @@
 
 package com.pyamsoft.powermanager.app.sql;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
+import java.util.List;
+import rx.Observable;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
-final class PowerTriggerDB {
-
-  @NonNull private static final Object lock = new Object();
-
-  @Nullable private static volatile PowerTriggerDB instance = null;
-
+public final class PowerTriggerDB {
   @NonNull private final BriteDatabase briteDatabase;
+  private static volatile Delegate instance = null;
 
   private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
     final SqlBrite sqlBrite = SqlBrite.create();
@@ -40,25 +41,79 @@ final class PowerTriggerDB {
     briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
   }
 
-  @CheckResult @NonNull static BriteDatabase with(final @NonNull Context context) {
+  @CheckResult @NonNull public final BriteDatabase getDatabase() {
+    return briteDatabase;
+  }
+
+  public static void setDelegate(@Nullable Delegate delegate) {
+    instance = delegate;
+  }
+
+  @CheckResult @NonNull public static Delegate with(@NonNull Context context) {
     return with(context, Schedulers.io());
   }
 
-  @SuppressWarnings("ConstantConditions") @CheckResult @NonNull
-  static BriteDatabase with(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
+  @CheckResult @NonNull
+  public static Delegate with(@NonNull Context context, @NonNull Scheduler scheduler) {
     if (instance == null) {
-      synchronized (lock) {
+      synchronized (Delegate.class) {
         if (instance == null) {
-          instance = new PowerTriggerDB(context.getApplicationContext(), dbScheduler);
+          instance = new Delegate(context, scheduler);
         }
       }
     }
 
-    // With double checking, this singleton should be guaranteed non-null
-    if (instance == null) {
-      throw new NullPointerException("PowerTriggerDB instance is NULL");
-    } else {
-      return instance.briteDatabase;
+    return instance;
+  }
+
+  public static class Delegate {
+
+    @NonNull private final PowerTriggerDB database;
+
+    public Delegate(@NonNull Context context) {
+      this(context, Schedulers.io());
+    }
+
+    public Delegate(@NonNull Context context, @NonNull Scheduler scheduler) {
+      this.database = new PowerTriggerDB(context.getApplicationContext(), scheduler);
+    }
+
+    @SuppressLint("NewApi") public void newTransaction(final @NonNull Runnable runnable) {
+      try (
+          final BriteDatabase.Transaction transaction = database.getDatabase().newTransaction()) {
+        runnable.run();
+        transaction.markSuccessful();
+      }
+    }
+
+    public void insert(final @NonNull ContentValues contentValues) {
+      database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+    }
+
+    @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(final int percent) {
+      return database.getDatabase()
+          .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
+              Integer.toString(percent))
+          .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
+              PowerTriggerEntry.empty())
+          .filter(padLockEntry -> padLockEntry != null);
+    }
+
+    @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
+      return database.getDatabase()
+          .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
+          .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
+          .filter(padLockEntries -> padLockEntries != null);
+    }
+
+    public void deleteWithPercent(final int percent) {
+      database.getDatabase()
+          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
+              Integer.toString(percent));
+    }
+
+    public void deleteAll() {
+      database.getDatabase().delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
     }
   }
 }
