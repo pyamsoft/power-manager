@@ -28,6 +28,14 @@
         android:title="@string/manage_data_title"
         />
 
+    <CheckBoxPreference
+        android:defaultValue="@bool/ignore_charging_data_default"
+        android:key="@string/ignore_charging_data_key"
+        android:summary="@string/ignore_charging_data_summary"
+        android:title="@string/ignore_charging_data_title"
+        android:dependency="@string/manage_data_key"
+        />
+
   </PreferenceCategory>
 
   <PreferenceCategory

@@ -28,6 +28,14 @@
         android:title="@string/manage_wifi_title"
         />
 
+    <CheckBoxPreference
+        android:defaultValue="@bool/ignore_charging_wifi_default"
+        android:key="@string/ignore_charging_wifi_key"
+        android:summary="@string/ignore_charging_wifi_summary"
+        android:title="@string/ignore_charging_wifi_title"
+        android:dependency="@string/manage_wifi_key"
+        />
+
   </PreferenceCategory>
 
   <PreferenceCategory
