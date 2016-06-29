@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-final class ManagerInteractorData extends ManagerInteractorBase {
+public final class ManagerInteractorData extends ManagerInteractorBase {
 
   @NonNull private static final String TAG = "data_manager_job";
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";

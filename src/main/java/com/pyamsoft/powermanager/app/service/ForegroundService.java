@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
+import com.pyamsoft.powermanager.dagger.service.DaggerForegroundComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -48,7 +49,10 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     screenOnOffReceiver = new ScreenOnOffReceiver();
     screenOnOffReceiver.register(this);
 
-    PowerManager.getInstance().getPowerManagerComponent().inject(this);
+    DaggerForegroundComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build()
+        .inject(this);
 
     presenter.bindView(this);
 

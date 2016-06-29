@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
+public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "wifi_manager_job";
   @NonNull private final WifiManager wifiManager;

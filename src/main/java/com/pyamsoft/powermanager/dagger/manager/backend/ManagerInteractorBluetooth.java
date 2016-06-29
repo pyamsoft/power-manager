@@ -29,7 +29,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
+public final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "bluetooth_manager_job";
   @NonNull private final BluetoothAdapterWrapper androidBluetooth;

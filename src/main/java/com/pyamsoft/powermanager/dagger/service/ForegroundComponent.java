@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.service;
 
-public interface SyncView extends Manager.ManagerView {
+import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import dagger.Component;
 
-  void syncStateEnabled();
+@ActivityScope @Component(modules = ForegroundModule.class, dependencies = PowerManagerComponent.class) public interface ForegroundComponent {
 
-  void syncStateDisabled();
-
-  void syncStartManaging();
-
-  void syncStopManaging();
-
+  void inject(ForegroundService service);
 }

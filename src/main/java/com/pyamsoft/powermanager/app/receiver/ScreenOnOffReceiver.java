@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.dagger.manager.backend.DaggerManagerComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -47,7 +48,10 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     isRegistered = false;
 
-    PowerManager.getInstance().getPowerManagerComponent().inject(this);
+    DaggerManagerComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build()
+        .inject(this);
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {

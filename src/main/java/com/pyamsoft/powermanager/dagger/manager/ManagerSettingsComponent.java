@@ -18,15 +18,19 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import com.pyamsoft.powermanager.app.manager.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.ManagerPeriodicFragment;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import dagger.Component;
 
-@ActivityScope
-@Component(modules = ManagerSettingsModule.class, dependencies = PowerManagerComponent.class)
-public interface ManagerSettingsComponent {
+@ActivityScope @Component(modules = {
+    ManagerSettingsModule.class, ManagerModule.class, AndroidDeviceModule.class
+}, dependencies = PowerManagerComponent.class) public interface ManagerSettingsComponent {
 
   void inject(ManagerManageFragment fragment);
 
   void inject(ManagerPeriodicFragment fragment);
+
+  void inject(ManagerSettingsPagerAdapter adapter);
 }

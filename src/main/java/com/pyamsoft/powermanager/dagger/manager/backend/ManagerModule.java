@@ -16,87 +16,63 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
-import javax.inject.Singleton;
 import rx.Scheduler;
 
 @Module public class ManagerModule {
 
-  final BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
-    BluetoothAdapter adapter;
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      adapter = BluetoothAdapter.getDefaultAdapter();
-    } else {
-      final BluetoothManager bluetoothManager = (BluetoothManager) context.getApplicationContext()
-          .getSystemService(Context.BLUETOOTH_SERVICE);
-      adapter = bluetoothManager.getAdapter();
-    }
-    return adapter;
-  }
-
-  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(
-      @NonNull Context context) {
-    return new BluetoothAdapterWrapper(getBluetoothAdapter(context));
-  }
-
-  @Singleton @Provides WifiManager provideWifiManager(@NonNull Context context) {
-    return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-  }
-
-  @Singleton @Provides ManagerInteractorWifi provideManagerInteractorWifi(
+  @ActivityScope @Provides ManagerInteractorWifi provideManagerInteractorWifi(
       @NonNull WifiManager wifiManager, @NonNull PowerManagerPreferences preferences,
       @NonNull Context context) {
     return new ManagerInteractorWifi(preferences, context, wifiManager);
   }
 
-  @Singleton @Provides ManagerInteractorData provideManagerInteractorData(
+  @ActivityScope @Provides ManagerInteractorData provideManagerInteractorData(
       @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
     return new ManagerInteractorData(preferences, context);
   }
 
-  @Singleton @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
+  @ActivityScope @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
       @NonNull BluetoothAdapterWrapper bluetoothAdapter,
       @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
     return new ManagerInteractorBluetooth(preferences, context, bluetoothAdapter);
   }
 
-  @Singleton @Provides ManagerInteractorSync provideManagerInteractorSync(
+  @ActivityScope @Provides ManagerInteractorSync provideManagerInteractorSync(
       @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
     return new ManagerInteractorSync(preferences, context);
   }
 
-  @Singleton @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,
+  @ActivityScope @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new ManagerWifi(wifi, ioScheduler, mainScheduler);
   }
 
-  @Singleton @Provides ManagerBluetooth provideManagerBluetooth(
+  @ActivityScope @Provides ManagerBluetooth provideManagerBluetooth(
       @NonNull ManagerInteractorBluetooth bluetooth, @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new ManagerBluetooth(bluetooth, ioScheduler, mainScheduler);
   }
 
-  @Singleton @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync,
+  @ActivityScope @Provides ManagerSync provideManagerSync(@NonNull ManagerInteractorSync sync,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new ManagerSync(sync, ioScheduler, mainScheduler);
   }
 
-  @Singleton @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data,
+  @ActivityScope @Provides ManagerData provideManagerData(@NonNull ManagerInteractorData data,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     return new ManagerData(data, ioScheduler, mainScheduler);

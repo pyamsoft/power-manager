@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
-public interface DataView extends Manager.ManagerView {
+import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.manager.AndroidDeviceModule;
+import dagger.Component;
 
-  void dataStateEnabled();
+@ActivityScope @Component(modules = {
+    ManagerModule.class, AndroidDeviceModule.class
+}, dependencies = PowerManagerComponent.class) public interface ManagerComponent {
 
-  void dataStateDisabled();
-
-  void dataStartManaging();
-
-  void dataStopManaging();
+  void inject(ScreenOnOffReceiver receiver);
 }

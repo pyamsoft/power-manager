@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger;
+package com.pyamsoft.powermanager.app.manager;
 
-import android.content.Context;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
-import dagger.Component;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import rx.Scheduler;
+public interface DataView extends ManagerPresenter.ManagerView {
 
-@Singleton @Component(modules = PowerManagerModule.class) public interface PowerManagerComponent {
+  void dataStateEnabled();
 
-  Context provideContext();
+  void dataStateDisabled();
 
-  PowerManagerPreferences providePreferences();
+  void dataStartManaging();
 
-  @Named("main") Scheduler provideMainScheduler();
-
-  @Named("io") Scheduler provideIoScheduler();
+  void dataStopManaging();
 }

@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-final class ManagerInteractorSync extends ManagerInteractorBase {
+public final class ManagerInteractorSync extends ManagerInteractorBase {
 
   @NonNull private static final String TAG = "sync_manager_job";
   @NonNull private final Context appContext;

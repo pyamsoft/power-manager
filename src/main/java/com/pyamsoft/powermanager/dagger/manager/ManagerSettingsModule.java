@@ -17,9 +17,17 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.manager.BluetoothPresenter;
+import com.pyamsoft.powermanager.app.manager.DataPresenter;
 import com.pyamsoft.powermanager.app.manager.ManagerManagePresenter;
 import com.pyamsoft.powermanager.app.manager.ManagerPeriodicPresenter;
+import com.pyamsoft.powermanager.app.manager.SyncPresenter;
+import com.pyamsoft.powermanager.app.manager.WifiPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractorBluetooth;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractorData;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractorSync;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractorWifi;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -47,5 +55,29 @@ import rx.Scheduler;
   @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(
       @NonNull ManagerPeriodicInteractorImpl interactor) {
     return interactor;
+  }
+
+  @ActivityScope @Provides WifiPresenter provideWifiPresenter(
+      @NonNull ManagerInteractorWifi interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new WifiPresenter(interactor, mainScheduler, ioScheduler);
+  }
+
+  @ActivityScope @Provides DataPresenter provideDataPresenter(
+      @NonNull ManagerInteractorData interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new DataPresenter(interactor, mainScheduler, ioScheduler);
+  }
+
+  @ActivityScope @Provides BluetoothPresenter provideBluetoothPresenter(
+      @NonNull ManagerInteractorBluetooth interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new BluetoothPresenter(interactor, mainScheduler, ioScheduler);
+  }
+
+  @ActivityScope @Provides SyncPresenter provideSyncPresenter(
+      @NonNull ManagerInteractorSync interactor, @Named("main") Scheduler mainScheduler,
+      @Named("io") Scheduler ioScheduler) {
+    return new SyncPresenter(interactor, mainScheduler, ioScheduler);
   }
 }

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.app.manager;
 
-public interface WifiView extends WearableManager.WearableView {
 
-  void wifiStateEnabled();
+public interface BluetoothView extends WearablePresenter.WearableView {
 
-  void wifiStateDisabled();
+  void bluetoothStateEnabled();
 
-  void wifiStartManaging();
+  void bluetoothStateDisabled();
 
-  void wifiStopManaging();
+  void bluetoothStartManaging();
+
+  void bluetoothStopManaging();
 }

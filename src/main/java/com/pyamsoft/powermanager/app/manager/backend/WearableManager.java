@@ -23,31 +23,17 @@ import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteracto
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class WearableManager<I extends WearableManager.WearableView> extends Manager<I> {
+abstract class WearableManager extends Manager {
 
   @NonNull private final WearableManagerInteractor interactor;
-  @NonNull private Subscription managedSubscription = Subscriptions.empty();
 
   WearableManager(@NonNull WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    super(interactor, ioScheduler, mainScheduler);
+    super(interactor, mainScheduler, ioScheduler);
     this.interactor = interactor;
-  }
-
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    unsubManaged();
-  }
-
-  private void unsubManaged() {
-    if (!managedSubscription.isUnsubscribed()) {
-      managedSubscription.unsubscribe();
-    }
   }
 
   @CheckResult @NonNull final Observable<ManagerInteractor> zipWithWearableManagedState(
@@ -72,31 +58,7 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
     });
   }
 
-  public final void onWearableManageChanged() {
-    unsubManaged();
-    managedSubscription = interactor.isWearableManaged()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(managed -> {
-          if (managed) {
-            getView().startManagingWearable();
-          } else {
-            getView().stopManagingWearable();
-          }
-        }, throwable -> {
-          // TODO
-          Timber.e(throwable, "onError");
-        });
-  }
-
   @Override public void disable(boolean charging) {
     disable(zipWithWearableManagedState(baseDisableObservable(charging)));
-  }
-
-  public interface WearableView extends ManagerView {
-
-    void startManagingWearable();
-
-    void stopManagingWearable();
   }
 }

@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.app.manager;
 
-public interface BluetoothView extends WearableManager.WearableView {
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import javax.inject.Named;
+import rx.Scheduler;
 
-  void bluetoothStateEnabled();
+public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView> extends SchedulerPresenter<I>{
 
-  void bluetoothStateDisabled();
+  protected ManagerPresenter(@NonNull @Named("main") Scheduler observeScheduler,
+      @NonNull @Named("io") Scheduler subscribeScheduler) {
+    super(observeScheduler, subscribeScheduler);
+  }
 
-  void bluetoothStartManaging();
+  public interface ManagerView {
 
-  void bluetoothStopManaging();
+  }
 }
