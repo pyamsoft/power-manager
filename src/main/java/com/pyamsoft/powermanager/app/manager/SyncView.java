@@ -25,4 +25,6 @@ public interface SyncView extends ManagerPresenter.ManagerView {
   void syncStartManaging();
 
   void syncStopManaging();
+
+  void syncInitialState(boolean enabled, boolean managed);
 }

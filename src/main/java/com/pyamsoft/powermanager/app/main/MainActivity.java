@@ -17,7 +17,9 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.animation.LayoutTransition;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -49,6 +51,7 @@ import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -64,6 +67,7 @@ public class MainActivity extends DonationActivityBase
   @Inject MainPresenter presenter;
   private Unbinder unbinder;
   private DataHolderFragment<String> adapterDataHolderFragment;
+  @ColorInt private int white;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -74,6 +78,9 @@ public class MainActivity extends DonationActivityBase
 
     DaggerMainComponent.builder().build().inject(this);
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
+
+    // Resolve color here, just once
+    white = ContextCompat.getColor(this, android.R.color.white);
 
     presenter.bindView(this);
 
@@ -366,7 +373,8 @@ public class MainActivity extends DonationActivityBase
   }
 
   @Override public void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor) {
-    fab.setImageDrawable(ContextCompat.getDrawable(this, icon));
+    final Drawable drawable = ContextCompat.getDrawable(this, icon);
+    fab.setImageDrawable(DrawableUtil.tintDrawableFromColor(drawable, white));
     fab.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
   }
 }

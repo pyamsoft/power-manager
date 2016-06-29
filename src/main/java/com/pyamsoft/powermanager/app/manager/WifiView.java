@@ -18,6 +18,8 @@ package com.pyamsoft.powermanager.app.manager;
 
 public interface WifiView extends WearablePresenter.WearableView {
 
+  void wifiInitialState(boolean enabled, boolean managed);
+
   void wifiStateEnabled();
 
   void wifiStateDisabled();

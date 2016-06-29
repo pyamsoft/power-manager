@@ -25,4 +25,6 @@ public interface DataView extends ManagerPresenter.ManagerView {
   void dataStartManaging();
 
   void dataStopManaging();
+
+  void dataInitialState(boolean enabled, boolean managed);
 }

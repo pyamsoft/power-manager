@@ -21,12 +21,15 @@ import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import javax.inject.Named;
 import rx.Scheduler;
 
-public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView> extends SchedulerPresenter<I>{
+public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView>
+    extends SchedulerPresenter<I> {
 
   protected ManagerPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
   }
+
+  public abstract void getCurrentState();
 
   public interface ManagerView {
 

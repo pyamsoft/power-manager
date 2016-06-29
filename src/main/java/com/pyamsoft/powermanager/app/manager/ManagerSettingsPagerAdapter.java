@@ -23,12 +23,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import com.pyamsoft.powermanager.model.FabColorEvent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     implements WifiView, DataView, BluetoothView, SyncView {
+
+  @ColorRes private static final int FAB_BACKGROUND_COLOR = R.color.lightblueA200;
+  @DrawableRes private static final int FAB_ICON_WIFI_ON = R.drawable.ic_network_wifi_24dp;
+  @DrawableRes private static final int FAB_ICON_WIFI_OFF = R.drawable.ic_signal_wifi_off_24dp;
+  @DrawableRes private static final int FAB_ICON_DATA_ON = R.drawable.ic_network_cell_24dp;
+  @DrawableRes private static final int FAB_ICON_DATA_OFF = R.drawable.ic_signal_cellular_off_24dp;
+  @DrawableRes private static final int FAB_ICON_BLUETOOTH_ON = R.drawable.ic_bluetooth_24dp;
+  @DrawableRes private static final int FAB_ICON_BLUETOOTH_OFF =
+      R.drawable.ic_bluetooth_disabled_24dp;
+  @DrawableRes private static final int FAB_ICON_SYNC_ON = R.drawable.ic_sync_24dp;
+  @DrawableRes private static final int FAB_ICON_SYNC_OFF = R.drawable.ic_sync_disabled_24dp;
 
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
@@ -38,8 +52,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @NonNull private final Fragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
-  @DrawableRes private int fabIcon;
-  @ColorRes private int backgroundIcon;
   @Inject WifiPresenter wifiPresenter;
   @Inject DataPresenter dataPresenter;
   @Inject BluetoothPresenter bluetoothPresenter;
@@ -61,6 +73,14 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     dataPresenter.bindView(this);
     bluetoothPresenter.bindView(this);
     syncPresenter.bindView(this);
+
+    switch (type) {
+      case TYPE_WIFI:
+        wifiPresenter.getCurrentState();
+        break;
+      default:
+        throw new IllegalStateException("Invalid type: " + type);
+    }
   }
 
   @NonNull public final String getType() {
@@ -179,5 +199,25 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void syncStopManaging() {
 
+  }
+
+  @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
+    @DrawableRes final int icon = enabled ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR));
+  }
+
+  @Override public void dataInitialState(boolean enabled, boolean managed) {
+    @DrawableRes final int icon = enabled ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR));
+  }
+
+  @Override public void syncInitialState(boolean enabled, boolean managed) {
+    @DrawableRes final int icon = enabled ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR));
+  }
+
+  @Override public void wifiInitialState(boolean enabled, boolean managed) {
+    @DrawableRes final int icon = enabled ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR));
   }
 }
