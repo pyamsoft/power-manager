@@ -39,6 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewPagerAdapter;
@@ -76,7 +77,10 @@ public class MainActivity extends DonationActivityBase
 
     setPreferenceDefaultValues();
 
-    DaggerMainComponent.builder().build().inject(this);
+    DaggerMainComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build()
+        .inject(this);
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
     // Resolve color here, just once

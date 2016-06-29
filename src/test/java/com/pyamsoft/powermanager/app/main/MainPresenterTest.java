@@ -28,13 +28,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import rx.schedulers.Schedulers;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, application = PowerManager.class, sdk = 23)
 public class MainPresenterTest {
 
   @CheckResult @NonNull public static MainPresenter getPresenter() {
-    return new MainPresenter();
+    return new MainPresenter(Schedulers.immediate(), Schedulers.immediate());
   }
 
   @Test public void test_busResponse() {
