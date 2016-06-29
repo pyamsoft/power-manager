@@ -27,7 +27,8 @@ import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter {
+public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
+    implements WifiView, DataView, BluetoothView, SyncView {
 
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
@@ -55,6 +56,11 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);
+
+    wifiPresenter.bindView(this);
+    dataPresenter.bindView(this);
+    bluetoothPresenter.bindView(this);
+    syncPresenter.bindView(this);
   }
 
   @NonNull public final String getType() {
@@ -95,7 +101,83 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     return title;
   }
 
-  public final void unbind() {
+  public final void recycle() {
+    Timber.d("Recycle ManagerSettingsPagerAdapter");
+    wifiPresenter.unbindView();
+    dataPresenter.unbindView();
+    bluetoothPresenter.unbindView();
+    syncPresenter.unbindView();
+  }
+
+  @Override public void wifiStateEnabled() {
+
+  }
+
+  @Override public void wifiStateDisabled() {
+
+  }
+
+  @Override public void wifiStartManaging() {
+
+  }
+
+  @Override public void wifiStopManaging() {
+
+  }
+
+  @Override public void startManagingWearable() {
+
+  }
+
+  @Override public void stopManagingWearable() {
+
+  }
+
+  @Override public void dataStateEnabled() {
+
+  }
+
+  @Override public void dataStateDisabled() {
+
+  }
+
+  @Override public void dataStartManaging() {
+
+  }
+
+  @Override public void dataStopManaging() {
+
+  }
+
+  @Override public void bluetoothStateEnabled() {
+
+  }
+
+  @Override public void bluetoothStateDisabled() {
+
+  }
+
+  @Override public void bluetoothStartManaging() {
+
+  }
+
+  @Override public void bluetoothStopManaging() {
+
+  }
+
+  @Override public void syncStateEnabled() {
+
+  }
+
+  @Override public void syncStateDisabled() {
+
+  }
+
+  @Override public void syncStartManaging() {
+
+  }
+
+  @Override public void syncStopManaging() {
 
   }
 }

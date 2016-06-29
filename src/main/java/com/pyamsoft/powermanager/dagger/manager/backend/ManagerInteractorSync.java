@@ -34,6 +34,7 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
       @NonNull Context context) {
     super(preferences);
     this.appContext = context.getApplicationContext();
+    Timber.d("new ManagerInteractorSync");
   }
 
   @Override public void cancelJobs() {

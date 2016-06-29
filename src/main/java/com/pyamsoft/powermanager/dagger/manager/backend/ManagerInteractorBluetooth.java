@@ -40,6 +40,7 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
     super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
     this.androidBluetooth = bluetoothAdapter;
+    Timber.d("new ManagerInteractorBluetooth");
   }
 
   @Override public void cancelJobs() {

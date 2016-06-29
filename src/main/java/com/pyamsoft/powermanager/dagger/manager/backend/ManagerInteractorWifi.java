@@ -36,6 +36,7 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
     this.wifiManager = wifiManager;
+    Timber.d("new ManagerInteractorWifi");
   }
 
   @Override public void cancelJobs() {

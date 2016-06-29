@@ -126,6 +126,8 @@ public class MainActivity extends DonationActivityBase
       Timber.d("Stored fragment exists, is manager fragment");
       adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
     }
+
+    recycleOldAdapter();
     viewPager.setAdapter(adapter);
     setActionBarUpEnabled(storedType != null);
   }
@@ -252,6 +254,7 @@ public class MainActivity extends DonationActivityBase
       super.onBackPressed();
     } else {
       Timber.d("Current pager does not hold overview, pop");
+      recycleOldAdapter();
       viewPager.setAdapter(new OverviewPagerAdapter(getSupportFragmentManager()));
       tabLayout.setVisibility(View.GONE);
       tabLayout.setupWithViewPager(null);
@@ -338,11 +341,24 @@ public class MainActivity extends DonationActivityBase
         adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), type);
         showTabs = true;
     }
+    recycleOldAdapter();
     viewPager.setAdapter(adapter);
     tabLayout.setVisibility(showTabs ? View.VISIBLE : View.GONE);
     tabLayout.setupWithViewPager(showTabs ? viewPager : null);
     setActionBarUpEnabled(true);
     setFabStateFromAdapter();
+  }
+
+  private void recycleOldAdapter() {
+    Timber.d("Recycle old adapter");
+    final PagerAdapter adapter = viewPager.getAdapter();
+    if (adapter != null) {
+      if (adapter instanceof ManagerSettingsPagerAdapter) {
+        final ManagerSettingsPagerAdapter settingsPagerAdapter =
+            (ManagerSettingsPagerAdapter) adapter;
+        settingsPagerAdapter.recycle();
+      }
+    }
   }
 
   @Override public void overviewEventError() {

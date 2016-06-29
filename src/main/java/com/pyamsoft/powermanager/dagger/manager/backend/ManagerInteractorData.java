@@ -40,6 +40,7 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
       @NonNull Context context) {
     super(preferences);
     this.appContext = context.getApplicationContext();
+    Timber.d("new ManagerInteractorData");
   }
 
   @Override public void cancelJobs() {
