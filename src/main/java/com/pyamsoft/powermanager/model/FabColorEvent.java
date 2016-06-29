@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.model;
 
-public interface SyncView extends Manager.ManagerView {
+import android.support.annotation.CheckResult;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
 
-  void syncStateEnabled();
+@AutoValue public abstract class FabColorEvent {
 
-  void syncStateDisabled();
+  @CheckResult @NonNull
+  public static FabColorEvent create(@DrawableRes int icon, @ColorRes int backgroundColor) {
+    return new AutoValue_FabColorEvent(icon, backgroundColor);
+  }
 
-  void syncStartManaging();
+  @DrawableRes public abstract int icon();
 
-  void syncStopManaging();
-
+  @ColorRes public abstract int backgroundColor();
 }

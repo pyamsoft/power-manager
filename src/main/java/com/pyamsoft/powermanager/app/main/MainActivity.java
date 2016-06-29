@@ -18,10 +18,14 @@ package com.pyamsoft.powermanager.app.main;
 
 import android.animation.LayoutTransition;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.PreferenceManager;
@@ -56,6 +60,7 @@ public class MainActivity extends DonationActivityBase
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   @BindView(R.id.main_pager) ViewPager viewPager;
+  @BindView(R.id.main_fab) FloatingActionButton fab;
   @Inject MainPresenter presenter;
   private Unbinder unbinder;
   private DataHolderFragment<String> adapterDataHolderFragment;
@@ -77,6 +82,7 @@ public class MainActivity extends DonationActivityBase
     setupAppBar();
     setupTabLayout(storedType);
     setupViewPager(storedType);
+    setFabStateFromAdapter();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -122,6 +128,60 @@ public class MainActivity extends DonationActivityBase
     }
     viewPager.setAdapter(adapter);
     setActionBarUpEnabled(storedType != null);
+  }
+
+  private void setFabStateFromAdapter() {
+    final PagerAdapter pagerAdapter = viewPager.getAdapter();
+    String type;
+    if (pagerAdapter instanceof ManagerSettingsPagerAdapter) {
+      final ManagerSettingsPagerAdapter settingsPagerAdapter =
+          (ManagerSettingsPagerAdapter) pagerAdapter;
+      type = settingsPagerAdapter.getType();
+      Timber.d("Save type of manager fragment for later");
+    } else if (pagerAdapter instanceof SettingsPagerAdapter) {
+      type = SettingsFragment.TAG;
+      Timber.d("Save type of settings fragment for later");
+    } else if (pagerAdapter instanceof PowerTriggerPagerAdapter) {
+      type = PowerTriggerFragment.TAG;
+      Timber.d("Save type of power triggers fragment for later");
+    } else {
+      Timber.d("Fragment is overview");
+      type = null;
+    }
+
+    boolean visible = false;
+    if (type != null) {
+      switch (type) {
+        case ManagerSettingsPagerAdapter.TYPE_WIFI:
+          visible = true;
+          break;
+        case ManagerSettingsPagerAdapter.TYPE_DATA:
+          visible = true;
+          break;
+        case ManagerSettingsPagerAdapter.TYPE_BLUETOOTH:
+          visible = true;
+          break;
+        case ManagerSettingsPagerAdapter.TYPE_SYNC:
+          visible = true;
+          break;
+        case PowerTriggerFragment.TAG:
+          visible = true;
+          break;
+        case SettingsFragment.TAG:
+          visible = false;
+          break;
+        default:
+          throw new IllegalStateException("Not valid type: " + type);
+      }
+    }
+
+    if (visible) {
+      Timber.d("Show the FAB");
+      fab.show();
+    } else {
+      Timber.d("Hide the FAB");
+      fab.hide();
+    }
   }
 
   private void setupTabLayout(@Nullable String storedType) {
@@ -196,6 +256,7 @@ public class MainActivity extends DonationActivityBase
       tabLayout.setVisibility(View.GONE);
       tabLayout.setupWithViewPager(null);
       setActionBarUpEnabled(false);
+      setFabStateFromAdapter();
     }
   }
 
@@ -281,9 +342,15 @@ public class MainActivity extends DonationActivityBase
     tabLayout.setVisibility(showTabs ? View.VISIBLE : View.GONE);
     tabLayout.setupWithViewPager(showTabs ? viewPager : null);
     setActionBarUpEnabled(true);
+    setFabStateFromAdapter();
   }
 
   @Override public void overviewEventError() {
     AppUtil.guaranteeSingleDialogFragment(this, new ErrorDialog(), "error");
+  }
+
+  @Override public void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor) {
+    fab.setImageDrawable(ContextCompat.getDrawable(this, icon));
+    fab.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
   }
 }

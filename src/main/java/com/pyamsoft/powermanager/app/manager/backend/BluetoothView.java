@@ -18,4 +18,11 @@ package com.pyamsoft.powermanager.app.manager.backend;
 
 public interface BluetoothView extends WearableManager.WearableView {
 
+  void bluetoothStateEnabled();
+
+  void bluetoothStateDisabled();
+
+  void bluetoothStartManaging();
+
+  void bluetoothStopManaging();
 }

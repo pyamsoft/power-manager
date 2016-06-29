@@ -16,10 +16,18 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter {
@@ -32,6 +40,12 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @NonNull private final Fragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
+  @DrawableRes private int fabIcon;
+  @ColorRes private int backgroundIcon;
+  @Inject ManagerWifi managerWifi;
+  @Inject ManagerData managerData;
+  @Inject ManagerBluetooth managerBluetooth;
+  @Inject ManagerSync managerSync;
 
   public ManagerSettingsPagerAdapter(@NonNull FragmentManager fm, @NonNull String type) {
     super(fm);
@@ -39,6 +53,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     manageFragment = ManagerManageFragment.newInstance(type);
     periodicFragment = ManagerPeriodicFragment.newInstance(type);
     this.type = type;
+    PowerManager.getInstance().getPowerManagerComponent().inject(this);
   }
 
   @NonNull public final String getType() {

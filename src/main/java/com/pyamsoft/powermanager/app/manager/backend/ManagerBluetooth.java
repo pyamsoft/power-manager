@@ -21,11 +21,15 @@ import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteracto
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public final class ManagerBluetooth extends WearableManager<BluetoothView> {
 
   @NonNull private final WearableManagerInteractor interactor;
+  @NonNull private Subscription isEnabledSubscription = Subscriptions.empty();
+  @NonNull private Subscription isManagedSubscription = Subscriptions.empty();
 
   @Inject public ManagerBluetooth(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
@@ -33,6 +37,58 @@ public final class ManagerBluetooth extends WearableManager<BluetoothView> {
     super(interactor, ioScheduler, mainScheduler);
     Timber.d("new ManagerBluetooth");
     this.interactor = interactor;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubIsEnabled();
+    unsubIsManaged();
+  }
+
+  public final void isEnabled() {
+    unsubIsEnabled();
+    isEnabledSubscription = interactor.isEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(enabled -> {
+          if (enabled) {
+            getView().bluetoothStateEnabled();
+          } else {
+            getView().bluetoothStateDisabled();
+          }
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO error
+        });
+  }
+
+  void unsubIsEnabled() {
+    if (!isEnabledSubscription.isUnsubscribed()) {
+      isEnabledSubscription.unsubscribe();
+    }
+  }
+
+  public final void isManaged() {
+    unsubIsManaged();
+    isManagedSubscription = interactor.isManaged()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(managed -> {
+          if (managed) {
+            getView().bluetoothStartManaging();
+          } else {
+            getView().bluetoothStopManaging();
+          }
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO error
+        });
+  }
+
+  void unsubIsManaged() {
+    if (!isManagedSubscription.isUnsubscribed()) {
+      isManagedSubscription.unsubscribe();
+    }
   }
 
   @Override void onEnableComplete() {

@@ -94,36 +94,31 @@ abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter
   final Observable<ManagerInteractor> baseDisableObservable(boolean charging) {
     final Observable<Boolean> ignoreChargingObservable =
         interactor.isChargingIgnore().map(ignoreCharding -> ignoreCharding && charging);
-    return Observable.defer(() -> Observable.just(interactor))
-        .map(managerInteractor -> {
-          Timber.d("Cancel any running jobs");
-          managerInteractor.cancelJobs();
-          return managerInteractor;
-        })
-        .zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
-          Timber.d("Check that manager ignoreCharging");
-          if (ignoreCharging) {
-            return null;
-          } else {
-            return managerInteractor;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out nulls");
-          return managerInteractor != null;
-        })
-        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-          Timber.d("Check that manager isManaged");
-          if (managed) {
-            return managerInteractor;
-          } else {
-            return null;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out nulls");
-          return managerInteractor != null;
-        });
+    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
+      Timber.d("Cancel any running jobs");
+      managerInteractor.cancelJobs();
+      return managerInteractor;
+    }).zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
+      Timber.d("Check that manager ignoreCharging");
+      if (ignoreCharging) {
+        return null;
+      } else {
+        return managerInteractor;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
+    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+      Timber.d("Check that manager isManaged");
+      if (managed) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
+    });
   }
 
   public final void enable(long time, boolean periodic) {
@@ -156,29 +151,9 @@ abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter
         });
   }
 
-  @CheckResult final boolean isEnabled() {
-    return interactor.isEnabled().toBlocking().first();
-  }
+  public abstract void isEnabled();
 
-  @CheckResult final boolean isManaged() {
-    return interactor.isManaged().toBlocking().first();
-  }
-
-  public final void onStateChanged() {
-    if (isEnabled()) {
-      getView().stateEnabled();
-    } else {
-      getView().stateDisabled();
-    }
-  }
-
-  public final void onManagedChanged() {
-    if (isManaged()) {
-      getView().startManaging();
-    } else {
-      getView().stopManaging();
-    }
-  }
+  public abstract void isManaged();
 
   protected void enable(@NonNull Observable<ManagerInteractor> observable) {
     unsubscribe();
@@ -227,12 +202,5 @@ abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter
 
   public interface ManagerView {
 
-    void stateEnabled();
-
-    void stateDisabled();
-
-    void startManaging();
-
-    void stopManaging();
   }
 }

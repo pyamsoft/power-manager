@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.app.main;
 
-public interface SyncView extends Manager.ManagerView {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.FabColorEvent;
+import com.pyamsoft.powermanager.model.RxBus;
 
-  void syncStateEnabled();
+public class FabColorBus extends RxBus<FabColorEvent> {
 
-  void syncStateDisabled();
+  @NonNull private static final FabColorBus instance = new FabColorBus();
 
-  void syncStartManaging();
-
-  void syncStopManaging();
-
+  @CheckResult @NonNull public static FabColorBus get() {
+    return instance;
+  }
 }

@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
@@ -42,4 +43,6 @@ public interface PowerManagerComponent {
   void inject(ForegroundService service);
 
   void inject(ScreenOnOffReceiver receiver);
+
+  void inject(ManagerSettingsPagerAdapter adapter);
 }

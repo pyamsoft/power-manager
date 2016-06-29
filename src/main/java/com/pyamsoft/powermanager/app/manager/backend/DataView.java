@@ -18,4 +18,11 @@ package com.pyamsoft.powermanager.app.manager.backend;
 
 public interface DataView extends Manager.ManagerView {
 
+  void dataStateEnabled();
+
+  void dataStateDisabled();
+
+  void dataStartManaging();
+
+  void dataStopManaging();
 }

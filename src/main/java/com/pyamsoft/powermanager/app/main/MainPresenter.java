@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.app.main;
 
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
 import com.pyamsoft.pydroid.base.Presenter;
@@ -27,6 +29,7 @@ import timber.log.Timber;
 public final class MainPresenter extends Presenter<MainPresenter.MainView> {
 
   @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
+  @NonNull private Subscription fabColorBusSubscription = Subscriptions.empty();
 
   @Inject public MainPresenter() {
   }
@@ -34,11 +37,13 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
   @Override public void onResume() {
     super.onResume();
     registerToOverviewBus();
+    registerToFabColorBus();
   }
 
   @Override public void onPause() {
     super.onPause();
     unregisterFromOverviewBus();
+    unregisterFromFabColorBus();
   }
 
   void registerToOverviewBus() {
@@ -49,9 +54,21 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
           Timber.d("Load fragment %s", overviewSelectionEvent.getType());
           getView().loadFragmentFromOverview(overviewSelectionEvent.getType());
         }, throwable -> {
-          Timber.e("onError");
+          Timber.e(throwable, "onError");
           getView().overviewEventError();
         });
+  }
+
+  void registerToFabColorBus() {
+    unregisterFromFabColorBus();
+    fabColorBusSubscription = FabColorBus.get().register().subscribe(fabColorEvent -> {
+      Timber.d("Set fab coloring");
+      getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor());
+    }, throwable -> {
+      // TODO different error
+      Timber.e(throwable, "onError");
+      getView().overviewEventError();
+    });
   }
 
   void unregisterFromOverviewBus() {
@@ -60,10 +77,18 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
     }
   }
 
+  void unregisterFromFabColorBus() {
+    if (!fabColorBusSubscription.isUnsubscribed()) {
+      fabColorBusSubscription.unsubscribe();
+    }
+  }
+
   public interface MainView {
 
     void loadFragmentFromOverview(@NonNull String type);
 
     void overviewEventError();
+
+    void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor);
   }
 }
