@@ -20,10 +20,13 @@ import com.pyamsoft.powermanager.app.main.MainPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
 @Module public class MainModule {
 
-  @ActivityScope @Provides MainPresenter provideMainPresenter() {
-    return new MainPresenter();
+  @ActivityScope @Provides MainPresenter provideMainPresenter(
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    return new MainPresenter(mainScheduler, ioScheduler);
   }
 }

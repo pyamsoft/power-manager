@@ -19,19 +19,23 @@ package com.pyamsoft.powermanager.app.main;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
-import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public final class MainPresenter extends Presenter<MainPresenter.MainView> {
+public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainView> {
 
   @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
   @NonNull private Subscription fabColorBusSubscription = Subscriptions.empty();
 
-  @Inject public MainPresenter() {
+  @Inject public MainPresenter(@NonNull @Named("main") Scheduler mainScheduler,
+      @NonNull @Named("io") Scheduler ioScheduler) {
+    super(mainScheduler, ioScheduler);
   }
 
   @Override public void onResume() {
@@ -49,8 +53,11 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
   void registerToOverviewBus() {
     unregisterFromOverviewBus();
 
-    overviewBusSubscription =
-        OverviewSelectionBus.get().register().subscribe(overviewSelectionEvent -> {
+    overviewBusSubscription = OverviewSelectionBus.get()
+        .register()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(overviewSelectionEvent -> {
           Timber.d("Load fragment %s", overviewSelectionEvent.getType());
           getView().loadFragmentFromOverview(overviewSelectionEvent.getType());
         }, throwable -> {
@@ -61,14 +68,18 @@ public final class MainPresenter extends Presenter<MainPresenter.MainView> {
 
   void registerToFabColorBus() {
     unregisterFromFabColorBus();
-    fabColorBusSubscription = FabColorBus.get().register().subscribe(fabColorEvent -> {
-      Timber.d("Set fab coloring");
-      getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor());
-    }, throwable -> {
-      // TODO different error
-      Timber.e(throwable, "onError");
-      getView().overviewEventError();
-    });
+    fabColorBusSubscription = FabColorBus.get()
+        .register()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(fabColorEvent -> {
+          Timber.d("Set fab coloring");
+          getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor());
+        }, throwable -> {
+          // TODO different error
+          Timber.e(throwable, "onError");
+          getView().overviewEventError();
+        });
   }
 
   void unregisterFromOverviewBus() {
