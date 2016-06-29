@@ -78,6 +78,15 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
       case TYPE_WIFI:
         wifiPresenter.getCurrentState();
         break;
+      case TYPE_DATA:
+        dataPresenter.getCurrentState();
+        break;
+      case TYPE_BLUETOOTH:
+        bluetoothPresenter.getCurrentState();
+        break;
+      case TYPE_SYNC:
+        syncPresenter.getCurrentState();
+        break;
       default:
         throw new IllegalStateException("Invalid type: " + type);
     }
