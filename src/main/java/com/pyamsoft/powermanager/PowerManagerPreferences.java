@@ -22,6 +22,14 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isIgnoreChargingWifi();
+
+  @CheckResult boolean isIgnoreChargingData();
+
+  @CheckResult boolean isIgnoreChargingBluetooth();
+
+  @CheckResult boolean isIgnoreChargingSync();
+
   @CheckResult boolean isCustomDelayTimeWifi();
 
   @CheckResult boolean isCustomDelayTimeData();

@@ -89,4 +89,9 @@
   <string name="periodic_data_enable_title">Periodic Data Enable</string>
   <string name="periodic_data_enable_summary">Periodic Data Enable</string>
 
+  <bool name="ignore_charging_data_default">false</bool>
+  <string name="ignore_charging_data_key">ignore_charging_data</string>
+  <string name="ignore_charging_data_title">Ignore When Charging</string>
+  <string name="ignore_charging_data_summary">Ignore Data when Device is Charging</string>
+
 </resources>

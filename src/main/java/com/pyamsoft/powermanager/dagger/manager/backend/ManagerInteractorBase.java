@@ -21,12 +21,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import rx.Observable;
 import timber.log.Timber;
 
 abstract class ManagerInteractorBase implements ManagerInteractor {
 
   private boolean originalState = false;
+  @NonNull private final PowerManagerPreferences preferences;
+
+  protected ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @CheckResult public PowerManagerPreferences getPreferences() {
+    return preferences;
+  }
 
   @WorkerThread protected final void cancelJobs(@NonNull String tag) {
     Timber.d("Attempt job cancel %s", tag);
@@ -37,8 +47,8 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     this.originalState = originalState;
   }
 
-  public final boolean isOriginalStateEnabled() {
-    return originalState;
+  @CheckResult @NonNull public final Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(originalState));
   }
 
   @CheckResult @NonNull abstract Observable<Long> getPeriodicEnableTime();

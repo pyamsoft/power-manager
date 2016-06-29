@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
@@ -30,14 +29,12 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "wifi_manager_job";
   @NonNull private final WifiManager wifiManager;
-  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Context appContext;
 
   @Inject ManagerInteractorWifi(@NonNull PowerManagerPreferences preferences,
       @NonNull Context context, @NonNull WifiManager wifiManager) {
     super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
     this.wifiManager = wifiManager;
   }
 
@@ -50,37 +47,43 @@ final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(preferences.isWifiManaged()));
+    return Observable.defer(() -> Observable.just(getPreferences().isWifiManaged()));
   }
 
   @NonNull @Override public Observable<Boolean> isPeriodic() {
-    return Observable.defer(() -> Observable.just(preferences.isPeriodicWifi()));
+    return Observable.defer(() -> Observable.just(getPreferences().isPeriodicWifi()));
   }
 
   @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
-    return Observable.defer(() -> Observable.just(preferences.getPeriodicEnableTimeWifi()));
+    return Observable.defer(() -> Observable.just(getPreferences().getPeriodicEnableTimeWifi()));
   }
 
   @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
-    return Observable.defer(() -> Observable.just(preferences.getPeriodicDisableTimeWifi()));
+    return Observable.defer(() -> Observable.just(getPreferences().getPeriodicDisableTimeWifi()));
   }
 
   @NonNull @Override public Observable<Long> getDelayTime() {
-    return Observable.defer(() -> Observable.just(preferences.getWifiDelay()));
+    return Observable.defer(() -> Observable.just(getPreferences().getWifiDelay()));
+  }
+
+  @NonNull @Override public Observable<Boolean> isChargingIgnore() {
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingWifi()));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
-    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
-        .map(times -> new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-            times.first, times.second));
+    return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
+        isOriginalStateEnabled(),
+        (disable, enable, original) -> new EnableJob(appContext, delayTime, original, periodic,
+            disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
-    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
-        .map(times -> new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-            times.first, times.second));
+    return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
+        isOriginalStateEnabled(),
+        (disable, enable, original) -> new DisableJob(appContext, delayTime, original, periodic,
+            disable, enable));
   }
 
   static final class EnableJob extends Job {

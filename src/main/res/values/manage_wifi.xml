@@ -89,4 +89,9 @@
   <string name="periodic_wifi_enable_title">Periodic Wifi Enable</string>
   <string name="periodic_wifi_enable_summary">Periodic Wifi Enable</string>
 
+  <bool name="ignore_charging_wifi_default">false</bool>
+  <string name="ignore_charging_wifi_key">ignore_charging_wifi</string>
+  <string name="ignore_charging_wifi_title">Ignore When Charging</string>
+  <string name="ignore_charging_wifi_summary">Ignore Wifi when Device is Charging</string>
+
 </resources>

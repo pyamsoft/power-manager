@@ -74,7 +74,8 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
 
   public final void onWearableManageChanged() {
     unsubManaged();
-    managedSubscription =  interactor.isWearableManaged().subscribeOn(getSubscribeScheduler())
+    managedSubscription = interactor.isWearableManaged()
+        .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(managed -> {
           if (managed) {
@@ -83,13 +84,13 @@ abstract class WearableManager<I extends WearableManager.WearableView> extends M
             getView().stopManagingWearable();
           }
         }, throwable -> {
-         // TODO
+          // TODO
           Timber.e(throwable, "onError");
         });
   }
 
-  @Override public void disable() {
-    disable(zipWithWearableManagedState(baseDisableObservable()));
+  @Override public void disable(boolean charging) {
+    disable(zipWithWearableManagedState(baseDisableObservable(charging)));
   }
 
   public interface WearableView extends ManagerView {

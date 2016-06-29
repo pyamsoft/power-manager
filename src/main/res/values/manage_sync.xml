@@ -89,4 +89,9 @@
   <string name="periodic_sync_enable_title">Periodic Sync Enable</string>
   <string name="periodic_sync_enable_summary">Periodic Sync Enable</string>
 
+  <bool name="ignore_charging_sync_default">false</bool>
+  <string name="ignore_charging_sync_key">ignore_charging_sync</string>
+  <string name="ignore_charging_sync_title">Ignore When Charging</string>
+  <string name="ignore_charging_sync_summary">Ignore Sync when Device is Charging</string>
+
 </resources>

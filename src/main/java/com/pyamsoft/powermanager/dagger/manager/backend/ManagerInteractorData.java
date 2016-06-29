@@ -23,7 +23,6 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.lang.reflect.Method;
@@ -35,13 +34,12 @@ final class ManagerInteractorData extends ManagerInteractorBase {
 
   @NonNull private static final String TAG = "data_manager_job";
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
-  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Context appContext;
 
   @Inject ManagerInteractorData(@NonNull PowerManagerPreferences preferences,
       @NonNull Context context) {
+    super(preferences);
     this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
   }
 
   @Override public void cancelJobs() {
@@ -63,37 +61,43 @@ final class ManagerInteractorData extends ManagerInteractorBase {
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(preferences.isDataManaged()));
+    return Observable.defer(() -> Observable.just(getPreferences().isDataManaged()));
   }
 
   @NonNull @Override public Observable<Boolean> isPeriodic() {
-    return Observable.defer(() -> Observable.just(preferences.isPeriodicData()));
+    return Observable.defer(() -> Observable.just(getPreferences().isPeriodicData()));
   }
 
   @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
-    return Observable.defer(() -> Observable.just(preferences.getPeriodicEnableTimeData()));
+    return Observable.defer(() -> Observable.just(getPreferences().getPeriodicEnableTimeData()));
   }
 
   @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
-    return Observable.defer(() -> Observable.just(preferences.getPeriodicDisableTimeData()));
+    return Observable.defer(() -> Observable.just(getPreferences().getPeriodicDisableTimeData()));
   }
 
   @NonNull @Override public Observable<Long> getDelayTime() {
-    return Observable.defer(() -> Observable.just(preferences.getDataDelay()));
+    return Observable.defer(() -> Observable.just(getPreferences().getDataDelay()));
+  }
+
+  @NonNull @Override public Observable<Boolean> isChargingIgnore() {
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingData()));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
-    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
-        .map(times -> new EnableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-            times.first, times.second));
+    return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
+        isOriginalStateEnabled(),
+        (disable, enable, original) -> new EnableJob(appContext, delayTime, original, periodic,
+            disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
-    return getPeriodicDisableTime().zipWith(getPeriodicEnableTime(), Pair::new)
-        .map(times -> new DisableJob(appContext, delayTime, isOriginalStateEnabled(), periodic,
-            times.first, times.second));
+    return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
+        isOriginalStateEnabled(),
+        (disable, enable, original) -> new DisableJob(appContext, delayTime, original, periodic,
+            disable, enable));
   }
 
   static final class EnableJob extends Job {

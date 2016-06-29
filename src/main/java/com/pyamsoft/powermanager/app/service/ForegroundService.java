@@ -45,8 +45,8 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @Override public void onCreate() {
     super.onCreate();
 
-    screenOnOffReceiver = new ScreenOnOffReceiver(getApplication());
-    screenOnOffReceiver.register();
+    screenOnOffReceiver = new ScreenOnOffReceiver();
+    screenOnOffReceiver.register(this);
 
     PowerManager.getInstance().getPowerManagerComponent().inject(this);
 
@@ -59,7 +59,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onDestroy();
     Timber.d("onDestroy");
 
-    screenOnOffReceiver.unregister();
+    screenOnOffReceiver.unregister(this);
     presenter.unbindView();
 
     stopForeground(true);

@@ -90,22 +90,40 @@ abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter
     });
   }
 
-  @CheckResult @NonNull final Observable<ManagerInteractor> baseDisableObservable() {
-    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
-      Timber.d("Cancel any running jobs");
-      managerInteractor.cancelJobs();
-      return managerInteractor;
-    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-      Timber.d("Check that manager isManaged");
-      if (managed) {
-        return managerInteractor;
-      } else {
-        return null;
-      }
-    }).filter(managerInteractor -> {
-      Timber.d("Filter out nulls");
-      return managerInteractor != null;
-    });
+  @CheckResult @NonNull
+  final Observable<ManagerInteractor> baseDisableObservable(boolean charging) {
+    final Observable<Boolean> ignoreChargingObservable =
+        interactor.isChargingIgnore().map(ignoreCharding -> ignoreCharding && charging);
+    return Observable.defer(() -> Observable.just(interactor))
+        .map(managerInteractor -> {
+          Timber.d("Cancel any running jobs");
+          managerInteractor.cancelJobs();
+          return managerInteractor;
+        })
+        .zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
+          Timber.d("Check that manager ignoreCharging");
+          if (ignoreCharging) {
+            return null;
+          } else {
+            return managerInteractor;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out nulls");
+          return managerInteractor != null;
+        })
+        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+          Timber.d("Check that manager isManaged");
+          if (managed) {
+            return managerInteractor;
+          } else {
+            return null;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out nulls");
+          return managerInteractor != null;
+        });
   }
 
   public final void enable(long time, boolean periodic) {
@@ -199,8 +217,8 @@ abstract class Manager<I extends Manager.ManagerView> extends SchedulerPresenter
     setSubscription(subscription);
   }
 
-  public void disable() {
-    disable(baseDisableObservable());
+  public void disable(boolean charging) {
+    disable(baseDisableObservable(charging));
   }
 
   abstract void onEnableComplete();

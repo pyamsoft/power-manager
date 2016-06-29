@@ -16,11 +16,12 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
@@ -32,18 +33,18 @@ import timber.log.Timber;
 
 public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
-  @NonNull private final IntentFilter filter;
-  @NonNull private final Application application;
+  @NonNull private final IntentFilter screenFilter;
   @Inject ManagerWifi managerWifi;
   @Inject ManagerData managerData;
   @Inject ManagerBluetooth managerBluetooth;
   @Inject ManagerSync managerSync;
+  @NonNull private final IntentFilter batteryFilter;
   private boolean isRegistered;
 
-  public ScreenOnOffReceiver(@NonNull Application application) {
-    this.application = application;
-    filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-    filter.addAction(Intent.ACTION_SCREEN_ON);
+  public ScreenOnOffReceiver() {
+    screenFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+    screenFilter.addAction(Intent.ACTION_SCREEN_ON);
+    batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     isRegistered = false;
 
     PowerManager.getInstance().getPowerManagerComponent().inject(this);
@@ -55,7 +56,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
           Timber.d("Screen off event");
-          disableManagers();
+          disableManagers(context);
           break;
         case Intent.ACTION_SCREEN_ON:
           Timber.d("Screen on event");
@@ -68,62 +69,46 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
-    enableWifi();
-    enableData();
-    enableBluetooth();
-    enableSync();
-  }
-
-  private void enableSync() {
+    managerWifi.enable();
+    managerData.enable();
+    managerBluetooth.enable();
     managerSync.enable();
   }
 
-  private void enableBluetooth() {
-    managerBluetooth.enable();
+  @CheckResult private boolean getCurrentChargingState(@NonNull Context context) {
+    final Intent batteryStatus = context.registerReceiver(null, batteryFilter);
+    int status;
+    if (batteryStatus == null) {
+      Timber.e("NULL BatteryStatus Intent, return Unknown");
+      status = BatteryManager.BATTERY_STATUS_UNKNOWN;
+    } else {
+      // Are we charging / charged?
+      status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS,
+          BatteryManager.BATTERY_STATUS_UNKNOWN);
+    }
+
+    return status == BatteryManager.BATTERY_STATUS_CHARGING;
   }
 
-  private void enableData() {
-    managerData.enable();
-  }
-
-  private void enableWifi() {
-    managerWifi.enable();
-  }
-
-  private void disableManagers() {
+  private void disableManagers(@NonNull Context context) {
     Timber.d("Disable all managed managers");
-    disableWifi();
-    disableData();
-    disableBluetooth();
-    disableSync();
+    final boolean charging = getCurrentChargingState(context);
+    managerWifi.disable(charging);
+    managerData.disable(charging);
+    managerBluetooth.disable(charging);
+    managerSync.disable(charging);
   }
 
-  private void disableSync() {
-    managerSync.disable();
-  }
-
-  private void disableBluetooth() {
-    managerBluetooth.disable();
-  }
-
-  private void disableData() {
-    managerData.disable();
-  }
-
-  private void disableWifi() {
-    managerWifi.disable();
-  }
-
-  public final void register() {
+  public final void register(@NonNull Context context) {
     if (!isRegistered) {
-      application.getApplicationContext().registerReceiver(this, filter);
+      context.getApplicationContext().registerReceiver(this, screenFilter);
       isRegistered = true;
     }
   }
 
-  public final void unregister() {
+  public final void unregister(@NonNull Context context) {
     if (isRegistered) {
-      application.getApplicationContext().unregisterReceiver(this);
+      context.getApplicationContext().unregisterReceiver(this);
       isRegistered = false;
     }
   }

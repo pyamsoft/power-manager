@@ -88,6 +88,15 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String presetPeriodicEnableBluetooth;
   @NonNull private final String presetPeriodicEnableSync;
 
+  @NonNull private final String ignoreChargingWifi;
+  @NonNull private final String ignoreChargingData;
+  @NonNull private final String ignoreChargingBluetooth;
+  @NonNull private final String ignoreChargingSync;
+  private final boolean ignoreChargingWifiDefault;
+  private final boolean ignoreChargingDataDefault;
+  private final boolean ignoreChargingBluetoothDefault;
+  private final boolean ignoreChargingSyncDefault;
+
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
 
@@ -159,8 +168,33 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
         appContext.getString(R.string.preset_periodic_bluetooth_enable_key);
     presetPeriodicEnableSync = appContext.getString(R.string.preset_periodic_sync_enable_key);
 
+    ignoreChargingWifi = appContext.getString(R.string.ignore_charging_wifi_key);
+    ignoreChargingData = appContext.getString(R.string.ignore_charging_data_key);
+    ignoreChargingBluetooth = appContext.getString(R.string.ignore_charging_bluetooth_key);
+    ignoreChargingSync = appContext.getString(R.string.ignore_charging_sync_key);
+    ignoreChargingWifiDefault = resources.getBoolean(R.bool.ignore_charging_wifi_default);
+    ignoreChargingDataDefault = resources.getBoolean(R.bool.ignore_charging_data_default);
+    ignoreChargingBluetoothDefault = resources.getBoolean(R.bool.ignore_charging_bluetooth_default);
+    ignoreChargingSyncDefault = resources.getBoolean(R.bool.ignore_charging_sync_default);
+
     manageWearable = appContext.getString(R.string.manage_wearable_key);
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
+  }
+
+  @Override public boolean isIgnoreChargingWifi() {
+    return get(ignoreChargingWifi, ignoreChargingWifiDefault);
+  }
+
+  @Override public boolean isIgnoreChargingData() {
+    return get(ignoreChargingData, ignoreChargingDataDefault);
+  }
+
+  @Override public boolean isIgnoreChargingBluetooth() {
+    return get(ignoreChargingBluetooth, ignoreChargingBluetoothDefault);
+  }
+
+  @Override public boolean isIgnoreChargingSync() {
+    return get(ignoreChargingSync, ignoreChargingSyncDefault);
   }
 
   @Override public boolean isCustomDelayTimeWifi() {

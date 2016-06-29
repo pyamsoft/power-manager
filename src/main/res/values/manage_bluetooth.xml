@@ -89,4 +89,9 @@
   <string name="periodic_bluetooth_enable_title">Periodic Bluetooth Enable</string>
   <string name="periodic_bluetooth_enable_summary">Periodic Bluetooth Enable</string>
 
+  <bool name="ignore_charging_bluetooth_default">false</bool>
+  <string name="ignore_charging_bluetooth_key">ignore_charging_bluetooth</string>
+  <string name="ignore_charging_bluetooth_title">Ignore When Charging</string>
+  <string name="ignore_charging_bluetooth_summary">Ignore Bluetooth when Device is Charging</string>
+
 </resources>

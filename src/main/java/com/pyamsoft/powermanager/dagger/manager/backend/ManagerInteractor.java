@@ -26,6 +26,8 @@ public interface ManagerInteractor {
 
   void setOriginalState(boolean enabled);
 
+  @CheckResult @NonNull Observable<Boolean> isChargingIgnore();
+
   @CheckResult @NonNull Observable<Boolean> isEnabled();
 
   @CheckResult @NonNull Observable<Boolean> isManaged();
