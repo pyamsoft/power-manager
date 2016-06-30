@@ -25,11 +25,13 @@ import com.google.auto.value.AutoValue;
 @AutoValue public abstract class FabColorEvent {
 
   @CheckResult @NonNull
-  public static FabColorEvent create(@DrawableRes int icon, @ColorRes int backgroundColor) {
-    return new AutoValue_FabColorEvent(icon, backgroundColor);
+  public static FabColorEvent create(@DrawableRes int icon, @ColorRes int backgroundColor, @NonNull Runnable onClick) {
+    return new AutoValue_FabColorEvent(icon, backgroundColor, onClick);
   }
 
   @DrawableRes public abstract int icon();
 
   @ColorRes public abstract int backgroundColor();
+
+  @NonNull public abstract Runnable onClick();
 }

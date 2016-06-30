@@ -74,7 +74,8 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         .observeOn(getObserveScheduler())
         .subscribe(fabColorEvent -> {
           Timber.d("Set fab coloring");
-          getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor());
+          getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor(),
+              fabColorEvent.onClick());
         }, throwable -> {
           // TODO different error
           Timber.e(throwable, "onError");
@@ -100,6 +101,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
 
     void overviewEventError();
 
-    void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor);
+    void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor,
+        @NonNull Runnable runnable);
   }
 }

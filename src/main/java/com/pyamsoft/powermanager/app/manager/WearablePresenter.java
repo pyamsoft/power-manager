@@ -33,7 +33,7 @@ public abstract class WearablePresenter<I extends WearablePresenter.WearableView
   protected WearablePresenter(@NonNull WearableManagerInteractor interactor,
       @NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
+    super(interactor, observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 

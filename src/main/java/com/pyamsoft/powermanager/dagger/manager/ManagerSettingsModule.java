@@ -19,8 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.BluetoothPresenter;
 import com.pyamsoft.powermanager.app.manager.DataPresenter;
-import com.pyamsoft.powermanager.app.manager.ManagerManagePresenter;
-import com.pyamsoft.powermanager.app.manager.ManagerPeriodicPresenter;
 import com.pyamsoft.powermanager.app.manager.SyncPresenter;
 import com.pyamsoft.powermanager.app.manager.WifiPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
@@ -34,28 +32,6 @@ import javax.inject.Named;
 import rx.Scheduler;
 
 @Module public class ManagerSettingsModule {
-
-  @ActivityScope @Provides ManagerManagePresenter provideManagerManagePresenter(
-      @NonNull ManagerManageInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
-    return new ManagerManagePresenter(interactor, mainScheduler, ioScheduler);
-  }
-
-  @ActivityScope @Provides ManagerManageInteractor provideManagerManageInteractor(
-      @NonNull ManagerManageInteractorImpl interactor) {
-    return interactor;
-  }
-
-  @ActivityScope @Provides ManagerPeriodicPresenter provideManagerPeriodicPresenter(
-      @NonNull ManagerPeriodicInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
-    return new ManagerPeriodicPresenter(interactor, mainScheduler, ioScheduler);
-  }
-
-  @ActivityScope @Provides ManagerPeriodicInteractor provideManagerPeriodicInteractor(
-      @NonNull ManagerPeriodicInteractorImpl interactor) {
-    return interactor;
-  }
 
   @ActivityScope @Provides WifiPresenter provideWifiPresenter(
       @NonNull ManagerInteractorWifi interactor, @Named("main") Scheduler mainScheduler,

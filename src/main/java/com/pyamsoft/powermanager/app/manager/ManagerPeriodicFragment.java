@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference;
-import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import com.pyamsoft.powermanager.dagger.manager.DaggerManagerPeriodicComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -197,7 +197,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    DaggerManagerSettingsComponent.builder()
+    DaggerManagerPeriodicComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);

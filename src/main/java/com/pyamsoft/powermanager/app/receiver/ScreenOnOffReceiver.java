@@ -104,10 +104,18 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   public final void register(@NonNull Context context) {
+    cleanup();
     if (!isRegistered) {
       context.getApplicationContext().registerReceiver(this, screenFilter);
       isRegistered = true;
     }
+  }
+
+  private void cleanup() {
+    managerWifi.cleanup();
+    managerData.cleanup();
+    managerBluetooth.cleanup();
+    managerSync.cleanup();
   }
 
   public final void unregister(@NonNull Context context) {
@@ -115,6 +123,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
       context.getApplicationContext().unregisterReceiver(this);
       isRegistered = false;
     }
+    cleanup();
   }
 }
 

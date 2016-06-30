@@ -17,11 +17,9 @@
 package com.pyamsoft.powermanager.app.manager;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -32,7 +30,6 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
   @NonNull private final WearableManagerInteractor interactor;
   @NonNull private Subscription isEnabledSubscription = Subscriptions.empty();
   @NonNull private Subscription isManagedSubscription = Subscriptions.empty();
-  @NonNull private Subscription initialSubscription = Subscriptions.empty();
 
   @Inject public WifiPresenter(@NonNull @Named("wifi") WearableManagerInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
@@ -46,26 +43,10 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
     super.onUnbind();
     unsubIsEnabled();
     unsubIsManaged();
-    unsubInitial();
   }
 
-  private void unsubInitial() {
-    if (!initialSubscription.isUnsubscribed()) {
-      initialSubscription.unsubscribe();
-    }
-  }
-
-  @Override public void getCurrentState() {
-    unsubInitial();
-    initialSubscription = Observable.zip(interactor.isEnabled(), interactor.isManaged(), Pair::new)
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(pair -> {
-          getView().wifiInitialState(pair.first, pair.second);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
+  @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
+    getView().wifiInitialState(enabled, managed);
   }
 
   public final void isEnabled() {
@@ -75,9 +56,9 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
         .observeOn(getObserveScheduler())
         .subscribe(enabled -> {
           if (enabled) {
-            getView().wifiStateEnabled();
+            getView().toggleWifiDisabled();
           } else {
-            getView().wifiStateDisabled();
+            getView().toggleWifiEnabled();
           }
         }, throwable -> {
           Timber.e(throwable, "onError");

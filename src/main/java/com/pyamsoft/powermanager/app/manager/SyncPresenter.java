@@ -17,11 +17,9 @@
 package com.pyamsoft.powermanager.app.manager;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -32,11 +30,11 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
   @NonNull private final ManagerInteractor interactor;
   @NonNull private Subscription isEnabledSubscription = Subscriptions.empty();
   @NonNull private Subscription isManagedSubscription = Subscriptions.empty();
-  @NonNull private Subscription initialSubscription = Subscriptions.empty();
 
   @Inject public SyncPresenter(@NonNull @Named("sync") ManagerInteractor interactor,
-      @NonNull @Named("main") Scheduler mainScheduler, @NonNull @Named("io") Scheduler ioScheduler) {
-    super(mainScheduler, ioScheduler);
+      @NonNull @Named("main") Scheduler mainScheduler,
+      @NonNull @Named("io") Scheduler ioScheduler) {
+    super(interactor, mainScheduler, ioScheduler);
     Timber.d("new ManagerSync");
     this.interactor = interactor;
   }
@@ -45,26 +43,10 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
     super.onUnbind();
     unsubIsEnabled();
     unsubIsManaged();
-    unsubInitial();
   }
 
-  private void unsubInitial() {
-    if (!initialSubscription.isUnsubscribed()) {
-      initialSubscription.unsubscribe();
-    }
-  }
-
-  @Override public void getCurrentState() {
-    unsubInitial();
-    initialSubscription = Observable.zip(interactor.isEnabled(), interactor.isManaged(), Pair::new)
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(pair -> {
-          getView().syncInitialState(pair.first, pair.second);
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
+  @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
+    getView().syncInitialState(enabled, managed);
   }
 
   public final void isEnabled() {
@@ -74,9 +56,9 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
         .observeOn(getObserveScheduler())
         .subscribe(enabled -> {
           if (enabled) {
-            getView().syncStateEnabled();
+            getView().toggleSyncEnabled();
           } else {
-            getView().syncStateDisabled();
+            getView().toggleSyncDisabled();
           }
         }, throwable -> {
           Timber.e(throwable, "onError");

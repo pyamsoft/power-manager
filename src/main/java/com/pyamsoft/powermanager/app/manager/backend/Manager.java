@@ -118,8 +118,11 @@ abstract class Manager {
     });
   }
 
-  public final void enable(long time, boolean periodic) {
+  public final void enable(long time, boolean periodic, boolean explicit) {
     unsubsEnable();
+    if (explicit) {
+      interactor.setOriginalState(true);
+    }
     enableJobSubscription = interactor.createEnableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
@@ -131,10 +134,10 @@ abstract class Manager {
         });
   }
 
-  public final void disable(long time, boolean periodic) {
+  public final void disable(long time, boolean periodic, boolean explicit) {
     unsubsDisable();
     disableJobSubscription = interactor.isEnabled().flatMap(enabled -> {
-      interactor.setOriginalState(enabled);
+      interactor.setOriginalState(enabled || explicit);
       return interactor.createDisableJob(time, periodic);
     }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(deviceJob -> {
       PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
@@ -151,7 +154,7 @@ abstract class Manager {
         .observeOn(mainScheduler)
         .subscribe(managerInteractor -> {
           Timber.d("Queue enable");
-          enable(0, false);
+          enable(0, false, false);
         }, throwable -> Timber.e(throwable, "onError"), () -> {
           Timber.d("onComplete");
           interactor.setOriginalState(false);
@@ -173,7 +176,7 @@ abstract class Manager {
         .observeOn(mainScheduler)
         .subscribe(pair -> {
           Timber.d("Queue disable");
-          disable(pair.second, pair.first);
+          disable(pair.second, pair.first, false);
         }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
   }
 

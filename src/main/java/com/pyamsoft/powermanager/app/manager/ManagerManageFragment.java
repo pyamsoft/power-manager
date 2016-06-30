@@ -32,7 +32,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
-import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import com.pyamsoft.powermanager.dagger.manager.DaggerManagerManageComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -150,7 +150,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    DaggerManagerSettingsComponent.builder()
+    DaggerManagerManageComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);

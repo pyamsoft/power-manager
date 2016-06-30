@@ -18,13 +18,9 @@ package com.pyamsoft.powermanager.app.manager;
 
 public interface SyncView extends ManagerPresenter.ManagerView {
 
-  void syncStateEnabled();
-
-  void syncStateDisabled();
-
-  void syncStartManaging();
-
-  void syncStopManaging();
-
   void syncInitialState(boolean enabled, boolean managed);
+
+  void toggleSyncEnabled();
+
+  void toggleSyncDisabled();
 }

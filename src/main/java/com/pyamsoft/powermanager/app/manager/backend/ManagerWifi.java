@@ -36,10 +36,12 @@ public final class ManagerWifi extends WearableManager {
   }
 
   @Override void onEnableComplete() {
-
+    Timber.d("Enable complete");
+    cleanup();
   }
 
   @Override void onDisableComplete() {
-
+    Timber.d("Disable complete");
+    cleanup();
   }
 }
