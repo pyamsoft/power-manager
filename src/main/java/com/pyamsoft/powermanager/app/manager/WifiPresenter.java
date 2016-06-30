@@ -42,7 +42,7 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubIsEnabled();
-    unsubIsManaged();
+    //unsubIsManaged();
   }
 
   @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
@@ -72,26 +72,26 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
     }
   }
 
-  public final void isManaged() {
-    unsubIsManaged();
-    isManagedSubscription = interactor.isManaged()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(managed -> {
-          if (managed) {
-            getView().wifiStartManaging();
-          } else {
-            getView().wifiStopManaging();
-          }
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
-  }
-
-  void unsubIsManaged() {
-    if (!isManagedSubscription.isUnsubscribed()) {
-      isManagedSubscription.unsubscribe();
-    }
-  }
+  //public final void isManaged() {
+  //  unsubIsManaged();
+  //  isManagedSubscription = interactor.isManaged()
+  //      .subscribeOn(getSubscribeScheduler())
+  //      .observeOn(getObserveScheduler())
+  //      .subscribe(managed -> {
+  //        if (managed) {
+  //          getView().wifiStartManaging();
+  //        } else {
+  //          getView().wifiStopManaging();
+  //        }
+  //      }, throwable -> {
+  //        Timber.e(throwable, "onError");
+  //         TODO error
+  //});
+  //}
+  //
+  //void unsubIsManaged() {
+  //  if (!isManagedSubscription.isUnsubscribed()) {
+  //    isManagedSubscription.unsubscribe();
+  //  }
+//}
 }

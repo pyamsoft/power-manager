@@ -43,7 +43,7 @@ public final class BluetoothPresenter extends WearablePresenter<BluetoothView> {
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubIsEnabled();
-    unsubIsManaged();
+    //unsubIsManaged();
   }
 
   @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
@@ -73,26 +73,26 @@ public final class BluetoothPresenter extends WearablePresenter<BluetoothView> {
     }
   }
 
-  public final void isManaged() {
-    unsubIsManaged();
-    isManagedSubscription = interactor.isManaged()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(managed -> {
-          if (managed) {
-            getView().bluetoothStartManaging();
-          } else {
-            getView().bluetoothStopManaging();
-          }
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
-  }
-
-  void unsubIsManaged() {
-    if (!isManagedSubscription.isUnsubscribed()) {
-      isManagedSubscription.unsubscribe();
-    }
-  }
+  //public final void isManaged() {
+  //  unsubIsManaged();
+  //  isManagedSubscription = interactor.isManaged()
+  //      .subscribeOn(getSubscribeScheduler())
+  //      .observeOn(getObserveScheduler())
+  //      .subscribe(managed -> {
+  //        if (managed) {
+  //          getView().bluetoothStartManaging();
+  //        } else {
+  //          getView().bluetoothStopManaging();
+  //        }
+  //      }, throwable -> {
+  //        Timber.e(throwable, "onError");
+  //        // TODO error
+  //      });
+  //}
+  //
+  //void unsubIsManaged() {
+  //  if (!isManagedSubscription.isUnsubscribed()) {
+  //    isManagedSubscription.unsubscribe();
+  //  }
+  //}
 }

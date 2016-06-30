@@ -42,7 +42,7 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubIsEnabled();
-    unsubIsManaged();
+    //unsubIsManaged();
   }
 
   @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
@@ -72,26 +72,26 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     }
   }
 
-  public final void isManaged() {
-    unsubIsManaged();
-    isManagedSubscription = interactor.isManaged()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(managed -> {
-          if (managed) {
-            getView().dataStartManaging();
-          } else {
-            getView().dataStopManaging();
-          }
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
-  }
-
-  void unsubIsManaged() {
-    if (!isManagedSubscription.isUnsubscribed()) {
-      isManagedSubscription.unsubscribe();
-    }
-  }
+  //public final void isManaged() {
+  //  unsubIsManaged();
+  //  isManagedSubscription = interactor.isManaged()
+  //      .subscribeOn(getSubscribeScheduler())
+  //      .observeOn(getObserveScheduler())
+  //      .subscribe(managed -> {
+  //        if (managed) {
+  //          getView().dataStartManaging();
+  //        } else {
+  //          getView().dataStopManaging();
+  //        }
+  //      }, throwable -> {
+  //        Timber.e(throwable, "onError");
+  //         TODO error
+  //});
+  //}
+  //
+  //void unsubIsManaged() {
+  //  if (!isManagedSubscription.isUnsubscribed()) {
+  //    isManagedSubscription.unsubscribe();
+  //  }
+  //}
 }
