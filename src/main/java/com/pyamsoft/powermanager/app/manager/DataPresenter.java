@@ -21,15 +21,11 @@ import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public final class DataPresenter extends ManagerPresenter<DataView> {
 
   @NonNull private final ManagerInteractor interactor;
-  @NonNull private Subscription isEnabledSubscription = Subscriptions.empty();
-  @NonNull private Subscription isManagedSubscription = Subscriptions.empty();
 
   @Inject public DataPresenter(@NonNull @Named("data") ManagerInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
@@ -39,37 +35,16 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    unsubIsEnabled();
-    //unsubIsManaged();
+  @Override public void onToggle(boolean currentState) {
+    if (currentState) {
+      getView().toggleDataDisabled();
+    } else {
+      getView().toggleDataEnabled();
+    }
   }
 
   @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
     getView().dataInitialState(enabled, managed);
-  }
-
-  @Override public void toggleState() {
-    unsubIsEnabled();
-    isEnabledSubscription = interactor.isEnabled()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(enabled -> {
-          if (enabled) {
-            getView().toggleDataEnabled();
-          } else {
-            getView().toggleDataDisabled();
-          }
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO error
-        });
-  }
-
-  void unsubIsEnabled() {
-    if (!isEnabledSubscription.isUnsubscribed()) {
-      isEnabledSubscription.unsubscribe();
-    }
   }
 
   //public final void isManaged() {
