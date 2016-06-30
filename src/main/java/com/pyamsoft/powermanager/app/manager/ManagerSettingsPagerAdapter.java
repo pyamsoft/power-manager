@@ -207,25 +207,23 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     @DrawableRes final int icon = enabled ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
     FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
       Timber.d("Runnable bluetoothPresenter");
-      bluetoothPresenter.isEnabled();
+      bluetoothPresenter.toggleState();
     }));
   }
 
   @Override public void dataInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, new Runnable() {
-      @Override public void run() {
-
-      }
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+      Timber.d("Runnable dataPresenter");
+      dataPresenter.toggleState();
     }));
   }
 
   @Override public void syncInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, new Runnable() {
-      @Override public void run() {
-
-      }
+    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+      Timber.d("Runnable syncPresenter");
+      syncPresenter.toggleState();
     }));
   }
 
@@ -233,7 +231,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     @DrawableRes final int icon = enabled ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
     FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
       Timber.d("Runnable wifiPresenter");
-      wifiPresenter.isEnabled();
+      wifiPresenter.toggleState();
     }));
   }
 }

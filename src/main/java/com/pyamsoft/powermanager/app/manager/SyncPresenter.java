@@ -49,7 +49,7 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
     getView().syncInitialState(enabled, managed);
   }
 
-  public final void isEnabled() {
+  @Override public void toggleState() {
     unsubIsEnabled();
     isEnabledSubscription = interactor.isEnabled()
         .subscribeOn(getSubscribeScheduler())

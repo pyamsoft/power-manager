@@ -49,7 +49,7 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     getView().dataInitialState(enabled, managed);
   }
 
-  public final void isEnabled() {
+  @Override public void toggleState() {
     unsubIsEnabled();
     isEnabledSubscription = interactor.isEnabled()
         .subscribeOn(getSubscribeScheduler())

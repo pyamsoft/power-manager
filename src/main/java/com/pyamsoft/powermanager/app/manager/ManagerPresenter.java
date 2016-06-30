@@ -66,6 +66,8 @@ public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView>
 
   public abstract void onCurrentStateReceived(boolean enabled, boolean managed);
 
+  public abstract void toggleState();
+
   public interface ManagerView {
 
   }

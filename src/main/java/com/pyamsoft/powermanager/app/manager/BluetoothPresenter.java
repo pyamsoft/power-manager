@@ -50,7 +50,7 @@ public final class BluetoothPresenter extends WearablePresenter<BluetoothView> {
     getView().bluetoothInitialState(enabled, managed);
   }
 
-  public final void isEnabled() {
+  @Override public void toggleState() {
     unsubIsEnabled();
     isEnabledSubscription = interactor.isEnabled()
         .subscribeOn(getSubscribeScheduler())

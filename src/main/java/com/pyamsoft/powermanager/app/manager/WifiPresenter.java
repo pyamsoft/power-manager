@@ -49,7 +49,7 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
     getView().wifiInitialState(enabled, managed);
   }
 
-  public final void isEnabled() {
+  @Override public void toggleState() {
     unsubIsEnabled();
     isEnabledSubscription = interactor.isEnabled()
         .subscribeOn(getSubscribeScheduler())
@@ -93,5 +93,5 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
   //  if (!isManagedSubscription.isUnsubscribed()) {
   //    isManagedSubscription.unsubscribe();
   //  }
-//}
+  //}
 }
