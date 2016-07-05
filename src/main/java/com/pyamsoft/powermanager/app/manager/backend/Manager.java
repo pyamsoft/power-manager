@@ -70,11 +70,7 @@ abstract class Manager {
   }
 
   @CheckResult @NonNull final Observable<ManagerInteractor> baseEnableObservable() {
-    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
-      Timber.d("Cancel any running jobs");
-      managerInteractor.cancelJobs();
-      return managerInteractor;
-    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+    return interactor.cancelJobs().zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
       Timber.d("Check that manager isManaged");
       if (managed) {
         return managerInteractor;
@@ -82,7 +78,17 @@ abstract class Manager {
         return null;
       }
     }).filter(managerInteractor -> {
-      Timber.d("Filter out nulls");
+      Timber.d("Filter out unmanaged nulls");
+      return managerInteractor != null;
+    }).zipWith(interactor.isOriginalState(), (managerInteractor, originalState) -> {
+      Timber.d("Check original state");
+      if (originalState) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out unoriginal nulls");
       return managerInteractor != null;
     });
   }
@@ -90,39 +96,40 @@ abstract class Manager {
   @CheckResult @NonNull
   final Observable<ManagerInteractor> baseDisableObservable(boolean charging) {
     final Observable<Boolean> ignoreChargingObservable =
-        interactor.isChargingIgnore().map(ignoreCharding -> ignoreCharding && charging);
-    return Observable.defer(() -> Observable.just(interactor)).map(managerInteractor -> {
-      Timber.d("Cancel any running jobs");
-      managerInteractor.cancelJobs();
-      return managerInteractor;
-    }).zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
-      Timber.d("Check that manager ignoreCharging");
-      if (ignoreCharging) {
-        return null;
-      } else {
-        return managerInteractor;
-      }
-    }).filter(managerInteractor -> {
-      Timber.d("Filter out nulls");
-      return managerInteractor != null;
-    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-      Timber.d("Check that manager isManaged");
-      if (managed) {
-        return managerInteractor;
-      } else {
-        return null;
-      }
-    }).filter(managerInteractor -> {
-      Timber.d("Filter out nulls");
-      return managerInteractor != null;
-    });
+        interactor.isChargingIgnore().map(ignoreCharging -> ignoreCharging && charging);
+    return interactor.cancelJobs()
+        .zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
+          Timber.d("Check that manager ignoreCharging");
+          if (ignoreCharging) {
+            return null;
+          } else {
+            return managerInteractor;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out nulls");
+          return managerInteractor != null;
+        })
+        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+          Timber.d("Check that manager isManaged");
+          if (managed) {
+            return managerInteractor;
+          } else {
+            return null;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out nulls");
+          return managerInteractor != null;
+        })
+        .zipWith(interactor.isEnabled(), (managerInteractor, enabled) -> {
+          managerInteractor.setOriginalState(enabled);
+          return managerInteractor;
+        });
   }
 
-  public final void enable(long time, boolean periodic, boolean explicit) {
+  public final void enable(long time, boolean periodic) {
     unsubsEnable();
-    if (explicit) {
-      interactor.setOriginalState(true);
-    }
     enableJobSubscription = interactor.createEnableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
@@ -134,35 +141,31 @@ abstract class Manager {
         });
   }
 
-  public final void disable(long time, boolean periodic, boolean explicit) {
+  public final void disable(long time, boolean periodic) {
     unsubsDisable();
-    disableJobSubscription = interactor.isEnabled().flatMap(enabled -> {
-      interactor.setOriginalState(enabled || explicit);
-      return interactor.createDisableJob(time, periodic);
-    }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(deviceJob -> {
-      PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
-    }, throwable -> {
-      // TODO
-      Timber.e(throwable, "onError");
-    });
-  }
-
-  protected void enable(@NonNull Observable<ManagerInteractor> observable) {
-    unsubscribe();
-    subscription = observable.filter(managerInteractor -> managerInteractor != null)
+    disableJobSubscription = interactor.createDisableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .subscribe(managerInteractor -> {
-          Timber.d("Queue enable");
-          enable(0, false, false);
-        }, throwable -> Timber.e(throwable, "onError"), () -> {
-          Timber.d("onComplete");
-          interactor.setOriginalState(false);
+        .subscribe(deviceJob -> {
+          PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
         });
   }
 
   public void enable() {
-    enable(baseEnableObservable());
+    unsubscribe();
+    subscription = baseEnableObservable().filter(managerInteractor -> managerInteractor != null)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+        .subscribe(managerInteractor -> {
+          Timber.d("Queue enable");
+          enable(0, false);
+        }, throwable -> Timber.e(throwable, "onError"), () -> {
+          Timber.d("onComplete");
+          interactor.setOriginalState(false);
+        });
   }
 
   protected void disable(@NonNull Observable<ManagerInteractor> observable) {
@@ -176,7 +179,7 @@ abstract class Manager {
         .observeOn(mainScheduler)
         .subscribe(pair -> {
           Timber.d("Queue disable");
-          disable(pair.second, pair.first, false);
+          disable(pair.second, pair.first);
         }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
   }
 

@@ -22,9 +22,11 @@ import rx.Observable;
 
 public interface ManagerInteractor {
 
-  void cancelJobs();
-
   void setOriginalState(boolean enabled);
+
+  @NonNull @CheckResult Observable<Boolean> isOriginalState();
+
+  @NonNull @CheckResult Observable<ManagerInteractor> cancelJobs();
 
   @CheckResult @NonNull Observable<Boolean> isChargingIgnore();
 

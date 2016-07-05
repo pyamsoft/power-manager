@@ -157,42 +157,42 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void toggleWifiDisabled() {
     Timber.d("Wifi currently enabled, disable");
-    managerWifi.disable(0, false, true);
+    managerWifi.disable(0, false);
   }
 
   @Override public void toggleWifiEnabled() {
     Timber.d("Wifi currently disabled, enabled");
-    managerWifi.enable(0, false, true);
+    managerWifi.enable(0, false);
   }
 
   @Override public void toggleBluetoothEnabled() {
     Timber.d("Bluetooth currently disabled, enabled");
-    managerBluetooth.enable(0, false, true);
+    managerBluetooth.enable(0, false);
   }
 
   @Override public void toggleBluetoothDisabled() {
     Timber.d("Bluetooth currently enabled, disable");
-    managerBluetooth.disable(0, false, true);
+    managerBluetooth.disable(0, false);
   }
 
   @Override public void toggleDataEnabled() {
     Timber.d("Data currently disabled, enable");
-    managerData.enable(0, false, true);
+    managerData.enable(0, false);
   }
 
   @Override public void toggleDataDisabled() {
     Timber.d("Data currently enabled, disable");
-    managerData.disable(0, false, true);
+    managerData.disable(0, false);
   }
 
   @Override public void toggleSyncEnabled() {
     Timber.d("Sync currently disabled, enable");
-    managerSync.enable(0, false, true);
+    managerSync.enable(0, false);
   }
 
   @Override public void toggleSyncDisabled() {
     Timber.d("Bluetooth currently enabled, disable");
-    managerSync.disable(0, false, true);
+    managerSync.disable(0, false);
   }
 
   @Override public void startManagingWearable() {

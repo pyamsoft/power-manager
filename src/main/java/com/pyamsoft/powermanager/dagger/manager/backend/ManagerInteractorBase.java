@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -38,16 +37,20 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     return preferences;
   }
 
-  @WorkerThread protected final void cancelJobs(@NonNull String tag) {
-    Timber.d("Attempt job cancel %s", tag);
-    PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, tag);
+  @NonNull @CheckResult
+  protected final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
+    return Observable.defer(() -> {
+      Timber.d("Attempt job cancel %s", tag);
+      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, tag);
+      return Observable.just(this);
+    });
   }
 
   @Override public final void setOriginalState(boolean originalState) {
     this.originalState = originalState;
   }
 
-  @CheckResult @NonNull public final Observable<Boolean> isOriginalStateEnabled() {
+  @NonNull @Override public Observable<Boolean> isOriginalState() {
     return Observable.defer(() -> Observable.just(originalState));
   }
 

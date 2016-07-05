@@ -36,28 +36,22 @@ public abstract class DeviceJob extends Job {
 
   @NonNull private final Context appContext;
   private final int jobType;
-  private final boolean originalState;
   private final boolean periodic;
   private final long periodicDisableTime;
   private final long periodicEnableTime;
 
-  DeviceJob(@NonNull Context context, @NonNull Params params, int jobType,
-      boolean originalState, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
+  DeviceJob(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
+      long periodicDisableTime, long periodicEnableTime) {
     super(params.setRequiresNetwork(false));
     this.periodicDisableTime = periodicDisableTime;
     this.periodicEnableTime = periodicEnableTime;
     this.appContext = context.getApplicationContext();
     this.jobType = jobType;
-    this.originalState = originalState;
     this.periodic = periodic;
   }
 
   @CheckResult @NonNull final Context getContext() {
     return appContext;
-  }
-
-  @CheckResult final boolean isOriginalState() {
-    return originalState;
   }
 
   @CheckResult final boolean isPeriodic() {
@@ -117,36 +111,28 @@ public abstract class DeviceJob extends Job {
   }
 
   final void enable() {
-    if (isOriginalState()) {
-      // Only turn wifi on if it is off
-      if (!isEnabled()) {
-        callEnable();
-        if (isPeriodic()) {
-          Timber.d("Periodic job");
-          PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
-        }
-      } else {
-        Timber.e("Radio is already on");
+    // Only turn wifi on if it is off
+    if (!isEnabled()) {
+      callEnable();
+      if (isPeriodic()) {
+        Timber.d("Periodic job");
+        PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
       }
     } else {
-      Timber.e("Radio was not originally on");
+      Timber.e("Radio is already on");
     }
   }
 
   final void disable() {
-    if (isOriginalState()) {
-      // Only turn wifi on if it is off
-      if (isEnabled()) {
-        callDisable();
-        if (isPeriodic()) {
-          Timber.d("Periodic job");
-          PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
-        }
-      } else {
-        Timber.e("Radio is already off");
+    // Only turn wifi on if it is off
+    if (isEnabled()) {
+      callDisable();
+      if (isPeriodic()) {
+        Timber.d("Periodic job");
+        PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
       }
     } else {
-      Timber.e("Radio was not originally on");
+      Timber.e("Radio is already off");
     }
   }
 
