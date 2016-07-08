@@ -28,26 +28,44 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerListAdapterComponent;
+import javax.inject.Inject;
 
 public class PowerTriggerFragment extends Fragment {
 
   @NonNull public static final String TAG = "power_triggers";
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
+
+  @Inject TriggerListAdapterPresenter listAdapterPresenter;
+  private PowerTriggerListAdapter adapter;
   private Unbinder unbinder;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    DaggerTriggerListAdapterComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build()
+        .inject(this);
+
+    adapter = new PowerTriggerListAdapter(listAdapterPresenter);
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_powertrigger, container, false);
     unbinder = ButterKnife.bind(this, view);
+    adapter.onCreate();
     return view;
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
+    adapter.onDestroy();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -58,6 +76,6 @@ public class PowerTriggerFragment extends Fragment {
   private void setupRecyclerView() {
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(new PowerTriggerListAdapter());
+    recyclerView.setAdapter(adapter);
   }
 }

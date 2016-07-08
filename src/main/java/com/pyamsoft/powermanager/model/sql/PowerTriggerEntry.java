@@ -33,6 +33,10 @@ import com.google.auto.value.AutoValue;
         false, false, false, false);
   }
 
+  @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
+    return entry.percent() == EMPTY_PERCENT && entry.name().equals(EMPTY_NAME);
+  }
+
   // SQLDelight does not yet support delete strings
   @NonNull public static final String DELETE_WITH_PERCENT = "percent = ?";
   @NonNull public static final String DELETE_ALL = "1=1";
