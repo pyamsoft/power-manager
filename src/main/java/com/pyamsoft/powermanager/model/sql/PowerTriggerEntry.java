@@ -30,7 +30,7 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
     return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
-        false, false, false, false);
+        false, false, false, false, false);
   }
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {

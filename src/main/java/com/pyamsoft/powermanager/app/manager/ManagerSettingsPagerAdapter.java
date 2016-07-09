@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -37,7 +36,6 @@ import timber.log.Timber;
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     implements WifiView, DataView, BluetoothView, SyncView {
 
-  @ColorRes private static final int FAB_BACKGROUND_COLOR = R.color.lightblueA200;
   @DrawableRes private static final int FAB_ICON_WIFI_ON = R.drawable.ic_network_wifi_24dp;
   @DrawableRes private static final int FAB_ICON_WIFI_OFF = R.drawable.ic_signal_wifi_off_24dp;
   @DrawableRes private static final int FAB_ICON_DATA_ON = R.drawable.ic_network_cell_24dp;
@@ -205,7 +203,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
       Timber.d("Runnable bluetoothPresenter");
       bluetoothPresenter.toggleState();
     }));
@@ -213,7 +211,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void dataInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
       Timber.d("Runnable dataPresenter");
       dataPresenter.toggleState();
     }));
@@ -221,7 +219,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void syncInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
       Timber.d("Runnable syncPresenter");
       syncPresenter.toggleState();
     }));
@@ -229,7 +227,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void wifiInitialState(boolean enabled, boolean managed) {
     @DrawableRes final int icon = enabled ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, FAB_BACKGROUND_COLOR, () -> {
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
       Timber.d("Runnable wifiPresenter");
       wifiPresenter.toggleState();
     }));

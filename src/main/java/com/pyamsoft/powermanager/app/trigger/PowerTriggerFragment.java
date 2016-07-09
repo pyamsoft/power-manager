@@ -30,7 +30,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
+import com.pyamsoft.powermanager.model.FabColorEvent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -75,8 +77,15 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    setupFab();
     setupRecyclerView();
     presenter.loadTriggerView();
+  }
+
+  private void setupFab() {
+    FabColorBus.get()
+        .post(FabColorEvent.create(R.drawable.ic_settings_24dp,
+            () -> presenter.createPowerTrigger()));
   }
 
   private void setupRecyclerView() {

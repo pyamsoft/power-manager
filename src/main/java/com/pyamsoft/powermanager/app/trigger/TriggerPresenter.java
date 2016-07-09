@@ -66,6 +66,10 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
+  public void createPowerTrigger() {
+    Timber.d("Create new power trigger");
+  }
+
   public interface TriggerView {
 
     void loadEmptyView();

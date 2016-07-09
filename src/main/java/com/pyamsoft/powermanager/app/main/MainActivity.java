@@ -20,7 +20,6 @@ import android.animation.LayoutTransition;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -376,10 +375,9 @@ public class MainActivity extends DonationActivityBase
     AppUtil.guaranteeSingleDialogFragment(this, new ErrorDialog(), "error");
   }
 
-  @Override public void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor, @NonNull Runnable runnable) {
+  @Override public void loadFabColoring(@DrawableRes int icon, @NonNull Runnable runnable) {
     final Drawable drawable = ContextCompat.getDrawable(this, icon);
     fab.setImageDrawable(DrawableUtil.tintDrawableFromColor(drawable, white));
-    fab.setBackgroundColor(ContextCompat.getColor(this, backgroundColor));
     fab.setOnClickListener(view -> runnable.run());
   }
 }

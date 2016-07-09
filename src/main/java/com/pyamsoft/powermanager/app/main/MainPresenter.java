@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.main;
 
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
@@ -74,8 +73,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         .observeOn(getObserveScheduler())
         .subscribe(fabColorEvent -> {
           Timber.d("Set fab coloring");
-          getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.backgroundColor(),
-              fabColorEvent.onClick());
+          getView().loadFabColoring(fabColorEvent.icon(), fabColorEvent.onClick());
         }, throwable -> {
           // TODO different error
           Timber.e(throwable, "onError");
@@ -101,7 +99,6 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
 
     void overviewEventError();
 
-    void loadFabColoring(@DrawableRes int icon, @ColorRes int backgroundColor,
-        @NonNull Runnable runnable);
+    void loadFabColoring(@DrawableRes int icon, @NonNull Runnable runnable);
   }
 }

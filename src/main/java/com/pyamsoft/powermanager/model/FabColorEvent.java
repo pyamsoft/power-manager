@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
@@ -25,13 +24,11 @@ import com.google.auto.value.AutoValue;
 @AutoValue public abstract class FabColorEvent {
 
   @CheckResult @NonNull
-  public static FabColorEvent create(@DrawableRes int icon, @ColorRes int backgroundColor, @NonNull Runnable onClick) {
-    return new AutoValue_FabColorEvent(icon, backgroundColor, onClick);
+  public static FabColorEvent create(@DrawableRes int icon, @NonNull Runnable onClick) {
+    return new AutoValue_FabColorEvent(icon, onClick);
   }
 
   @DrawableRes public abstract int icon();
-
-  @ColorRes public abstract int backgroundColor();
 
   @NonNull public abstract Runnable onClick();
 }
