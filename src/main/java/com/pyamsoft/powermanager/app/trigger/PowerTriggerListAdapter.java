@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import timber.log.Timber;
 
 public class PowerTriggerListAdapter
     extends RecyclerView.Adapter<PowerTriggerListAdapter.ViewHolder>
@@ -61,7 +62,10 @@ public class PowerTriggerListAdapter
   }
 
   public void onAddTriggerForPercent(int percent) {
-    notifyItemInserted(presenter.getPositionForPercent(percent));
+    Timber.d("Insert new item for percent: %d", percent);
+    final int position = presenter.getPositionForPercent(percent);
+    Timber.d("Insert new item at: %d", position);
+    notifyItemInserted(position);
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
