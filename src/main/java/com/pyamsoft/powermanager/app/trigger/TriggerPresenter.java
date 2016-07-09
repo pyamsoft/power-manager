@@ -54,6 +54,7 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(size -> {
+          Timber.d("Trigger size = %d", size);
           if (size == 0) {
             getView().loadEmptyView();
           } else {

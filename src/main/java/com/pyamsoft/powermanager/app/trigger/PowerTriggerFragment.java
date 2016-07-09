@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class PowerTriggerFragment extends Fragment implements TriggerPresenter.TriggerView {
 
@@ -84,11 +85,13 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   }
 
   @Override public void loadEmptyView() {
+    Timber.d("Load empty view");
     recyclerView.setVisibility(View.GONE);
     recyclerView.setAdapter(null);
   }
 
   @Override public void loadListView() {
+    Timber.d("Load list view");
     recyclerView.setAdapter(adapter);
     recyclerView.setVisibility(View.VISIBLE);
   }

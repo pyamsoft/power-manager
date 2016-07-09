@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
+import timber.log.Timber;
 
 final class TriggerListAdapterInteractorImpl implements TriggerListAdapterInteractor {
 
@@ -33,7 +34,13 @@ final class TriggerListAdapterInteractorImpl implements TriggerListAdapterIntera
   }
 
   @NonNull @Override public Observable<Integer> size() {
-    return PowerTriggerDB.with(appContext).queryAll().first().count();
+    return PowerTriggerDB.with(appContext).queryAll().first().map(powerTriggerEntries -> {
+      // Can't use actual .count operator here as it always returns 1, for 1 List
+      // We actually want to count the number of items in the list
+      final int count = powerTriggerEntries.size();
+      Timber.d("Count of elements: %d", count);
+      return count;
+    });
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> get(int position) {
