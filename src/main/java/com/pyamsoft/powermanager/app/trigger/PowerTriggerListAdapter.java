@@ -70,6 +70,11 @@ public class PowerTriggerListAdapter
     notifyItemInserted(position);
   }
 
+  public void onDeleteTriggerAtPosition(int position) {
+    Timber.d("Delete item at position: %d", position);
+    notifyItemRemoved(position);
+  }
+
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.trigger_name) TextView triggerName;

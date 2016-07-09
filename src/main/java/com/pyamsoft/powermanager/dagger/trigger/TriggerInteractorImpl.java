@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements TriggerInteractor {
 
@@ -34,6 +35,16 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
     return Observable.defer(() -> {
       PowerTriggerDB.with(getAppContext()).insert(values);
       return Observable.just(PowerTriggerEntry.toTrigger(values));
+    });
+  }
+
+  @NonNull @Override public Observable<Integer> delete(int percent) {
+    return Observable.defer(() -> {
+      Timber.d("Get position of trigger before delete");
+      final Observable<Integer> position = getPosition(percent);
+      Timber.d("Delete trigger for percent %d", percent);
+      PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent);
+      return position;
     });
   }
 }

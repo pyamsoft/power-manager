@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -43,5 +44,39 @@ abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
       Timber.d("Count of elements: %d", count);
       return count;
     });
+  }
+
+  @NonNull @Override public Observable<Integer> getPosition(int percent) {
+    return PowerTriggerDB.with(getAppContext())
+        .queryAll()
+        .first()
+        .flatMap(Observable::from)
+        .toSortedList((entry, entry2) -> {
+          if (entry.percent() < entry2.percent()) {
+            // This is less, goes first
+            return -1;
+          } else if (entry.percent() > entry2.percent()) {
+            // This is greater, goes second
+            return 1;
+          } else {
+            // Same percent. This is impossible technically due to DB rules
+            throw new IllegalStateException("Cannot have two entries with the same percent");
+          }
+        })
+        .map(powerTriggerEntries -> {
+          int position = -1;
+          for (int i = 0; i < powerTriggerEntries.size(); ++i) {
+            final PowerTriggerEntry entry = powerTriggerEntries.get(i);
+            if (entry.percent() == percent) {
+              position = i;
+              break;
+            }
+          }
+
+          if (position == -1) {
+            throw new IndexOutOfBoundsException("Could not find entry with percent: " + percent);
+          }
+          return position;
+        });
   }
 }

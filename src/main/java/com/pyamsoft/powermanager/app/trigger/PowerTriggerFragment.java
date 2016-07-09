@@ -108,7 +108,17 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   @Override public void onNewTriggerAdded(int percent) {
     adapter.onAddTriggerForPercent(percent);
     if (recyclerView.getAdapter() == null) {
+      Timber.d("First trigger, show list");
       loadListView();
+    }
+  }
+
+  @Override public void onTriggerDeleted(int position) {
+    final int oldSize = adapter.getItemCount();
+    adapter.onDeleteTriggerAtPosition(position);
+    if (oldSize - 1 == 0) {
+      Timber.d("Last trigger, hide list");
+      loadEmptyView();
     }
   }
 }

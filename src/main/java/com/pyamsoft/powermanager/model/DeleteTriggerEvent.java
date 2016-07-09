@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.trigger;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import rx.Observable;
+import com.google.auto.value.AutoValue;
 
-public interface TriggerListAdapterInteractor extends BaseTriggerInteractor {
+@AutoValue public abstract class DeleteTriggerEvent {
 
-  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int position);
+  @CheckResult @NonNull public static DeleteTriggerEvent create(int percent) {
+    return new AutoValue_DeleteTriggerEvent(percent);
+  }
+
+  public abstract int percent();
 }

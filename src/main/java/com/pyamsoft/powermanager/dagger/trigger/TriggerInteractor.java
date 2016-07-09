@@ -25,4 +25,6 @@ import rx.Observable;
 public interface TriggerInteractor extends BaseTriggerInteractor {
 
   @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull ContentValues entry);
+
+  @CheckResult @NonNull Observable<Integer> delete(int percent);
 }

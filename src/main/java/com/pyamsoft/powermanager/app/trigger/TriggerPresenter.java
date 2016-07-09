@@ -34,6 +34,8 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
   @NonNull private static final Random RANDOM_PERCENT = new Random();
   @NonNull private final TriggerInteractor interactor;
   @NonNull private Subscription viewSubscription = Subscriptions.empty();
+  @NonNull private Subscription deleteTriggerBusSubscription = Subscriptions.empty();
+  @NonNull private Subscription deleteSubscription = Subscriptions.empty();
 
   @Inject public TriggerPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -44,11 +46,28 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubViewSubscription();
+    unsubDeleteSubscription();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    registerOnDeleteTriggerBus();
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    unregisterFromDeleteTriggerBus();
   }
 
   private void unsubViewSubscription() {
     if (!viewSubscription.isUnsubscribed()) {
       viewSubscription.unsubscribe();
+    }
+  }
+
+  private void unsubDeleteSubscription() {
+    if (!deleteSubscription.isUnsubscribed()) {
+      deleteSubscription.unsubscribe();
     }
   }
 
@@ -96,7 +115,39 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
+  void registerOnDeleteTriggerBus() {
+    unregisterFromDeleteTriggerBus();
+    deleteTriggerBusSubscription = DeleteTriggerDialog.Bus.get()
+        .register()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(deleteTriggerEvent -> {
+          // KLUDGE nested subs are ugly
+          unsubDeleteSubscription();
+          deleteSubscription = interactor.delete(deleteTriggerEvent.percent())
+              .subscribeOn(getSubscribeScheduler())
+              .observeOn(getObserveScheduler())
+              .subscribe(position -> {
+                getView().onTriggerDeleted(position);
+              }, throwable -> {
+                // TODO
+                Timber.e(throwable, "onError");
+              });
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
+  }
+
+  private void unregisterFromDeleteTriggerBus() {
+    if (!deleteTriggerBusSubscription.isUnsubscribed()) {
+      deleteTriggerBusSubscription.unsubscribe();
+    }
+  }
+
   public interface TriggerView {
+
+    void onTriggerDeleted(int position);
 
     void onNewTriggerAdded(int percent);
 
