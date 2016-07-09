@@ -2,6 +2,7 @@
 CREATE TABLE power_triggers (
   percent INTEGER NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
+  enabled INTEGER AS Boolean DEFAULT 0,
   toggleWifi INTEGER AS Boolean DEFAULT 0,
   toggleData INTEGER AS Boolean DEFAULT 0,
   toggleBluetooth INTEGER AS Boolean DEFAULT 0,
