@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.custom;
+package com.pyamsoft.powermanager.dagger.manager.preference;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

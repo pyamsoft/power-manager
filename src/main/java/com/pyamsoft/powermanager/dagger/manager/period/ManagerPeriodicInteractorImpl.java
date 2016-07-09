@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.period;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractorImpl;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -34,23 +35,23 @@ final class ManagerPeriodicInteractorImpl extends ManagerSettingsInteractorImpl
   @Inject ManagerPeriodicInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences);
-    KEY_PERIODIC_WIFI = appContext.getString(R.string.periodic_wifi_key);
-    KEY_PERIODIC_DATA = appContext.getString(R.string.periodic_data_key);
-    KEY_PERIODIC_BLUETOOTH = appContext.getString(R.string.periodic_bluetooth_key);
-    KEY_PERIODIC_SYNC = appContext.getString(R.string.periodic_sync_key);
+    KEY_PERIODIC_WIFI = getAppContext().getString(R.string.periodic_wifi_key);
+    KEY_PERIODIC_DATA = getAppContext().getString(R.string.periodic_data_key);
+    KEY_PERIODIC_BLUETOOTH = getAppContext().getString(R.string.periodic_bluetooth_key);
+    KEY_PERIODIC_SYNC = getAppContext().getString(R.string.periodic_sync_key);
   }
 
   @Override @NonNull public Observable<Boolean> isCustomPeriodicDisableTime(@NonNull String key) {
     return Observable.defer(() -> {
       boolean custom;
       if (key.equals(KEY_PERIODIC_WIFI)) {
-        custom = preferences.isCustomPeriodicDisableTimeWifi();
+        custom = getPreferences().isCustomPeriodicDisableTimeWifi();
       } else if (key.equals(KEY_PERIODIC_DATA)) {
-        custom = preferences.isCustomPeriodicDisableTimeData();
+        custom = getPreferences().isCustomPeriodicDisableTimeData();
       } else if (key.equals(KEY_PERIODIC_BLUETOOTH)) {
-        custom = preferences.isCustomPeriodicDisableTimeBluetooth();
+        custom = getPreferences().isCustomPeriodicDisableTimeBluetooth();
       } else if (key.equals(KEY_PERIODIC_SYNC)) {
-        custom = preferences.isCustomPeriodicDisableTimeSync();
+        custom = getPreferences().isCustomPeriodicDisableTimeSync();
       } else {
         throw new IllegalStateException("Invalid key");
       }
@@ -63,13 +64,13 @@ final class ManagerPeriodicInteractorImpl extends ManagerSettingsInteractorImpl
     return Observable.defer(() -> {
       boolean custom;
       if (key.equals(KEY_PERIODIC_WIFI)) {
-        custom = preferences.isCustomPeriodicEnableTimeWifi();
+        custom = getPreferences().isCustomPeriodicEnableTimeWifi();
       } else if (key.equals(KEY_PERIODIC_DATA)) {
-        custom = preferences.isCustomPeriodicEnableTimeData();
+        custom = getPreferences().isCustomPeriodicEnableTimeData();
       } else if (key.equals(KEY_PERIODIC_BLUETOOTH)) {
-        custom = preferences.isCustomPeriodicEnableTimeBluetooth();
+        custom = getPreferences().isCustomPeriodicEnableTimeBluetooth();
       } else if (key.equals(KEY_PERIODIC_SYNC)) {
-        custom = preferences.isCustomPeriodicEnableTimeSync();
+        custom = getPreferences().isCustomPeriodicEnableTimeSync();
       } else {
         throw new IllegalStateException("Invalid key");
       }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerManagePresenter;
+import com.pyamsoft.powermanager.app.manager.manage.ManagerManagePresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

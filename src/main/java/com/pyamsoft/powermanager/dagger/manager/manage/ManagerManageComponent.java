@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.manage;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import dagger.Component;
 
-public interface ManagerPeriodicInteractor extends ManagerSettingsInteractor {
+@ActivityScope
+@Component(modules = ManagerManageModule.class, dependencies = PowerManagerComponent.class)
+public interface ManagerManageComponent {
 
-  @CheckResult @NonNull Observable<Boolean> isCustomPeriodicDisableTime(@NonNull String key);
-
-  @CheckResult @NonNull Observable<Boolean> isCustomPeriodicEnableTime(@NonNull String key);
+  void inject(ManagerManageFragment fragment);
 }

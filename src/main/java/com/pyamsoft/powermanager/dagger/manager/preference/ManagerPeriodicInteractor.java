@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager.preference;
 
-public interface ManagerManageView extends ManagerSettingsPresenter.ManagerSettingsView {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
-  void enableManaged();
+interface ManagerPeriodicInteractor {
 
-  void disableManaged();
+  void setPeriodicTime(@NonNull String key, long time);
 
-  void enableCustomDelayTime();
-
-  void disableCustomDelayTime();
+  @CheckResult @NonNull Observable<Long> getPeriodicTime(@NonNull String key);
 }

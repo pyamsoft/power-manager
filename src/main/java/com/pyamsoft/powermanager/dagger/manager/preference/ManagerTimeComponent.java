@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.custom;
+package com.pyamsoft.powermanager.dagger.manager.preference;
 
-import com.pyamsoft.powermanager.app.manager.custom.ManagerDelayPreference;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference;
+import com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference;
+import com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;

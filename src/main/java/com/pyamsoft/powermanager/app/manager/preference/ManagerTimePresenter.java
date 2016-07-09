@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.custom;
+package com.pyamsoft.powermanager.app.manager.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;

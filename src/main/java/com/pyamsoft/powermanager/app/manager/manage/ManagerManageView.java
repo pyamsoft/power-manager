@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.app.manager.manage;
 
-import com.pyamsoft.powermanager.app.manager.ManagerPeriodicFragment;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
 
-@ActivityScope
-@Component(modules = ManagerPeriodicModule.class, dependencies = PowerManagerComponent.class)
-public interface ManagerPeriodicComponent {
+public interface ManagerManageView extends ManagerSettingsPresenter.ManagerSettingsView {
 
-  void inject(ManagerPeriodicFragment fragment);
+  void enableManaged();
+
+  void disableManaged();
+
+  void enableCustomDelayTime();
+
+  void disableCustomDelayTime();
 }

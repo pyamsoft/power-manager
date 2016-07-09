@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.custom;
+package com.pyamsoft.powermanager.app.manager.preference;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.dagger.manager.custom.DaggerManagerTimeComponent;
+import com.pyamsoft.powermanager.dagger.manager.preference.DaggerManagerTimeComponent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public final class ManagerPeriodicPreference extends ManagerTimePreference {
+public final class ManagerDelayPreference extends ManagerTimePreference {
 
-  @Inject @Named("periodic") ManagerTimePresenter presenter;
+  @Inject @Named("delay") ManagerTimePresenter presenter;
 
-  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
 
@@ -37,15 +37,15 @@ public final class ManagerPeriodicPreference extends ManagerTimePreference {
         .inject(this);
   }
 
-  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     this(context, attrs, defStyleAttr, 0);
   }
 
-  public ManagerPeriodicPreference(Context context, AttributeSet attrs) {
+  public ManagerDelayPreference(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  public ManagerPeriodicPreference(Context context) {
+  public ManagerDelayPreference(Context context) {
     this(context, null);
   }
 

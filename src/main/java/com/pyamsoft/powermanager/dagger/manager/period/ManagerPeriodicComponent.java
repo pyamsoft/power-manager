@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager.period;
 
-public interface ManagerPeriodicView extends ManagerSettingsPresenter.ManagerSettingsView {
+import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import dagger.Component;
 
-  void enablePeriodic();
+@ActivityScope
+@Component(modules = ManagerPeriodicModule.class, dependencies = PowerManagerComponent.class)
+public interface ManagerPeriodicComponent {
 
-  void disablePeriodic();
-
-  void enablePeriodicDisableTime();
-
-  void disablePeriodicDisableTime();
-
-  void enablePeriodicEnableTime();
-
-  void disablePeriodicEnableTime();
+  void inject(ManagerPeriodicFragment fragment);
 }

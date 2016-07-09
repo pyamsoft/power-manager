@@ -28,6 +28,8 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
+import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import javax.inject.Inject;
@@ -50,7 +52,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @NonNull public static final String TYPE_DATA = "data";
   @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
   @NonNull public static final String TYPE_SYNC = "sync";
-  @NonNull static final String FRAGMENT_TYPE = "fragment_type";
+  @NonNull public static final String FRAGMENT_TYPE = "fragment_type";
   @NonNull private final Fragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;

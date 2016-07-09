@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
 import javax.inject.Named;
 import rx.Scheduler;
 
-abstract class ManagerSettingsPresenter<I extends ManagerSettingsPresenter.ManagerSettingsView>
+public abstract class ManagerSettingsPresenter<I extends ManagerSettingsPresenter.ManagerSettingsView>
     extends SchedulerPresenter<I> {
 
   @NonNull private final ManagerSettingsInteractor interactor;

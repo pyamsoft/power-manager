@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.custom;
+package com.pyamsoft.powermanager.app.manager.preference;
 
 import android.content.Context;
 import android.os.Handler;

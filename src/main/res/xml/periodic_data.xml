@@ -38,7 +38,7 @@
         android:title="@string/periodic_data_disable_title"
         />
 
-    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
+    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_data_disable_key"/>
 
     <ListPreference
@@ -51,7 +51,7 @@
         android:title="@string/periodic_data_enable_title"
         />
 
-    <com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference
+    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_data_enable_key"/>
 
   </PreferenceCategory>

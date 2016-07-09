@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.manager.manage;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractorImpl;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -36,13 +37,13 @@ final class ManagerManageInteractorImpl extends ManagerSettingsInteractorImpl
     return Observable.defer(() -> {
       boolean custom;
       if (key.equals(KEY_MANAGE_WIFI)) {
-        custom = preferences.isCustomDelayTimeWifi();
+        custom = getPreferences().isCustomDelayTimeWifi();
       } else if (key.equals(KEY_MANAGE_DATA)) {
-        custom = preferences.isCustomDelayTimeData();
+        custom = getPreferences().isCustomDelayTimeData();
       } else if (key.equals(KEY_MANAGE_BLUETOOTH)) {
-        custom = preferences.isCustomDelayTimeBluetooth();
+        custom = getPreferences().isCustomDelayTimeBluetooth();
       } else if (key.equals(KEY_MANAGE_SYNC)) {
-        custom = preferences.isCustomDelayTimeSync();
+        custom = getPreferences().isCustomDelayTimeSync();
       } else {
         throw new IllegalStateException("Invalid key");
       }
@@ -51,8 +52,8 @@ final class ManagerManageInteractorImpl extends ManagerSettingsInteractorImpl
   }
 
   @Override public void updateNotificationOnManageStateChange() {
-    final Intent serviceUpdateIntent = new Intent(appContext, ForegroundService.class);
-    appContext.startService(serviceUpdateIntent);
+    final Intent serviceUpdateIntent = new Intent(getAppContext(), ForegroundService.class);
+    getAppContext().startService(serviceUpdateIntent);
   }
 }
 

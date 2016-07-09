@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.manager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.ManagerManageInteractor;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
+import com.pyamsoft.powermanager.dagger.manager.manage.ManagerManageInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

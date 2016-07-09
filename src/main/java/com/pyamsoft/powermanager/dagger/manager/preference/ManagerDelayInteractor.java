@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.custom;
+package com.pyamsoft.powermanager.dagger.manager.preference;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface ManagerPeriodicInteractor {
+interface ManagerDelayInteractor {
 
-  void setPeriodicTime(@NonNull String key, long time);
+  void setDelayTime(@NonNull String key, long time);
 
-  @CheckResult @NonNull Observable<Long> getPeriodicTime(@NonNull String key);
+  @CheckResult @NonNull Observable<Long> getDelayTime(@NonNull String key);
 }

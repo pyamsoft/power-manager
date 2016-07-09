@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.custom;
+package com.pyamsoft.powermanager.dagger.manager.manage;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsInteractor;
 import rx.Observable;
 
-interface ManagerDelayInteractor {
+public interface ManagerManageInteractor extends ManagerSettingsInteractor {
 
-  void setDelayTime(@NonNull String key, long time);
+  @CheckResult @NonNull Observable<Boolean> isCustomDelayTime(@NonNull String key);
 
-  @CheckResult @NonNull Observable<Long> getDelayTime(@NonNull String key);
+  void updateNotificationOnManageStateChange();
 }

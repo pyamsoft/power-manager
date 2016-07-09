@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.app.manager.period;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,8 +31,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.manager.custom.ManagerPeriodicPreference;
-import com.pyamsoft.powermanager.dagger.manager.DaggerManagerPeriodicComponent;
+import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
+import com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference;
+import com.pyamsoft.powermanager.dagger.manager.period.DaggerManagerPeriodicComponent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
