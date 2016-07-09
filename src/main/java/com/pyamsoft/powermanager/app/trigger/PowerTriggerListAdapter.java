@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.trigger;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
 public class PowerTriggerListAdapter
@@ -33,8 +35,11 @@ public class PowerTriggerListAdapter
     implements TriggerListAdapterPresenter.TriggerListAdapterView {
 
   @NonNull private final TriggerListAdapterPresenter presenter;
+  @NonNull private final Fragment fragment;
 
-  public PowerTriggerListAdapter(@NonNull TriggerListAdapterPresenter presenter) {
+  public PowerTriggerListAdapter(@NonNull Fragment fragment,
+      @NonNull TriggerListAdapterPresenter presenter) {
+    this.fragment = fragment;
     this.presenter = presenter;
   }
 
@@ -61,6 +66,19 @@ public class PowerTriggerListAdapter
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     final PowerTriggerEntry entry = presenter.get(position);
     holder.triggerName.setText(entry.name());
+
+    // Set up delete onLongClick
+    holder.itemView.setOnLongClickListener(view -> {
+      AppUtil.guaranteeSingleDialogFragment(fragment.getFragmentManager(),
+          DeleteTriggerDialog.newInstance(entry), "delete_trigger");
+      return true;
+    });
+  }
+
+  @Override public void onViewRecycled(ViewHolder holder) {
+    super.onViewRecycled(holder);
+    holder.triggerName.setText(null);
+    holder.itemView.setOnLongClickListener(null);
   }
 
   public void onAddTriggerForPercent(int percent) {

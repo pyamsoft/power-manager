@@ -55,7 +55,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
         .build()
         .inject(this);
 
-    adapter = new PowerTriggerListAdapter(listAdapterPresenter);
+    adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
   }
 
   @Nullable @Override
