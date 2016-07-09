@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.model.sql;
 
+import android.content.ContentValues;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
@@ -27,6 +28,22 @@ import com.google.auto.value.AutoValue;
 
   @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
       new Factory<>(AutoValue_PowerTriggerEntry::new);
+
+  @NonNull public static PowerTriggerEntry toTrigger(@NonNull ContentValues values) {
+    final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
+    final String name = values.getAsString(PowerTriggerEntry.NAME);
+    final boolean enabled = values.getAsBoolean(PowerTriggerEntry.ENABLED);
+    final boolean toggleWifi = values.getAsBoolean(PowerTriggerEntry.TOGGLEWIFI);
+    final boolean toggleData = values.getAsBoolean(PowerTriggerEntry.TOGGLEDATA);
+    final boolean toggleBluetooth = values.getAsBoolean(PowerTriggerEntry.TOGGLEBLUETOOTH);
+    final boolean toggleSync = values.getAsBoolean(PowerTriggerEntry.TOGGLESYNC);
+    final boolean enableWifi = values.getAsBoolean(PowerTriggerEntry.ENABLEWIFI);
+    final boolean enableData = values.getAsBoolean(PowerTriggerEntry.ENABLEDATA);
+    final boolean enableBluetooth = values.getAsBoolean(PowerTriggerEntry.ENABLEBLUETOOTH);
+    final boolean enableSync = values.getAsBoolean(PowerTriggerEntry.ENABLESYNC);
+    return FACTORY.creator.create(percent, name, enabled, toggleWifi, toggleData, toggleBluetooth,
+        toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
+  }
 
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
     return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,

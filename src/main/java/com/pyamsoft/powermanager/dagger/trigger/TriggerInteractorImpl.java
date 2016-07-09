@@ -23,7 +23,6 @@ import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.functions.Func0;
 
 final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements TriggerInteractor {
 
@@ -31,12 +30,10 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
     super(context);
   }
 
-  @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues entry) {
-    return Observable.defer(new Func0<Observable<PowerTriggerEntry>>() {
-      @Override public Observable<PowerTriggerEntry> call() {
-        PowerTriggerDB.with(getAppContext()).insert(entry);
-        return null;
-      }
+  @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
+    return Observable.defer(() -> {
+      PowerTriggerDB.with(getAppContext()).insert(values);
+      return Observable.just(PowerTriggerEntry.toTrigger(values));
     });
   }
 }
