@@ -53,7 +53,9 @@ public class PowerTriggerListAdapter
   }
 
   @Override public int getItemCount() {
-    return presenter.size();
+    final int size = presenter.size();
+    Timber.d("List size: %d", size);
+    return size;
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
