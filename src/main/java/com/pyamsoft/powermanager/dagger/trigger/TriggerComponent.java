@@ -22,8 +22,8 @@ import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;
 
 @ActivityScope
-@Component(modules = TriggerListAdapterModule.class, dependencies = PowerManagerComponent.class)
-public interface TriggerListAdapterComponent {
+@Component(modules = {TriggerListAdapterModule.class, TriggerModule.class}, dependencies = PowerManagerComponent.class)
+public interface TriggerComponent {
 
   void inject(PowerTriggerFragment fragment);
 }

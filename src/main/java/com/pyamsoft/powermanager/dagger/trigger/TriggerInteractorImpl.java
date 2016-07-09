@@ -19,29 +19,19 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
 
-final class TriggerListAdapterInteractorImpl implements TriggerListAdapterInteractor {
+final class TriggerInteractorImpl implements TriggerInteractor {
 
   @Named private final Context appContext;
 
-  @Inject public TriggerListAdapterInteractorImpl(Context context) {
+  @Inject public TriggerInteractorImpl(Context context) {
     this.appContext = context.getApplicationContext();
   }
 
   @NonNull @Override public Observable<Integer> size() {
     return PowerTriggerDB.with(appContext).queryAll().first().count();
-  }
-
-  @NonNull @Override public Observable<PowerTriggerEntry> get(int position) {
-    return PowerTriggerDB.with(appContext)
-        .queryAll()
-        .first()
-        .flatMap(Observable::from)
-        .skip(position)
-        .first();
   }
 }

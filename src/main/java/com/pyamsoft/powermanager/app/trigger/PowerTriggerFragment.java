@@ -30,22 +30,24 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerListAdapterComponent;
+import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import javax.inject.Inject;
 
-public class PowerTriggerFragment extends Fragment {
+public class PowerTriggerFragment extends Fragment implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "power_triggers";
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
 
   @Inject TriggerListAdapterPresenter listAdapterPresenter;
+  @Inject TriggerPresenter presenter;
+
   private PowerTriggerListAdapter adapter;
   private Unbinder unbinder;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    DaggerTriggerListAdapterComponent.builder()
+    DaggerTriggerComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);
@@ -59,6 +61,7 @@ public class PowerTriggerFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_powertrigger, container, false);
     unbinder = ButterKnife.bind(this, view);
     adapter.onCreate();
+    presenter.bindView(this);
     return view;
   }
 
@@ -66,16 +69,27 @@ public class PowerTriggerFragment extends Fragment {
     super.onDestroyView();
     unbinder.unbind();
     adapter.onDestroy();
+    presenter.unbindView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     setupRecyclerView();
+    presenter.loadTriggerView();
   }
 
   private void setupRecyclerView() {
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setHasFixedSize(true);
+  }
+
+  @Override public void loadEmptyView() {
+    recyclerView.setVisibility(View.GONE);
+    recyclerView.setAdapter(null);
+  }
+
+  @Override public void loadListView() {
     recyclerView.setAdapter(adapter);
+    recyclerView.setVisibility(View.VISIBLE);
   }
 }
