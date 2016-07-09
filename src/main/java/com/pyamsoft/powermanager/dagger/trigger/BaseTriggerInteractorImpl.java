@@ -17,25 +17,31 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
-final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
-    implements TriggerListAdapterInteractor {
+abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
 
-  @Inject public TriggerListAdapterInteractorImpl(Context context) {
-    super(context);
+  @NonNull private final Context appContext;
+
+  protected BaseTriggerInteractorImpl(Context context) {
+    this.appContext = context.getApplicationContext();
   }
 
-  @NonNull @Override public Observable<PowerTriggerEntry> get(int position) {
-    return PowerTriggerDB.with(getAppContext())
-        .queryAll()
-        .first()
-        .flatMap(Observable::from)
-        .skip(position)
-        .first();
+  @CheckResult @NonNull public final Context getAppContext() {
+    return appContext;
+  }
+
+  @NonNull @Override public Observable<Integer> size() {
+    return PowerTriggerDB.with(appContext).queryAll().first().map(powerTriggerEntries -> {
+      // Can't use actual .count operator here as it always returns 1, for 1 List
+      // We actually want to count the number of items in the list
+      final int count = powerTriggerEntries.size();
+      Timber.d("Count of elements: %d", count);
+      return count;
+    });
   }
 }
