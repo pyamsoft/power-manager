@@ -124,9 +124,8 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   }
 
   @Override public void onTriggerDeleted(int position) {
-    final int oldSize = adapter.getItemCount();
     adapter.onDeleteTriggerAtPosition(position);
-    if (oldSize - 1 == 0) {
+    if (adapter.getItemCount() == 0) {
       Timber.d("Last trigger, hide list");
       loadEmptyView();
     }

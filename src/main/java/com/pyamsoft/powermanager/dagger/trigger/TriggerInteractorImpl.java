@@ -41,7 +41,8 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
   @NonNull @Override public Observable<Integer> delete(int percent) {
     return Observable.defer(() -> {
       Timber.d("Get position of trigger before delete");
-      final Observable<Integer> position = getPosition(percent);
+      return getPosition(percent);
+    }).map(position -> {
       Timber.d("Delete trigger for percent %d", percent);
       PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent);
       return position;
