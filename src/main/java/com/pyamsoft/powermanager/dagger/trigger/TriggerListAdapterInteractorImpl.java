@@ -35,6 +35,19 @@ final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
         .queryAll()
         .first()
         .flatMap(Observable::from)
+        .toSortedList((entry, entry2) -> {
+          if (entry.percent() < entry2.percent()) {
+            // This is less, goes first
+            return -1;
+          } else if (entry.percent() > entry2.percent()) {
+            // This is greater, goes second
+            return 1;
+          } else {
+            // Same percent. This is impossible technically due to DB rules
+            throw new IllegalStateException("Cannot have two entries with the same percent");
+          }
+        })
+        .flatMap(Observable::from)
         .skip(position)
         .first();
   }
