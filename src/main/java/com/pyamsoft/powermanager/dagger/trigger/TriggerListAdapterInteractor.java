@@ -24,4 +24,6 @@ import rx.Observable;
 public interface TriggerListAdapterInteractor extends BaseTriggerInteractor {
 
   @CheckResult @NonNull Observable<PowerTriggerEntry> get(int position);
+
+  @CheckResult @NonNull Observable<Integer> getPosition(int percent);
 }

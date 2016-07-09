@@ -16,5 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-public interface TriggerInteractor extends BaseTriggerInteractor{
+import android.content.ContentValues;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import rx.Observable;
+
+public interface TriggerInteractor extends BaseTriggerInteractor {
+
+  @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull ContentValues entry);
 }

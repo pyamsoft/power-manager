@@ -1,6 +1,6 @@
 -- Create the table for PowerTrigger objects
 CREATE TABLE power_triggers (
-  percent INTEGER NOT NULL PRIMARY KEY,
+  percent INTEGER As Integer NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
   enabled INTEGER AS Boolean DEFAULT 0,
   toggleWifi INTEGER AS Boolean DEFAULT 0,

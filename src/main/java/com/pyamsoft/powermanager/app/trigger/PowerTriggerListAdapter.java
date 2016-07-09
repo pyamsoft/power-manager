@@ -60,6 +60,10 @@ public class PowerTriggerListAdapter
     holder.triggerName.setText(entry.name());
   }
 
+  public void onAddTriggerForPercent(int percent) {
+    notifyItemInserted(presenter.getPositionForPercent(percent));
+  }
+
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.trigger_name) TextView triggerName;

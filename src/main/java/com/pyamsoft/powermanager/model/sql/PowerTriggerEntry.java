@@ -23,7 +23,7 @@ import com.google.auto.value.AutoValue;
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
 
   @NonNull public static final String EMPTY_NAME = "EMPTY";
-  public static final long EMPTY_PERCENT = -1L;
+  public static final int EMPTY_PERCENT = -1;
 
   @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
       new Factory<>(AutoValue_PowerTriggerEntry::new);

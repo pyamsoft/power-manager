@@ -19,6 +19,9 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerInteractor;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerModel;
+import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -28,6 +31,7 @@ import timber.log.Timber;
 
 public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.TriggerView> {
 
+  @NonNull private static final Random RANDOM_PERCENT = new Random();
   @NonNull private final TriggerInteractor interactor;
   @NonNull private Subscription viewSubscription = Subscriptions.empty();
 
@@ -68,9 +72,33 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
 
   public void createPowerTrigger() {
     Timber.d("Create new power trigger");
+
+    // TODO move this into a dialog which creates the trigger on completion
+    final PowerTriggerModel.Marshal marshal = PowerTriggerEntry.FACTORY.marshal();
+    marshal.name("TESTING 1")
+        .percent(RANDOM_PERCENT.nextInt(101))
+        .enabled(false)
+        .enableWifi(false)
+        .enableData(false)
+        .enableBluetooth(false)
+        .enableSync(false)
+        .toggleWifi(false)
+        .toggleData(false)
+        .toggleBluetooth(false)
+        .toggleSync(false);
+    interactor.put(marshal.asContentValues())
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(entry1 -> {
+          getView().onNewTriggerAdded(entry1.percent());
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        });
   }
 
   public interface TriggerView {
+
+    void onNewTriggerAdded(int percent);
 
     void loadEmptyView();
 

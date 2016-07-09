@@ -37,15 +37,18 @@ public class TriggerListAdapterPresenter
     this.interactor = adapterInteractor;
   }
 
-  @CheckResult public final int size() {
+  @CheckResult public int size() {
     return interactor.size().toBlocking().first();
   }
 
-  @CheckResult public final PowerTriggerEntry get(int position) {
+  @CheckResult public PowerTriggerEntry get(int position) {
     return interactor.get(position).toBlocking().first();
   }
 
-  public interface TriggerListAdapterView {
+  @CheckResult public int getPositionForPercent(int percent) {
+    return interactor.getPosition(percent).toBlocking().first();
+  }
 
+  public interface TriggerListAdapterView {
   }
 }

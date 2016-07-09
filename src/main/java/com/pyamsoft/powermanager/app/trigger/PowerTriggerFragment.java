@@ -104,4 +104,8 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
     recyclerView.setAdapter(adapter);
     recyclerView.setVisibility(View.VISIBLE);
   }
+
+  @Override public void onNewTriggerAdded(int percent) {
+    adapter.onAddTriggerForPercent(percent);
+  }
 }
