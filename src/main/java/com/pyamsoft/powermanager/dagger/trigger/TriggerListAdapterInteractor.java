@@ -18,9 +18,12 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 
 public interface TriggerListAdapterInteractor {
 
   @CheckResult @NonNull Observable<Integer> size();
+
+  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int position);
 }

@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterInteractor;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -38,6 +39,10 @@ public class TriggerListAdapterPresenter
 
   @CheckResult public final int size() {
     return interactor.size().toBlocking().first();
+  }
+
+  @CheckResult public final PowerTriggerEntry get(int position) {
+    return interactor.get(position).toBlocking().first();
   }
 
   public interface TriggerListAdapterView {

@@ -19,9 +19,11 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
+import timber.log.Timber;
 
 final class TriggerListAdapterInteractorImpl implements TriggerListAdapterInteractor {
 
@@ -33,5 +35,26 @@ final class TriggerListAdapterInteractorImpl implements TriggerListAdapterIntera
 
   @NonNull @Override public Observable<Integer> size() {
     return PowerTriggerDB.with(appContext).queryAll().first().count();
+  }
+
+  @NonNull @Override public Observable<PowerTriggerEntry> get(int position) {
+    return PowerTriggerDB.with(appContext).queryAll().first().flatMap(powerTriggerEntries -> {
+      if (powerTriggerEntries.isEmpty()) {
+        Timber.d("Empty list -> Entry empty observable");
+        return Observable.just(PowerTriggerEntry.empty());
+      } else {
+        Timber.d("Flat map");
+        return Observable.from(powerTriggerEntries);
+      }
+    }).skip(position).first().map(entry -> {
+      Timber.d("map");
+      if (entry == null) {
+        Timber.d("Null entry, replace with EMPTY");
+        return PowerTriggerEntry.empty();
+      } else {
+        Timber.d("Return entry");
+        return entry;
+      }
+    });
   }
 }
