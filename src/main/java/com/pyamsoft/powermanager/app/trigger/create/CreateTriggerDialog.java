@@ -19,11 +19,22 @@ package com.pyamsoft.powermanager.app.trigger.create;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import com.pyamsoft.powermanager.R;
 
 public class CreateTriggerDialog extends DialogFragment {
+
+  @BindView(R.id.new_trigger_back) ImageView backButton;
+  private Unbinder unbinder;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -31,5 +42,18 @@ public class CreateTriggerDialog extends DialogFragment {
     dialog.getWindow()
         .setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     return dialog;
+  }
+
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    final View view = inflater.inflate(R.layout.dialog_new_trigger, container, false);
+    unbinder = ButterKnife.bind(this, view);
+    return view;
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    unbinder.unbind();
   }
 }
