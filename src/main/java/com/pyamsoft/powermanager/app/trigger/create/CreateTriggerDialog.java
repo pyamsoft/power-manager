@@ -66,12 +66,12 @@ public class CreateTriggerDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
     cancelTask(backButtonTask);
     cancelTask(closeButtonTask);
     cancelTask(continueButtonTask);
 
     viewPager.removeOnPageChangeListener(pageChangeListener);
+    unbinder.unbind();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,6 +97,11 @@ public class CreateTriggerDialog extends DialogFragment {
 
       @Override public void onPageSelected(int position) {
         Timber.d("Page selected: %d", position);
+        if (position == 0) {
+          backButton.setVisibility(View.GONE);
+        } else {
+          backButton.setVisibility(View.VISIBLE);
+        }
       }
 
       @Override public void onPageScrollStateChanged(int state) {
@@ -108,6 +113,9 @@ public class CreateTriggerDialog extends DialogFragment {
     // KLUDGE Child fragments are ugly.
     adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
     viewPager.setAdapter(adapter);
+
+    // Hide the back button at first
+    backButton.setVisibility(View.GONE);
   }
 
   private void setupContinueButton() {
@@ -117,12 +125,15 @@ public class CreateTriggerDialog extends DialogFragment {
       final int currentItem = viewPager.getCurrentItem();
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
         Timber.d("Final item continue clicked, process dialog and close");
+        dismiss();
         // TODO process
       } else {
         Timber.d("Continue clicked, progress 1 item");
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
       }
     });
+
+    continueButtonTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_arrow_forward_24dp));
   }
 
   private void setupToolbarButtons() {
