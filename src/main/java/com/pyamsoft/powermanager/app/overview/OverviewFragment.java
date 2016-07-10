@@ -33,6 +33,7 @@ public class OverviewFragment extends Fragment {
 
   @BindView(R.id.main_fragment_recycler) RecyclerView recyclerView;
   private Unbinder unbinder;
+  private OverviewAdapter adapter;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,6 +45,7 @@ public class OverviewFragment extends Fragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    adapter.cleanup();
     unbinder.unbind();
   }
 
@@ -54,9 +56,10 @@ public class OverviewFragment extends Fragment {
 
   private void setupRecyclerView() {
     RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+    adapter = new OverviewAdapter();
 
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(new OverviewAdapter());
+    recyclerView.setAdapter(adapter);
   }
 }

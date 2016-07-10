@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
+import android.os.AsyncTask;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -36,6 +37,9 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import java.util.HashMap;
+import java.util.Map;
+import timber.log.Timber;
 
 final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
 
@@ -46,6 +50,12 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
   public static final int POSITION_TRIGGERS = 4;
   public static final int POSITION_SETTINGS = 5;
   private static final int NUMBER_ITEMS = 6;
+
+  @NonNull private final Map<String, AsyncTask> taskMap;
+
+  OverviewAdapter() {
+    taskMap = new HashMap<>();
+  }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final View view = LayoutInflater.from(parent.getContext())
@@ -102,39 +112,49 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
     holder.itemView.setBackgroundColor(
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
-    assert holder.root != null;
     holder.root.setOnClickListener(v -> OverviewSelectionBus.get()
         .post(new OverviewSelectionBus.OverviewSelectionEvent(type)));
 
-    assert holder.title != null;
     holder.title.setText(title);
 
-    cancelAsyncTask(holder);
+    final AsyncVectorDrawableTask task =
+        new AsyncVectorDrawableTask(holder.image, android.R.color.white);
+    addNewAsyncTask(title, task);
 
-    assert holder.image != null;
-    holder.task = new AsyncVectorDrawableTask(holder.image, android.R.color.white);
-    holder.task.execute(
-        new AsyncDrawable(holder.itemView.getContext().getApplicationContext(), image));
+    task.execute(new AsyncDrawable(holder.itemView.getContext().getApplicationContext(), image));
+  }
+
+  private void addNewAsyncTask(@NonNull String title, @NonNull AsyncTask task) {
+    if (taskMap.containsKey(title)) {
+      Timber.d("Remove old task from map, cancel if needed");
+      final AsyncTask oldTask = taskMap.get(title);
+      cancelTask(oldTask);
+      taskMap.remove(title);
+    }
+
+    Timber.d("Put new entry: %s %s", title, task);
+    taskMap.put(title, task);
   }
 
   @Override public void onViewRecycled(ViewHolder holder) {
     super.onViewRecycled(holder);
-    assert holder.root != null;
     holder.root.setOnClickListener(null);
-
-    assert holder.title != null;
     holder.title.setText(null);
-
-    assert holder.image != null;
     holder.image.setImageResource(0);
-
-    cancelAsyncTask(holder);
   }
 
-  private void cancelAsyncTask(@NonNull ViewHolder holder) {
-    if (holder.task != null) {
-      holder.task.cancel(true);
-      holder.task = null;
+  public void cleanup() {
+    Timber.d("Clear all async tasks");
+    for (final AsyncTask task : taskMap.values()) {
+      cancelTask(task);
+    }
+    taskMap.clear();
+  }
+
+  private void cancelTask(@Nullable AsyncTask task) {
+    if (task != null && !task.isCancelled()) {
+      Timber.d("Cancel running AsyncTask");
+      task.cancel(true);
     }
   }
 
@@ -144,10 +164,9 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @Nullable @BindView(R.id.adapter_item_overview_root) FrameLayout root;
-    @Nullable @BindView(R.id.adapter_item_overview_image) ImageView image;
-    @Nullable @BindView(R.id.adapter_item_overview_title) TextView title;
-    @Nullable AsyncVectorDrawableTask task;
+    @BindView(R.id.adapter_item_overview_root) FrameLayout root;
+    @BindView(R.id.adapter_item_overview_image) ImageView image;
+    @BindView(R.id.adapter_item_overview_title) TextView title;
 
     public ViewHolder(View itemView) {
       super(itemView);

@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +31,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
   @BindView(R.id.new_trigger_back) ImageView backButton;
+  @BindView(R.id.new_trigger_close) ImageView closeButton;
+  @BindView(R.id.new_trigger_continue) ImageView continueButton;
+  @BindView(R.id.new_trigger_pager) ViewPager viewPager;
+  private CreateTriggerPagerAdapter adapter;
   private Unbinder unbinder;
+  private AsyncVectorDrawableTask backButtonTask;
+  private AsyncVectorDrawableTask closeButtonTask;
+  private AsyncVectorDrawableTask continueButtonTask;
+  private ViewPager.OnPageChangeListener pageChangeListener;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -55,5 +67,85 @@ public class CreateTriggerDialog extends DialogFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
+    cancelTask(backButtonTask);
+    cancelTask(closeButtonTask);
+    cancelTask(continueButtonTask);
+
+    viewPager.removeOnPageChangeListener(pageChangeListener);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setupToolbarButtons();
+    setupContinueButton();
+    setupViewPager(savedInstanceState);
+  }
+
+  private void cancelTask(@Nullable AsyncVectorDrawableTask task) {
+    if (task != null && !task.isCancelled()) {
+      Timber.d("Cancel running AsyncTask");
+      task.cancel(true);
+    }
+  }
+
+  private void setupViewPager(@Nullable Bundle bundle) {
+    pageChangeListener = new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override public void onPageSelected(int position) {
+        Timber.d("Page selected: %d", position);
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+
+      }
+    };
+    viewPager.addOnPageChangeListener(pageChangeListener);
+
+    // KLUDGE Child fragments are ugly.
+    adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
+    viewPager.setAdapter(adapter);
+  }
+
+  private void setupContinueButton() {
+    continueButtonTask = new AsyncVectorDrawableTask(continueButton);
+
+    continueButton.setOnClickListener(view -> {
+      final int currentItem = viewPager.getCurrentItem();
+      if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
+        Timber.d("Final item continue clicked, process dialog and close");
+        // TODO process
+      } else {
+        Timber.d("Continue clicked, progress 1 item");
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+      }
+    });
+  }
+
+  private void setupToolbarButtons() {
+    backButtonTask = new AsyncVectorDrawableTask(backButton);
+    closeButtonTask = new AsyncVectorDrawableTask(closeButton);
+
+    backButton.setOnClickListener(view -> {
+      Timber.d("Go back one item");
+      viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+    });
+
+    closeButton.setOnClickListener(view -> {
+      Timber.d("Close clicked, dismiss dialog");
+      dismiss();
+    });
+
+    backButtonTask.execute(
+        new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_arrow_back_24dp));
+    closeButtonTask.execute(
+        new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_close_24dp));
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
   }
 }
