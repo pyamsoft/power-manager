@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerInteractor;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerModel;
 import java.util.Random;
 import javax.inject.Inject;
@@ -89,22 +88,13 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
-  public void createPowerTrigger() {
-    Timber.d("Create new power trigger");
+  public void showNewTriggerDialog() {
+    // TODO is there anything else we have to do?
+    getView().onShowNewTriggerDialog();
+  }
 
-    // TODO move this into a dialog which creates the trigger on completion
-    final PowerTriggerModel.Marshal marshal = PowerTriggerEntry.FACTORY.marshal();
-    marshal.name("TESTING 1")
-        .percent(RANDOM_PERCENT.nextInt(101))
-        .enabled(false)
-        .toggleWifi(false)
-        .toggleData(false)
-        .toggleBluetooth(false)
-        .toggleSync(false)
-        .enableWifi(false)
-        .enableData(false)
-        .enableBluetooth(false)
-        .enableSync(false);
+  public void createPowerTrigger(@NonNull PowerTriggerModel.Marshal marshal) {
+    Timber.d("Create new power trigger");
     interactor.put(marshal.asContentValues())
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -146,6 +136,8 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
   }
 
   public interface TriggerView {
+
+    void onShowNewTriggerDialog();
 
     void onTriggerDeleted(int position);
 

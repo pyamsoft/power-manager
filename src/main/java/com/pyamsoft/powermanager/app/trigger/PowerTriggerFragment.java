@@ -31,8 +31,10 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
+import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
+import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -95,7 +97,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   private void setupFab() {
     FabColorBus.get()
         .post(FabColorEvent.create(R.drawable.ic_settings_24dp,
-            () -> presenter.createPowerTrigger()));
+            () -> presenter.showNewTriggerDialog()));
   }
 
   private void setupRecyclerView() {
@@ -121,6 +123,12 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
       Timber.d("First trigger, show list");
       loadListView();
     }
+  }
+
+  @Override public void onShowNewTriggerDialog() {
+    Timber.d("Show new trigger dialog");
+    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new CreateTriggerDialog(),
+        "create_trigger");
   }
 
   @Override public void onTriggerDeleted(int position) {
