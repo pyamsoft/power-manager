@@ -37,6 +37,7 @@ import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
+  private static final String CURRENT_PAGE = "current_page";
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
@@ -98,8 +99,10 @@ public class CreateTriggerDialog extends DialogFragment {
       @Override public void onPageSelected(int position) {
         Timber.d("Page selected: %d", position);
         if (position == 0) {
+          Timber.d("Hide back button");
           backButton.setVisibility(View.GONE);
         } else {
+          Timber.d("Show back button");
           backButton.setVisibility(View.VISIBLE);
         }
       }
@@ -114,8 +117,21 @@ public class CreateTriggerDialog extends DialogFragment {
     adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
     viewPager.setAdapter(adapter);
 
-    // Hide the back button at first
-    backButton.setVisibility(View.GONE);
+    int currentPage;
+    if (bundle == null) {
+      currentPage = 0;
+    } else {
+      currentPage = bundle.getInt(CURRENT_PAGE, 0);
+    }
+    if (currentPage == 0) {
+      // Hide the back button at first
+      Timber.d("Show first page");
+      backButton.setVisibility(View.GONE);
+    } else {
+      Timber.d("Show saved page: %d", currentPage);
+      backButton.setVisibility(View.VISIBLE);
+      viewPager.setCurrentItem(currentPage);
+    }
   }
 
   private void setupContinueButton() {
@@ -157,6 +173,7 @@ public class CreateTriggerDialog extends DialogFragment {
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putInt(CURRENT_PAGE, viewPager.getCurrentItem());
     super.onSaveInstanceState(outState);
   }
 }
