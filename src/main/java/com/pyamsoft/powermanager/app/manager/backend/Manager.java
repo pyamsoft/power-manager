@@ -95,6 +95,7 @@ abstract class Manager {
 
   @CheckResult @NonNull
   final Observable<ManagerInteractor> baseDisableObservable(boolean charging) {
+    Timber.d("Current charging state: %s", charging);
     final Observable<Boolean> ignoreChargingObservable =
         interactor.isChargingIgnore().map(ignoreCharging -> ignoreCharging && charging);
     return interactor.cancelJobs()

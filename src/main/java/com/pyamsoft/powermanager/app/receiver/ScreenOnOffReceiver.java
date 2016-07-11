@@ -91,7 +91,8 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
           BatteryManager.BATTERY_STATUS_UNKNOWN);
     }
 
-    return status == BatteryManager.BATTERY_STATUS_CHARGING;
+    return status == BatteryManager.BATTERY_STATUS_CHARGING
+        || status == BatteryManager.BATTERY_STATUS_FULL;
   }
 
   private void disableManagers(@NonNull Context context) {
