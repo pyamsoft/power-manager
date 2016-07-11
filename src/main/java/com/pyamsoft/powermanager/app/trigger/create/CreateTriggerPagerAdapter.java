@@ -37,7 +37,17 @@ public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     Fragment fragment;
     switch (position) {
       case POSITION_WIFI:
-        fragment = new CreateTriggerManageFragment();
+        fragment = CreateTriggerManageFragment.newInstance(CreateTriggerManageFragment.TYPE_WIFI);
+        break;
+      case POSITION_DATA:
+        fragment = CreateTriggerManageFragment.newInstance(CreateTriggerManageFragment.TYPE_DATA);
+        break;
+      case POSITION_BLUETOOTH:
+        fragment =
+            CreateTriggerManageFragment.newInstance(CreateTriggerManageFragment.TYPE_BLUETOOTH);
+        break;
+      case POSITION_SYNC:
+        fragment = CreateTriggerManageFragment.newInstance(CreateTriggerManageFragment.TYPE_SYNC);
         break;
       default:
         fragment = new CreateTriggerBasicFragment();
