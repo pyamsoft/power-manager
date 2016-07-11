@@ -36,6 +36,7 @@ import timber.log.Timber;
 public class CreateTriggerBasicFragment extends Fragment {
 
   @BindView(R.id.create_trigger_basic_name_layout) TextInputLayout nameLayout;
+  @BindView(R.id.create_trigger_basic_percent_layout) TextInputLayout percentLayout;
   private Unbinder unbinder;
 
   @Nullable @Override
@@ -76,6 +77,19 @@ public class CreateTriggerBasicFragment extends Fragment {
 
   @CheckResult public final int getTriggerPercent() {
     int percent;
-    return PowerTriggerEntry.EMPTY_PERCENT;
+    if (percentLayout == null) {
+      Timber.e("Percent layout is empty!");
+      percent = PowerTriggerEntry.EMPTY_PERCENT;
+    } else {
+      final EditText editText = percentLayout.getEditText();
+      if (editText == null) {
+        Timber.e("Percent edit is empty!");
+        percent = PowerTriggerEntry.EMPTY_PERCENT;
+      } else {
+        Timber.d("Get percent");
+        percent = Integer.parseInt(editText.getText().toString());
+      }
+    }
+    return percent;
   }
 }

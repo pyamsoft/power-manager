@@ -15,27 +15,75 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/create_trigger_basic_root_view"
+    android:id="@+id/create_trigger_basic_root_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
 
-  <android.support.design.widget.TextInputLayout
-      android:id="@+id/create_trigger_basic_name_layout"
+  <LinearLayout
+      android:id="@+id/create_trigger_basic_root_view"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:hint="Trigger Name"
+      android:orientation="vertical"
+      android:padding="8dp"
       >
 
-    <android.support.design.widget.TextInputEditText
-        android:id="@+id/create_trigger_basic_name_entry"
+    <TextView
+        android:id="@+id/create_trigger_basic_root_name_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/create_trigger_name_explain"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
-  </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/create_trigger_basic_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_create_trigger_name"
+        >
 
-</LinearLayout>
+      <android.support.design.widget.TextInputEditText
+          android:id="@+id/create_trigger_basic_name_entry"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:imeOptions="actionNext"
+          android:inputType="text"
+          android:maxLines="1"
+          />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/create_trigger_basic_root_percent_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/create_trigger_percent_explain"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/create_trigger_basic_percent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_create_trigger_percent"
+        >
+
+      <android.support.design.widget.TextInputEditText
+          android:id="@+id/create_trigger_basic_percent_entry"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:imeOptions="actionDone"
+          android:inputType="number"
+          android:maxLines="1"
+          />
+
+    </android.support.design.widget.TextInputLayout>
+
+  </LinearLayout>
+</ScrollView>
