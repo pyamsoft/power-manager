@@ -33,8 +33,14 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
 
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
     return Observable.defer(() -> {
-      PowerTriggerDB.with(getAppContext()).insert(values);
-      return Observable.just(PowerTriggerEntry.toTrigger(values));
+      if (PowerTriggerEntry.isEmpty(values)) {
+        Timber.e("Trigger is EMPTY");
+        return Observable.empty();
+      } else {
+        Timber.e("Insert new Trigger into DB");
+        PowerTriggerDB.with(getAppContext()).insert(values);
+        return Observable.just(PowerTriggerEntry.toTrigger(values));
+      }
     });
   }
 

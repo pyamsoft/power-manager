@@ -113,6 +113,9 @@ public class CreateTriggerDialog extends DialogFragment {
     };
     viewPager.addOnPageChangeListener(pageChangeListener);
 
+    // Hold all the pages in memory so we can retrieve their content
+    viewPager.setOffscreenPageLimit(4);
+
     // KLUDGE Child fragments are ugly.
     adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
     viewPager.setAdapter(adapter);

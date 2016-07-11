@@ -23,7 +23,8 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
 
-  @NonNull public static final String EMPTY_NAME = "EMPTY";
+  @NonNull public static final String EMPTY_NAME =
+      PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
   public static final int EMPTY_PERCENT = -1;
 
   @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
@@ -51,7 +52,13 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
-    return entry.percent() == EMPTY_PERCENT && entry.name().equals(EMPTY_NAME);
+    return entry.percent() == EMPTY_PERCENT && EMPTY_NAME.equals(entry.name());
+  }
+
+  @CheckResult public static boolean isEmpty(@NonNull ContentValues values) {
+    final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
+    final String name = values.getAsString(PowerTriggerEntry.NAME);
+    return percent == EMPTY_PERCENT && EMPTY_NAME.equals(name);
   }
 
   // SQLDelight does not yet support delete strings
