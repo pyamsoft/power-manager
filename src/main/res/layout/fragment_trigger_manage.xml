@@ -34,6 +34,14 @@
         android:id="@+id/create_trigger_manage_toggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/create_trigger_manage_manage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
   </LinearLayout>

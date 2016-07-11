@@ -34,9 +34,8 @@
         android:id="@+id/create_trigger_basic_root_name_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="@string/create_trigger_name_explain"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
     <android.support.design.widget.TextInputLayout
@@ -61,10 +60,9 @@
         android:id="@+id/create_trigger_basic_root_percent_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/create_trigger_percent_explain"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
     <android.support.design.widget.TextInputLayout
