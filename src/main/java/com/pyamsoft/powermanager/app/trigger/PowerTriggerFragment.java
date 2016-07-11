@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.content.ContentValues;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
+import com.pyamsoft.powermanager.model.RxBus;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -136,6 +139,15 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
     if (adapter.getItemCount() == 0) {
       Timber.d("Last trigger, hide list");
       loadEmptyView();
+    }
+  }
+
+  public static final class Bus extends RxBus<ContentValues> {
+
+    @NonNull private static final Bus instance = new Bus();
+
+    @CheckResult @NonNull public static Bus get() {
+      return instance;
     }
   }
 }

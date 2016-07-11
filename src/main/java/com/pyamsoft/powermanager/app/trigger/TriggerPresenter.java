@@ -16,11 +16,10 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerInteractor;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerModel;
-import java.util.Random;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -30,11 +29,12 @@ import timber.log.Timber;
 
 public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.TriggerView> {
 
-  @NonNull private static final Random RANDOM_PERCENT = new Random();
   @NonNull private final TriggerInteractor interactor;
   @NonNull private Subscription viewSubscription = Subscriptions.empty();
   @NonNull private Subscription deleteTriggerBusSubscription = Subscriptions.empty();
+  @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
   @NonNull private Subscription deleteSubscription = Subscriptions.empty();
+  @NonNull private Subscription createSubscription = Subscriptions.empty();
 
   @Inject public TriggerPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -46,16 +46,19 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
     super.onUnbind();
     unsubViewSubscription();
     unsubDeleteSubscription();
+    unsubCreateSubscription();
   }
 
   @Override public void onResume() {
     super.onResume();
     registerOnDeleteTriggerBus();
+    registerOnCreateTriggerBus();
   }
 
   @Override public void onPause() {
     super.onPause();
     unregisterFromDeleteTriggerBus();
+    unregisterFromCreateTriggerBus();
   }
 
   private void unsubViewSubscription() {
@@ -67,6 +70,12 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
   private void unsubDeleteSubscription() {
     if (!deleteSubscription.isUnsubscribed()) {
       deleteSubscription.unsubscribe();
+    }
+  }
+
+  private void unsubCreateSubscription() {
+    if (!createSubscription.isUnsubscribed()) {
+      createSubscription.unsubscribe();
     }
   }
 
@@ -93,9 +102,10 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
     getView().onShowNewTriggerDialog();
   }
 
-  public void createPowerTrigger(@NonNull PowerTriggerModel.Marshal marshal) {
+  void createPowerTrigger(@NonNull ContentValues values) {
     Timber.d("Create new power trigger");
-    interactor.put(marshal.asContentValues())
+    unsubCreateSubscription();
+    createSubscription = interactor.put(values)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(entry1 -> {
@@ -129,9 +139,27 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
+  void registerOnCreateTriggerBus() {
+    unregisterFromCreateTriggerBus();
+    createTriggerBusSubscription = PowerTriggerFragment.Bus.get()
+        .register()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(this::createPowerTrigger, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
+  }
+
   private void unregisterFromDeleteTriggerBus() {
     if (!deleteTriggerBusSubscription.isUnsubscribed()) {
       deleteTriggerBusSubscription.unsubscribe();
+    }
+  }
+
+  private void unregisterFromCreateTriggerBus() {
+    if (!createTriggerBusSubscription.isUnsubscribed()) {
+      createTriggerBusSubscription.unsubscribe();
     }
   }
 

@@ -147,7 +147,7 @@ public class CreateTriggerDialog extends DialogFragment {
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
         Timber.d("Final item continue clicked, process dialog and close");
         dismiss();
-        // TODO process
+        adapter.collect(viewPager);
       } else {
         Timber.d("Continue clicked, progress 1 item");
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);

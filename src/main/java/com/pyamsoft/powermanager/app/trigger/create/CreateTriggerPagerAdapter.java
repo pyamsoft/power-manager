@@ -16,9 +16,15 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
+import android.content.ContentValues;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import timber.log.Timber;
 
 public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -57,5 +63,44 @@ public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
 
   @Override public int getCount() {
     return 5;
+  }
+
+  public final void collect(@NonNull ViewPager viewPager) {
+    final CreateTriggerBasicFragment basicFragment =
+        (CreateTriggerBasicFragment) instantiateItem(viewPager, POSITION_BASIC);
+    final CreateTriggerManageFragment wifiFragment =
+        (CreateTriggerManageFragment) instantiateItem(viewPager, POSITION_WIFI);
+    final CreateTriggerManageFragment dataFragment =
+        (CreateTriggerManageFragment) instantiateItem(viewPager, POSITION_DATA);
+    final CreateTriggerManageFragment bluetoothFragment =
+        (CreateTriggerManageFragment) instantiateItem(viewPager, POSITION_BLUETOOTH);
+    final CreateTriggerManageFragment syncFragment =
+        (CreateTriggerManageFragment) instantiateItem(viewPager, POSITION_SYNC);
+
+    final String name = basicFragment.getTriggerName();
+    final int percent = basicFragment.getTriggerPercent();
+    final boolean wifiToggle = wifiFragment.getTriggerToggle();
+    final boolean wifiEnable = wifiFragment.getTriggerEnable();
+    final boolean dataToggle = dataFragment.getTriggerToggle();
+    final boolean dataEnable = dataFragment.getTriggerEnable();
+    final boolean bluetoothToggle = bluetoothFragment.getTriggerToggle();
+    final boolean bluetoothEnable = bluetoothFragment.getTriggerEnable();
+    final boolean syncToggle = syncFragment.getTriggerToggle();
+    final boolean syncEnable = syncFragment.getTriggerEnable();
+
+    Timber.d("Post content values to bus");
+    final ContentValues values = PowerTriggerEntry.FACTORY.marshal().name(name)
+        .percent(percent)
+        .enabled(false)
+        .toggleWifi(wifiToggle)
+        .toggleData(dataToggle)
+        .toggleBluetooth(bluetoothToggle)
+        .toggleSync(syncToggle)
+        .enableWifi(wifiEnable)
+        .enableData(dataEnable)
+        .enableBluetooth(bluetoothEnable)
+        .enableSync(syncEnable)
+        .asContentValues();
+    PowerTriggerFragment.Bus.get().post(values);
   }
 }

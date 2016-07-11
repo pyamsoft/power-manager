@@ -64,7 +64,7 @@ public class CreateTriggerBasicFragment extends Fragment {
       name = PowerTriggerEntry.EMPTY_NAME;
     } else {
       final EditText editText = nameLayout.getEditText();
-      if (editText == null) {
+      if (editText == null || editText.getText().toString().isEmpty()) {
         Timber.e("Name edit is empty!");
         name = PowerTriggerEntry.EMPTY_NAME;
       } else {
@@ -87,7 +87,12 @@ public class CreateTriggerBasicFragment extends Fragment {
         percent = PowerTriggerEntry.EMPTY_PERCENT;
       } else {
         Timber.d("Get percent");
-        percent = Integer.parseInt(editText.getText().toString());
+        try {
+          percent = Integer.parseInt(editText.getText().toString());
+        } catch (NumberFormatException e) {
+          Timber.e("Percent is not a Number");
+          percent = PowerTriggerEntry.EMPTY_PERCENT;
+        }
       }
     }
     return percent;
