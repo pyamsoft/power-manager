@@ -83,9 +83,11 @@ public class CreateTriggerDialog extends DialogFragment {
   }
 
   private void cancelTask(@Nullable AsyncVectorDrawableTask task) {
-    if (task != null && !task.isCancelled()) {
-      Timber.d("Cancel running AsyncTask");
-      task.cancel(true);
+    if (task != null) {
+      if (!task.isCancelled()) {
+        Timber.d("Cancel running AsyncTask");
+        task.cancel(true);
+      }
     }
   }
 

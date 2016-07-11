@@ -30,17 +30,36 @@
       android:padding="8dp"
       >
 
+    <TextView
+        android:id="@+id/create_trigger_manage_toggle_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Controls whether Power Manager should toggle this device radio."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        />
+
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/create_trigger_manage_toggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Toggle Radio:"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+    <TextView
+        android:id="@+id/create_trigger_manage_enable_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Controls whether a toggled radio should be turned On or Off."
+        android:textAppearance="?android:attr/textAppearanceSmall"
         />
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/create_trigger_manage_enable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Enable Radio:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
