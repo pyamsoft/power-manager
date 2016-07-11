@@ -38,7 +38,7 @@
         />
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/create_trigger_manage_manage"
+        android:id="@+id/create_trigger_manage_enable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"

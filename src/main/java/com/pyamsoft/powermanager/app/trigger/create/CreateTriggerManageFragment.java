@@ -39,7 +39,7 @@ public class CreateTriggerManageFragment extends Fragment {
   public static final int TYPE_SYNC = 3;
 
   @BindView(R.id.create_trigger_manage_toggle) SwitchCompat switchToggle;
-  @BindView(R.id.create_trigger_manage_manage) SwitchCompat switchManage;
+  @BindView(R.id.create_trigger_manage_enable) SwitchCompat switchEnable;
   private int type;
   private Unbinder unbinder;
 
@@ -86,15 +86,15 @@ public class CreateTriggerManageFragment extends Fragment {
     return toggle;
   }
 
-  @CheckResult public final boolean getTriggerManage() {
-    boolean manage;
-    if (switchManage == null) {
-      Timber.e("Manage is NULL");
-      manage = false;
+  @CheckResult public final boolean getTriggerEnable() {
+    boolean enable;
+    if (switchEnable == null) {
+      Timber.e("Enable is NULL");
+      enable = false;
     } else {
-      Timber.d("Get manage");
-      manage = switchManage.isChecked();
+      Timber.d("Get enable");
+      enable = switchEnable.isChecked();
     }
-    return manage;
+    return enable;
   }
 }
