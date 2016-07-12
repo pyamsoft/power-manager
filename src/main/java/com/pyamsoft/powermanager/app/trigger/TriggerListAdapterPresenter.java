@@ -41,7 +41,7 @@ public class TriggerListAdapterPresenter
     return interactor.size().toBlocking().first();
   }
 
-  @CheckResult public PowerTriggerEntry get(int position) {
+  @CheckResult @NonNull public PowerTriggerEntry get(int position) {
     return interactor.get(position).toBlocking().first();
   }
 

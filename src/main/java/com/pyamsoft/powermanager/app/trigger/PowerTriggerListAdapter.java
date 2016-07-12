@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class PowerTriggerListAdapter
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     final PowerTriggerEntry entry = presenter.get(position);
-    holder.triggerName.setText(entry.name());
+    holder.name.setText(entry.name());
 
     // Set up delete onLongClick
     holder.itemView.setOnLongClickListener(view -> {
@@ -73,11 +74,19 @@ public class PowerTriggerListAdapter
           DeleteTriggerDialog.newInstance(entry), "delete_trigger");
       return true;
     });
+
+    holder.percent.setText("Percent: " + entry.percent());
+
+    holder.enabled.setChecked(entry.enabled());
+    holder.enabled.setOnCheckedChangeListener((compoundButton, b) -> {
+      Timber.d("Toggle enabled: %s", b);
+      // TODO toggle enabled to state b
+    });
   }
 
   @Override public void onViewRecycled(ViewHolder holder) {
     super.onViewRecycled(holder);
-    holder.triggerName.setText(null);
+    holder.name.setText(null);
     holder.itemView.setOnLongClickListener(null);
   }
 
@@ -95,7 +104,9 @@ public class PowerTriggerListAdapter
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.trigger_name) TextView triggerName;
+    @BindView(R.id.trigger_name) TextView name;
+    @BindView(R.id.trigger_percent) TextView percent;
+    @BindView(R.id.trigger_enabled_switch) SwitchCompat enabled;
 
     public ViewHolder(View itemView) {
       super(itemView);

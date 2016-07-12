@@ -2,15 +2,15 @@
 CREATE TABLE power_triggers (
   percent INTEGER As Integer NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
-  enabled INTEGER AS Boolean DEFAULT 0,
-  toggleWifi INTEGER AS Boolean DEFAULT 0,
-  toggleData INTEGER AS Boolean DEFAULT 0,
-  toggleBluetooth INTEGER AS Boolean DEFAULT 0,
-  toggleSync INTEGER AS Boolean DEFAULT 0,
-  enableWifi INTEGER AS Boolean DEFAULT 0,
-  enableData INTEGER AS Boolean DEFAULT 0,
-  enableBluetooth INTEGER AS Boolean DEFAULT 0,
-  enableSync INTEGER AS Boolean DEFAULT 0
+  enabled INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  toggleWifi INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  toggleData INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  toggleBluetooth INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  toggleSync INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  enableWifi INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  enableData INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  enableBluetooth INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  enableSync INTEGER AS Boolean DEFAULT 0 NOT NULL
 );
 
 -- Get all entries in the table
