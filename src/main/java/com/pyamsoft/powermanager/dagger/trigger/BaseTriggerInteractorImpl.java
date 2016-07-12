@@ -47,7 +47,7 @@ abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
   }
 
   @NonNull @Override public Observable<Integer> getPosition(int percent) {
-    return PowerTriggerDB.with(getAppContext())
+    return PowerTriggerDB.with(appContext)
         .queryAll()
         .first()
         .flatMap(Observable::from)

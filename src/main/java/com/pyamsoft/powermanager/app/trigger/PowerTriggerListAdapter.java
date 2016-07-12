@@ -80,7 +80,8 @@ public class PowerTriggerListAdapter
     holder.enabled.setChecked(entry.enabled());
     holder.enabled.setOnCheckedChangeListener((compoundButton, b) -> {
       Timber.d("Toggle enabled: %s", b);
-      // TODO toggle enabled to state b
+      presenter.toggleEnabledState(holder.getAdapterPosition(),
+          presenter.get(holder.getAdapterPosition()), b);
     });
   }
 
@@ -88,6 +89,11 @@ public class PowerTriggerListAdapter
     super.onViewRecycled(holder);
     holder.name.setText(null);
     holder.itemView.setOnLongClickListener(null);
+  }
+
+  @Override public void updateViewHolder(int position) {
+    Timber.d("Update view holder at %d", position);
+    notifyItemChanged(position);
   }
 
   public void onAddTriggerForPercent(int percent) {

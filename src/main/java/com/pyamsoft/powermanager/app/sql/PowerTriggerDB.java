@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.sql;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.CheckResult;
@@ -78,16 +77,14 @@ public final class PowerTriggerDB {
       this.database = new PowerTriggerDB(context.getApplicationContext(), scheduler);
     }
 
-    @SuppressLint("NewApi") public void newTransaction(final @NonNull Runnable runnable) {
-      try (
-          final BriteDatabase.Transaction transaction = database.getDatabase().newTransaction()) {
-        runnable.run();
-        transaction.markSuccessful();
-      }
-    }
-
     public void insert(final @NonNull ContentValues contentValues) {
       database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+    }
+
+    @CheckResult public int update(final @NonNull ContentValues contentValues, final int percent) {
+      return database.getDatabase()
+          .update(PowerTriggerEntry.TABLE_NAME, contentValues,
+              PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
     }
 
     @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(final int percent) {

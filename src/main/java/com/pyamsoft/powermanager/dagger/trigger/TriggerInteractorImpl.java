@@ -39,7 +39,7 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
       } else {
         Timber.d("Insert new Trigger into DB");
         PowerTriggerDB.with(getAppContext()).insert(values);
-        return Observable.just(PowerTriggerEntry.toTrigger(values));
+        return Observable.just(PowerTriggerEntry.asTrigger(values));
       }
     });
   }

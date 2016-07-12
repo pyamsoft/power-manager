@@ -30,7 +30,7 @@ import com.google.auto.value.AutoValue;
   @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
       new Factory<>(AutoValue_PowerTriggerEntry::new);
 
-  @NonNull public static PowerTriggerEntry toTrigger(@NonNull ContentValues values) {
+  @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
     final String name = values.getAsString(PowerTriggerEntry.NAME);
     final boolean enabled = values.getAsBoolean(PowerTriggerEntry.ENABLED);
@@ -46,6 +46,23 @@ import com.google.auto.value.AutoValue;
         toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
   }
 
+  @NonNull @CheckResult
+  public static ContentValues asContentValues(@NonNull PowerTriggerEntry entry) {
+    return FACTORY.marshal()
+        .name(entry.name())
+        .percent(entry.percent())
+        .enabled(entry.enabled())
+        .toggleWifi(entry.toggleWifi())
+        .toggleData(entry.toggleData())
+        .toggleBluetooth(entry.toggleBluetooth())
+        .toggleSync(entry.toggleSync())
+        .enableWifi(entry.enableWifi())
+        .enabled(entry.enableData())
+        .enableBluetooth(entry.enableBluetooth())
+        .enableSync(entry.enableSync())
+        .asContentValues();
+  }
+
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
     return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
         false, false, false, false, false);
@@ -59,6 +76,13 @@ import com.google.auto.value.AutoValue;
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
     final String name = values.getAsString(PowerTriggerEntry.NAME);
     return percent == EMPTY_PERCENT || EMPTY_NAME.equals(name);
+  }
+
+  @CheckResult @NonNull
+  public static PowerTriggerEntry updatedCopy(@NonNull PowerTriggerEntry old, boolean enabled) {
+    return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, old.toggleWifi(),
+        old.toggleData(), old.toggleBluetooth(), old.toggleSync(), old.enableWifi(),
+        old.enableData(), old.enableBluetooth(), old.enableSync());
   }
 
   // SQLDelight does not yet support delete strings

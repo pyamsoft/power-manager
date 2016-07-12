@@ -24,17 +24,26 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 public class TriggerListAdapterPresenter
     extends SchedulerPresenter<TriggerListAdapterPresenter.TriggerListAdapterView> {
 
-  private final TriggerListAdapterInteractor interactor;
+  @NonNull private final TriggerListAdapterInteractor interactor;
+  @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
   @Inject public TriggerListAdapterPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler,
-      TriggerListAdapterInteractor adapterInteractor) {
+      @NonNull TriggerListAdapterInteractor adapterInteractor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = adapterInteractor;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubUpdateSubscription();
   }
 
   @CheckResult public int size() {
@@ -49,6 +58,27 @@ public class TriggerListAdapterPresenter
     return interactor.getPosition(percent).toBlocking().first();
   }
 
+  public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled) {
+    unsubUpdateSubscription();
+    updateSubscription = interactor.update(entry, enabled)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(result -> {
+          getView().updateViewHolder(position);
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
+  }
+
+  private void unsubUpdateSubscription() {
+    if (!updateSubscription.isUnsubscribed()) {
+      updateSubscription.unsubscribe();
+    }
+  }
+
   public interface TriggerListAdapterView {
+
+    void updateViewHolder(int position);
   }
 }

@@ -16,12 +16,14 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
     implements TriggerListAdapterInteractor {
@@ -50,5 +52,24 @@ final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
         .flatMap(Observable::from)
         .skip(position)
         .first();
+  }
+
+  @NonNull @Override
+  public Observable<Boolean> update(@NonNull PowerTriggerEntry entry, boolean enabled) {
+    return Observable.defer(() -> {
+      final int percent = entry.percent();
+      Timber.d("Update enabled state with percent: %d", percent);
+
+      final PowerTriggerEntry updated = PowerTriggerEntry.updatedCopy(entry, enabled);
+      final ContentValues values = PowerTriggerEntry.asContentValues(updated);
+
+      Timber.d("Update entry to enabled state: %s", enabled);
+      return Observable.just(PowerTriggerDB.with(getAppContext()).update(values, percent));
+    }).map(integer -> {
+      // TODO handle the int return value
+
+      // For now, just return true
+      return true;
+    });
   }
 }
