@@ -50,6 +50,7 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.app.observer.DataStateObserver;
 import com.pyamsoft.powermanager.app.observer.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
@@ -107,7 +108,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
   public static final class FullDialog extends DialogFragment
       implements WifiView, DataView, BluetoothView, SyncView,
-      WifiStateObserver.WifiStateObserverView {
+      WifiStateObserver.WifiStateObserverView, DataStateObserver.DataStateObserverView {
 
     @Inject WifiPresenter wifiPresenter;
     @Inject ManagerWifi managerWifi;
@@ -131,6 +132,7 @@ public class FullNotificationActivity extends AppCompatActivity
     @BindView(R.id.full_notification_sync_toggle) ImageButton syncToggle;
 
     private WifiStateObserver wifiStateObserver;
+    private DataStateObserver dataStateObserver;
     private Unbinder unbinder;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -148,8 +150,10 @@ public class FullNotificationActivity extends AppCompatActivity
       syncPresenter.bindView(this);
 
       wifiStateObserver = new WifiStateObserver(getContext(), this);
+      dataStateObserver = new DataStateObserver(getContext(), this);
 
       wifiStateObserver.register();
+      dataStateObserver.register();
     }
 
     @Override public void onDestroy() {
@@ -166,6 +170,7 @@ public class FullNotificationActivity extends AppCompatActivity
       managerSync.cleanup();
 
       wifiStateObserver.unregister();
+      dataStateObserver.unregister();
 
       unbinder.unbind();
     }
@@ -271,18 +276,22 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    @Override public void dataInitialState(boolean enabled, boolean managed) {
-      Timber.d("dataInitialState");
+    @UiThread private void setDataState(boolean enabled) {
       int res = enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       Drawable d = ContextCompat.getDrawable(getActivity(), res);
       d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
       dataToggle.setImageDrawable(d);
+    }
+
+    @Override public void dataInitialState(boolean enabled, boolean managed) {
+      Timber.d("dataInitialState");
       dataToggle.setOnClickListener(view -> {
         Timber.d("Toggle data state");
         dataPresenter.toggleState();
       });
 
+      setDataState(enabled);
       setDataChecked(managed);
     }
 
@@ -470,6 +479,16 @@ public class FullNotificationActivity extends AppCompatActivity
 
     @Override public void stopManagingWearable() {
 
+    }
+
+    @Override public void onDataStateEnabled() {
+      Timber.d("Data state enabled");
+      setDataState(true);
+    }
+
+    @Override public void onDataStateDisabled() {
+      Timber.d("Data state disabled");
+      setDataState(false);
     }
   }
 }
