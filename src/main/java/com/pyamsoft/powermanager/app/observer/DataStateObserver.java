@@ -33,9 +33,9 @@ public class DataStateObserver extends StateObserver {
     super(context);
     this.view = view;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(Settings.Global.WIFI_ON);
+      uri = Settings.Global.getUriFor(SETTINGS_MOBILE_DATA);
     } else {
-      uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
+      uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
     }
   }
 
