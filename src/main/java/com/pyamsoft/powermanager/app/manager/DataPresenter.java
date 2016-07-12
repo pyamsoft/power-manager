@@ -35,7 +35,7 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     this.interactor = interactor;
   }
 
-  @Override public void onToggle(boolean currentState) {
+  @Override void onToggle(boolean currentState) {
     if (currentState) {
       getView().toggleDataDisabled();
     } else {
@@ -43,7 +43,7 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     }
   }
 
-  @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
+  @Override void onCurrentStateReceived(boolean enabled, boolean managed) {
     getView().dataInitialState(enabled, managed);
   }
 

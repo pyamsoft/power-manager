@@ -35,11 +35,11 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
     this.interactor = interactor;
   }
 
-  @Override public void onCurrentStateReceived(boolean enabled, boolean managed) {
+  @Override void onCurrentStateReceived(boolean enabled, boolean managed) {
     getView().wifiInitialState(enabled, managed);
   }
 
-  @Override public void onToggle(boolean currentState) {
+  @Override void onToggle(boolean currentState) {
     if (currentState) {
       getView().toggleWifiDisabled();
     } else {

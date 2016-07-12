@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
+import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
@@ -27,4 +28,6 @@ import dagger.Component;
 }, dependencies = PowerManagerComponent.class) public interface ManagerSettingsComponent {
 
   void inject(ManagerSettingsPagerAdapter adapter);
+
+  void inject(FullNotificationActivity.FullDialog dialog);
 }

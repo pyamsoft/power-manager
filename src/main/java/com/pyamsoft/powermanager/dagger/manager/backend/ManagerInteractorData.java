@@ -121,12 +121,13 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
     @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
     @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
     @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
-    @NonNull private final ConnectivityManager connectivityManager;
 
     static {
       SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
       GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
     }
+
+    @NonNull private final ConnectivityManager connectivityManager;
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
