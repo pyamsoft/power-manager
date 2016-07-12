@@ -297,12 +297,12 @@ public class FullNotificationActivity extends AppCompatActivity
 
     @Override public void toggleDataEnabled() {
       Timber.d("Enable data");
-      managerWifi.enable(0, false);
+      managerData.enable(0, false);
     }
 
     @Override public void toggleDataDisabled() {
       Timber.d("Disable data");
-      managerWifi.disable(0, false);
+      managerData.disable(0, false);
     }
 
     @UiThread private void setDataChecked(boolean managed) {
