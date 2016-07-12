@@ -48,7 +48,11 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
   }
 
   @Override void onManaged(boolean managed) {
-
+    if (managed) {
+      getView().dataStartManaged();
+    } else {
+      getView().dataStopManaged();
+    }
   }
 
   //public final void isManaged() {

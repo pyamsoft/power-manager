@@ -122,6 +122,8 @@ public class FullNotificationActivity extends AppCompatActivity
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
     @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
     @BindView(R.id.full_notification_bluetooth_toggle) ImageButton bluetoothToggle;
+    @BindView(R.id.full_notification_data_manage) SwitchCompat dataManage;
+    @BindView(R.id.full_notification_data_toggle) ImageButton dataToggle;
 
     private Unbinder unbinder;
 
@@ -185,6 +187,7 @@ public class FullNotificationActivity extends AppCompatActivity
       // TODO init view
       unbinder = ButterKnife.bind(this, dialogView);
       wifiPresenter.getCurrentState();
+      dataPresenter.getCurrentState();
       bluetoothPresenter.getCurrentState();
 
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
@@ -210,7 +213,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setBluetoothOnChecked(managed);
     }
 
-    @UiThread void setBluetoothOnChecked(boolean managed) {
+    @UiThread private void setBluetoothOnChecked(boolean managed) {
       bluetoothManage.setOnCheckedChangeListener(null);
       bluetoothManage.setChecked(managed);
 
@@ -256,15 +259,63 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @Override public void dataInitialState(boolean enabled, boolean managed) {
+      Timber.d("dataInitialState");
+      int res = enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      Drawable d = ContextCompat.getDrawable(getActivity(), res);
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
+      dataToggle.setImageDrawable(d);
+      dataToggle.setOnClickListener(view -> {
+        Timber.d("Toggle data state");
+        dataPresenter.toggleState();
+      });
 
+      setDataChecked(managed);
     }
 
     @Override public void toggleDataEnabled() {
-
+      Timber.d("Enable data");
+      managerWifi.enable(0, false);
     }
 
     @Override public void toggleDataDisabled() {
+      Timber.d("Disable data");
+      managerWifi.disable(0, false);
+    }
 
+    private void setDataChecked(boolean managed) {
+      dataManage.setOnCheckedChangeListener(null);
+      dataManage.setChecked(managed);
+
+      final CompoundButton.OnCheckedChangeListener listener =
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+              compoundButton.setOnCheckedChangeListener(null);
+              compoundButton.setChecked(!b);
+              compoundButton.setOnCheckedChangeListener(this);
+
+              Timber.d("Set manage data");
+              dataPresenter.toggleManaged();
+            }
+          };
+
+      dataManage.setOnCheckedChangeListener(listener);
+    }
+
+    @Override public void dataStartManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Data is managed");
+        setDataChecked(true);
+      });
+    }
+
+    @Override public void dataStopManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Data is not managed");
+        setDataChecked(false);
+      });
     }
 
     @Override public void syncInitialState(boolean enabled, boolean managed) {
@@ -294,7 +345,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setWifiOnChecked(managed);
     }
 
-    @UiThread void setWifiOnChecked(boolean managed) {
+    @UiThread private void setWifiOnChecked(boolean managed) {
       wifiManage.setOnCheckedChangeListener(null);
       wifiManage.setChecked(managed);
 

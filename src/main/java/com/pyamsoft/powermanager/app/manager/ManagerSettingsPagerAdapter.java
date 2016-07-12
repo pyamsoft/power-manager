@@ -204,6 +204,16 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     managerData.disable(0, false);
   }
 
+  @Override public void dataStartManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
+  @Override public void dataStopManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
   @Override public void toggleSyncEnabled() {
     Timber.d("Sync currently disabled, enable");
     managerSync.enable(0, false);

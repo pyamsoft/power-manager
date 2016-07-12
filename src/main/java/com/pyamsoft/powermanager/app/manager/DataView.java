@@ -23,4 +23,8 @@ public interface DataView extends ManagerPresenter.ManagerView {
   void toggleDataEnabled();
 
   void toggleDataDisabled();
+
+  void dataStartManaged();
+
+  void dataStopManaged();
 }
