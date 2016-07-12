@@ -77,6 +77,7 @@ public class PowerTriggerListAdapter
 
     holder.percent.setText("Percent: " + entry.percent());
 
+    holder.enabled.setOnCheckedChangeListener(null);
     holder.enabled.setChecked(entry.enabled());
     holder.enabled.setOnCheckedChangeListener((compoundButton, b) -> {
       Timber.d("Toggle enabled: %s", b);
@@ -92,8 +93,8 @@ public class PowerTriggerListAdapter
   }
 
   @Override public void updateViewHolder(int position) {
-    Timber.d("Update view holder at %d", position);
-    notifyItemChanged(position);
+    //Timber.d("Update view holder at %d", position);
+    //notifyItemChanged(position);
   }
 
   public void onAddTriggerForPercent(int percent) {

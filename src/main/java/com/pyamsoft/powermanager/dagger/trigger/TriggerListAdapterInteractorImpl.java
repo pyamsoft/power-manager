@@ -63,7 +63,7 @@ final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
       final PowerTriggerEntry updated = PowerTriggerEntry.updatedCopy(entry, enabled);
       final ContentValues values = PowerTriggerEntry.asContentValues(updated);
 
-      Timber.d("Update entry to enabled state: %s", enabled);
+      Timber.d("Update entry to enabled state: %s", updated.enabled());
       return Observable.just(PowerTriggerDB.with(getAppContext()).update(values, percent));
     }).map(integer -> {
       // TODO handle the int return value
