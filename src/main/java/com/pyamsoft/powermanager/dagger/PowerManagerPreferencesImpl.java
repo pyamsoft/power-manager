@@ -100,6 +100,9 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
 
+  @NonNull private final String fullNotification;
+  private final boolean fullNotificationDefault;
+
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
@@ -179,6 +182,13 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     manageWearable = appContext.getString(R.string.manage_wearable_key);
     manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
+
+    fullNotification = appContext.getString(R.string.full_notification_key);
+    fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
+  }
+
+  @Override public boolean isFullNotificationEnabled() {
+    return get(fullNotification, fullNotificationDefault);
   }
 
   @Override public boolean isIgnoreChargingWifi() {

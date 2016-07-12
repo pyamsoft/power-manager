@@ -94,6 +94,8 @@ public interface PowerManagerPreferences {
 
   void clearAll();
 
+  @CheckResult boolean isFullNotificationEnabled();
+
   @CheckResult boolean isPeriodicWifi();
 
   @CheckResult boolean isPeriodicData();

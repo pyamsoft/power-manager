@@ -47,14 +47,26 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     this.appContext = context.getApplicationContext();
   }
 
+  @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {
+    return Observable.defer(() -> Observable.just(preferences.isFullNotificationEnabled()));
+  }
+
   @NonNull @Override public Observable<Notification> createNotification() {
-    return Observable.defer(() -> {
-      final Intent intent =
-          new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    return isFullNotificationEnabled().map(full -> {
+      Intent intent;
+      if (full) {
+        // TODO launch full intent
+        intent =
+            new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      } else {
+        intent =
+            new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+      }
+
       final PendingIntent pendingIntent =
           PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
       final RemoteViews customRemoteView = createCustomRemoteViews();
-      final Notification notification = new NotificationCompat.Builder(appContext).setContentTitle(
+      return new NotificationCompat.Builder(appContext).setContentTitle(
           appContext.getString(R.string.app_name))
           .setSmallIcon(R.drawable.ic_notification)
           .setColor(ContextCompat.getColor(appContext, R.color.amber500))
@@ -67,8 +79,6 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
           .setPriority(preferences.getNotificationPriority())
           .setCustomContentView(customRemoteView)
           .build();
-
-      return Observable.just(notification);
     });
   }
 
