@@ -48,7 +48,11 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
   }
 
   @Override void onManaged(boolean managed) {
-
+    if (managed) {
+      getView().syncStartManaged();
+    } else {
+      getView().syncStopManaged();
+    }
   }
 
   //public final void isManaged() {

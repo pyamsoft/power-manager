@@ -23,4 +23,8 @@ public interface SyncView extends ManagerPresenter.ManagerView {
   void toggleSyncEnabled();
 
   void toggleSyncDisabled();
+
+  void syncStartManaged();
+
+  void syncStopManaged();
 }

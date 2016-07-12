@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.service;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -124,6 +125,8 @@ public class FullNotificationActivity extends AppCompatActivity
     @BindView(R.id.full_notification_bluetooth_toggle) ImageButton bluetoothToggle;
     @BindView(R.id.full_notification_data_manage) SwitchCompat dataManage;
     @BindView(R.id.full_notification_data_toggle) ImageButton dataToggle;
+    @BindView(R.id.full_notification_sync_manage) SwitchCompat syncManage;
+    @BindView(R.id.full_notification_sync_toggle) ImageButton syncToggle;
 
     private Unbinder unbinder;
 
@@ -181,7 +184,7 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-      final View dialogView = LayoutInflater.from(getActivity())
+      @SuppressLint("InflateParams") final View dialogView = LayoutInflater.from(getActivity())
           .inflate(R.layout.dialog_full_notification, null, false);
 
       // TODO init view
@@ -189,6 +192,7 @@ public class FullNotificationActivity extends AppCompatActivity
       wifiPresenter.getCurrentState();
       dataPresenter.getCurrentState();
       bluetoothPresenter.getCurrentState();
+      syncPresenter.getCurrentState();
 
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
@@ -283,7 +287,7 @@ public class FullNotificationActivity extends AppCompatActivity
       managerWifi.disable(0, false);
     }
 
-    private void setDataChecked(boolean managed) {
+    @UiThread private void setDataChecked(boolean managed) {
       dataManage.setOnCheckedChangeListener(null);
       dataManage.setChecked(managed);
 
@@ -318,16 +322,64 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    @Override public void syncInitialState(boolean enabled, boolean managed) {
+    @UiThread private void setSyncChecked(boolean managed) {
+      syncManage.setOnCheckedChangeListener(null);
+      syncManage.setChecked(managed);
 
+      final CompoundButton.OnCheckedChangeListener listener =
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+              compoundButton.setOnCheckedChangeListener(null);
+              compoundButton.setChecked(!b);
+              compoundButton.setOnCheckedChangeListener(this);
+
+              Timber.d("Set manage sync");
+              syncPresenter.toggleManaged();
+            }
+          };
+
+      syncManage.setOnCheckedChangeListener(listener);
+    }
+
+    @Override public void syncInitialState(boolean enabled, boolean managed) {
+      Timber.d("syncInitialState");
+      int res = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      Drawable d = ContextCompat.getDrawable(getActivity(), res);
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
+      syncToggle.setImageDrawable(d);
+      syncToggle.setOnClickListener(view -> {
+        Timber.d("Toggle sync state");
+        syncPresenter.toggleState();
+      });
+
+      setSyncChecked(managed);
     }
 
     @Override public void toggleSyncEnabled() {
-
+      Timber.d("Enable sync");
+      managerSync.enable(0, false);
     }
 
     @Override public void toggleSyncDisabled() {
+      Timber.d("Disable sync");
+      managerSync.disable(0, false);
+    }
 
+    @Override public void syncStartManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Sync is managed");
+        setSyncChecked(true);
+      });
+    }
+
+    @Override public void syncStopManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Sync is not managed");
+        setSyncChecked(false);
+      });
     }
 
     @Override public void wifiInitialState(boolean enabled, boolean managed) {
@@ -373,14 +425,6 @@ public class FullNotificationActivity extends AppCompatActivity
       managerWifi.enable(0, false);
     }
 
-    @Override public void startManagingWearable() {
-
-    }
-
-    @Override public void stopManagingWearable() {
-
-    }
-
     @Override public void wifiStartManaged() {
       // KLUDGE we need this or UI crash
       getActivity().runOnUiThread(() -> {
@@ -395,6 +439,14 @@ public class FullNotificationActivity extends AppCompatActivity
         Timber.d("Wifi is not managed");
         setWifiOnChecked(false);
       });
+    }
+
+    @Override public void startManagingWearable() {
+
+    }
+
+    @Override public void stopManagingWearable() {
+
     }
   }
 }

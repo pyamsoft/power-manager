@@ -224,6 +224,16 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     managerSync.disable(0, false);
   }
 
+  @Override public void syncStartManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
+  @Override public void syncStopManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
   @Override public void startManagingWearable() {
 
   }
