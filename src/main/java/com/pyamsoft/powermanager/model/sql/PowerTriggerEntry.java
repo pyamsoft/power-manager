@@ -57,7 +57,7 @@ import com.google.auto.value.AutoValue;
         .toggleBluetooth(entry.toggleBluetooth())
         .toggleSync(entry.toggleSync())
         .enableWifi(entry.enableWifi())
-        .enabled(entry.enableData())
+        .enableData(entry.enableData())
         .enableBluetooth(entry.enableBluetooth())
         .enableSync(entry.enableSync())
         .asContentValues();
