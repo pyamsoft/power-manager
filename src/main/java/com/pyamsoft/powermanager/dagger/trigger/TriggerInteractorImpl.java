@@ -38,19 +38,22 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
         return Observable.empty();
       } else {
         Timber.d("Insert new Trigger into DB");
-        PowerTriggerDB.with(getAppContext()).insert(values);
-        return Observable.just(PowerTriggerEntry.asTrigger(values));
+        return Observable.just(PowerTriggerDB.with(getAppContext()).insert(values));
       }
+    }).map(aLong -> {
+      // TODO do something with result
+      return PowerTriggerEntry.asTrigger(values);
     });
   }
 
   @NonNull @Override public Observable<Integer> delete(int percent) {
+    final Observable<Integer> deleteObservable = Observable.defer(
+        () -> Observable.just(PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent)));
     return Observable.defer(() -> {
       Timber.d("Get position of trigger before delete");
       return getPosition(percent);
-    }).map(position -> {
-      Timber.d("Delete trigger for percent %d", percent);
-      PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent);
+    }).zipWith(deleteObservable, (position, result) -> {
+      // TODO do something with result
       return position;
     });
   }

@@ -77,8 +77,8 @@ public final class PowerTriggerDB {
       this.database = new PowerTriggerDB(context.getApplicationContext(), scheduler);
     }
 
-    public void insert(final @NonNull ContentValues contentValues) {
-      database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+    @CheckResult public long insert(final @NonNull ContentValues contentValues) {
+      return database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues);
     }
 
     @CheckResult public int update(final @NonNull ContentValues contentValues, final int percent) {
@@ -103,14 +103,15 @@ public final class PowerTriggerDB {
           .filter(padLockEntries -> padLockEntries != null);
     }
 
-    public void deleteWithPercent(final int percent) {
-      database.getDatabase()
+    @CheckResult public int deleteWithPercent(final int percent) {
+      return database.getDatabase()
           .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
               Integer.toString(percent));
     }
 
-    public void deleteAll() {
-      database.getDatabase().delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
+    @CheckResult public int deleteAll() {
+      return database.getDatabase()
+          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
     }
   }
 }
