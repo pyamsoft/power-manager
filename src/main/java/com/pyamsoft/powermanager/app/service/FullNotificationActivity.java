@@ -50,7 +50,9 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.app.observer.BluetoothStateObserver;
 import com.pyamsoft.powermanager.app.observer.DataStateObserver;
+import com.pyamsoft.powermanager.app.observer.SyncStateObserver;
 import com.pyamsoft.powermanager.app.observer.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
@@ -108,7 +110,8 @@ public class FullNotificationActivity extends AppCompatActivity
 
   public static final class FullDialog extends DialogFragment
       implements WifiView, DataView, BluetoothView, SyncView,
-      WifiStateObserver.WifiStateObserverView, DataStateObserver.DataStateObserverView {
+      WifiStateObserver.WifiStateObserverView, DataStateObserver.DataStateObserverView,
+      BluetoothStateObserver.BluetoothStateObserverView, SyncStateObserver.SyncStateObserverView {
 
     @Inject WifiPresenter wifiPresenter;
     @Inject ManagerWifi managerWifi;
@@ -133,6 +136,8 @@ public class FullNotificationActivity extends AppCompatActivity
 
     private WifiStateObserver wifiStateObserver;
     private DataStateObserver dataStateObserver;
+    private BluetoothStateObserver bluetoothStateObserver;
+    private SyncStateObserver syncStateObserver;
     private Unbinder unbinder;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -151,9 +156,13 @@ public class FullNotificationActivity extends AppCompatActivity
 
       wifiStateObserver = new WifiStateObserver(getContext(), this);
       dataStateObserver = new DataStateObserver(getContext(), this);
+      bluetoothStateObserver = new BluetoothStateObserver(getContext(), this);
+      syncStateObserver = new SyncStateObserver(getContext(), this);
 
       wifiStateObserver.register();
       dataStateObserver.register();
+      bluetoothStateObserver.register();
+      syncStateObserver.register();
     }
 
     @Override public void onDestroy() {
@@ -171,6 +180,8 @@ public class FullNotificationActivity extends AppCompatActivity
 
       wifiStateObserver.unregister();
       dataStateObserver.unregister();
+      bluetoothStateObserver.unregister();
+      syncStateObserver.unregister();
 
       unbinder.unbind();
     }
@@ -216,18 +227,22 @@ public class FullNotificationActivity extends AppCompatActivity
       destroy();
     }
 
-    @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
+    @UiThread private void setBluetoothState(boolean enabled) {
       Timber.d("bluetoothInitialState");
       int res = enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       Drawable d = ContextCompat.getDrawable(getActivity(), res);
       d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
       bluetoothToggle.setImageDrawable(d);
+    }
+
+    @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
       bluetoothToggle.setOnClickListener(view -> {
         Timber.d("Toggle wifi state");
         bluetoothPresenter.toggleState();
       });
 
+      setBluetoothState(enabled);
       setBluetoothOnChecked(managed);
     }
 
@@ -359,18 +374,22 @@ public class FullNotificationActivity extends AppCompatActivity
       syncManage.setOnCheckedChangeListener(listener);
     }
 
-    @Override public void syncInitialState(boolean enabled, boolean managed) {
+    @UiThread private void setSyncState(boolean enabled) {
       Timber.d("syncInitialState");
       int res = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       Drawable d = ContextCompat.getDrawable(getActivity(), res);
       d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
       syncToggle.setImageDrawable(d);
+    }
+
+    @Override public void syncInitialState(boolean enabled, boolean managed) {
       syncToggle.setOnClickListener(view -> {
         Timber.d("Toggle sync state");
         syncPresenter.toggleState();
       });
 
+      setSyncState(enabled);
       setSyncChecked(managed);
     }
 
@@ -463,16 +482,6 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    @Override public void onWifiStateEnabled() {
-      Timber.d("Wifi state enabled");
-      setWifiState(true);
-    }
-
-    @Override public void onWifiStateDisabled() {
-      Timber.d("Wifi state disabled");
-      setWifiState(false);
-    }
-
     @Override public void startManagingWearable() {
 
     }
@@ -481,14 +490,60 @@ public class FullNotificationActivity extends AppCompatActivity
 
     }
 
+    @Override public void onWifiStateEnabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Wifi state enabled");
+        setWifiState(true);
+      });
+    }
+
+    @Override public void onWifiStateDisabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Wifi state disabled");
+        setWifiState(false);
+      });
+    }
+
     @Override public void onDataStateEnabled() {
-      Timber.d("Data state enabled");
-      setDataState(true);
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Data state enabled");
+        setDataState(true);
+      });
     }
 
     @Override public void onDataStateDisabled() {
-      Timber.d("Data state disabled");
-      setDataState(false);
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Data state disabled");
+        setDataState(false);
+      });
+    }
+
+    @Override public void onBluetoothStateEnabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Bluetooth state enabled");
+        setBluetoothState(true);
+      });
+    }
+
+    @Override public void onBluetoothStateDisabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Bluetooth state disabled");
+        setBluetoothState(false);
+      });
+    }
+
+    @Override public void onSyncStateEnabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Sync state enabled");
+        setSyncState(true);
+      });
+    }
+
+    @Override public void onSyncStateDisabled() {
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Sync state disabled");
+        setSyncState(false);
+      });
     }
   }
 }

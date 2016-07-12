@@ -23,6 +23,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import timber.log.Timber;
 
 public abstract class StateObserver extends ContentObserver {
@@ -40,20 +41,30 @@ public abstract class StateObserver extends ContentObserver {
     return appContext;
   }
 
-  final void register(@NonNull Uri uri) {
+  void internalRegister(@Nullable Uri uri) {
+    if (uri != null) {
+      appContext.getContentResolver().registerContentObserver(uri, false, this);
+    }
+  }
+
+  final void register(@Nullable Uri uri) {
     if (!registered) {
       Timber.d("Register new state observer for: %s", uri);
-      appContext.getContentResolver().registerContentObserver(uri, false, this);
+      internalRegister(uri);
       registered = true;
     } else {
       Timber.e("Already registered");
     }
   }
 
-  public final void unregister() {
+  void internalUnregister() {
+    appContext.getContentResolver().unregisterContentObserver(this);
+  }
+
+  public void unregister() {
     if (registered) {
       Timber.d("Unregister new state observer");
-      appContext.getContentResolver().unregisterContentObserver(this);
+      internalUnregister();
       registered = false;
     } else {
       Timber.e("Already unregistered");
