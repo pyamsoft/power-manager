@@ -23,6 +23,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,11 +80,21 @@ public class PowerTriggerListAdapter
 
     holder.enabled.setOnCheckedChangeListener(null);
     holder.enabled.setChecked(entry.enabled());
-    holder.enabled.setOnCheckedChangeListener((compoundButton, b) -> {
-      Timber.d("Toggle enabled: %s", b);
-      presenter.toggleEnabledState(holder.getAdapterPosition(),
-          presenter.get(holder.getAdapterPosition()), b);
-    });
+    final CompoundButton.OnCheckedChangeListener listener =
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override
+          public void onCheckedChanged(@NonNull CompoundButton compoundButton, boolean b) {
+            compoundButton.setOnCheckedChangeListener(null);
+            compoundButton.setChecked(!b);
+            compoundButton.setOnCheckedChangeListener(this);
+
+            Timber.d("Toggle enabled: %s", b);
+            presenter.toggleEnabledState(holder.getAdapterPosition(),
+                presenter.get(holder.getAdapterPosition()), b);
+          }
+        };
+
+    holder.enabled.setOnCheckedChangeListener(listener);
   }
 
   @Override public void onViewRecycled(ViewHolder holder) {
@@ -93,8 +104,8 @@ public class PowerTriggerListAdapter
   }
 
   @Override public void updateViewHolder(int position) {
-    //Timber.d("Update view holder at %d", position);
-    //notifyItemChanged(position);
+    Timber.d("Update view holder at %d", position);
+    notifyItemChanged(position);
   }
 
   public void onAddTriggerForPercent(int percent) {
