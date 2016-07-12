@@ -18,10 +18,12 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -41,9 +43,14 @@ import com.pyamsoft.powermanager.app.manager.SyncPresenter;
 import com.pyamsoft.powermanager.app.manager.SyncView;
 import com.pyamsoft.powermanager.app.manager.WifiPresenter;
 import com.pyamsoft.powermanager.app.manager.WifiView;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DrawableUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -98,12 +105,19 @@ public class FullNotificationActivity extends AppCompatActivity
       implements WifiView, DataView, BluetoothView, SyncView {
 
     @Inject WifiPresenter wifiPresenter;
+    @Inject ManagerWifi managerWifi;
+
     @Inject DataPresenter dataPresenter;
+    @Inject ManagerData managerData;
+
     @Inject BluetoothPresenter bluetoothPresenter;
+    @Inject ManagerBluetooth managerBluetooth;
+
     @Inject SyncPresenter syncPresenter;
+    @Inject ManagerSync managerSync;
 
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
-    @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggl;
+    @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
 
     private Unbinder unbinder;
 
@@ -161,7 +175,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
       // TODO init view
       unbinder = ButterKnife.bind(this, dialogView);
-
+      wifiPresenter.getCurrentState();
 
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
@@ -208,15 +222,33 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @Override public void wifiInitialState(boolean enabled, boolean managed) {
+      Timber.d("wifiInitialState");
+      int res = enabled ? R.drawable.ic_network_wifi_24dp : R.drawable.ic_signal_wifi_off_24dp;
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      Drawable d = ContextCompat.getDrawable(getActivity(), res);
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
+      wifiToggle.setImageDrawable(d);
+      wifiToggle.setOnClickListener(view -> {
+        Timber.d("Toggle wifi state");
+        wifiPresenter.toggleState();
+      });
 
+      wifiManage.setOnCheckedChangeListener(null);
+      wifiManage.setChecked(managed);
+      wifiManage.setOnCheckedChangeListener((compoundButton, b) -> {
+        // TODO set managed
+        Timber.d("Set manage wifi");
+      });
     }
 
     @Override public void toggleWifiDisabled() {
-
+      Timber.d("Disable wifi");
+      managerWifi.disable(0, false);
     }
 
     @Override public void toggleWifiEnabled() {
-
+      Timber.d("Enable wifi");
+      managerWifi.enable(0, false);
     }
 
     @Override public void startManagingWearable() {
