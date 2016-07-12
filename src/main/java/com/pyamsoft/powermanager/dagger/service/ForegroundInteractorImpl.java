@@ -30,6 +30,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import rx.Observable;
@@ -55,9 +56,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     return isFullNotificationEnabled().map(full -> {
       Intent intent;
       if (full) {
-        // TODO launch full intent
-        intent =
-            new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent = new Intent(appContext, FullNotificationActivity.class).setFlags(
+            Intent.FLAG_ACTIVITY_SINGLE_TOP);
       } else {
         intent =
             new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

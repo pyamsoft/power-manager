@@ -72,6 +72,14 @@
       </intent-filter>
     </activity>
 
+    <!-- Full Notification -->
+    <activity
+        android:name=".app.service.FullNotificationActivity"
+        android:excludeFromRecents="true"
+        android:theme="@style/Theme.PowerManager.Light.FullNotification"
+        android:launchMode="singleInstance"
+        android:noHistory="true"/>
+
     <!-- Job Scheduling -->
     <service
         android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
