@@ -94,11 +94,10 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-      final View dialogView = LayoutInflater.from(getActivity())
-          .inflate(R.layout.dialog_full_notification, null, false);
+      final View dialogView =
+          LayoutInflater.from(getActivity()).inflate(R.layout.dialog_full_notification, null, false);
 
       // TODO init view
-
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
 
