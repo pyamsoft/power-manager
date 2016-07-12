@@ -37,6 +37,7 @@ import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -52,6 +53,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   private PowerTriggerListAdapter adapter;
   private Unbinder unbinder;
+  private RecyclerView.ItemDecoration dividerDecoration;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
         .inject(this);
 
     adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
+    dividerDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
   }
 
   @Nullable @Override
@@ -75,9 +78,12 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
+
+    recyclerView.removeItemDecoration(dividerDecoration);
+
     adapter.onDestroy();
     presenter.unbindView();
+    unbinder.unbind();
   }
 
   @Override public void onResume() {
@@ -106,6 +112,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   private void setupRecyclerView() {
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setHasFixedSize(true);
+    recyclerView.addItemDecoration(dividerDecoration);
   }
 
   @Override public void loadEmptyView() {
