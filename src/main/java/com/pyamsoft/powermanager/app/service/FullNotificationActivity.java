@@ -331,13 +331,19 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @Override public void wifiStartManaged() {
-      Timber.d("Wifi is managed");
-      setWifiOnChecked(true);
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Wifi is managed");
+        setWifiOnChecked(true);
+      });
     }
 
     @Override public void wifiStopManaged() {
-      Timber.d("Wifi is not managed");
-      setWifiOnChecked(false);
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Wifi is not managed");
+        setWifiOnChecked(false);
+      });
     }
   }
 }
