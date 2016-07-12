@@ -24,6 +24,8 @@ public interface ManagerInteractor {
 
   void setOriginalState(boolean enabled);
 
+  void setManaged(boolean managed);
+
   @NonNull @CheckResult Observable<Boolean> isOriginalState();
 
   @NonNull @CheckResult Observable<ManagerInteractor> cancelJobs();

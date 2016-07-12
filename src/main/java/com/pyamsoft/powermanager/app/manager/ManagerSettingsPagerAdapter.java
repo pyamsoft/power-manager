@@ -38,6 +38,11 @@ import timber.log.Timber;
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     implements WifiView, DataView, BluetoothView, SyncView {
 
+  @NonNull public static final String TYPE_WIFI = "wifi";
+  @NonNull public static final String TYPE_DATA = "data";
+  @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
+  @NonNull public static final String TYPE_SYNC = "sync";
+  @NonNull public static final String FRAGMENT_TYPE = "fragment_type";
   @DrawableRes private static final int FAB_ICON_WIFI_ON = R.drawable.ic_network_wifi_24dp;
   @DrawableRes private static final int FAB_ICON_WIFI_OFF = R.drawable.ic_signal_wifi_off_24dp;
   @DrawableRes private static final int FAB_ICON_DATA_ON = R.drawable.ic_network_cell_24dp;
@@ -47,12 +52,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
       R.drawable.ic_bluetooth_disabled_24dp;
   @DrawableRes private static final int FAB_ICON_SYNC_ON = R.drawable.ic_sync_24dp;
   @DrawableRes private static final int FAB_ICON_SYNC_OFF = R.drawable.ic_sync_disabled_24dp;
-
-  @NonNull public static final String TYPE_WIFI = "wifi";
-  @NonNull public static final String TYPE_DATA = "data";
-  @NonNull public static final String TYPE_BLUETOOTH = "bluetooth";
-  @NonNull public static final String TYPE_SYNC = "sync";
-  @NonNull public static final String FRAGMENT_TYPE = "fragment_type";
   @NonNull private final Fragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
@@ -163,6 +162,16 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @Override public void toggleWifiEnabled() {
     Timber.d("Wifi currently disabled, enabled");
     managerWifi.enable(0, false);
+  }
+
+  @Override public void wifiStartManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
+  @Override public void wifiStopManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
   }
 
   @Override public void toggleBluetoothEnabled() {

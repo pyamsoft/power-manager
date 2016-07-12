@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -233,12 +234,25 @@ public class FullNotificationActivity extends AppCompatActivity
         wifiPresenter.toggleState();
       });
 
+      setWifiOnChecked(managed);
+    }
+
+    void setWifiOnChecked(boolean managed) {
       wifiManage.setOnCheckedChangeListener(null);
       wifiManage.setChecked(managed);
-      wifiManage.setOnCheckedChangeListener((compoundButton, b) -> {
-        // TODO set managed
-        Timber.d("Set manage wifi");
-      });
+
+      final CompoundButton.OnCheckedChangeListener listener =
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+              compoundButton.setOnCheckedChangeListener(null);
+              compoundButton.setChecked(!b);
+              compoundButton.setOnCheckedChangeListener(this);
+
+              Timber.d("Set manage wifi");
+              wifiPresenter.toggleManaged();
+            }
+          };
+      wifiManage.setOnCheckedChangeListener(listener);
     }
 
     @Override public void toggleWifiDisabled() {
@@ -257,6 +271,16 @@ public class FullNotificationActivity extends AppCompatActivity
 
     @Override public void stopManagingWearable() {
 
+    }
+
+    @Override public void wifiStartManaged() {
+      Timber.d("Wifi is managed");
+      setWifiOnChecked(true);
+    }
+
+    @Override public void wifiStopManaged() {
+      Timber.d("Wifi is not managed");
+      setWifiOnChecked(false);
     }
   }
 }

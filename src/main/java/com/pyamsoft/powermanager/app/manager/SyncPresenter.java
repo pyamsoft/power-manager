@@ -46,6 +46,11 @@ public final class SyncPresenter extends ManagerPresenter<SyncView> {
       getView().toggleSyncEnabled();
     }
   }
+
+  @Override void onManaged(boolean managed) {
+
+  }
+
   //public final void isManaged() {
   //  unsubIsManaged();
   //  isManagedSubscription = interactor.isManaged()

@@ -48,6 +48,10 @@ public final class BluetoothPresenter extends WearablePresenter<BluetoothView> {
     }
   }
 
+  @Override void onManaged(boolean managed) {
+
+  }
+
   //public final void isManaged() {
   //  unsubIsManaged();
   //  isManagedSubscription = interactor.isManaged()

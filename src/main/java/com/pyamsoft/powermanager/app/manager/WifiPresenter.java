@@ -47,6 +47,14 @@ public final class WifiPresenter extends WearablePresenter<WifiView> {
     }
   }
 
+  @Override void onManaged(boolean managed) {
+    if (managed) {
+      getView().wifiStartManaged();
+    } else {
+      getView().wifiStopManaged();
+    }
+  }
+
   //public final void isManaged() {
   //  unsubIsManaged();
   //  isManagedSubscription = interactor.isManaged()

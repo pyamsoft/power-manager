@@ -145,30 +145,35 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @Override public void updateWearablePreferenceStatus() {
+    // TODO should we talk to manager instead?
     final boolean state = preferences.isWearableManaged();
     preferences.setWearableManaged(!state);
     Timber.d("Update wearable managed from %s to %s", state, !state);
   }
 
   @Override public void updateWifiPreferenceStatus() {
+    // TODO should we talk to manager instead?
     final boolean state = preferences.isWifiManaged();
     preferences.setWifiManaged(!state);
     Timber.d("Update wifi managed from %s to %s", state, !state);
   }
 
   @Override public void updateDataPreferenceStatus() {
+    // TODO should we talk to manager instead?
     final boolean state = preferences.isDataManaged();
     preferences.setDataManaged(!state);
     Timber.d("Update data managed from %s to %s", state, !state);
   }
 
   @Override public void updateBluetoothPreferenceStatus() {
+    // TODO should we talk to manager instead?
     final boolean state = preferences.isBluetoothManaged();
     preferences.setBluetoothManaged(!state);
     Timber.d("Update bluetooth managed from %s to %s", state, !state);
   }
 
   @Override public void updateSyncPreferenceStatus() {
+    // TODO should we talk to manager instead?
     final boolean state = preferences.isSyncManaged();
     preferences.setSyncManaged(!state);
     Timber.d("Update sync managed from %s to %s", state, !state);

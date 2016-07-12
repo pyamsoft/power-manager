@@ -23,4 +23,8 @@ public interface WifiView extends WearablePresenter.WearableView {
   void toggleWifiDisabled();
 
   void toggleWifiEnabled();
+
+  void wifiStartManaged();
+
+  void wifiStopManaged();
 }

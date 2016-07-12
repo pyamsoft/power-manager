@@ -47,6 +47,10 @@ public final class DataPresenter extends ManagerPresenter<DataView> {
     getView().dataInitialState(enabled, managed);
   }
 
+  @Override void onManaged(boolean managed) {
+
+  }
+
   //public final void isManaged() {
   //  unsubIsManaged();
   //  isManagedSubscription = interactor.isManaged()

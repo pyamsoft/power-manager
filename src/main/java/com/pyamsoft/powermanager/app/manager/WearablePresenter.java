@@ -28,7 +28,7 @@ public abstract class WearablePresenter<I extends WearablePresenter.WearableView
     extends ManagerPresenter<I> {
 
   @NonNull private final WearableManagerInteractor interactor;
-  @NonNull private Subscription managedSubscription = Subscriptions.empty();
+  @NonNull private Subscription wearManagedSubscription = Subscriptions.empty();
 
   protected WearablePresenter(@NonNull WearableManagerInteractor interactor,
       @NonNull @Named("main") Scheduler observeScheduler,
@@ -39,18 +39,18 @@ public abstract class WearablePresenter<I extends WearablePresenter.WearableView
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubManaged();
+    unsubWearManaged();
   }
 
-  private void unsubManaged() {
-    if (!managedSubscription.isUnsubscribed()) {
-      managedSubscription.unsubscribe();
+  void unsubWearManaged() {
+    if (!wearManagedSubscription.isUnsubscribed()) {
+      wearManagedSubscription.unsubscribe();
     }
   }
 
   public final void onWearableManageChanged() {
-    unsubManaged();
-    managedSubscription = interactor.isWearableManaged()
+    unsubWearManaged();
+    wearManagedSubscription = interactor.isWearableManaged()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(managed -> {

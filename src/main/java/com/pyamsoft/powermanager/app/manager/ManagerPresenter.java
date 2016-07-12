@@ -33,6 +33,7 @@ public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView>
   @NonNull private final ManagerInteractor interactor;
   @NonNull private Subscription initialSubscription = Subscriptions.empty();
   @NonNull private Subscription toggleSubscription = Subscriptions.empty();
+  @NonNull private Subscription managedSubscription = Subscriptions.empty();
 
   protected ManagerPresenter(@NonNull ManagerInteractor interactor,
       @NonNull @Named("main") Scheduler observeScheduler,
@@ -77,15 +78,38 @@ public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView>
         });
   }
 
+  public void toggleManaged() {
+    unsubManaged();
+    managedSubscription = interactor.isManaged()
+        .map(managed -> {
+          interactor.setManaged(!managed);
+          return !managed;
+        })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(this::onManaged, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO error
+        });
+  }
+
   void unsubToggle() {
     if (!toggleSubscription.isUnsubscribed()) {
       toggleSubscription.unsubscribe();
     }
   }
 
+  void unsubManaged() {
+    if (!managedSubscription.isUnsubscribed()) {
+      managedSubscription.unsubscribe();
+    }
+  }
+
   abstract void onCurrentStateReceived(boolean enabled, boolean managed);
 
-  abstract void onToggle(boolean currentState);
+  abstract void onToggle(boolean enabled);
+
+  abstract void onManaged(boolean managed);
 
   public interface ManagerView {
 
