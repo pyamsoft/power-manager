@@ -49,7 +49,11 @@ public final class BluetoothPresenter extends WearablePresenter<BluetoothView> {
   }
 
   @Override void onManaged(boolean managed) {
-
+    if (managed) {
+      getView().bluetoothStartManaged();
+    } else {
+      getView().bluetoothStopManaged();
+    }
   }
 
   //public final void isManaged() {

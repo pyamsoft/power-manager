@@ -23,4 +23,8 @@ public interface BluetoothView extends WearablePresenter.WearableView {
   void toggleBluetoothEnabled();
 
   void toggleBluetoothDisabled();
+
+  void bluetoothStartManaged();
+
+  void bluetoothStopManaged();
 }

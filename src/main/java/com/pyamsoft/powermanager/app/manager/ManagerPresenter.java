@@ -46,6 +46,7 @@ public abstract class ManagerPresenter<I extends ManagerPresenter.ManagerView>
     super.onUnbind();
     unsubInitial();
     unsubToggle();
+    unsubManaged();
   }
 
   private void unsubInitial() {

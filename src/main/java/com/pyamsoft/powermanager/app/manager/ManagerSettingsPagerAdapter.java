@@ -184,6 +184,16 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     managerBluetooth.disable(0, false);
   }
 
+  @Override public void bluetoothStartManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
+  @Override public void bluetoothStopManaged() {
+    // noop
+    throw new RuntimeException("NOOP");
+  }
+
   @Override public void toggleDataEnabled() {
     Timber.d("Data currently disabled, enable");
     managerData.enable(0, false);

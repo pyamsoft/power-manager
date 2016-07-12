@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -119,6 +120,8 @@ public class FullNotificationActivity extends AppCompatActivity
 
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
+    @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
+    @BindView(R.id.full_notification_bluetooth_toggle) ImageButton bluetoothToggle;
 
     private Unbinder unbinder;
 
@@ -144,6 +147,11 @@ public class FullNotificationActivity extends AppCompatActivity
       dataPresenter.unbindView();
       bluetoothPresenter.unbindView();
       syncPresenter.unbindView();
+
+      managerWifi.cleanup();
+      managerData.cleanup();
+      managerBluetooth.cleanup();
+      managerSync.cleanup();
 
       unbinder.unbind();
     }
@@ -177,6 +185,7 @@ public class FullNotificationActivity extends AppCompatActivity
       // TODO init view
       unbinder = ButterKnife.bind(this, dialogView);
       wifiPresenter.getCurrentState();
+      bluetoothPresenter.getCurrentState();
 
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
@@ -187,15 +196,63 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
+      Timber.d("bluetoothInitialState");
+      int res = enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      Drawable d = ContextCompat.getDrawable(getActivity(), res);
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(), color));
+      bluetoothToggle.setImageDrawable(d);
+      bluetoothToggle.setOnClickListener(view -> {
+        Timber.d("Toggle wifi state");
+        bluetoothPresenter.toggleState();
+      });
 
+      setBluetoothOnChecked(managed);
+    }
+
+    @UiThread void setBluetoothOnChecked(boolean managed) {
+      bluetoothManage.setOnCheckedChangeListener(null);
+      bluetoothManage.setChecked(managed);
+
+      final CompoundButton.OnCheckedChangeListener listener =
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+              compoundButton.setOnCheckedChangeListener(null);
+              compoundButton.setChecked(!b);
+              compoundButton.setOnCheckedChangeListener(this);
+
+              Timber.d("Set manage bluetooth");
+              bluetoothPresenter.toggleManaged();
+            }
+          };
+
+      bluetoothManage.setOnCheckedChangeListener(listener);
     }
 
     @Override public void toggleBluetoothEnabled() {
-
+      Timber.d("Enable bluetooth");
+      managerBluetooth.enable(0, false);
     }
 
     @Override public void toggleBluetoothDisabled() {
+      Timber.d("Disable bluetooth");
+      managerBluetooth.disable(0, false);
+    }
 
+    @Override public void bluetoothStartManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Bluetooth is managed");
+        setBluetoothOnChecked(true);
+      });
+    }
+
+    @Override public void bluetoothStopManaged() {
+      // KLUDGE we need this or UI crash
+      getActivity().runOnUiThread(() -> {
+        Timber.d("Bluetooth is not managed");
+        setBluetoothOnChecked(false);
+      });
     }
 
     @Override public void dataInitialState(boolean enabled, boolean managed) {
@@ -237,7 +294,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setWifiOnChecked(managed);
     }
 
-    void setWifiOnChecked(boolean managed) {
+    @UiThread void setWifiOnChecked(boolean managed) {
       wifiManage.setOnCheckedChangeListener(null);
       wifiManage.setChecked(managed);
 
