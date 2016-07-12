@@ -24,7 +24,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
@@ -53,11 +56,15 @@ public class FullNotificationActivity extends AppCompatActivity
 
   @Override protected void onResume() {
     super.onResume();
+
+    Timber.d("onResume");
     presenter.onResume();
   }
 
   @Override protected void onPause() {
     super.onPause();
+
+    Timber.d("onPause");
     presenter.onPause();
   }
 
@@ -75,13 +82,29 @@ public class FullNotificationActivity extends AppCompatActivity
 
   public static final class FullDialog extends DialogFragment {
 
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setCancelable(true);
+    }
+
+    private void destroy() {
+      Timber.d("Destroy FullNotification");
+      dismiss();
+      FullNotificationPresenter.Bus.get().post(new FullNotificationPresenter.DismissEvent());
+    }
+
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-      return new AlertDialog.Builder(getActivity()).setPositiveButton("Okay",
-          new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialogInterface, int i) {
-              dismiss();
-            }
-          }).create();
+      final View dialogView = LayoutInflater.from(getActivity())
+          .inflate(R.layout.dialog_full_notification, null, false);
+
+      // TODO init view
+
+      return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
+    }
+
+    @Override public void onCancel(DialogInterface dialog) {
+      super.onCancel(dialog);
+      destroy();
     }
   }
 }

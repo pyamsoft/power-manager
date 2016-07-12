@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
+
+  <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      >
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/full_notification_wifi_manage"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ImageButton
+        android:id="@+id/full_notification_wifi_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/full_notification_wifi_manage"
+        android:contentDescription="@string/blank"
+        />
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      >
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/full_notification_data_manage"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ImageButton
+        android:id="@+id/full_notification_data_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/full_notification_data_manage"
+        android:contentDescription="@string/blank"
+        />
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      >
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/full_notification_bluetooth_manage"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ImageButton
+        android:id="@+id/full_notification_bluetooth_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/full_notification_bluetooth_manage"
+        android:contentDescription="@string/blank"
+        />
+
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_weight="1"
+      >
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/full_notification_sync_manage"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ImageButton
+        android:id="@+id/full_notification_sync_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/full_notification_sync_manage"
+        android:contentDescription="@string/blank"
+        />
+
+  </RelativeLayout>
+
+</LinearLayout>
