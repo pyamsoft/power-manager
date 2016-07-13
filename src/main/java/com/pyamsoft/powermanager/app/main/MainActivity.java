@@ -17,16 +17,14 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.animation.LayoutTransition;
-import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.preference.PreferenceManager;
@@ -48,10 +46,11 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
 import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
+import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.DrawableUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -67,7 +66,7 @@ public class MainActivity extends DonationActivityBase
   @Inject MainPresenter presenter;
   private Unbinder unbinder;
   private DataHolderFragment<String> adapterDataHolderFragment;
-  @ColorInt private int white;
+  private AsyncVectorDrawableTask fabColorTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -83,7 +82,6 @@ public class MainActivity extends DonationActivityBase
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
     // Resolve color here, just once
-    white = ContextCompat.getColor(this, android.R.color.white);
 
     presenter.bindView(this);
 
@@ -238,8 +236,9 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onDestroy() {
     super.onDestroy();
 
-    unbinder.unbind();
+    cancelTask(fabColorTask);
     presenter.unbindView();
+    unbinder.unbind();
   }
 
   @Override protected void onResume() {
@@ -385,9 +384,19 @@ public class MainActivity extends DonationActivityBase
     AppUtil.guaranteeSingleDialogFragment(this, new ErrorDialog(), "error");
   }
 
+  private void cancelTask(@Nullable AsyncTask task) {
+    if (task != null) {
+      if (!task.isCancelled()) {
+        Timber.d("Cancel task");
+        task.cancel(true);
+      }
+    }
+  }
+
   @Override public void loadFabColoring(@DrawableRes int icon, @NonNull Runnable runnable) {
-    final Drawable drawable = ContextCompat.getDrawable(this, icon);
-    fab.setImageDrawable(DrawableUtil.tintDrawableFromColor(drawable, white));
+    cancelTask(fabColorTask);
+    fabColorTask = new AsyncVectorDrawableTask(fab, android.R.color.white);
+    fabColorTask.execute(new AsyncDrawable(getApplicationContext(), icon));
     fab.setOnClickListener(view -> runnable.run());
   }
 }

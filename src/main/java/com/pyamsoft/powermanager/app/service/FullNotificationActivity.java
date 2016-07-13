@@ -20,13 +20,11 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -63,7 +61,8 @@ import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.DrawableUtil;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -119,6 +118,7 @@ public class FullNotificationActivity extends AppCompatActivity
       SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
       BluetoothManageObserver.View, SyncManageObserver.View {
 
+    @NonNull private final Map<String, AsyncTask> taskMap = new HashMap<>();
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
     @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
@@ -152,8 +152,6 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject SyncManageModifier syncManageModifier;
 
     private Unbinder unbinder;
-    private AsyncVectorDrawableTask mainTask;
-    private AsyncVectorDrawableTask closeTask;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -215,10 +213,17 @@ public class FullNotificationActivity extends AppCompatActivity
       bluetoothManageObserver.unregister();
       syncManageObserver.unregister();
 
-      cancelTask(mainTask);
-      cancelTask(closeTask);
+      cleanupTasks();
 
       unbinder.unbind();
+    }
+
+    public void cleanupTasks() {
+      Timber.d("Clear all async tasks");
+      for (final AsyncTask task : taskMap.values()) {
+        cancelTask(task);
+      }
+      taskMap.clear();
     }
 
     private void cancelTask(@Nullable AsyncTask task) {
@@ -236,6 +241,18 @@ public class FullNotificationActivity extends AppCompatActivity
       FullNotificationPresenter.Bus.get().post(new FullNotificationPresenter.DismissEvent());
     }
 
+    private void addNewAsyncTask(@NonNull String title, @NonNull AsyncTask task) {
+      if (taskMap.containsKey(title)) {
+        Timber.d("Remove old task from map, cancel if needed");
+        final AsyncTask oldTask = taskMap.get(title);
+        cancelTask(oldTask);
+        taskMap.remove(title);
+      }
+
+      Timber.d("Put new entry: %s %s", title, task);
+      taskMap.put(title, task);
+    }
+
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
       Timber.d("onCreateDialog");
       @SuppressLint("InflateParams") final android.view.View dialogView =
@@ -250,13 +267,15 @@ public class FullNotificationActivity extends AppCompatActivity
             Intent.FLAG_ACTIVITY_SINGLE_TOP));
       });
 
-      mainTask = new AsyncVectorDrawableTask(mainButton);
+      final AsyncVectorDrawableTask mainTask = new AsyncVectorDrawableTask(mainButton);
       mainTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_settings_24dp));
+      addNewAsyncTask("main", mainTask);
 
       closeButton.setOnClickListener(view -> destroy());
 
-      closeTask = new AsyncVectorDrawableTask(closeButton);
+      final AsyncVectorDrawableTask closeTask = new AsyncVectorDrawableTask(closeButton);
       closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
+      addNewAsyncTask("close", closeTask);
 
       wifiToggle.setOnClickListener(view -> {
         Timber.d("Wifi clicked");
@@ -322,34 +341,34 @@ public class FullNotificationActivity extends AppCompatActivity
 
     private void setWifiToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_network_wifi_24dp : R.drawable.ic_signal_wifi_off_24dp;
-      Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
-          enabled ? R.color.lightblueA200 : android.R.color.black));
-      wifiToggle.setImageDrawable(d);
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(wifiToggle, color);
+      task.execute(new AsyncDrawable(getActivity(), icon));
+      addNewAsyncTask("wifi", task);
     }
 
     private void setDataToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
-      Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
-          enabled ? R.color.lightblueA200 : android.R.color.black));
-      dataToggle.setImageDrawable(d);
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(dataToggle, color);
+      task.execute(new AsyncDrawable(getActivity(), icon));
+      addNewAsyncTask("data", task);
     }
 
     private void setBluetoothToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
-      Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
-          enabled ? R.color.lightblueA200 : android.R.color.black));
-      bluetoothToggle.setImageDrawable(d);
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(bluetoothToggle, color);
+      task.execute(new AsyncDrawable(getActivity(), icon));
+      addNewAsyncTask("bluetooth", task);
     }
 
     private void setSyncToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
-      Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
-          enabled ? R.color.lightblueA200 : android.R.color.black));
-      syncToggle.setImageDrawable(d);
+      int color = enabled ? R.color.lightblueA200 : android.R.color.black;
+      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(bluetoothToggle, color);
+      task.execute(new AsyncDrawable(getActivity(), icon));
+      addNewAsyncTask("sync", task);
     }
 
     private void setWifiManageState(boolean state) {
