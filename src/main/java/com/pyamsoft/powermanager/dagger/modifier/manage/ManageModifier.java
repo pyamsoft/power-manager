@@ -24,10 +24,12 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 
 abstract class ManageModifier implements InterestModifier {
 
   @NonNull private final Context appContext;
+  @NonNull private final Intent service;
   @NonNull private final Handler handler;
   @NonNull private final PowerManagerPreferences preferences;
 
@@ -35,6 +37,7 @@ abstract class ManageModifier implements InterestModifier {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.handler = new Handler(Looper.getMainLooper());
+    this.service = new Intent(appContext, ForegroundService.class);
   }
 
   @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
@@ -51,7 +54,6 @@ abstract class ManageModifier implements InterestModifier {
       mainThreadSet();
 
       // The notification will be notified when a manage state changes
-      final Intent service = getServiceIntent();
       appContext.startService(service);
     });
   }
@@ -62,12 +64,10 @@ abstract class ManageModifier implements InterestModifier {
       mainThreadUnset();
 
       // The notification will be notified when a manage state changes
-      final Intent service = getServiceIntent();
       appContext.startService(service);
     });
   }
 
-  @CheckResult @NonNull abstract Intent getServiceIntent();
 
   abstract void mainThreadSet();
 

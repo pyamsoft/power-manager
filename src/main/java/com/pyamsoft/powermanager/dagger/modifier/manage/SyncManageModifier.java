@@ -17,10 +17,8 @@
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
 import javax.inject.Inject;
 
 public class SyncManageModifier extends ManageModifier {
@@ -28,11 +26,6 @@ public class SyncManageModifier extends ManageModifier {
   @Inject SyncManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences);
-  }
-
-  @NonNull @Override Intent getServiceIntent() {
-    return new Intent(getAppContext(), ForegroundService.class).putExtra(
-        ForegroundService.EXTRA_SYNC, true);
   }
 
   @Override void mainThreadSet() {
