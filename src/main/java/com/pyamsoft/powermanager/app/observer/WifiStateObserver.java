@@ -23,54 +23,46 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-public class WifiStateObserver extends StateObserver {
+public class WifiStateObserver extends StateContentObserver {
 
   @NonNull private final WifiStateObserverView view;
-  @NonNull private final Uri uri;
 
   public WifiStateObserver(@NonNull Context context, @NonNull WifiStateObserverView view) {
     super(context);
     this.view = view;
+
+    Uri uri;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       uri = Settings.Global.getUriFor(Settings.Global.WIFI_ON);
     } else {
+      //noinspection deprecation
       uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
     }
-  }
-
-  @Override public boolean deliverSelfNotifications() {
-    return false;
-  }
-
-  @Override public void onChange(boolean selfChange) {
-    onChange(selfChange, null);
+    setUri(uri);
   }
 
   @Override public void onChange(boolean selfChange, Uri uri) {
     Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
-    if (isEnabled()) {
+    if (is()) {
       view.onWifiStateEnabled();
     } else {
       view.onWifiStateDisabled();
     }
   }
 
-  @SuppressWarnings("deprecation") @Override boolean isEnabled() {
+  @Override public boolean is() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
           Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.WIFI_ON, 0)
               == 1;
     } else {
+      //noinspection deprecation
       enabled =
           Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.WIFI_ON, 0)
               == 1;
     }
     return enabled;
-  }
-
-  @Override public void register() {
-    register(uri);
   }
 
   public interface WifiStateObserverView {

@@ -109,7 +109,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         break;
       case TYPE_SYNC:
         syncPresenter.getCurrentState();
-        observer = new SyncStateObserver(activity, this);
+        observer = new SyncStateObserver(this);
         break;
       default:
         throw new IllegalStateException("Invalid type: " + type);

@@ -23,40 +23,34 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-public class DataStateObserver extends StateObserver {
+public class DataStateObserver extends StateContentObserver {
 
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
   @NonNull private final DataStateObserverView view;
-  @NonNull private final Uri uri;
 
   public DataStateObserver(@NonNull Context context, @NonNull DataStateObserverView view) {
     super(context);
     this.view = view;
+
+    Uri uri;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       uri = Settings.Global.getUriFor(SETTINGS_MOBILE_DATA);
     } else {
       uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
     }
-  }
-
-  @Override public boolean deliverSelfNotifications() {
-    return false;
-  }
-
-  @Override public void onChange(boolean selfChange) {
-    onChange(selfChange, null);
+    setUri(uri);
   }
 
   @Override public void onChange(boolean selfChange, Uri uri) {
     Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
-    if (isEnabled()) {
+    if (is()) {
       view.onDataStateEnabled();
     } else {
       view.onDataStateDisabled();
     }
   }
 
-  @SuppressWarnings("deprecation") @Override boolean isEnabled() {
+  @Override public boolean is() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
@@ -68,10 +62,6 @@ public class DataStateObserver extends StateObserver {
               == 1;
     }
     return enabled;
-  }
-
-  @Override public void register() {
-    register(uri);
   }
 
   public interface DataStateObserverView {

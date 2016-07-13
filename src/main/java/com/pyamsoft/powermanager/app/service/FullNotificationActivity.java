@@ -168,7 +168,7 @@ public class FullNotificationActivity extends AppCompatActivity
       wifiStateObserver = new WifiStateObserver(getContext(), this);
       dataStateObserver = new DataStateObserver(getContext(), this);
       bluetoothStateObserver = new BluetoothStateObserver(getContext(), this);
-      syncStateObserver = new SyncStateObserver(getContext(), this);
+      syncStateObserver = new SyncStateObserver(this);
 
       wifiStateObserver.register();
       dataStateObserver.register();

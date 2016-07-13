@@ -16,62 +16,13 @@
 
 package com.pyamsoft.powermanager.app.observer;
 
-import android.content.Context;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import timber.log.Timber;
 
-public abstract class StateObserver extends ContentObserver {
+public interface StateObserver {
 
-  @NonNull private final Context appContext;
-  private boolean registered;
+  void register();
 
-  public StateObserver(@NonNull Context context) {
-    super(new Handler(Looper.getMainLooper()));
-    appContext = context.getApplicationContext();
-    registered = false;
-  }
+  void unregister();
 
-  @NonNull @CheckResult final Context getAppContext() {
-    return appContext;
-  }
-
-  void internalRegister(@Nullable Uri uri) {
-    if (uri != null) {
-      appContext.getContentResolver().registerContentObserver(uri, false, this);
-    }
-  }
-
-  final void register(@Nullable Uri uri) {
-    if (!registered) {
-      Timber.d("Register new state observer for: %s", uri);
-      internalRegister(uri);
-      registered = true;
-    } else {
-      Timber.e("Already registered");
-    }
-  }
-
-  void internalUnregister() {
-    appContext.getContentResolver().unregisterContentObserver(this);
-  }
-
-  public void unregister() {
-    if (registered) {
-      Timber.d("Unregister new state observer");
-      internalUnregister();
-      registered = false;
-    } else {
-      Timber.e("Already unregistered");
-    }
-  }
-
-  @CheckResult abstract boolean isEnabled();
-
-  public abstract void register();
+  @CheckResult boolean is();
 }
