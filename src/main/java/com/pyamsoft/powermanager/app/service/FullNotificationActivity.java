@@ -366,7 +366,7 @@ public class FullNotificationActivity extends AppCompatActivity
     private void setSyncToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
-      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(bluetoothToggle, color);
+      final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(syncToggle, color);
       task.execute(new AsyncDrawable(getActivity(), icon));
       addNewAsyncTask("sync", task);
     }
