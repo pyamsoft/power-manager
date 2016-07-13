@@ -19,132 +19,170 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="horizontal"
-    android:padding="4dp"
+    android:orientation="vertical"
     >
 
   <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="?attr/colorPrimary"
       >
 
-    <ImageButton
-        android:id="@+id/full_notification_wifi_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
+    <ImageView
+        android:id="@+id/full_notification_main"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
         android:contentDescription="@string/blank"
+        android:scaleType="center"
         />
 
-    <FrameLayout
-        android:id="@+id/full_notification_wifi_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        >
+    <View
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_weight="1"
+        />
 
-      <android.support.v7.widget.SwitchCompat
-          android:id="@+id/full_notification_wifi_manage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          />
-
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/full_notification_close"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="?attr/actionBarSize"
+        android:contentDescription="@string/blank"
+        android:scaleType="center"
+        />
 
   </LinearLayout>
 
   <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      android:padding="4dp"
       >
 
-    <ImageButton
-        android:id="@+id/full_notification_data_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:contentDescription="@string/blank"
-        />
-
-    <FrameLayout
-        android:id="@+id/full_notification_data_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
         >
 
-      <android.support.v7.widget.SwitchCompat
-          android:id="@+id/full_notification_data_manage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
+      <ImageButton
+          android:id="@+id/full_notification_wifi_toggle"
+          android:layout_width="match_parent"
+          android:layout_height="64dp"
+          android:contentDescription="@string/blank"
           />
 
-    </FrameLayout>
+      <FrameLayout
+          android:id="@+id/full_notification_wifi_layout"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          >
 
-  </LinearLayout>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/full_notification_wifi_manage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
 
-  <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical"
-      >
+      </FrameLayout>
 
-    <ImageButton
-        android:id="@+id/full_notification_bluetooth_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:contentDescription="@string/blank"
-        />
+    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/full_notification_bluetooth_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
         >
 
-      <android.support.v7.widget.SwitchCompat
-          android:id="@+id/full_notification_bluetooth_manage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
+      <ImageButton
+          android:id="@+id/full_notification_data_toggle"
+          android:layout_width="match_parent"
+          android:layout_height="64dp"
+          android:contentDescription="@string/blank"
           />
 
-    </FrameLayout>
+      <FrameLayout
+          android:id="@+id/full_notification_data_layout"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          >
 
-  </LinearLayout>
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/full_notification_data_manage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
 
-  <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical"
-      >
+      </FrameLayout>
 
-    <ImageButton
-        android:id="@+id/full_notification_sync_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:contentDescription="@string/blank"
-        />
+    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/full_notification_sync_layout"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
         >
 
-      <android.support.v7.widget.SwitchCompat
-          android:id="@+id/full_notification_sync_manage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
+      <ImageButton
+          android:id="@+id/full_notification_bluetooth_toggle"
+          android:layout_width="match_parent"
+          android:layout_height="64dp"
+          android:contentDescription="@string/blank"
           />
 
-    </FrameLayout>
+      <FrameLayout
+          android:id="@+id/full_notification_bluetooth_layout"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          >
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/full_notification_bluetooth_manage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+      </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+      <ImageButton
+          android:id="@+id/full_notification_sync_toggle"
+          android:layout_width="match_parent"
+          android:layout_height="64dp"
+          android:contentDescription="@string/blank"
+          />
+
+      <FrameLayout
+          android:id="@+id/full_notification_sync_layout"
+          android:layout_width="match_parent"
+          android:layout_height="48dp"
+          >
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/full_notification_sync_manage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            />
+
+      </FrameLayout>
+
+    </LinearLayout>
 
   </LinearLayout>
 

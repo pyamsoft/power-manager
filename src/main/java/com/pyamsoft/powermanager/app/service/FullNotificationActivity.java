@@ -19,7 +19,9 @@ package com.pyamsoft.powermanager.app.service;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,11 +35,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.manager.BluetoothPresenter;
 import com.pyamsoft.powermanager.app.manager.BluetoothView;
 import com.pyamsoft.powermanager.app.manager.DataPresenter;
@@ -56,6 +60,8 @@ import com.pyamsoft.powermanager.app.observer.SyncStateObserver;
 import com.pyamsoft.powermanager.app.observer.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
+import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.DrawableUtil;
 import javax.inject.Inject;
@@ -134,11 +140,16 @@ public class FullNotificationActivity extends AppCompatActivity
     @BindView(R.id.full_notification_sync_manage) SwitchCompat syncManage;
     @BindView(R.id.full_notification_sync_toggle) ImageButton syncToggle;
 
+    @BindView(R.id.full_notification_main) ImageView mainButton;
+    @BindView(R.id.full_notification_close) ImageView closeButton;
+
     private WifiStateObserver wifiStateObserver;
     private DataStateObserver dataStateObserver;
     private BluetoothStateObserver bluetoothStateObserver;
     private SyncStateObserver syncStateObserver;
     private Unbinder unbinder;
+    private AsyncVectorDrawableTask mainTask;
+    private AsyncVectorDrawableTask closeTask;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -165,6 +176,15 @@ public class FullNotificationActivity extends AppCompatActivity
       syncStateObserver.register();
     }
 
+    private void cancelTask(@Nullable AsyncTask task) {
+      if (task != null) {
+        if (!task.isCancelled()) {
+          Timber.d("Cancel task");
+          task.cancel(true);
+        }
+      }
+    }
+
     @Override public void onDestroy() {
       super.onDestroy();
 
@@ -182,6 +202,9 @@ public class FullNotificationActivity extends AppCompatActivity
       dataStateObserver.unregister();
       bluetoothStateObserver.unregister();
       syncStateObserver.unregister();
+
+      cancelTask(mainTask);
+      cancelTask(closeTask);
 
       unbinder.unbind();
     }
@@ -218,6 +241,20 @@ public class FullNotificationActivity extends AppCompatActivity
       dataPresenter.getCurrentState();
       bluetoothPresenter.getCurrentState();
       syncPresenter.getCurrentState();
+
+      mainButton.setOnClickListener(view -> {
+        destroy();
+        startActivity(new Intent(getActivity(), MainActivity.class).setFlags(
+            Intent.FLAG_ACTIVITY_SINGLE_TOP));
+      });
+
+      mainTask = new AsyncVectorDrawableTask(mainButton);
+      mainTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_settings_24dp));
+
+      closeButton.setOnClickListener(view -> destroy());
+
+      closeTask = new AsyncVectorDrawableTask(closeButton);
+      closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
 
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
