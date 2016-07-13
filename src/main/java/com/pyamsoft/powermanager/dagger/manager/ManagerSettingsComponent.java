@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import dagger.Component;
 
 @ActivityScope @Component(modules = {
-    ManagerSettingsModule.class, AndroidDeviceModule.class, ManagerModule.class
+    ManagerSettingsModule.class, ManagerModule.class
 }, dependencies = PowerManagerComponent.class) public interface ManagerSettingsComponent {
 
 }

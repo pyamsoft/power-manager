@@ -20,13 +20,12 @@ import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.manager.AndroidDeviceModule;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import dagger.Component;
 import javax.inject.Named;
 
 @ActivityScope @Component(modules = {
-    StateModifierModule.class, ManagerModule.class, AndroidDeviceModule.class
+    StateModifierModule.class, ManagerModule.class
 }, dependencies = PowerManagerComponent.class) public interface StateModifierComponent {
 
   void inject(FullNotificationActivity.FullDialog activity);

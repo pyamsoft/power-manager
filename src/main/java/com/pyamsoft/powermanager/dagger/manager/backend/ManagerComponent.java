@@ -19,12 +19,10 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.manager.AndroidDeviceModule;
 import dagger.Component;
 
-@ActivityScope @Component(modules = {
-    ManagerModule.class, AndroidDeviceModule.class
-}, dependencies = PowerManagerComponent.class) public interface ManagerComponent {
+@ActivityScope @Component(modules = ManagerModule.class, dependencies = PowerManagerComponent.class)
+public interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);
 }
