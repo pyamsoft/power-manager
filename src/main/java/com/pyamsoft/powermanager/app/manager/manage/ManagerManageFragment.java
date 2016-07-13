@@ -197,12 +197,20 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
   @Override public void onResume() {
     super.onResume();
     presenter.onResume();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
     presenter.registerSharedPreferenceChangeListener(listener, getString(manageKeyResId));
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 
   @Override public void onPause() {
     super.onPause();
     presenter.onPause();
-    presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 }

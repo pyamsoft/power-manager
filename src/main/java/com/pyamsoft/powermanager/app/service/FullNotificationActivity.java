@@ -235,7 +235,6 @@ public class FullNotificationActivity extends AppCompatActivity
       @SuppressLint("InflateParams") final View dialogView = LayoutInflater.from(getActivity())
           .inflate(R.layout.dialog_full_notification, null, false);
 
-      // TODO init view
       unbinder = ButterKnife.bind(this, dialogView);
       wifiPresenter.getCurrentState();
       dataPresenter.getCurrentState();
