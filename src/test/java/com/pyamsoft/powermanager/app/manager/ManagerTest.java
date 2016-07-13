@@ -19,10 +19,10 @@ package com.pyamsoft.powermanager.app.manager;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, application = PowerManager.class, sdk = 23)
 public class ManagerTest {
 

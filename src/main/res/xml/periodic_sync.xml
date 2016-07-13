@@ -21,6 +21,7 @@
   <PreferenceCategory
       android:title="Periodic Sync Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_sync_default"
         android:key="@string/periodic_sync_key"
@@ -38,6 +39,7 @@
         android:title="@string/periodic_sync_disable_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_sync_disable_key"/>
 
@@ -51,6 +53,7 @@
         android:title="@string/periodic_sync_enable_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_sync_enable_key"/>
 

@@ -21,6 +21,7 @@
   <PreferenceCategory
       android:title="Data Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_data_default"
         android:key="@string/manage_data_key"
@@ -51,6 +52,7 @@
         android:title="@string/data_time_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference
         android:key="@string/data_time_key"/>
 

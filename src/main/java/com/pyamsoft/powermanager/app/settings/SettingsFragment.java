@@ -90,20 +90,18 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     });
 
     final Preference fullNotification = findPreference(getString(R.string.full_notification_key));
-    fullNotification.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object o) {
-        if (o instanceof Boolean) {
-          final boolean state = (boolean) o;
-          Timber.d("Full notification preference change: %s", state);
-          final Intent serviceIntent = new Intent(getContext(), ForegroundService.class).putExtra(
-              ForegroundService.EXTRA_NOTIFICATION, state);
-          getContext().startService(serviceIntent);
-          return true;
-        }
-
-        Timber.e("Could not update preference full_notification");
-        return false;
+    fullNotification.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof Boolean) {
+        final boolean state = (boolean) o;
+        Timber.d("Full notification preference change: %s", state);
+        final Intent serviceIntent = new Intent(getContext(), ForegroundService.class).putExtra(
+            ForegroundService.EXTRA_NOTIFICATION, state);
+        getContext().startService(serviceIntent);
+        return true;
       }
+
+      Timber.e("Could not update preference full_notification");
+      return false;
     });
   }
 

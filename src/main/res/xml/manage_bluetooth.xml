@@ -21,6 +21,7 @@
   <PreferenceCategory
       android:title="Bluetooth Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_bluetooth_default"
         android:key="@string/manage_bluetooth_key"
@@ -51,6 +52,7 @@
         android:title="@string/bluetooth_time_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference
         android:key="@string/bluetooth_time_key"/>
 

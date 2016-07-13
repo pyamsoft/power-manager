@@ -21,12 +21,14 @@
   <PreferenceCategory
       android:title="Service Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:key="@string/boot_key"
         android:summary="@string/boot_summary"
         android:title="@string/boot_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/full_notification_default"
         android:key="@string/full_notification_key"

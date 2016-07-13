@@ -21,6 +21,7 @@
   <PreferenceCategory
       android:title="Sync Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_sync_default"
         android:key="@string/manage_sync_key"
@@ -51,6 +52,7 @@
         android:title="@string/sync_time_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference
         android:key="@string/sync_time_key"/>
 

@@ -21,6 +21,7 @@
   <PreferenceCategory
       android:title="Periodic Wifi Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_wifi_default"
         android:key="@string/periodic_wifi_key"
@@ -38,6 +39,7 @@
         android:title="@string/periodic_wifi_disable_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_wifi_disable_key"/>
 
@@ -51,6 +53,7 @@
         android:title="@string/periodic_wifi_enable_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
         android:key="@string/periodic_wifi_enable_key"/>
 
