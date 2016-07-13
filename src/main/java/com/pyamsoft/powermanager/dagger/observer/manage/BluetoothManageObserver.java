@@ -20,13 +20,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
+import javax.inject.Inject;
 
 public class BluetoothManageObserver
     extends ManagePreferenceObserver<BluetoothManageObserver.View> {
 
   @Nullable private View view;
 
-  public BluetoothManageObserver(@NonNull Context context) {
+  @Inject BluetoothManageObserver(@NonNull Context context) {
     super(context, context.getString(R.string.manage_bluetooth_key),
         context.getResources().getBoolean(R.bool.manage_bluetooth_default));
   }

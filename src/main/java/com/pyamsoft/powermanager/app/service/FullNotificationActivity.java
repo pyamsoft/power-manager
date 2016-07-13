@@ -20,11 +20,13 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -41,6 +43,11 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
@@ -50,6 +57,7 @@ import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DrawableUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -102,7 +110,8 @@ public class FullNotificationActivity extends AppCompatActivity
 
   public static final class FullDialog extends DialogFragment
       implements WifiStateObserver.View, DataStateObserver.View, BluetoothStateObserver.View,
-      SyncStateObserver.View {
+      SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
+      BluetoothManageObserver.View, SyncManageObserver.View {
 
     @Inject ManagerWifi managerWifi;
     @Inject ManagerData managerData;
@@ -126,6 +135,11 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject BluetoothStateObserver bluetoothStateObserver;
     @Inject SyncStateObserver syncStateObserver;
 
+    @Inject WifiManageObserver wifiManageObserver;
+    @Inject DataManageObserver dataManageObserver;
+    @Inject BluetoothManageObserver bluetoothManageObserver;
+    @Inject SyncManageObserver syncManageObserver;
+
     private Unbinder unbinder;
     private AsyncVectorDrawableTask mainTask;
     private AsyncVectorDrawableTask closeTask;
@@ -133,8 +147,14 @@ public class FullNotificationActivity extends AppCompatActivity
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setCancelable(true);
+      Timber.d("onCreate");
 
       DaggerStateObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .inject(this);
+
+      DaggerManageObserverComponent.builder()
           .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
           .build()
           .inject(this);
@@ -144,23 +164,25 @@ public class FullNotificationActivity extends AppCompatActivity
       bluetoothStateObserver.setView(this);
       syncStateObserver.setView(this);
 
+      wifiManageObserver.setView(this);
+      dataManageObserver.setView(this);
+      bluetoothManageObserver.setView(this);
+      syncManageObserver.setView(this);
+
       wifiStateObserver.register();
       dataStateObserver.register();
       bluetoothStateObserver.register();
       syncStateObserver.register();
-    }
 
-    private void cancelTask(@Nullable AsyncTask task) {
-      if (task != null) {
-        if (!task.isCancelled()) {
-          Timber.d("Cancel task");
-          task.cancel(true);
-        }
-      }
+      wifiManageObserver.register();
+      dataManageObserver.register();
+      bluetoothManageObserver.register();
+      syncManageObserver.register();
     }
 
     @Override public void onDestroy() {
       super.onDestroy();
+      Timber.d("onDestroy");
 
       managerWifi.cleanup();
       managerData.cleanup();
@@ -178,12 +200,13 @@ public class FullNotificationActivity extends AppCompatActivity
       unbinder.unbind();
     }
 
-    @Override public void onResume() {
-      super.onResume();
-    }
-
-    @Override public void onPause() {
-      super.onPause();
+    private void cancelTask(@Nullable AsyncTask task) {
+      if (task != null) {
+        if (!task.isCancelled()) {
+          Timber.d("Cancel task");
+          task.cancel(true);
+        }
+      }
     }
 
     private void destroy() {
@@ -193,6 +216,7 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+      Timber.d("onCreateDialog");
       @SuppressLint("InflateParams") final android.view.View dialogView =
           LayoutInflater.from(getActivity())
               .inflate(R.layout.dialog_full_notification, null, false);
@@ -213,6 +237,16 @@ public class FullNotificationActivity extends AppCompatActivity
       closeTask = new AsyncVectorDrawableTask(closeButton);
       closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
 
+      setWifiToggleState(wifiStateObserver.is());
+      setDataToggleState(dataStateObserver.is());
+      setBluetoothToggleState(bluetoothStateObserver.is());
+      setSyncToggleState(syncStateObserver.is());
+
+      setWifiManageState(wifiManageObserver.is());
+      setDataManageState(dataManageObserver.is());
+      setBluetoothManageState(bluetoothManageObserver.is());
+      setSyncManageState(syncManageObserver.is());
+
       return new AlertDialog.Builder(getActivity()).setView(dialogView).create();
     }
 
@@ -221,36 +255,152 @@ public class FullNotificationActivity extends AppCompatActivity
       destroy();
     }
 
-    @Override public void onDataStateEnabled() {
+    private void setWifiToggleState(boolean enabled) {
+      int icon = enabled ? R.drawable.ic_network_wifi_24dp : R.drawable.ic_signal_wifi_off_24dp;
+      Drawable d = ContextCompat.getDrawable(getContext(), icon);
+      d = DrawableUtil.tintDrawableFromColor(d,
+          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      wifiToggle.setImageDrawable(d);
+    }
 
+    private void setDataToggleState(boolean enabled) {
+      int icon = enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
+      Drawable d = ContextCompat.getDrawable(getContext(), icon);
+      d = DrawableUtil.tintDrawableFromColor(d,
+          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      dataToggle.setImageDrawable(d);
+    }
+
+    private void setBluetoothToggleState(boolean enabled) {
+      int icon = enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
+      Drawable d = ContextCompat.getDrawable(getContext(), icon);
+      d = DrawableUtil.tintDrawableFromColor(d,
+          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      bluetoothToggle.setImageDrawable(d);
+    }
+
+    private void setSyncToggleState(boolean enabled) {
+      int icon = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
+      Drawable d = ContextCompat.getDrawable(getContext(), icon);
+      d = DrawableUtil.tintDrawableFromColor(d,
+          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      syncToggle.setImageDrawable(d);
+    }
+
+    private void setWifiManageState(boolean state) {
+      wifiManage.setOnCheckedChangeListener(null);
+      wifiManage.setChecked(state);
+      wifiManage.setOnCheckedChangeListener((compoundButton, b) -> {
+        Timber.d("Wifi Manage click");
+        //TODO
+      });
+    }
+
+    private void setDataManageState(boolean state) {
+      dataManage.setOnCheckedChangeListener(null);
+      dataManage.setChecked(state);
+      dataManage.setOnCheckedChangeListener((compoundButton, b) -> {
+        Timber.d("Data Manage click");
+        //TODO
+      });
+    }
+
+    private void setBluetoothManageState(boolean state) {
+      bluetoothManage.setOnCheckedChangeListener(null);
+      bluetoothManage.setChecked(state);
+      bluetoothManage.setOnCheckedChangeListener((compoundButton, b) -> {
+        Timber.d("Bluetooth Manage click");
+        //TODO
+      });
+    }
+
+    private void setSyncManageState(boolean state) {
+      syncManage.setOnCheckedChangeListener(null);
+      syncManage.setChecked(state);
+      syncManage.setOnCheckedChangeListener((compoundButton, b) -> {
+        Timber.d("Sync Manage click");
+        //TODO
+      });
+    }
+
+    @Override public void onDataStateEnabled() {
+      Timber.d("Data enabled");
+      setDataToggleState(true);
     }
 
     @Override public void onDataStateDisabled() {
-
+      Timber.d("Data disabled");
+      setDataToggleState(false);
     }
 
     @Override public void onBluetoothStateEnabled() {
-
+      Timber.d("Bluetooth enabled");
+      setBluetoothToggleState(true);
     }
 
     @Override public void onBluetoothStateDisabled() {
-
+      Timber.d("Bluetooth disabled");
+      setBluetoothToggleState(false);
     }
 
     @Override public void onSyncStateEnabled() {
-
+      Timber.d("Sync enabled");
+      setSyncToggleState(true);
     }
 
     @Override public void onSyncStateDisabled() {
-
+      Timber.d("Sync disabled");
+      setSyncToggleState(false);
     }
 
     @Override public void onWifiStateEnabled() {
-
+      Timber.d("Wifi enabled");
+      setWifiToggleState(true);
     }
 
     @Override public void onWifiStateDisabled() {
+      Timber.d("Wifi disabled");
+      setWifiToggleState(false);
+    }
 
+    @Override public void onWifiManageEnabled() {
+      Timber.d("Wifi managed");
+      setWifiManageState(true);
+    }
+
+    @Override public void onWifiManageDisabled() {
+      Timber.d("Wifi not managed");
+      setWifiManageState(false);
+    }
+
+    @Override public void onDataManageEnabled() {
+      Timber.d("Data managed");
+      setDataManageState(true);
+    }
+
+    @Override public void onDataManageDisabled() {
+      Timber.d("Data not managed");
+      setDataManageState(false);
+    }
+
+    @Override public void onBluetoothManageEnabled() {
+      Timber.d("Bluetooth managed");
+      setBluetoothManageState(true);
+    }
+
+    @Override public void onBluetoothManageDisabled() {
+      Timber.d("Bluetooth not managed");
+      setBluetoothManageState(false);
+    }
+
+    @Override public void onSyncManageEnabled() {
+      Timber.d("Sync not managed");
+      setSyncManageState(false);
+    }
+
+    @Override public void onSyncManageDisabled() {
+      Timber.d("Sync managed");
+      setSyncManageState(true);
     }
   }
 }

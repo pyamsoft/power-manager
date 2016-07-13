@@ -20,12 +20,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
+import javax.inject.Inject;
 
 public class SyncManageObserver extends ManagePreferenceObserver<SyncManageObserver.View> {
 
   @Nullable private View view;
 
-  public SyncManageObserver(@NonNull Context context) {
+  @Inject SyncManageObserver(@NonNull Context context) {
     super(context, context.getString(R.string.manage_sync_key),
         context.getResources().getBoolean(R.bool.manage_sync_default));
   }
