@@ -194,6 +194,11 @@ public class FullNotificationActivity extends AppCompatActivity
       bluetoothStateObserver.unregister();
       syncStateObserver.unregister();
 
+      wifiManageObserver.unregister();
+      dataManageObserver.unregister();
+      bluetoothManageObserver.unregister();
+      syncManageObserver.unregister();
+
       cancelTask(mainTask);
       cancelTask(closeTask);
 
