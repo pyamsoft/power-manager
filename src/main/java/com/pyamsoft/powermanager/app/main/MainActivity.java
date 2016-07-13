@@ -134,7 +134,7 @@ public class MainActivity extends DonationActivityBase
       adapter = new PowerTriggerPagerAdapter(getSupportFragmentManager());
     } else {
       Timber.d("Stored fragment exists, is manager fragment");
-      adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), storedType);
+      adapter = new ManagerSettingsPagerAdapter(this, storedType);
     }
 
     recycleOldAdapter();
@@ -257,6 +257,16 @@ public class MainActivity extends DonationActivityBase
     RatingDialog.showRatingDialog(this, this);
   }
 
+  @Override protected void onStart() {
+    super.onStart();
+    presenter.registerToFabColorBus();
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    presenter.unregisterFromFabColorBus();
+  }
+
   @Override public void onBackPressed() {
     final PagerAdapter adapter = viewPager.getAdapter();
     if (adapter instanceof OverviewPagerAdapter) {
@@ -348,7 +358,7 @@ public class MainActivity extends DonationActivityBase
         showTabs = false;
         break;
       default:
-        adapter = new ManagerSettingsPagerAdapter(getSupportFragmentManager(), type);
+        adapter = new ManagerSettingsPagerAdapter(this, type);
         showTabs = true;
     }
     recycleOldAdapter();
