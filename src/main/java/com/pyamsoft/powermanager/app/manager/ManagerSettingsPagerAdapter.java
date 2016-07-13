@@ -24,10 +24,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
@@ -42,7 +38,6 @@ import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.model.FabColorEvent;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
@@ -67,11 +62,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @NonNull private final ManagerManageFragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
-
-  @Inject ManagerWifi managerWifi;
-  @Inject ManagerData managerData;
-  @Inject ManagerBluetooth managerBluetooth;
-  @Inject ManagerSync managerSync;
 
   private InterestObserver stateObserver;
   private InterestObserver manageObserver;
@@ -163,11 +153,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   public final void recycle() {
     Timber.d("Recycle ManagerSettingsPagerAdapter");
-
-    managerWifi.cleanup();
-    managerData.cleanup();
-    managerBluetooth.cleanup();
-    managerSync.cleanup();
 
     stateObserver.unregister();
     manageObserver.unregister();
