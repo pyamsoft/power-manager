@@ -26,7 +26,10 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
+import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
@@ -65,6 +68,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
 
+  private InterestModifier stateModifier;
   private InterestObserver stateObserver;
   private InterestObserver manageObserver;
 
@@ -83,24 +87,32 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build();
 
+    final StateModifierComponent stateModifierComponent = DaggerStateModifierComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build();
+
     int icon;
     switch (type) {
       case TYPE_WIFI:
+        stateModifier = stateModifierComponent.provideWifiStateModifier();
         stateObserver = stateComponent.provideWifiStateObserver();
         manageObserver = manageComponent.provideWifiManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
         break;
       case TYPE_DATA:
+        stateModifier = stateModifierComponent.provideDataStateModifier();
         stateObserver = stateComponent.provideDataStateObserver();
         manageObserver = manageComponent.provideDataManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
         break;
       case TYPE_BLUETOOTH:
+        stateModifier = stateModifierComponent.provideBluetoothStateModifier();
         stateObserver = stateComponent.provideBluetoothStateObserver();
         manageObserver = manageComponent.provideBluetoothManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
         break;
       case TYPE_SYNC:
+        stateModifier = stateModifierComponent.provideSyncStateModifier();
         stateObserver = stateComponent.provideSyncStateObserver();
         manageObserver = manageComponent.provideSyncManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
@@ -109,14 +121,23 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         throw new IllegalStateException("Invalid type: " + type);
     }
 
+    //noinspection unchecked
     stateObserver.setView(this);
+    //noinspection unchecked
     manageObserver.setView(this);
 
     stateObserver.register();
     manageObserver.register();
 
     // Register the initial states here
-    FabColorBus.get().post(FabColorEvent.create(icon, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
+      Timber.d("Click!");
+      if (stateObserver.is()) {
+        stateModifier.unset();
+      } else {
+        stateModifier.set();
+      }
+    }));
   }
 
   @NonNull public final String getType() {
@@ -166,42 +187,66 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   @Override public void onWifiStateEnabled() {
     Timber.d("Wifi state enabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_WIFI_ON, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_WIFI_ON, () -> {
+      Timber.d("Click!");
+      stateModifier.unset();
+    }));
   }
 
   @Override public void onWifiStateDisabled() {
     Timber.d("Wifi state disabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_WIFI_OFF, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_WIFI_OFF, () -> {
+      Timber.d("Click!");
+      stateModifier.set();
+    }));
   }
 
   @Override public void onDataStateEnabled() {
     Timber.d("Data state disabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_DATA_ON, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_DATA_ON, () -> {
+      Timber.d("Click!");
+      stateModifier.unset();
+    }));
   }
 
   @Override public void onDataStateDisabled() {
     Timber.d("Data state disabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_DATA_OFF, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_DATA_OFF, () -> {
+      Timber.d("Click!");
+      stateModifier.set();
+    }));
   }
 
   @Override public void onBluetoothStateEnabled() {
     Timber.d("Bluetooth state enabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_BLUETOOTH_ON, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_BLUETOOTH_ON, () -> {
+      Timber.d("Click!");
+      stateModifier.unset();
+    }));
   }
 
   @Override public void onBluetoothStateDisabled() {
     Timber.d("Bluetooth state disabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_BLUETOOTH_OFF, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_BLUETOOTH_OFF, () -> {
+      Timber.d("Click!");
+      stateModifier.set();
+    }));
   }
 
   @Override public void onSyncStateEnabled() {
     Timber.d("Sync state enabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_SYNC_ON, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_SYNC_ON, () -> {
+      Timber.d("Click!");
+      stateModifier.unset();
+    }));
   }
 
   @Override public void onSyncStateDisabled() {
     Timber.d("Sync state disabled");
-    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_SYNC_OFF, () -> Timber.d("Click!")));
+    FabColorBus.get().post(FabColorEvent.create(FAB_ICON_SYNC_OFF, () -> {
+      Timber.d("Click!");
+      stateModifier.set();
+    }));
   }
 
   @Override public void onDataManageEnabled() {
