@@ -39,6 +39,11 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.dagger.modifier.manage.BluetoothManageModifier;
+import com.pyamsoft.powermanager.dagger.modifier.manage.DaggerManageModifierComponent;
+import com.pyamsoft.powermanager.dagger.modifier.manage.DataManageModifier;
+import com.pyamsoft.powermanager.dagger.modifier.manage.SyncManageModifier;
+import com.pyamsoft.powermanager.dagger.modifier.manage.WifiManageModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.DataStateModifier;
@@ -141,6 +146,11 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject BluetoothStateModifier bluetoothStateModifier;
     @Inject SyncStateModifier syncStateModifier;
 
+    @Inject WifiManageModifier wifiManageModifier;
+    @Inject DataManageModifier dataManageModifier;
+    @Inject BluetoothManageModifier bluetoothManageModifier;
+    @Inject SyncManageModifier syncManageModifier;
+
     private Unbinder unbinder;
     private AsyncVectorDrawableTask mainTask;
     private AsyncVectorDrawableTask closeTask;
@@ -161,6 +171,11 @@ public class FullNotificationActivity extends AppCompatActivity
           .inject(this);
 
       DaggerStateModifierComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .inject(this);
+
+      DaggerManageModifierComponent.builder()
           .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
           .build()
           .inject(this);
@@ -342,7 +357,11 @@ public class FullNotificationActivity extends AppCompatActivity
       wifiManage.setChecked(state);
       wifiManage.setOnCheckedChangeListener((compoundButton, b) -> {
         Timber.d("Wifi Manage click");
-        //TODO
+        if (b) {
+          wifiManageModifier.set();
+        } else {
+          wifiManageModifier.unset();
+        }
       });
     }
 
@@ -351,7 +370,11 @@ public class FullNotificationActivity extends AppCompatActivity
       dataManage.setChecked(state);
       dataManage.setOnCheckedChangeListener((compoundButton, b) -> {
         Timber.d("Data Manage click");
-        //TODO
+        if (b) {
+          dataManageModifier.set();
+        } else {
+          dataManageModifier.unset();
+        }
       });
     }
 
@@ -360,7 +383,11 @@ public class FullNotificationActivity extends AppCompatActivity
       bluetoothManage.setChecked(state);
       bluetoothManage.setOnCheckedChangeListener((compoundButton, b) -> {
         Timber.d("Bluetooth Manage click");
-        //TODO
+        if (b) {
+          bluetoothManageModifier.set();
+        } else {
+          bluetoothManageModifier.unset();
+        }
       });
     }
 
@@ -369,7 +396,11 @@ public class FullNotificationActivity extends AppCompatActivity
       syncManage.setChecked(state);
       syncManage.setOnCheckedChangeListener((compoundButton, b) -> {
         Timber.d("Sync Manage click");
-        //TODO
+        if (b) {
+          syncManageModifier.set();
+        } else {
+          syncManageModifier.unset();
+        }
       });
     }
 
