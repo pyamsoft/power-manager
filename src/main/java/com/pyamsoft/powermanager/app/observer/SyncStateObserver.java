@@ -26,21 +26,44 @@ import timber.log.Timber;
 
 public class SyncStateObserver extends StateObserver {
 
-  @NonNull private final SyncStateObserverView view;
   @NonNull private final SyncStatusObserver observer;
   private Object listener;
+  private boolean enabled = false;
+  private boolean disabled = false;
 
   public SyncStateObserver(@NonNull Context context, @NonNull SyncStateObserverView view) {
     super(context);
-    this.view = view;
+    enabled = false;
+    disabled = false;
+
     observer = i -> {
       Timber.d("onStatusChanged: %d", i);
       if (isEnabled()) {
-        Timber.d("Enabled");
-        view.onSyncStateEnabled();
+        // Reset status of other flag here
+        disabled = false;
+
+        // Only call hook once
+        if (!enabled) {
+          enabled = true;
+          Timber.d("Enabled");
+          view.onSyncStateEnabled();
+        } else {
+          // KLUDGE on nexus 6, every 3rd or so time Master Sync is toggle, the enable hook runs
+          // KLUDGE like 5 times.
+          Timber.e("Sync has already run the enabled event hook");
+        }
       } else {
-        Timber.d("Disabled");
-        view.onSyncStateDisabled();
+        // Reset status of other flag here
+        enabled = false;
+
+        // Only call hook once
+        if (!disabled) {
+          disabled = true;
+          Timber.d("Disabled");
+          view.onSyncStateDisabled();
+        } else {
+          Timber.e("Sync has already run the disabled event hook");
+        }
       }
     };
   }
