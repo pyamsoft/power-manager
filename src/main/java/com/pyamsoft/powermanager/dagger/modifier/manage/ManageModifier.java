@@ -16,6 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -23,14 +27,50 @@ import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 
 abstract class ManageModifier implements InterestModifier {
 
+  @NonNull private final Context appContext;
+  @NonNull private final Handler handler;
   @NonNull private final PowerManagerPreferences preferences;
 
-  protected ManageModifier(@NonNull PowerManagerPreferences preferences) {
+  protected ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    this.appContext = context.getApplicationContext();
     this.preferences = preferences;
+    this.handler = new Handler(Looper.getMainLooper());
   }
 
   @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
     return preferences;
   }
+
+  @NonNull @CheckResult final Context getAppContext() {
+    return appContext;
+  }
+
+  @Override public final void set() {
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      mainThreadSet();
+
+      // The notification will be notified when a manage state changes
+      final Intent service = getServiceIntent();
+      appContext.startService(service);
+    });
+  }
+
+  @Override public final void unset() {
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      mainThreadUnset();
+
+      // The notification will be notified when a manage state changes
+      final Intent service = getServiceIntent();
+      appContext.startService(service);
+    });
+  }
+
+  @CheckResult @NonNull abstract Intent getServiceIntent();
+
+  abstract void mainThreadSet();
+
+  abstract void mainThreadUnset();
 }
 

@@ -16,21 +16,30 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import javax.inject.Inject;
 
 public class WifiManageModifier extends ManageModifier {
 
-  @Inject WifiManageModifier(@NonNull PowerManagerPreferences preferences) {
-    super(preferences);
+  @Inject WifiManageModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
   }
 
-  @Override public void set() {
+  @NonNull @Override Intent getServiceIntent() {
+    return new Intent(getAppContext(), ForegroundService.class).putExtra(
+        ForegroundService.EXTRA_WIFI, true);
+  }
+
+  @Override void mainThreadSet() {
     getPreferences().setWifiManaged(true);
   }
 
-  @Override public void unset() {
+  @Override void mainThreadUnset() {
     getPreferences().setWifiManaged(false);
   }
 }

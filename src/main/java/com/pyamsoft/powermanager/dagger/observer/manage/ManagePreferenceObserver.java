@@ -82,9 +82,9 @@ abstract class ManagePreferenceObserver<V>
       result = preferences.isWifiManaged();
     } else if (key.equals(KEY_DATA)) {
       result = preferences.isDataManaged();
-    } else if (key.equals(KEY_DATA)) {
+    } else if (key.equals(KEY_BLUETOOTH)) {
       result = preferences.isBluetoothManaged();
-    } else if (key.equals(KEY_DATA)) {
+    } else if (key.equals(KEY_SYNC)) {
       result = preferences.isSyncManaged();
     } else {
       throw new RuntimeException("Unsupported key: " + key);

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
@@ -27,22 +28,22 @@ import javax.inject.Named;
 @Module public class ManageModifierModule {
 
   @ActivityScope @Named("wifi") @Provides InterestModifier provideWifiModifier(
-      @NonNull PowerManagerPreferences preferences) {
-    return new WifiManageModifier(preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new WifiManageModifier(context, preferences);
   }
 
   @ActivityScope @Named("data") @Provides InterestModifier provideDataModifier(
-      @NonNull PowerManagerPreferences preferences) {
-    return new DataManageModifier(preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new DataManageModifier(context, preferences);
   }
 
   @ActivityScope @Named("bluetooth") @Provides InterestModifier provideBluetoothModifier(
-      @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothManageModifier(preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new BluetoothManageModifier(context, preferences);
   }
 
   @ActivityScope @Named("sync") @Provides InterestModifier provideSyncModifier(
-      @NonNull PowerManagerPreferences preferences) {
-    return new SyncManageModifier(preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new SyncManageModifier(context, preferences);
   }
 }
