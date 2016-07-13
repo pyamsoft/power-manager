@@ -87,4 +87,11 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   @Override public final void onChange(boolean selfChange) {
     onChange(selfChange, null);
   }
+
+  @Override public final void onChange(boolean selfChange, Uri uri) {
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> onChange(uri));
+  }
+
+  abstract void onChange(Uri uri);
 }

@@ -53,46 +53,44 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
 
   @Override public void register() {
     handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      if (!registered) {
-        Timber.d("Register new state observer");
-        listener =
-            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
-                i -> {
-                  if (view != null) {
-                    if (is()) {
-                      // Reset status of other flag here
-                      disabled = false;
+    if (!registered) {
+      Timber.d("Register new state observer");
+      listener =
+          ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
+              i -> handler.post(() -> {
+                if (view != null) {
+                  if (is()) {
+                    // Reset status of other flag here
+                    disabled = false;
 
-                      // Only call hook once
-                      if (!enabled) {
-                        enabled = true;
-                        Timber.d("Enabled");
-                        view.onSyncStateEnabled();
-                      } else {
-                        // KLUDGE on nexus 6, every 3rd or so time
-                        // KLUDGE Master Sync is toggle, the enable hook runs
-                        // KLUDGE like 5 times.
-                        Timber.e("Sync has already run the enabled event hook");
-                      }
+                    // Only call hook once
+                    if (!enabled) {
+                      enabled = true;
+                      Timber.d("Enabled");
+                      view.onSyncStateEnabled();
                     } else {
-                      // Reset status of other flag here
-                      enabled = false;
+                      // KLUDGE on nexus 6, every 3rd or so time
+                      // KLUDGE Master Sync is toggle, the enable hook runs
+                      // KLUDGE like 5 times.
+                      Timber.e("Sync has already run the enabled event hook");
+                    }
+                  } else {
+                    // Reset status of other flag here
+                    enabled = false;
 
-                      // Only call hook once
-                      if (!disabled) {
-                        disabled = true;
-                        Timber.d("Disabled");
-                        view.onSyncStateDisabled();
-                      }
+                    // Only call hook once
+                    if (!disabled) {
+                      disabled = true;
+                      Timber.d("Disabled");
+                      view.onSyncStateDisabled();
                     }
                   }
-                });
-        registered = true;
-      } else {
-        Timber.e("Already registered");
-      }
-    });
+                }
+              }));
+      registered = true;
+    } else {
+      Timber.e("Already registered");
+    }
   }
 
   @Override public void unregister() {

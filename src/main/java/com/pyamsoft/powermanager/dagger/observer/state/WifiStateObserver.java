@@ -46,9 +46,9 @@ public class WifiStateObserver extends StateContentObserver<WifiStateObserver.Vi
     this.view = view;
   }
 
-  @Override public void onChange(boolean selfChange, Uri uri) {
+  @Override void onChange(Uri uri) {
     if (view != null) {
-      Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
+      Timber.d("onChange. URI: %s", uri);
       if (is()) {
         view.onWifiStateEnabled();
       } else {
