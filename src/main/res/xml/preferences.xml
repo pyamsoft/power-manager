@@ -21,10 +21,17 @@
   <PreferenceCategory
       android:title="Service Settings">
 
-    <CheckBoxPreference
+    <SwitchPreferenceCompat
         android:key="@string/boot_key"
         android:summary="@string/boot_summary"
         android:title="@string/boot_title"
+        />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/full_notification_default"
+        android:key="@string/full_notification_key"
+        android:summary="@string/full_notification_summary"
+        android:title="@string/full_notification_title"
         />
 
   </PreferenceCategory>

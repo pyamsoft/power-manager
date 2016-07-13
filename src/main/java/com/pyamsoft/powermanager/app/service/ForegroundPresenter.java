@@ -52,9 +52,9 @@ public final class ForegroundPresenter
     }
   }
 
-  public final void onStartNotification() {
+  public final void onStartNotification(boolean explicit) {
     unsubNotification();
-    notificationSubscription = interactor.createNotification()
+    notificationSubscription = interactor.createNotification(explicit)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(notification -> {

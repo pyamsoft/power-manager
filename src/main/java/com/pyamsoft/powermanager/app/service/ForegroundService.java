@@ -30,12 +30,13 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
-  private static final int NOTIFICATION_ID = 1000;
   @NonNull public static final String EXTRA_WEARABLE = "wearable";
   @NonNull public static final String EXTRA_WIFI = "wifi";
   @NonNull public static final String EXTRA_DATA = "data";
   @NonNull public static final String EXTRA_BLUETOOTH = "bluetooth";
   @NonNull public static final String EXTRA_SYNC = "sync";
+  @NonNull public static final String EXTRA_NOTIFICATION = "notification";
+  private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
 
@@ -71,6 +72,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     Timber.d("onStartCommand");
+    boolean explicit = false;
     if (intent != null) {
       if (intent.getBooleanExtra(EXTRA_WEARABLE, false)) {
         Timber.d("Update wearable status");
@@ -96,13 +98,15 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
         Timber.d("Update sync status");
         presenter.updateSyncAction();
       }
-    }
-    startForeground();
-    return START_STICKY;
-  }
 
-  private void startForeground() {
-    presenter.onStartNotification();
+      if (intent.getBooleanExtra(EXTRA_NOTIFICATION, false)) {
+        Timber.d("Explicit notification state");
+        explicit = true;
+      }
+    }
+
+    presenter.onStartNotification(explicit);
+    return START_STICKY;
   }
 
   @Override public void startNotificationInForeground(@NonNull Notification notification) {

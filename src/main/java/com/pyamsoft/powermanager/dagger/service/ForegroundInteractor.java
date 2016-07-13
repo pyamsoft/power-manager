@@ -23,7 +23,7 @@ import rx.Observable;
 
 public interface ForegroundInteractor {
 
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  @CheckResult @NonNull Observable<Notification> createNotification(boolean explicit);
 
   void updateWearablePreferenceStatus();
 

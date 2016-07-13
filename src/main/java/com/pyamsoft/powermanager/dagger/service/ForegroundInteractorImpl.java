@@ -52,17 +52,18 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     return Observable.defer(() -> Observable.just(preferences.isFullNotificationEnabled()));
   }
 
-  @NonNull @Override public Observable<Notification> createNotification() {
-    return isFullNotificationEnabled().map(full -> {
+  @NonNull @Override public Observable<Notification> createNotification(boolean explicit) {
+    return isFullNotificationEnabled().map(enabled -> {
       Intent intent;
-      if (full) {
+      if (explicit || enabled) {
         intent = new Intent(appContext, FullNotificationActivity.class).setFlags(
             Intent.FLAG_ACTIVITY_SINGLE_TOP);
       } else {
         intent =
             new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
       }
-
+      return intent;
+    }).map(intent -> {
       final PendingIntent pendingIntent =
           PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
       final RemoteViews customRemoteView = createCustomRemoteViews();
