@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.manager.manage;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -49,7 +48,6 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
   @StringRes private int manageKeyResId;
   @StringRes private int timeKeyResId;
   @StringRes private int presetTimeKeyResId;
-  private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
   @CheckResult @NonNull public static ManagerManageFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
@@ -160,12 +158,6 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
     addPreferencesFromResource(xmlResId);
 
     resolvePreferences();
-    listener = (sharedPreferences, pref) -> {
-      final String key = getString(manageKeyResId);
-      if (pref.equals(key)) {
-        presenter.setManagedFromPreference(key);
-      }
-    };
   }
 
   private void resolvePreferences() {
@@ -197,16 +189,6 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
   @Override public void onResume() {
     super.onResume();
     presenter.onResume();
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.registerSharedPreferenceChangeListener(listener, getString(manageKeyResId));
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 
   @Override public void onPause() {

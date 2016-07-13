@@ -30,9 +30,13 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.manage.BluetoothManageObserver;
+import com.pyamsoft.powermanager.app.observer.manage.DataManageObserver;
+import com.pyamsoft.powermanager.app.observer.manage.SyncManageObserver;
+import com.pyamsoft.powermanager.app.observer.manage.WifiManageObserver;
 import com.pyamsoft.powermanager.app.observer.state.BluetoothStateObserver;
 import com.pyamsoft.powermanager.app.observer.state.DataStateObserver;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.app.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
@@ -41,8 +45,9 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
-    implements WifiView, DataView, BluetoothView, SyncView, WifiStateObserver.View,
-    DataStateObserver.View, BluetoothStateObserver.View, SyncStateObserver.View {
+    implements WifiStateObserver.View, DataStateObserver.View, BluetoothStateObserver.View,
+    SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
+    BluetoothManageObserver.View, SyncManageObserver.View {
 
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
@@ -58,23 +63,17 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
       R.drawable.ic_bluetooth_disabled_24dp;
   @DrawableRes private static final int FAB_ICON_SYNC_ON = R.drawable.ic_sync_24dp;
   @DrawableRes private static final int FAB_ICON_SYNC_OFF = R.drawable.ic_sync_disabled_24dp;
-  @NonNull private final Fragment manageFragment;
+  @NonNull private final ManagerManageFragment manageFragment;
   @NonNull private final Fragment periodicFragment;
   @NonNull private final String type;
 
-  @Inject WifiPresenter wifiPresenter;
   @Inject ManagerWifi managerWifi;
-
-  @Inject DataPresenter dataPresenter;
   @Inject ManagerData managerData;
-
-  @Inject BluetoothPresenter bluetoothPresenter;
   @Inject ManagerBluetooth managerBluetooth;
-
-  @Inject SyncPresenter syncPresenter;
   @Inject ManagerSync managerSync;
 
-  private InterestObserver observer;
+  private InterestObserver stateObserver;
+  private InterestObserver manageObserver;
 
   public ManagerSettingsPagerAdapter(@NonNull FragmentActivity activity, @NonNull String type) {
     super(activity.getSupportFragmentManager());
@@ -88,33 +87,37 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         .build()
         .inject(this);
 
-    wifiPresenter.bindView(this);
-    dataPresenter.bindView(this);
-    bluetoothPresenter.bindView(this);
-    syncPresenter.bindView(this);
-
+    int icon;
     switch (type) {
       case TYPE_WIFI:
-        wifiPresenter.getCurrentState();
-        observer = new WifiStateObserver(activity, this);
+        stateObserver = new WifiStateObserver(activity, this);
+        manageObserver = new WifiManageObserver(activity, this);
+        icon = stateObserver.is() ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
         break;
       case TYPE_DATA:
-        dataPresenter.getCurrentState();
-        observer = new DataStateObserver(activity, this);
+        stateObserver = new DataStateObserver(activity, this);
+        manageObserver = new DataManageObserver(activity, this);
+        icon = stateObserver.is() ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
         break;
       case TYPE_BLUETOOTH:
-        bluetoothPresenter.getCurrentState();
-        observer = new BluetoothStateObserver(activity, this);
+        stateObserver = new BluetoothStateObserver(activity, this);
+        manageObserver = new BluetoothManageObserver(activity, this);
+        icon = stateObserver.is() ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
         break;
       case TYPE_SYNC:
-        syncPresenter.getCurrentState();
-        observer = new SyncStateObserver(this);
+        stateObserver = new SyncStateObserver(this);
+        manageObserver = new SyncManageObserver(activity, this);
+        icon = stateObserver.is() ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
         break;
       default:
         throw new IllegalStateException("Invalid type: " + type);
     }
 
-    observer.register();
+    stateObserver.register();
+    manageObserver.register();
+
+    // Register the initial states here
+    FabColorBus.get().post(FabColorEvent.create(icon, () -> Timber.d("Click!")));
   }
 
   @NonNull public final String getType() {
@@ -157,176 +160,85 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   public final void recycle() {
     Timber.d("Recycle ManagerSettingsPagerAdapter");
-    wifiPresenter.unbindView();
-    dataPresenter.unbindView();
-    bluetoothPresenter.unbindView();
-    syncPresenter.unbindView();
 
     managerWifi.cleanup();
     managerData.cleanup();
     managerBluetooth.cleanup();
     managerSync.cleanup();
 
-    observer.unregister();
-  }
-
-  @Override public void toggleWifiDisabled() {
-    Timber.d("Wifi currently enabled, disable");
-    managerWifi.disable(0, false);
-  }
-
-  @Override public void toggleWifiEnabled() {
-    Timber.d("Wifi currently disabled, enabled");
-    managerWifi.enable(0, false);
-  }
-
-  @Override public void wifiStartManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void wifiStopManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void toggleBluetoothEnabled() {
-    Timber.d("Bluetooth currently disabled, enabled");
-    managerBluetooth.enable(0, false);
-  }
-
-  @Override public void toggleBluetoothDisabled() {
-    Timber.d("Bluetooth currently enabled, disable");
-    managerBluetooth.disable(0, false);
-  }
-
-  @Override public void bluetoothStartManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void bluetoothStopManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void toggleDataEnabled() {
-    Timber.d("Data currently disabled, enable");
-    managerData.enable(0, false);
-  }
-
-  @Override public void toggleDataDisabled() {
-    Timber.d("Data currently enabled, disable");
-    managerData.disable(0, false);
-  }
-
-  @Override public void dataStartManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void dataStopManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void toggleSyncEnabled() {
-    Timber.d("Sync currently disabled, enable");
-    managerSync.enable(0, false);
-  }
-
-  @Override public void toggleSyncDisabled() {
-    Timber.d("Bluetooth currently enabled, disable");
-    managerSync.disable(0, false);
-  }
-
-  @Override public void syncStartManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void syncStopManaged() {
-    // noop
-    throw new RuntimeException("NOOP");
-  }
-
-  @Override public void startManagingWearable() {
-
-  }
-
-  @Override public void stopManagingWearable() {
-
-  }
-
-  @Override public void bluetoothInitialState(boolean enabled, boolean managed) {
-    @DrawableRes final int icon = enabled ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
-      Timber.d("Runnable bluetoothPresenter");
-      bluetoothPresenter.toggleState();
-    }));
-  }
-
-  @Override public void dataInitialState(boolean enabled, boolean managed) {
-    @DrawableRes final int icon = enabled ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
-      Timber.d("Runnable dataPresenter");
-      dataPresenter.toggleState();
-    }));
-  }
-
-  @Override public void syncInitialState(boolean enabled, boolean managed) {
-    @DrawableRes final int icon = enabled ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
-      Timber.d("Runnable syncPresenter");
-      syncPresenter.toggleState();
-    }));
-  }
-
-  @Override public void wifiInitialState(boolean enabled, boolean managed) {
-    @DrawableRes final int icon = enabled ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
-    FabColorBus.get().post(FabColorEvent.create(icon, () -> {
-      Timber.d("Runnable wifiPresenter");
-      wifiPresenter.toggleState();
-    }));
+    stateObserver.unregister();
+    manageObserver.unregister();
   }
 
   @Override public void onWifiStateEnabled() {
     Timber.d("Wifi state enabled");
-    wifiInitialState(true, false); // We ignore managed at the moment
   }
 
   @Override public void onWifiStateDisabled() {
     Timber.d("Wifi state disabled");
-    wifiInitialState(false, false); // We ignore managed at the moment
   }
 
   @Override public void onDataStateEnabled() {
     Timber.d("Data state disabled");
-    dataInitialState(true, false); // We ignore managed at the moment
   }
 
   @Override public void onDataStateDisabled() {
     Timber.d("Data state disabled");
-    dataInitialState(false, false); // We ignore managed at the moment
   }
 
   @Override public void onBluetoothStateEnabled() {
     Timber.d("Bluetooth state enabled");
-    bluetoothInitialState(true, false); // We ignore managed at the moment
   }
 
   @Override public void onBluetoothStateDisabled() {
     Timber.d("Bluetooth state disabled");
-    bluetoothInitialState(false, false); // We ignore managed at the moment
   }
 
   @Override public void onSyncStateEnabled() {
     Timber.d("Sync state enabled");
-    syncInitialState(true, false); // We ignore managed at the moment
   }
 
   @Override public void onSyncStateDisabled() {
     Timber.d("Sync state disabled");
-    syncInitialState(false, false); // We ignore managed at the moment
+  }
+
+  @Override public void onDataManageEnabled() {
+    Timber.d("Data manage enabled");
+    manageFragment.enableManaged();
+  }
+
+  @Override public void onDataManageDisabled() {
+    Timber.d("Data manage disabled");
+    manageFragment.disableManaged();
+  }
+
+  @Override public void onSyncManageEnabled() {
+    Timber.d("Sync manage enabled");
+    manageFragment.enableManaged();
+  }
+
+  @Override public void onSyncManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    manageFragment.disableManaged();
+  }
+
+  @Override public void onWifiManageEnabled() {
+    Timber.d("Wifi manage enabled");
+    manageFragment.enableManaged();
+  }
+
+  @Override public void onWifiManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    manageFragment.disableManaged();
+  }
+
+  @Override public void onBluetoothManageEnabled() {
+    Timber.d("Bluetooth manage enabled");
+    manageFragment.enableManaged();
+  }
+
+  @Override public void onBluetoothManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    manageFragment.disableManaged();
   }
 }
