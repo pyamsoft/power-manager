@@ -32,7 +32,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,10 +53,10 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
-import com.pyamsoft.powermanager.app.observer.BluetoothStateObserver;
-import com.pyamsoft.powermanager.app.observer.DataStateObserver;
-import com.pyamsoft.powermanager.app.observer.SyncStateObserver;
-import com.pyamsoft.powermanager.app.observer.WifiStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.BluetoothStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.DataStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.SyncStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
@@ -115,9 +114,8 @@ public class FullNotificationActivity extends AppCompatActivity
   }
 
   public static final class FullDialog extends DialogFragment
-      implements WifiView, DataView, BluetoothView, SyncView,
-      WifiStateObserver.WifiStateObserverView, DataStateObserver.DataStateObserverView,
-      BluetoothStateObserver.BluetoothStateObserverView, SyncStateObserver.SyncStateObserverView {
+      implements WifiView, DataView, BluetoothView, SyncView, WifiStateObserver.View, DataStateObserver.View,
+      BluetoothStateObserver.View, SyncStateObserver.View {
 
     @Inject WifiPresenter wifiPresenter;
     @Inject ManagerWifi managerWifi;
@@ -232,7 +230,7 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-      @SuppressLint("InflateParams") final View dialogView = LayoutInflater.from(getActivity())
+      @SuppressLint("InflateParams") final android.view.View dialogView = LayoutInflater.from(getActivity())
           .inflate(R.layout.dialog_full_notification, null, false);
 
       unbinder = ButterKnife.bind(this, dialogView);

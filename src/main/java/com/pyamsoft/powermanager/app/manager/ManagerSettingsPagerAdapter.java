@@ -30,20 +30,19 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
-import com.pyamsoft.powermanager.app.observer.BluetoothStateObserver;
-import com.pyamsoft.powermanager.app.observer.DataStateObserver;
-import com.pyamsoft.powermanager.app.observer.StateObserver;
-import com.pyamsoft.powermanager.app.observer.SyncStateObserver;
-import com.pyamsoft.powermanager.app.observer.WifiStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.BluetoothStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.DataStateObserver;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.state.SyncStateObserver;
+import com.pyamsoft.powermanager.app.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
-    implements WifiView, DataView, BluetoothView, SyncView, WifiStateObserver.WifiStateObserverView,
-    DataStateObserver.DataStateObserverView, BluetoothStateObserver.BluetoothStateObserverView,
-    SyncStateObserver.SyncStateObserverView {
+    implements WifiView, DataView, BluetoothView, SyncView, WifiStateObserver.View,
+    DataStateObserver.View, BluetoothStateObserver.View, SyncStateObserver.View {
 
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
@@ -75,7 +74,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
   @Inject SyncPresenter syncPresenter;
   @Inject ManagerSync managerSync;
 
-  private StateObserver observer;
+  private InterestObserver observer;
 
   public ManagerSettingsPagerAdapter(@NonNull FragmentActivity activity, @NonNull String type) {
     super(activity.getSupportFragmentManager());

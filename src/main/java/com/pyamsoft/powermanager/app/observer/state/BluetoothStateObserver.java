@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.app.observer.state;
 
 import android.content.Context;
 import android.net.Uri;
@@ -25,10 +25,10 @@ import timber.log.Timber;
 
 public class BluetoothStateObserver extends StateContentObserver {
 
-  @NonNull private final BluetoothStateObserverView view;
+  @NonNull private final View view;
 
   public BluetoothStateObserver(@NonNull Context context,
-      @NonNull BluetoothStateObserverView view) {
+      @NonNull View view) {
     super(context);
     this.view = view;
 
@@ -66,7 +66,7 @@ public class BluetoothStateObserver extends StateContentObserver {
     return enabled;
   }
 
-  public interface BluetoothStateObserverView {
+  public interface View {
 
     void onBluetoothStateEnabled();
 

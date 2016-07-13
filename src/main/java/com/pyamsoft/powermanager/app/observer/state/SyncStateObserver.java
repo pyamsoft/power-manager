@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.app.observer.state;
 
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
-public class SyncStateObserver implements StateObserver {
+public class SyncStateObserver implements InterestObserver {
 
-  @NonNull private final SyncStateObserverView view;
+  @NonNull private final View view;
   private Object listener;
   private boolean registered;
   private boolean enabled;
   private boolean disabled;
 
-  public SyncStateObserver(@NonNull SyncStateObserverView view) {
+  public SyncStateObserver(@NonNull View view) {
     this.view = view;
     registered = false;
     enabled = false;
@@ -90,7 +91,7 @@ public class SyncStateObserver implements StateObserver {
     }
   }
 
-  public interface SyncStateObserverView {
+  public interface View {
 
     void onSyncStateEnabled();
 

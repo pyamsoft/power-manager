@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.app.observer.state;
 
 import android.content.Context;
 import android.net.Uri;
@@ -23,20 +23,20 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-public class DataStateObserver extends StateContentObserver {
+public class WifiStateObserver extends StateContentObserver {
 
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
-  @NonNull private final DataStateObserverView view;
+  @NonNull private final View view;
 
-  public DataStateObserver(@NonNull Context context, @NonNull DataStateObserverView view) {
+  public WifiStateObserver(@NonNull Context context, @NonNull View view) {
     super(context);
     this.view = view;
 
     Uri uri;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(SETTINGS_MOBILE_DATA);
+      uri = Settings.Global.getUriFor(Settings.Global.WIFI_ON);
     } else {
-      uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
+      //noinspection deprecation
+      uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
     }
     setUri(uri);
   }
@@ -44,9 +44,9 @@ public class DataStateObserver extends StateContentObserver {
   @Override public void onChange(boolean selfChange, Uri uri) {
     Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
     if (is()) {
-      view.onDataStateEnabled();
+      view.onWifiStateEnabled();
     } else {
-      view.onDataStateDisabled();
+      view.onWifiStateDisabled();
     }
   }
 
@@ -54,20 +54,21 @@ public class DataStateObserver extends StateContentObserver {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
+          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.WIFI_ON, 0)
               == 1;
     } else {
+      //noinspection deprecation
       enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
+          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.WIFI_ON, 0)
               == 1;
     }
     return enabled;
   }
 
-  public interface DataStateObserverView {
+  public interface View {
 
-    void onDataStateEnabled();
+    void onWifiStateEnabled();
 
-    void onDataStateDisabled();
+    void onWifiStateDisabled();
   }
 }

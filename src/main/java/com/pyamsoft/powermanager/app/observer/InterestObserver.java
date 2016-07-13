@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.observer;
 
 import android.support.annotation.CheckResult;
 
-public interface StateObserver {
+public interface InterestObserver {
 
   void register();
 
