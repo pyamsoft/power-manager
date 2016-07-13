@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
@@ -27,22 +28,22 @@ import javax.inject.Named;
 @Module public class ManageObserverModule {
 
   @ActivityScope @Named("wifi") @Provides InterestObserver provideWifiObserver(
-      @NonNull Context context) {
-    return new WifiManageObserver(context);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new WifiManageObserver(context, preferences);
   }
 
   @ActivityScope @Named("data") @Provides InterestObserver provideDataObserver(
-      @NonNull Context context) {
-    return new DataManageObserver(context);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new DataManageObserver(context, preferences);
   }
 
   @ActivityScope @Named("bluetooth") @Provides InterestObserver provideBluetoothObserver(
-      @NonNull Context context) {
-    return new BluetoothManageObserver(context);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new BluetoothManageObserver(context, preferences);
   }
 
   @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver(
-      @NonNull Context context) {
-    return new BluetoothManageObserver(context);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new BluetoothManageObserver(context, preferences);
   }
 }

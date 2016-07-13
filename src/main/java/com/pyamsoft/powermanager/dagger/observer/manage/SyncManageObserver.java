@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
@@ -26,9 +27,9 @@ public class SyncManageObserver extends ManagePreferenceObserver<SyncManageObser
 
   @Nullable private View view;
 
-  @Inject SyncManageObserver(@NonNull Context context) {
-    super(context, context.getString(R.string.manage_sync_key),
-        context.getResources().getBoolean(R.bool.manage_sync_default));
+  @Inject SyncManageObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences, context.getString(R.string.manage_sync_key));
   }
 
   @Override void onChange() {

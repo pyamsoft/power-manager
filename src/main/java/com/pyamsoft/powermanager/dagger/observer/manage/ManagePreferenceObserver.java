@@ -18,29 +18,32 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
-/**
- * KLUDGE This splits up the architecture as we are accessing Preferences from the View layer
- */
 abstract class ManagePreferenceObserver<V>
     implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver<V> {
 
-  // KLUDGE limited to only default preference location
-  @NonNull private final SharedPreferences defaultSharedPreferences;
+  @NonNull private final String KEY_WIFI;
+  @NonNull private final String KEY_DATA;
+  @NonNull private final String KEY_BLUETOOTH;
+  @NonNull private final String KEY_SYNC;
+  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
-  private final boolean defValue;
   private boolean registered;
 
-  protected ManagePreferenceObserver(@NonNull Context context, @NonNull String key,
-      boolean defValue) {
+  protected ManagePreferenceObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull String key) {
+    this.preferences = preferences;
     this.key = key;
-    this.defValue = defValue;
-    defaultSharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+
+    KEY_WIFI = context.getString(R.string.manage_wifi_key);
+    KEY_DATA = context.getString(R.string.manage_data_key);
+    KEY_BLUETOOTH = context.getString(R.string.manage_bluetooth_key);
+    KEY_SYNC = context.getString(R.string.manage_sync_key);
   }
 
   @Override
@@ -56,7 +59,7 @@ abstract class ManagePreferenceObserver<V>
   @Override public final void register() {
     if (!registered) {
       Timber.d("Register new state observer for: %s", key);
-      defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+      preferences.register(this);
       registered = true;
     } else {
       Timber.e("Already registered");
@@ -66,7 +69,7 @@ abstract class ManagePreferenceObserver<V>
   @Override public final void unregister() {
     if (registered) {
       Timber.d("Unregister new state observer");
-      defaultSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+      preferences.unregister(this);
       registered = false;
     } else {
       Timber.e("Already unregistered");
@@ -74,7 +77,20 @@ abstract class ManagePreferenceObserver<V>
   }
 
   @Override public final boolean is() {
-    return defaultSharedPreferences.getBoolean(key, defValue);
+    boolean result;
+    if (key.equals(KEY_WIFI)) {
+      result = preferences.isWifiManaged();
+    } else if (key.equals(KEY_DATA)) {
+      result = preferences.isDataManaged();
+    } else if (key.equals(KEY_DATA)) {
+      result = preferences.isBluetoothManaged();
+    } else if (key.equals(KEY_DATA)) {
+      result = preferences.isSyncManaged();
+    } else {
+      throw new RuntimeException("Unsupported key: " + key);
+    }
+
+    return result;
   }
 
   abstract void onChange();
