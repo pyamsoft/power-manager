@@ -20,6 +20,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class SyncStateModifier extends StateModifier {
 
@@ -28,10 +29,12 @@ public class SyncStateModifier extends StateModifier {
   }
 
   @Override void mainThreadSet() {
+    Timber.d("Set sync: true");
     ContentResolver.setMasterSyncAutomatically(true);
   }
 
   @Override void mainThreadUnset() {
+    Timber.d("Set sync: false");
     ContentResolver.setMasterSyncAutomatically(false);
   }
 }

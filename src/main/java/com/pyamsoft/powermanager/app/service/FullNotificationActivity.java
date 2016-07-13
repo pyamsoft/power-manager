@@ -278,7 +278,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
       syncToggle.setOnClickListener(view -> {
         Timber.d("Sync clicked");
-        if (syncManageObserver.is()) {
+        if (syncStateObserver.is()) {
           Timber.d("Disable sync");
           syncStateModifier.unset();
         } else {
@@ -444,13 +444,13 @@ public class FullNotificationActivity extends AppCompatActivity
     }
 
     @Override public void onSyncManageEnabled() {
-      Timber.d("Sync not managed");
-      setSyncManageState(false);
+      Timber.d("Sync managed");
+      setSyncManageState(true);
     }
 
     @Override public void onSyncManageDisabled() {
-      Timber.d("Sync managed");
-      setSyncManageState(true);
+      Timber.d("Sync not managed");
+      setSyncManageState(false);
     }
   }
 }

@@ -47,7 +47,7 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
 
   @Override public boolean is() {
     final boolean b = ContentResolver.getMasterSyncAutomatically();
-    Timber.d("Set %s", b);
+    Timber.d("Sync is %s", b);
     return b;
   }
 
