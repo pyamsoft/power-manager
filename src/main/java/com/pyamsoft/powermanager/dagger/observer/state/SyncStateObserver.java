@@ -68,11 +68,6 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
                       enabled = true;
                       Timber.d("Enabled");
                       view.onSyncStateEnabled();
-                    } else {
-                      // KLUDGE on nexus 6, every 3rd or so time
-                      // KLUDGE Master Sync is toggle, the enable hook runs
-                      // KLUDGE like 5 times.
-                      Timber.e("Sync has already run the enabled event hook");
                     }
                   } else {
                     // Reset status of other flag here
