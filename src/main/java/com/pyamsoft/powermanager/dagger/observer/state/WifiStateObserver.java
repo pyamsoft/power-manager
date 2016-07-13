@@ -29,8 +29,7 @@ public class WifiStateObserver extends StateContentObserver<WifiStateObserver.Vi
 
   @Nullable private View view;
 
-  @Inject
-  WifiStateObserver(@NonNull Context context) {
+  @Inject WifiStateObserver(@NonNull Context context) {
     super(context);
 
     Uri uri;
@@ -70,6 +69,8 @@ public class WifiStateObserver extends StateContentObserver<WifiStateObserver.Vi
           Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.WIFI_ON, 0)
               == 1;
     }
+
+    Timber.d("Set %s", enabled);
     return enabled;
   }
 

@@ -69,6 +69,8 @@ public class BluetoothStateObserver extends StateContentObserver<BluetoothStateO
           Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.BLUETOOTH_ON,
               0) == 1;
     }
+
+    Timber.d("Set %s", enabled);
     return enabled;
   }
 

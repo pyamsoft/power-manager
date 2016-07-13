@@ -27,11 +27,11 @@ public class SyncStateModifier extends StateModifier {
     super(context);
   }
 
-  @Override public void set() {
+  @Override void mainThreadSet() {
     ContentResolver.setMasterSyncAutomatically(true);
   }
 
-  @Override public void unset() {
+  @Override void mainThreadUnset() {
     ContentResolver.setMasterSyncAutomatically(false);
   }
 }

@@ -30,6 +30,7 @@ import timber.log.Timber;
 abstract class StateContentObserver<V> extends ContentObserver implements InterestObserver<V> {
 
   @NonNull private final Context appContext;
+  @NonNull private final Handler handler;
   private Uri uri;
   private boolean registered;
 
@@ -40,6 +41,7 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   public StateContentObserver(@NonNull Context context, @Nullable Uri uri) {
     super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
+    handler = new Handler(Looper.getMainLooper());
     registered = false;
     this.uri = uri;
   }
@@ -53,23 +55,29 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   }
 
   @Override public final void register() {
-    if (!registered) {
-      Timber.d("Register new state observer for: %s", uri);
-      appContext.getContentResolver().registerContentObserver(uri, false, this);
-      registered = true;
-    } else {
-      Timber.e("Already registered");
-    }
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      if (!registered) {
+        Timber.d("Register new state observer for: %s", uri);
+        appContext.getContentResolver().registerContentObserver(uri, false, this);
+        registered = true;
+      } else {
+        Timber.e("Already registered");
+      }
+    });
   }
 
   @Override public final void unregister() {
-    if (registered) {
-      Timber.d("Unregister new state observer");
-      appContext.getContentResolver().unregisterContentObserver(this);
-      registered = false;
-    } else {
-      Timber.e("Already unregistered");
-    }
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      if (registered) {
+        Timber.d("Unregister new state observer");
+        appContext.getContentResolver().unregisterContentObserver(this);
+        registered = false;
+      } else {
+        Timber.e("Already unregistered");
+      }
+    });
   }
 
   @Override public final boolean deliverSelfNotifications() {

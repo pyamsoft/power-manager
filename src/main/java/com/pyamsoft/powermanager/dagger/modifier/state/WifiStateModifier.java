@@ -32,13 +32,13 @@ public class WifiStateModifier extends StateModifier {
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
-  @Override public void set() {
+  @Override void mainThreadSet() {
     if (wifiManager != null) {
       wifiManager.setWifiEnabled(true);
     }
   }
 
-  @Override public void unset() {
+  @Override void mainThreadUnset() {
     if (wifiManager != null) {
       wifiManager.setWifiEnabled(false);
     }

@@ -17,6 +17,8 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
@@ -24,12 +26,28 @@ import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 abstract class StateModifier implements InterestModifier {
 
   @NonNull private final Context appContext;
+  @NonNull private final Handler handler;
 
   protected StateModifier(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
+    this.handler = new Handler(Looper.getMainLooper());
   }
 
   @NonNull @CheckResult final Context getAppContext() {
     return appContext;
   }
+
+  @Override public final void set() {
+    handler.removeCallbacksAndMessages(null);
+    handler.post(this::mainThreadSet);
+  }
+
+  @Override public final void unset() {
+    handler.removeCallbacksAndMessages(null);
+    handler.post(this::mainThreadUnset);
+  }
+
+  abstract void mainThreadSet();
+
+  abstract void mainThreadUnset();
 }

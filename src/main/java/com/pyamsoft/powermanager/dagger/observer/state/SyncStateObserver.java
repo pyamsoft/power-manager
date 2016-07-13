@@ -17,6 +17,8 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.ContentResolver;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
@@ -25,14 +27,15 @@ import timber.log.Timber;
 
 public class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
 
+  @NonNull private final Handler handler;
   @Nullable private View view;
   private Object listener;
   private boolean registered;
   private boolean enabled;
   private boolean disabled;
 
-  @Inject
-  SyncStateObserver() {
+  @Inject SyncStateObserver() {
+    handler = new Handler(Looper.getMainLooper());
     registered = false;
     enabled = false;
     disabled = false;
@@ -43,60 +46,66 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
   }
 
   @Override public boolean is() {
-    return ContentResolver.getMasterSyncAutomatically();
+    final boolean b = ContentResolver.getMasterSyncAutomatically();
+    Timber.d("Set %s", b);
+    return b;
   }
 
   @Override public void register() {
-    if (!registered) {
-      Timber.d("Register new state observer");
-      listener =
-          ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
-              i -> {
-                if (view != null) {
-                  Timber.d("onStatusChanged: %d", i);
-                  if (is()) {
-                    // Reset status of other flag here
-                    disabled = false;
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      if (!registered) {
+        Timber.d("Register new state observer");
+        listener =
+            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
+                i -> {
+                  if (view != null) {
+                    if (is()) {
+                      // Reset status of other flag here
+                      disabled = false;
 
-                    // Only call hook once
-                    if (!enabled) {
-                      enabled = true;
-                      Timber.d("Enabled");
-                      view.onSyncStateEnabled();
+                      // Only call hook once
+                      if (!enabled) {
+                        enabled = true;
+                        Timber.d("Enabled");
+                        view.onSyncStateEnabled();
+                      } else {
+                        // KLUDGE on nexus 6, every 3rd or so time
+                        // KLUDGE Master Sync is toggle, the enable hook runs
+                        // KLUDGE like 5 times.
+                        Timber.e("Sync has already run the enabled event hook");
+                      }
                     } else {
-                      // KLUDGE on nexus 6, every 3rd or so time Master Sync is toggle, the enable hook runs
-                      // KLUDGE like 5 times.
-                      Timber.e("Sync has already run the enabled event hook");
-                    }
-                  } else {
-                    // Reset status of other flag here
-                    enabled = false;
+                      // Reset status of other flag here
+                      enabled = false;
 
-                    // Only call hook once
-                    if (!disabled) {
-                      disabled = true;
-                      Timber.d("Disabled");
-                      view.onSyncStateDisabled();
-                    } else {
-                      Timber.e("Sync has already run the disabled event hook");
+                      // Only call hook once
+                      if (!disabled) {
+                        disabled = true;
+                        Timber.d("Disabled");
+                        view.onSyncStateDisabled();
+                      }
                     }
                   }
-                }
-              });
-      registered = true;
-    } else {
-      Timber.e("Already registered");
-    }
+                });
+        registered = true;
+      } else {
+        Timber.e("Already registered");
+      }
+    });
   }
 
   @Override public void unregister() {
-    if (registered) {
-      Timber.d("Unregister new state observer");
-      ContentResolver.removeStatusChangeListener(listener);
-      registered = false;
-    } else {
-      Timber.e("Already unregistered");
-    }
+    handler.removeCallbacksAndMessages(null);
+    handler.post(() -> {
+      if (registered) {
+        Timber.d("Unregister new state observer");
+        ContentResolver.removeStatusChangeListener(listener);
+        registered = false;
+      } else {
+        Timber.e("Already unregistered");
+      }
+    });
   }
 
   public interface View {

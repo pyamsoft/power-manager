@@ -39,10 +39,11 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
+import com.pyamsoft.powermanager.dagger.modifier.state.DataStateModifier;
+import com.pyamsoft.powermanager.dagger.modifier.state.SyncStateModifier;
+import com.pyamsoft.powermanager.dagger.modifier.state.WifiStateModifier;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
@@ -113,11 +114,6 @@ public class FullNotificationActivity extends AppCompatActivity
       SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
       BluetoothManageObserver.View, SyncManageObserver.View {
 
-    @Inject ManagerWifi managerWifi;
-    @Inject ManagerData managerData;
-    @Inject ManagerBluetooth managerBluetooth;
-    @Inject ManagerSync managerSync;
-
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
     @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
@@ -140,6 +136,11 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject BluetoothManageObserver bluetoothManageObserver;
     @Inject SyncManageObserver syncManageObserver;
 
+    @Inject WifiStateModifier wifiStateModifier;
+    @Inject DataStateModifier dataStateModifier;
+    @Inject BluetoothStateModifier bluetoothStateModifier;
+    @Inject SyncStateModifier syncStateModifier;
+
     private Unbinder unbinder;
     private AsyncVectorDrawableTask mainTask;
     private AsyncVectorDrawableTask closeTask;
@@ -155,6 +156,11 @@ public class FullNotificationActivity extends AppCompatActivity
           .inject(this);
 
       DaggerManageObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .inject(this);
+
+      DaggerStateModifierComponent.builder()
           .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
           .build()
           .inject(this);
@@ -183,11 +189,6 @@ public class FullNotificationActivity extends AppCompatActivity
     @Override public void onDestroy() {
       super.onDestroy();
       Timber.d("onDestroy");
-
-      managerWifi.cleanup();
-      managerData.cleanup();
-      managerBluetooth.cleanup();
-      managerSync.cleanup();
 
       wifiStateObserver.unregister();
       dataStateObserver.unregister();
@@ -242,6 +243,50 @@ public class FullNotificationActivity extends AppCompatActivity
       closeTask = new AsyncVectorDrawableTask(closeButton);
       closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
 
+      wifiToggle.setOnClickListener(view -> {
+        Timber.d("Wifi clicked");
+        if (wifiStateObserver.is()) {
+          Timber.d("Disable data");
+          wifiStateModifier.unset();
+        } else {
+          Timber.d("Enable data");
+          wifiStateModifier.set();
+        }
+      });
+
+      dataToggle.setOnClickListener(view -> {
+        Timber.d("Data clicked");
+        if (dataStateObserver.is()) {
+          Timber.d("Disable data");
+          dataStateModifier.unset();
+        } else {
+          Timber.d("Enable data");
+          dataStateModifier.set();
+        }
+      });
+
+      bluetoothToggle.setOnClickListener(view -> {
+        Timber.d("Bluetooth clicked");
+        if (bluetoothStateObserver.is()) {
+          Timber.d("Disable bluetooth");
+          bluetoothStateModifier.unset();
+        } else {
+          Timber.d("Enable bluetooth");
+          bluetoothStateModifier.set();
+        }
+      });
+
+      syncToggle.setOnClickListener(view -> {
+        Timber.d("Sync clicked");
+        if (syncManageObserver.is()) {
+          Timber.d("Disable sync");
+          syncStateModifier.unset();
+        } else {
+          Timber.d("Enable sync");
+          syncStateModifier.set();
+        }
+      });
+
       setWifiToggleState(wifiStateObserver.is());
       setDataToggleState(dataStateObserver.is());
       setBluetoothToggleState(bluetoothStateObserver.is());
@@ -263,32 +308,32 @@ public class FullNotificationActivity extends AppCompatActivity
     private void setWifiToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_network_wifi_24dp : R.drawable.ic_signal_wifi_off_24dp;
       Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d,
-          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
+          enabled ? R.color.lightblueA200 : android.R.color.black));
       wifiToggle.setImageDrawable(d);
     }
 
     private void setDataToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
       Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d,
-          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
+          enabled ? R.color.lightblueA200 : android.R.color.black));
       dataToggle.setImageDrawable(d);
     }
 
     private void setBluetoothToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
       Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d,
-          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
+          enabled ? R.color.lightblueA200 : android.R.color.black));
       bluetoothToggle.setImageDrawable(d);
     }
 
     private void setSyncToggleState(boolean enabled) {
       int icon = enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
       Drawable d = ContextCompat.getDrawable(getContext(), icon);
-      d = DrawableUtil.tintDrawableFromColor(d,
-          ContextCompat.getColor(getContext(), R.color.lightblueA200));
+      d = DrawableUtil.tintDrawableFromColor(d, ContextCompat.getColor(getContext(),
+          enabled ? R.color.lightblueA200 : android.R.color.black));
       syncToggle.setImageDrawable(d);
     }
 

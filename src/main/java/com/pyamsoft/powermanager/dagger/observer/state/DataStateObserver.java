@@ -68,6 +68,8 @@ public class DataStateObserver extends StateContentObserver<DataStateObserver.Vi
           Settings.Secure.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
               == 1;
     }
+
+    Timber.d("Set %s", enabled);
     return enabled;
   }
 

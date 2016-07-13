@@ -84,11 +84,11 @@ public class DataStateModifier extends StateModifier {
     }
   }
 
-  @Override public void set() {
+  @Override void mainThreadSet() {
     setMobileDataEnabled(connectivityManager, true);
   }
 
-  @Override public void unset() {
+  @Override void mainThreadUnset() {
     setMobileDataEnabled(connectivityManager, false);
   }
 }
