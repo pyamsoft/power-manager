@@ -16,15 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
+import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -32,14 +32,14 @@ import timber.log.Timber;
 public final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "bluetooth_manager_job";
-  @NonNull private final BluetoothAdapterWrapper androidBluetooth;
+  @NonNull private final BluetoothStateObserver observer;
   @NonNull private final Context appContext;
 
   @Inject ManagerInteractorBluetooth(@NonNull PowerManagerPreferences preferences,
-      @NonNull Context context, @NonNull BluetoothAdapterWrapper bluetoothAdapter) {
+      @NonNull Context context, @NonNull BluetoothStateObserver observer) {
     super(context.getApplicationContext(), preferences);
     this.appContext = context.getApplicationContext();
-    this.androidBluetooth = bluetoothAdapter;
+    this.observer = observer;
     Timber.d("new ManagerInteractorBluetooth");
   }
 
@@ -52,7 +52,7 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(androidBluetooth.isEnabled()));
+    return Observable.defer(() -> Observable.just(observer.is()));
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
@@ -113,41 +113,33 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
 
   static abstract class Job extends DeviceJob {
 
-    @NonNull private final BluetoothAdapterWrapper adapter;
+    @NonNull private final BluetoothStateModifier modifier;
+    @NonNull private final InterestObserver observer;
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
       super(context, params.addTags(ManagerInteractorBluetooth.TAG), jobType, periodic,
           periodicDisableTime, periodicEnableTime);
-      adapter = new BluetoothAdapterWrapper(getBluetoothAdapter());
-    }
-
-    @CheckResult @Nullable final BluetoothAdapter getBluetoothAdapter() {
-      BluetoothAdapter adapter;
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        adapter = BluetoothAdapter.getDefaultAdapter();
-      } else {
-        final BluetoothManager bluetoothManager =
-            (BluetoothManager) getContext().getApplicationContext()
-                .getSystemService(Context.BLUETOOTH_SERVICE);
-        adapter = bluetoothManager.getAdapter();
-      }
-      return adapter;
+      modifier = new BluetoothStateModifier(getContext());
+      observer = DaggerStateObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideBluetoothStateObserver();
     }
 
     @Override protected void callEnable() {
       Timber.d("Enable bluetooth");
-      adapter.enable();
+      modifier.set();
     }
 
     @Override protected void callDisable() {
       Timber.d("Disable bluetooth");
-      adapter.disable();
+      modifier.unset();
     }
 
     @Override protected boolean isEnabled() {
       Timber.d("isBluetoothEnabled");
-      return adapter.isEnabled();
+      return observer.is();
     }
 
     @Override protected DeviceJob periodicDisableJob() {

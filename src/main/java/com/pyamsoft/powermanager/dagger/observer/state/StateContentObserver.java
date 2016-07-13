@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.state;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
 import android.database.ContentObserver;
@@ -27,7 +27,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
-abstract class StateContentObserver extends ContentObserver implements InterestObserver {
+abstract class StateContentObserver<V> extends ContentObserver implements InterestObserver<V> {
 
   @NonNull private final Context appContext;
   private Uri uri;

@@ -14,24 +14,35 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothAdapterWrapper;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 
-@Module public class AndroidDeviceModule {
+@Module public class StateObserverModule {
 
-  @ActivityScope @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(
+  @ActivityScope @Named("wifi") @Provides InterestObserver provideWifiObserver(
       @NonNull Context context) {
-    return new BluetoothAdapterWrapper(context);
+    return new WifiStateObserver(context);
   }
 
-  @ActivityScope @Provides WifiManager provideWifiManager(@NonNull Context context) {
-    return (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+  @ActivityScope @Named("data") @Provides InterestObserver provideDataObserver(
+      @NonNull Context context) {
+    return new DataStateObserver(context);
+  }
+
+  @ActivityScope @Named("bluetooth") @Provides InterestObserver provideBluetoothObserver(
+      @NonNull Context context) {
+    return new BluetoothStateObserver(context);
+  }
+
+  @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver(
+      @NonNull Context context) {
+    return new BluetoothStateObserver(context);
   }
 }

@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -44,9 +45,9 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
-      @NonNull BluetoothAdapterWrapper bluetoothAdapter,
-      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
-    return new ManagerInteractorBluetooth(preferences, context, bluetoothAdapter);
+      @NonNull BluetoothStateObserver observer, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context) {
+    return new ManagerInteractorBluetooth(preferences, context, observer);
   }
 
   @ActivityScope @Provides ManagerInteractorSync provideManagerInteractorSync(

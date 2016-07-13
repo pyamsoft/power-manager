@@ -14,34 +14,40 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.manage;
+package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
 
-public class DataManageObserver extends ManagePreferenceObserver {
+public class WifiManageObserver extends ManagePreferenceObserver<WifiManageObserver.View> {
 
-  @NonNull private final View view;
+  @Nullable private View view;
 
-  public DataManageObserver(@NonNull Context context, @NonNull View view) {
-    super(context, context.getString(R.string.manage_data_key),
-        context.getResources().getBoolean(R.bool.manage_data_default));
-    this.view = view;
+  public WifiManageObserver(@NonNull Context context) {
+    super(context, context.getString(R.string.manage_wifi_key),
+        context.getResources().getBoolean(R.bool.manage_wifi_default));
   }
 
   @Override void onChange() {
-    if (is()) {
-      view.onDataManageEnabled();
-    } else {
-      view.onDataManageDisabled();
+    if (view != null) {
+      if (is()) {
+        view.onWifiManageEnabled();
+      } else {
+        view.onWifiManageDisabled();
+      }
     }
+  }
+
+  @Override public void setView(@NonNull View view) {
+    this.view = view;
   }
 
   public interface View {
 
-    void onDataManageEnabled();
+    void onWifiManageEnabled();
 
-    void onDataManageDisabled();
+    void onWifiManageDisabled();
   }
 }

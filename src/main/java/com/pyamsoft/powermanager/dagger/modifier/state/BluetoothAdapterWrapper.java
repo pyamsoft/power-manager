@@ -14,19 +14,34 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.backend;
+package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
+import android.content.Context;
+import android.os.Build;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import javax.inject.Inject;
 
 public final class BluetoothAdapterWrapper {
 
   @Nullable private final BluetoothAdapter adapter;
 
-  @Inject public BluetoothAdapterWrapper(@Nullable BluetoothAdapter adapter) {
-    this.adapter = adapter;
+  public BluetoothAdapterWrapper(@NonNull Context context) {
+    this.adapter = getBluetoothAdapter(context);
+  }
+
+  @CheckResult @Nullable final BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
+    BluetoothAdapter adapter;
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      adapter = BluetoothAdapter.getDefaultAdapter();
+    } else {
+      final BluetoothManager bluetoothManager = (BluetoothManager) context.getApplicationContext()
+          .getSystemService(Context.BLUETOOTH_SERVICE);
+      adapter = bluetoothManager.getAdapter();
+    }
+    return adapter;
   }
 
   public final void enable() {

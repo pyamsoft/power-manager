@@ -14,34 +14,41 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.manage;
+package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
 
-public class SyncManageObserver extends ManagePreferenceObserver {
+public class BluetoothManageObserver
+    extends ManagePreferenceObserver<BluetoothManageObserver.View> {
 
-  @NonNull private final View view;
+  @Nullable private View view;
 
-  public SyncManageObserver(@NonNull Context context, @NonNull View view) {
-    super(context, context.getString(R.string.manage_sync_key),
-        context.getResources().getBoolean(R.bool.manage_sync_default));
-    this.view = view;
+  public BluetoothManageObserver(@NonNull Context context) {
+    super(context, context.getString(R.string.manage_bluetooth_key),
+        context.getResources().getBoolean(R.bool.manage_bluetooth_default));
   }
 
   @Override void onChange() {
-    if (is()) {
-      view.onSyncManageEnabled();
-    } else {
-      view.onSyncManageDisabled();
+    if (view != null) {
+      if (is()) {
+        view.onBluetoothManageEnabled();
+      } else {
+        view.onBluetoothManageDisabled();
+      }
     }
+  }
+
+  @Override public void setView(@NonNull View view) {
+    this.view = view;
   }
 
   public interface View {
 
-    void onSyncManageEnabled();
+    void onBluetoothManageEnabled();
 
-    void onSyncManageDisabled();
+    void onBluetoothManageDisabled();
   }
 }

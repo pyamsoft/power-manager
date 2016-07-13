@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.manager.AndroidDeviceModule;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import dagger.Component;
+import javax.inject.Named;
 
 @ActivityScope @Component(modules = {
-    ManagerSettingsModule.class, AndroidDeviceModule.class, ManagerModule.class
-}, dependencies = PowerManagerComponent.class) public interface ManagerSettingsComponent {
+    StateObserverModule.class, ManagerModule.class, AndroidDeviceModule.class
+}, dependencies = PowerManagerComponent.class) public interface StateObserverComponent {
 
+  void inject(FullNotificationActivity.FullDialog activity);
+
+  @Named("wifi") InterestObserver provideWifiStateObserver();
+
+  @Named("data") InterestObserver provideDataStateObserver();
+
+  @Named("bluetooth") InterestObserver provideBluetoothStateObserver();
+
+  @Named("sync") InterestObserver provideSyncStateObserver();
 }

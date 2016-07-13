@@ -14,34 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.manage;
+package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.R;
 
-public class WifiManageObserver extends ManagePreferenceObserver {
+public class BluetoothStateModifier extends
+    StateModifier {
 
-  @NonNull private final View view;
+  @NonNull private final BluetoothAdapterWrapper wrapper;
 
-  public WifiManageObserver(@NonNull Context context, @NonNull View view) {
-    super(context, context.getString(R.string.manage_wifi_key),
-        context.getResources().getBoolean(R.bool.manage_wifi_default));
-    this.view = view;
+  public BluetoothStateModifier(@NonNull Context context) {
+    super(context);
+    wrapper = new BluetoothAdapterWrapper(context);
   }
 
-  @Override void onChange() {
-    if (is()) {
-      view.onWifiManageEnabled();
-    } else {
-      view.onWifiManageDisabled();
-    }
+  @Override public void set() {
+    wrapper.enable();
   }
 
-  public interface View {
-
-    void onWifiManageEnabled();
-
-    void onWifiManageDisabled();
+  @Override public void unset() {
+    wrapper.disable();
   }
 }

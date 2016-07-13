@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.state;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SyncStateObserver implements InterestObserver {
+public class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
 
-  @NonNull private final View view;
+  @Nullable private View view;
   private Object listener;
   private boolean registered;
   private boolean enabled;
   private boolean disabled;
 
-  public SyncStateObserver(@NonNull View view) {
-    this.view = view;
+  @Inject
+  SyncStateObserver() {
     registered = false;
     enabled = false;
     disabled = false;
+  }
+
+  public final void setView(@NonNull View view) {
+    this.view = view;
   }
 
   @Override public boolean is() {
@@ -46,32 +52,34 @@ public class SyncStateObserver implements InterestObserver {
       listener =
           ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
               i -> {
-                Timber.d("onStatusChanged: %d", i);
-                if (is()) {
-                  // Reset status of other flag here
-                  disabled = false;
+                if (view != null) {
+                  Timber.d("onStatusChanged: %d", i);
+                  if (is()) {
+                    // Reset status of other flag here
+                    disabled = false;
 
-                  // Only call hook once
-                  if (!enabled) {
-                    enabled = true;
-                    Timber.d("Enabled");
-                    view.onSyncStateEnabled();
+                    // Only call hook once
+                    if (!enabled) {
+                      enabled = true;
+                      Timber.d("Enabled");
+                      view.onSyncStateEnabled();
+                    } else {
+                      // KLUDGE on nexus 6, every 3rd or so time Master Sync is toggle, the enable hook runs
+                      // KLUDGE like 5 times.
+                      Timber.e("Sync has already run the enabled event hook");
+                    }
                   } else {
-                    // KLUDGE on nexus 6, every 3rd or so time Master Sync is toggle, the enable hook runs
-                    // KLUDGE like 5 times.
-                    Timber.e("Sync has already run the enabled event hook");
-                  }
-                } else {
-                  // Reset status of other flag here
-                  enabled = false;
+                    // Reset status of other flag here
+                    enabled = false;
 
-                  // Only call hook once
-                  if (!disabled) {
-                    disabled = true;
-                    Timber.d("Disabled");
-                    view.onSyncStateDisabled();
-                  } else {
-                    Timber.e("Sync has already run the disabled event hook");
+                    // Only call hook once
+                    if (!disabled) {
+                      disabled = true;
+                      Timber.d("Disabled");
+                      view.onSyncStateDisabled();
+                    } else {
+                      Timber.e("Sync has already run the disabled event hook");
+                    }
                   }
                 }
               });

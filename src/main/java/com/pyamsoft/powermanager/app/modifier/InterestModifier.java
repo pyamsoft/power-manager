@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.app.modifier;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+public interface InterestModifier {
 
-public interface InterestObserver<V> {
+  void set();
 
-  void setView(@NonNull V view);
-
-  void register();
-
-  void unregister();
-
-  @CheckResult boolean is();
+  void unset();
 }

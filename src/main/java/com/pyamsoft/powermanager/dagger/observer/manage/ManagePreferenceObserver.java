@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.manage;
+package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,8 +26,8 @@ import timber.log.Timber;
 /**
  * KLUDGE This splits up the architecture as we are accessing Preferences from the View layer
  */
-abstract class ManagePreferenceObserver
-    implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver {
+abstract class ManagePreferenceObserver<V>
+    implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver<V> {
 
   // KLUDGE limited to only default preference location
   @NonNull private final SharedPreferences defaultSharedPreferences;

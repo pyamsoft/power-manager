@@ -14,40 +14,46 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.state;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class BluetoothStateObserver extends StateContentObserver {
+public class DataStateObserver extends StateContentObserver<DataStateObserver.View> {
 
-  @NonNull private final View view;
+  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
+  @Nullable private View view;
 
-  public BluetoothStateObserver(@NonNull Context context,
-      @NonNull View view) {
+  @Inject DataStateObserver(@NonNull Context context) {
     super(context);
-    this.view = view;
 
     Uri uri;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(Settings.Global.BLUETOOTH_ON);
+      uri = Settings.Global.getUriFor(SETTINGS_MOBILE_DATA);
     } else {
-      //noinspection deprecation
-      uri = Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON);
+      uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
     }
     setUri(uri);
   }
 
+  public final void setView(@NonNull View view) {
+    this.view = view;
+  }
+
   @Override public void onChange(boolean selfChange, Uri uri) {
-    Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
-    if (is()) {
-      view.onBluetoothStateEnabled();
-    } else {
-      view.onBluetoothStateDisabled();
+    if (view != null) {
+      Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
+      if (is()) {
+        view.onDataStateEnabled();
+      } else {
+        view.onDataStateDisabled();
+      }
     }
   }
 
@@ -55,21 +61,20 @@ public class BluetoothStateObserver extends StateContentObserver {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.BLUETOOTH_ON,
-              0) == 1;
+          Settings.Global.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
+              == 1;
     } else {
-      //noinspection deprecation
       enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.BLUETOOTH_ON,
-              0) == 1;
+          Settings.Secure.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
+              == 1;
     }
     return enabled;
   }
 
   public interface View {
 
-    void onBluetoothStateEnabled();
+    void onDataStateEnabled();
 
-    void onBluetoothStateDisabled();
+    void onDataStateDisabled();
   }
 }

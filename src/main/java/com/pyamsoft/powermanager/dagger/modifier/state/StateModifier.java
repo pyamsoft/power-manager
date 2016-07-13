@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.dagger.modifier.state;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 
-public interface InterestObserver<V> {
+abstract class StateModifier implements InterestModifier {
 
-  void setView(@NonNull V view);
+  @NonNull private final Context appContext;
 
-  void register();
+  protected StateModifier(@NonNull Context context) {
+    this.appContext = context.getApplicationContext();
+  }
 
-  void unregister();
-
-  @CheckResult boolean is();
+  @NonNull @CheckResult final Context getAppContext() {
+    return appContext;
+  }
 }

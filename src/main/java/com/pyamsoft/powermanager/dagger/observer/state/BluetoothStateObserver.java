@@ -14,39 +14,46 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer.state;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class WifiStateObserver extends StateContentObserver {
+public class BluetoothStateObserver extends StateContentObserver<BluetoothStateObserver.View> {
 
-  @NonNull private final View view;
+  @Nullable private View view;
 
-  public WifiStateObserver(@NonNull Context context, @NonNull View view) {
+  @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
-    this.view = view;
 
     Uri uri;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(Settings.Global.WIFI_ON);
+      uri = Settings.Global.getUriFor(Settings.Global.BLUETOOTH_ON);
     } else {
       //noinspection deprecation
-      uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
+      uri = Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON);
     }
     setUri(uri);
   }
 
+  public final void setView(@NonNull View view) {
+    this.view = view;
+  }
+
   @Override public void onChange(boolean selfChange, Uri uri) {
-    Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
-    if (is()) {
-      view.onWifiStateEnabled();
-    } else {
-      view.onWifiStateDisabled();
+    if (view != null) {
+      Timber.d("onChange. SELF: %s URI: %s", selfChange, uri);
+      if (is()) {
+        view.onBluetoothStateEnabled();
+      } else {
+        view.onBluetoothStateDisabled();
+      }
     }
   }
 
@@ -54,21 +61,21 @@ public class WifiStateObserver extends StateContentObserver {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.WIFI_ON, 0)
-              == 1;
+          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.BLUETOOTH_ON,
+              0) == 1;
     } else {
       //noinspection deprecation
       enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.WIFI_ON, 0)
-              == 1;
+          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.BLUETOOTH_ON,
+              0) == 1;
     }
     return enabled;
   }
 
   public interface View {
 
-    void onWifiStateEnabled();
+    void onBluetoothStateEnabled();
 
-    void onWifiStateDisabled();
+    void onBluetoothStateDisabled();
   }
 }

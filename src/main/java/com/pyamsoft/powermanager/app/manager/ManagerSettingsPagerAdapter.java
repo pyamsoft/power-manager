@@ -31,15 +31,16 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.app.observer.manage.BluetoothManageObserver;
-import com.pyamsoft.powermanager.app.observer.manage.DataManageObserver;
-import com.pyamsoft.powermanager.app.observer.manage.SyncManageObserver;
-import com.pyamsoft.powermanager.app.observer.manage.WifiManageObserver;
-import com.pyamsoft.powermanager.app.observer.state.BluetoothStateObserver;
-import com.pyamsoft.powermanager.app.observer.state.DataStateObserver;
-import com.pyamsoft.powermanager.app.observer.state.SyncStateObserver;
-import com.pyamsoft.powermanager.app.observer.state.WifiStateObserver;
-import com.pyamsoft.powermanager.dagger.manager.DaggerManagerSettingsComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -82,36 +83,38 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     periodicFragment = ManagerPeriodicFragment.newInstance(type);
     this.type = type;
 
-    DaggerManagerSettingsComponent.builder()
+    final StateObserverComponent component = DaggerStateObserverComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+        .build();
 
     int icon;
     switch (type) {
       case TYPE_WIFI:
-        stateObserver = new WifiStateObserver(activity, this);
-        manageObserver = new WifiManageObserver(activity, this);
+        stateObserver = component.provideWifiStateObserver();
+        manageObserver = new WifiManageObserver(activity);
         icon = stateObserver.is() ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
         break;
       case TYPE_DATA:
-        stateObserver = new DataStateObserver(activity, this);
-        manageObserver = new DataManageObserver(activity, this);
+        stateObserver = component.provideDataStateObserver();
+        manageObserver = new DataManageObserver(activity);
         icon = stateObserver.is() ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
         break;
       case TYPE_BLUETOOTH:
-        stateObserver = new BluetoothStateObserver(activity, this);
-        manageObserver = new BluetoothManageObserver(activity, this);
+        stateObserver = component.provideBluetoothStateObserver();
+        manageObserver = new BluetoothManageObserver(activity);
         icon = stateObserver.is() ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
         break;
       case TYPE_SYNC:
-        stateObserver = new SyncStateObserver(this);
-        manageObserver = new SyncManageObserver(activity, this);
+        stateObserver = component.provideSyncStateObserver();
+        manageObserver = new SyncManageObserver(activity);
         icon = stateObserver.is() ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
         break;
       default:
         throw new IllegalStateException("Invalid type: " + type);
     }
+
+    stateObserver.setView(this);
+    manageObserver.setView(this);
 
     stateObserver.register();
     manageObserver.register();
