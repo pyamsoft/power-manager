@@ -17,10 +17,14 @@
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -28,14 +32,12 @@ import timber.log.Timber;
 public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "wifi_manager_job";
-  @NonNull private final WifiManager wifiManager;
-  @NonNull private final Context appContext;
+  @NonNull private final InterestObserver observer;
 
   @Inject ManagerInteractorWifi(@NonNull PowerManagerPreferences preferences,
-      @NonNull Context context, @NonNull WifiManager wifiManager) {
-    super(context.getApplicationContext(), preferences);
-    this.appContext = context.getApplicationContext();
-    this.wifiManager = wifiManager;
+      @NonNull Context context, @NonNull InterestObserver observer) {
+    super(context, preferences);
+    this.observer = observer;
     Timber.d("new ManagerInteractorWifi");
   }
 
@@ -48,7 +50,7 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(wifiManager.isWifiEnabled()));
+    return Observable.defer(() -> Observable.just(observer.is()));
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
@@ -78,13 +80,13 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new EnableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new EnableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new DisableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new DisableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   static final class EnableJob extends Job {
@@ -107,28 +109,36 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   static abstract class Job extends DeviceJob {
 
-    @NonNull private final WifiManager wifiManager;
+    @NonNull private final InterestModifier modifier;
+    @NonNull private final InterestObserver observer;
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
       super(context, params.addTags(ManagerInteractorWifi.TAG), jobType, periodic,
           periodicDisableTime, periodicEnableTime);
-      wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+      modifier = DaggerStateModifierComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideWifiStateModifier();
+      observer = DaggerStateObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideWifiStateObserver();
     }
 
     @Override protected void callEnable() {
       Timber.d("Enable wifi");
-      wifiManager.setWifiEnabled(true);
+      modifier.set();
     }
 
     @Override protected void callDisable() {
       Timber.d("Disable wifi");
-      wifiManager.setWifiEnabled(false);
+      modifier.unset();
     }
 
     @Override protected boolean isEnabled() {
       Timber.d("isWifiEnabled");
-      return wifiManager.isWifiEnabled();
+      return observer.is();
     }
 
     @Override protected DeviceJob periodicDisableJob() {

@@ -17,15 +17,15 @@
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import java.lang.reflect.Method;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -33,13 +33,12 @@ import timber.log.Timber;
 public final class ManagerInteractorData extends ManagerInteractorBase {
 
   @NonNull private static final String TAG = "data_manager_job";
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
-  @NonNull private final Context appContext;
+  @NonNull private final InterestObserver observer;
 
   @Inject ManagerInteractorData(@NonNull PowerManagerPreferences preferences,
-      @NonNull Context context) {
-    super(preferences);
-    this.appContext = context.getApplicationContext();
+      @NonNull Context context, @NonNull DataStateObserver observer) {
+    super(context, preferences);
+    this.observer = observer;
     Timber.d("new ManagerInteractorData");
   }
 
@@ -52,17 +51,7 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> {
-      boolean enabled;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        enabled =
-            Settings.Global.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-      } else {
-        enabled =
-            Settings.Secure.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
-      }
-      return Observable.just(enabled);
-    });
+    return Observable.defer(() -> Observable.just(observer.is()));
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
@@ -92,13 +81,13 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new EnableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new EnableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new DisableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new DisableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   static final class EnableJob extends Job {
@@ -121,120 +110,36 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
 
   static abstract class Job extends DeviceJob {
 
-    @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
-    @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
-    @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
-    @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
-
-    static {
-      SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
-      GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
-    }
-
-    @NonNull private final ConnectivityManager connectivityManager;
+    @NonNull private final InterestModifier modifier;
+    @NonNull private final InterestObserver observer;
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
       super(context, params.addTags(ManagerInteractorData.TAG), jobType, periodic,
           periodicDisableTime, periodicEnableTime);
-      connectivityManager =
-          (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-    }
-
-    @CheckResult @Nullable private static String resolveSetMethodName() {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        return SET_METHOD_NAME;
-      } else {
-        return null;
-      }
-    }
-
-    @CheckResult @Nullable private static String resolveGetMethodName() {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        return GET_METHOD_NAME;
-      } else {
-        return null;
-      }
-    }
-
-    @CheckResult @Nullable private static Method reflectGetMethod() {
-      final String getMethodName = resolveGetMethodName();
-      if (getMethodName != null) {
-        synchronized (Job.class) {
-          try {
-            final Method method = ConnectivityManager.class.getDeclaredMethod(getMethodName);
-            method.setAccessible(true);
-            return method;
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData reflectGetMethod ERROR");
-          }
-        }
-      }
-
-      Timber.e("Unable to resolve getMobileDataEnabled using reflection");
-      return null;
-    }
-
-    @CheckResult @Nullable private static Method reflectSetMethod() {
-      final String setMethodName = resolveSetMethodName();
-      if (setMethodName != null) {
-        synchronized (Job.class) {
-          try {
-            final Method method =
-                ConnectivityManager.class.getDeclaredMethod(setMethodName, Boolean.TYPE);
-            method.setAccessible(true);
-            return method;
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData reflectSetMethod ERROR");
-          }
-        }
-      }
-
-      Timber.e("Unable to resolve setMobileDataEnabled using reflection");
-      return null;
-    }
-
-    @CheckResult private static boolean isMobileDataEnabled(
-        final @NonNull ConnectivityManager connectivityManager) {
-      if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
-        synchronized (Job.class) {
-          try {
-            return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData isEnabled ERROR");
-          }
-        }
-      }
-      Timber.e("Unable to resolve isEnabled using reflection");
-      return false;
-    }
-
-    private static void setMobileDataEnabled(@NonNull ConnectivityManager connectivityManager,
-        boolean enabled) {
-      if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
-        synchronized (Job.class) {
-          try {
-            SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
-          } catch (final Exception e) {
-            Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
-          }
-        }
-      }
+      modifier = DaggerStateModifierComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideDataStateModifier();
+      observer = DaggerStateObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideDataStateObserver();
     }
 
     @Override protected void callEnable() {
       Timber.d("Enable data");
-      setMobileDataEnabled(connectivityManager, true);
+      modifier.set();
     }
 
     @Override protected void callDisable() {
       Timber.d("Disable data");
-      setMobileDataEnabled(connectivityManager, false);
+      modifier.unset();
     }
 
     @Override protected boolean isEnabled() {
       Timber.d("isDataEnabled");
-      return isMobileDataEnabled(connectivityManager);
+      return observer.is();
     }
 
     @Override protected DeviceJob periodicDisableJob() {

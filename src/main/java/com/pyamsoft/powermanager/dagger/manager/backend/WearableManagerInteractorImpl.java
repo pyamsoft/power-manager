@@ -33,21 +33,17 @@ import timber.log.Timber;
 abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
     implements WearableManagerInteractor {
 
-  @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final GoogleApiClient googleApiClient;
 
   WearableManagerInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(preferences);
-    this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
+    super(context, preferences);
     googleApiClient =
-        new GoogleApiClient.Builder(appContext).addApiIfAvailable(Wearable.API).build();
+        new GoogleApiClient.Builder(getAppContext()).addApiIfAvailable(Wearable.API).build();
   }
 
   @NonNull @Override public Observable<Boolean> isWearableManaged() {
-    return Observable.defer(() -> Observable.just(preferences.isWearableManaged()));
+    return Observable.defer(() -> Observable.just(getPreferences().isWearableManaged()));
   }
 
   @NonNull @CheckResult @Override public Observable<Boolean> isWearableConnected() {

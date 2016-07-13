@@ -16,11 +16,16 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -28,12 +33,12 @@ import timber.log.Timber;
 public final class ManagerInteractorSync extends ManagerInteractorBase {
 
   @NonNull private static final String TAG = "sync_manager_job";
-  @NonNull private final Context appContext;
+  @NonNull private final InterestObserver observer;
 
   @Inject ManagerInteractorSync(@NonNull PowerManagerPreferences preferences,
-      @NonNull Context context) {
-    super(preferences);
-    this.appContext = context.getApplicationContext();
+      @NonNull Context context, @NonNull SyncStateObserver observer) {
+    super(context, preferences);
+    this.observer = observer;
     Timber.d("new ManagerInteractorSync");
   }
 
@@ -46,7 +51,7 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(ContentResolver.getMasterSyncAutomatically()));
+    return Observable.defer(() -> Observable.just(observer.is()));
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
@@ -76,13 +81,13 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new EnableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new EnableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new DisableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new DisableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   static final class EnableJob extends Job {
@@ -105,25 +110,36 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
 
   static abstract class Job extends DeviceJob {
 
+    @NonNull private final InterestModifier modifier;
+    @NonNull private final InterestObserver observer;
+
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
       super(context, params.addTags(ManagerInteractorSync.TAG), jobType, periodic,
           periodicDisableTime, periodicEnableTime);
+      modifier = DaggerStateModifierComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideSyncStateModifier();
+      observer = DaggerStateObserverComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideSyncStateObserver();
     }
 
     @Override protected void callEnable() {
       Timber.d("Enable sync");
-      ContentResolver.setMasterSyncAutomatically(true);
+      modifier.set();
     }
 
     @Override protected void callDisable() {
       Timber.d("Disable sync");
-      ContentResolver.setMasterSyncAutomatically(false);
+      modifier.unset();
     }
 
     @Override protected boolean isEnabled() {
       Timber.d("isSyncEnabled");
-      return ContentResolver.getMasterSyncAutomatically();
+      return observer.is();
     }
 
     @Override protected DeviceJob periodicDisableJob() {

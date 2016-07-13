@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
@@ -26,6 +25,9 @@ import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
+import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -34,14 +36,15 @@ import rx.Scheduler;
 @Module public class ManagerModule {
 
   @ActivityScope @Provides ManagerInteractorWifi provideManagerInteractorWifi(
-      @NonNull WifiManager wifiManager, @NonNull PowerManagerPreferences preferences,
+      @NonNull WifiStateObserver observer, @NonNull PowerManagerPreferences preferences,
       @NonNull Context context) {
-    return new ManagerInteractorWifi(preferences, context, wifiManager);
+    return new ManagerInteractorWifi(preferences, context, observer);
   }
 
   @ActivityScope @Provides ManagerInteractorData provideManagerInteractorData(
-      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
-    return new ManagerInteractorData(preferences, context);
+      @NonNull DataStateObserver observer, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context) {
+    return new ManagerInteractorData(preferences, context, observer);
   }
 
   @ActivityScope @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
@@ -51,8 +54,9 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ManagerInteractorSync provideManagerInteractorSync(
-      @NonNull PowerManagerPreferences preferences, @NonNull Context context) {
-    return new ManagerInteractorSync(preferences, context);
+      @NonNull SyncStateObserver observer, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context) {
+    return new ManagerInteractorSync(preferences, context, observer);
   }
 
   @ActivityScope @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,

@@ -17,23 +17,30 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import javax.inject.Inject;
 
-public class BluetoothStateModifier extends StateModifier {
+public class WifiStateModifier extends StateModifier {
 
-  @NonNull private final BluetoothAdapterWrapper wrapper;
+  @Nullable private final WifiManager wifiManager;
 
-  @Inject BluetoothStateModifier(@NonNull Context context) {
+  @Inject WifiStateModifier(@NonNull Context context) {
     super(context);
-    wrapper = new BluetoothAdapterWrapper(context);
+    wifiManager =
+        (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
   @Override public void set() {
-    wrapper.enable();
+    if (wifiManager != null) {
+      wifiManager.setWifiEnabled(true);
+    }
   }
 
   @Override public void unset() {
-    wrapper.disable();
+    if (wifiManager != null) {
+      wifiManager.setWifiEnabled(false);
+    }
   }
 }

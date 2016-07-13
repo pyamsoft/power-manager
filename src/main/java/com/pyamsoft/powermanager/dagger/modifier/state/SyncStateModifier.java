@@ -16,24 +16,22 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
-public class BluetoothStateModifier extends StateModifier {
+public class SyncStateModifier extends StateModifier {
 
-  @NonNull private final BluetoothAdapterWrapper wrapper;
-
-  @Inject BluetoothStateModifier(@NonNull Context context) {
+  @Inject SyncStateModifier(@NonNull Context context) {
     super(context);
-    wrapper = new BluetoothAdapterWrapper(context);
   }
 
   @Override public void set() {
-    wrapper.enable();
+    ContentResolver.setMasterSyncAutomatically(true);
   }
 
   @Override public void unset() {
-    wrapper.disable();
+    ContentResolver.setMasterSyncAutomatically(false);
   }
 }

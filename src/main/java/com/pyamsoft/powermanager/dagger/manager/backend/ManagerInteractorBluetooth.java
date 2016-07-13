@@ -21,8 +21,9 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
+import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import javax.inject.Inject;
@@ -32,13 +33,11 @@ import timber.log.Timber;
 public final class ManagerInteractorBluetooth extends WearableManagerInteractorImpl {
 
   @NonNull private static final String TAG = "bluetooth_manager_job";
-  @NonNull private final BluetoothStateObserver observer;
-  @NonNull private final Context appContext;
+  @NonNull private final InterestObserver observer;
 
   @Inject ManagerInteractorBluetooth(@NonNull PowerManagerPreferences preferences,
       @NonNull Context context, @NonNull BluetoothStateObserver observer) {
-    super(context.getApplicationContext(), preferences);
-    this.appContext = context.getApplicationContext();
+    super(context, preferences);
     this.observer = observer;
     Timber.d("new ManagerInteractorBluetooth");
   }
@@ -84,13 +83,13 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new EnableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new EnableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new DisableJob(appContext, delayTime, periodic, disable, enable));
+        (disable, enable) -> new DisableJob(getAppContext(), delayTime, periodic, disable, enable));
   }
 
   static final class EnableJob extends Job {
@@ -113,14 +112,17 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
 
   static abstract class Job extends DeviceJob {
 
-    @NonNull private final BluetoothStateModifier modifier;
+    @NonNull private final InterestModifier modifier;
     @NonNull private final InterestObserver observer;
 
     protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
         long periodicDisableTime, long periodicEnableTime) {
       super(context, params.addTags(ManagerInteractorBluetooth.TAG), jobType, periodic,
           periodicDisableTime, periodicEnableTime);
-      modifier = new BluetoothStateModifier(getContext());
+      modifier = DaggerStateModifierComponent.builder()
+          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+          .build()
+          .provideBluetoothStateModifier();
       observer = DaggerStateObserverComponent.builder()
           .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
           .build()
