@@ -54,6 +54,11 @@
       android:supportsRtl="false"
       android:theme="@style/Theme.PowerManager.Light">
 
+    <!-- Remove the Google API activity -->
+    <activity
+        android:name="com.google.android.gms.common.api.GoogleApiActivity"
+        tools:node="remove"/>
+
     <!-- Main Activity -->
     <activity
         android:name=".app.main.MainActivity"
