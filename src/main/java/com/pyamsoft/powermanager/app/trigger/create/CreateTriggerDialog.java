@@ -32,21 +32,20 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
+  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
   @BindView(R.id.new_trigger_pager) ViewPager viewPager;
   private CreateTriggerPagerAdapter adapter;
   private Unbinder unbinder;
-  private AsyncVectorDrawableTask backButtonTask;
-  private AsyncVectorDrawableTask closeButtonTask;
-  private AsyncVectorDrawableTask continueButtonTask;
   private ViewPager.OnPageChangeListener pageChangeListener;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,9 +66,7 @@ public class CreateTriggerDialog extends DialogFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    cancelTask(backButtonTask);
-    cancelTask(closeButtonTask);
-    cancelTask(continueButtonTask);
+    taskMap.clear();
 
     viewPager.removeOnPageChangeListener(pageChangeListener);
     unbinder.unbind();
@@ -80,15 +77,6 @@ public class CreateTriggerDialog extends DialogFragment {
     setupToolbarButtons();
     setupContinueButton();
     setupViewPager(savedInstanceState);
-  }
-
-  private void cancelTask(@Nullable AsyncVectorDrawableTask task) {
-    if (task != null) {
-      if (!task.isCancelled()) {
-        Timber.d("Cancel running AsyncTask");
-        task.cancel(true);
-      }
-    }
   }
 
   private void setupViewPager(@Nullable Bundle bundle) {
@@ -140,8 +128,6 @@ public class CreateTriggerDialog extends DialogFragment {
   }
 
   private void setupContinueButton() {
-    continueButtonTask = new AsyncVectorDrawableTask(continueButton);
-
     continueButton.setOnClickListener(view -> {
       final int currentItem = viewPager.getCurrentItem();
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
@@ -154,13 +140,12 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
+    final AsyncVectorDrawableTask continueButtonTask = new AsyncVectorDrawableTask(continueButton);
     continueButtonTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_arrow_forward_24dp));
+    taskMap.put("continue", continueButtonTask);
   }
 
   private void setupToolbarButtons() {
-    backButtonTask = new AsyncVectorDrawableTask(backButton);
-    closeButtonTask = new AsyncVectorDrawableTask(closeButton);
-
     backButton.setOnClickListener(view -> {
       Timber.d("Go back one item");
       viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
@@ -171,10 +156,15 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
+    final AsyncVectorDrawableTask backButtonTask = new AsyncVectorDrawableTask(backButton);
     backButtonTask.execute(
         new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_arrow_back_24dp));
+    taskMap.put("back", backButtonTask);
+
+    final AsyncVectorDrawableTask closeButtonTask = new AsyncVectorDrawableTask(closeButton);
     closeButtonTask.execute(
         new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_close_24dp));
+    taskMap.put("close", closeButtonTask);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.main;
 
 import android.animation.LayoutTransition;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -48,6 +47,7 @@ import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -58,6 +58,7 @@ import timber.log.Timber;
 public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
+  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
   @BindView(R.id.main_tablayout) TabLayout tabLayout;
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
@@ -66,7 +67,6 @@ public class MainActivity extends DonationActivityBase
   @Inject MainPresenter presenter;
   private Unbinder unbinder;
   private DataHolderFragment<String> adapterDataHolderFragment;
-  private AsyncVectorDrawableTask fabColorTask;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -236,7 +236,7 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onDestroy() {
     super.onDestroy();
 
-    cancelTask(fabColorTask);
+    taskMap.clear();
     presenter.unbindView();
     unbinder.unbind();
   }
@@ -384,19 +384,11 @@ public class MainActivity extends DonationActivityBase
     AppUtil.guaranteeSingleDialogFragment(this, new ErrorDialog(), "error");
   }
 
-  private void cancelTask(@Nullable AsyncTask task) {
-    if (task != null) {
-      if (!task.isCancelled()) {
-        Timber.d("Cancel task");
-        task.cancel(true);
-      }
-    }
-  }
-
   @Override public void loadFabColoring(@DrawableRes int icon, @NonNull Runnable runnable) {
-    cancelTask(fabColorTask);
-    fabColorTask = new AsyncVectorDrawableTask(fab, android.R.color.white);
+    final AsyncVectorDrawableTask fabColorTask =
+        new AsyncVectorDrawableTask(fab, android.R.color.white);
     fabColorTask.execute(new AsyncDrawable(getApplicationContext(), icon));
+    taskMap.put("fab", fabColorTask);
     fab.setOnClickListener(view -> runnable.run());
   }
 }

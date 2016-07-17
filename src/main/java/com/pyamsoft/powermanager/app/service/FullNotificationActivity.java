@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,10 +58,9 @@ import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 import com.pyamsoft.pydroid.util.AppUtil;
-import java.util.HashMap;
-import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -118,7 +116,7 @@ public class FullNotificationActivity extends AppCompatActivity
       SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
       BluetoothManageObserver.View, SyncManageObserver.View {
 
-    @NonNull private final Map<String, AsyncTask> taskMap = new HashMap<>();
+    @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
     @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
@@ -213,44 +211,14 @@ public class FullNotificationActivity extends AppCompatActivity
       bluetoothManageObserver.unregister();
       syncManageObserver.unregister();
 
-      cleanupTasks();
-
-      unbinder.unbind();
-    }
-
-    public void cleanupTasks() {
-      Timber.d("Clear all async tasks");
-      for (final AsyncTask task : taskMap.values()) {
-        cancelTask(task);
-      }
       taskMap.clear();
-    }
-
-    private void cancelTask(@Nullable AsyncTask task) {
-      if (task != null) {
-        if (!task.isCancelled()) {
-          Timber.d("Cancel task");
-          task.cancel(true);
-        }
-      }
+      unbinder.unbind();
     }
 
     private void destroy() {
       Timber.d("Destroy FullNotification");
       dismiss();
       FullNotificationPresenter.Bus.get().post(new FullNotificationPresenter.DismissEvent());
-    }
-
-    private void addNewAsyncTask(@NonNull String title, @NonNull AsyncTask task) {
-      if (taskMap.containsKey(title)) {
-        Timber.d("Remove old task from map, cancel if needed");
-        final AsyncTask oldTask = taskMap.get(title);
-        cancelTask(oldTask);
-        taskMap.remove(title);
-      }
-
-      Timber.d("Put new entry: %s %s", title, task);
-      taskMap.put(title, task);
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -269,13 +237,13 @@ public class FullNotificationActivity extends AppCompatActivity
 
       final AsyncVectorDrawableTask mainTask = new AsyncVectorDrawableTask(mainButton);
       mainTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_settings_24dp));
-      addNewAsyncTask("main", mainTask);
+      taskMap.put("main", mainTask);
 
       closeButton.setOnClickListener(view -> destroy());
 
       final AsyncVectorDrawableTask closeTask = new AsyncVectorDrawableTask(closeButton);
       closeTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_close_24dp));
-      addNewAsyncTask("close", closeTask);
+      taskMap.put("close", closeTask);
 
       wifiToggle.setOnClickListener(view -> {
         Timber.d("Wifi clicked");
@@ -344,7 +312,7 @@ public class FullNotificationActivity extends AppCompatActivity
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(wifiToggle, color);
       task.execute(new AsyncDrawable(getActivity(), icon));
-      addNewAsyncTask("wifi", task);
+      taskMap.put("wifi", task);
     }
 
     private void setDataToggleState(boolean enabled) {
@@ -352,7 +320,7 @@ public class FullNotificationActivity extends AppCompatActivity
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(dataToggle, color);
       task.execute(new AsyncDrawable(getActivity(), icon));
-      addNewAsyncTask("data", task);
+      taskMap.put("data", task);
     }
 
     private void setBluetoothToggleState(boolean enabled) {
@@ -360,7 +328,7 @@ public class FullNotificationActivity extends AppCompatActivity
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(bluetoothToggle, color);
       task.execute(new AsyncDrawable(getActivity(), icon));
-      addNewAsyncTask("bluetooth", task);
+      taskMap.put("bluetooth", task);
     }
 
     private void setSyncToggleState(boolean enabled) {
@@ -368,7 +336,7 @@ public class FullNotificationActivity extends AppCompatActivity
       int color = enabled ? R.color.lightblueA200 : android.R.color.black;
       final AsyncVectorDrawableTask task = new AsyncVectorDrawableTask(syncToggle, color);
       task.execute(new AsyncDrawable(getActivity(), icon));
-      addNewAsyncTask("sync", task);
+      taskMap.put("sync", task);
     }
 
     private void setWifiManageState(boolean state) {
