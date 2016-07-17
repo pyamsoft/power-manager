@@ -18,7 +18,14 @@
 
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.pyamsoft.powermanager">
+
+
+  <!-- Remove the INTERNET permission -->
+  <uses-permission
+      android:name="android.permission.INTERNET"
+      tools:node="remove"/>
 
   <!-- For Billing Service -->
   <uses-permission android:name="com.android.vending.BILLING"/>
@@ -76,9 +83,9 @@
     <activity
         android:name=".app.service.FullNotificationActivity"
         android:excludeFromRecents="true"
-        android:theme="@style/Theme.PowerManager.Light.FullNotification"
         android:launchMode="singleInstance"
-        android:noHistory="true"/>
+        android:noHistory="true"
+        android:theme="@style/Theme.PowerManager.Light.FullNotification"/>
 
     <!-- Job Scheduling -->
     <service

@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.config.Configuration;
+import com.birbit.android.jobqueue.network.NetworkUtil;
 import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.google.android.gms.common.ConnectionResult;
@@ -41,9 +42,9 @@ import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
 
-  @Nullable private volatile static PowerManager instance = null;
-  @Nullable private PowerManagerComponent powerManagerComponent;
-  @Nullable private JobManager jobManager;
+  private volatile static PowerManager instance = null;
+  private PowerManagerComponent powerManagerComponent;
+  private JobManager jobManager;
 
   @NonNull @CheckResult public synchronized static PowerManager getInstance() {
     if (instance == null) {
@@ -82,6 +83,9 @@ public final class PowerManager extends ApplicationBase {
       }
     }
 
+    // We do not use the internet, always return Disconnected
+    builder.networkUtil(context -> NetworkUtil.DISCONNECTED);
+
     Timber.d("Create a new JobManager");
     return new JobManager(builder.build());
   }
@@ -114,7 +118,9 @@ public final class PowerManager extends ApplicationBase {
     powerManagerComponent = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
         .build();
-    initializeJobManager();
+
+    jobManager = createJobManager(this);
+    Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
 
     // Set instance
     setInstance(this);
@@ -136,11 +142,6 @@ public final class PowerManager extends ApplicationBase {
 
   private void startForegroundService() {
     startService(new Intent(this, ForegroundService.class));
-  }
-
-  private void initializeJobManager() {
-    jobManager = createJobManager(this);
-    Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
   }
 
   @Override protected boolean buildConfigDebug() {
