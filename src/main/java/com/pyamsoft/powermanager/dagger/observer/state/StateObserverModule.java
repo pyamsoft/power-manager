@@ -41,8 +41,7 @@ import javax.inject.Named;
     return new BluetoothStateObserver(context);
   }
 
-  @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver(
-      @NonNull Context context) {
-    return new BluetoothStateObserver(context);
+  @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver() {
+    return new SyncStateObserver();
   }
 }

@@ -44,6 +44,6 @@ import javax.inject.Named;
 
   @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothManageObserver(context, preferences);
+    return new SyncManageObserver(context, preferences);
   }
 }
