@@ -27,6 +27,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -47,6 +48,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   @NonNull public static final String TAG = "power_triggers";
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
+  @BindView(R.id.power_trigger_empty) FrameLayout emptyView;
 
   @Inject TriggerListAdapterPresenter listAdapterPresenter;
   @Inject TriggerPresenter presenter;
@@ -63,7 +65,8 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
         .inject(this);
 
     adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
-    dividerDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+    dividerDecoration =
+        new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
   }
 
   @Nullable @Override
@@ -119,10 +122,12 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
     Timber.d("Load empty view");
     recyclerView.setVisibility(View.GONE);
     recyclerView.setAdapter(null);
+    emptyView.setVisibility(View.VISIBLE);
   }
 
   @Override public void loadListView() {
     Timber.d("Load list view");
+    emptyView.setVisibility(View.GONE);
     recyclerView.setAdapter(adapter);
     recyclerView.setVisibility(View.VISIBLE);
   }

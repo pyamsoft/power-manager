@@ -33,5 +33,21 @@
       android:paddingTop="0dp"
       />
 
+  <FrameLayout
+      android:id="@+id/power_trigger_empty"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:padding="8dp"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_power_triggers_msg"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        />
+
+  </FrameLayout>
 
 </LinearLayout>

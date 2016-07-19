@@ -23,5 +23,6 @@
   <string name="hint_create_trigger_percent">Trigger Percent:</string>
   <string name="create_trigger_name_explain">Enter the name of the new Power Trigger here. Names are a single line in length, but should be able to handle any character.</string>
   <string name="create_trigger_percent_explain">Enter the percent that the Power Trigger should activate on. Percents are a non zero, positive number, and may not always run exactly depending on your current settings.</string>
+  <string name="no_power_triggers_msg">No Power Triggers! Make one down below!</string>
 </resources>
 
