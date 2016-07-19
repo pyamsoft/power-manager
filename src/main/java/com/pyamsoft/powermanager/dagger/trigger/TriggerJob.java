@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
@@ -27,9 +26,9 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import rx.Observable;
-import rx.Scheduler;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -37,27 +36,20 @@ public class TriggerJob extends BaseJob {
 
   public static final int PRIORITY = 2;
   @NonNull public static final String TRIGGER_TAG = "trigger";
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler mainScheduler;
   @NonNull private Subscription runSubscription = Subscriptions.empty();
-  @NonNull private Subscription queueSubscription = Subscriptions.empty();
 
-  public TriggerJob(long delay, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler mainScheduler) {
+  public TriggerJob(long delay) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
-    this.subscribeScheduler = subscribeScheduler;
-    this.mainScheduler = mainScheduler;
   }
 
-  @CheckResult @NonNull public static Observable<Boolean> queue(@NonNull TriggerJob job) {
-    return Observable.defer(() -> {
-      Timber.d("Cancel trigger jobs");
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, TRIGGER_TAG);
+  public static void queue(@NonNull TriggerJob job) {
+    Timber.d("Cancel trigger jobs");
+    PowerManager.getInstance()
+        .getJobManager()
+        .cancelJobsInBackground(null, TagConstraint.ANY, TRIGGER_TAG);
 
-      Timber.d("Add new trigger job");
-      PowerManager.getInstance().getJobManager().addJob(job);
-      return Observable.just(true);
-    }).subscribeOn(job.subscribeScheduler).observeOn(job.mainScheduler);
+    Timber.d("Add new trigger job");
+    PowerManager.getInstance().getJobManager().addJobInBackground(job, null);
   }
 
   @Override public void onRun() throws Throwable {
@@ -91,22 +83,15 @@ public class TriggerJob extends BaseJob {
           Timber.d("Filter disabled triggers");
           return entry.enabled();
         })
-        .subscribeOn(subscribeScheduler)
-        .observeOn(mainScheduler)
+        // KLUDGE hardcoded schedulers
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(entry -> {
           Timber.d("Run trigger for entry name: %s", entry.name());
           Timber.d("Run trigger for entry percent: %d", entry.percent());
           Timber.d("Requeue the job");
 
-          // KLUDGE nested subs are ugly
-          unsubQueue();
-          queueSubscription =
-              queue(new TriggerJob(getDelayInMs(), subscribeScheduler, mainScheduler)).subscribe(
-                  aBoolean -> {
-                    Timber.d("New job queued");
-                  }, throwable -> {
-                    Timber.e(throwable, "onError");
-                  });
+          queue(new TriggerJob(getDelayInMs()));
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
@@ -119,14 +104,7 @@ public class TriggerJob extends BaseJob {
     }
   }
 
-  private void unsubQueue() {
-    if (!queueSubscription.isUnsubscribed()) {
-      queueSubscription.unsubscribe();
-    }
-  }
-
   @Override protected void onCancelHook() {
-    unsubQueue();
     unsubRun();
   }
 }
