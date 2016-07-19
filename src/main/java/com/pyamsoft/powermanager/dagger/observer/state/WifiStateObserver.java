@@ -70,7 +70,7 @@ public class WifiStateObserver extends StateContentObserver<WifiStateObserver.Vi
               == 1;
     }
 
-    Timber.d("Set %s", enabled);
+    Timber.d("Is %s", enabled);
     return enabled;
   }
 

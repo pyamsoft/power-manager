@@ -248,10 +248,10 @@ public class FullNotificationActivity extends AppCompatActivity
       wifiToggle.setOnClickListener(view -> {
         Timber.d("Wifi clicked");
         if (wifiStateObserver.is()) {
-          Timber.d("Disable data");
+          Timber.d("Disable wifi");
           wifiStateModifier.unset();
         } else {
-          Timber.d("Enable data");
+          Timber.d("Enable wifi");
           wifiStateModifier.set();
         }
       });
