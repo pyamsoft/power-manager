@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
@@ -27,18 +26,11 @@ import timber.log.Timber;
 
 abstract class ManagerInteractorBase implements ManagerInteractor {
 
-  @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
   private boolean originalState = false;
 
-  protected ManagerInteractorBase(@NonNull Context appContext,
-      @NonNull PowerManagerPreferences preferences) {
-    this.appContext = appContext.getApplicationContext();
+  protected ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
-  }
-
-  @NonNull @CheckResult final Context getAppContext() {
-    return appContext;
   }
 
   @NonNull @CheckResult final PowerManagerPreferences getPreferences() {

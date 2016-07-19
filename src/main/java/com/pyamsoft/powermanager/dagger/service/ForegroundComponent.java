@@ -21,7 +21,9 @@ import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import dagger.Component;
 
-@ActivityScope @Component(modules = ForegroundModule.class, dependencies = PowerManagerComponent.class) public interface ForegroundComponent {
+@ActivityScope
+@Component(modules = ForegroundModule.class, dependencies = PowerManagerComponent.class)
+public interface ForegroundComponent {
 
   void inject(ForegroundService service);
 }

@@ -22,10 +22,14 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.service.DaggerForegroundComponent;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import javax.inject.Inject;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
@@ -39,6 +43,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
+  @NonNull private Subscription queueSubscription = Subscriptions.empty();
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -57,12 +62,30 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
     presenter.bindView(this);
 
+    // KLUDGE time
+    queueSubscription = TriggerJob.queue(new TriggerJob(5 * 60 * 1000,
+        PowerManager.getInstance().getPowerManagerComponent().provideIoScheduler(),
+        PowerManager.getInstance().getPowerManagerComponent().provideMainScheduler()))
+        .subscribe(aBoolean -> {
+          Timber.d("Queue new triggerjob");
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        });
+
     Timber.d("onCreate");
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     Timber.d("onDestroy");
+
+    if (!queueSubscription.isUnsubscribed()) {
+      queueSubscription.unsubscribe();
+      Timber.d("Cancel all trigger jobs");
+      PowerManager.getInstance()
+          .getJobManager()
+          .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+    }
 
     screenOnOffReceiver.unregister(this);
     presenter.unbindView();

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
@@ -30,24 +29,18 @@ public abstract class DeviceJob extends BaseJob {
   static final int JOB_TYPE_DISABLE = 2;
   static final int PRIORITY = 1;
 
-  @NonNull private final Context appContext;
   private final int jobType;
   private final boolean periodic;
   private final long periodicDisableTime;
   private final long periodicEnableTime;
 
-  DeviceJob(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
-      long periodicDisableTime, long periodicEnableTime) {
+  DeviceJob(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
+      long periodicEnableTime) {
     super(params);
     this.periodicDisableTime = periodicDisableTime;
     this.periodicEnableTime = periodicEnableTime;
-    this.appContext = context.getApplicationContext();
     this.jobType = jobType;
     this.periodic = periodic;
-  }
-
-  @CheckResult @NonNull final Context getContext() {
-    return appContext;
   }
 
   @CheckResult final boolean isPeriodic() {

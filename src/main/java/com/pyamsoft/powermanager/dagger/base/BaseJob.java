@@ -57,6 +57,8 @@ public abstract class BaseJob extends Job {
     if (throwable != null) {
       Timber.e(throwable, "JOB CANCELLED");
     }
+
+    onCancelHook();
   }
 
   @Override
@@ -64,5 +66,9 @@ public abstract class BaseJob extends Job {
       int maxRunCount) {
     Timber.w("Cancel job on retry attempt");
     return RetryConstraint.CANCEL;
+  }
+
+  protected void onCancelHook() {
+
   }
 }

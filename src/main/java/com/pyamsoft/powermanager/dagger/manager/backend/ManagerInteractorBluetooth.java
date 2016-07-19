@@ -83,29 +83,29 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
   @NonNull @Override
   public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new EnableJob(getAppContext(), delayTime, periodic, disable, enable));
+        (disable, enable) -> new EnableJob(delayTime, periodic, disable, enable));
   }
 
   @NonNull @Override
   public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
-        (disable, enable) -> new DisableJob(getAppContext(), delayTime, periodic, disable, enable));
+        (disable, enable) -> new DisableJob(delayTime, periodic, disable, enable));
   }
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(@NonNull Context context, long delayTime, boolean periodic,
-        long periodicDisableTime, long periodicEnableTime) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, periodic,
+    protected EnableJob(long delayTime, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
+      super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
   }
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(@NonNull Context context, long delayTime, boolean periodic,
-        long periodicDisableTime, long periodicEnableTime) {
-      super(context, new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
+    protected DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
+      super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
   }
@@ -115,10 +115,10 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
     @NonNull private final InterestModifier modifier;
     @NonNull private final InterestObserver observer;
 
-    protected Job(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
-        long periodicDisableTime, long periodicEnableTime) {
-      super(context, params.addTags(ManagerInteractorBluetooth.TAG), jobType, periodic,
-          periodicDisableTime, periodicEnableTime);
+    protected Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
+      super(params.addTags(ManagerInteractorBluetooth.TAG), jobType, periodic, periodicDisableTime,
+          periodicEnableTime);
       modifier = DaggerStateModifierComponent.builder()
           .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
           .build()
@@ -146,14 +146,14 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
 
     @Override protected DeviceJob periodicDisableJob() {
       Timber.d("Periodic bluetooth disable job");
-      return new DisableJob(getContext(), getPeriodicDisableTime() * 1000, true,
-          getPeriodicDisableTime(), getPeriodicEnableTime());
+      return new DisableJob(getPeriodicDisableTime() * 1000, true, getPeriodicDisableTime(),
+          getPeriodicEnableTime());
     }
 
     @Override protected DeviceJob periodicEnableJob() {
       Timber.d("Periodic bluetooth enable job");
-      return new EnableJob(getContext(), getPeriodicEnableTime() * 1000, true,
-          getPeriodicDisableTime(), getPeriodicEnableTime());
+      return new EnableJob(getPeriodicEnableTime() * 1000, true, getPeriodicDisableTime(),
+          getPeriodicEnableTime());
     }
   }
 }

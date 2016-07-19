@@ -37,9 +37,10 @@ abstract class WearableManagerInteractorImpl extends ManagerInteractorBase
 
   WearableManagerInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences);
+    super(preferences);
     googleApiClient =
-        new GoogleApiClient.Builder(getAppContext()).addApiIfAvailable(Wearable.API).build();
+        new GoogleApiClient.Builder(context.getApplicationContext()).addApiIfAvailable(Wearable.API)
+            .build();
   }
 
   @NonNull @Override public Observable<Boolean> isWearableManaged() {
