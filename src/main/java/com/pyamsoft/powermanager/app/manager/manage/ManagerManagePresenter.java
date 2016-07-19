@@ -24,6 +24,7 @@ import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 public final class ManagerManagePresenter extends ManagerSettingsPresenter<ManagerManageView> {
 
@@ -37,8 +38,8 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull ManagerManageView view) {
+    super.onUnbind(view);
     unsubManaged();
     unsubCustomDelay();
   }
@@ -68,6 +69,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
           }
         }, throwable -> {
           // TODO
+          Timber.e(throwable, "onError");
         });
   }
 
@@ -80,6 +82,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
           updateCustomDelayTimeView(customTime && isManaged);
         }, throwable -> {
           // TODO
+          Timber.e(throwable, "onError");
         });
   }
 

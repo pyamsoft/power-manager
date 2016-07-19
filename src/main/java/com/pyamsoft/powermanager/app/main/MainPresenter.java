@@ -37,14 +37,24 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
     super(mainScheduler, ioScheduler);
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override protected void onResume(@NonNull MainView view) {
+    super.onResume(view);
     registerToOverviewBus();
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override protected void onPause(@NonNull MainView view) {
+    super.onPause(view);
     unregisterFromOverviewBus();
+  }
+
+  @Override protected void onStart(@NonNull MainView view) {
+    super.onStart(view);
+    registerToFabColorBus();
+  }
+
+  @Override protected void onStop(@NonNull MainView view) {
+    super.onStop(view);
+    unregisterFromFabColorBus();
   }
 
   void registerToOverviewBus() {
@@ -63,7 +73,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         });
   }
 
-  public void registerToFabColorBus() {
+  void registerToFabColorBus() {
     unregisterFromFabColorBus();
     fabColorBusSubscription = FabColorBus.get()
         .register()
@@ -85,7 +95,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
     }
   }
 
-  public void unregisterFromFabColorBus() {
+  void unregisterFromFabColorBus() {
     if (!fabColorBusSubscription.isUnsubscribed()) {
       fabColorBusSubscription.unsubscribe();
     }

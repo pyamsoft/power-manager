@@ -44,18 +44,18 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     this.mainScheduler = mainScheduler;
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override protected void onResume(@NonNull MainSettingsView view) {
+    super.onResume(view);
     registerOnConfirmEventBus();
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override protected void onPause(@NonNull MainSettingsView view) {
+    super.onPause(view);
     unregisterFromConfirmEventBus();
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull MainSettingsView view) {
+    super.onUnbind(view);
     unsubscribeConfirm();
   }
 

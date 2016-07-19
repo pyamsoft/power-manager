@@ -42,21 +42,21 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull TriggerView view) {
+    super.onUnbind(view);
     unsubViewSubscription();
     unsubDeleteSubscription();
     unsubCreateSubscription();
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override protected void onResume(@NonNull TriggerView view) {
+    super.onResume(view);
     registerOnDeleteTriggerBus();
     registerOnCreateTriggerBus();
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override protected void onPause(@NonNull TriggerView view) {
+    super.onPause(view);
     unregisterFromDeleteTriggerBus();
     unregisterFromCreateTriggerBus();
   }

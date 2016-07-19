@@ -36,8 +36,8 @@ final class ManagerDelayPresenter extends ManagerTimePresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull TimeView view) {
+    super.onUnbind(view);
     unsubDelay();
   }
 
@@ -48,6 +48,7 @@ final class ManagerDelayPresenter extends ManagerTimePresenter {
   }
 
   @Override public void setTimeFromPreference(@NonNull String key) {
+    unsubDelay();
     delaySubscription = interactor.getDelayTime(key)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

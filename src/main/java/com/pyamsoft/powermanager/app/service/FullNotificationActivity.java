@@ -88,15 +88,15 @@ public class FullNotificationActivity extends AppCompatActivity
   @Override protected void onResume() {
     super.onResume();
 
-    Timber.d("onResume");
-    presenter.onResume();
+    Timber.d("resume");
+    presenter.resume();
   }
 
   @Override protected void onPause() {
     super.onPause();
 
-    Timber.d("onPause");
-    presenter.onPause();
+    Timber.d("pause");
+    presenter.pause();
   }
 
   @Override protected void onPostResume() {

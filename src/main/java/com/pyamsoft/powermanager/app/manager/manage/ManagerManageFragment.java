@@ -103,6 +103,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
 
     presenter.setCustomDelayTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
+    presenter.setManagedFromPreference(getString(manageKeyResId));
   }
 
   @Override public void onDestroyView() {
@@ -188,11 +189,11 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
 
   @Override public void onResume() {
     super.onResume();
-    presenter.onResume();
+    presenter.resume();
   }
 
   @Override public void onPause() {
     super.onPause();
-    presenter.onPause();
+    presenter.pause();
   }
 }

@@ -51,12 +51,12 @@ public class MainPresenterTest {
 
     // Register onto the bus
     presenter.bindView(mockMainView);
-    presenter.onResume();
+    presenter.resume();
 
     // Post the event
     OverviewSelectionBus.get().post(new OverviewSelectionBus.OverviewSelectionEvent(type));
 
-    presenter.onPause();
+    presenter.pause();
     presenter.unbindView();
   }
 
@@ -73,9 +73,9 @@ public class MainPresenterTest {
 
     // Register onto the bus
     presenter.bindView(mockMainView);
-    presenter.onResume();
+    presenter.resume();
 
-    presenter.onPause();
+    presenter.pause();
     presenter.unbindView();
   }
 
@@ -89,9 +89,9 @@ public class MainPresenterTest {
 
     // Register onto the bus
     presenter.bindView(mockMainView);
-    presenter.onResume();
+    presenter.resume();
 
-    presenter.onPause();
+    presenter.pause();
     presenter.unbindView();
 
     // Post the event to nothing

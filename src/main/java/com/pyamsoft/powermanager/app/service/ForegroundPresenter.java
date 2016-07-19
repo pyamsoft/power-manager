@@ -41,8 +41,8 @@ public final class ForegroundPresenter
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull ForegroundProvider view) {
+    super.onUnbind(view);
     unsubNotification();
   }
 

@@ -243,12 +243,12 @@ public class MainActivity extends DonationActivityBase
 
   @Override protected void onResume() {
     super.onResume();
-    presenter.onResume();
+    presenter.resume();
   }
 
   @Override protected void onPause() {
     super.onPause();
-    presenter.onPause();
+    presenter.pause();
   }
 
   @Override protected void onPostResume() {
@@ -258,12 +258,12 @@ public class MainActivity extends DonationActivityBase
 
   @Override protected void onStart() {
     super.onStart();
-    presenter.registerToFabColorBus();
+    presenter.start();
   }
 
   @Override protected void onStop() {
     super.onStop();
-    presenter.unregisterFromFabColorBus();
+    presenter.stop();
   }
 
   @Override public void onBackPressed() {

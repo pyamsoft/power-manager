@@ -264,13 +264,13 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
 
   @Override public void onResume() {
     super.onResume();
-    presenter.onResume();
+    presenter.resume();
     presenter.registerSharedPreferenceChangeListener(listener, getString(manageKeyResId));
   }
 
   @Override public void onPause() {
     super.onPause();
-    presenter.onPause();
+    presenter.pause();
     presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 }

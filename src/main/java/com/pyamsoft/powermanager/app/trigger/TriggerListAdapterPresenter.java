@@ -41,8 +41,8 @@ public class TriggerListAdapterPresenter
     this.interactor = adapterInteractor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull TriggerListAdapterView view) {
+    super.onUnbind(view);
     unsubUpdateSubscription();
   }
 

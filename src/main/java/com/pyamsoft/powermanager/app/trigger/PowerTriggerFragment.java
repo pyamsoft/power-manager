@@ -88,12 +88,12 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   @Override public void onResume() {
     super.onResume();
-    presenter.onResume();
+    presenter.resume();
   }
 
   @Override public void onPause() {
     super.onPause();
-    presenter.onPause();
+    presenter.pause();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

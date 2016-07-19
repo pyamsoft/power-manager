@@ -118,12 +118,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat
 
   @Override public void onResume() {
     super.onResume();
-    presenter.onResume();
+    presenter.resume();
   }
 
   @Override public void onPause() {
     super.onPause();
-    presenter.onPause();
+    presenter.pause();
   }
 
   @Override public void showConfirmDialog(int type) {

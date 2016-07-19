@@ -38,8 +38,8 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onUnbind(@NonNull ManagerPeriodicView view) {
+    super.onUnbind(view);
     unsubManaged();
     unsubCustomDisable();
     unsubCustomEnable();

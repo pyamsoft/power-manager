@@ -37,13 +37,13 @@ public class FullNotificationPresenter
     super(observeScheduler, subscribeScheduler);
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override protected void onResume(@NonNull FullNotificationView view) {
+    super.onResume(view);
     registerOnDismissBus();
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override protected void onPause(@NonNull FullNotificationView view) {
+    super.onPause(view);
     unregisterFromDismissBus();
   }
 
