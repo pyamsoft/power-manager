@@ -19,16 +19,12 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
 import com.pyamsoft.powermanager.PowerManager;
-import java.util.Arrays;
-import java.util.Set;
+import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import timber.log.Timber;
 
-public abstract class DeviceJob extends Job {
+public abstract class DeviceJob extends BaseJob {
 
   static final int JOB_TYPE_ENABLE = 1;
   static final int JOB_TYPE_DISABLE = 2;
@@ -42,7 +38,7 @@ public abstract class DeviceJob extends Job {
 
   DeviceJob(@NonNull Context context, @NonNull Params params, int jobType, boolean periodic,
       long periodicDisableTime, long periodicEnableTime) {
-    super(params.setRequiresNetwork(false));
+    super(params);
     this.periodicDisableTime = periodicDisableTime;
     this.periodicEnableTime = periodicEnableTime;
     this.appContext = context.getApplicationContext();
@@ -80,34 +76,6 @@ public abstract class DeviceJob extends Job {
       default:
         Timber.e("No job specified: %d", jobType);
     }
-  }
-
-  @Override public void onAdded() {
-    final Set<String> tags = getTags();
-    String tagString;
-    if (tags == null) {
-      tagString = "NO TAGS";
-    } else {
-      tagString = Arrays.toString(tags.toArray());
-    }
-    Timber.d("Job is Added: %s %s will run in %d ms", getId(), tagString, getDelayInMs());
-  }
-
-  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-    final Set<String> tags = getTags();
-    if (tags != null) {
-      Timber.w("Job is cancelled %s %s", getId(), Arrays.toString(tags.toArray()));
-    }
-    if (throwable != null) {
-      Timber.e(throwable, "JOB CANCELLED");
-    }
-  }
-
-  @Override
-  protected RetryConstraint shouldReRunOnThrowable(@NonNull Throwable throwable, int runCount,
-      int maxRunCount) {
-    Timber.w("Cancel job on retry attempt");
-    return RetryConstraint.CANCEL;
   }
 
   final void enable() {
