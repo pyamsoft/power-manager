@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import dagger.Component;
 import javax.inject.Named;
 
@@ -29,6 +30,8 @@ import javax.inject.Named;
 }, dependencies = PowerManagerComponent.class) public interface StateModifierComponent {
 
   void inject(FullNotificationActivity.FullDialog activity);
+
+  void inject(TriggerJob job);
 
   @Named("wifi") InterestModifier provideWifiStateModifier();
 
