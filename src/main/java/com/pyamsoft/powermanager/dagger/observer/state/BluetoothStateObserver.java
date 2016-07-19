@@ -70,7 +70,7 @@ public class BluetoothStateObserver extends StateContentObserver<BluetoothStateO
               0) == 1;
     }
 
-    Timber.d("Set %s", enabled);
+    Timber.d("Is %s", enabled);
     return enabled;
   }
 
