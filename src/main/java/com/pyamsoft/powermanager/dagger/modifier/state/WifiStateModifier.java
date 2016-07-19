@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class WifiStateModifier extends StateModifier {
 
@@ -34,12 +35,14 @@ public class WifiStateModifier extends StateModifier {
 
   @Override void mainThreadSet() {
     if (wifiManager != null) {
+      Timber.d("setWifiEnabled: true");
       wifiManager.setWifiEnabled(true);
     }
   }
 
   @Override void mainThreadUnset() {
     if (wifiManager != null) {
+      Timber.d("setWifiEnabled: false");
       wifiManager.setWifiEnabled(false);
     }
   }

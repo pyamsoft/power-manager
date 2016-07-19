@@ -76,6 +76,7 @@ public class DataStateModifier extends StateModifier {
     if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
       synchronized (Job.class) {
         try {
+          Timber.d("setMobileDataEnabled: %s", enabled);
           SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
         } catch (final Exception e) {
           Timber.e(e, "ManagerData setMobileDataEnabled ERROR");

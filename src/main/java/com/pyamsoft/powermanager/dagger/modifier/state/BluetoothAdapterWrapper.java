@@ -23,6 +23,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import timber.log.Timber;
 
 public final class BluetoothAdapterWrapper {
 
@@ -46,12 +47,14 @@ public final class BluetoothAdapterWrapper {
 
   public final void enable() {
     if (adapter != null) {
+      Timber.d("Bluetooth: enable");
       adapter.enable();
     }
   }
 
   public final void disable() {
     if (adapter != null) {
+      Timber.d("Bluetooth: disable");
       adapter.disable();
     }
   }
