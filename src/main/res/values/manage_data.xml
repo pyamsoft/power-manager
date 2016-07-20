@@ -52,8 +52,8 @@
 
   <string name="data_time_default">30</string>
   <string name="data_time_key">data_time</string>
-  <string name="data_time_title">Data Time</string>
-  <string name="data_time_summary">Data Time</string>
+  <string name="data_time_title">Data Off Delay</string>
+  <string name="data_time_summary">Amount of time to wait after screen turns off before turning off Data</string>
 
   <bool name="periodic_data_default">true</bool>
   <string name="periodic_data_key">data_periodic</string>

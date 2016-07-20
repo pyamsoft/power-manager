@@ -52,8 +52,8 @@
 
   <string name="sync_time_default">30</string>
   <string name="sync_time_key">sync_time</string>
-  <string name="sync_time_title">Sync Time</string>
-  <string name="sync_time_summary">Sync Time</string>
+  <string name="sync_time_title">Sync Off Delay</string>
+  <string name="sync_time_summary">Amount of time to wait after screen turns off before turning off Sync</string>
 
   <bool name="periodic_sync_default">true</bool>
   <string name="periodic_sync_key">sync_periodic</string>

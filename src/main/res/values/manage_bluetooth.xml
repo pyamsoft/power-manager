@@ -52,8 +52,8 @@
 
   <string name="bluetooth_time_default">30</string>
   <string name="bluetooth_time_key">bluetooth_time</string>
-  <string name="bluetooth_time_title">Bluetooth Time</string>
-  <string name="bluetooth_time_summary">Bluetooth Time</string>
+  <string name="bluetooth_time_title">Bluetooth Off Delay</string>
+  <string name="bluetooth_time_summary">Amount of time to wait after screen turns off before turning off Bluetooth</string>
 
   <bool name="periodic_bluetooth_default">true</bool>
   <string name="periodic_bluetooth_key">bluetooth_periodic</string>

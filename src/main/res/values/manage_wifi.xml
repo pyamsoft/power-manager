@@ -52,8 +52,8 @@
 
   <string name="wifi_time_default">30</string>
   <string name="wifi_time_key">wifi_time</string>
-  <string name="wifi_time_title">Wifi Time</string>
-  <string name="wifi_time_summary">Wifi Time</string>
+  <string name="wifi_time_title">Wifi Off Delay</string>
+  <string name="wifi_time_summary">Amount of time to wait after screen turns off before turning off Wifi</string>
 
   <bool name="periodic_wifi_default">true</bool>
   <string name="periodic_wifi_key">wifi_periodic</string>
