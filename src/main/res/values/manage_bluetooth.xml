@@ -93,6 +93,7 @@
   <bool name="ignore_charging_bluetooth_default">false</bool>
   <string name="ignore_charging_bluetooth_key">ignore_charging_bluetooth</string>
   <string name="ignore_charging_bluetooth_title">Ignore When Charging</string>
-  <string name="ignore_charging_bluetooth_summary">Ignore Bluetooth when Device is Charging</string>
+  <string name="ignore_charging_bluetooth_summary_checked">Ignore Bluetooth while device is charging</string>
+  <string name="ignore_charging_bluetooth_summary_unchecked">Manage Bluetooth even while device is charging</string>
 
 </resources>

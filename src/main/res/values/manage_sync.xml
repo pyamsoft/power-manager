@@ -93,6 +93,7 @@
   <bool name="ignore_charging_sync_default">false</bool>
   <string name="ignore_charging_sync_key">ignore_charging_sync</string>
   <string name="ignore_charging_sync_title">Ignore When Charging</string>
-  <string name="ignore_charging_sync_summary">Ignore Sync when Device is Charging</string>
+  <string name="ignore_charging_sync_summary_checked">Ignore Sync while device is charging</string>
+  <string name="ignore_charging_sync_summary_unchecked">Manage Sync even while device is charging</string>
 
 </resources>

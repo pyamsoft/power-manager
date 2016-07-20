@@ -93,6 +93,7 @@
   <bool name="ignore_charging_wifi_default">false</bool>
   <string name="ignore_charging_wifi_key">ignore_charging_wifi</string>
   <string name="ignore_charging_wifi_title">Ignore When Charging</string>
-  <string name="ignore_charging_wifi_summary">Ignore Wifi when Device is Charging</string>
+  <string name="ignore_charging_wifi_summary_checked">Ignore Wifi while device is charging</string>
+  <string name="ignore_charging_wifi_summary_unchecked">Manage Wifi even while device is charging</string>
 
 </resources>

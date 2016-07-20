@@ -93,6 +93,7 @@
   <bool name="ignore_charging_data_default">false</bool>
   <string name="ignore_charging_data_key">ignore_charging_data</string>
   <string name="ignore_charging_data_title">Ignore When Charging</string>
-  <string name="ignore_charging_data_summary">Ignore Data when Device is Charging</string>
+  <string name="ignore_charging_data_summary_checked">Ignore Data even while the device is charging</string>
+  <string name="ignore_charging_data_summary_unchecked">Manage Data while device is charging</string>
 
 </resources>

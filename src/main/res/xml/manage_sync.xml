@@ -33,7 +33,8 @@
     <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_sync_default"
         android:key="@string/ignore_charging_sync_key"
-        android:summary="@string/ignore_charging_sync_summary"
+        android:summaryOn="@string/ignore_charging_sync_summary_checked"
+        android:summaryOff="@string/ignore_charging_sync_summary_unchecked"
         android:title="@string/ignore_charging_sync_title"
         android:dependency="@string/manage_sync_key"
         />
