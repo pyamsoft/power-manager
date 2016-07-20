@@ -25,6 +25,7 @@ import timber.log.Timber;
 
 public abstract class DeviceJob extends BaseJob {
 
+  public static final long MINIMUM_ALLOWED_PERIOD = 60L;
   static final int JOB_TYPE_ENABLE = 1;
   static final int JOB_TYPE_DISABLE = 2;
   static final int PRIORITY = 1;
@@ -77,7 +78,7 @@ public abstract class DeviceJob extends BaseJob {
       callEnable();
       if (isPeriodic()) {
         Timber.d("Periodic job");
-        if (getPeriodicDisableTime() < 60) {
+        if (getPeriodicDisableTime() < MINIMUM_ALLOWED_PERIOD) {
           Timber.e("Not queuing period disable job with interval less than 1 minute");
         } else {
           PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
@@ -94,7 +95,7 @@ public abstract class DeviceJob extends BaseJob {
       callDisable();
       if (isPeriodic()) {
         Timber.d("Periodic job");
-        if (getPeriodicEnableTime() < 60) {
+        if (getPeriodicEnableTime() < MINIMUM_ALLOWED_PERIOD) {
           Timber.e("Not queuing period enable job with interval less than 1 minute");
         } else {
           PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
