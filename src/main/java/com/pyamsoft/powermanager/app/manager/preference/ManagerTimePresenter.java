@@ -54,6 +54,10 @@ public abstract class ManagerTimePresenter
 
   public interface TimeView {
 
+    void setCustomHint(@NonNull String hint);
+
+    void setCustomSummary(@NonNull String formattable);
+
     void setTimeText(long time);
 
     void setTimeSummary(long time);

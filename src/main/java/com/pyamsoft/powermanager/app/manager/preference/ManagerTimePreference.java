@@ -39,11 +39,12 @@ public abstract class ManagerTimePreference extends Preference
 
   @NonNull private final Handler handler;
 
-  @BindView(R.id.preference_manage_delay_summary) TextView summary;
-  @BindView(R.id.preference_manage_delay_times) TextInputLayout textInputLayout;
+  @BindView(R.id.preference_custom_summary) TextView summary;
+  @BindView(R.id.preference_custom_times) TextInputLayout textInputLayout;
   private ManagerTimePresenter presenter;
   private TextWatcher watcher;
   private Unbinder unbinder;
+  private String customSummary;
 
   public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -143,8 +144,19 @@ public abstract class ManagerTimePreference extends Preference
     unbinder.unbind();
   }
 
+  @Override public void setCustomHint(@NonNull String hint) {
+    Timber.d("Set Custom Hint text");
+    textInputLayout.setHintEnabled(true);
+    textInputLayout.setHint(hint);
+  }
+
+  @Override public void setCustomSummary(@NonNull String formattable) {
+    Timber.d("Set Custom Summary");
+    customSummary = formattable;
+  }
+
   @Override public void setTimeSummary(long time) {
-    summary.setText(String.format(Locale.US, "Current delay: %d seconds", time));
+    summary.setText(String.format(Locale.US, customSummary, time));
   }
 
   @Override public void setTimeText(long time) {

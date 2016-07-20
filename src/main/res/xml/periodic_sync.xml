@@ -40,7 +40,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
+    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicDisablePreference
         android:key="@string/periodic_sync_disable_key"/>
 
     <ListPreference
@@ -54,7 +54,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference
+    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicEnablePreference
         android:key="@string/periodic_sync_enable_key"/>
 
   </PreferenceCategory>

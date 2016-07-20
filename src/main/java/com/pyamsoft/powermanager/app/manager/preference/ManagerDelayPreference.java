@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.manager.preference;
 
 import android.content.Context;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.dagger.manager.preference.DaggerManagerTimeComponent;
@@ -51,5 +52,11 @@ public final class ManagerDelayPreference extends ManagerTimePreference {
 
   public final void bindView() {
     bindView(presenter);
+  }
+
+  @Override public void onBindViewHolder(PreferenceViewHolder holder) {
+    super.onBindViewHolder(holder);
+    setCustomHint("Custom Delay Time");
+    setCustomSummary("Current delay time: %d seconds");
   }
 }
