@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_bluetooth_default"
         android:key="@string/periodic_bluetooth_key"
-        android:summary="@string/periodic_bluetooth_summary"
+        android:summaryOn="@string/periodic_bluetooth_summary_checked"
+        android:summaryOff="@string/periodic_bluetooth_summary_unchecked"
         android:title="@string/periodic_bluetooth_title"
         />
 

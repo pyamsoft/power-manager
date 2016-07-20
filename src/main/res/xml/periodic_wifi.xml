@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_wifi_default"
         android:key="@string/periodic_wifi_key"
-        android:summary="@string/periodic_wifi_summary"
+        android:summaryOff="@string/periodic_wifi_summary_unchecked"
+        android:summaryOn="@string/periodic_wifi_summary_checked"
         android:title="@string/periodic_wifi_title"
         />
 

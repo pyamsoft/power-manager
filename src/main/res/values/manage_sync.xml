@@ -57,8 +57,9 @@
 
   <bool name="periodic_sync_default">true</bool>
   <string name="periodic_sync_key">sync_periodic</string>
-  <string name="periodic_sync_title">Sync Periodic</string>
-  <string name="periodic_sync_summary">Sync Periodic</string>
+  <string name="periodic_sync_title">Toggle Sync Periodically</string>
+  <string name="periodic_sync_summary_checked">Sync will be toggled periodically after the delay time has elapsed</string>
+  <string name="periodic_sync_summary_unchecked">Sync will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_sync_disable_key">preset_periodic_sync_disable_key</string>
   <string name="preset_periodic_sync_enable_key">preset_periodic_sync_enable_key</string>

@@ -57,8 +57,9 @@
 
   <bool name="periodic_bluetooth_default">true</bool>
   <string name="periodic_bluetooth_key">bluetooth_periodic</string>
-  <string name="periodic_bluetooth_title">Bluetooth Periodic</string>
-  <string name="periodic_bluetooth_summary">Bluetooth Periodic</string>
+  <string name="periodic_bluetooth_title">Toggle Bluetooth Periodically</string>
+  <string name="periodic_bluetooth_summary_checked">Bluetooth will be toggled periodically after the delay time has elapsed</string>
+  <string name="periodic_bluetooth_summary_unchecked">Bluetooth will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_bluetooth_disable_key">preset_periodic_bluetooth_disable_key</string>
   <string name="preset_periodic_bluetooth_enable_key">preset_periodic_bluetooth_enable_key</string>

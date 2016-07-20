@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_sync_default"
         android:key="@string/periodic_sync_key"
-        android:summary="@string/periodic_sync_summary"
+        android:summaryOff="@string/periodic_sync_summary_unchecked"
+        android:summaryOn="@string/periodic_sync_summary_checked"
         android:title="@string/periodic_sync_title"
         />
 

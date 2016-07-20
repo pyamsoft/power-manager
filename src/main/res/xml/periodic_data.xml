@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_data_default"
         android:key="@string/periodic_data_key"
-        android:summary="@string/periodic_data_summary"
+        android:summaryOn="@string/periodic_data_summary_checked"
+        android:summaryOff="@string/periodic_data_summary_unchecked"
         android:title="@string/periodic_data_title"
         />
 

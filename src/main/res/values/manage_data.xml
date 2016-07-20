@@ -57,8 +57,9 @@
 
   <bool name="periodic_data_default">true</bool>
   <string name="periodic_data_key">data_periodic</string>
-  <string name="periodic_data_title">Data Periodic</string>
-  <string name="periodic_data_summary">Data Periodic</string>
+  <string name="periodic_data_title">Toggle Data Periodically</string>
+  <string name="periodic_data_summary_checked">Data will be toggled periodically after the delay time has elapsed</string>
+  <string name="periodic_data_summary_unchecked">Data will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_data_disable_key">preset_periodic_data_disable_key</string>
   <string name="preset_periodic_data_enable_key">preset_periodic_data_enable_key</string>
