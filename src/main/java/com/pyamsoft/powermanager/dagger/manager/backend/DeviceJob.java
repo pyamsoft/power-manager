@@ -77,7 +77,11 @@ public abstract class DeviceJob extends BaseJob {
       callEnable();
       if (isPeriodic()) {
         Timber.d("Periodic job");
-        PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
+        if (getPeriodicDisableTime() < 60) {
+          Timber.e("Not queuing period disable job with interval less than 1 minute");
+        } else {
+          PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
+        }
       }
     } else {
       Timber.e("Radio is already on");
@@ -90,7 +94,11 @@ public abstract class DeviceJob extends BaseJob {
       callDisable();
       if (isPeriodic()) {
         Timber.d("Periodic job");
-        PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
+        if (getPeriodicEnableTime() < 60) {
+          Timber.e("Not queuing period enable job with interval less than 1 minute");
+        } else {
+          PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
+        }
       }
     } else {
       Timber.e("Radio is already off");
