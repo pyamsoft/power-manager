@@ -17,15 +17,21 @@
 package com.pyamsoft.powermanager.app.manager.preference;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.dagger.manager.backend.DeviceJob;
 import com.pyamsoft.powermanager.dagger.manager.preference.DaggerManagerTimeComponent;
 import javax.inject.Inject;
 import javax.inject.Named;
+import timber.log.Timber;
 
 public abstract class ManagerPeriodicPreference extends ManagerTimePreference {
 
+  @NonNull private static final String ERROR_SUMMARY =
+      "The specified time period is too low: %d seconds";
   @Inject @Named("periodic") ManagerTimePresenter presenter;
+  private String specifiedCustomSummary;
 
   public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -47,6 +53,25 @@ public abstract class ManagerPeriodicPreference extends ManagerTimePreference {
 
   public ManagerPeriodicPreference(Context context) {
     this(context, null);
+  }
+
+  @Override public void setCustomSummary(@NonNull String formattable) {
+    // Store the custom summary for later
+    specifiedCustomSummary = formattable;
+    super.setCustomSummary(formattable);
+  }
+
+  @Override public void setTimeSummary(long time) {
+    // If the time is less than minimum time, set a custom error message
+    if (time < DeviceJob.MINIMUM_ALLOWED_PERIOD) {
+      Timber.e("Time too small, display error");
+      super.setCustomSummary(ERROR_SUMMARY);
+    } else {
+      Timber.d("Time is allowed, set normal summary");
+      super.setCustomSummary(specifiedCustomSummary);
+    }
+
+    super.setTimeSummary(time);
   }
 
   public final void bindView() {
