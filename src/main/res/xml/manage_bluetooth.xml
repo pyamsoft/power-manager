@@ -25,16 +25,17 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_bluetooth_default"
         android:key="@string/manage_bluetooth_key"
-        android:summary="@string/manage_bluetooth_summary"
+        android:summaryOff="@string/manage_bluetooth_summary_unchecked"
+        android:summaryOn="@string/manage_bluetooth_summary_checked"
         android:title="@string/manage_bluetooth_title"
         />
 
     <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_bluetooth_default"
+        android:dependency="@string/manage_bluetooth_key"
         android:key="@string/ignore_charging_bluetooth_key"
         android:summary="@string/ignore_charging_bluetooth_summary"
         android:title="@string/ignore_charging_bluetooth_title"
-        android:dependency="@string/manage_bluetooth_key"
         />
 
   </PreferenceCategory>

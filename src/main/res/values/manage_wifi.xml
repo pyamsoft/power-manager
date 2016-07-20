@@ -22,7 +22,8 @@
   <bool name="manage_wifi_default">true</bool>
   <string name="manage_wifi_key">manage_wifi</string>
   <string name="manage_wifi_title">Manage Wifi</string>
-  <string name="manage_wifi_summary">Manage Wifi</string>
+  <string name="manage_wifi_summary_checked">Will control Wifi state</string>
+  <string name="manage_wifi_summary_unchecked">Will ignore Wifi state</string>
 
   <string name="preset_delay_wifi_key">preset_delay_wifi</string>
   <string-array name="preset_delay_wifi_names">

@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_wifi_default"
         android:key="@string/manage_wifi_key"
-        android:summary="@string/manage_wifi_summary"
+        android:summaryOn="@string/manage_wifi_summary_checked"
+        android:summaryOff="@string/manage_wifi_summary_unchecked"
         android:title="@string/manage_wifi_title"
         />
 

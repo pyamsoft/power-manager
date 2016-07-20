@@ -25,7 +25,8 @@
     <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_data_default"
         android:key="@string/manage_data_key"
-        android:summary="@string/manage_data_summary"
+        android:summaryOff="@string/manage_data_summary_unchecked"
+        android:summaryOn="@string/manage_data_summary_checked"
         android:title="@string/manage_data_title"
         />
 

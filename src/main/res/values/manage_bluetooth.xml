@@ -22,7 +22,8 @@
   <bool name="manage_bluetooth_default">false</bool>
   <string name="manage_bluetooth_key">manage_bluetooth</string>
   <string name="manage_bluetooth_title">Manage Bluetooth</string>
-  <string name="manage_bluetooth_summary">Manage Bluetooth</string>
+  <string name="manage_bluetooth_summary_checked">Will control Bluetooth state</string>
+  <string name="manage_bluetooth_summary_unchecked">Will ignore Bluetooth state</string>
 
   <string name="preset_delay_bluetooth_key">preset_delay_bluetooth</string>
   <string-array name="preset_delay_bluetooth_names">
