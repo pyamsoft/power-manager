@@ -31,6 +31,7 @@ abstract class ManagePreferenceObserver<V>
   @NonNull private final String KEY_DATA;
   @NonNull private final String KEY_BLUETOOTH;
   @NonNull private final String KEY_SYNC;
+  @NonNull private final String KEY_WEAR;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
   private boolean registered;
@@ -44,6 +45,7 @@ abstract class ManagePreferenceObserver<V>
     KEY_DATA = context.getString(R.string.manage_data_key);
     KEY_BLUETOOTH = context.getString(R.string.manage_bluetooth_key);
     KEY_SYNC = context.getString(R.string.manage_sync_key);
+    KEY_WEAR = context.getString(R.string.manage_wearable_key);
   }
 
   @Override
@@ -86,6 +88,8 @@ abstract class ManagePreferenceObserver<V>
       result = preferences.isBluetoothManaged();
     } else if (key.equals(KEY_SYNC)) {
       result = preferences.isSyncManaged();
+    } else if (key.equals(KEY_WEAR)) {
+      result = preferences.isWearableManaged();
     } else {
       throw new RuntimeException("Unsupported key: " + key);
     }
