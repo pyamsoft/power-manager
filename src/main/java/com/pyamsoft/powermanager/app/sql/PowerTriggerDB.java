@@ -91,15 +91,6 @@ public final class PowerTriggerDB {
               PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent))));
     }
 
-    @CheckResult @NonNull
-    public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent,
-        final boolean availability) {
-      return Observable.defer(() -> Observable.just(database.getDatabase()
-          .update(PowerTriggerEntry.TABLE_NAME, contentValues,
-              PowerTriggerEntry.UPDATE_WITH_AVAILABILITY, String.valueOf(percent),
-              String.valueOf(availability))));
-    }
-
     @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
       return database.getDatabase()
           .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)

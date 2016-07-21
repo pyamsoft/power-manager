@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
@@ -36,6 +37,7 @@ import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import java.util.Locale;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscription;
@@ -143,8 +145,7 @@ public class TriggerJob extends BaseJob {
                 final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
                 final ContentValues values = PowerTriggerEntry.asContentValues(updated);
                 updatedAvailability = updatedAvailability.mergeWith(
-                    PowerTriggerDB.with(getApplicationContext())
-                        .update(values, updated.percent(), updated.available()));
+                    PowerTriggerDB.with(getApplicationContext()).update(values, updated.percent()));
               }
             }
           } else {
@@ -152,11 +153,17 @@ public class TriggerJob extends BaseJob {
             PowerTriggerEntry best = PowerTriggerEntry.empty();
             for (final PowerTriggerEntry entry : powerTriggerEntries) {
               Timber.d("Current entry: %s %d", entry.name(), entry.percent());
-              if (entry.available() && entry.enabled()) {
-                final int bestDiff = best.percent() - percent;
-                final int currentDiff = entry.percent() - percent;
-                if (currentDiff < bestDiff) {
-                  Timber.d("Best entry for %d: %s [%d]", percent, entry.name(), entry.percent());
+              if (entry.available()
+                  && entry.enabled()
+                  && entry.percent() >= percent
+                  && entry.percent() <= percent + 5) {
+                if (PowerTriggerEntry.isEmpty(best)) {
+                  Timber.d("Mark first valid entry as best");
+                  best = entry;
+                }
+
+                if (entry.percent() < best.percent()) {
+                  Timber.d("Mark current entry as new best");
                   best = entry;
                 }
 
@@ -168,11 +175,11 @@ public class TriggerJob extends BaseJob {
             }
 
             if (!PowerTriggerEntry.isEmpty(best)) {
-              Timber.d("Mark trigger as unavailable: %s", best.name());
+              Timber.d("Mark trigger as unavailable: %s %d", best.name(), best.percent());
               final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(best, false);
               final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-              updatedAvailability = PowerTriggerDB.with(getApplicationContext())
-                  .update(values, updated.percent(), updated.available());
+              updatedAvailability =
+                  PowerTriggerDB.with(getApplicationContext()).update(values, updated.percent());
               trigger = updated;
             }
           }
@@ -180,7 +187,7 @@ public class TriggerJob extends BaseJob {
           // KLUDGE just java things
           Timber.d("Finalize trigger so we can kludge");
           final PowerTriggerEntry passOn = trigger;
-          return updatedAvailability.toSortedList().first().map(integer -> {
+          return updatedAvailability.toSortedList().first().map(list -> {
             // KLUDGE this is terrible
             Timber.d("Do terrible kludge");
             return passOn;
@@ -209,6 +216,9 @@ public class TriggerJob extends BaseJob {
   private void onTriggerRun(PowerTriggerEntry entry) {
     Timber.d("Run trigger for entry name: %s", entry.name());
     Timber.d("Run trigger for entry percent: %d", entry.percent());
+    final String formatted =
+        String.format(Locale.US, "Run trigger: %s [%d]", entry.name(), entry.percent());
+    Toast.makeText(getApplicationContext(), formatted, Toast.LENGTH_SHORT).show();
 
     if (entry.toggleWifi()) {
       Timber.d("Wifi should toggle");
