@@ -35,14 +35,19 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
     return Observable.defer(() -> {
       if (PowerTriggerEntry.isEmpty(values)) {
         Timber.e("Trigger is EMPTY");
-        return Observable.empty();
+        return Observable.just(-1L);
       } else {
         Timber.d("Insert new Trigger into DB");
-        return Observable.just(PowerTriggerDB.with(getAppContext()).insert(values));
+        // Throws SQLiteConstraintException
+        return PowerTriggerDB.with(getAppContext()).insert(values);
       }
     }).map(aLong -> {
-      // TODO do something with result
-      return PowerTriggerEntry.asTrigger(values);
+      if (aLong == -1L) {
+        throw new IllegalStateException("Trigger is EMPTY");
+      } else {
+        Timber.d("new trigger created");
+        return PowerTriggerEntry.asTrigger(values);
+      }
     });
   }
 
@@ -53,7 +58,7 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
       return getPosition(percent);
     }).cache();
 
-    return positionObservable.map(integer -> {
+    return positionObservable.flatMap(integer -> {
       Timber.d("Delete trigger with percent: %d", percent);
       return PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent);
     }).flatMap(integer -> {

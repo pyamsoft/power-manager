@@ -30,18 +30,14 @@ import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
 public final class PowerTriggerDB {
-  @NonNull private final BriteDatabase briteDatabase;
   private static volatile Delegate instance = null;
+  @NonNull private final BriteDatabase briteDatabase;
 
   private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
     final SqlBrite sqlBrite = SqlBrite.create();
     final PowerTriggerOpenHelper openHelper =
         new PowerTriggerOpenHelper(context.getApplicationContext());
     briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
-  }
-
-  @CheckResult @NonNull public final BriteDatabase getDatabase() {
-    return briteDatabase;
   }
 
   public static void setDelegate(@Nullable Delegate delegate) {
@@ -65,6 +61,10 @@ public final class PowerTriggerDB {
     return instance;
   }
 
+  @CheckResult @NonNull public final BriteDatabase getDatabase() {
+    return briteDatabase;
+  }
+
   public static class Delegate {
 
     @NonNull private final PowerTriggerDB database;
@@ -77,23 +77,27 @@ public final class PowerTriggerDB {
       this.database = new PowerTriggerDB(context.getApplicationContext(), scheduler);
     }
 
-    @CheckResult public long insert(final @NonNull ContentValues contentValues) {
-      return database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+    @CheckResult @NonNull
+    public Observable<Long> insert(final @NonNull ContentValues contentValues) {
+      return Observable.defer(() -> Observable.just(
+          database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues)));
     }
 
-    @CheckResult public int update(final @NonNull ContentValues contentValues, final int percent) {
-      return database.getDatabase()
+    @CheckResult @NonNull
+    public Observable<Integer> update(final @NonNull ContentValues contentValues,
+        final int percent) {
+      return Observable.defer(() -> Observable.just(database.getDatabase()
           .update(PowerTriggerEntry.TABLE_NAME, contentValues,
-              PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
+              PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent))));
     }
 
-    @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(final int percent) {
-      return database.getDatabase()
-          .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-              Integer.toString(percent))
-          .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
-              PowerTriggerEntry.empty())
-          .filter(padLockEntry -> padLockEntry != null);
+    @CheckResult @NonNull
+    public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent,
+        final boolean availability) {
+      return Observable.defer(() -> Observable.just(database.getDatabase()
+          .update(PowerTriggerEntry.TABLE_NAME, contentValues,
+              PowerTriggerEntry.UPDATE_WITH_AVAILABILITY, String.valueOf(percent),
+              String.valueOf(availability))));
     }
 
     @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
@@ -103,15 +107,15 @@ public final class PowerTriggerDB {
           .filter(padLockEntries -> padLockEntries != null);
     }
 
-    @CheckResult public int deleteWithPercent(final int percent) {
-      return database.getDatabase()
+    @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
+      return Observable.defer(() -> Observable.just(database.getDatabase()
           .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
-              Integer.toString(percent));
+              Integer.toString(percent))));
     }
 
-    @CheckResult public int deleteAll() {
-      return database.getDatabase()
-          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
+    @CheckResult @NonNull public Observable<Integer> deleteAll() {
+      return Observable.defer(() -> Observable.just(database.getDatabase()
+          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL)));
     }
   }
 }

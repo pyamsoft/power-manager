@@ -57,7 +57,7 @@ final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
   @NonNull @Override
   public Observable<Boolean> update(@NonNull PowerTriggerEntry entry, boolean enabled) {
     return Observable.defer(() -> {
-      final PowerTriggerEntry updated = PowerTriggerEntry.updatedCopy(entry, enabled);
+      final PowerTriggerEntry updated = PowerTriggerEntry.updatedEnabled(entry, enabled);
       final ContentValues values = PowerTriggerEntry.asContentValues(updated);
 
       final int percent = updated.percent();
@@ -65,7 +65,7 @@ final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
       Timber.d("Update entry to enabled state: %s", updated.enabled());
 
       // KLUDGE Update states it is successful, but changes are not actually written
-      return Observable.just(PowerTriggerDB.with(getAppContext()).update(values, percent));
+      return PowerTriggerDB.with(getAppContext()).update(values, percent);
     }).map(integer -> {
       // TODO handle the int return value
       Timber.d("Return code for update(): %d", integer);

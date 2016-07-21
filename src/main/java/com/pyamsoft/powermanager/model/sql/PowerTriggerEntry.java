@@ -29,11 +29,18 @@ import com.google.auto.value.AutoValue;
 
   @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
       new Factory<>(AutoValue_PowerTriggerEntry::new);
+  // SQLDelight does not yet support delete strings
+  @NonNull public static final String DELETE_WITH_PERCENT = "percent = ?";
+  @NonNull public static final String DELETE_ALL = "1=1";
+  // SQLDelight does not yet support update strings
+  @NonNull public static final String UPDATE_WITH_PERCENT = "percent = ?";
+  @NonNull public static final String UPDATE_WITH_AVAILABILITY = "percent = ? AND available = ?";
 
   @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
     final String name = values.getAsString(PowerTriggerEntry.NAME);
     final boolean enabled = values.getAsBoolean(PowerTriggerEntry.ENABLED);
+    final boolean available = values.getAsBoolean(PowerTriggerEntry.AVAILABLE);
     final boolean toggleWifi = values.getAsBoolean(PowerTriggerEntry.TOGGLEWIFI);
     final boolean toggleData = values.getAsBoolean(PowerTriggerEntry.TOGGLEDATA);
     final boolean toggleBluetooth = values.getAsBoolean(PowerTriggerEntry.TOGGLEBLUETOOTH);
@@ -42,8 +49,8 @@ import com.google.auto.value.AutoValue;
     final boolean enableData = values.getAsBoolean(PowerTriggerEntry.ENABLEDATA);
     final boolean enableBluetooth = values.getAsBoolean(PowerTriggerEntry.ENABLEBLUETOOTH);
     final boolean enableSync = values.getAsBoolean(PowerTriggerEntry.ENABLESYNC);
-    return FACTORY.creator.create(percent, name, enabled, toggleWifi, toggleData, toggleBluetooth,
-        toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
+    return FACTORY.creator.create(percent, name, enabled, available, toggleWifi, toggleData,
+        toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
   }
 
   @NonNull @CheckResult
@@ -65,7 +72,7 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
     return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
-        false, false, false, false, false);
+        false, false, false, false, false, false);
   }
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
@@ -79,16 +86,21 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  public static PowerTriggerEntry updatedCopy(@NonNull PowerTriggerEntry old, boolean enabled) {
-    return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, old.toggleWifi(),
-        old.toggleData(), old.toggleBluetooth(), old.toggleSync(), old.enableWifi(),
-        old.enableData(), old.enableBluetooth(), old.enableSync());
+  public static PowerTriggerEntry updatedEnabled(@NonNull PowerTriggerEntry old, boolean enabled) {
+    return updated(old, enabled, old.available());
   }
 
-  // SQLDelight does not yet support delete strings
-  @NonNull public static final String DELETE_WITH_PERCENT = "percent = ?";
-  @NonNull public static final String DELETE_ALL = "1=1";
+  @CheckResult @NonNull
+  public static PowerTriggerEntry updatedAvailable(@NonNull PowerTriggerEntry old,
+      boolean available) {
+    return updated(old, old.enabled(), available);
+  }
 
-  // SQLDelight does not yet support update strings
-  @NonNull public static final String UPDATE_WITH_PERCENT = "percent = ?";
+  @CheckResult @NonNull
+  private static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
+      boolean available) {
+    return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, available,
+        old.toggleWifi(), old.toggleData(), old.toggleBluetooth(), old.toggleSync(),
+        old.enableWifi(), old.enableData(), old.enableBluetooth(), old.enableSync());
+  }
 }

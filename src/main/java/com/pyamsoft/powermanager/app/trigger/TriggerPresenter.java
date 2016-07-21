@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.trigger;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerInteractor;
@@ -112,6 +113,13 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
           getView().onNewTriggerAdded(entry1.percent());
         }, throwable -> {
           Timber.e(throwable, "onError");
+          if (throwable instanceof SQLiteConstraintException) {
+            Timber.e("Error inserting into DB");
+            getView().onNewTriggerInsertError();
+          } else {
+            Timber.e("Issue creating trigger");
+            getView().onNewTriggerCreateError();
+          }
         });
   }
 
@@ -170,6 +178,10 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
     void onTriggerDeleted(int position);
 
     void onNewTriggerAdded(int percent);
+
+    void onNewTriggerCreateError();
+
+    void onNewTriggerInsertError();
 
     void loadEmptyView();
 

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
@@ -36,6 +37,7 @@ import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -82,37 +84,103 @@ public class TriggerJob extends BaseJob {
 
     // Get battery level
     int percent;
+    boolean charging;
     if (batteryIntent != null) {
       Timber.d("Retrieve battery info");
       percent = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+      charging = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS,
+          BatteryManager.BATTERY_STATUS_UNKNOWN) == (BatteryManager.BATTERY_STATUS_CHARGING
+          | BatteryManager.BATTERY_STATUS_FULL);
     } else {
       Timber.d("Null battery intent");
       percent = 0;
+      charging = false;
     }
 
     Timber.d("Run trigger job for percent: %d", percent);
-    runTriggerForPercent(percent);
+    runTriggerForPercent(percent, charging);
   }
 
-  private void runTriggerForPercent(int percent) {
+  private void runTriggerForPercent(int percent, boolean charging) {
     unsubRun();
     runSubscription = PowerTriggerDB.with(getApplicationContext())
-        .queryWithPercent(percent)
+        .queryAll()
         .first()
+        .flatMap(powerTriggerEntries -> {
+          Timber.d("Flatten and filter");
+          return Observable.from(powerTriggerEntries);
+        })
         .filter(entry -> {
           Timber.d("Filter empty triggers");
           return !PowerTriggerEntry.isEmpty(entry);
         })
-        .filter(entry -> {
-          Timber.d("Filter disabled triggers");
-          return entry.enabled();
+        .toSortedList()
+        .flatMap(powerTriggerEntries -> {
+          // KLUDGE this is really bad. Is there another way to update in the background?
+          Observable<Integer> updatedAvailability = Observable.just(-1);
+          PowerTriggerEntry trigger = PowerTriggerEntry.empty();
+
+          if (charging) {
+            Timber.d("Mark any available triggers");
+            for (final PowerTriggerEntry entry : powerTriggerEntries) {
+              if (entry.percent() <= percent && !entry.available()) {
+                Timber.d("Mark entry available for percent: %d", entry.percent());
+                final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
+                final ContentValues values = PowerTriggerEntry.asContentValues(updated);
+                updatedAvailability = updatedAvailability.mergeWith(
+                    PowerTriggerDB.with(getApplicationContext())
+                        .update(values, updated.percent(), updated.available()));
+              }
+            }
+          } else {
+            Timber.d("Select best trigger from available");
+            PowerTriggerEntry best = PowerTriggerEntry.empty();
+            for (final PowerTriggerEntry entry : powerTriggerEntries) {
+              if (entry.available() && entry.enabled()) {
+                final int bestDiff = best.percent() - percent;
+                final int currentDiff = entry.percent() - percent;
+                if (currentDiff < bestDiff) {
+                  Timber.d("Best entry for %d: %s [%d]", percent, entry.name(), entry.percent());
+                  best = entry;
+                }
+
+                if (best.percent() == percent) {
+                  Timber.d("Found exact");
+                  break;
+                }
+              }
+            }
+
+            if (!PowerTriggerEntry.isEmpty(best)) {
+              Timber.d("Mark trigger as unavailable: %s", best.name());
+              final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(best, false);
+              final ContentValues values = PowerTriggerEntry.asContentValues(updated);
+              updatedAvailability = PowerTriggerDB.with(getApplicationContext())
+                  .update(values, updated.percent(), updated.available());
+              trigger = updated;
+            }
+          }
+
+          // KLUDGE just java things
+          final PowerTriggerEntry passOn = trigger;
+          return updatedAvailability.first().map(integer -> {
+            // KLUDGE this is terrible
+            Timber.d("Do terrible kludge");
+            return passOn;
+          });
         })
         // KLUDGE hardcoded schedulers
+        // KLUDGE need to subscribe even if we are noop so that the other operations run
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(entry -> {
-          onTriggerRun(entry);
+          if (!charging && !PowerTriggerEntry.isEmpty(entry)) {
+            onTriggerRun(entry);
+          } else {
+            Timber.e("Can't run trigger. Either device is charging or no valid trigger");
+          }
 
+          // KLUDGE the show must go on
           Timber.d("Requeue the job");
           queue(new TriggerJob(getDelayInMs()));
         }, throwable -> {

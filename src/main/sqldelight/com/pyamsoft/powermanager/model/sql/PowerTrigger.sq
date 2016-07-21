@@ -3,6 +3,7 @@ CREATE TABLE power_triggers (
   percent INTEGER As Integer NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
   enabled INTEGER AS Boolean DEFAULT 0 NOT NULL,
+  available INTEGER AS Boolean DEFAULT 1 NOT NULL,
   toggleWifi INTEGER AS Boolean DEFAULT 0 NOT NULL,
   toggleData INTEGER AS Boolean DEFAULT 0 NOT NULL,
   toggleBluetooth INTEGER AS Boolean DEFAULT 0 NOT NULL,
@@ -17,11 +18,4 @@ CREATE TABLE power_triggers (
 all_entries:
 SELECT *
 FROM power_triggers;
-
--- Get all entries with the given percent
-with_percent:
-SELECT *
-FROM power_triggers
-WHERE percent = ?
-LIMIT 1;
 
