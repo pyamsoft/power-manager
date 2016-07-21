@@ -38,5 +38,5 @@ import javax.inject.Named;
 
   @Named("sync") InterestObserver provideSyncManagerObserver();
 
-  @Named("wearable") InterestObserver provideWearableManageObserver();
+  @Named("wear") InterestObserver provideWearableManageObserver();
 }
