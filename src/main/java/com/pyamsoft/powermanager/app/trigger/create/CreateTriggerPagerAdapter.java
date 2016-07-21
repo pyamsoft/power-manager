@@ -92,6 +92,7 @@ public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final ContentValues values = PowerTriggerEntry.FACTORY.marshal().name(name)
         .percent(percent)
         .enabled(false)
+        .available(true)
         .toggleWifi(wifiToggle)
         .toggleData(dataToggle)
         .toggleBluetooth(bluetoothToggle)

@@ -59,6 +59,7 @@ import com.google.auto.value.AutoValue;
         .name(entry.name())
         .percent(entry.percent())
         .enabled(entry.enabled())
+        .available(entry.available())
         .toggleWifi(entry.toggleWifi())
         .toggleData(entry.toggleData())
         .toggleBluetooth(entry.toggleBluetooth())
