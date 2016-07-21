@@ -32,17 +32,27 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.manager.manage.DaggerManagerManageComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ManagerManageFragment extends PreferenceFragmentCompat implements ManagerManageView {
+public class ManagerManageFragment extends PreferenceFragmentCompat
+    implements ManagerManageView, WifiManageObserver.View, DataManageObserver.View,
+    BluetoothManageObserver.View, SyncManageObserver.View {
 
   @Inject ManagerManagePresenter presenter;
 
   private SwitchPreferenceCompat managePreference;
   private ListPreference presetDelayPreference;
   private ManagerDelayPreference delayPreference;
+  private InterestObserver manageObserver;
 
   @XmlRes private int xmlResId;
   @StringRes private int manageKeyResId;
@@ -59,6 +69,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    manageObserver.register();
     presenter.bindView(this);
     delayPreference.bindView();
     return super.onCreateView(inflater, container, savedInstanceState);
@@ -108,16 +119,21 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    manageObserver.unregister();
     delayPreference.unbindView();
     presenter.unbindView();
   }
 
   private void findCorrectPreferences() {
+    final ManageObserverComponent manageObserverComponent = DaggerManageObserverComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build();
     final String fragmentType =
         getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
     switch (fragmentType) {
       case ManagerSettingsPagerAdapter.TYPE_WIFI:
         Timber.d("Manage fragment for Wifi");
+        manageObserver = manageObserverComponent.provideWifiManagerObserver();
         xmlResId = R.xml.manage_wifi;
         manageKeyResId = R.string.manage_wifi_key;
         timeKeyResId = R.string.wifi_time_key;
@@ -125,6 +141,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
         break;
       case ManagerSettingsPagerAdapter.TYPE_DATA:
         Timber.d("Manage fragment for Data");
+        manageObserver = manageObserverComponent.provideDataManagerObserver();
         xmlResId = R.xml.manage_data;
         manageKeyResId = R.string.manage_data_key;
         timeKeyResId = R.string.data_time_key;
@@ -132,6 +149,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
         break;
       case ManagerSettingsPagerAdapter.TYPE_BLUETOOTH:
         Timber.d("Manage fragment for Bluetooth");
+        manageObserver = manageObserverComponent.provideBluetoothManagerObserver();
         xmlResId = R.xml.manage_bluetooth;
         manageKeyResId = R.string.manage_bluetooth_key;
         timeKeyResId = R.string.bluetooth_time_key;
@@ -139,6 +157,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
         break;
       case ManagerSettingsPagerAdapter.TYPE_SYNC:
         Timber.d("Manage fragment for Sync");
+        manageObserver = manageObserverComponent.provideSyncManagerObserver();
         xmlResId = R.xml.manage_sync;
         manageKeyResId = R.string.manage_sync_key;
         timeKeyResId = R.string.sync_time_key;
@@ -147,6 +166,9 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
       default:
         throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
     }
+
+    //noinspection unchecked
+    manageObserver.setView(this);
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -195,5 +217,45 @@ public class ManagerManageFragment extends PreferenceFragmentCompat implements M
   @Override public void onPause() {
     super.onPause();
     presenter.pause();
+  }
+
+  @Override public void onDataManageEnabled() {
+    Timber.d("Data manage enabled");
+    enableManaged();
+  }
+
+  @Override public void onDataManageDisabled() {
+    Timber.d("Data manage disabled");
+    disableManaged();
+  }
+
+  @Override public void onSyncManageEnabled() {
+    Timber.d("Sync manage enabled");
+    enableManaged();
+  }
+
+  @Override public void onSyncManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    disableManaged();
+  }
+
+  @Override public void onWifiManageEnabled() {
+    Timber.d("Wifi manage enabled");
+    enableManaged();
+  }
+
+  @Override public void onWifiManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    disableManaged();
+  }
+
+  @Override public void onBluetoothManageEnabled() {
+    Timber.d("Bluetooth manage enabled");
+    enableManaged();
+  }
+
+  @Override public void onBluetoothManageDisabled() {
+    Timber.d("Wifi manage disabled");
+    disableManaged();
   }
 }

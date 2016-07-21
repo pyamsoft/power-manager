@@ -30,12 +30,6 @@ import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
-import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
-import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
-import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
-import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
-import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
-import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
@@ -47,8 +41,7 @@ import timber.log.Timber;
 
 public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     implements WifiStateObserver.View, DataStateObserver.View, BluetoothStateObserver.View,
-    SyncStateObserver.View, WifiManageObserver.View, DataManageObserver.View,
-    BluetoothManageObserver.View, SyncManageObserver.View {
+    SyncStateObserver.View {
 
   @NonNull public static final String TYPE_WIFI = "wifi";
   @NonNull public static final String TYPE_DATA = "data";
@@ -70,7 +63,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   private InterestModifier stateModifier;
   private InterestObserver stateObserver;
-  private InterestObserver manageObserver;
 
   public ManagerSettingsPagerAdapter(@NonNull FragmentActivity activity, @NonNull String type) {
     super(activity.getSupportFragmentManager());
@@ -83,10 +75,6 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build();
 
-    final ManageObserverComponent manageComponent = DaggerManageObserverComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build();
-
     final StateModifierComponent stateModifierComponent = DaggerStateModifierComponent.builder()
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build();
@@ -96,25 +84,21 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
       case TYPE_WIFI:
         stateModifier = stateModifierComponent.provideWifiStateModifier();
         stateObserver = stateComponent.provideWifiStateObserver();
-        manageObserver = manageComponent.provideWifiManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_WIFI_ON : FAB_ICON_WIFI_OFF;
         break;
       case TYPE_DATA:
         stateModifier = stateModifierComponent.provideDataStateModifier();
         stateObserver = stateComponent.provideDataStateObserver();
-        manageObserver = manageComponent.provideDataManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_DATA_ON : FAB_ICON_DATA_OFF;
         break;
       case TYPE_BLUETOOTH:
         stateModifier = stateModifierComponent.provideBluetoothStateModifier();
         stateObserver = stateComponent.provideBluetoothStateObserver();
-        manageObserver = manageComponent.provideBluetoothManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_BLUETOOTH_ON : FAB_ICON_BLUETOOTH_OFF;
         break;
       case TYPE_SYNC:
         stateModifier = stateModifierComponent.provideSyncStateModifier();
         stateObserver = stateComponent.provideSyncStateObserver();
-        manageObserver = manageComponent.provideSyncManagerObserver();
         icon = stateObserver.is() ? FAB_ICON_SYNC_ON : FAB_ICON_SYNC_OFF;
         break;
       default:
@@ -123,11 +107,8 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
     //noinspection unchecked
     stateObserver.setView(this);
-    //noinspection unchecked
-    manageObserver.setView(this);
 
     stateObserver.register();
-    manageObserver.register();
 
     // Register the initial states here
     FabColorBus.get().post(FabColorEvent.create(icon, () -> {
@@ -180,9 +161,7 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
 
   public final void recycle() {
     Timber.d("Recycle ManagerSettingsPagerAdapter");
-
     stateObserver.unregister();
-    manageObserver.unregister();
   }
 
   @Override public void onWifiStateEnabled() {
@@ -247,45 +226,5 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
       Timber.d("Click!");
       stateModifier.set();
     }));
-  }
-
-  @Override public void onDataManageEnabled() {
-    Timber.d("Data manage enabled");
-    manageFragment.enableManaged();
-  }
-
-  @Override public void onDataManageDisabled() {
-    Timber.d("Data manage disabled");
-    manageFragment.disableManaged();
-  }
-
-  @Override public void onSyncManageEnabled() {
-    Timber.d("Sync manage enabled");
-    manageFragment.enableManaged();
-  }
-
-  @Override public void onSyncManageDisabled() {
-    Timber.d("Wifi manage disabled");
-    manageFragment.disableManaged();
-  }
-
-  @Override public void onWifiManageEnabled() {
-    Timber.d("Wifi manage enabled");
-    manageFragment.enableManaged();
-  }
-
-  @Override public void onWifiManageDisabled() {
-    Timber.d("Wifi manage disabled");
-    manageFragment.disableManaged();
-  }
-
-  @Override public void onBluetoothManageEnabled() {
-    Timber.d("Bluetooth manage enabled");
-    manageFragment.enableManaged();
-  }
-
-  @Override public void onBluetoothManageDisabled() {
-    Timber.d("Wifi manage disabled");
-    manageFragment.disableManaged();
   }
 }
