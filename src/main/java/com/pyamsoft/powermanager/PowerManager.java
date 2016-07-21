@@ -115,15 +115,18 @@ public final class PowerManager extends ApplicationBase {
     }
 
     // Initialize instance
-    powerManagerComponent = DaggerPowerManagerComponent.builder()
-        .powerManagerModule(new PowerManagerModule(getApplicationContext()))
-        .build();
+    // Findbugs complains about synchronization issues
+    synchronized (this) {
+      powerManagerComponent = DaggerPowerManagerComponent.builder()
+          .powerManagerModule(new PowerManagerModule(getApplicationContext()))
+          .build();
 
-    jobManager = createJobManager(this);
-    Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
+      jobManager = createJobManager(this);
+      Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
 
-    // Set instance
-    setInstance(this);
+      // Set instance
+      setInstance(this);
+    }
 
     // Start stuff
     startForegroundService();
