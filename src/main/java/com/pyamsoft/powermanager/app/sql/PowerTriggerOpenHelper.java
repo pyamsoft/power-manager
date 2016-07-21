@@ -25,10 +25,11 @@ import timber.log.Timber;
 
 public final class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
+  @NonNull public static final String DB_NAME = "power_trigger_db";
   private static final int DATABASE_VERSION = 1;
 
   public PowerTriggerOpenHelper(final @NonNull Context context) {
-    super(context.getApplicationContext(), "power_trigger_db", null, DATABASE_VERSION);
+    super(context.getApplicationContext(), DB_NAME, null, DATABASE_VERSION);
   }
 
   @Override public void onCreate(@NonNull SQLiteDatabase sqLiteDatabase) {

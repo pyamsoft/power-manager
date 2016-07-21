@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.app.sql.PowerTriggerOpenHelper;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -43,7 +44,7 @@ final class SettingsInteractorImpl implements SettingsInteractor {
       return Observable.just(PowerTriggerDB.with(appContext).deleteAll());
     }).map(integer -> {
       // TODO do something with result
-      return true;
+      return appContext.deleteDatabase(PowerTriggerOpenHelper.DB_NAME);
     });
   }
 
