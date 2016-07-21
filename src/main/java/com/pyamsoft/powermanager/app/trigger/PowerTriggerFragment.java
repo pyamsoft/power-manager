@@ -141,12 +141,12 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   }
 
   @Override public void onNewTriggerCreateError() {
-    Toast.makeText(getContext(), "ERROR: Two triggers cannot have the same percent",
+    Toast.makeText(getContext(), "ERROR: Trigger must have a name and unique percent",
         Toast.LENGTH_LONG).show();
   }
 
   @Override public void onNewTriggerInsertError() {
-    Toast.makeText(getContext(), "ERROR: Trigger must have a name and unique percent",
+    Toast.makeText(getContext(), "ERROR: Two triggers cannot have the same percent",
         Toast.LENGTH_LONG).show();
   }
 
