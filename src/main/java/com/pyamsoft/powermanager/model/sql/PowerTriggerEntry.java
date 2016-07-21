@@ -34,7 +34,6 @@ import com.google.auto.value.AutoValue;
   @NonNull public static final String DELETE_ALL = "1=1";
   // SQLDelight does not yet support update strings
   @NonNull public static final String UPDATE_WITH_PERCENT = "percent = ?";
-  @NonNull public static final String UPDATE_WITH_AVAILABILITY = "percent = ? AND available = ?";
 
   @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);

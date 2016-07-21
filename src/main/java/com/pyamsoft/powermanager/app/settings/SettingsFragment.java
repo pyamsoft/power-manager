@@ -28,8 +28,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.WearableManageObserver;
 import com.pyamsoft.powermanager.dagger.settings.DaggerSettingsComponent;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -37,12 +40,13 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 public final class SettingsFragment extends PreferenceFragmentCompat
-    implements SettingsPresenter.MainSettingsView {
+    implements SettingsPresenter.MainSettingsView, WearableManageObserver.View {
 
   @NonNull public static final String TAG = "settings";
   @NonNull private final Intent batterySettingsIntent =
       new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
   @Inject SettingsPresenter presenter;
+  private InterestObserver wearableObserver;
   private CheckBoxPreference wearableManage;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -50,6 +54,13 @@ public final class SettingsFragment extends PreferenceFragmentCompat
         .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
         .build()
         .inject(this);
+    wearableObserver = DaggerManageObserverComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build()
+        .provideWearableManageObserver();
+    //noinspection unchecked
+    wearableObserver.setView(this);
+
     addPreferencesFromResource(R.xml.preferences);
 
     final Preference boot = getPreferenceScreen().findPreference(getString(R.string.boot_key));
@@ -115,12 +126,9 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     });
   }
 
-  @Override public void onManageWearableChange(boolean state) {
-    wearableManage.setChecked(state);
-  }
-
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    wearableObserver.register();
     presenter.bindView(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
@@ -128,6 +136,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   @Override public void onDestroyView() {
     super.onDestroyView();
     presenter.unbindView();
+    wearableObserver.unregister();
   }
 
   @Override public void onResume() {
@@ -152,6 +161,16 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onClearDatabase() {
+    Timber.d("Database is cleared and deleted");
+  }
 
+  @Override public void onWearableManageEnabled() {
+    Timber.d("manage wearable");
+    wearableManage.setChecked(true);
+  }
+
+  @Override public void onWearableManageDisabled() {
+    Timber.d("unmanage wearable");
+    wearableManage.setChecked(false);
   }
 }

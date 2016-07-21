@@ -37,4 +37,6 @@ import javax.inject.Named;
   @Named("bluetooth") InterestObserver provideBluetoothManagerObserver();
 
   @Named("sync") InterestObserver provideSyncManagerObserver();
+
+  @Named("wearable") InterestObserver provideWearableManageObserver();
 }

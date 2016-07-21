@@ -91,7 +91,7 @@ public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     Timber.d("Post content values to bus");
     final ContentValues values = PowerTriggerEntry.FACTORY.marshal().name(name)
         .percent(percent)
-        .enabled(false)
+        .enabled(true)
         .available(true)
         .toggleWifi(wifiToggle)
         .toggleData(dataToggle)
