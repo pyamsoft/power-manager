@@ -93,7 +93,7 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
         break;
       case POSITION_SETTINGS:
         title = "Settings";
-        image = R.drawable.ic_settings_24dp;
+        image = R.drawable.ic_battery_24dp;
         background = R.color.pink500;
         type = SettingsFragment.TAG;
         break;

@@ -103,6 +103,20 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       Timber.e("Could not update preference full_notification");
       return false;
     });
+
+    final Preference wearableManage = findPreference(getString(R.string.manage_wearable_key));
+    wearableManage.setOnPreferenceChangeListener((preference, o) -> {
+      if (o instanceof Boolean) {
+        final boolean state = (boolean) o;
+        Timber.d("Manage wearable preference change: %s", state);
+        final Intent serviceIntent = new Intent(getContext(), ForegroundService.class);
+        getContext().startService(serviceIntent);
+        return true;
+      }
+
+      Timber.e("Could not update preference manage_wearable");
+      return false;
+    });
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

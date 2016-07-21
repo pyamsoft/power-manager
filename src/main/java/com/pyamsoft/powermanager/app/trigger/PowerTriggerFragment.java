@@ -108,8 +108,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   private void setupFab() {
     FabColorBus.get()
-        .post(FabColorEvent.create(R.drawable.ic_settings_24dp,
-            () -> presenter.showNewTriggerDialog()));
+        .post(FabColorEvent.create(R.drawable.ic_add_24dp, () -> presenter.showNewTriggerDialog()));
   }
 
   private void setupRecyclerView() {
