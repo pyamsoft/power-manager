@@ -33,7 +33,7 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   private Uri uri;
   private boolean registered;
 
-  private StateContentObserver(@NonNull Context context) {
+  StateContentObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
     handler = new Handler(Looper.getMainLooper());
