@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   @NonNull private final Intent batterySettingsIntent =
       new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
   @Inject SettingsPresenter presenter;
+  private CheckBoxPreference wearableManage;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
     DaggerSettingsComponent.builder()
@@ -104,19 +106,17 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       return false;
     });
 
-    final Preference wearableManage = findPreference(getString(R.string.manage_wearable_key));
-    wearableManage.setOnPreferenceChangeListener((preference, o) -> {
-      if (o instanceof Boolean) {
-        final boolean state = (boolean) o;
-        Timber.d("Manage wearable preference change: %s", state);
-        final Intent serviceIntent = new Intent(getContext(), ForegroundService.class);
-        getContext().startService(serviceIntent);
-        return true;
-      }
-
-      Timber.e("Could not update preference manage_wearable");
-      return false;
+    wearableManage = (CheckBoxPreference) findPreference(getString(R.string.manage_wearable_key));
+    wearableManage.setOnPreferenceClickListener(preference -> {
+      Timber.d("Update service on preference change");
+      final Intent serviceIntent = new Intent(getContext(), ForegroundService.class);
+      getContext().startService(serviceIntent);
+      return true;
     });
+  }
+
+  @Override public void onManageWearableChange(boolean state) {
+    wearableManage.setChecked(state);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

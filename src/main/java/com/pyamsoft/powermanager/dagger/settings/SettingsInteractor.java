@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.settings;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
@@ -25,4 +26,14 @@ public interface SettingsInteractor {
   @CheckResult @NonNull Observable<Boolean> clearDatabase();
 
   @CheckResult @NonNull Observable<Boolean> clearAll();
+
+  @CheckResult @NonNull Observable<String> getManageWearablePreferenceString();
+
+  @CheckResult @NonNull Observable<Boolean> isManageWearable();
+
+  void registerSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+
+  void unregisterSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 }

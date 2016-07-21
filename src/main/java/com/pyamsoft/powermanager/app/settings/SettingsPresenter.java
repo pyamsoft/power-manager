@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.settings;
 
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.settings.SettingsInteractor;
 import com.pyamsoft.pydroid.base.Presenter;
@@ -33,8 +34,10 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
   @NonNull private final SettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
+  @NonNull private final SharedPreferences.OnSharedPreferenceChangeListener listener;
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
+  @NonNull private Subscription wearableSubscription = Subscriptions.empty();
 
   @Inject public SettingsPresenter(@NonNull SettingsInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
@@ -42,16 +45,41 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     this.interactor = interactor;
     this.ioScheduler = ioScheduler;
     this.mainScheduler = mainScheduler;
+
+    final String cachedResult = interactor.getManageWearablePreferenceString().toBlocking().first();
+    listener = (sharedPreferences, s) -> {
+      if (cachedResult.equals(s)) {
+        Timber.d("Caught change for key: %s", s);
+        unsubWearable();
+        wearableSubscription = interactor.isManageWearable()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribe(state -> {
+              getView().onManageWearableChange(state);
+            }, throwable -> {
+              // TODO error
+              Timber.e(throwable, "onError");
+            });
+      }
+    };
+  }
+
+  private void unsubWearable() {
+    if (!wearableSubscription.isUnsubscribed()) {
+      wearableSubscription.unsubscribe();
+    }
   }
 
   @Override protected void onResume(@NonNull MainSettingsView view) {
     super.onResume(view);
     registerOnConfirmEventBus();
+    interactor.registerSharedPreferenceChangeListener(listener);
   }
 
   @Override protected void onPause(@NonNull MainSettingsView view) {
     super.onPause(view);
     unregisterFromConfirmEventBus();
+    interactor.unregisterSharedPreferenceChangeListener(listener);
   }
 
   @Override protected void onUnbind(@NonNull MainSettingsView view) {
@@ -122,5 +150,7 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     void onClearAll();
 
     void onClearDatabase();
+
+    void onManageWearableChange(boolean state);
   }
 }

@@ -17,8 +17,10 @@
 package com.pyamsoft.powermanager.dagger.settings;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import javax.inject.Inject;
 import rx.Observable;
@@ -51,5 +53,24 @@ final class SettingsInteractorImpl implements SettingsInteractor {
       preferences.clearAll();
       return true;
     });
+  }
+
+  @NonNull @Override public Observable<String> getManageWearablePreferenceString() {
+    return Observable.defer(
+        () -> Observable.just(appContext.getString(R.string.manage_wearable_key)));
+  }
+
+  @NonNull @Override public Observable<Boolean> isManageWearable() {
+    return Observable.defer(() -> Observable.just(preferences.isWearableManaged()));
+  }
+
+  @Override public void registerSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    preferences.register(listener);
+  }
+
+  @Override public void unregisterSharedPreferenceChangeListener(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    preferences.unregister(listener);
   }
 }
