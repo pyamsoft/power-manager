@@ -88,9 +88,10 @@ public class TriggerJob extends BaseJob {
     if (batteryIntent != null) {
       Timber.d("Retrieve battery info");
       percent = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-      charging = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS,
-          BatteryManager.BATTERY_STATUS_UNKNOWN) == (BatteryManager.BATTERY_STATUS_CHARGING
-          | BatteryManager.BATTERY_STATUS_FULL);
+      final int state = batteryIntent.getIntExtra(BatteryManager.EXTRA_STATUS,
+          BatteryManager.BATTERY_STATUS_UNKNOWN);
+      charging = (state == BatteryManager.BATTERY_STATUS_CHARGING
+          || state == BatteryManager.BATTERY_STATUS_FULL);
     } else {
       Timber.d("Null battery intent");
       percent = 0;
@@ -136,6 +137,7 @@ public class TriggerJob extends BaseJob {
           if (charging) {
             Timber.d("Mark any available triggers");
             for (final PowerTriggerEntry entry : powerTriggerEntries) {
+              Timber.d("Current entry: %s %d", entry.name(), entry.percent());
               if (entry.percent() <= percent && !entry.available()) {
                 Timber.d("Mark entry available for percent: %d", entry.percent());
                 final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
@@ -149,6 +151,7 @@ public class TriggerJob extends BaseJob {
             Timber.d("Select best trigger from available");
             PowerTriggerEntry best = PowerTriggerEntry.empty();
             for (final PowerTriggerEntry entry : powerTriggerEntries) {
+              Timber.d("Current entry: %s %d", entry.name(), entry.percent());
               if (entry.available() && entry.enabled()) {
                 final int bestDiff = best.percent() - percent;
                 final int currentDiff = entry.percent() - percent;
@@ -175,6 +178,7 @@ public class TriggerJob extends BaseJob {
           }
 
           // KLUDGE just java things
+          Timber.d("Finalize trigger so we can kludge");
           final PowerTriggerEntry passOn = trigger;
           return updatedAvailability.toSortedList().first().map(integer -> {
             // KLUDGE this is terrible
