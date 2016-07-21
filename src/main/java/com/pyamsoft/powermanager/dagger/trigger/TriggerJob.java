@@ -163,7 +163,7 @@ public class TriggerJob extends BaseJob {
 
           // KLUDGE just java things
           final PowerTriggerEntry passOn = trigger;
-          return updatedAvailability.first().map(integer -> {
+          return updatedAvailability.toSortedList().first().map(integer -> {
             // KLUDGE this is terrible
             Timber.d("Do terrible kludge");
             return passOn;
