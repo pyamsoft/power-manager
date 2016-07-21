@@ -17,8 +17,6 @@
 
 <resources>
 
-  <string name="wifi_category_title">Wifi Settings</string>
-
   <bool name="manage_wifi_default">true</bool>
   <string name="manage_wifi_key">manage_wifi</string>
   <string name="manage_wifi_title">Manage Wifi</string>

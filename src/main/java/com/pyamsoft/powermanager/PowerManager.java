@@ -55,7 +55,7 @@ public final class PowerManager extends ApplicationBase {
     }
   }
 
-  public synchronized static void setInstance(@Nullable PowerManager instance) {
+  private synchronized static void setInstance(@Nullable PowerManager instance) {
     PowerManager.instance = instance;
   }
 

@@ -36,7 +36,7 @@ abstract class WearableManager extends Manager {
     this.interactor = interactor;
   }
 
-  @CheckResult @NonNull final Observable<ManagerInteractor> zipWithWearableManagedState(
+  @CheckResult @NonNull private Observable<ManagerInteractor> zipWithWearableManagedState(
       @NonNull Observable<ManagerInteractor> observable) {
     final Observable<Boolean> connectedObservable =
         interactor.isWearableManaged().flatMap(managed -> {

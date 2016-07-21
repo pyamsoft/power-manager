@@ -33,8 +33,7 @@ public abstract class ManagerPeriodicPreference extends ManagerTimePreference {
   @Inject @Named("periodic") ManagerTimePresenter presenter;
   private String specifiedCustomSummary;
 
-  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
+  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
 
     DaggerManagerTimeComponent.builder()

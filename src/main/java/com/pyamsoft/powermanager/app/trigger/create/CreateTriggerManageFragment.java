@@ -53,6 +53,7 @@ public class CreateTriggerManageFragment extends Fragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    // TODO
     type = getArguments().getInt(FRAGMENT_TYPE, -1);
   }
 
@@ -68,10 +69,6 @@ public class CreateTriggerManageFragment extends Fragment {
     super.onDestroyView();
 
     unbinder.unbind();
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
   }
 
   @CheckResult public final boolean getTriggerToggle() {

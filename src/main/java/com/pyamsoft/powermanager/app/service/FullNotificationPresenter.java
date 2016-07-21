@@ -47,7 +47,7 @@ public class FullNotificationPresenter
     unregisterFromDismissBus();
   }
 
-  void registerOnDismissBus() {
+  private void registerOnDismissBus() {
     dismissSubscription = Bus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
@@ -60,7 +60,7 @@ public class FullNotificationPresenter
         });
   }
 
-  void unregisterFromDismissBus() {
+  private void unregisterFromDismissBus() {
     if (!dismissSubscription.isUnsubscribed()) {
       dismissSubscription.unsubscribe();
     }

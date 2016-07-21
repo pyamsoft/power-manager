@@ -61,11 +61,11 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     return Observable.defer(() -> Observable.just(getPreferences().isPeriodicWifi()));
   }
 
-  @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
+  @Override @NonNull Observable<Long> getPeriodicEnableTime() {
     return Observable.defer(() -> Observable.just(getPreferences().getPeriodicEnableTimeWifi()));
   }
 
-  @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
+  @Override @NonNull Observable<Long> getPeriodicDisableTime() {
     return Observable.defer(() -> Observable.just(getPreferences().getPeriodicDisableTimeWifi()));
   }
 
@@ -91,8 +91,7 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(long delayTime, boolean periodic, long periodicDisableTime,
-        long periodicEnableTime) {
+    EnableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -100,8 +99,7 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
-        long periodicEnableTime) {
+    DisableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -112,7 +110,7 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     @NonNull private final InterestModifier modifier;
     @NonNull private final InterestObserver observer;
 
-    protected Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
+    Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorWifi.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);

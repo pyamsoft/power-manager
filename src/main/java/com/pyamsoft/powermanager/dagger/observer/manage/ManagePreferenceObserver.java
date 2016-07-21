@@ -36,8 +36,8 @@ abstract class ManagePreferenceObserver<V>
   @NonNull private final String key;
   private boolean registered;
 
-  protected ManagePreferenceObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull String key) {
+  ManagePreferenceObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull String key) {
     this.preferences = preferences;
     this.key = key;
 

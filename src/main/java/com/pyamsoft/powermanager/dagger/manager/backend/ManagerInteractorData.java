@@ -61,11 +61,11 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
     return Observable.defer(() -> Observable.just(getPreferences().isPeriodicData()));
   }
 
-  @Override @NonNull public Observable<Long> getPeriodicEnableTime() {
+  @Override @NonNull Observable<Long> getPeriodicEnableTime() {
     return Observable.defer(() -> Observable.just(getPreferences().getPeriodicEnableTimeData()));
   }
 
-  @Override @NonNull public Observable<Long> getPeriodicDisableTime() {
+  @Override @NonNull Observable<Long> getPeriodicDisableTime() {
     return Observable.defer(() -> Observable.just(getPreferences().getPeriodicDisableTimeData()));
   }
 
@@ -91,8 +91,7 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
 
   static final class EnableJob extends Job {
 
-    protected EnableJob(long delayTime, boolean periodic, long periodicDisableTime,
-        long periodicEnableTime) {
+    EnableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_ENABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -100,8 +99,7 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
 
   static final class DisableJob extends Job {
 
-    protected DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
-        long periodicEnableTime) {
+    DisableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -112,7 +110,7 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
     @NonNull private final InterestModifier modifier;
     @NonNull private final InterestObserver observer;
 
-    protected Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
+    Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorData.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);

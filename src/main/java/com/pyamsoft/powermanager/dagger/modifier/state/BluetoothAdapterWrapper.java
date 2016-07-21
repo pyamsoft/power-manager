@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import timber.log.Timber;
 
-public final class BluetoothAdapterWrapper {
+final class BluetoothAdapterWrapper {
 
   @Nullable private final BluetoothAdapter adapter;
 
@@ -33,7 +33,7 @@ public final class BluetoothAdapterWrapper {
     this.adapter = getBluetoothAdapter(context);
   }
 
-  @CheckResult @Nullable final BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
+  @CheckResult @Nullable private BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
     BluetoothAdapter adapter;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       adapter = BluetoothAdapter.getDefaultAdapter();

@@ -28,7 +28,7 @@ abstract class StateModifier implements InterestModifier {
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
 
-  protected StateModifier(@NonNull Context context) {
+  StateModifier(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
     this.handler = new Handler(Looper.getMainLooper());
   }

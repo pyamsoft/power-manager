@@ -42,11 +42,11 @@ public abstract class ManagerSettingsInteractorImpl implements ManagerSettingsIn
     KEY_MANAGE_SYNC = appContext.getString(R.string.manage_sync_key);
   }
 
-  @CheckResult @NonNull public Context getAppContext() {
+  @CheckResult @NonNull protected Context getAppContext() {
     return appContext;
   }
 
-  @CheckResult @NonNull public PowerManagerPreferences getPreferences() {
+  @CheckResult @NonNull protected PowerManagerPreferences getPreferences() {
     return preferences;
   }
 

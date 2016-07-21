@@ -53,10 +53,6 @@ public class CreateTriggerBasicFragment extends Fragment {
     unbinder.unbind();
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-  }
-
   @CheckResult @NonNull public final String getTriggerName() {
     String name;
     if (nameLayout == null) {

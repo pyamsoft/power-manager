@@ -28,11 +28,11 @@ abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
 
   @NonNull private final Context appContext;
 
-  protected BaseTriggerInteractorImpl(Context context) {
+  BaseTriggerInteractorImpl(Context context) {
     this.appContext = context.getApplicationContext();
   }
 
-  @CheckResult @NonNull public final Context getAppContext() {
+  @CheckResult @NonNull final Context getAppContext() {
     return appContext;
   }
 

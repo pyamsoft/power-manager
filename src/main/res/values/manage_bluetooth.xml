@@ -17,8 +17,6 @@
 
 <resources>
 
-  <string name="bluetooth_category_title">Bluetooth Settings</string>
-
   <bool name="manage_bluetooth_default">false</bool>
   <string name="manage_bluetooth_key">manage_bluetooth</string>
   <string name="manage_bluetooth_title">Manage Bluetooth</string>

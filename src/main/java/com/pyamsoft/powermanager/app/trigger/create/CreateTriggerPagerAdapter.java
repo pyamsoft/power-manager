@@ -26,14 +26,14 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
-public class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
+class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
 
   public static final int TOTAL_COUNT = 5;
-  public static final int POSITION_BASIC = 0;
-  public static final int POSITION_WIFI = 1;
-  public static final int POSITION_DATA = 2;
-  public static final int POSITION_BLUETOOTH = 3;
-  public static final int POSITION_SYNC = 4;
+  private static final int POSITION_BASIC = 0;
+  private static final int POSITION_WIFI = 1;
+  private static final int POSITION_DATA = 2;
+  private static final int POSITION_BLUETOOTH = 3;
+  private static final int POSITION_SYNC = 4;
 
   public CreateTriggerPagerAdapter(FragmentManager fm) {
     super(fm);

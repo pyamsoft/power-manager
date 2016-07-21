@@ -17,8 +17,6 @@
 
 <resources>
 
-  <string name="sync_category_title">Sync Settings</string>
-
   <bool name="manage_sync_default">true</bool>
   <string name="manage_sync_key">manage_sync</string>
   <string name="manage_sync_title">Manage Sync</string>

@@ -37,8 +37,7 @@ abstract class Manager {
   @NonNull private Subscription disableJobSubscription = Subscriptions.empty();
   @NonNull private Subscription enableJobSubscription = Subscriptions.empty();
 
-  protected Manager(@NonNull ManagerInteractor interactor,
-      @NonNull @Named("main") Scheduler mainScheduler,
+  Manager(@NonNull ManagerInteractor interactor, @NonNull @Named("main") Scheduler mainScheduler,
       @NonNull @Named("io") Scheduler ioScheduler) {
     this.interactor = interactor;
     this.ioScheduler = ioScheduler;
@@ -69,7 +68,7 @@ abstract class Manager {
     }
   }
 
-  @CheckResult @NonNull final Observable<ManagerInteractor> baseEnableObservable() {
+  @CheckResult @NonNull private Observable<ManagerInteractor> baseEnableObservable() {
     return interactor.cancelJobs().zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
       Timber.d("Check that manager isManaged");
       if (managed) {
@@ -129,7 +128,7 @@ abstract class Manager {
         });
   }
 
-  public final void enable(long time, boolean periodic) {
+  private void enable(long time, boolean periodic) {
     unsubsEnable();
     enableJobSubscription = interactor.createEnableJob(time, periodic)
         .subscribeOn(ioScheduler)
@@ -142,7 +141,7 @@ abstract class Manager {
         });
   }
 
-  public final void disable(long time, boolean periodic) {
+  private void disable(long time, boolean periodic) {
     unsubsDisable();
     disableJobSubscription = interactor.createDisableJob(time, periodic)
         .subscribeOn(ioScheduler)
@@ -169,7 +168,7 @@ abstract class Manager {
         });
   }
 
-  protected void disable(@NonNull Observable<ManagerInteractor> observable) {
+  void disable(@NonNull Observable<ManagerInteractor> observable) {
     unsubscribe();
     subscription = observable.filter(managerInteractor -> managerInteractor != null)
         .flatMap(ManagerInteractor::isPeriodic)

@@ -83,7 +83,7 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     });
   }
 
-  @CheckResult @NonNull final RemoteViews createCustomRemoteViews() {
+  @CheckResult @NonNull private RemoteViews createCustomRemoteViews() {
     final RemoteViews customView =
         new RemoteViews(appContext.getPackageName(), R.layout.remoteview_notification);
 

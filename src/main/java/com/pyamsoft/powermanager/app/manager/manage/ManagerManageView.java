@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.manager.manage;
 
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
 
-public interface ManagerManageView extends ManagerSettingsPresenter.ManagerSettingsView {
+interface ManagerManageView extends ManagerSettingsPresenter.ManagerSettingsView {
 
   void enableManaged();
 

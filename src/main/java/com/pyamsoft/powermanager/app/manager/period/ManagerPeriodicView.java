@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.manager.period;
 
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
 
-public interface ManagerPeriodicView extends ManagerSettingsPresenter.ManagerSettingsView {
+interface ManagerPeriodicView extends ManagerSettingsPresenter.ManagerSettingsView {
 
   void enablePeriodic();
 

@@ -33,7 +33,7 @@ abstract class ManageModifier implements InterestModifier {
   @NonNull private final Handler handler;
   @NonNull private final PowerManagerPreferences preferences;
 
-  protected ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.handler = new Handler(Looper.getMainLooper());

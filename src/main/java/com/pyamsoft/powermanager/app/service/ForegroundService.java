@@ -59,6 +59,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
     presenter.bindView(this);
 
+    // For now, trigger every 5 minutes
     TriggerJob.queue(new TriggerJob(5 * 60 * 1000));
     Timber.d("onCreate");
   }

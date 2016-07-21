@@ -39,12 +39,12 @@ import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
 
 final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
 
-  public static final int POSITION_WIFI = 0;
-  public static final int POSITION_DATA = 1;
-  public static final int POSITION_BLUETOOTH = 2;
-  public static final int POSITION_SYNC = 3;
-  public static final int POSITION_TRIGGERS = 4;
-  public static final int POSITION_SETTINGS = 5;
+  private static final int POSITION_WIFI = 0;
+  private static final int POSITION_DATA = 1;
+  private static final int POSITION_BLUETOOTH = 2;
+  private static final int POSITION_SYNC = 3;
+  private static final int POSITION_TRIGGERS = 4;
+  private static final int POSITION_SETTINGS = 5;
   private static final int NUMBER_ITEMS = 6;
 
   @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();

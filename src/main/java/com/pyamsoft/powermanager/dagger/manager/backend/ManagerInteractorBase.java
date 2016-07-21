@@ -29,7 +29,7 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
   @NonNull private final PowerManagerPreferences preferences;
   private boolean originalState = false;
 
-  protected ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
+  ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
   }
 
@@ -37,8 +37,7 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     return preferences;
   }
 
-  @NonNull @CheckResult
-  protected final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
+  @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
     return Observable.defer(() -> {
       Timber.d("Attempt job cancel %s", tag);
       PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, tag);

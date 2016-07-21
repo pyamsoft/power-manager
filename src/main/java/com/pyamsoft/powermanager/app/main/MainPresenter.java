@@ -57,7 +57,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
     unregisterFromFabColorBus();
   }
 
-  void registerToOverviewBus() {
+  private void registerToOverviewBus() {
     unregisterFromOverviewBus();
 
     overviewBusSubscription = OverviewSelectionBus.get()
@@ -73,7 +73,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         });
   }
 
-  void registerToFabColorBus() {
+  private void registerToFabColorBus() {
     unregisterFromFabColorBus();
     fabColorBusSubscription = FabColorBus.get()
         .register()
@@ -89,13 +89,13 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         });
   }
 
-  void unregisterFromOverviewBus() {
+  private void unregisterFromOverviewBus() {
     if (!overviewBusSubscription.isUnsubscribed()) {
       overviewBusSubscription.unsubscribe();
     }
   }
 
-  void unregisterFromFabColorBus() {
+  private void unregisterFromFabColorBus() {
     if (!fabColorBusSubscription.isUnsubscribed()) {
       fabColorBusSubscription.unsubscribe();
     }

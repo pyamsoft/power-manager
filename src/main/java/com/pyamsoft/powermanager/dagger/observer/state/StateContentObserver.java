@@ -23,7 +23,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
@@ -34,23 +33,18 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   private Uri uri;
   private boolean registered;
 
-  public StateContentObserver(@NonNull Context context) {
-    this(context, null);
-  }
-
-  public StateContentObserver(@NonNull Context context, @Nullable Uri uri) {
+  private StateContentObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
     handler = new Handler(Looper.getMainLooper());
     registered = false;
-    this.uri = uri;
   }
 
   @NonNull @CheckResult final Context getAppContext() {
     return appContext;
   }
 
-  public final void setUri(@NonNull Uri uri) {
+  final void setUri(@NonNull Uri uri) {
     this.uri = uri;
   }
 

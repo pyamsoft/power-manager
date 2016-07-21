@@ -48,7 +48,7 @@ import timber.log.Timber;
 
 public class TriggerJob extends BaseJob {
 
-  public static final int PRIORITY = 2;
+  private static final int PRIORITY = 2;
   @NonNull public static final String TRIGGER_TAG = "trigger";
   @Inject WifiStateObserver wifiObserver;
   @Inject DataStateObserver dataObserver;

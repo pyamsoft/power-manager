@@ -103,7 +103,7 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
     getView().onShowNewTriggerDialog();
   }
 
-  void createPowerTrigger(@NonNull ContentValues values) {
+  private void createPowerTrigger(@NonNull ContentValues values) {
     Timber.d("Create new power trigger");
     unsubCreateSubscription();
     createSubscription = interactor.put(values)
@@ -123,7 +123,7 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
-  void registerOnDeleteTriggerBus() {
+  private void registerOnDeleteTriggerBus() {
     unregisterFromDeleteTriggerBus();
     deleteTriggerBusSubscription = DeleteTriggerDialog.Bus.get()
         .register()
@@ -147,7 +147,7 @@ public class TriggerPresenter extends SchedulerPresenter<TriggerPresenter.Trigge
         });
   }
 
-  void registerOnCreateTriggerBus() {
+  private void registerOnCreateTriggerBus() {
     unregisterFromCreateTriggerBus();
     createTriggerBusSubscription = PowerTriggerFragment.Bus.get()
         .register()

@@ -61,7 +61,7 @@ public final class PowerTriggerDB {
     return instance;
   }
 
-  @CheckResult @NonNull public final BriteDatabase getDatabase() {
+  @CheckResult @NonNull private BriteDatabase getDatabase() {
     return briteDatabase;
   }
 

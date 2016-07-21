@@ -28,8 +28,8 @@ import timber.log.Timber;
 
 public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSettingsView> {
 
-  public static final int CONFIRM_DATABASE = 0;
-  public static final int CONFIRM_ALL = 1;
+  private static final int CONFIRM_DATABASE = 0;
+  private static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsInteractor interactor;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
@@ -67,19 +67,19 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     getView().showConfirmDialog(CONFIRM_DATABASE);
   }
 
-  void unsubscribeConfirm() {
+  private void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
     }
   }
 
-  void unregisterFromConfirmEventBus() {
+  private void unregisterFromConfirmEventBus() {
     if (!confirmBusSubscription.isUnsubscribed()) {
       confirmBusSubscription.unsubscribe();
     }
   }
 
-  void registerOnConfirmEventBus() {
+  private void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
         ConfirmationDialog.Bus.get().register().subscribe(confirmationEvent -> {

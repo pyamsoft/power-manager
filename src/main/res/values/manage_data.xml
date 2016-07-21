@@ -17,8 +17,6 @@
 
 <resources>
 
-  <string name="data_category_title">Data Settings</string>
-
   <bool name="manage_data_default">false</bool>
   <string name="manage_data_key">manage_data</string>
   <string name="manage_data_title">Manage Data</string>

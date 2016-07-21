@@ -44,7 +44,7 @@ public abstract class DeviceJob extends BaseJob {
     this.periodic = periodic;
   }
 
-  @CheckResult final boolean isPeriodic() {
+  @CheckResult private boolean isPeriodic() {
     return periodic;
   }
 
@@ -72,7 +72,7 @@ public abstract class DeviceJob extends BaseJob {
     }
   }
 
-  final void enable() {
+  private void enable() {
     // Only turn wifi on if it is off
     if (!isEnabled()) {
       callEnable();
@@ -89,7 +89,7 @@ public abstract class DeviceJob extends BaseJob {
     }
   }
 
-  final void disable() {
+  private void disable() {
     // Only turn wifi on if it is off
     if (isEnabled()) {
       callDisable();

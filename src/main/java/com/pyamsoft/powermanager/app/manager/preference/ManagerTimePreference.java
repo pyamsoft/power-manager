@@ -46,8 +46,7 @@ public abstract class ManagerTimePreference extends Preference
   private Unbinder unbinder;
   private String customSummary;
 
-  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
+  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     handler = new Handler();
 
