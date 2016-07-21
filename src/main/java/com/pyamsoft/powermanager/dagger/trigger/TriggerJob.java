@@ -114,7 +114,20 @@ public class TriggerJob extends BaseJob {
           Timber.d("Filter empty triggers");
           return !PowerTriggerEntry.isEmpty(entry);
         })
-        .toSortedList()
+        // KLUDGE Entries do not implement comparable
+        .toSortedList((entry, entry2) -> {
+          Timber.d("Sort entries");
+          final int p1 = entry.percent();
+          final int p2 = entry2.percent();
+
+          if (p1 < p2) {
+            return -1;
+          } else if (p1 > p2) {
+            return 1;
+          } else {
+            return 0;
+          }
+        })
         .flatMap(powerTriggerEntries -> {
           // KLUDGE this is really bad. Is there another way to update in the background?
           Observable<Integer> updatedAvailability = Observable.just(-1);
