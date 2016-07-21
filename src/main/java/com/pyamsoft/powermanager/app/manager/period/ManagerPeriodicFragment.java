@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.manager.period;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -33,15 +32,24 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.manager.period.DaggerManagerPeriodicComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
+import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
+import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class ManagerPeriodicFragment extends PreferenceFragmentCompat
-    implements ManagerPeriodicView {
+    implements ManagerPeriodicView, WifiManageObserver.View, DataManageObserver.View,
+    BluetoothManageObserver.View, SyncManageObserver.View {
 
   @Inject ManagerPeriodicPresenter presenter;
 
+  private InterestObserver manageObserver;
   private SwitchPreferenceCompat periodicPreference;
   private ListPreference presetPeriodicDisablePreference;
   private ManagerPeriodicPreference periodicDisablePreference;
@@ -55,7 +63,6 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
   @StringRes private int presetPeriodicDisableKeyResId;
   @StringRes private int periodicEnableKeyResId;
   @StringRes private int presetPeriodicEnableKeyResId;
-  private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
   @CheckResult @NonNull public static ManagerPeriodicFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
@@ -67,6 +74,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    manageObserver.register();
     presenter.bindView(this);
     periodicDisablePreference.bindView();
     periodicEnablePreference.bindView();
@@ -143,17 +151,22 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    manageObserver.unregister();
     periodicDisablePreference.unbindView();
     periodicEnablePreference.unbindView();
     presenter.unbindView();
   }
 
   private void findCorrectPreferences() {
+    final ManageObserverComponent manageObserverComponent = DaggerManageObserverComponent.builder()
+        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
+        .build();
     final String fragmentType =
         getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
     switch (fragmentType) {
       case ManagerSettingsPagerAdapter.TYPE_WIFI:
         Timber.d("Periodic fragment for Wifi");
+        manageObserver = manageObserverComponent.provideWifiManagerObserver();
         xmlResId = R.xml.periodic_wifi;
         manageKeyResId = R.string.manage_wifi_key;
         periodicKeyResId = R.string.periodic_wifi_key;
@@ -164,6 +177,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
         break;
       case ManagerSettingsPagerAdapter.TYPE_DATA:
         Timber.d("Periodic fragment for Data");
+        manageObserver = manageObserverComponent.provideDataManagerObserver();
         xmlResId = R.xml.periodic_data;
         manageKeyResId = R.string.manage_data_key;
         periodicKeyResId = R.string.periodic_data_key;
@@ -174,6 +188,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
         break;
       case ManagerSettingsPagerAdapter.TYPE_BLUETOOTH:
         Timber.d("Periodic fragment for Bluetooth");
+        manageObserver = manageObserverComponent.provideBluetoothManagerObserver();
         xmlResId = R.xml.periodic_bluetooth;
         manageKeyResId = R.string.manage_bluetooth_key;
         periodicKeyResId = R.string.periodic_bluetooth_key;
@@ -184,6 +199,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
         break;
       case ManagerSettingsPagerAdapter.TYPE_SYNC:
         Timber.d("Periodic fragment for Sync");
+        manageObserver = manageObserverComponent.provideSyncManagerObserver();
         xmlResId = R.xml.periodic_sync;
         manageKeyResId = R.string.manage_sync_key;
         periodicKeyResId = R.string.periodic_sync_key;
@@ -195,6 +211,9 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
       default:
         throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
     }
+
+    //noinspection unchecked
+    manageObserver.setView(this);
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
@@ -207,17 +226,6 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
     addPreferencesFromResource(xmlResId);
 
     resolvePreferences();
-    listener = (sharedPreferences, pref) -> {
-      final String key = getString(manageKeyResId);
-      if (pref.equals(key)) {
-        // We want to enable the periodic switch only based on managed state
-        presenter.setPeriodicFromPreference(key);
-        presenter.setCustomPeriodicDisableTimeStateFromPreference(key, getString(periodicKeyResId),
-            periodicPreference.isChecked());
-        presenter.setCustomPeriodicEnableTimeStateFromPreference(key, getString(periodicKeyResId),
-            periodicPreference.isChecked());
-      }
-    };
   }
 
   private void resolvePreferences() {
@@ -262,15 +270,63 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
     periodicPreference.setEnabled(false);
   }
 
+  @Override public void onSyncManageEnabled() {
+    Timber.d("sync managed");
+    onManageChangeResponse();
+  }
+
+  @Override public void onSyncManageDisabled() {
+    Timber.d("sync unmanaged");
+    onManageChangeResponse();
+  }
+
+  @Override public void onBluetoothManageDisabled() {
+    Timber.d("bluetooth unmanaged");
+    onManageChangeResponse();
+  }
+
+  @Override public void onBluetoothManageEnabled() {
+    Timber.d("bluetooth managed");
+    onManageChangeResponse();
+  }
+
+  @Override public void onWifiManageEnabled() {
+    Timber.d("wifi managed");
+    onManageChangeResponse();
+  }
+
+  @Override public void onWifiManageDisabled() {
+    Timber.d("wifi unmanaged");
+    onManageChangeResponse();
+  }
+
+  @Override public void onDataManageDisabled() {
+    Timber.d("data unmanaged");
+    onManageChangeResponse();
+  }
+
+  @Override public void onDataManageEnabled() {
+    Timber.d("data managed");
+    onManageChangeResponse();
+  }
+
+  private void onManageChangeResponse() {
+    // We want to enable the periodic switch only based on managed state
+    final String key = getString(manageKeyResId);
+    presenter.setPeriodicFromPreference(key);
+    presenter.setCustomPeriodicDisableTimeStateFromPreference(key, getString(periodicKeyResId),
+        periodicPreference.isChecked());
+    presenter.setCustomPeriodicEnableTimeStateFromPreference(key, getString(periodicKeyResId),
+        periodicPreference.isChecked());
+  }
+
   @Override public void onResume() {
     super.onResume();
     presenter.resume();
-    presenter.registerSharedPreferenceChangeListener(listener, getString(manageKeyResId));
   }
 
   @Override public void onPause() {
     super.onPause();
     presenter.pause();
-    presenter.unregisterSharedPreferenceChangeListener(listener);
   }
 }

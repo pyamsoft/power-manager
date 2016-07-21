@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -49,20 +48,6 @@ public abstract class ManagerSettingsInteractorImpl implements ManagerSettingsIn
 
   @CheckResult @NonNull public PowerManagerPreferences getPreferences() {
     return preferences;
-  }
-
-  @Override public final void registerSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key) {
-    if (!key.equals(KEY_MANAGE_WIFI) && !key.equals(KEY_MANAGE_DATA) && !key.equals(
-        KEY_MANAGE_BLUETOOTH) && !key.equals(KEY_MANAGE_SYNC)) {
-      throw new IllegalStateException("Invalid key");
-    }
-    preferences.register(listener);
-  }
-
-  @Override public final void unregisterSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
-    preferences.unregister(listener);
   }
 
   @NonNull @Override public Observable<Boolean> isManaged(@NonNull String key) {

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
@@ -24,10 +23,4 @@ import rx.Observable;
 public interface ManagerSettingsInteractor {
 
   @CheckResult @NonNull Observable<Boolean> isManaged(@NonNull String key);
-
-  void registerSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener, @NonNull String key);
-
-  void unregisterSharedPreferenceChangeListener(
-      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 }

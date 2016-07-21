@@ -34,7 +34,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
 
   @Inject public ManagerManagePresenter(@NonNull ManagerManageInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
-    super(interactor, mainScheduler, ioScheduler);
+    super(mainScheduler, ioScheduler);
     this.interactor = interactor;
   }
 
