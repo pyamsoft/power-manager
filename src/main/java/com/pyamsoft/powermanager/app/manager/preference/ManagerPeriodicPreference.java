@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.dagger.manager.backend.DeviceJob;
-import com.pyamsoft.powermanager.dagger.manager.preference.DaggerManagerTimeComponent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -33,13 +32,11 @@ public abstract class ManagerPeriodicPreference extends ManagerTimePreference {
   @Inject @Named("periodic") ManagerTimePresenter presenter;
   private String specifiedCustomSummary;
 
-  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr,
+      int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
 
-    DaggerManagerTimeComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusManagerTime().inject(this);
   }
 
   public ManagerPeriodicPreference(Context context, AttributeSet attrs, int defStyleAttr) {

@@ -43,7 +43,6 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
-import com.pyamsoft.powermanager.dagger.main.DaggerMainComponent;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -75,10 +74,7 @@ public class MainActivity extends DonationActivityBase
 
     setPreferenceDefaultValues();
 
-    DaggerMainComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusMain().inject(this);
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
     // Resolve color here, just once

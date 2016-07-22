@@ -18,11 +18,10 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
 @ActivityScope
-@Component(modules = FullNotificationModule.class, dependencies = PowerManagerComponent.class)
+@Subcomponent(modules = FullNotificationModule.class)
 public interface FullNotificationComponent {
 
   void inject(FullNotificationActivity activity);

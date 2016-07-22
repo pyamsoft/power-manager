@@ -23,8 +23,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
-import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -99,7 +97,8 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
 
   static final class DisableJob extends Job {
 
-    DisableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
+    DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -114,13 +113,13 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorWifi.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);
-      modifier = DaggerStateModifierComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      modifier = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateModifier()
           .provideWifiStateModifier();
-      observer = DaggerStateObserverComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      observer = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateObserver()
           .provideWifiStateObserver();
     }
 

@@ -28,7 +28,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.DataStateModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.SyncStateModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.WifiStateModifier;
@@ -64,10 +63,7 @@ public class TriggerJob extends BaseJob {
   public TriggerJob(long delay) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
 
-    DaggerStateModifierComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusStateModifier().inject(this);
   }
 
   public static void queue(@NonNull TriggerJob job) {

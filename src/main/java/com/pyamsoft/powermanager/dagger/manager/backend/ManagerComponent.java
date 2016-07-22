@@ -18,10 +18,9 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope @Component(modules = ManagerModule.class, dependencies = PowerManagerComponent.class)
+@ActivityScope @Subcomponent(modules = ManagerModule.class)
 public interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);

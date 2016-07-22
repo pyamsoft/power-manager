@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.powermanager.dagger.service.DaggerForegroundComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -52,10 +51,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     screenOnOffReceiver = new ScreenOnOffReceiver();
     screenOnOffReceiver.register(this);
 
-    DaggerForegroundComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusForeground().inject(this);
 
     presenter.bindView(this);
 

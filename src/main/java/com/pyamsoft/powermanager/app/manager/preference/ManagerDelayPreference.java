@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.dagger.manager.preference.DaggerManagerTimeComponent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -32,10 +31,7 @@ public final class ManagerDelayPreference extends ManagerTimePreference {
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
 
-    DaggerManagerTimeComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusManagerTime().inject(this);
   }
 
   public ManagerDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {

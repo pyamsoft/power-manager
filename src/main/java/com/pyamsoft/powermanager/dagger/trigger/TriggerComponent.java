@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope
-@Component(modules = {TriggerListAdapterModule.class, TriggerModule.class}, dependencies = PowerManagerComponent.class)
+@ActivityScope @Subcomponent(modules = { TriggerListAdapterModule.class, TriggerModule.class })
 public interface TriggerComponent {
 
   void inject(PowerTriggerFragment fragment);

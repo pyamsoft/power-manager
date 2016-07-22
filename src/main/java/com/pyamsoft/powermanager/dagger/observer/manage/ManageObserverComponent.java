@@ -19,14 +19,13 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
-import dagger.Component;
+import dagger.Subcomponent;
 import javax.inject.Named;
 
-@ActivityScope @Component(modules = {
+@ActivityScope @Subcomponent(modules = {
     ManageObserverModule.class, ManagerModule.class
-}, dependencies = PowerManagerComponent.class) public interface ManageObserverComponent {
+}) public interface ManageObserverComponent {
 
   void inject(FullNotificationActivity.FullDialog activity);
 

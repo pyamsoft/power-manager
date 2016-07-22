@@ -36,7 +36,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
-import com.pyamsoft.powermanager.dagger.trigger.DaggerTriggerComponent;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import com.pyamsoft.powermanager.model.RxBus;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
@@ -60,10 +59,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    DaggerTriggerComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusTrigger().inject(this);
 
     adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
     dividerDecoration =

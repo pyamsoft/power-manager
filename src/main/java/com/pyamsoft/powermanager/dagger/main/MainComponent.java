@@ -18,10 +18,9 @@ package com.pyamsoft.powermanager.dagger.main;
 
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope @Component(modules = MainModule.class, dependencies = PowerManagerComponent.class)
+@ActivityScope @Subcomponent(modules = MainModule.class)
 public interface MainComponent {
 
   void inject(MainActivity activity);

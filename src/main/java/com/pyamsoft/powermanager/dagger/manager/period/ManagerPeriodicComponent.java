@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.dagger.manager.period;
 
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope
-@Component(modules = ManagerPeriodicModule.class, dependencies = PowerManagerComponent.class)
+@ActivityScope @Subcomponent(modules = ManagerPeriodicModule.class)
 public interface ManagerPeriodicComponent {
 
   void inject(ManagerPeriodicFragment fragment);

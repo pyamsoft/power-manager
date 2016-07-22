@@ -19,15 +19,14 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
-import dagger.Component;
+import dagger.Subcomponent;
 import javax.inject.Named;
 
-@ActivityScope @Component(modules = {
+@ActivityScope @Subcomponent(modules = {
     StateModifierModule.class, ManagerModule.class
-}, dependencies = PowerManagerComponent.class) public interface StateModifierComponent {
+}) public interface StateModifierComponent {
 
   void inject(FullNotificationActivity.FullDialog activity);
 

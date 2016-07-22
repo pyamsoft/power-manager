@@ -31,9 +31,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.WearableManageObserver;
-import com.pyamsoft.powermanager.dagger.settings.DaggerSettingsComponent;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
@@ -50,14 +48,12 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference wearableManage;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    DaggerSettingsComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
-    wearableObserver = DaggerManageObserverComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
+    PowerManager.getInstance().getPowerManagerComponent().plusSettings().inject(this);
+    wearableObserver = PowerManager.getInstance()
+        .getPowerManagerComponent()
+        .plusManageObserver()
         .provideWearableManageObserver();
+
     //noinspection unchecked
     wearableObserver.setView(this);
 

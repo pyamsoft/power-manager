@@ -22,8 +22,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
-import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import javax.inject.Inject;
 import rx.Observable;
@@ -99,7 +97,8 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
 
   static final class DisableJob extends Job {
 
-    DisableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
+    DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }
@@ -114,13 +113,13 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorSync.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);
-      modifier = DaggerStateModifierComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      modifier = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateModifier()
           .provideSyncStateModifier();
-      observer = DaggerStateObserverComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      observer = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateObserver()
           .provideSyncStateObserver();
     }
 

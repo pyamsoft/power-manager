@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.dagger.manager.manage;
 
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope
-@Component(modules = ManagerManageModule.class, dependencies = PowerManagerComponent.class)
+@ActivityScope @Subcomponent(modules = ManagerManageModule.class)
 public interface ManagerManageComponent {
 
   void inject(ManagerManageFragment fragment);

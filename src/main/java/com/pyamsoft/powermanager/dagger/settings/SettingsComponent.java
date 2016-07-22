@@ -18,12 +18,9 @@ package com.pyamsoft.powermanager.dagger.settings;
 
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import dagger.Component;
+import dagger.Subcomponent;
 
-@ActivityScope
-@Component(modules = SettingsModule.class, dependencies = PowerManagerComponent.class)
-public interface SettingsComponent {
+@ActivityScope @Subcomponent(modules = SettingsModule.class) public interface SettingsComponent {
 
   void inject(SettingsFragment fragment);
 }

@@ -28,10 +28,8 @@ import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
-import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
@@ -71,13 +69,10 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     periodicFragment = ManagerPeriodicFragment.newInstance(type);
     this.type = type;
 
-    final StateObserverComponent stateComponent = DaggerStateObserverComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build();
-
-    final StateModifierComponent stateModifierComponent = DaggerStateModifierComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build();
+    final StateObserverComponent stateComponent =
+        PowerManager.getInstance().getPowerManagerComponent().plusStateObserver();
+    final StateModifierComponent stateModifierComponent =
+        PowerManager.getInstance().getPowerManagerComponent().plusStateModifier();
 
     int icon;
     switch (type) {

@@ -22,8 +22,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
-import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import javax.inject.Inject;
 import rx.Observable;
@@ -114,13 +112,13 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorData.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);
-      modifier = DaggerStateModifierComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      modifier = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateModifier()
           .provideDataStateModifier();
-      observer = DaggerStateObserverComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
+      observer = PowerManager.getInstance()
+          .getPowerManagerComponent()
+          .plusStateObserver()
           .provideDataStateObserver();
     }
 

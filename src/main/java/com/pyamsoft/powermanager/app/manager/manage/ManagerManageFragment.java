@@ -33,9 +33,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.manager.manage.DaggerManagerManageComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
-import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
@@ -125,9 +123,8 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
   }
 
   private void findCorrectPreferences() {
-    final ManageObserverComponent manageObserverComponent = DaggerManageObserverComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build();
+    final ManageObserverComponent manageObserverComponent =
+        PowerManager.getInstance().getPowerManagerComponent().plusManageObserver();
     final String fragmentType =
         getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
     switch (fragmentType) {
@@ -172,10 +169,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    DaggerManagerManageComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusManagerManage().inject(this);
 
     findCorrectPreferences();
     addPreferencesFromResource(xmlResId);

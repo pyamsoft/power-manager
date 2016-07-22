@@ -37,26 +37,21 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.dagger.modifier.manage.BluetoothManageModifier;
-import com.pyamsoft.powermanager.dagger.modifier.manage.DaggerManageModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.manage.DataManageModifier;
 import com.pyamsoft.powermanager.dagger.modifier.manage.SyncManageModifier;
 import com.pyamsoft.powermanager.dagger.modifier.manage.WifiManageModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
-import com.pyamsoft.powermanager.dagger.modifier.state.DaggerStateModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.DataStateModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.SyncStateModifier;
 import com.pyamsoft.powermanager.dagger.modifier.state.WifiStateModifier;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
-import com.pyamsoft.powermanager.dagger.observer.manage.DaggerManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
-import com.pyamsoft.powermanager.dagger.observer.state.DaggerStateObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
-import com.pyamsoft.powermanager.dagger.service.DaggerFullNotificationComponent;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
@@ -71,11 +66,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    DaggerFullNotificationComponent.builder()
-        .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-        .build()
-        .inject(this);
+    PowerManager.getInstance().getPowerManagerComponent().plusFullNotification().inject(this);
 
     presenter.bindView(this);
   }
@@ -156,25 +147,10 @@ public class FullNotificationActivity extends AppCompatActivity
       setCancelable(true);
       Timber.d("onCreate");
 
-      DaggerStateObserverComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
-          .inject(this);
-
-      DaggerManageObserverComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
-          .inject(this);
-
-      DaggerStateModifierComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
-          .inject(this);
-
-      DaggerManageModifierComponent.builder()
-          .powerManagerComponent(PowerManager.getInstance().getPowerManagerComponent())
-          .build()
-          .inject(this);
+      PowerManager.getInstance().getPowerManagerComponent().plusStateObserver().inject(this);
+      PowerManager.getInstance().getPowerManagerComponent().plusManageObserver().inject(this);
+      PowerManager.getInstance().getPowerManagerComponent().plusStateModifier().inject(this);
+      PowerManager.getInstance().getPowerManagerComponent().plusManageModifier().inject(this);
 
       wifiStateObserver.setView(this);
       dataStateObserver.setView(this);
