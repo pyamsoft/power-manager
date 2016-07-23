@@ -45,6 +45,7 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
+import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
@@ -58,6 +59,7 @@ public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
   @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
+  @BindView(R.id.ad_view) AdvertisementView adView;
   @BindView(R.id.main_tablayout) TabLayout tabLayout;
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
@@ -77,8 +79,6 @@ public class MainActivity extends DonationActivityBase
     PowerManager.getInstance().getPowerManagerComponent().plusMain().inject(this);
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
-    // Resolve color here, just once
-
     presenter.bindView(this);
 
     unbinder = ButterKnife.bind(this);
@@ -87,6 +87,7 @@ public class MainActivity extends DonationActivityBase
     setupTabLayout(storedType);
     setupViewPager(storedType);
     setFabStateFromAdapter();
+    adView.create();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -234,6 +235,7 @@ public class MainActivity extends DonationActivityBase
 
     taskMap.clear();
     presenter.unbindView();
+    adView.destroy();
     unbinder.unbind();
   }
 
@@ -255,6 +257,7 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onStart() {
     super.onStart();
     presenter.start();
+    adView.show(false);
   }
 
   @Override protected void onStop() {

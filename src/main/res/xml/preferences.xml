@@ -54,6 +54,14 @@
         android:summary="@string/battery_settings_summary"
         android:title="@string/battery_settings_title"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/adview_default"
+        android:key="@string/adview_key"
+        android:summaryOff="@string/adview_summary_unchecked"
+        android:summaryOn="@string/adview_summary_checked"
+        android:title="@string/adview_title"
+        />
+
   </PreferenceCategory>
 
   <PreferenceCategory
