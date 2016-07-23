@@ -36,6 +36,9 @@ final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements T
       if (PowerTriggerEntry.isEmpty(values)) {
         Timber.e("Trigger is EMPTY");
         return Observable.just(-1L);
+      } else if (values.getAsInteger(PowerTriggerEntry.PERCENT) > 100) {
+        Timber.e("Percent too high");
+        return Observable.just(-1L);
       } else {
         Timber.d("Insert new Trigger into DB");
         // Throws SQLiteConstraintException
