@@ -24,7 +24,7 @@
   <string name="full_notification_key">full_notification</string>
   <bool name="full_notification_default">true</bool>
   <string name="full_notification_summary">Enable more robust configuration dialog from the notification</string>
-  <string name="full_notification_title">Better Notification</string>
+  <string name="full_notification_title">Full Notification</string>
 
   <string name="battery_settings_key">battery_settings</string>
   <string name="battery_settings_summary">Open the system battery settings screen</string>
@@ -36,7 +36,7 @@
 
   <string name="clear_db_key">clear_db</string>
   <string name="clear_db_title">Reset Database</string>
-  <string name="clear_db_summary">Reset the locked applications database</string>
+  <string name="clear_db_summary">Reset the power trigger database</string>
 
   <string name="clear_all_key">clear_all</string>
   <string name="clear_all_title">Reset All Settings</string>
