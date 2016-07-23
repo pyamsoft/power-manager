@@ -257,7 +257,6 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onStart() {
     super.onStart();
     presenter.start();
-    adView.show(false);
   }
 
   @Override protected void onStop() {
@@ -405,5 +404,13 @@ public class MainActivity extends DonationActivityBase
     fabColorTask.execute(new AsyncDrawable(getApplicationContext(), icon));
     taskMap.put("fab", fabColorTask);
     fab.setOnClickListener(view -> runnable.run());
+  }
+
+  @Override public void showAd() {
+    adView.show(false);
+  }
+
+  @Override public void hideAd() {
+    adView.hide();
   }
 }

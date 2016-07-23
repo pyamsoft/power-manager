@@ -23,11 +23,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
@@ -119,6 +121,24 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       final Intent serviceIntent = new Intent(getContext(), ForegroundService.class);
       getContext().startService(serviceIntent);
       return true;
+    });
+
+    final SwitchPreferenceCompat showAds =
+        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
+    showAds.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean b = (boolean) newValue;
+        final MainActivity activity = (MainActivity) getActivity();
+        if (b) {
+          Timber.d("Turn on ads");
+          activity.showAd();
+        } else {
+          Timber.d("Turn off ads");
+          activity.hideAd();
+        }
+        return true;
+      }
+      return false;
     });
   }
 
