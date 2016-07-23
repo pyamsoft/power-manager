@@ -45,7 +45,6 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import com.pyamsoft.pydroid.model.AsyncDrawable;
-import com.pyamsoft.pydroid.support.AdvertisementView;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.tool.AsyncTaskMap;
 import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
@@ -59,7 +58,6 @@ public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
   @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
-  @BindView(R.id.ad_view) AdvertisementView adView;
   @BindView(R.id.main_tablayout) TabLayout tabLayout;
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
@@ -72,8 +70,6 @@ public class MainActivity extends DonationActivityBase
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
-
     setPreferenceDefaultValues();
 
     PowerManager.getInstance().getPowerManagerComponent().plusMain().inject(this);
@@ -87,7 +83,11 @@ public class MainActivity extends DonationActivityBase
     setupTabLayout(storedType);
     setupViewPager(storedType);
     setFabStateFromAdapter();
-    adView.create();
+  }
+
+  @Override protected int bindActivityToView() {
+    setContentView(R.layout.activity_main);
+    return R.id.ad_view;
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -235,7 +235,6 @@ public class MainActivity extends DonationActivityBase
 
     taskMap.clear();
     presenter.unbindView();
-    adView.destroy();
     unbinder.unbind();
   }
 
@@ -404,13 +403,5 @@ public class MainActivity extends DonationActivityBase
     fabColorTask.execute(new AsyncDrawable(getApplicationContext(), icon));
     taskMap.put("fab", fabColorTask);
     fab.setOnClickListener(view -> runnable.run());
-  }
-
-  @Override public void showAd() {
-    adView.show(false);
-  }
-
-  @Override public void hideAd() {
-    adView.hide();
   }
 }
