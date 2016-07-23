@@ -299,10 +299,15 @@ public class MainActivity extends DonationActivityBase
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
     final String line1 = "BUGFIX: Code cleanup and general bugfixes";
-    final String line2 = "FEATURE: This change log screen";
+    final String line2 = "BUGFIX: More reliable managing of device hardware";
+    final String line3 = "BUGFIX: Additional battery optimizations for Power Triggers";
+    final String line4 = "FEATURE: Faster processing of Power Triggers";
+    final String line5 = "FEATURE: Battery optimization in queueing up power manage jobs";
+    final String line6 = "FEATURE: Removed advertisements and does not hold Internet permission";
 
     // Turn it into a spannable
-    final Spannable spannable = StringUtil.createBuilder(title, "\n\n", line1, "\n\n", line2);
+    final Spannable spannable =
+        StringUtil.createLineBreakBuilder(title, line1, line2, line3, line4, line5, line6);
 
     int start = 0;
     int end = title.length();
@@ -320,7 +325,18 @@ public class MainActivity extends DonationActivityBase
     StringUtil.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
-    end += 2 + line1.length() + 2 + line2.length();
+    end += 2
+        + line1.length()
+        + 2
+        + line2.length()
+        + 2
+        + line3.length()
+        + 2
+        + line4.length()
+        + 2
+        + line5.length()
+        + 2
+        + line6.length();
 
     StringUtil.sizeSpan(spannable, start, end, smallSize);
     StringUtil.colorSpan(spannable, start, end, smallColor);
