@@ -25,6 +25,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -32,14 +33,15 @@ import com.pyamsoft.powermanager.R;
 import timber.log.Timber;
 
 public class CreateTriggerManageFragment extends Fragment {
-  @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   public static final int TYPE_WIFI = 0;
   public static final int TYPE_DATA = 1;
   public static final int TYPE_BLUETOOTH = 2;
   public static final int TYPE_SYNC = 3;
-
+  @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @BindView(R.id.create_trigger_manage_toggle) SwitchCompat switchToggle;
   @BindView(R.id.create_trigger_manage_enable) SwitchCompat switchEnable;
+  @BindView(R.id.create_trigger_manage_toggle_explanation) TextView toggleExplain;
+  @BindView(R.id.create_trigger_manage_enable_explanation) TextView enableExplain;
   private int type;
   private Unbinder unbinder;
 
@@ -53,7 +55,6 @@ public class CreateTriggerManageFragment extends Fragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    // TODO
     type = getArguments().getInt(FRAGMENT_TYPE, -1);
   }
 
@@ -63,6 +64,48 @@ public class CreateTriggerManageFragment extends Fragment {
     final View view = inflater.inflate(R.layout.fragment_trigger_manage, container, false);
     unbinder = ButterKnife.bind(this, view);
     return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    setExplanation();
+  }
+
+  private void setExplanation() {
+    String radio;
+    switch (type) {
+      case TYPE_WIFI:
+        radio = "Wifi";
+        break;
+      case TYPE_DATA:
+        radio = "Data";
+        break;
+      case TYPE_BLUETOOTH:
+        radio = "Bluetooth";
+        break;
+      case TYPE_SYNC:
+        radio = "Sync";
+        break;
+      default:
+        throw new IllegalStateException("Invalid type: " + type);
+    }
+
+    String toggle = "Toggle " + radio;
+    String toggleExplainChecked = "Change state of " + radio + " as specified";
+    String toggleExplainUnchecked = "Do not change state of " + radio;
+    String enable = "Enable " + radio;
+    String enableExplainChecked = radio + " will be turned on";
+    String enableExplainUnchecked = radio + " will be turned off";
+
+    toggleExplain.setText(toggleExplainUnchecked);
+    switchToggle.setText(toggle);
+    switchToggle.setOnCheckedChangeListener((compoundButton, b) -> toggleExplain.setText(
+        b ? toggleExplainChecked : toggleExplainUnchecked));
+
+    enableExplain.setText(enableExplainUnchecked);
+    switchEnable.setText(enable);
+    switchEnable.setOnCheckedChangeListener((compoundButton, b) -> enableExplain.setText(
+        b ? enableExplainChecked : enableExplainUnchecked));
   }
 
   @Override public void onDestroyView() {
