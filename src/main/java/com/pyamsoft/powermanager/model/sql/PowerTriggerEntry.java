@@ -82,7 +82,7 @@ import com.google.auto.value.AutoValue;
   @CheckResult public static boolean isEmpty(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
     final String name = values.getAsString(PowerTriggerEntry.NAME);
-    return percent == EMPTY_PERCENT || EMPTY_NAME.equals(name);
+    return percent == EMPTY_PERCENT || EMPTY_NAME.equals(name) || name.isEmpty();
   }
 
   @CheckResult @NonNull
