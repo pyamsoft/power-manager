@@ -46,7 +46,8 @@ public abstract class ManagerTimePreference extends Preference
   private Unbinder unbinder;
   private String customSummary;
 
-  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+  public ManagerTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
+      int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     handler = new Handler();
 
@@ -140,7 +141,11 @@ public abstract class ManagerTimePreference extends Preference
       }
     }
     presenter.unbindView();
-    unbinder.unbind();
+
+    // Unbinder is not guaranteed
+    if (unbinder != null) {
+      unbinder.unbind();
+    }
   }
 
   @Override public void setCustomHint(@NonNull String hint) {
