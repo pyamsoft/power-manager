@@ -33,16 +33,15 @@ public abstract class DozeJob extends BaseJob {
       "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP";
   @NonNull public static final String DOZE_TAG = "doze_tag";
   @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
-  @NonNull private static final String DUMPSYS_DOZE_START_COMMAND;
+  @NonNull private static final String DUMPSYS_DOZE_START_COMMAND =
+      DUMPSYS_COMMAND + " deviceidle force-idle deep";
   @NonNull private static final String DUMPSYS_DOZE_END_COMMAND;
   private static final int PRIORITY = 5;
 
   static {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle deep";
       DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle unforce";
     } else {
-      DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle";
       DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle step";
     }
   }
