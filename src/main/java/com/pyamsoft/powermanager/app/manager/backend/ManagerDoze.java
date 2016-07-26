@@ -48,9 +48,10 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   static {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle deep";
-      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle"
+      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle unforce";
     } else {
       DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle";
+      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle step";
     }
   }
 
