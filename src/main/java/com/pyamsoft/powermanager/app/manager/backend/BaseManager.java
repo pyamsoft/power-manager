@@ -45,7 +45,7 @@ abstract class BaseManager implements Manager {
     this.mainScheduler = mainScheduler;
   }
 
-  public final void cleanup() {
+  @Override public void cleanup() {
     unsubscribe();
     unsubsDisable();
     unsubsEnable();
@@ -139,7 +139,7 @@ abstract class BaseManager implements Manager {
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
-        });
+        }, this::unsubsEnable);
   }
 
   private void disable(long time, boolean periodic) {
@@ -152,7 +152,7 @@ abstract class BaseManager implements Manager {
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
-        });
+        }, this::unsubsDisable);
   }
 
   @Override public void enable() {
@@ -166,6 +166,7 @@ abstract class BaseManager implements Manager {
         }, throwable -> Timber.e(throwable, "onError"), () -> {
           Timber.d("onComplete");
           interactor.setOriginalState(false);
+          unsubscribe();
         });
   }
 
@@ -181,7 +182,10 @@ abstract class BaseManager implements Manager {
         .subscribe(pair -> {
           Timber.d("Queue disable");
           disable(pair.second, pair.first);
-        }, throwable -> Timber.e(throwable, "onError"), () -> Timber.d("onComplete"));
+        }, throwable -> Timber.e(throwable, "onError"), () -> {
+          Timber.d("onComplete");
+          unsubscribe();
+        });
   }
 
   @Override public void disable(boolean charging) {

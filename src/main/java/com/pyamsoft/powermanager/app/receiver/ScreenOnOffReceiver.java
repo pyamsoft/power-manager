@@ -118,7 +118,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
     if (isDoze) {
       Timber.d("Device is currently dozing, disable Doze");
-      managerDoze.disable(charging);
+      managerDoze.enable();
     }
   }
 
@@ -131,7 +131,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
     if (!isDoze) {
       Timber.d("Device is currently not dozing, enable Doze");
-      managerDoze.enable();
+      managerDoze.disable(charging);
     }
   }
 
@@ -149,6 +149,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     managerData.cleanup();
     managerBluetooth.cleanup();
     managerSync.cleanup();
+    managerDoze.cleanup();
   }
 
   public final void unregister() {

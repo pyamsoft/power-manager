@@ -152,6 +152,9 @@ dependencies {
   // Showcase View
   compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
 
+//  // Call shell commands
+//  compile 'eu.chainfire:libsuperuser:1.0.0.+'
+
   // Android Framework Testing
   androidTestCompile 'com.android.support:support-annotations:24.1.1'
   androidTestCompile 'com.android.support.test:runner:0.5'

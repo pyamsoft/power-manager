@@ -21,4 +21,6 @@ public interface Manager {
   void enable();
 
   void disable(boolean charging);
+
+  void cleanup();
 }
