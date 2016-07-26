@@ -21,11 +21,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.pyamsoft.powermanager">
 
-
   <!-- Remove the INTERNET permission -->
   <uses-permission
       android:name="android.permission.INTERNET"
       tools:node="remove"/>
+
+  <!-- To call dumpsys command for Doze -->
+  <uses-permission
+      android:name="android.permission.DUMP"
+      tools:ignore="ProtectedPermissions"/>
 
   <!-- For Billing Service -->
   <uses-permission android:name="com.android.vending.BILLING"/>

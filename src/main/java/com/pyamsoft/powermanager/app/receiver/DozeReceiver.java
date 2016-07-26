@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import timber.log.Timber;
@@ -39,8 +40,24 @@ import timber.log.Timber;
     }
   }
 
+  @CheckResult public static boolean isDozeMode(Context context) {
+    final android.os.PowerManager pm = (android.os.PowerManager) context.getApplicationContext()
+        .getSystemService(Context.POWER_SERVICE);
+    boolean doze;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Timber.d("Get doze state");
+      doze = pm.isDeviceIdleMode();
+    } else {
+      Timber.e("Default doze state false");
+      doze = false;
+    }
+
+    return doze;
+  }
+
   @Override public void onReceive(Context context, Intent intent) {
     Timber.d("onReceive: Doze change event");
+    Timber.d("Doze state: %s", isDozeMode(context));
   }
 
   public void register(@NonNull Context context) {

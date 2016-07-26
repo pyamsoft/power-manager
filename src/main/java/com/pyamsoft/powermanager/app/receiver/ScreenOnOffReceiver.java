@@ -16,12 +16,12 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
@@ -58,21 +58,6 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
   }
 
-  @CheckResult private static boolean isDozeMode(Context context) {
-    final android.os.PowerManager pm = (android.os.PowerManager) context.getApplicationContext()
-        .getSystemService(Context.POWER_SERVICE);
-    boolean doze;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Timber.d("Get doze state");
-      doze = pm.isDeviceIdleMode();
-    } else {
-      Timber.e("Default doze state false");
-      doze = false;
-    }
-
-    return doze;
-  }
-
   @CheckResult private static boolean getCurrentChargingState(@NonNull Context context) {
     final Intent batteryStatus = context.registerReceiver(null, BATTERY_FILTER);
     int status;
@@ -92,16 +77,17 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   @Override public final void onReceive(final Context context, final Intent intent) {
     if (null != intent) {
       final String action = intent.getAction();
-      final boolean isDoze = isDozeMode(context);
+      final boolean hasDump = ManagerDoze.checkDumpsysPermission(context);
+      final boolean isDoze = DozeReceiver.isDozeMode(context);
       final boolean charging = getCurrentChargingState(context);
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
           Timber.d("Screen off event");
-          disableManagers(charging, isDoze);
+          disableManagers(charging, isDoze, hasDump);
           break;
         case Intent.ACTION_SCREEN_ON:
           Timber.d("Screen on event");
-          enableManagers(charging, isDoze);
+          enableManagers(charging, isDoze, hasDump);
           break;
         default:
           Timber.e("Invalid event: %s", action);
@@ -109,29 +95,41 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     }
   }
 
-  private void enableManagers(boolean charging, boolean isDoze) {
+  private void enableManagers(boolean charging, boolean isDoze, boolean hasDump) {
     Timber.d("Enable all managed managers");
     managerWifi.enable();
     managerData.enable();
     managerBluetooth.enable();
     managerSync.enable();
 
-    if (isDoze) {
-      Timber.d("Device is currently dozing, disable Doze");
-      managerDoze.enable();
+    if (hasDump) {
+      if (isDoze) {
+        Timber.d("Device is currently dozing, disable Doze");
+        managerDoze.enable();
+      } else {
+        Timber.d("Device is not currently in doze");
+      }
+    } else {
+      Timber.e("Missing permission %s", Manifest.permission.DUMP);
     }
   }
 
-  private void disableManagers(boolean charging, boolean isDoze) {
+  private void disableManagers(boolean charging, boolean isDoze, boolean hasDump) {
     Timber.d("Disable all managed managers");
     managerWifi.disable(charging);
     managerData.disable(charging);
     managerBluetooth.disable(charging);
     managerSync.disable(charging);
 
-    if (!isDoze) {
-      Timber.d("Device is currently not dozing, enable Doze");
-      managerDoze.disable(charging);
+    if (hasDump) {
+      if (!isDoze) {
+        Timber.d("Device is currently not dozing, enable Doze");
+        managerDoze.disable(charging);
+      } else {
+        Timber.d("Device is not dozing");
+      }
+    } else {
+      Timber.e("Missing permission %s", Manifest.permission.DUMP);
     }
   }
 

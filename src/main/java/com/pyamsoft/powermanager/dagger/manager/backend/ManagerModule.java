@@ -82,9 +82,14 @@ import rx.Scheduler;
     return new ManagerData(data, ioScheduler, mainScheduler);
   }
 
-  @ActivityScope @Provides ManagerDoze provideManagerDoze(
+  @ActivityScope @Provides ManagerDoze provideManagerDoze(@NonNull ManagerDozeInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    return new ManagerDoze(ioScheduler, mainScheduler);
+    return new ManagerDoze(interactor, ioScheduler, mainScheduler);
+  }
+
+  @ActivityScope @Provides ManagerDozeInteractor provideManagerDozeInteractor(
+      @NonNull PowerManagerPreferences preferences) {
+    return new ManagerDozeInteractorImpl(preferences);
   }
 }
