@@ -34,12 +34,25 @@ import timber.log.Timber;
 
 public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implements Manager {
 
-  @NonNull private static final String DUMPSYS_SENSORSERVICE_COMMAND = "dumpsys sensorservice";
+  @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
+  @NonNull private static final String DUMPSYS_SENSORSERVICE_COMMAND =
+      DUMPSYS_COMMAND + " sensorservice";
   @NonNull private static final String DUMPSYS_ENABLE_COMMAND =
       DUMPSYS_SENSORSERVICE_COMMAND + " enable";
   @NonNull private static final String DUMPSYS_DISABLE_COMMAND =
       DUMPSYS_SENSORSERVICE_COMMAND + " restrict com.pyamsoft.powermanager";
+  @NonNull private static final String DUMPSYS_DOZE_START_COMMAND;
+  @NonNull private static final String DUMPSYS_DOZE_END_COMMAND;
   @NonNull private Subscription subscription = Subscriptions.empty();
+
+  static {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle deep";
+      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle"
+    } else {
+      DUMPSYS_DOZE_START_COMMAND = DUMPSYS_COMMAND + " deviceidle force-idle";
+    }
+  }
 
   @Inject public ManagerDoze(@NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
