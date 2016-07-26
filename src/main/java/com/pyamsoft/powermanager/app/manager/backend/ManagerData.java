@@ -23,7 +23,7 @@ import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
 
-public final class ManagerData extends Manager {
+public final class ManagerData extends BaseManager {
 
   @NonNull private final ManagerInteractor interactor;
 

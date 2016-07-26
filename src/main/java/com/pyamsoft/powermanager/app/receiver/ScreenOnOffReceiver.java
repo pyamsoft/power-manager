@@ -21,11 +21,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
 import javax.inject.Inject;
@@ -33,50 +35,46 @@ import timber.log.Timber;
 
 public final class ScreenOnOffReceiver extends BroadcastReceiver {
 
-  @NonNull private final IntentFilter screenFilter;
+  @NonNull private final static IntentFilter SCREEN_FILTER;
+  @NonNull private final static IntentFilter BATTERY_FILTER;
+
+  static {
+    SCREEN_FILTER = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+    SCREEN_FILTER.addAction(Intent.ACTION_SCREEN_ON);
+    BATTERY_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+  }
+
   @Inject ManagerWifi managerWifi;
   @Inject ManagerData managerData;
   @Inject ManagerBluetooth managerBluetooth;
   @Inject ManagerSync managerSync;
-  @NonNull private final IntentFilter batteryFilter;
+  @Inject ManagerDoze managerDoze;
   private boolean isRegistered;
+  private Context appContext;
 
   public ScreenOnOffReceiver() {
-    screenFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-    screenFilter.addAction(Intent.ACTION_SCREEN_ON);
-    batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     isRegistered = false;
 
     PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
   }
 
-  @Override public final void onReceive(final Context context, final Intent intent) {
-    if (null != intent) {
-      final String action = intent.getAction();
-      switch (action) {
-        case Intent.ACTION_SCREEN_OFF:
-          Timber.d("Screen off event");
-          disableManagers(context);
-          break;
-        case Intent.ACTION_SCREEN_ON:
-          Timber.d("Screen on event");
-          enableManagers();
-          break;
-        default:
-      }
+  @CheckResult private static boolean isDozeMode(Context context) {
+    final android.os.PowerManager pm = (android.os.PowerManager) context.getApplicationContext()
+        .getSystemService(Context.POWER_SERVICE);
+    boolean doze;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Timber.d("Get doze state");
+      doze = pm.isDeviceIdleMode();
+    } else {
+      Timber.e("Default doze state false");
+      doze = false;
     }
+
+    return doze;
   }
 
-  private void enableManagers() {
-    Timber.d("Enable all managed managers");
-    managerWifi.enable();
-    managerData.enable();
-    managerBluetooth.enable();
-    managerSync.enable();
-  }
-
-  @CheckResult private boolean getCurrentChargingState(@NonNull Context context) {
-    final Intent batteryStatus = context.registerReceiver(null, batteryFilter);
+  @CheckResult private static boolean getCurrentChargingState(@NonNull Context context) {
+    final Intent batteryStatus = context.registerReceiver(null, BATTERY_FILTER);
     int status;
     if (batteryStatus == null) {
       Timber.e("NULL BatteryStatus Intent, return Unknown");
@@ -91,19 +89,57 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
         || status == BatteryManager.BATTERY_STATUS_FULL;
   }
 
-  private void disableManagers(@NonNull Context context) {
+  @Override public final void onReceive(final Context context, final Intent intent) {
+    if (null != intent) {
+      final String action = intent.getAction();
+      final boolean isDoze = isDozeMode(context);
+      final boolean charging = getCurrentChargingState(context);
+      switch (action) {
+        case Intent.ACTION_SCREEN_OFF:
+          Timber.d("Screen off event");
+          disableManagers(charging, isDoze);
+          break;
+        case Intent.ACTION_SCREEN_ON:
+          Timber.d("Screen on event");
+          enableManagers(charging, isDoze);
+          break;
+        default:
+          Timber.e("Invalid event: %s", action);
+      }
+    }
+  }
+
+  private void enableManagers(boolean charging, boolean isDoze) {
+    Timber.d("Enable all managed managers");
+    managerWifi.enable();
+    managerData.enable();
+    managerBluetooth.enable();
+    managerSync.enable();
+
+    if (isDoze) {
+      Timber.d("Device is currently dozing, disable Doze");
+      managerDoze.disable(charging);
+    }
+  }
+
+  private void disableManagers(boolean charging, boolean isDoze) {
     Timber.d("Disable all managed managers");
-    final boolean charging = getCurrentChargingState(context);
     managerWifi.disable(charging);
     managerData.disable(charging);
     managerBluetooth.disable(charging);
     managerSync.disable(charging);
+
+    if (!isDoze) {
+      Timber.d("Device is currently not dozing, enable Doze");
+      managerDoze.enable();
+    }
   }
 
   public final void register(@NonNull Context context) {
     cleanup();
     if (!isRegistered) {
-      context.getApplicationContext().registerReceiver(this, screenFilter);
+      appContext = context.getApplicationContext();
+      appContext.registerReceiver(this, SCREEN_FILTER);
       isRegistered = true;
     }
   }
@@ -115,9 +151,10 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     managerSync.cleanup();
   }
 
-  public final void unregister(@NonNull Context context) {
+  public final void unregister() {
     if (isRegistered) {
-      context.getApplicationContext().unregisterReceiver(this);
+      appContext.unregisterReceiver(this);
+      appContext = null;
       isRegistered = false;
     }
     cleanup();

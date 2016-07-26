@@ -25,7 +25,7 @@ import rx.Observable;
 import rx.Scheduler;
 import timber.log.Timber;
 
-abstract class WearableManager extends Manager {
+abstract class WearableManager extends BaseManager {
 
   @NonNull private final WearableManagerInteractor interactor;
 

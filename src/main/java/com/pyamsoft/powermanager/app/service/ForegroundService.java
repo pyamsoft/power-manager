@@ -69,7 +69,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
         .getJobManager()
         .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
 
-    screenOnOffReceiver.unregister(this);
+    screenOnOffReceiver.unregister();
     presenter.unbindView();
 
     stopForeground(true);

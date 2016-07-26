@@ -23,7 +23,7 @@ import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
 
-public final class ManagerSync extends Manager {
+public final class ManagerSync extends BaseManager {
 
   @NonNull private final ManagerInteractor interactor;
 
