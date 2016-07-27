@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.manage;
+package com.pyamsoft.powermanager.app.settings;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -22,28 +22,26 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-public class LollipopDataDialog extends DialogFragment {
+public class DozeDialog extends DialogFragment {
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity()).setCancelable(false)
         .setPositiveButton("Okay", (dialogInterface, i) -> {
           dismiss();
         })
-        .setTitle("Toggle Data on Lollipop+")
+        .setTitle("Agressive Doze on Marshmallow")
         .setMessage(
-            "Due to changes in Android on Lollipop and Marshmallow, it became more difficult to toggle the state of mobile data on the device."
+            "Doze mode is a feature on Android Marshmallow that allows the device to enter a power saving mode after 30 minutes."
                 + "\n"
-                + "In order to enable Power Manager to toggle mobile data on your Android device you must run the following command via the Android Debug Bridge (adb)."
+                + "In order to enable Power Manager to force the device to enter Doze mode more aggressively, you must do the following."
                 + "\n"
                 + "You must connect your Android device to a computer which has the adb program installed and then run the following command (all one line):"
                 + "\n\n"
-                + "adb -d shell pm grant com.pyamsoft.powermanager android.permission.WRITE_SECURE_SETTINGS"
+                + "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP"
                 + "\n\n"
-                + "This will grant Power Manager the ability to change system settings that are normally not available to it."
+                + "This will grant Power Manager the ability to call the dumpsys command which is critical to enabling Doze mode"
                 + "\n"
-                + "This commands the Android package manager to grant the WRITE_SECURE_SETTINGS permission to Power Manager so that it may change the state of the"
-                + "\n"
-                + "Cellular Data system setting.")
+                + "This commands the Android package manager to grant the DUMP permission to Power Manager so that it may force Doze mode")
         .create();
   }
 }

@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
@@ -140,6 +141,15 @@ public final class SettingsFragment extends PreferenceFragmentCompat
       }
       return false;
     });
+
+    showInfoDialogForDoze();
+  }
+
+  private void showInfoDialogForDoze() {
+    if (!ManagerDoze.checkDumpsysPermission(getContext())) {
+      Timber.d("Display dialog about doze mode on Marshmallow");
+      AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
+    }
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,

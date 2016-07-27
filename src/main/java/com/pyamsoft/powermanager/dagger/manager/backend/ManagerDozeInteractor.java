@@ -22,5 +22,7 @@ import rx.Observable;
 
 public interface ManagerDozeInteractor {
 
+  @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
+
   @CheckResult @NonNull Observable<Long> getDozeDelay();
 }

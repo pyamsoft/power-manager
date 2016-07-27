@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isDozeEnabled();
+
   @CheckResult boolean isIgnoreChargingWifi();
 
   @CheckResult boolean isIgnoreChargingData();
@@ -74,21 +76,21 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isWifiManaged();
 
-  @CheckResult boolean isDataManaged();
-
-  @CheckResult boolean isBluetoothManaged();
-
-  @CheckResult boolean isSyncManaged();
-
-  @CheckResult boolean isWearableManaged();
-
   void setWifiManaged(boolean enable);
+
+  @CheckResult boolean isDataManaged();
 
   void setDataManaged(boolean enable);
 
+  @CheckResult boolean isBluetoothManaged();
+
   void setBluetoothManaged(boolean enable);
 
+  @CheckResult boolean isSyncManaged();
+
   void setSyncManaged(boolean enable);
+
+  @CheckResult boolean isWearableManaged();
 
   void setWearableManaged(boolean enable);
 
@@ -106,33 +108,33 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getPeriodicDisableTimeWifi();
 
-  @CheckResult long getPeriodicDisableTimeData();
-
-  @CheckResult long getPeriodicDisableTimeBluetooth();
-
-  @CheckResult long getPeriodicDisableTimeSync();
-
   void setPeriodicDisableTimeWifi(long time);
+
+  @CheckResult long getPeriodicDisableTimeData();
 
   void setPeriodicDisableTimeData(long time);
 
+  @CheckResult long getPeriodicDisableTimeBluetooth();
+
   void setPeriodicDisableTimeBluetooth(long time);
+
+  @CheckResult long getPeriodicDisableTimeSync();
 
   void setPeriodicDisableTimeSync(long time);
 
   @CheckResult long getPeriodicEnableTimeWifi();
 
-  @CheckResult long getPeriodicEnableTimeData();
-
-  @CheckResult long getPeriodicEnableTimeBluetooth();
-
-  @CheckResult long getPeriodicEnableTimeSync();
-
   void setPeriodicEnableTimeWifi(long time);
+
+  @CheckResult long getPeriodicEnableTimeData();
 
   void setPeriodicEnableTimeData(long time);
 
+  @CheckResult long getPeriodicEnableTimeBluetooth();
+
   void setPeriodicEnableTimeBluetooth(long time);
+
+  @CheckResult long getPeriodicEnableTimeSync();
 
   void setPeriodicEnableTimeSync(long time);
 

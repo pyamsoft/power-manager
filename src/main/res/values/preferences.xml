@@ -42,5 +42,10 @@
   <string name="clear_all_title">Reset All Settings</string>
   <string name="clear_all_summary">Reset all application settings to default</string>
 
+  <bool name="doze_default">false</bool>
+  <string name="doze_key">force_doze</string>
+  <string name="doze_title">Force Doze</string>
+  <string name="doze_summary_checked">Force the device into Doze mode after the screen turns off (Marshmallow only)</string>
+  <string name="doze_summary_unchecked">The device will enter Doze after about 30 minutes of inactivity</string>
 
 </resources>

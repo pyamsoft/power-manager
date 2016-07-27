@@ -54,6 +54,14 @@
         android:summary="@string/battery_settings_summary"
         android:title="@string/battery_settings_title"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/doze_default"
+        android:key="@string/doze_key"
+        android:summaryOff="@string/doze_summary_unchecked"
+        android:summaryOn="@string/doze_summary_checked"
+        android:title="@string/doze_title"
+        />
+
   </PreferenceCategory>
 
   <PreferenceCategory

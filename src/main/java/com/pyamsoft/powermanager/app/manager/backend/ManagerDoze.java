@@ -61,14 +61,17 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void enable() {
     unsubSubscription();
-    subscription = Observable.defer(() -> {
+    subscription = interactor.isDozeEnabled().filter(aBoolean -> {
+      Timber.d("filter Doze not enabled");
+      return aBoolean;
+    }).flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();
       }
 
       PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
-      return Observable.just(0);
+      return Observable.just(0L);
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
       PowerManager.getInstance().getJobManager().addJobInBackground(new DozeJob.EnableJob());
     }, throwable -> {
@@ -84,7 +87,10 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void disable(boolean charging) {
     unsubSubscription();
-    subscription = Observable.defer(() -> {
+    subscription = interactor.isDozeEnabled().filter(aBoolean -> {
+      Timber.d("filter Doze not enabled");
+      return aBoolean;
+    }).flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();

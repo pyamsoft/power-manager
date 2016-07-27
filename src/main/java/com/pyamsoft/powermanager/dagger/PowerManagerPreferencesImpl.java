@@ -191,6 +191,10 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(fullNotification, fullNotificationDefault);
   }
 
+  @Override public boolean isDozeEnabled() {
+    return false;
+  }
+
   @Override public boolean isIgnoreChargingWifi() {
     return get(ignoreChargingWifi, ignoreChargingWifiDefault);
   }
