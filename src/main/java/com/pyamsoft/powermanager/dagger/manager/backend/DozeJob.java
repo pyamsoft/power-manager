@@ -35,18 +35,21 @@ public abstract class DozeJob extends BaseJob {
   private static final int PRIORITY = 5;
 
   private final boolean doze;
+  private final boolean manageSensors;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
-  DozeJob(long delay, boolean enable) {
-    this(delay, enable, Schedulers.io(), AndroidSchedulers.mainThread());
+  DozeJob(long delay, boolean enable, boolean manageSensors) {
+    this(delay, enable, manageSensors, Schedulers.io(), AndroidSchedulers.mainThread());
   }
 
-  DozeJob(long delay, boolean enable, @NonNull @Named("io") Scheduler ioScheduler,
+  DozeJob(long delay, boolean enable, boolean manageSensors,
+      @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(new Params(PRIORITY).setRequiresNetwork(false).addTags(DOZE_TAG).setDelayMs(delay));
     this.doze = enable;
+    this.manageSensors = manageSensors;
     this.ioScheduler = ioScheduler;
     this.mainScheduler = mainScheduler;
   }
@@ -58,10 +61,15 @@ public abstract class DozeJob extends BaseJob {
       if (doze1) {
         Timber.d("Do doze startDoze");
         ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
+        if (manageSensors) {
+          Timber.d("Do sensor restrict");
+          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
+        }
       } else {
         Timber.d("Do doze stopDoze");
         ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+
+        Timber.d("Do sensor enable");
         ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
       }
       // Ignore
@@ -87,14 +95,14 @@ public abstract class DozeJob extends BaseJob {
   public static final class EnableJob extends DozeJob {
 
     public EnableJob() {
-      super(100, false);
+      super(100, false, false);
     }
   }
 
   public static final class DisableJob extends DozeJob {
 
-    public DisableJob(long delay) {
-      super(delay, true);
+    public DisableJob(long delay, boolean manageSensors) {
+      super(delay, true, manageSensors);
     }
   }
 }

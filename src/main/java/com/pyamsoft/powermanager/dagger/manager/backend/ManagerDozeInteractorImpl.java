@@ -44,4 +44,8 @@ public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
   @NonNull @Override public Observable<Boolean> isForceOutOfDoze() {
     return Observable.defer(() -> Observable.just(preferences.isForceOutDoze()));
   }
+
+  @NonNull @Override public Observable<Boolean> isManageSensors() {
+    return Observable.defer(() -> Observable.just(preferences.isManageSensors()));
+  }
 }

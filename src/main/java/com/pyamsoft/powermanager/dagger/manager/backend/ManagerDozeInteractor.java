@@ -29,4 +29,6 @@ public interface ManagerDozeInteractor {
   @CheckResult @NonNull Observable<Boolean> isIgnoreCharging();
 
   @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
+
+  @CheckResult @NonNull Observable<Boolean> isManageSensors();
 }

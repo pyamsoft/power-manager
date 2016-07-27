@@ -107,11 +107,13 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String forceOutOfDoze;
   @NonNull private final String ignoreChargingDoze;
   @NonNull private final String dozeDelay;
+  @NonNull private final String manageSensors;
 
   private final boolean forceDozeDefault;
   private final boolean forceOutOfDozeDefault;
   private final boolean ignoreChargingDozeDefault;
   @NonNull private final String dozeDelayDefault;
+  private final boolean manageSensorsDefault;
 
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -200,11 +202,17 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     forceOutOfDoze = appContext.getString(R.string.force_out_doze_key);
     ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
     dozeDelay = appContext.getString(R.string.doze_time_key);
+    manageSensors = appContext.getString(R.string.sensors_doze_key);
 
     forceDozeDefault = resources.getBoolean(R.bool.doze_default);
     forceOutOfDozeDefault = resources.getBoolean(R.bool.force_out_doze_default);
     ignoreChargingDozeDefault = resources.getBoolean(R.bool.ignore_charging_doze_default);
     dozeDelayDefault = appContext.getString(R.string.doze_time_default);
+    manageSensorsDefault = resources.getBoolean(R.bool.sensors_doze_default);
+  }
+
+  @Override public boolean isManageSensors() {
+    return get(manageSensors, manageSensorsDefault);
   }
 
   @Override public long getDozeDelay() {

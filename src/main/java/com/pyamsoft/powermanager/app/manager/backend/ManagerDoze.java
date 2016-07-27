@@ -24,6 +24,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
@@ -196,29 +197,31 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void disable(boolean charging) {
     unsubSubscription();
-    subscription =
-        baseObservable().flatMap(aBoolean -> interactor.isIgnoreCharging())
-            .filter(ignore -> {
-              Timber.d("Filter out if ignore doze and device is charging");
-              return !(ignore && charging);
-            })
-            .flatMap(aBoolean -> {
-              if (!isDozeAvailable()) {
-                Timber.e("Doze is not available on this platform");
-                return Observable.empty();
-              }
+    final Observable<Long> delayObservable =
+        baseObservable().flatMap(aBoolean -> interactor.isIgnoreCharging()).filter(ignore -> {
+          Timber.d("Filter out if ignore doze and device is charging");
+          return !(ignore && charging);
+        }).flatMap(aBoolean -> {
+          if (!isDozeAvailable()) {
+            Timber.e("Doze is not available on this platform");
+            return Observable.empty();
+          }
 
-              return interactor.getDozeDelay();
-            })
-            .subscribeOn(getSubscribeScheduler())
-            .observeOn(getObserveScheduler())
-            .subscribe(delay -> {
-              PowerManager.getInstance()
-                  .getJobManager()
-                  .addJobInBackground(new DozeJob.DisableJob(delay * 1000L));
-            }, throwable -> {
-              Timber.e(throwable, "onError");
-            }, this::unsubSubscription);
+          return interactor.getDozeDelay();
+        });
+
+    final Observable<Boolean> sensorsObservable = interactor.isManageSensors();
+
+    subscription = Observable.zip(delayObservable, sensorsObservable, Pair::new)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(pair -> {
+          PowerManager.getInstance()
+              .getJobManager()
+              .addJobInBackground(new DozeJob.DisableJob(pair.first * 1000L, pair.second));
+        }, throwable -> {
+          Timber.e(throwable, "onError");
+        }, this::unsubSubscription);
   }
 
   @Override public void cleanup() {

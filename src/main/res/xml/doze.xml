@@ -38,6 +38,15 @@
         android:title="@string/doze_time_title"
         />
 
+    <SwitchPreferenceCompat
+        android:defaultValue="@bool/sensors_doze_default"
+        android:dependency="@string/doze_key"
+        android:key="@string/sensors_doze_key"
+        android:summaryOff="@string/sensors_doze_summary_unchecked"
+        android:summaryOn="@string/sensors_doze_summary_checked"
+        android:title="@string/sensors_doze_title"
+        />
+
     <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_doze_default"
         android:dependency="@string/doze_key"
