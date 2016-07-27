@@ -37,16 +37,20 @@ public abstract class DozeJob extends BaseJob {
 
   @NonNull public static final String DOZE_TAG = "doze_tag";
   @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
-  @NonNull private static final String DUMPSYS_DOZE_START_COMMAND =
+  @NonNull private static final String DUMPSYS_DOZE_START =
       DUMPSYS_COMMAND + " deviceidle force-idle deep";
-  @NonNull private static final String DUMPSYS_DOZE_END_COMMAND;
+  @NonNull private static final String DUMPSYS_DOZE_END;
+  @NonNull private static final String DUMPSYS_SENSOR_ENABLE =
+      DUMPSYS_COMMAND + " sensorservice enable";
+  @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
+      DUMPSYS_COMMAND + " sensorservice restrict com.pyamsoft.powermanager";
   private static final int PRIORITY = 5;
 
   static {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle unforce";
+      DUMPSYS_DOZE_END = DUMPSYS_COMMAND + " deviceidle unforce";
     } else {
-      DUMPSYS_DOZE_END_COMMAND = DUMPSYS_COMMAND + " deviceidle step";
+      DUMPSYS_DOZE_END = DUMPSYS_COMMAND + " deviceidle step";
     }
   }
 
@@ -93,14 +97,16 @@ public abstract class DozeJob extends BaseJob {
     if (doze) {
       if (!isDoze) {
         Timber.d("Do doze startDoze");
-        executeShellCommand(DUMPSYS_DOZE_START_COMMAND);
+        executeShellCommand(DUMPSYS_DOZE_START);
+        executeShellCommand(DUMPSYS_SENSOR_RESTRICT);
       } else {
         Timber.e("Doze already running");
       }
     } else {
       if (isDoze) {
         Timber.d("Do doze stopDoze");
-        executeShellCommand(DUMPSYS_DOZE_END_COMMAND);
+        executeShellCommand(DUMPSYS_DOZE_END);
+        executeShellCommand(DUMPSYS_SENSOR_ENABLE);
       } else {
         Timber.e("Doze already not running");
       }
