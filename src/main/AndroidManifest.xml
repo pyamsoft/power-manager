@@ -31,6 +31,10 @@
       android:name="android.permission.DUMP"
       tools:ignore="ProtectedPermissions"/>
 
+  <uses-permission
+      android:name="android.permission.WRITE_SECURE_SETTINGS"
+      tools:ignore="ProtectedPermissions"/>
+
   <!-- For Billing Service -->
   <uses-permission android:name="com.android.vending.BILLING"/>
 

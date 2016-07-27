@@ -29,8 +29,12 @@ import timber.log.Timber;
 
 public abstract class DozeJob extends BaseJob {
 
-  @NonNull public static final String GRANT_PERMISSION_COMMAND =
+  @NonNull public static final String GRANT_PERMISSION_DUMP_COMMAND =
       "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP";
+
+  @NonNull public static final String GRANT_PERMISSION_SECURE_COMMAND =
+      "adb -d shell pm grant com.pyamsoft.powermanager android.permission.WRITE_SECURE_SETTINGS";
+
   @NonNull public static final String DOZE_TAG = "doze_tag";
   @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
   @NonNull private static final String DUMPSYS_DOZE_START_COMMAND =

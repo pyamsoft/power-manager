@@ -16,9 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ import timber.log.Timber;
 
 public class DataStateModifier extends StateModifier {
 
+  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
   @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
 
@@ -58,7 +61,7 @@ public class DataStateModifier extends StateModifier {
   private void setMobileDataEnabledReflection(boolean enabled) {
     if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
       try {
-        Timber.d("setMobileDataEnabled: %s", enabled);
+        Timber.d("setMobileDataEnabledReflection: %s", enabled);
         SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
       } catch (final Exception e) {
         Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
@@ -69,7 +72,16 @@ public class DataStateModifier extends StateModifier {
   private void setMobileDataEnabled(boolean enabled) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledReflection(enabled);
+    } else {
+      setMobileDataEnabledSettings(enabled);
     }
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  private void setMobileDataEnabledSettings(boolean enabled) {
+    Timber.d("setMobileDataEnabledSettings: %s", enabled);
+    Settings.Global.putInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA,
+        enabled ? 1 : 0);
   }
 
   @Override void mainThreadSet() {
