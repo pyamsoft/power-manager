@@ -104,7 +104,9 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean fullNotificationDefault;
 
   @NonNull private final String forceDoze;
+  @NonNull private final String ignoreChargingDoze;
   private final boolean forceDozeDefault;
+  private final boolean ignoreChargingDozeDefault;
 
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -190,7 +192,13 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
 
     forceDoze = appContext.getString(R.string.doze_key);
+    ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
     forceDozeDefault = resources.getBoolean(R.bool.doze_default);
+    ignoreChargingDozeDefault = resources.getBoolean(R.bool.ignore_charging_doze_default);
+  }
+
+  @Override public boolean isIgnoreChargingDoze() {
+    return get(ignoreChargingDoze, ignoreChargingDozeDefault);
   }
 
   @Override public boolean isFullNotificationEnabled() {

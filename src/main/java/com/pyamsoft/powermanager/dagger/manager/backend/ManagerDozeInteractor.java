@@ -25,4 +25,6 @@ public interface ManagerDozeInteractor {
   @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
 
   @CheckResult @NonNull Observable<Long> getDozeDelay();
+
+  @CheckResult @NonNull Observable<Boolean> isIgnoreCharging();
 }

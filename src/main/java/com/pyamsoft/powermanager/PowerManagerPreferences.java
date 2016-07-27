@@ -24,6 +24,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isDozeEnabled();
 
+  @CheckResult boolean isIgnoreChargingDoze();
+
   @CheckResult boolean isIgnoreChargingWifi();
 
   @CheckResult boolean isIgnoreChargingData();

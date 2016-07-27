@@ -143,9 +143,9 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
-    }).filter(aBoolean -> {
-      Timber.d("Filter device is not charging");
-      return !charging;
+    }).flatMap(aBoolean -> interactor.isIgnoreCharging()).filter(ignore -> {
+      Timber.d("Filter out if ignore doze and device is charging");
+      return !(ignore && charging);
     }).flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
         Timber.e("Doze is not available on this platform");
