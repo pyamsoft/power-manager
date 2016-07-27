@@ -21,6 +21,13 @@ import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
+import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public abstract class DozeJob extends BaseJob {
@@ -29,31 +36,58 @@ public abstract class DozeJob extends BaseJob {
   private static final int PRIORITY = 5;
 
   private final boolean doze;
+  @NonNull private final Scheduler ioScheduler;
+  @NonNull private final Scheduler mainScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
   DozeJob(long delay, boolean enable) {
+    this(delay, enable, Schedulers.io(), AndroidSchedulers.mainThread());
+  }
+
+  DozeJob(long delay, boolean enable, @NonNull @Named("io") Scheduler ioScheduler,
+      @NonNull @Named("main") Scheduler mainScheduler) {
     super(new Params(PRIORITY).setRequiresNetwork(false).addTags(DOZE_TAG).setDelayMs(delay));
     this.doze = enable;
+    this.ioScheduler = ioScheduler;
+    this.mainScheduler = mainScheduler;
   }
 
   @Override public void onRun() throws Throwable {
-    Timber.d("Run DozeJob");
-    final boolean isDoze = DozeReceiver.isDozeMode(getApplicationContext());
-    if (doze) {
-      if (!isDoze) {
-        Timber.d("Do doze startDoze");
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
-      } else {
-        Timber.e("Doze already running");
-      }
-    } else {
-      if (isDoze) {
-        Timber.d("Do doze stopDoze");
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
-      } else {
-        Timber.e("Doze already not running");
-      }
+    unsub();
+    subscription = Observable.defer(() -> Observable.just(true))
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+        .subscribe(useless -> {
+          Timber.d("Run DozeJob");
+          final boolean isDoze = DozeReceiver.isDozeMode(getApplicationContext());
+          if (doze) {
+            if (!isDoze) {
+              Timber.d("Do doze startDoze");
+              ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+              ManagerDoze.executeDumpsys(getApplicationContext(),
+                  ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
+            } else {
+              Timber.e("Doze already running");
+            }
+          } else {
+            if (isDoze) {
+              Timber.d("Do doze stopDoze");
+              ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+              ManagerDoze.executeDumpsys(getApplicationContext(),
+                  ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+            } else {
+              Timber.e("Doze already not running");
+            }
+          }
+        }, throwable -> {
+          Timber.e(throwable, "error executing dumpsys command");
+          // TODO
+        }, this::unsub);
+  }
+
+  private void unsub() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
     }
   }
 
