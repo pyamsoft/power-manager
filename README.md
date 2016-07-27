@@ -8,7 +8,17 @@ on your Android device. When the device's screen is off and the device is
 idle, Power Manager will automatically turn off the interfaces that you ask  
 it to manage. The application can be configured to start up when your device  
 starts, and can even be configured to periodically turn your device on to  
-check for things like messages and emails.
+check for things like messages and emails. Power Manager does not require  
+root to run any of its functions to save your device battery.
+
+Power Manager is also able to force a quicker Doze mode on devices running  
+Android Marshmallow. To enable this functionality, manual action must be  
+taken by the user to grant Power Manager the ability to set the current  
+Doze mode state. To learn more, see the Settings page in the application. 
+
+For cellular data management on Android Lollipop and up, special manual action  
+must be taken by the user to grant Power Manager the ability to automatically  
+manage Cellular Data. To learn more, see the Data page in the application.
 
 ## Permissions
 
@@ -18,14 +28,6 @@ absolutely NO third party storage or usage of user data. Power Manager does
 not collect nor will it ever ask for any of your personal information. The  
 cache used by Power Manager is used to store user preferences, and nothing  
 more.
-
-## Ads and network usage
-
-Power Manager requires the Internet and Network state permissions to only do  
-one thing: load an optional AdMob interstitial ad. The interstital ad can be  
-viewed if desired by selecting the redeem icon on the top right hand side of  
-the screen. Aside from that single optional advertisement, Power Manager does  
-not access the internet or utilize device resources in any other way.
 
 ## Development
 
