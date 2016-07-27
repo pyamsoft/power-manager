@@ -16,6 +16,11 @@
 
 package com.pyamsoft.powermanager.app.manager.backend;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
@@ -33,6 +38,13 @@ public final class ManagerData extends BaseManager {
     super(interactor, mainScheduler, ioScheduler);
     Timber.d("new ManagerData");
     this.interactor = interactor;
+  }
+
+  @CheckResult public static boolean checkWriteSettingsPermission(@NonNull Context context) {
+    return context.getApplicationContext()
+        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+        == PackageManager.PERMISSION_GRANTED
+        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
   }
 
   @Override void onEnableComplete() {
