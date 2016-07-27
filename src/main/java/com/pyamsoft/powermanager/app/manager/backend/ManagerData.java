@@ -40,14 +40,14 @@ public final class ManagerData extends BaseManager {
     this.interactor = interactor;
   }
 
+  @CheckResult public static boolean needsPermissionToToggle() {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+  }
+
   @CheckResult public static boolean checkWriteSettingsPermission(@NonNull Context context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      return context.getApplicationContext()
-          .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
-          == PackageManager.PERMISSION_GRANTED;
-    } else {
-      return true;
-    }
+    return context.getApplicationContext()
+        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+        == PackageManager.PERMISSION_GRANTED;
   }
 
   @Override void onEnableComplete() {

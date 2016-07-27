@@ -103,6 +103,9 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String fullNotification;
   private final boolean fullNotificationDefault;
 
+  @NonNull private final String forceDoze;
+  private final boolean forceDozeDefault;
+
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
@@ -185,6 +188,9 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     fullNotification = appContext.getString(R.string.full_notification_key);
     fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
+
+    forceDoze = appContext.getString(R.string.doze_key);
+    forceDozeDefault = resources.getBoolean(R.bool.doze_default);
   }
 
   @Override public boolean isFullNotificationEnabled() {
@@ -192,7 +198,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isDozeEnabled() {
-    return false;
+    return get(forceDoze, forceDozeDefault);
   }
 
   @Override public boolean isIgnoreChargingWifi() {
@@ -300,36 +306,36 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(manageBluetooth, manageBluetoothDefault);
   }
 
+  @Override public void setBluetoothManaged(boolean enable) {
+    put(manageBluetooth, enable);
+  }
+
   @Override public boolean isDataManaged() {
     return get(manageData, manageDataDefault);
-  }
-
-  @Override public boolean isSyncManaged() {
-    return get(manageSync, manageSyncDefault);
-  }
-
-  @Override public boolean isWifiManaged() {
-    return get(manageWifi, manageWifiDefault);
-  }
-
-  @Override public boolean isWearableManaged() {
-    return get(manageWearable, manageWearableDefault);
-  }
-
-  @Override public void setWifiManaged(boolean enable) {
-    put(manageWifi, enable);
   }
 
   @Override public void setDataManaged(boolean enable) {
     put(manageData, enable);
   }
 
-  @Override public void setBluetoothManaged(boolean enable) {
-    put(manageBluetooth, enable);
+  @Override public boolean isSyncManaged() {
+    return get(manageSync, manageSyncDefault);
   }
 
   @Override public void setSyncManaged(boolean enable) {
     put(manageSync, enable);
+  }
+
+  @Override public boolean isWifiManaged() {
+    return get(manageWifi, manageWifiDefault);
+  }
+
+  @Override public void setWifiManaged(boolean enable) {
+    put(manageWifi, enable);
+  }
+
+  @Override public boolean isWearableManaged() {
+    return get(manageWearable, manageWearableDefault);
   }
 
   @Override public void setWearableManaged(boolean enable) {
@@ -360,28 +366,28 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return Long.parseLong(get(periodicDisableWifi, periodicDisableWifiDefault));
   }
 
-  @Override public long getPeriodicDisableTimeData() {
-    return Long.parseLong(get(periodicDisableData, periodicDisableDataDefault));
-  }
-
-  @Override public long getPeriodicDisableTimeBluetooth() {
-    return Long.parseLong(get(periodicDisableBluetooth, periodicDisableBluetoothDefault));
-  }
-
-  @Override public long getPeriodicDisableTimeSync() {
-    return Long.parseLong(get(periodicDisableSync, periodicDisableSyncDefault));
-  }
-
   @Override public void setPeriodicDisableTimeWifi(long time) {
     put(periodicDisableWifi, String.valueOf(time));
+  }
+
+  @Override public long getPeriodicDisableTimeData() {
+    return Long.parseLong(get(periodicDisableData, periodicDisableDataDefault));
   }
 
   @Override public void setPeriodicDisableTimeData(long time) {
     put(periodicDisableData, String.valueOf(time));
   }
 
+  @Override public long getPeriodicDisableTimeBluetooth() {
+    return Long.parseLong(get(periodicDisableBluetooth, periodicDisableBluetoothDefault));
+  }
+
   @Override public void setPeriodicDisableTimeBluetooth(long time) {
     put(periodicDisableBluetooth, String.valueOf(time));
+  }
+
+  @Override public long getPeriodicDisableTimeSync() {
+    return Long.parseLong(get(periodicDisableSync, periodicDisableSyncDefault));
   }
 
   @Override public void setPeriodicDisableTimeSync(long time) {
@@ -392,28 +398,28 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return Long.parseLong(get(periodicEnableWifi, periodicEnableWifiDefault));
   }
 
-  @Override public long getPeriodicEnableTimeData() {
-    return Long.parseLong(get(periodicEnableData, periodicEnableDataDefault));
-  }
-
-  @Override public long getPeriodicEnableTimeBluetooth() {
-    return Long.parseLong(get(periodicEnableBluetooth, periodicEnableBluetoothDefault));
-  }
-
-  @Override public long getPeriodicEnableTimeSync() {
-    return Long.parseLong(get(periodicEnableSync, periodicEnableSyncDefault));
-  }
-
   @Override public void setPeriodicEnableTimeWifi(long time) {
     put(periodicEnableWifi, String.valueOf(time));
+  }
+
+  @Override public long getPeriodicEnableTimeData() {
+    return Long.parseLong(get(periodicEnableData, periodicEnableDataDefault));
   }
 
   @Override public void setPeriodicEnableTimeData(long time) {
     put(periodicEnableData, String.valueOf(time));
   }
 
+  @Override public long getPeriodicEnableTimeBluetooth() {
+    return Long.parseLong(get(periodicEnableBluetooth, periodicEnableBluetoothDefault));
+  }
+
   @Override public void setPeriodicEnableTimeBluetooth(long time) {
     put(periodicEnableBluetooth, String.valueOf(time));
+  }
+
+  @Override public long getPeriodicEnableTimeSync() {
+    return Long.parseLong(get(periodicEnableSync, periodicEnableSyncDefault));
   }
 
   @Override public void setPeriodicEnableTimeSync(long time) {

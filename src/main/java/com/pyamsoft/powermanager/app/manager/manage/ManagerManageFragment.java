@@ -119,7 +119,8 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
   }
 
   private void showInfoDialogForLollipop() {
-    if (!ManagerData.checkWriteSettingsPermission(getContext())) {
+    if (!ManagerData.checkWriteSettingsPermission(getContext())
+        && ManagerData.needsPermissionToToggle()) {
       Timber.d("Display dialog about data toggle on Lollipop+");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new LollipopDataDialog(),
           "lollipop_data");

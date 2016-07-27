@@ -146,7 +146,7 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   }
 
   private void showInfoDialogForDoze() {
-    if (!ManagerDoze.checkDumpsysPermission(getContext())) {
+    if (!ManagerDoze.checkDumpsysPermission(getContext()) && ManagerDoze.isDozeAvailable()) {
       Timber.d("Display dialog about doze mode on Marshmallow");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
     }

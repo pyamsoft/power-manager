@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -79,9 +80,13 @@ public class DataStateModifier extends StateModifier {
 
   @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   private void setMobileDataEnabledSettings(boolean enabled) {
-    Timber.d("setMobileDataEnabledSettings: %s", enabled);
-    Settings.Global.putInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA,
-        enabled ? 1 : 0);
+    if (ManagerData.checkWriteSettingsPermission(getAppContext())) {
+      Timber.d("setMobileDataEnabledSettings: %s", enabled);
+      Settings.Global.putInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA,
+          enabled ? 1 : 0);
+    } else {
+      Timber.e("Missing WRITE_SECURE_SETTINGS permission");
+    }
   }
 
   @Override void mainThreadSet() {
