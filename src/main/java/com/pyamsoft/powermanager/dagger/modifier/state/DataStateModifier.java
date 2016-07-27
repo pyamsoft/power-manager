@@ -22,7 +22,6 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.Job;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -44,52 +43,40 @@ public class DataStateModifier extends StateModifier {
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
-  @CheckResult @Nullable private static String resolveSetMethodName() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      return SET_METHOD_NAME;
-    } else {
+  @CheckResult @Nullable private static Method reflectSetMethod() {
+    try {
+      final Method method =
+          ConnectivityManager.class.getDeclaredMethod(SET_METHOD_NAME, Boolean.TYPE);
+      method.setAccessible(true);
+      return method;
+    } catch (final Exception e) {
+      Timber.e(e, "ManagerData reflectSetMethod ERROR");
       return null;
     }
   }
 
-  @CheckResult @Nullable private static Method reflectSetMethod() {
-    final String setMethodName = resolveSetMethodName();
-    if (setMethodName != null) {
-      synchronized (Job.class) {
-        try {
-          final Method method =
-              ConnectivityManager.class.getDeclaredMethod(setMethodName, Boolean.TYPE);
-          method.setAccessible(true);
-          return method;
-        } catch (final Exception e) {
-          Timber.e(e, "ManagerData reflectSetMethod ERROR");
-        }
+  private void setMobileDataEnabledReflection(boolean enabled) {
+    if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
+      try {
+        Timber.d("setMobileDataEnabled: %s", enabled);
+        SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
+      } catch (final Exception e) {
+        Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
       }
     }
-
-    Timber.e("Unable to resolve setMobileDataEnabled using reflection");
-    return null;
   }
 
-  private static void setMobileDataEnabled(@NonNull ConnectivityManager connectivityManager,
-      boolean enabled) {
-    if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
-      synchronized (Job.class) {
-        try {
-          Timber.d("setMobileDataEnabled: %s", enabled);
-          SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
-        } catch (final Exception e) {
-          Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
-        }
-      }
+  private void setMobileDataEnabled(boolean enabled) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      setMobileDataEnabledReflection(enabled);
     }
   }
 
   @Override void mainThreadSet() {
-    setMobileDataEnabled(connectivityManager, true);
+    setMobileDataEnabled(true);
   }
 
   @Override void mainThreadUnset() {
-    setMobileDataEnabled(connectivityManager, false);
+    setMobileDataEnabled(false);
   }
 }
