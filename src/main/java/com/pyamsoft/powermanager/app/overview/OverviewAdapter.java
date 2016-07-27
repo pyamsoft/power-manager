@@ -95,7 +95,7 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
         break;
       case POSITION_DOZE:
         title = "Doze";
-        image = R.drawable.ic_battery_24dp;
+        image = R.drawable.ic_doze_24dp;
         background = R.color.orange500;
         type = DozeFragment.TAG;
         break;
