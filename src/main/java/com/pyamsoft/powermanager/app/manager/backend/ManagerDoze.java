@@ -70,7 +70,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   }
 
   @SuppressLint("NewApi")
-  public static void executeDumpsys(@NonNull Context context, @NonNull String command) {
+  public static void executeDumpsys(@NonNull Context context, @NonNull String cmd) {
     if (!(checkDumpsysPermission(context) && isDozeAvailable())) {
       Timber.e("Does not have permission to call dumpsys");
       return;
@@ -79,7 +79,8 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     final Process process;
     boolean caughtPermissionDenial = false;
     try {
-      process = Runtime.getRuntime().exec("dumpsys " + command);
+      final String command = "dumpsys " + cmd;
+      process = Runtime.getRuntime().exec(command);
       try (final BufferedReader bufferedReader = new BufferedReader(
           new InputStreamReader(process.getInputStream()))) {
         Timber.d("Read results of exec: '%s'", command);
