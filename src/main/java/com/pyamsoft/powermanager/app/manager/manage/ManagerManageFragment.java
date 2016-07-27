@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
@@ -38,6 +39,7 @@ import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
+import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -75,6 +77,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    showInfoDialogForLollipop();
 
     managePreference.setOnPreferenceChangeListener((preference, o) -> {
       if (o instanceof Boolean) {
@@ -113,6 +116,14 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
     presenter.setCustomDelayTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
     presenter.setManagedFromPreference(getString(manageKeyResId));
+  }
+
+  private void showInfoDialogForLollipop() {
+    if (!ManagerData.checkWriteSettingsPermission(getContext())) {
+      Timber.d("Display dialog about data toggle on Lollipop+");
+      AppUtil.guaranteeSingleDialogFragment(getActivity(), new LollipopDataDialog(),
+          "lollipop_data");
+    }
   }
 
   @Override public void onDestroyView() {

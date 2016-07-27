@@ -41,10 +41,13 @@ public final class ManagerData extends BaseManager {
   }
 
   @CheckResult public static boolean checkWriteSettingsPermission(@NonNull Context context) {
-    return context.getApplicationContext()
-        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
-        == PackageManager.PERMISSION_GRANTED
-        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      return context.getApplicationContext()
+          .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+          == PackageManager.PERMISSION_GRANTED;
+    } else {
+      return true;
+    }
   }
 
   @Override void onEnableComplete() {
