@@ -42,16 +42,11 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implements Manager {
-
-  //@NonNull public static final String GRANT_PERMISSION_COMMAND =
-  //    "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP";
-
   @NonNull public static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
   @NonNull public static final String DUMPSYS_DOZE_END = "deviceidle step";
   @NonNull public static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
   @NonNull public static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.pyamsoft.powermanager";
-  @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
   @NonNull private final ManagerDozeInteractor interactor;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
@@ -230,10 +225,14 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     unsubSubscription();
   }
 
+  public void forceOutOfDoze() {
+    final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
+    if (forceOut) {
+      Timber.d("Force device out of Doze mode");
+      enable();
+    }
+  }
+
   public interface DozeView {
-
-    void onDumpSysPermissionSuccess();
-
-    void onDumpSysPermissionError();
   }
 }

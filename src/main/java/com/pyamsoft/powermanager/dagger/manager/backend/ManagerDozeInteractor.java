@@ -27,4 +27,6 @@ public interface ManagerDozeInteractor {
   @CheckResult @NonNull Observable<Long> getDozeDelay();
 
   @CheckResult @NonNull Observable<Boolean> isIgnoreCharging();
+
+  @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
 }

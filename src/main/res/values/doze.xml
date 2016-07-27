@@ -26,6 +26,12 @@
   <bool name="ignore_charging_doze_default">true</bool>
   <string name="ignore_charging_doze_key">ignore_charging_doze</string>
   <string name="ignore_charging_doze_title">Ignore When Charging</string>
-  <string name="ignore_charging_doze_summary_checked">Ignore Doze while device is charging</string>
+  <string name="ignore_charging_doze_summary_checked">Ignore Doze while device is charging (Marshmallow only)</string>
   <string name="ignore_charging_doze_summary_unchecked">Run Doze even while device is charging</string>
+
+  <bool name="force_out_doze_default">false</bool>
+  <string name="force_out_doze_key">force_out_doze</string>
+  <string name="force_out_doze_title">Never Doze</string>
+  <string name="force_out_doze_summary_checked">Force the device out of Doze mode (Marshmallow only)</string>
+  <string name="force_out_doze_summary_unchecked">The device will use the normal Doze cycle</string>
 </resources>

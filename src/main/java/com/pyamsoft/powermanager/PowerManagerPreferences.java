@@ -143,4 +143,6 @@ public interface PowerManagerPreferences {
   void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 
   void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+
+  @CheckResult boolean isForceOutDoze();
 }

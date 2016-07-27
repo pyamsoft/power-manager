@@ -16,12 +16,14 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = ManagerModule.class)
-public interface ManagerComponent {
+@ActivityScope @Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);
+
+  void inject(DozeReceiver receiver);
 }

@@ -24,13 +24,16 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
+import javax.inject.Inject;
 import timber.log.Timber;
 
 @TargetApi(Build.VERSION_CODES.M) public class DozeReceiver extends BroadcastReceiver {
 
   @NonNull private final IntentFilter filter =
       new IntentFilter(android.os.PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+  @Inject ManagerDoze managerDoze;
   private boolean registered = false;
   private Context appContext;
 
@@ -38,6 +41,8 @@ import timber.log.Timber;
     if (!ManagerDoze.isDozeAvailable()) {
       throw new RuntimeException("Doze not available!");
     }
+
+    PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
   }
 
   @CheckResult public static boolean isDozeMode(Context context) {
@@ -57,7 +62,12 @@ import timber.log.Timber;
 
   @Override public void onReceive(Context context, Intent intent) {
     Timber.d("onReceive: Doze change event");
-    Timber.d("Doze state: %s", isDozeMode(context));
+
+    final boolean state = isDozeMode(context);
+    Timber.d("Doze state: %s", state);
+    if (state) {
+      managerDoze.forceOutOfDoze();
+    }
   }
 
   public void register(@NonNull Context context) {
