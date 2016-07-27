@@ -51,7 +51,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   }
 
   @CheckResult public static boolean isDozeAvailable() {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
   }
 
   @CheckResult public static boolean checkDumpsysPermission(@NonNull Context context) {
