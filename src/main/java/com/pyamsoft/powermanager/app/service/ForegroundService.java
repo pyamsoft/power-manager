@@ -89,6 +89,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
     Timber.d("re-enable sensors when service dies");
     ManagerDoze.executeDumpsys(this, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+    ManagerDoze.fixSensorDisplayRotationBug(getApplicationContext());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
