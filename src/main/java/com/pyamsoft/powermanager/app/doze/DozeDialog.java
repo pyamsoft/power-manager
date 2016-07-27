@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.settings;
+package com.pyamsoft.powermanager.app.doze;
 
 import android.app.Dialog;
 import android.os.Bundle;

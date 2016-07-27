@@ -47,7 +47,7 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
   private static final int POSITION_TRIGGERS = 4;
   private static final int POSITION_DOZE = 5;
   private static final int POSITION_SETTINGS = 6;
-  private static final int NUMBER_ITEMS = 6;
+  private static final int NUMBER_ITEMS = 7;
 
   @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
 

@@ -20,6 +20,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
+import com.pyamsoft.pydroid.util.AppUtil;
+import timber.log.Timber;
 
 public class DozeFragment extends PreferenceFragmentCompat {
 
@@ -27,5 +30,14 @@ public class DozeFragment extends PreferenceFragmentCompat {
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(R.xml.doze);
+
+    showInfoDialogForDoze();
+  }
+
+  private void showInfoDialogForDoze() {
+    if (!ManagerDoze.checkDumpsysPermission(getContext()) && ManagerDoze.isDozeAvailable()) {
+      Timber.d("Display dialog about doze mode on Marshmallow");
+      AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
+    }
   }
 }
