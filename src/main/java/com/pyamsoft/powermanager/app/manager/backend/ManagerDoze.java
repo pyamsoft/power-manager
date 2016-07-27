@@ -61,7 +61,11 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void enable() {
     unsubSubscription();
-    subscription = interactor.isDozeEnabled().filter(aBoolean -> {
+    subscription = interactor.isDozeEnabled().map(aBoolean -> {
+      Timber.d("Cancel old doze jobs");
+      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
+      return aBoolean;
+    }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
     }).flatMap(aBoolean -> {
@@ -70,7 +74,6 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
         return Observable.empty();
       }
 
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
       return Observable.just(0L);
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
       PowerManager.getInstance().getJobManager().addJobInBackground(new DozeJob.EnableJob());
@@ -87,16 +90,22 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void disable(boolean charging) {
     unsubSubscription();
-    subscription = interactor.isDozeEnabled().filter(aBoolean -> {
+    subscription = interactor.isDozeEnabled().map(aBoolean -> {
+      Timber.d("Cancel old doze jobs");
+      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
+      return aBoolean;
+    }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
+    }).filter(aBoolean -> {
+      Timber.d("Filter device is not charging");
+      return !charging;
     }).flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();
       }
 
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
       return interactor.getDozeDelay();
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
       PowerManager.getInstance().getJobManager().addJobInBackground(new DozeJob.DisableJob(delay));
