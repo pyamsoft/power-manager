@@ -16,43 +16,17 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import timber.log.Timber;
 
 public abstract class DozeJob extends BaseJob {
 
-  @NonNull public static final String GRANT_PERMISSION_DUMP_COMMAND =
-      "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP";
-
-  @NonNull public static final String GRANT_PERMISSION_SECURE_COMMAND =
-      "adb -d shell pm grant com.pyamsoft.powermanager android.permission.WRITE_SECURE_SETTINGS";
-
   @NonNull public static final String DOZE_TAG = "doze_tag";
-  @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
-  @NonNull private static final String DUMPSYS_DOZE_START =
-      DUMPSYS_COMMAND + " deviceidle force-idle deep";
-  @NonNull private static final String DUMPSYS_DOZE_END;
-  @NonNull private static final String DUMPSYS_SENSOR_ENABLE =
-      DUMPSYS_COMMAND + " sensorservice enable";
-  @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
-      DUMPSYS_COMMAND + " sensorservice restrict com.pyamsoft.powermanager";
   private static final int PRIORITY = 5;
-
-  static {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      DUMPSYS_DOZE_END = DUMPSYS_COMMAND + " deviceidle unforce";
-    } else {
-      DUMPSYS_DOZE_END = DUMPSYS_COMMAND + " deviceidle step";
-    }
-  }
 
   private final boolean doze;
 
@@ -61,52 +35,22 @@ public abstract class DozeJob extends BaseJob {
     this.doze = enable;
   }
 
-  @SuppressLint("NewApi") private static void executeShellCommand(@NonNull String command) {
-    final Process process;
-    boolean caughtPermissionDenial = false;
-    try {
-      process = Runtime.getRuntime().exec(command);
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream()))) {
-        Timber.d("Read results of exec: '%s'", command);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          if (line.startsWith("Permission Denial")) {
-            Timber.e("Command resulted in permission denial");
-            caughtPermissionDenial = true;
-            break;
-          }
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
-
-      if (caughtPermissionDenial) {
-        throw new IllegalStateException("Error running command: " + command);
-      }
-
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
-    }
-  }
-
   @Override public void onRun() throws Throwable {
     Timber.d("Run DozeJob");
     final boolean isDoze = DozeReceiver.isDozeMode(getApplicationContext());
     if (doze) {
       if (!isDoze) {
         Timber.d("Do doze startDoze");
-        executeShellCommand(DUMPSYS_DOZE_START);
-        executeShellCommand(DUMPSYS_SENSOR_RESTRICT);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
       } else {
         Timber.e("Doze already running");
       }
     } else {
       if (isDoze) {
         Timber.d("Do doze stopDoze");
-        executeShellCommand(DUMPSYS_DOZE_END);
-        executeShellCommand(DUMPSYS_SENSOR_ENABLE);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
       } else {
         Timber.e("Doze already not running");
       }

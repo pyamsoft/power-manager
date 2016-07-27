@@ -86,6 +86,9 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     presenter.unbindView();
 
     stopForeground(true);
+
+    Timber.d("re-enable sensors when service dies");
+    ManagerDoze.executeDumpsys(this, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {

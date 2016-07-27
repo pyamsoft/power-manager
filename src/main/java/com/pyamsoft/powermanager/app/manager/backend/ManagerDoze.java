@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.manager.backend;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -27,6 +28,9 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.manager.backend.DozeJob;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDozeInteractor;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -40,6 +44,12 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   //@NonNull public static final String GRANT_PERMISSION_COMMAND =
   //    "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP";
 
+  @NonNull public static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
+  @NonNull public static final String DUMPSYS_DOZE_END = "deviceidle step";
+  @NonNull public static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
+  @NonNull public static final String DUMPSYS_SENSOR_RESTRICT =
+      "sensorservice restrict com.pyamsoft.powermanager";
+  @NonNull private static final String DUMPSYS_COMMAND = "dumpsys";
   @NonNull private final ManagerDozeInteractor interactor;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
@@ -57,6 +67,42 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @CheckResult public static boolean checkDumpsysPermission(@NonNull Context context) {
     return context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
         == PackageManager.PERMISSION_GRANTED;
+  }
+
+  @SuppressLint("NewApi")
+  public static void executeDumpsys(@NonNull Context context, @NonNull String command) {
+    if (!(checkDumpsysPermission(context) && isDozeAvailable())) {
+      Timber.e("Does not have permission to call dumpsys");
+      return;
+    }
+
+    final Process process;
+    boolean caughtPermissionDenial = false;
+    try {
+      process = Runtime.getRuntime().exec("dumpsys " + command);
+      try (final BufferedReader bufferedReader = new BufferedReader(
+          new InputStreamReader(process.getInputStream()))) {
+        Timber.d("Read results of exec: '%s'", command);
+        String line = bufferedReader.readLine();
+        while (line != null && !line.isEmpty()) {
+          if (line.startsWith("Permission Denial")) {
+            Timber.e("Command resulted in permission denial");
+            caughtPermissionDenial = true;
+            break;
+          }
+          Timber.d("%s", line);
+          line = bufferedReader.readLine();
+        }
+      }
+
+      if (caughtPermissionDenial) {
+        throw new IllegalStateException("Error running command: " + command);
+      }
+
+      // Will always be 0
+    } catch (IOException e) {
+      Timber.e(e, "Error running shell command");
+    }
   }
 
   @Override public void enable() {
