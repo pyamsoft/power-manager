@@ -37,6 +37,8 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.doze.DozePagerAdapter;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
@@ -102,6 +104,9 @@ public class MainActivity extends DonationActivityBase
       } else if (pagerAdapter instanceof SettingsPagerAdapter) {
         type = SettingsFragment.TAG;
         Timber.d("Save type of settings fragment for later");
+      } else if (pagerAdapter instanceof DozePagerAdapter) {
+        type = DozeFragment.TAG;
+        Timber.d("Save type of doze fragment for later");
       } else if (pagerAdapter instanceof PowerTriggerPagerAdapter) {
         type = PowerTriggerFragment.TAG;
         Timber.d("Save type of power triggers fragment for later");
@@ -127,6 +132,9 @@ public class MainActivity extends DonationActivityBase
     } else if (storedType.equals(PowerTriggerFragment.TAG)) {
       Timber.d("Stored fragment exists, is power trigger fragment");
       adapter = new PowerTriggerPagerAdapter(getSupportFragmentManager());
+    } else if (storedType.equals(DozeFragment.TAG)) {
+      Timber.d("Stored fragment exists, is doze fragment");
+      adapter = new DozePagerAdapter(getSupportFragmentManager());
     } else {
       Timber.d("Stored fragment exists, is manager fragment");
       adapter = new ManagerSettingsPagerAdapter(this, storedType);
@@ -148,6 +156,9 @@ public class MainActivity extends DonationActivityBase
     } else if (pagerAdapter instanceof SettingsPagerAdapter) {
       type = SettingsFragment.TAG;
       Timber.d("Save type of settings fragment for later");
+    } else if (pagerAdapter instanceof DozePagerAdapter) {
+      type = DozeFragment.TAG;
+      Timber.d("Save type of doze for later");
     } else if (pagerAdapter instanceof PowerTriggerPagerAdapter) {
       type = PowerTriggerFragment.TAG;
       Timber.d("Save type of power triggers fragment for later");
@@ -174,11 +185,8 @@ public class MainActivity extends DonationActivityBase
         case PowerTriggerFragment.TAG:
           visible = true;
           break;
-        case SettingsFragment.TAG:
-          visible = false;
-          break;
         default:
-          throw new IllegalStateException("Not valid type: " + type);
+          visible = false;
       }
     }
 
@@ -349,6 +357,10 @@ public class MainActivity extends DonationActivityBase
     switch (type) {
       case SettingsFragment.TAG:
         adapter = new SettingsPagerAdapter(getSupportFragmentManager());
+        showTabs = false;
+        break;
+      case DozeFragment.TAG:
+        adapter = new DozePagerAdapter(getSupportFragmentManager());
         showTabs = false;
         break;
       case PowerTriggerFragment.TAG:

@@ -215,7 +215,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
             .subscribe(delay -> {
               PowerManager.getInstance()
                   .getJobManager()
-                  .addJobInBackground(new DozeJob.DisableJob(delay));
+                  .addJobInBackground(new DozeJob.DisableJob(delay * 1000L));
             }, throwable -> {
               Timber.e(throwable, "onError");
             }, this::unsubSubscription);
