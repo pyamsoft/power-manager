@@ -19,14 +19,12 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
-import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -55,32 +53,20 @@ public abstract class DozeJob extends BaseJob {
 
   @Override public void onRun() throws Throwable {
     unsub();
-    subscription = Observable.defer(() -> Observable.just(doze)).map(new Func1<Boolean, Boolean>() {
-      @Override public Boolean call(Boolean doze) {
-        Timber.d("Run DozeJob");
-        final boolean isDoze = DozeReceiver.isDozeMode(getApplicationContext());
-        if (doze) {
-          if (!isDoze) {
-            Timber.d("Do doze startDoze");
-            ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
-            ManagerDoze.executeDumpsys(getApplicationContext(),
-                ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
-          } else {
-            Timber.e("Doze already running");
-          }
-        } else {
-          if (isDoze) {
-            Timber.d("Do doze stopDoze");
-            ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
-            ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
-          } else {
-            Timber.e("Doze already not running");
-          }
-        }
-        // Ignore
-        Timber.d("Run a fix function if doze was stopping and current state was doze");
-        return !doze && isDoze;
+    subscription = Observable.defer(() -> Observable.just(doze)).map(doze1 -> {
+      Timber.d("Run DozeJob");
+      if (doze1) {
+        Timber.d("Do doze startDoze");
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
+      } else {
+        Timber.d("Do doze stopDoze");
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
       }
+      // Ignore
+      Timber.d("Run a fix function if doze was stopping and current state was doze");
+      return !doze1;
     }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(shouldRunFix -> {
       if (shouldRunFix) {
         Timber.d("Run hack fix for brightness and rotate");

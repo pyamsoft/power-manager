@@ -30,8 +30,7 @@ public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
   }
 
   @NonNull @Override public Observable<Long> getDozeDelay() {
-    // TODO
-    return Observable.just(5000L);
+    return Observable.defer(() -> Observable.just(preferences.getDozeDelay()));
   }
 
   @NonNull @Override public Observable<Boolean> isDozeEnabled() {

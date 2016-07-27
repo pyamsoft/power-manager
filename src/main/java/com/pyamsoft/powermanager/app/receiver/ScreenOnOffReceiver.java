@@ -87,7 +87,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
           break;
         case Intent.ACTION_SCREEN_ON:
           Timber.d("Screen on event");
-          enableManagers(charging, isDoze, hasDump);
+          enableManagers(isDoze, hasDump);
           break;
         default:
           Timber.e("Invalid event: %s", action);
@@ -95,7 +95,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     }
   }
 
-  private void enableManagers(boolean charging, boolean isDoze, boolean hasDump) {
+  private void enableManagers(boolean isDoze, boolean hasDump) {
     Timber.d("Enable all managed managers");
     managerWifi.enable();
     managerData.enable();

@@ -106,9 +106,12 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String forceDoze;
   @NonNull private final String forceOutOfDoze;
   @NonNull private final String ignoreChargingDoze;
+  @NonNull private final String dozeDelay;
+
   private final boolean forceDozeDefault;
   private final boolean forceOutOfDozeDefault;
   private final boolean ignoreChargingDozeDefault;
+  @NonNull private final String dozeDelayDefault;
 
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -196,9 +199,16 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     forceDoze = appContext.getString(R.string.doze_key);
     forceOutOfDoze = appContext.getString(R.string.force_out_doze_key);
     ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
+    dozeDelay = appContext.getString(R.string.doze_time_key);
+
     forceDozeDefault = resources.getBoolean(R.bool.doze_default);
     forceOutOfDozeDefault = resources.getBoolean(R.bool.force_out_doze_default);
     ignoreChargingDozeDefault = resources.getBoolean(R.bool.ignore_charging_doze_default);
+    dozeDelayDefault = appContext.getString(R.string.doze_time_default);
+  }
+
+  @Override public long getDozeDelay() {
+    return Long.parseLong(get(dozeDelay, dozeDelayDefault));
   }
 
   @Override public boolean isForceOutDoze() {
