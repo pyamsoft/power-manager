@@ -166,16 +166,20 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     }
   }
 
-  @Override public void enable() {
-    unsubSubscription();
-    subscription = interactor.isDozeEnabled().map(aBoolean -> {
+  @CheckResult @NonNull Observable<Boolean> baseObservable() {
+    return interactor.isDozeEnabled().map(aBoolean -> {
       Timber.d("Cancel old doze jobs");
       PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
       return aBoolean;
     }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
-    }).flatMap(aBoolean -> {
+    });
+  }
+
+  @Override public void enable() {
+    unsubSubscription();
+    subscription = baseObservable().flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();
@@ -197,28 +201,29 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void disable(boolean charging) {
     unsubSubscription();
-    subscription = interactor.isDozeEnabled().map(aBoolean -> {
-      Timber.d("Cancel old doze jobs");
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
-      return aBoolean;
-    }).filter(aBoolean -> {
-      Timber.d("filter Doze not enabled");
-      return aBoolean;
-    }).flatMap(aBoolean -> interactor.isIgnoreCharging()).filter(ignore -> {
-      Timber.d("Filter out if ignore doze and device is charging");
-      return !(ignore && charging);
-    }).flatMap(aBoolean -> {
-      if (!isDozeAvailable()) {
-        Timber.e("Doze is not available on this platform");
-        return Observable.empty();
-      }
+    subscription =
+        baseObservable().flatMap(aBoolean -> interactor.isIgnoreCharging())
+            .filter(ignore -> {
+              Timber.d("Filter out if ignore doze and device is charging");
+              return !(ignore && charging);
+            })
+            .flatMap(aBoolean -> {
+              if (!isDozeAvailable()) {
+                Timber.e("Doze is not available on this platform");
+                return Observable.empty();
+              }
 
-      return interactor.getDozeDelay();
-    }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
-      PowerManager.getInstance().getJobManager().addJobInBackground(new DozeJob.DisableJob(delay));
-    }, throwable -> {
-      Timber.e(throwable, "onError");
-    }, this::unsubSubscription);
+              return interactor.getDozeDelay();
+            })
+            .subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(delay -> {
+              PowerManager.getInstance()
+                  .getJobManager()
+                  .addJobInBackground(new DozeJob.DisableJob(delay));
+            }, throwable -> {
+              Timber.e(throwable, "onError");
+            }, this::unsubSubscription);
   }
 
   @Override public void cleanup() {
