@@ -207,7 +207,7 @@ public class MainActivity extends DonationActivityBase
       pager = null;
       visibility = View.GONE;
     } else if (storedType.equals(SettingsFragment.TAG) || storedType.equals(
-        PowerTriggerFragment.TAG)) {
+        PowerTriggerFragment.TAG) || storedType.equals(DozeFragment.TAG)) {
       Timber.d("Stored fragment exists, is settings fragment or power trigger. no tabs");
       pager = null;
       visibility = View.GONE;
