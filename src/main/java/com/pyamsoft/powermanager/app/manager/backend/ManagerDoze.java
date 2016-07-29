@@ -21,19 +21,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.manager.backend.DozeJob;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDozeInteractor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -50,6 +50,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
       "sensorservice restrict com.pyamsoft.powermanager";
   @NonNull private final ManagerDozeInteractor interactor;
   @NonNull private Subscription subscription = Subscriptions.empty();
+  @Nullable private SensorFixReceiver sensorFixReceiver;
 
   @Inject public ManagerDoze(@NonNull ManagerDozeInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
@@ -65,72 +66,6 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @CheckResult public static boolean checkDumpsysPermission(@NonNull Context context) {
     return context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
         == PackageManager.PERMISSION_GRANTED;
-  }
-
-  @CheckResult private static boolean isAutoRotateEnabled(@NonNull Context context) {
-    final boolean autorotate =
-        Settings.System.getInt(context.getApplicationContext().getContentResolver(),
-            Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
-    Timber.d("is auto rotate: %s", autorotate);
-    return autorotate;
-  }
-
-  private static void setAutoRotateEnabled(@NonNull Context context, boolean enabled) {
-    Timber.d("Set auto rotate: %s", enabled);
-    Settings.System.putInt(context.getApplicationContext().getContentResolver(),
-        Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
-  }
-
-  @CheckResult private static boolean isAutoBrightnessEnabled(@NonNull Context context) {
-    try {
-      final boolean autobright =
-          Settings.System.getInt(context.getApplicationContext().getContentResolver(),
-              Settings.System.SCREEN_BRIGHTNESS_MODE)
-              == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
-      Timber.d("is auto bright: %s", autobright);
-      return autobright;
-    } catch (Settings.SettingNotFoundException e) {
-      Timber.e(e, "error getting autobrightness");
-      return false;
-    }
-  }
-
-  private static void setAutoBrightnessEnabled(@NonNull Context context, boolean enabled) {
-    Timber.d("Set auto brightness: %s", enabled);
-    Settings.System.putInt(context.getApplicationContext().getContentResolver(),
-        Settings.System.SCREEN_BRIGHTNESS_MODE,
-        enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-            : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-  }
-
-  public static void fixSensorDisplayRotationBug(@NonNull Context context) {
-    Timber.d("Run sensor fix which resets both auto brightness and rotation after sensor dump");
-    Timber.w("Run as blocking observable");
-    final boolean result = Observable.defer(
-        () -> Observable.just(isAutoBrightnessEnabled(context.getApplicationContext())))
-        .map(autobright -> {
-          setAutoBrightnessEnabled(context.getApplicationContext(), !autobright);
-          return autobright;
-        })
-        .delay(140, TimeUnit.MILLISECONDS)
-        .map(autobright -> {
-          setAutoRotateEnabled(context.getApplicationContext(), autobright);
-          return true;
-        })
-        .map(ignore -> isAutoRotateEnabled(context.getApplicationContext()))
-        .map(autorotate -> {
-          setAutoRotateEnabled(context.getApplicationContext(), !autorotate);
-          return autorotate;
-        })
-        .delay(140, TimeUnit.MILLISECONDS)
-        .map(autorotate -> {
-          setAutoRotateEnabled(context.getApplicationContext(), autorotate);
-          return true;
-        })
-        .toBlocking()
-        .first();
-    // Always true
-    Timber.d("Result is %s", result);
   }
 
   @SuppressLint("NewApi")
@@ -168,6 +103,15 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     } catch (IOException e) {
       Timber.e(e, "Error running shell command");
     }
+  }
+
+  public void fixSensorDisplayRotationBug() {
+    Timber.d("Run sensor fix which resets both auto brightness and rotation after sensor dump");
+    if (sensorFixReceiver != null) {
+      sensorFixReceiver.unregister();
+    }
+    sensorFixReceiver = interactor.createSensorFixReceiver().toBlocking().first();
+    sensorFixReceiver.register();
   }
 
   @CheckResult @NonNull Observable<Boolean> baseObservable() {

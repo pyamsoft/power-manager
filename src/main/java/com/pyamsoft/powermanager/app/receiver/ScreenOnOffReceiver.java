@@ -140,9 +140,10 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     managerSync.cleanup();
     managerDoze.cleanup();
 
-    if (ManagerDoze.checkDumpsysPermission(context)) {
+    if (ManagerDoze.checkDumpsysPermission(context) && ManagerDoze.isDozeAvailable()) {
       ManagerDoze.executeDumpsys(context, ManagerDoze.DUMPSYS_DOZE_END);
-      ManagerDoze.fixSensorDisplayRotationBug(context);
+      ManagerDoze.executeDumpsys(context, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+      managerDoze.fixSensorDisplayRotationBug();
     }
   }
 

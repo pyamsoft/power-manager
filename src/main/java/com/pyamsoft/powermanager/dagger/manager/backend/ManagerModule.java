@@ -89,7 +89,7 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ManagerDozeInteractor provideManagerDozeInteractor(
-      @NonNull PowerManagerPreferences preferences) {
-    return new ManagerDozeInteractorImpl(preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new ManagerDozeInteractorImpl(context, preferences);
   }
 }

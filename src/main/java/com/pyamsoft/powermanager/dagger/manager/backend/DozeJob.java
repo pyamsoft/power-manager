@@ -17,8 +17,10 @@
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
+import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import javax.inject.Named;
 import rx.Observable;
@@ -40,6 +42,9 @@ public abstract class DozeJob extends BaseJob {
   @NonNull private final Scheduler mainScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
+  // KLUDGE created here with dagger. goes against architecture
+  @Nullable private SensorFixReceiver sensorFixReceiver;
+
   DozeJob(long delay, boolean enable, boolean manageSensors) {
     this(delay, enable, manageSensors, Schedulers.io(), AndroidSchedulers.mainThread());
   }
@@ -56,6 +61,13 @@ public abstract class DozeJob extends BaseJob {
 
   @Override public void onRun() throws Throwable {
     unsub();
+
+    // Unregister here manually
+    if (sensorFixReceiver != null) {
+      sensorFixReceiver.unregister();
+    }
+    this.sensorFixReceiver = new SensorFixReceiver(getApplicationContext());
+
     subscription = Observable.defer(() -> Observable.just(doze)).map(doze1 -> {
       Timber.d("Run DozeJob");
       if (doze1) {
@@ -78,7 +90,7 @@ public abstract class DozeJob extends BaseJob {
     }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(shouldRunFix -> {
       if (shouldRunFix) {
         Timber.d("Run hack fix for brightness and rotate");
-        ManagerDoze.fixSensorDisplayRotationBug(getApplicationContext());
+        sensorFixReceiver.register();
       }
     }, throwable -> {
       Timber.e(throwable, "error executing dumpsys command");

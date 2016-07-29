@@ -16,16 +16,21 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import javax.inject.Inject;
 import rx.Observable;
 
 public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
 
+  @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject public ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject public ManagerDozeInteractorImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    this.appContext = context.getApplicationContext();
     this.preferences = preferences;
   }
 
@@ -33,6 +38,7 @@ public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
     return Observable.defer(() -> Observable.just(preferences.getDozeDelay()));
   }
 
+  // KLUDGE duplicates code with base
   @NonNull @Override public Observable<Boolean> isDozeEnabled() {
     return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
   }
@@ -47,5 +53,9 @@ public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
 
   @NonNull @Override public Observable<Boolean> isManageSensors() {
     return Observable.defer(() -> Observable.just(preferences.isManageSensors()));
+  }
+
+  @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {
+    return Observable.defer(() -> Observable.just(new SensorFixReceiver(appContext)));
   }
 }
