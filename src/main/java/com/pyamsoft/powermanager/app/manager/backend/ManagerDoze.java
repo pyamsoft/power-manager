@@ -110,15 +110,23 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
         () -> Observable.just(isAutoBrightnessEnabled(context.getApplicationContext())))
         .map(autobright -> {
           setAutoBrightnessEnabled(context.getApplicationContext(), !autobright);
+          return autobright;
+        })
+        .delay(140, TimeUnit.MILLISECONDS)
+        .map(autobright -> {
+          setAutoRotateEnabled(context.getApplicationContext(), autobright);
           return true;
         })
-        .delay(100, TimeUnit.MILLISECONDS)
         .map(ignore -> isAutoRotateEnabled(context.getApplicationContext()))
         .map(autorotate -> {
           setAutoRotateEnabled(context.getApplicationContext(), !autorotate);
+          return autorotate;
+        })
+        .delay(140, TimeUnit.MILLISECONDS)
+        .map(autorotate -> {
+          setAutoRotateEnabled(context.getApplicationContext(), autorotate);
           return true;
         })
-        .delay(100, TimeUnit.MILLISECONDS)
         .toBlocking()
         .first();
     // Always true
