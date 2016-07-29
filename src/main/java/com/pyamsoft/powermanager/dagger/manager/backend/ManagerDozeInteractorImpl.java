@@ -23,36 +23,31 @@ import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import javax.inject.Inject;
 import rx.Observable;
 
-public class ManagerDozeInteractorImpl implements ManagerDozeInteractor {
+public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
+    implements ManagerDozeInteractor {
 
   @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
 
   @Inject public ManagerDozeInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
+    super(preferences);
     this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
   }
 
   @NonNull @Override public Observable<Long> getDozeDelay() {
-    return Observable.defer(() -> Observable.just(preferences.getDozeDelay()));
-  }
-
-  // KLUDGE duplicates code with base
-  @NonNull @Override public Observable<Boolean> isDozeEnabled() {
-    return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
+    return Observable.defer(() -> Observable.just(getPreferences().getDozeDelay()));
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreCharging() {
-    return Observable.defer(() -> Observable.just(preferences.isIgnoreChargingDoze()));
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 
   @NonNull @Override public Observable<Boolean> isForceOutOfDoze() {
-    return Observable.defer(() -> Observable.just(preferences.isForceOutDoze()));
+    return Observable.defer(() -> Observable.just(getPreferences().isForceOutDoze()));
   }
 
   @NonNull @Override public Observable<Boolean> isManageSensors() {
-    return Observable.defer(() -> Observable.just(preferences.isManageSensors()));
+    return Observable.defer(() -> Observable.just(getPreferences().isManageSensors()));
   }
 
   @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {

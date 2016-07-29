@@ -18,18 +18,10 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import rx.Observable;
 
-public interface ManagerDozeInteractor extends ManagerInteractorDoze {
+// KLUDGE needs a better name
+public interface ManagerInteractorDoze {
 
-  @CheckResult @NonNull Observable<Long> getDozeDelay();
-
-  @CheckResult @NonNull Observable<Boolean> isIgnoreCharging();
-
-  @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
-
-  @CheckResult @NonNull Observable<Boolean> isManageSensors();
-
-  @CheckResult @NonNull Observable<SensorFixReceiver> createSensorFixReceiver();
+  @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
 }

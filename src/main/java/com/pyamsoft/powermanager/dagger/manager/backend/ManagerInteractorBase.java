@@ -24,21 +24,13 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import rx.Observable;
 import timber.log.Timber;
 
-abstract class ManagerInteractorBase implements ManagerInteractor {
+abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
+    implements ManagerInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
   private boolean originalState = false;
 
   ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
-    this.preferences = preferences;
-  }
-
-  @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
-    return preferences;
-  }
-
-  @NonNull @Override public Observable<Boolean> isDozeEnabled() {
-    return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
+    super(preferences);
   }
 
   @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
