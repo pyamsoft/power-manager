@@ -44,10 +44,6 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
     return cancelJobs(TAG);
   }
 
-  @Override public void setManaged(boolean enabled) {
-    getPreferences().setBluetoothManaged(enabled);
-  }
-
   @NonNull @Override public Observable<Boolean> isEnabled() {
     return Observable.defer(() -> Observable.just(observer.is()));
   }

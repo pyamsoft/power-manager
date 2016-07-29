@@ -43,10 +43,6 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
     return cancelJobs(TAG);
   }
 
-  @Override public void setManaged(boolean enabled) {
-    getPreferences().setDataManaged(enabled);
-  }
-
   @NonNull @Override public Observable<Boolean> isEnabled() {
     return Observable.defer(() -> Observable.just(observer.is()));
   }

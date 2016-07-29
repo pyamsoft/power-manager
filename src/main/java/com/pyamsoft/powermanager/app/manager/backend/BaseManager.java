@@ -70,27 +70,43 @@ abstract class BaseManager implements Manager {
   }
 
   @CheckResult @NonNull private Observable<ManagerInteractor> baseEnableObservable() {
-    return interactor.cancelJobs().zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-      Timber.d("Check that manager isManaged");
-      if (managed) {
-        return managerInteractor;
-      } else {
-        return null;
-      }
-    }).filter(managerInteractor -> {
-      Timber.d("Filter out unmanaged nulls");
-      return managerInteractor != null;
-    }).zipWith(interactor.isOriginalState(), (managerInteractor, originalState) -> {
-      Timber.d("Check original state");
-      if (originalState) {
-        return managerInteractor;
-      } else {
-        return null;
-      }
-    }).filter(managerInteractor -> {
-      Timber.d("Filter out unoriginal nulls");
-      return managerInteractor != null;
-    });
+    return interactor.cancelJobs()
+        .zipWith(interactor.isDozeEnabled(), (managerInteractor, doze) -> {
+          Timber.d("If Doze is enabled, this is a no-op");
+          if (doze && ManagerDoze.isDozeAvailable()) {
+            return null;
+          } else {
+            return managerInteractor;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out doze");
+          return managerInteractor != null;
+        })
+        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+          Timber.d("Check that manager isManaged");
+          if (managed) {
+            return managerInteractor;
+          } else {
+            return null;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out unmanaged nulls");
+          return managerInteractor != null;
+        })
+        .zipWith(interactor.isOriginalState(), (managerInteractor, originalState) -> {
+          Timber.d("Check original state");
+          if (originalState) {
+            return managerInteractor;
+          } else {
+            return null;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out unoriginal nulls");
+          return managerInteractor != null;
+        });
   }
 
   @CheckResult @NonNull
@@ -99,6 +115,18 @@ abstract class BaseManager implements Manager {
     final Observable<Boolean> ignoreChargingObservable =
         interactor.isChargingIgnore().map(ignoreCharging -> ignoreCharging && charging);
     return interactor.cancelJobs()
+        .zipWith(interactor.isDozeEnabled(), (managerInteractor, doze) -> {
+          Timber.d("If Doze is enabled, this is a no-op");
+          if (doze && ManagerDoze.isDozeAvailable()) {
+            return null;
+          } else {
+            return managerInteractor;
+          }
+        })
+        .filter(managerInteractor -> {
+          Timber.d("Filter out doze");
+          return managerInteractor != null;
+        })
         .zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
           Timber.d("Check that manager ignoreCharging");
           if (ignoreCharging) {

@@ -22,9 +22,9 @@ import rx.Observable;
 
 public interface ManagerInteractor {
 
-  void setOriginalState(boolean enabled);
+  @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
 
-  void setManaged(boolean managed);
+  void setOriginalState(boolean enabled);
 
   @NonNull @CheckResult Observable<Boolean> isOriginalState();
 

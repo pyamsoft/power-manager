@@ -43,10 +43,6 @@ public final class ManagerInteractorWifi extends WearableManagerInteractorImpl {
     return cancelJobs(TAG);
   }
 
-  @Override public void setManaged(boolean enabled) {
-    getPreferences().setWifiManaged(enabled);
-  }
-
   @NonNull @Override public Observable<Boolean> isEnabled() {
     return Observable.defer(() -> Observable.just(observer.is()));
   }

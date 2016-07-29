@@ -37,6 +37,10 @@ abstract class ManagerInteractorBase implements ManagerInteractor {
     return preferences;
   }
 
+  @NonNull @Override public Observable<Boolean> isDozeEnabled() {
+    return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
+  }
+
   @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
     return Observable.defer(() -> {
       Timber.d("Attempt job cancel %s", tag);
