@@ -63,11 +63,10 @@ import timber.log.Timber;
   @Override public void onReceive(Context context, Intent intent) {
     Timber.d("onReceive: Doze change event");
 
+    final boolean charging = ScreenOnOffReceiver.getCurrentChargingState(context);
     final boolean state = isDozeMode(context);
     Timber.d("Doze state: %s", state);
-    if (state) {
-      managerDoze.forceOutOfDoze();
-    }
+    managerDoze.handleDozeStateChange(context.getApplicationContext(), state, charging);
   }
 
   public void register(@NonNull Context context) {

@@ -115,10 +115,10 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   }
 
   @CheckResult @NonNull Observable<Boolean> baseObservable() {
-    return interactor.isDozeEnabled().map(aBoolean -> {
+    return Observable.defer(() -> {
       Timber.d("Cancel old doze jobs");
       PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
-      return aBoolean;
+      return interactor.isDozeEnabled();
     }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
@@ -180,11 +180,27 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     unsubSubscription();
   }
 
-  public void forceOutOfDoze() {
-    final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
-    if (forceOut) {
-      Timber.d("Force device out of Doze mode");
-      enable();
+  public void handleDozeStateChange(@NonNull Context context, boolean currentState,
+      boolean charging) {
+    if (checkDumpsysPermission(context.getApplicationContext())) {
+      Timber.d("Holds DUMP permission");
+      if (currentState) {
+        Timber.d("Device has entered Doze mode");
+        // KLUDGE running blocking
+        final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
+        if (forceOut) {
+          Timber.d("Force device out of Doze mode");
+          enable();
+        } else {
+          Timber.d("Run Doze enter hooks");
+          disable(charging);
+        }
+      } else {
+        Timber.d("Device has exited Doze mode, return to normal operating state");
+        enable();
+      }
+    } else {
+      Timber.e("Does not have DUMP permission");
     }
   }
 

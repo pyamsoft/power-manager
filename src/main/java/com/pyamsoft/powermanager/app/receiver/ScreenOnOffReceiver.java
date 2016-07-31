@@ -58,7 +58,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
   }
 
-  @CheckResult private static boolean getCurrentChargingState(@NonNull Context context) {
+  @CheckResult public static boolean getCurrentChargingState(@NonNull Context context) {
     final Intent batteryStatus = context.registerReceiver(null, BATTERY_FILTER);
     int status;
     if (batteryStatus == null) {
