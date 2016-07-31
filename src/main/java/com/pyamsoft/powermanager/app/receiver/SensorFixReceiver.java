@@ -42,19 +42,18 @@ public class SensorFixReceiver {
   }
 
   @CheckResult private static boolean hasWritePermission(@NonNull Context context) {
-    final boolean permissionManifest = context.getApplicationContext()
-        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SETTINGS)
-        == PackageManager.PERMISSION_GRANTED;
     boolean hasRuntimePermission;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       Timber.d("Runtime permissions before M are auto granted");
-      hasRuntimePermission = true;
+      hasRuntimePermission = context.getApplicationContext()
+          .checkCallingOrSelfPermission(Manifest.permission.WRITE_SETTINGS)
+          == PackageManager.PERMISSION_GRANTED;
     } else {
       Timber.d("Check if system setting is granted");
       hasRuntimePermission = Settings.System.canWrite(context);
     }
 
-    return permissionManifest && hasRuntimePermission;
+    return hasRuntimePermission;
   }
 
   public void register() {
