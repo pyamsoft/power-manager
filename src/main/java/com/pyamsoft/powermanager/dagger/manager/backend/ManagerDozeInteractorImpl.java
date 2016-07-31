@@ -30,7 +30,7 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
 
   @Inject public ManagerDozeInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(preferences);
+    super(context, preferences);
     this.appContext = context.getApplicationContext();
   }
 

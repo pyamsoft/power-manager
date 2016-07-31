@@ -16,17 +16,22 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import rx.Observable;
 
 // KLUDGE needs a better name
 abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
 
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final Context appContext;
 
-  ManagerInteractorDozeBase(@NonNull PowerManagerPreferences preferences) {
+  ManagerInteractorDozeBase(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    this.appContext = context.getApplicationContext();
     this.preferences = preferences;
   }
 
@@ -36,5 +41,9 @@ abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
 
   @NonNull @Override public Observable<Boolean> isDozeEnabled() {
     return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
+  }
+
+  @NonNull @Override public Observable<Boolean> hasDumpSysPermission() {
+    return Observable.defer(() -> Observable.just(ManagerDoze.checkDumpsysPermission(appContext)));
   }
 }

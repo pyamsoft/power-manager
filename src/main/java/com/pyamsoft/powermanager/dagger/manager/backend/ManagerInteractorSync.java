@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
@@ -32,9 +33,9 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
   @NonNull private static final String TAG = "sync_manager_job";
   @NonNull private final InterestObserver observer;
 
-  @Inject ManagerInteractorSync(@NonNull PowerManagerPreferences preferences,
-      @NonNull SyncStateObserver observer) {
-    super(preferences);
+  @Inject ManagerInteractorSync(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull SyncStateObserver observer) {
+    super(context, preferences);
     this.observer = observer;
     Timber.d("new ManagerInteractorSync");
   }

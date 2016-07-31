@@ -70,91 +70,88 @@ abstract class BaseManager implements Manager {
   }
 
   @CheckResult @NonNull private Observable<ManagerInteractor> baseEnableObservable() {
-    return interactor.cancelJobs()
-        .zipWith(interactor.isDozeEnabled(), (managerInteractor, doze) -> {
-          Timber.d("If Doze is enabled, this is a no-op");
-          if (doze && ManagerDoze.isDozeAvailable()) {
-            return null;
-          } else {
-            return managerInteractor;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out doze");
-          return managerInteractor != null;
-        })
-        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-          Timber.d("Check that manager isManaged");
-          if (managed) {
-            return managerInteractor;
-          } else {
-            return null;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out unmanaged nulls");
-          return managerInteractor != null;
-        })
-        .zipWith(interactor.isOriginalState(), (managerInteractor, originalState) -> {
-          Timber.d("Check original state");
-          if (originalState) {
-            return managerInteractor;
-          } else {
-            return null;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out unoriginal nulls");
-          return managerInteractor != null;
-        });
+    final Observable<Boolean> dozeBooleanObservable =
+        Observable.zip(interactor.isDozeEnabled(), interactor.hasDumpSysPermission(),
+            (dozeEnabled, dumpPermission) -> dozeEnabled
+                && dumpPermission
+                && ManagerDoze.isDozeAvailable());
+    return interactor.cancelJobs().zipWith(dozeBooleanObservable, (managerInteractor, doze) -> {
+      Timber.d("If Doze is enabled, and permission granted, this is a no-op");
+      if (doze) {
+        return null;
+      } else {
+        return managerInteractor;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out doze not enabled");
+      return managerInteractor != null;
+    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+      Timber.d("Check that manager isManaged");
+      if (managed) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out unmanaged nulls");
+      return managerInteractor != null;
+    }).zipWith(interactor.isOriginalState(), (managerInteractor, originalState) -> {
+      Timber.d("Check original state");
+      if (originalState) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out unoriginal nulls");
+      return managerInteractor != null;
+    });
   }
 
   @CheckResult @NonNull
   final Observable<ManagerInteractor> baseDisableObservable(boolean charging) {
     Timber.d("Current charging state: %s", charging);
+    final Observable<Boolean> dozeBooleanObservable =
+        Observable.zip(interactor.isDozeEnabled(), interactor.hasDumpSysPermission(),
+            (dozeEnabled, dumpPermission) -> dozeEnabled
+                && dumpPermission
+                && ManagerDoze.isDozeAvailable());
     final Observable<Boolean> ignoreChargingObservable =
         interactor.isChargingIgnore().map(ignoreCharging -> ignoreCharging && charging);
-    return interactor.cancelJobs()
-        .zipWith(interactor.isDozeEnabled(), (managerInteractor, doze) -> {
-          Timber.d("If Doze is enabled, this is a no-op");
-          if (doze && ManagerDoze.isDozeAvailable()) {
-            return null;
-          } else {
-            return managerInteractor;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out doze");
-          return managerInteractor != null;
-        })
-        .zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
-          Timber.d("Check that manager ignoreCharging");
-          if (ignoreCharging) {
-            return null;
-          } else {
-            return managerInteractor;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out nulls");
-          return managerInteractor != null;
-        })
-        .zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
-          Timber.d("Check that manager isManaged");
-          if (managed) {
-            return managerInteractor;
-          } else {
-            return null;
-          }
-        })
-        .filter(managerInteractor -> {
-          Timber.d("Filter out nulls");
-          return managerInteractor != null;
-        })
-        .zipWith(interactor.isEnabled(), (managerInteractor, enabled) -> {
-          managerInteractor.setOriginalState(enabled);
-          return managerInteractor;
-        });
+    return interactor.cancelJobs().zipWith(dozeBooleanObservable, (managerInteractor, doze) -> {
+      Timber.d("If Doze is enabled, and permission granted this is a no-op");
+      if (doze) {
+        return null;
+      } else {
+        return managerInteractor;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out doze");
+      return managerInteractor != null;
+    }).zipWith(ignoreChargingObservable, (managerInteractor, ignoreCharging) -> {
+      Timber.d("Check that manager ignoreCharging");
+      if (ignoreCharging) {
+        return null;
+      } else {
+        return managerInteractor;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
+    }).zipWith(interactor.isManaged(), (managerInteractor, managed) -> {
+      Timber.d("Check that manager isManaged");
+      if (managed) {
+        return managerInteractor;
+      } else {
+        return null;
+      }
+    }).filter(managerInteractor -> {
+      Timber.d("Filter out nulls");
+      return managerInteractor != null;
+    }).zipWith(interactor.isEnabled(), (managerInteractor, enabled) -> {
+      managerInteractor.setOriginalState(enabled);
+      return managerInteractor;
+    });
   }
 
   private void enable(long time, boolean periodic) {

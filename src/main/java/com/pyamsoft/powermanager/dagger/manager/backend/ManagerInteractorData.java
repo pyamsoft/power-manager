@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
@@ -32,9 +33,9 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
   @NonNull private static final String TAG = "data_manager_job";
   @NonNull private final InterestObserver observer;
 
-  @Inject ManagerInteractorData(@NonNull PowerManagerPreferences preferences,
-      @NonNull DataStateObserver observer) {
-    super(preferences);
+  @Inject ManagerInteractorData(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull DataStateObserver observer) {
+    super(context, preferences);
     this.observer = observer;
     Timber.d("new ManagerInteractorData");
   }
@@ -93,7 +94,8 @@ public final class ManagerInteractorData extends ManagerInteractorBase {
 
   static final class DisableJob extends Job {
 
-    DisableJob(long delayTime, boolean periodic, long periodicDisableTime, long periodicEnableTime) {
+    DisableJob(long delayTime, boolean periodic, long periodicDisableTime,
+        long periodicEnableTime) {
       super(new Params(PRIORITY).setDelayMs(delayTime), JOB_TYPE_DISABLE, periodic,
           periodicDisableTime, periodicEnableTime);
     }

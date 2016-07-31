@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
@@ -29,8 +30,8 @@ abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
 
   private boolean originalState = false;
 
-  ManagerInteractorBase(@NonNull PowerManagerPreferences preferences) {
-    super(preferences);
+  ManagerInteractorBase(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
   }
 
   @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {

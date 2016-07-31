@@ -20,9 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-public interface ManagerInteractor {
-
-  @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
+public interface ManagerInteractor extends ManagerInteractorDoze {
 
   void setOriginalState(boolean enabled);
 

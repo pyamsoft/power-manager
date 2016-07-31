@@ -43,8 +43,9 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ManagerInteractorData provideManagerInteractorData(
-      @NonNull DataStateObserver observer, @NonNull PowerManagerPreferences preferences) {
-    return new ManagerInteractorData(preferences, observer);
+      @NonNull Context context, @NonNull DataStateObserver observer,
+      @NonNull PowerManagerPreferences preferences) {
+    return new ManagerInteractorData(context, preferences, observer);
   }
 
   @ActivityScope @Provides ManagerInteractorBluetooth provideManagerInteractorBluetooth(
@@ -54,8 +55,9 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ManagerInteractorSync provideManagerInteractorSync(
-      @NonNull SyncStateObserver observer, @NonNull PowerManagerPreferences preferences) {
-    return new ManagerInteractorSync(preferences, observer);
+      @NonNull Context context, @NonNull SyncStateObserver observer,
+      @NonNull PowerManagerPreferences preferences) {
+    return new ManagerInteractorSync(context, preferences, observer);
   }
 
   @ActivityScope @Provides ManagerWifi provideManagerWifi(@NonNull ManagerInteractorWifi wifi,
