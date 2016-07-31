@@ -48,6 +48,11 @@ public class DataStateModifier extends StateModifier {
   }
 
   @CheckResult @Nullable private static Method reflectSetMethod() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Timber.e("Reflection method %s does not exist on Lollipop+", SET_METHOD_NAME);
+      return null;
+    }
+
     try {
       final Method method =
           ConnectivityManager.class.getDeclaredMethod(SET_METHOD_NAME, Boolean.TYPE);

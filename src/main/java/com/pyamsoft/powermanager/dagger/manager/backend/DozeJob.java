@@ -38,6 +38,7 @@ public abstract class DozeJob extends BaseJob {
 
   private final boolean doze;
   private final boolean manageSensors;
+  private final boolean forceDoze;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
@@ -45,15 +46,16 @@ public abstract class DozeJob extends BaseJob {
   // KLUDGE created here with dagger. goes against architecture
   @Nullable private SensorFixReceiver sensorFixReceiver;
 
-  DozeJob(long delay, boolean enable, boolean manageSensors) {
-    this(delay, enable, manageSensors, Schedulers.io(), AndroidSchedulers.mainThread());
+  DozeJob(long delay, boolean enable, boolean forceDoze, boolean manageSensors) {
+    this(delay, enable, forceDoze, manageSensors, Schedulers.io(), AndroidSchedulers.mainThread());
   }
 
-  DozeJob(long delay, boolean enable, boolean manageSensors,
+  DozeJob(long delay, boolean enable, boolean forceDoze, boolean manageSensors,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(new Params(PRIORITY).setRequiresNetwork(false).addTags(DOZE_TAG).setDelayMs(delay));
     this.doze = enable;
+    this.forceDoze = forceDoze;
     this.manageSensors = manageSensors;
     this.ioScheduler = ioScheduler;
     this.mainScheduler = mainScheduler;
@@ -72,14 +74,18 @@ public abstract class DozeJob extends BaseJob {
       Timber.d("Run DozeJob");
       if (doze1) {
         Timber.d("Do doze startDoze");
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+        if (forceDoze) {
+          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+        }
         if (manageSensors) {
           Timber.d("Do sensor restrict");
           ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
         }
       } else {
         Timber.d("Do doze stopDoze");
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+        if (forceDoze) {
+          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+        }
 
         Timber.d("Do sensor enable");
         ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
@@ -106,15 +112,15 @@ public abstract class DozeJob extends BaseJob {
 
   public static final class EnableJob extends DozeJob {
 
-    public EnableJob() {
-      super(100, false, false);
+    public EnableJob(boolean forceDoze) {
+      super(100, false, forceDoze, false);
     }
   }
 
   public static final class DisableJob extends DozeJob {
 
-    public DisableJob(long delay, boolean manageSensors) {
-      super(delay, true, manageSensors);
+    public DisableJob(long delay, boolean forceDoze, boolean manageSensors) {
+      super(delay, true, forceDoze, manageSensors);
     }
   }
 }

@@ -125,7 +125,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     });
   }
 
-  @Override public void enable() {
+  private void enable(boolean forceDoze) {
     unsubSubscription();
     subscription = baseObservable().flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
@@ -135,10 +135,16 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
       return Observable.just(0L);
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
-      PowerManager.getInstance().getJobManager().addJobInBackground(new DozeJob.EnableJob());
+      PowerManager.getInstance()
+          .getJobManager()
+          .addJobInBackground(new DozeJob.EnableJob(forceDoze));
     }, throwable -> {
       Timber.e(throwable, "onError");
     }, this::unsubSubscription);
+  }
+
+  @Override public void enable() {
+    enable(true);
   }
 
   private void unsubSubscription() {
@@ -147,7 +153,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     }
   }
 
-  @Override public void disable(boolean charging) {
+  private void disable(boolean charging, boolean forceDoze) {
     unsubSubscription();
     final Observable<Long> delayObservable =
         baseObservable().flatMap(aBoolean -> interactor.isDozeIgnoreCharging()).filter(ignore -> {
@@ -170,10 +176,15 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
         .subscribe(pair -> {
           PowerManager.getInstance()
               .getJobManager()
-              .addJobInBackground(new DozeJob.DisableJob(pair.first * 1000L, pair.second));
+              .addJobInBackground(
+                  new DozeJob.DisableJob(pair.first * 1000L, forceDoze, pair.second));
         }, throwable -> {
           Timber.e(throwable, "onError");
         }, this::unsubSubscription);
+  }
+
+  @Override public void disable(boolean charging) {
+    disable(charging, true);
   }
 
   @Override public void cleanup() {
@@ -189,15 +200,15 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
         // KLUDGE running blocking
         final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
         if (forceOut) {
-          Timber.d("Force device out of Doze mode");
+          Timber.w("Forcing device out of Doze mode");
           enable();
         } else {
-          Timber.d("Run Doze enter hooks");
-          disable(charging);
+          Timber.d("Attempt device sensor restrict");
+          disable(charging, false);
         }
       } else {
-        Timber.d("Device has exited Doze mode, return to normal operating state");
-        enable();
+        Timber.d("Device has exited Doze mode, Attempt device sensors enable");
+        enable(false);
       }
     } else {
       Timber.e("Does not have DUMP permission");
