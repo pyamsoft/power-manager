@@ -16,9 +16,12 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -36,6 +39,22 @@ public class SensorFixReceiver {
     this.appContext = context.getApplicationContext();
     this.brightnessFixReceiver = new BrightnessFixReceiver(appContext);
     this.rotateFixReceiver = new RotateFixReceiver(appContext);
+  }
+
+  @CheckResult private static boolean hasWritePermission(@NonNull Context context) {
+    final boolean permissionManifest = context.getApplicationContext()
+        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SETTINGS)
+        == PackageManager.PERMISSION_GRANTED;
+    boolean hasRuntimePermission;
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      Timber.d("Runtime permissions before M are auto granted");
+      hasRuntimePermission = true;
+    } else {
+      Timber.d("Check if system setting is granted");
+      hasRuntimePermission = Settings.System.canWrite(context);
+    }
+
+    return permissionManifest && hasRuntimePermission;
   }
 
   public void register() {
@@ -78,11 +97,15 @@ public class SensorFixReceiver {
     }
 
     private void setAutoBrightnessEnabled(boolean enabled) {
-      Timber.d("Set auto brightness: %s", enabled);
-      Settings.System.putInt(appContext.getContentResolver(),
-          Settings.System.SCREEN_BRIGHTNESS_MODE,
-          enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-              : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+      if (hasWritePermission(appContext)) {
+        Timber.d("Set auto brightness: %s", enabled);
+        Settings.System.putInt(appContext.getContentResolver(),
+            Settings.System.SCREEN_BRIGHTNESS_MODE,
+            enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+                : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+      } else {
+        Timber.e("Missing WRITE_SETTINGS permission");
+      }
     }
 
     public final void register() {
@@ -143,9 +166,13 @@ public class SensorFixReceiver {
     }
 
     private void setAutoRotateEnabled(boolean enabled) {
-      Timber.d("Set auto rotate: %s", enabled);
-      Settings.System.putInt(appContext.getContentResolver(),
-          Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
+      if (hasWritePermission(appContext)) {
+        Timber.d("Set auto rotate: %s", enabled);
+        Settings.System.putInt(appContext.getContentResolver(),
+            Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
+      } else {
+        Timber.e("Missing WRITE_SETTINGS permission");
+      }
     }
 
     public final void register() {

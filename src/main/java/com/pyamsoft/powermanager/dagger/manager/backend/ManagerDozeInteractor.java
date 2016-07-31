@@ -25,8 +25,6 @@ public interface ManagerDozeInteractor extends ManagerInteractorDoze {
 
   @CheckResult @NonNull Observable<Long> getDozeDelay();
 
-  @CheckResult @NonNull Observable<Boolean> isIgnoreCharging();
-
   @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
 
   @CheckResult @NonNull Observable<Boolean> isManageSensors();

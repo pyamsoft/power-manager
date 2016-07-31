@@ -150,7 +150,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @Override public void disable(boolean charging) {
     unsubSubscription();
     final Observable<Long> delayObservable =
-        baseObservable().flatMap(aBoolean -> interactor.isIgnoreCharging()).filter(ignore -> {
+        baseObservable().flatMap(aBoolean -> interactor.isDozeIgnoreCharging()).filter(ignore -> {
           Timber.d("Filter out if ignore doze and device is charging");
           return !(ignore && charging);
         }).flatMap(aBoolean -> {

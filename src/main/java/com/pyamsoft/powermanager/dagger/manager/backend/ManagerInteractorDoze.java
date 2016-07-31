@@ -26,4 +26,6 @@ public interface ManagerInteractorDoze {
   @CheckResult @NonNull Observable<Boolean> hasDumpSysPermission();
 
   @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
+
+  @CheckResult @NonNull Observable<Boolean> isDozeIgnoreCharging();
 }
