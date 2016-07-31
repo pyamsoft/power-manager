@@ -58,6 +58,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
   @StringRes private int manageKeyResId;
   @StringRes private int timeKeyResId;
   @StringRes private int presetTimeKeyResId;
+  private String fragmentType;
 
   @CheckResult @NonNull public static ManagerManageFragment newInstance(@NonNull String type) {
     final Bundle args = new Bundle();
@@ -120,7 +121,8 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
 
   private void showInfoDialogForLollipop() {
     if (!ManagerData.checkWriteSettingsPermission(getContext())
-        && ManagerData.needsPermissionToToggle()) {
+        && ManagerData.needsPermissionToToggle()
+        && ManagerSettingsPagerAdapter.TYPE_DATA.equals(fragmentType)) {
       Timber.d("Display dialog about data toggle on Lollipop+");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new LollipopDataDialog(),
           "lollipop_data");
@@ -137,8 +139,7 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
   private void findCorrectPreferences() {
     final ManageObserverComponent manageObserverComponent =
         PowerManager.getInstance().getPowerManagerComponent().plusManageObserver();
-    final String fragmentType =
-        getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
+    fragmentType = getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
     switch (fragmentType) {
       case ManagerSettingsPagerAdapter.TYPE_WIFI:
         Timber.d("Manage fragment for Wifi");
