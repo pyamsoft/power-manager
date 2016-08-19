@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-public class WearableManageObserver extends ManagePreferenceObserver<WearableManageObserver.View> {
+class WearableManageObserver extends ManagePreferenceObserver<WearableManageObserver.View> {
 
   @Inject WearableManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

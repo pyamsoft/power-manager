@@ -16,7 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -32,7 +36,20 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides ForegroundInteractor provideForegroundInteractor(
-      @NonNull ForegroundInteractorImpl interactor) {
-    return interactor;
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("obs_wifi_manage") @NonNull InterestObserver wifiManageObserver,
+      @Named("obs_data_manage") @NonNull InterestObserver dataManageObserver,
+      @Named("obs_bluetooth_manage") @NonNull InterestObserver bluetoothManageObserver,
+      @Named("obs_sync_manage") @NonNull InterestObserver syncManageObserver,
+      @Named("obs_wear_manage") @NonNull InterestObserver wearManageObserver,
+      @Named("mod_wifi_manage") @NonNull InterestModifier wifiManageModifier,
+      @Named("mod_data_manage") @NonNull InterestModifier dataManageModifier,
+      @Named("mod_bluetooth_manage") @NonNull InterestModifier bluetoothManageModifier,
+      @Named("mod_sync_manage") @NonNull InterestModifier syncManageModifier,
+      @Named("mod_wear_manage") @NonNull InterestModifier wearManageModifier) {
+    return new ForegroundInteractorImpl(context, preferences, wifiManageObserver,
+        dataManageObserver, bluetoothManageObserver, syncManageObserver, wearManageObserver,
+        wifiManageModifier, dataManageModifier, bluetoothManageModifier, syncManageModifier,
+        wearManageModifier);
   }
 }

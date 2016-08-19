@@ -27,27 +27,27 @@ import javax.inject.Named;
 
 @Module public class ManageModifierModule {
 
-  @ActivityScope @Named("wifi") @Provides InterestModifier provideWifiModifier(
+  @ActivityScope @Named("mod_wifi_manage") @Provides InterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WifiManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("data") @Provides InterestModifier provideDataModifier(
+  @ActivityScope @Named("mod_data_manage") @Provides InterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DataManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("bluetooth") @Provides InterestModifier provideBluetoothModifier(
+  @ActivityScope @Named("mod_bluetooth_manage") @Provides InterestModifier provideBluetoothModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("sync") @Provides InterestModifier provideSyncModifier(
+  @ActivityScope @Named("mod_sync_manage") @Provides InterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("wear") @Provides InterestModifier provideWearModifier(
+  @ActivityScope @Named("mod_wear_manage") @Provides InterestModifier provideWearModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageModifier(context, preferences);
   }

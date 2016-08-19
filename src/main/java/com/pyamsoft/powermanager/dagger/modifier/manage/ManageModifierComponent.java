@@ -16,24 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
 import dagger.Subcomponent;
-import javax.inject.Named;
 
-@ActivityScope @Subcomponent(modules = {
-    ManageModifierModule.class, ManagerModule.class
-}) public interface ManageModifierComponent {
+@ActivityScope @Subcomponent(modules = ManageModifierModule.class)
+public interface ManageModifierComponent {
 
-  void inject(FullNotificationActivity.FullDialog activity);
-
-  @Named("wifi") InterestModifier provideWifiManageModifier();
-
-  @Named("data") InterestModifier provideDataManageModifier();
-
-  @Named("bluetooth") InterestModifier provideBluetoothManageModifier();
-
-  @Named("sync") InterestModifier provideSyncManageModifier();
 }

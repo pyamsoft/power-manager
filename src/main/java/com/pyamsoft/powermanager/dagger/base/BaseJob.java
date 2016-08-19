@@ -44,7 +44,7 @@ public abstract class BaseJob extends Job {
     Timber.w("Job is added %s %s with delay: %d", getId(), tagString, getDelayInMs());
   }
 
-  @Override protected final void onCancel(int cancelReason, @Nullable Throwable throwable) {
+  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
     final Set<String> tags = getTags();
     String tagString;
     if (tags != null) {
@@ -57,8 +57,6 @@ public abstract class BaseJob extends Job {
     if (throwable != null) {
       Timber.e(throwable, "JOB CANCELLED");
     }
-
-    onCancelHook();
   }
 
   @Override
@@ -66,9 +64,5 @@ public abstract class BaseJob extends Job {
       int maxRunCount) {
     Timber.w("Cancel job on retry attempt");
     return RetryConstraint.CANCEL;
-  }
-
-  protected void onCancelHook() {
-
   }
 }

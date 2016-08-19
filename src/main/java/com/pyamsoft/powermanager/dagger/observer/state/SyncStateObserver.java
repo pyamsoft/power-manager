@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
+class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
 
   @NonNull private final Handler handler;
   @NonNull private WeakReference<View> weakView = new WeakReference<>(null);

@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
-public class BluetoothStateModifier extends StateModifier {
+class BluetoothStateModifier extends StateModifier {
 
   @NonNull private final BluetoothAdapterWrapper wrapper;
 

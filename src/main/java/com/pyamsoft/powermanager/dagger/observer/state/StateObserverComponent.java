@@ -16,27 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.observer.state;
 
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerModule;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
+import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import dagger.Subcomponent;
-import javax.inject.Named;
 
-@ActivityScope @Subcomponent(modules = {
-    StateObserverModule.class, ManagerModule.class
-}) public interface StateObserverComponent {
+@ActivityScope @Subcomponent(modules = StateObserverModule.class)
+public interface StateObserverComponent {
 
-  void inject(FullNotificationActivity.FullDialog activity);
-
-  void inject(TriggerJob job);
-
-  @Named("wifi") InterestObserver provideWifiStateObserver();
-
-  @Named("data") InterestObserver provideDataStateObserver();
-
-  @Named("bluetooth") InterestObserver provideBluetoothStateObserver();
-
-  @Named("sync") InterestObserver provideSyncStateObserver();
+  // Subcomponent StateModifier
+  StateModifierComponent plusStateModifier();
 }

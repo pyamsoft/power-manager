@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class DataManageModifier extends ManageModifier {
+class DataManageModifier extends ManageModifier {
 
   @Inject DataManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

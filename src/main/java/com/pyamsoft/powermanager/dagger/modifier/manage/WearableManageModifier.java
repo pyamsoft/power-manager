@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class WearableManageModifier extends ManageModifier {
+class WearableManageModifier extends ManageModifier {
 
   @Inject WearableManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

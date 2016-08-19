@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class SyncManageModifier extends ManageModifier {
+class SyncManageModifier extends ManageModifier {
 
   @Inject SyncManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

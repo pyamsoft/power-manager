@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.observer.manage;
+package com.pyamsoft.powermanager.app.main;
 
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierComponent;
-import dagger.Subcomponent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 
-@ActivityScope @Subcomponent(modules = ManageObserverModule.class)
-public interface ManageObserverComponent {
+public class MainActivity extends DonationActivityBase {
 
-  // Subcomponent ManageModifier
-  ManageModifierComponent plusManageModifier();
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+  }
+
+  @Override protected int bindActivityToView() {
+    setContentView(R.layout.activity_main);
+    return R.id.ad_view;
+  }
 }

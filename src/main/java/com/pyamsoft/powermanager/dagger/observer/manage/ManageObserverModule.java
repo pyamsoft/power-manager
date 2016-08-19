@@ -27,27 +27,27 @@ import javax.inject.Named;
 
 @Module public class ManageObserverModule {
 
-  @ActivityScope @Named("wifi") @Provides InterestObserver provideWifiObserver(
+  @ActivityScope @Named("obs_wifi_manage") @Provides InterestObserver provideWifiObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WifiManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("data") @Provides InterestObserver provideDataObserver(
+  @ActivityScope @Named("obs_data_manage") @Provides InterestObserver provideDataObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DataManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("bluetooth") @Provides InterestObserver provideBluetoothObserver(
+  @ActivityScope @Named("obs_bluetooth_manage") @Provides InterestObserver provideBluetoothObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("sync") @Provides InterestObserver provideSyncObserver(
+  @ActivityScope @Named("obs_sync_manage") @Provides InterestObserver provideSyncObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("wear") @Provides InterestObserver provideWearableObserver(
+  @ActivityScope @Named("obs_wear_manage") @Provides InterestObserver provideWearableObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageObserver(context, preferences);
   }

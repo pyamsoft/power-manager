@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class DataStateModifier extends StateModifier {
+class DataStateModifier extends StateModifier {
 
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
   @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;

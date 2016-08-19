@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class WifiStateObserver extends StateContentObserver<WifiStateObserver.View> {
+class WifiStateObserver extends StateContentObserver<WifiStateObserver.View> {
 
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);

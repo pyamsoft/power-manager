@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SyncStateModifier extends StateModifier {
+class SyncStateModifier extends StateModifier {
 
   @Inject SyncStateModifier(@NonNull Context context) {
     super(context);

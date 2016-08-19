@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-public class BluetoothManageObserver
+class BluetoothManageObserver
     extends ManagePreferenceObserver<BluetoothManageObserver.View> {
 
   @Inject BluetoothManageObserver(@NonNull Context context,

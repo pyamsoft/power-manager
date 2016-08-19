@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class WifiStateModifier extends StateModifier {
+class WifiStateModifier extends StateModifier {
 
   @Nullable private final WifiManager wifiManager;
 

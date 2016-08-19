@@ -29,6 +29,8 @@ import android.widget.RemoteViews;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -41,11 +43,37 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   private static final int PENDING_RC = 1004;
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final InterestObserver wifiManageObserver;
+  @NonNull private final InterestObserver dataManageObserver;
+  @NonNull private final InterestObserver bluetoothManageObserver;
+  @NonNull private final InterestObserver syncManageObserver;
+  @NonNull private final InterestObserver wearManageObserver;
+  @NonNull private final InterestModifier wifiManageModifier;
+  @NonNull private final InterestModifier dataManageModifier;
+  @NonNull private final InterestModifier bluetoothManageModifier;
+  @NonNull private final InterestModifier syncManageModifier;
+  @NonNull private final InterestModifier wearManageModifier;
 
   @Inject ForegroundInteractorImpl(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    this.preferences = preferences;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver wifiManageObserver,
+      @NonNull InterestObserver dataManageObserver,
+      @NonNull InterestObserver bluetoothManageObserver,
+      @NonNull InterestObserver syncManageObserver, @NonNull InterestObserver wearManageObserver,
+      @NonNull InterestModifier wifiManageModifier, @NonNull InterestModifier dataManageModifier,
+      @NonNull InterestModifier bluetoothManageModifier,
+      @NonNull InterestModifier syncManageModifier, @NonNull InterestModifier wearManageModifier) {
+    this.wifiManageModifier = wifiManageModifier;
+    this.dataManageModifier = dataManageModifier;
+    this.bluetoothManageModifier = bluetoothManageModifier;
+    this.syncManageModifier = syncManageModifier;
+    this.wearManageModifier = wearManageModifier;
     this.appContext = context.getApplicationContext();
+    this.preferences = preferences;
+    this.wifiManageObserver = wifiManageObserver;
+    this.dataManageObserver = dataManageObserver;
+    this.bluetoothManageObserver = bluetoothManageObserver;
+    this.syncManageObserver = syncManageObserver;
+    this.wearManageObserver = wearManageObserver;
   }
 
   @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {
@@ -114,16 +142,16 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         PendingIntent.getService(appContext, PENDING_RC + 8, syncIntent, 0);
 
     @DrawableRes final int wearIcon =
-        preferences.isWearableManaged() ? R.drawable.ic_watch_24dp : R.drawable.ic_watch_off_24dp;
-    @DrawableRes final int wifiIcon = preferences.isWifiManaged() ? R.drawable.ic_network_wifi_24dp
+        wearManageObserver.is() ? R.drawable.ic_watch_24dp : R.drawable.ic_watch_off_24dp;
+    @DrawableRes final int wifiIcon = wifiManageObserver.is() ? R.drawable.ic_network_wifi_24dp
         : R.drawable.ic_signal_wifi_off_24dp;
-    @DrawableRes final int dataIcon = preferences.isDataManaged() ? R.drawable.ic_network_cell_24dp
+    @DrawableRes final int dataIcon = dataManageObserver.is() ? R.drawable.ic_network_cell_24dp
         : R.drawable.ic_signal_cellular_off_24dp;
     @DrawableRes final int bluetoothIcon =
-        preferences.isBluetoothManaged() ? R.drawable.ic_bluetooth_24dp
+        bluetoothManageObserver.is() ? R.drawable.ic_bluetooth_24dp
             : R.drawable.ic_bluetooth_disabled_24dp;
     @DrawableRes final int syncIcon =
-        preferences.isSyncManaged() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
+        syncManageObserver.is() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
 
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_wear_image, wearIcon);
@@ -146,37 +174,52 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @Override public void updateWearablePreferenceStatus() {
-    // TODO should we talk to manager instead?
-    final boolean state = preferences.isWearableManaged();
-    preferences.setWearableManaged(!state);
+    final boolean state = wearManageObserver.is();
+    if (state) {
+      wearManageModifier.unset();
+    } else {
+      wearManageModifier.set();
+    }
     Timber.d("Update wearable managed from %s to %s", state, !state);
   }
 
   @Override public void updateWifiPreferenceStatus() {
-    // TODO should we talk to manager instead?
-    final boolean state = preferences.isWifiManaged();
-    preferences.setWifiManaged(!state);
+    final boolean state = wifiManageObserver.is();
+    if (state) {
+      wifiManageModifier.unset();
+    } else {
+      wifiManageModifier.set();
+    }
     Timber.d("Update wifi managed from %s to %s", state, !state);
   }
 
   @Override public void updateDataPreferenceStatus() {
-    // TODO should we talk to manager instead?
-    final boolean state = preferences.isDataManaged();
-    preferences.setDataManaged(!state);
+    final boolean state = dataManageObserver.is();
+    if (state) {
+      dataManageModifier.unset();
+    } else {
+      dataManageModifier.set();
+    }
     Timber.d("Update data managed from %s to %s", state, !state);
   }
 
   @Override public void updateBluetoothPreferenceStatus() {
-    // TODO should we talk to manager instead?
-    final boolean state = preferences.isBluetoothManaged();
-    preferences.setBluetoothManaged(!state);
+    final boolean state = bluetoothManageObserver.is();
+    if (state) {
+      bluetoothManageModifier.unset();
+    } else {
+      bluetoothManageModifier.set();
+    }
     Timber.d("Update bluetooth managed from %s to %s", state, !state);
   }
 
   @Override public void updateSyncPreferenceStatus() {
-    // TODO should we talk to manager instead?
-    final boolean state = preferences.isSyncManaged();
-    preferences.setSyncManaged(!state);
+    final boolean state = syncManageObserver.is();
+    if (state) {
+      syncManageModifier.unset();
+    } else {
+      syncManageModifier.set();
+    }
     Timber.d("Update sync managed from %s to %s", state, !state);
   }
 }

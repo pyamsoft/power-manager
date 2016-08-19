@@ -22,23 +22,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
-import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
-import com.pyamsoft.powermanager.dagger.modifier.state.DataStateModifier;
-import com.pyamsoft.powermanager.dagger.modifier.state.SyncStateModifier;
-import com.pyamsoft.powermanager.dagger.modifier.state.WifiStateModifier;
-import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
-import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
-import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
-import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -50,15 +46,15 @@ public class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
   private static final int PRIORITY = 2;
-  @Inject WifiStateObserver wifiObserver;
-  @Inject DataStateObserver dataObserver;
-  @Inject BluetoothStateObserver bluetoothObserver;
-  @Inject SyncStateObserver syncObserver;
+  @Inject @Named("obs_wifi_state") InterestObserver wifiObserver;
+  @Inject @Named("obs_data_state") InterestObserver dataObserver;
+  @Inject @Named("obs_bluetooth_state") InterestObserver bluetoothObserver;
+  @Inject @Named("obs_sync_state") InterestObserver syncObserver;
 
-  @Inject WifiStateModifier wifiModifier;
-  @Inject DataStateModifier dataModifier;
-  @Inject BluetoothStateModifier bluetoothModifier;
-  @Inject SyncStateModifier syncModifier;
+  @Inject @Named("mod_wifi_state") InterestModifier wifiModifier;
+  @Inject @Named("mod_data_state") InterestModifier dataModifier;
+  @Inject @Named("mod_bluetooth_state") InterestModifier bluetoothModifier;
+  @Inject @Named("mod_sync_state") InterestModifier syncModifier;
   @NonNull private Subscription runSubscription = Subscriptions.empty();
 
   public TriggerJob(long delay) {
@@ -75,7 +71,10 @@ public class TriggerJob extends BaseJob {
 
   @Override public void onAdded() {
     super.onAdded();
-    Singleton.Dagger.with(getApplicationContext()).plusStateModifier().inject(this);
+    Singleton.Dagger.with(getApplicationContext())
+        .plusStateObserver()
+        .plusStateModifier()
+        .inject(this);
   }
 
   @Override public void onRun() throws Throwable {
@@ -285,7 +284,8 @@ public class TriggerJob extends BaseJob {
     }
   }
 
-  @Override protected void onCancelHook() {
+  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
+    super.onCancel(cancelReason, throwable);
     unsubRun();
   }
 }

@@ -26,22 +26,22 @@ import javax.inject.Named;
 
 @Module public class StateModifierModule {
 
-  @ActivityScope @Named("wifi") @Provides InterestModifier provideWifiModifier(
+  @ActivityScope @Named("mod_wifi_state") @Provides InterestModifier provideWifiModifier(
       @NonNull Context context) {
     return new WifiStateModifier(context);
   }
 
-  @ActivityScope @Named("data") @Provides InterestModifier provideDataModifier(
+  @ActivityScope @Named("mod_data_state") @Provides InterestModifier provideDataModifier(
       @NonNull Context context) {
     return new DataStateModifier(context);
   }
 
-  @ActivityScope @Named("bluetooth") @Provides InterestModifier provideBluetoothModifier(
+  @ActivityScope @Named("mod_bluetooth_state") @Provides InterestModifier provideBluetoothModifier(
       @NonNull Context context) {
     return new BluetoothStateModifier(context);
   }
 
-  @ActivityScope @Named("sync") @Provides InterestModifier provideSyncModifier(
+  @ActivityScope @Named("mod_sync_state") @Provides InterestModifier provideSyncModifier(
       @NonNull Context context) {
     return new SyncStateModifier(context);
   }

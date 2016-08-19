@@ -33,10 +33,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterPresenter;
-import com.pyamsoft.powermanager.model.FabColorEvent;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.tool.RxBus;
@@ -105,8 +103,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   }
 
   private void setupFab() {
-    FabColorBus.get()
-        .post(FabColorEvent.create(R.drawable.ic_add_24dp, () -> presenter.showNewTriggerDialog()));
+    //FabColorBus.get()
+    //    .post(FabColorEvent.create(R.drawable.ic_add_24dp, () -> presenter.showNewTriggerDialog()));
   }
 
   private void setupRecyclerView() {

@@ -16,17 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger;
 
-import com.pyamsoft.powermanager.dagger.main.MainComponent;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerComponent;
-import com.pyamsoft.powermanager.dagger.manager.manage.ManagerManageComponent;
-import com.pyamsoft.powermanager.dagger.manager.period.ManagerPeriodicComponent;
-import com.pyamsoft.powermanager.dagger.manager.preference.ManagerTimeComponent;
-import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierComponent;
-import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
-import com.pyamsoft.powermanager.dagger.settings.SettingsComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -36,36 +28,12 @@ import javax.inject.Singleton;
   // Subcomponent Trigger
   TriggerComponent plusTrigger();
 
-  // Subcomponent Settings
-  SettingsComponent plusSettings();
-
   // Subcomponent StateObserver
   StateObserverComponent plusStateObserver();
 
   // Subcomponent ManageObserver
   ManageObserverComponent plusManageObserver();
 
-  // Subcomponent StateModifier
-  StateModifierComponent plusStateModifier();
-
-  // Subcomponent ManageModifier
-  ManageModifierComponent plusManageModifier();
-
   // Subcomponent FullNotification
   FullNotificationComponent plusFullNotification();
-
-  // Subcomponent Manager
-  ManagerComponent plusManager();
-
-  // Subcomponent ManagerManage
-  ManagerManageComponent plusManagerManage();
-
-  // Subcomponent ManagerTime
-  ManagerTimeComponent plusManagerTime();
-
-  // Subcomponent ManagerPeriodic
-  ManagerPeriodicComponent plusManagerPeriodic();
-
-  // Subcomponent MainComponent
-  MainComponent plusMain();
 }

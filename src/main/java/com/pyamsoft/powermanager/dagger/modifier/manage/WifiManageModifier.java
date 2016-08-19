@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class WifiManageModifier extends ManageModifier {
+class WifiManageModifier extends ManageModifier {
 
   @Inject WifiManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

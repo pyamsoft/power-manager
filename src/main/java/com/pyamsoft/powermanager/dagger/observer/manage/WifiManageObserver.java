@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-public class WifiManageObserver extends ManagePreferenceObserver<WifiManageObserver.View> {
+class WifiManageObserver extends ManagePreferenceObserver<WifiManageObserver.View> {
 
   @Inject WifiManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

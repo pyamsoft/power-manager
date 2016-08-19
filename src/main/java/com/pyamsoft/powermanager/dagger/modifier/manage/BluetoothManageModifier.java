@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class BluetoothManageModifier extends ManageModifier {
+class BluetoothManageModifier extends ManageModifier {
 
   @Inject BluetoothManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
