@@ -57,7 +57,7 @@ public class DozeFragment extends ActionBarPreferenceFragment {
   }
 
   private void showInfoDialogForDoze() {
-    if (managerDoze.isDozeAvailable()) {
+    if (!managerDoze.isDozeEnabled()) {
       Timber.d("Display dialog about doze mode on Marshmallow");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
     }
