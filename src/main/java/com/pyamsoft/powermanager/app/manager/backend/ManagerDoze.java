@@ -122,6 +122,16 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     });
   }
 
+  // KLUDGE blocking obs
+  public boolean isDozeEnabled() {
+    return interactor.isDozeEnabled().toBlocking().first();
+  }
+
+  // KLUDGE blocking obs
+  public boolean isSensorsManaged() {
+    return isDozeEnabled() && interactor.isManageSensors().toBlocking().first();
+  }
+
   private void enable(boolean forceDoze) {
     unsubSubscription();
     subscription = baseObservable().flatMap(aBoolean -> {

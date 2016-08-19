@@ -134,17 +134,22 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void cleanup() {
+    if (ManagerDoze.checkDumpsysPermission(appContext)
+        && ManagerDoze.isDozeAvailable()
+        && managerDoze.isDozeEnabled()) {
+      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_DOZE_END);
+
+      if (managerDoze.isSensorsManaged()) {
+        ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+        managerDoze.fixSensorDisplayRotationBug();
+      }
+    }
+
     managerWifi.cleanup();
     managerData.cleanup();
     managerBluetooth.cleanup();
     managerSync.cleanup();
     managerDoze.cleanup();
-
-    if (ManagerDoze.checkDumpsysPermission(appContext) && ManagerDoze.isDozeAvailable()) {
-      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_DOZE_END);
-      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
-      managerDoze.fixSensorDisplayRotationBug();
-    }
   }
 
   public final void unregister() {
