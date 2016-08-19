@@ -18,16 +18,14 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
+import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import rx.Observable;
 
-public interface ManagerInteractor extends ManagerInteractorDoze {
+public interface ManagerInteractor {
 
   void setOriginalState(boolean enabled);
 
   @NonNull @CheckResult Observable<Boolean> isOriginalState();
-
-  @NonNull @CheckResult Observable<ManagerInteractor> cancelJobs();
 
   @CheckResult @NonNull Observable<Boolean> isChargingIgnore();
 
@@ -39,11 +37,19 @@ public interface ManagerInteractor extends ManagerInteractorDoze {
 
   @CheckResult @NonNull Observable<Long> getDelayTime();
 
-  @CheckResult @NonNull Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic);
+  @CheckResult @NonNull Observable<BaseJob> createEnableJob(long delayTime, boolean periodic);
 
-  @CheckResult @NonNull Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic);
+  @CheckResult @NonNull Observable<BaseJob> createDisableJob(long delayTime, boolean periodic);
 
-  void queueDeviceEnableJob(@NonNull DeviceJob job);
+  void queueJob(@NonNull BaseJob job);
 
-  void queueDeviceDisableJob(@NonNull DeviceJob job);
+  @NonNull @CheckResult Observable<ManagerInteractor> cancelJobs();
+
+  @CheckResult @NonNull Observable<Boolean> isDozeAvailable();
+
+  @CheckResult @NonNull Observable<Boolean> isDozeIgnoreCharging();
+
+  @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
+
+  @CheckResult @NonNull Observable<Boolean> isDozeExclusive();
 }

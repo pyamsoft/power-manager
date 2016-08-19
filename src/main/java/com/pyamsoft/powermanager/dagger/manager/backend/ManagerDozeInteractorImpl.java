@@ -21,10 +21,9 @@ import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
+import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.dagger.manager.jobs.DozeJob;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +32,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
+public class ManagerDozeInteractorImpl extends ManagerInteractorBase
     implements ManagerDozeInteractor {
 
   @NonNull private final Context appContext;
@@ -44,8 +43,16 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
     this.appContext = context.getApplicationContext();
   }
 
-  @NonNull @Override public Observable<Long> getDozeDelay() {
+  @NonNull @Override public Observable<Long> getDelayTime() {
     return Observable.defer(() -> Observable.just(getPreferences().getDozeDelay()));
+  }
+
+  @NonNull @Override Observable<Long> getPeriodicEnableTime() {
+    return getDelayTime();
+  }
+
+  @NonNull @Override Observable<Long> getPeriodicDisableTime() {
+    return getDelayTime();
   }
 
   @NonNull @Override public Observable<Boolean> isForceOutOfDoze() {
@@ -70,14 +77,6 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
 
   @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {
     return Observable.defer(() -> Observable.just(new SensorFixReceiver(appContext)));
-  }
-
-  @Override public void cancelAllJobs() {
-    Singleton.Jobs.with(appContext).cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
-  }
-
-  @Override public void queueEnableJob(boolean forceDoze) {
-    Singleton.Jobs.with(appContext).addJobInBackground(new DozeJob.EnableJob(forceDoze));
   }
 
   @SuppressLint("NewApi") @Override public void executeDumpsys(@NonNull String cmd) {
@@ -111,8 +110,33 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
     }
   }
 
-  @Override public void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors) {
-    Singleton.Jobs.with(appContext)
-        .addJobInBackground(new DozeJob.DisableJob(delay, forceDoze, manageSensors));
+  @NonNull @Override public Observable<Boolean> isChargingIgnore() {
+    return isDozeIgnoreCharging();
+  }
+
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    return isDozeEnabled();
+  }
+
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return isDozeEnabled();
+  }
+
+  @NonNull @Override public Observable<Boolean> isPeriodic() {
+    return Observable.defer(() -> Observable.just(false));
+  }
+
+  @NonNull @Override public Observable<BaseJob> createEnableJob(long delayTime, boolean periodic) {
+    return isForceOutOfDoze().map(DozeJob.EnableJob::new);
+  }
+
+  @NonNull @Override
+  public Observable<BaseJob> createDisableJob(long delayTime, boolean manageSensors) {
+    return isForceOutOfDoze().map(
+        forceDoze -> new DozeJob.DisableJob(delayTime, forceDoze, manageSensors));
+  }
+
+  @NonNull @Override public Observable<ManagerInteractor> cancelJobs() {
+    return cancelJobs(DozeJob.DOZE_TAG);
   }
 }

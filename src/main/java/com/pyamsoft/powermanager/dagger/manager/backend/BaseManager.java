@@ -140,7 +140,7 @@ abstract class BaseManager implements Manager {
     enableJobSubscription = interactor.createEnableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .subscribe(interactor::queueDeviceEnableJob, throwable -> {
+        .subscribe(interactor::queueJob, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
         }, this::unsubsEnable);
@@ -151,7 +151,7 @@ abstract class BaseManager implements Manager {
     disableJobSubscription = interactor.createDisableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .subscribe(interactor::queueDeviceDisableJob, throwable -> {
+        .subscribe(interactor::queueJob, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
         }, this::unsubsDisable);

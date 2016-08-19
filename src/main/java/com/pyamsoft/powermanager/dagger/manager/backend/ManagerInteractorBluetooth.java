@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
 import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import javax.inject.Inject;
@@ -75,14 +76,12 @@ public final class ManagerInteractorBluetooth extends WearableManagerInteractorI
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingBluetooth()));
   }
 
-  @NonNull @Override
-  public Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic) {
+  @NonNull @Override public Observable<BaseJob> createEnableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
         (disable, enable) -> new EnableJob(delayTime, periodic, disable, enable));
   }
 
-  @NonNull @Override
-  public Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic) {
+  @NonNull @Override public Observable<BaseJob> createDisableJob(long delayTime, boolean periodic) {
     return Observable.zip(getPeriodicDisableTime(), getPeriodicEnableTime(),
         (disable, enable) -> new DisableJob(delayTime, periodic, disable, enable));
   }

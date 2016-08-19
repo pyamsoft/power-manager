@@ -142,9 +142,8 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @CheckResult @NonNull Observable<Boolean> baseObservable() {
     return Observable.defer(() -> {
       Timber.d("Cancel old doze jobs");
-      interactor.cancelAllJobs();
-      return interactor.isDozeEnabled();
-    }).filter(aBoolean -> {
+      return interactor.cancelJobs();
+    }).flatMap(managerInteractor -> interactor.isDozeEnabled()).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
       return aBoolean;
     });
@@ -165,7 +164,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     return isDozeEnabled() && interactor.isManageSensors().toBlocking().first();
   }
 
-  void enable(boolean forceDoze) {
+  @Override public void enable() {
     unsubSubscription();
     subscription = baseObservable().flatMap(isEnabled -> {
       if (isEnabled) {
@@ -176,14 +175,11 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
         return Observable.empty();
       }
     })
+        .flatMap(delay -> interactor.createEnableJob(delay, false))
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(delay -> interactor.queueEnableJob(forceDoze),
-            throwable -> Timber.e(throwable, "onError"), this::unsubSubscription);
-  }
-
-  @Override public void enable() {
-    enable(true);
+        .subscribe(interactor::queueJob, throwable -> Timber.e(throwable, "onError"),
+            this::unsubSubscription);
   }
 
   void unsubSubscription() {
@@ -192,7 +188,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     }
   }
 
-  void disable(boolean charging, boolean forceDoze) {
+  @Override public void disable(boolean charging) {
     unsubSubscription();
     final Observable<Long> delayObservable = baseObservable().flatMap(isEnabled -> {
       if (isEnabled) {
@@ -205,20 +201,17 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
       return !(ignore && charging);
     }).flatMap(shouldIgnore -> {
       Timber.d("Get doze delay");
-      return interactor.getDozeDelay();
+      return interactor.getDelayTime();
     });
 
     final Observable<Boolean> sensorsObservable = interactor.isManageSensors();
 
     subscription = Observable.zip(delayObservable, sensorsObservable, Pair::new)
+        .flatMap(pair -> interactor.createDisableJob(pair.first, pair.second))
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(pair -> interactor.queueDisableJob(pair.first * 1000L, forceDoze, pair.second),
-            throwable -> Timber.e(throwable, "onError"), this::unsubSubscription);
-  }
-
-  @Override public void disable(boolean charging) {
-    disable(charging, true);
+        .subscribe(interactor::queueJob, throwable -> Timber.e(throwable, "onError"),
+            this::unsubSubscription);
   }
 
   @Override public void cleanup() {
@@ -233,29 +226,30 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   public void handleDozeStateChange(boolean currentState, boolean charging) {
     unsubStateChange();
     stateChangeSubscription = interactor.isDozeEnabled()
-        .map(isEnabled -> {
+        .flatMap(isEnabled -> {
           if (!isEnabled) {
             Timber.e("Doze is not enabled");
-            return false;
+            return Observable.just(false);
           } else {
             Timber.d("Holds DUMP permission");
             if (currentState) {
               Timber.d("Device has entered Doze mode");
-              // KLUDGE running blocking
-              final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
-              if (forceOut) {
-                Timber.w("Forcing device out of Doze mode");
-                enable();
-              } else {
-                Timber.d("Attempt device sensor restrict");
-                disable(charging, false);
-              }
+              return interactor.isForceOutOfDoze().map(forceOut -> {
+                if (forceOut) {
+                  Timber.w("Forcing device out of Doze mode");
+                  enable();
+                } else {
+                  Timber.d("Attempt device sensor restrict");
+                  disable(charging);
+                }
+                return true;
+              });
             } else {
               Timber.d("Device has exited Doze mode, Attempt device sensors enable");
-              enable(false);
+              enable();
+              return Observable.just(true);
             }
           }
-          return true;
         })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

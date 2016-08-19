@@ -21,21 +21,13 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import rx.Observable;
 
-public interface ManagerDozeInteractor extends ManagerInteractorDoze {
-
-  @CheckResult @NonNull Observable<Long> getDozeDelay();
+public interface ManagerDozeInteractor extends ManagerInteractor {
 
   @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
 
   @CheckResult @NonNull Observable<Boolean> isManageSensors();
 
   @CheckResult @NonNull Observable<SensorFixReceiver> createSensorFixReceiver();
-
-  void cancelAllJobs();
-
-  void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors);
-
-  void queueEnableJob(boolean forceDoze);
 
   void executeDumpsys(@NonNull String cmd);
 }

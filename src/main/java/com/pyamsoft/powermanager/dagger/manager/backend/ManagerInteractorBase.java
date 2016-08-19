@@ -16,31 +16,28 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
+import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import rx.Observable;
 import timber.log.Timber;
 
-abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
-    implements ManagerInteractor {
+abstract class ManagerInteractorBase implements ManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final Context appContext;
   private boolean originalState = false;
 
   ManagerInteractorBase(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences);
-  }
-
-  @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
-    return Observable.defer(() -> {
-      Timber.d("Attempt job cancel %s", tag);
-      Singleton.Jobs.with(getAppContext()).cancelJobs(TagConstraint.ANY, tag);
-      return Observable.just(this);
-    });
+    this.preferences = preferences;
+    this.appContext = context.getApplicationContext();
   }
 
   @Override public final void setOriginalState(boolean originalState) {
@@ -55,11 +52,48 @@ abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
 
   @CheckResult @NonNull abstract Observable<Long> getPeriodicDisableTime();
 
-  @Override public void queueDeviceDisableJob(@NonNull DeviceJob job) {
+  @Override public void queueJob(@NonNull BaseJob job) {
     Singleton.Jobs.with(getAppContext()).addJobInBackground(job);
   }
 
-  @Override public void queueDeviceEnableJob(@NonNull DeviceJob job) {
-    Singleton.Jobs.with(getAppContext()).addJobInBackground(job);
+  @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
+    return Observable.defer(() -> {
+      Timber.d("Attempt job cancel %s", tag);
+      Singleton.Jobs.with(getAppContext()).cancelJobs(TagConstraint.ANY, tag);
+      return Observable.just(this);
+    });
+  }
+
+  @NonNull @CheckResult protected final Observable<Boolean> hasDumpSysPermission() {
+    return Observable.defer(() -> Observable.just(
+        appContext.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
+            == PackageManager.PERMISSION_GRANTED));
+  }
+
+  @CheckResult @NonNull final Context getAppContext() {
+    return appContext;
+  }
+
+  @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
+    return preferences;
+  }
+
+  @Override @NonNull public Observable<Boolean> isDozeAvailable() {
+    return Observable.defer(() -> Observable.just(Build.VERSION.SDK_INT == Build.VERSION_CODES.M));
+  }
+
+  @NonNull @Override public Observable<Boolean> isDozeEnabled() {
+    return isDozeAvailable().flatMap(
+        available -> hasDumpSysPermission().map(hasPermission -> hasPermission && available))
+        .map(available -> available && preferences.isDozeEnabled());
+  }
+
+  @NonNull @Override public Observable<Boolean> isDozeExclusive() {
+    // TODO replace with setting
+    return Observable.defer(() -> Observable.just(false));
+  }
+
+  @NonNull @Override public Observable<Boolean> isDozeIgnoreCharging() {
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 }
