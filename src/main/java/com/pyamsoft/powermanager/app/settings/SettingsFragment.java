@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -29,18 +28,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.observer.manage.WearableManageObserver;
-import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
-import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class SettingsFragment extends ActionBarPreferenceFragment
+public final class SettingsFragment extends ActionBarSettingsPreferenceFragment
     implements SettingsPresenter.MainSettingsView, WearableManageObserver.View {
 
   @NonNull public static final String TAG = "settings";
@@ -96,16 +93,7 @@ public final class SettingsFragment extends ActionBarPreferenceFragment
     });
 
     final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
-    upgradeInfo.setOnPreferenceClickListener(preference -> {
-      final FragmentActivity activity = getActivity();
-      if (activity instanceof RatingDialog.ChangeLogProvider) {
-        final RatingDialog.ChangeLogProvider provider = (RatingDialog.ChangeLogProvider) activity;
-        RatingDialog.showRatingDialog(activity, provider, true);
-      } else {
-        throw new ClassCastException("Activity is not a change log provider");
-      }
-      return true;
-    });
+    upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
 
     final Preference batterySettings = findPreference(getString(R.string.battery_settings_key));
     batterySettings.setOnPreferenceClickListener(preference -> {
@@ -138,21 +126,7 @@ public final class SettingsFragment extends ActionBarPreferenceFragment
 
     final SwitchPreferenceCompat showAds =
         (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean b = (boolean) newValue;
-        final MainActivity activity = (MainActivity) getActivity();
-        if (b) {
-          Timber.d("Turn on ads");
-          activity.showAd();
-        } else {
-          Timber.d("Turn off ads");
-          activity.hideAd();
-        }
-        return true;
-      }
-      return false;
-    });
+    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
   }
 
   @Override public void onDestroyView() {
