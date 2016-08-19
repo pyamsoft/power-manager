@@ -26,17 +26,17 @@ import timber.log.Timber;
 public abstract class DeviceJob extends BaseJob {
 
   public static final long MINIMUM_ALLOWED_PERIOD = 60L;
-  static final int JOB_TYPE_ENABLE = 1;
-  static final int JOB_TYPE_DISABLE = 2;
-  static final int PRIORITY = 1;
+  protected static final int JOB_TYPE_ENABLE = 1;
+  protected static final int JOB_TYPE_DISABLE = 2;
+  protected static final int PRIORITY = 1;
 
   private final int jobType;
   private final boolean periodic;
   private final long periodicDisableTime;
   private final long periodicEnableTime;
 
-  DeviceJob(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
-      long periodicEnableTime) {
+  protected DeviceJob(@NonNull Params params, int jobType, boolean periodic,
+      long periodicDisableTime, long periodicEnableTime) {
     super(params);
     this.periodicDisableTime = periodicDisableTime;
     this.periodicEnableTime = periodicEnableTime;
@@ -48,11 +48,11 @@ public abstract class DeviceJob extends BaseJob {
     return periodic;
   }
 
-  @CheckResult final long getPeriodicDisableTime() {
+  @CheckResult protected final long getPeriodicDisableTime() {
     return periodicDisableTime;
   }
 
-  @CheckResult final long getPeriodicEnableTime() {
+  @CheckResult protected final long getPeriodicEnableTime() {
     return periodicEnableTime;
   }
 
