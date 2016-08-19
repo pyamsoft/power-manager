@@ -34,9 +34,9 @@ import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
-import com.pyamsoft.pydroid.model.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncTaskMap;
-import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import rx.Subscription;
 
 final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
 
@@ -49,7 +49,7 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
   private static final int POSITION_SETTINGS = 6;
   private static final int NUMBER_ITEMS = 7;
 
-  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final View view = LayoutInflater.from(parent.getContext())
@@ -117,9 +117,10 @@ final class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHol
 
     holder.title.setText(title);
 
-    final AsyncVectorDrawableTask task =
-        new AsyncVectorDrawableTask(holder.image, android.R.color.white);
-    task.execute(new AsyncDrawable(holder.itemView.getContext().getApplicationContext(), image));
+    final Subscription task = AsyncDrawable.with(holder.itemView.getContext())
+        .load(image)
+        .tint(android.R.color.white)
+        .into(holder.image);
     taskMap.put(title, task);
   }
 

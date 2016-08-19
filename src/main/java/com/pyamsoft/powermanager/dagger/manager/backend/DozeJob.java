@@ -92,7 +92,7 @@ public abstract class DozeJob extends BaseJob {
       }
       // Ignore
       Timber.d("Run a fix function if doze was stopping and current state was doze");
-      return !doze1;
+      return !doze1 && manageSensors;
     }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(shouldRunFix -> {
       if (shouldRunFix) {
         Timber.d("Run hack fix for brightness and rotate");
