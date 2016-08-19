@@ -25,6 +25,8 @@ public interface ManagerDozeInteractor extends ManagerInteractor {
 
   @CheckResult @NonNull Observable<Boolean> isForceOutOfDoze();
 
+  @CheckResult @NonNull Observable<Boolean> canManageSensors();
+
   @CheckResult @NonNull Observable<Boolean> isManageSensors();
 
   @CheckResult @NonNull Observable<SensorFixReceiver> createSensorFixReceiver();

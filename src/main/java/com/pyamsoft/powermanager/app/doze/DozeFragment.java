@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.doze;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.Preference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,6 @@ import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
 import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 public class DozeFragment extends ActionBarPreferenceFragment {
 
@@ -53,13 +53,34 @@ public class DozeFragment extends ActionBarPreferenceFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    showInfoDialogForDoze();
-  }
+    final Preference dozeEnable = findPreference(getString(R.string.doze_key));
+    dozeEnable.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (managerDoze.isDozeAvailable()) {
+        if (!managerDoze.canManageDoze()) {
+          AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog.DozeEnable(),
+              "force_doze");
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    });
 
-  private void showInfoDialogForDoze() {
-    if (!managerDoze.isDozeEnabled()) {
-      Timber.d("Display dialog about doze mode on Marshmallow");
-      AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
-    }
+    final Preference manageSensors = findPreference(getString(R.string.sensors_doze_key));
+    manageSensors.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (managerDoze.isDozeAvailable()) {
+        if (!managerDoze.canManageSensors()) {
+          AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog.SensorsEnable(),
+              "sensors");
+          return false;
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    });
   }
 }

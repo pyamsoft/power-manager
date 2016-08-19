@@ -59,10 +59,8 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorBase
     return Observable.defer(() -> Observable.just(getPreferences().isForceOutDoze()));
   }
 
-  @NonNull @Override public Observable<Boolean> isManageSensors() {
+  @NonNull @Override public Observable<Boolean> canManageSensors() {
     return Observable.defer(() -> {
-      final boolean manage = getPreferences().isManageSensors();
-
       final boolean hasPermission;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         Timber.d("Check that we have write permission on Marshmallow");
@@ -71,8 +69,13 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorBase
         Timber.d("Write permission is auto-granted on <M");
         hasPermission = true;
       }
-      return Observable.just(manage && hasPermission);
+
+      return Observable.just(hasPermission);
     });
+  }
+
+  @NonNull @Override public Observable<Boolean> isManageSensors() {
+    return canManageSensors().map(permission -> permission && getPreferences().isManageSensors());
   }
 
   @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {
@@ -119,7 +122,7 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorBase
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return isDozeEnabled();
+    return hasDumpSysPermission();
   }
 
   @NonNull @Override public Observable<Boolean> isPeriodic() {

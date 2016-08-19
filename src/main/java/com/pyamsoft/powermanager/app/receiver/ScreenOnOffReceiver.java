@@ -127,7 +127,7 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     if (managerDoze.isDozeEnabled()) {
       managerDoze.commandDozeEnd();
 
-      if (managerDoze.isSensorsManaged()) {
+      if (managerDoze.isManageSensors()) {
         managerDoze.commandSensorEnable();
       }
     }

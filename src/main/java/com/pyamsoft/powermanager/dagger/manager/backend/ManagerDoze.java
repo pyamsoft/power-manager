@@ -160,7 +160,17 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   }
 
   // KLUDGE blocking obs
-  @CheckResult public boolean isSensorsManaged() {
+  @CheckResult public boolean canManageDoze() {
+    return interactor.isManaged().toBlocking().first();
+  }
+
+  // KLUDGE blocking obs
+  @CheckResult public boolean canManageSensors() {
+    return isDozeEnabled() && interactor.canManageSensors().toBlocking().first();
+  }
+
+  // KLUDGE blocking obs
+  @CheckResult public boolean isManageSensors() {
     return isDozeEnabled() && interactor.isManageSensors().toBlocking().first();
   }
 
