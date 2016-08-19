@@ -23,18 +23,17 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
+class SyncStateObserver implements InterestObserver {
 
   @NonNull private final Handler handler;
-  @NonNull private WeakReference<View> weakView = new WeakReference<>(null);
-  private Object listener;
   private boolean registered;
   private boolean enabled;
   private boolean disabled;
+  @Nullable private Object listener;
+  @Nullable private Callback callback;
 
   @Inject SyncStateObserver() {
     handler = new Handler(Looper.getMainLooper());
@@ -43,13 +42,47 @@ class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
     disabled = false;
   }
 
-  public final void setView(@NonNull View view) {
-    weakView.clear();
-    weakView = new WeakReference<>(view);
+  @CheckResult @NonNull private Object addStatusChangeListener() {
+    return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
+        i -> handler.post(() -> {
+          if (callback == null) {
+            Timber.e("Received change event with no callback");
+          } else {
+            if (is()) {
+              // Reset status of other flag here
+              disabled = false;
+
+              // Only call hook once
+              if (!enabled) {
+                enabled = true;
+                Timber.d("Enabled");
+                callback.onSet();
+              }
+            } else {
+              // Reset status of other flag here
+              enabled = false;
+
+              // Only call hook once
+              if (!disabled) {
+                disabled = true;
+                Timber.d("Disabled");
+                callback.onUnset();
+              }
+            }
+          }
+        }));
   }
 
-  @Nullable @CheckResult public final View getView() {
-    return weakView.get();
+  private void registerListener() {
+    unregisterListener();
+    listener = addStatusChangeListener();
+  }
+
+  private void unregisterListener() {
+    if (listener != null) {
+      ContentResolver.removeStatusChangeListener(listener);
+      listener = null;
+    }
   }
 
   @Override public boolean is() {
@@ -58,38 +91,12 @@ class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
     return b;
   }
 
-  @Override public void register() {
+  @Override public void register(@NonNull Callback callback) {
     handler.removeCallbacksAndMessages(null);
     if (!registered) {
+      this.callback = callback;
       Timber.d("Register new state observer");
-      listener =
-          ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
-              i -> handler.post(() -> {
-                final View view = getView();
-                if (view != null) {
-                  if (is()) {
-                    // Reset status of other flag here
-                    disabled = false;
-
-                    // Only call hook once
-                    if (!enabled) {
-                      enabled = true;
-                      Timber.d("Enabled");
-                      view.onSyncStateEnabled();
-                    }
-                  } else {
-                    // Reset status of other flag here
-                    enabled = false;
-
-                    // Only call hook once
-                    if (!disabled) {
-                      disabled = true;
-                      Timber.d("Disabled");
-                      view.onSyncStateDisabled();
-                    }
-                  }
-                }
-              }));
+      registerListener();
       registered = true;
     } else {
       Timber.e("Already registered");
@@ -101,18 +108,12 @@ class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
     handler.post(() -> {
       if (registered) {
         Timber.d("Unregister new state observer");
-        ContentResolver.removeStatusChangeListener(listener);
+        unregisterListener();
+        this.callback = null;
         registered = false;
       } else {
         Timber.e("Already unregistered");
       }
     });
-  }
-
-  public interface View {
-
-    void onSyncStateEnabled();
-
-    void onSyncStateDisabled();
   }
 }

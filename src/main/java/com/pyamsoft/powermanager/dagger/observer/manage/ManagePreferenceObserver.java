@@ -18,17 +18,15 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
-abstract class ManagePreferenceObserver<V>
-    implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver<V> {
+abstract class ManagePreferenceObserver
+    implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver {
 
   @NonNull private final String KEY_WIFI;
   @NonNull private final String KEY_DATA;
@@ -37,7 +35,7 @@ abstract class ManagePreferenceObserver<V>
   @NonNull private final String KEY_WEAR;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
-  @NonNull private WeakReference<V> weakView = new WeakReference<>(null);
+  @Nullable private Callback callback;
   private boolean registered;
 
   ManagePreferenceObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
@@ -55,15 +53,24 @@ abstract class ManagePreferenceObserver<V>
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
-      onChange();
+      if (callback == null) {
+        Timber.e("Received change event with no callback");
+      } else {
+        if (is()) {
+          callback.onSet();
+        } else {
+          callback.onUnset();
+        }
+      }
     } else {
       Timber.e("Received preference change for other key: %s", s);
     }
   }
 
-  @Override public final void register() {
+  @Override public final void register(@NonNull Callback callback) {
     if (!registered) {
       Timber.d("Register new state observer for: %s", key);
+      this.callback = callback;
       preferences.register(this);
       registered = true;
     } else {
@@ -75,6 +82,7 @@ abstract class ManagePreferenceObserver<V>
     if (registered) {
       Timber.d("Unregister new state observer");
       preferences.unregister(this);
+      callback = null;
       registered = false;
     } else {
       Timber.e("Already unregistered");
@@ -99,15 +107,4 @@ abstract class ManagePreferenceObserver<V>
 
     return result;
   }
-
-  @CheckResult @Nullable protected final V getView() {
-    return weakView.get();
-  }
-
-  @Override public final void setView(@NonNull V view) {
-    weakView.clear();
-    weakView = new WeakReference<>(view);
-  }
-
-  abstract void onChange();
 }

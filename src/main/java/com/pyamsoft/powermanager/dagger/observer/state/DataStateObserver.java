@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataStateObserver extends StateContentObserver<DataStateObserver.View> {
+class DataStateObserver extends StateContentObserver {
 
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
 
@@ -38,18 +38,6 @@ class DataStateObserver extends StateContentObserver<DataStateObserver.View> {
       uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
     }
     setUri(uri);
-  }
-
-  @Override void onChange(Uri uri) {
-    final View view = getView();
-    if (view != null) {
-      Timber.d("onChange. URI: %s", uri);
-      if (is()) {
-        view.onDataStateEnabled();
-      } else {
-        view.onDataStateDisabled();
-      }
-    }
   }
 
   @Override public boolean is() {
@@ -66,12 +54,5 @@ class DataStateObserver extends StateContentObserver<DataStateObserver.View> {
 
     Timber.d("Is %s", enabled);
     return enabled;
-  }
-
-  public interface View {
-
-    void onDataStateEnabled();
-
-    void onDataStateDisabled();
   }
 }

@@ -19,13 +19,18 @@ package com.pyamsoft.powermanager.app.observer;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 
-public interface InterestObserver<V> {
+public interface InterestObserver {
 
-  void setView(@NonNull V view);
-
-  void register();
+  void register(@NonNull Callback callback);
 
   void unregister();
 
   @CheckResult boolean is();
+
+  interface Callback {
+
+    void onSet();
+
+    void onUnset();
+  }
 }

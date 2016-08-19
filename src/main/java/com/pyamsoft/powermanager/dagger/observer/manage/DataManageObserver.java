@@ -18,33 +18,14 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class DataManageObserver extends ManagePreferenceObserver<DataManageObserver.View> {
+class DataManageObserver extends ManagePreferenceObserver {
 
   @Inject DataManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_data_key));
-  }
-
-  @Override void onChange() {
-    final View view = getView();
-    if (view != null) {
-      if (is()) {
-        view.onDataManageEnabled();
-      } else {
-        view.onDataManageDisabled();
-      }
-    }
-  }
-
-  public interface View {
-
-    void onDataManageEnabled();
-
-    void onDataManageDisabled();
   }
 }

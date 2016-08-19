@@ -22,29 +22,10 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class BluetoothManageObserver
-    extends ManagePreferenceObserver<BluetoothManageObserver.View> {
+class BluetoothManageObserver extends ManagePreferenceObserver {
 
   @Inject BluetoothManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_bluetooth_key));
-  }
-
-  @Override void onChange() {
-    final View view = getView();
-    if (view != null) {
-      if (is()) {
-        view.onBluetoothManageEnabled();
-      } else {
-        view.onBluetoothManageDisabled();
-      }
-    }
-  }
-
-  public interface View {
-
-    void onBluetoothManageEnabled();
-
-    void onBluetoothManageDisabled();
   }
 }

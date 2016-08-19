@@ -25,16 +25,15 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
-abstract class StateContentObserver<V> extends ContentObserver implements InterestObserver<V> {
+abstract class StateContentObserver extends ContentObserver implements InterestObserver {
 
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
-  @NonNull private WeakReference<V> weakView = new WeakReference<>(null);
   private Uri uri;
   private boolean registered;
+  @Nullable private Callback callback;
 
   StateContentObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
@@ -51,11 +50,12 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
     this.uri = uri;
   }
 
-  @Override public final void register() {
+  @Override public final void register(@NonNull Callback callback) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (!registered) {
         Timber.d("Register new state observer for: %s", uri);
+        this.callback = callback;
         appContext.getContentResolver().registerContentObserver(uri, false, this);
         registered = true;
       } else {
@@ -70,6 +70,7 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
       if (registered) {
         Timber.d("Unregister new state observer");
         appContext.getContentResolver().unregisterContentObserver(this);
+        callback = null;
         registered = false;
       } else {
         Timber.e("Already unregistered");
@@ -87,17 +88,16 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
 
   @Override public final void onChange(boolean selfChange, Uri uri) {
     handler.removeCallbacksAndMessages(null);
-    handler.post(() -> onChange(uri));
+    handler.post(() -> {
+      if (callback == null) {
+        Timber.e("Received change event with no callback");
+      } else {
+        if (is()) {
+          callback.onSet();
+        } else {
+          callback.onUnset();
+        }
+      }
+    });
   }
-
-  @CheckResult @Nullable protected final V getView() {
-    return weakView.get();
-  }
-
-  @Override public final void setView(@NonNull V view) {
-    weakView.clear();
-    weakView = new WeakReference<>(view);
-  }
-
-  abstract void onChange(Uri uri);
 }

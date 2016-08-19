@@ -21,11 +21,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothStateObserver extends StateContentObserver<BluetoothStateObserver.View> {
+class BluetoothStateObserver extends StateContentObserver {
 
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
@@ -38,19 +37,6 @@ class BluetoothStateObserver extends StateContentObserver<BluetoothStateObserver
       uri = Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON);
     }
     setUri(uri);
-  }
-
-
-  @Override void onChange(Uri uri) {
-    final View view = getView();
-    if (view != null) {
-      Timber.d("onChange. URI: %s", uri);
-      if (is()) {
-        view.onBluetoothStateEnabled();
-      } else {
-        view.onBluetoothStateDisabled();
-      }
-    }
   }
 
   @Override public boolean is() {
@@ -68,12 +54,5 @@ class BluetoothStateObserver extends StateContentObserver<BluetoothStateObserver
 
     Timber.d("Is %s", enabled);
     return enabled;
-  }
-
-  public interface View {
-
-    void onBluetoothStateEnabled();
-
-    void onBluetoothStateDisabled();
   }
 }

@@ -22,28 +22,10 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class WifiManageObserver extends ManagePreferenceObserver<WifiManageObserver.View> {
+class WifiManageObserver extends ManagePreferenceObserver {
 
   @Inject WifiManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_wifi_key));
-  }
-
-  @Override void onChange() {
-    final View view = getView();
-    if (view != null) {
-      if (is()) {
-        view.onWifiManageEnabled();
-      } else {
-        view.onWifiManageDisabled();
-      }
-    }
-  }
-
-  public interface View {
-
-    void onWifiManageEnabled();
-
-    void onWifiManageDisabled();
   }
 }

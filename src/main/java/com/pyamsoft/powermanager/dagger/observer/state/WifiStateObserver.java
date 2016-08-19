@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiStateObserver extends StateContentObserver<WifiStateObserver.View> {
+class WifiStateObserver extends StateContentObserver {
 
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);
@@ -37,18 +37,6 @@ class WifiStateObserver extends StateContentObserver<WifiStateObserver.View> {
       uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
     }
     setUri(uri);
-  }
-
-  @Override void onChange(Uri uri) {
-    final View view = getView();
-    if (view != null) {
-      Timber.d("onChange. URI: %s", uri);
-      if (is()) {
-        view.onWifiStateEnabled();
-      } else {
-        view.onWifiStateDisabled();
-      }
-    }
   }
 
   @Override public boolean is() {
@@ -66,12 +54,5 @@ class WifiStateObserver extends StateContentObserver<WifiStateObserver.View> {
 
     Timber.d("Is %s", enabled);
     return enabled;
-  }
-
-  public interface View {
-
-    void onWifiStateEnabled();
-
-    void onWifiStateDisabled();
   }
 }

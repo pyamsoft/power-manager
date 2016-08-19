@@ -18,33 +18,14 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class WearableManageObserver extends ManagePreferenceObserver<WearableManageObserver.View> {
+class WearableManageObserver extends ManagePreferenceObserver {
 
   @Inject WearableManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_wearable_key));
-  }
-
-  @Override void onChange() {
-    final View view = getView();
-    if (view != null) {
-      if (is()) {
-        view.onWearableManageEnabled();
-      } else {
-        view.onWearableManageDisabled();
-      }
-    }
-  }
-
-  public interface View {
-
-    void onWearableManageEnabled();
-
-    void onWearableManageDisabled();
   }
 }
