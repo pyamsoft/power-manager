@@ -16,12 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
-import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = StateModifierModule.class)
+@Singleton @Subcomponent(modules = StateModifierModule.class)
 public interface StateModifierComponent {
 
   void inject(TriggerJob job);

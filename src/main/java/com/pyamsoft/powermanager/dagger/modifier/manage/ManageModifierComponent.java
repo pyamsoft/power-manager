@@ -19,8 +19,9 @@ package com.pyamsoft.powermanager.dagger.modifier.manage;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = ManageModifierModule.class)
+@Singleton @Subcomponent(modules = ManageModifierModule.class)
 public interface ManageModifierComponent {
 
 }

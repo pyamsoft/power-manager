@@ -21,22 +21,22 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import rx.Scheduler;
 
 @Module public class ForegroundModule {
 
-  @ActivityScope @Provides ForegroundPresenter provideForegroundPresenter(
+  @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
       @NonNull ForegroundInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new ForegroundPresenter(interactor, mainScheduler, ioScheduler);
   }
 
-  @ActivityScope @Provides ForegroundInteractor provideForegroundInteractor(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") @NonNull InterestObserver wifiManageObserver,
       @Named("obs_data_manage") @NonNull InterestObserver dataManageObserver,
       @Named("obs_bluetooth_manage") @NonNull InterestObserver bluetoothManageObserver,

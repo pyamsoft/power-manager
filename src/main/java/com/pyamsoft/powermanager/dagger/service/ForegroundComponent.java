@@ -17,12 +17,12 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
 import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = {
+@Singleton @Subcomponent(modules = {
     ForegroundModule.class, ManageObserverModule.class, ManageModifierModule.class
 }) public interface ForegroundComponent {
 

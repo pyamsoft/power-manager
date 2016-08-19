@@ -20,34 +20,34 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Module public class ManageModifierModule {
 
-  @ActivityScope @Named("mod_wifi_manage") @Provides InterestModifier provideWifiModifier(
+  @Singleton @Named("mod_wifi_manage") @Provides InterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WifiManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("mod_data_manage") @Provides InterestModifier provideDataModifier(
+  @Singleton @Named("mod_data_manage") @Provides InterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DataManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("mod_bluetooth_manage") @Provides InterestModifier provideBluetoothModifier(
+  @Singleton @Named("mod_bluetooth_manage") @Provides InterestModifier provideBluetoothModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("mod_sync_manage") @Provides InterestModifier provideSyncModifier(
+  @Singleton @Named("mod_sync_manage") @Provides InterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageModifier(context, preferences);
   }
 
-  @ActivityScope @Named("mod_wear_manage") @Provides InterestModifier provideWearModifier(
+  @Singleton @Named("mod_wear_manage") @Provides InterestModifier provideWearModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageModifier(context, preferences);
   }

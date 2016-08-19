@@ -23,25 +23,26 @@ import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Module public class StateModifierModule {
 
-  @ActivityScope @Named("mod_wifi_state") @Provides InterestModifier provideWifiModifier(
+  @Singleton @Named("mod_wifi_state") @Provides InterestModifier provideWifiModifier(
       @NonNull Context context) {
     return new WifiStateModifier(context);
   }
 
-  @ActivityScope @Named("mod_data_state") @Provides InterestModifier provideDataModifier(
+  @Singleton @Named("mod_data_state") @Provides InterestModifier provideDataModifier(
       @NonNull Context context) {
     return new DataStateModifier(context);
   }
 
-  @ActivityScope @Named("mod_bluetooth_state") @Provides InterestModifier provideBluetoothModifier(
+  @Singleton @Named("mod_bluetooth_state") @Provides InterestModifier provideBluetoothModifier(
       @NonNull Context context) {
     return new BluetoothStateModifier(context);
   }
 
-  @ActivityScope @Named("mod_sync_state") @Provides InterestModifier provideSyncModifier(
+  @Singleton @Named("mod_sync_state") @Provides InterestModifier provideSyncModifier(
       @NonNull Context context) {
     return new SyncStateModifier(context);
   }

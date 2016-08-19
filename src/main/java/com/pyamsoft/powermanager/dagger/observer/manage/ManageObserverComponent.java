@@ -19,8 +19,9 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierComponent;
 import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = ManageObserverModule.class)
+@Singleton @Subcomponent(modules = ManageObserverModule.class)
 public interface ManageObserverComponent {
 
   // Subcomponent ManageModifier

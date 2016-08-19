@@ -19,8 +19,9 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = StateObserverModule.class)
+@Singleton @Subcomponent(modules = StateObserverModule.class)
 public interface StateObserverComponent {
 
   // Subcomponent StateModifier

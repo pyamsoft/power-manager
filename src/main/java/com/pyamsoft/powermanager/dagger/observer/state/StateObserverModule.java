@@ -19,29 +19,29 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Module public class StateObserverModule {
 
-  @ActivityScope @Named("obs_wifi_state") @Provides InterestObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_state") @Provides InterestObserver provideWifiObserver(
       @NonNull Context context) {
     return new WifiStateObserver(context);
   }
 
-  @ActivityScope @Named("obs_data_state") @Provides InterestObserver provideDataObserver(
+  @Singleton @Named("obs_data_state") @Provides InterestObserver provideDataObserver(
       @NonNull Context context) {
     return new DataStateObserver(context);
   }
 
-  @ActivityScope @Named("obs_bluetooth_state") @Provides InterestObserver provideBluetoothObserver(
+  @Singleton @Named("obs_bluetooth_state") @Provides InterestObserver provideBluetoothObserver(
       @NonNull Context context) {
     return new BluetoothStateObserver(context);
   }
 
-  @ActivityScope @Named("obs_sync_state") @Provides InterestObserver provideSyncObserver() {
+  @Singleton @Named("obs_sync_state") @Provides InterestObserver provideSyncObserver() {
     return new SyncStateObserver();
   }
 }

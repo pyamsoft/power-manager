@@ -20,34 +20,34 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Module public class ManageObserverModule {
 
-  @ActivityScope @Named("obs_wifi_manage") @Provides InterestObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_manage") @Provides InterestObserver provideWifiObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WifiManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("obs_data_manage") @Provides InterestObserver provideDataObserver(
+  @Singleton @Named("obs_data_manage") @Provides InterestObserver provideDataObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DataManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("obs_bluetooth_manage") @Provides InterestObserver provideBluetoothObserver(
+  @Singleton @Named("obs_bluetooth_manage") @Provides InterestObserver provideBluetoothObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("obs_sync_manage") @Provides InterestObserver provideSyncObserver(
+  @Singleton @Named("obs_sync_manage") @Provides InterestObserver provideSyncObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageObserver(context, preferences);
   }
 
-  @ActivityScope @Named("obs_wear_manage") @Provides InterestObserver provideWearableObserver(
+  @Singleton @Named("obs_wear_manage") @Provides InterestObserver provideWearableObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageObserver(context, preferences);
   }
