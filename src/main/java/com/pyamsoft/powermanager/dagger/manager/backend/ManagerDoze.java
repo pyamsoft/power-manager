@@ -207,7 +207,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     final Observable<Boolean> sensorsObservable = interactor.isManageSensors();
 
     subscription = Observable.zip(delayObservable, sensorsObservable, Pair::new)
-        .flatMap(pair -> interactor.createDisableJob(pair.first, pair.second))
+        .flatMap(pair -> interactor.createDisableJob(pair.first * 1000L, pair.second))
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(interactor::queueJob, throwable -> Timber.e(throwable, "onError"),
