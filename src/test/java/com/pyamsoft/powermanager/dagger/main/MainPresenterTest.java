@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.main;
+package com.pyamsoft.powermanager.dagger.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
