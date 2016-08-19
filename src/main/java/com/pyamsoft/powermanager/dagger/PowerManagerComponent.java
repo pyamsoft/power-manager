@@ -25,7 +25,6 @@ import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
-import com.pyamsoft.powermanager.dagger.service.ForegroundComponent;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
@@ -39,9 +38,6 @@ import javax.inject.Singleton;
 
   // Subcomponent Settings
   SettingsComponent plusSettings();
-
-  // Subcomponent Foreground
-  ForegroundComponent plusForeground();
 
   // Subcomponent StateObserver
   StateObserverComponent plusStateObserver();

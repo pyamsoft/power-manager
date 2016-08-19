@@ -16,9 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DozeJob;
+import com.pyamsoft.powermanager.dagger.service.ForegroundComponent;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
@@ -26,4 +29,11 @@ import dagger.Subcomponent;
   void inject(ScreenOnOffReceiver receiver);
 
   void inject(DozeReceiver receiver);
+
+  void inject(DozeFragment fragment);
+
+  void inject(DozeJob job);
+
+  // Subcomponent Foreground
+  ForegroundComponent plusForeground();
 }

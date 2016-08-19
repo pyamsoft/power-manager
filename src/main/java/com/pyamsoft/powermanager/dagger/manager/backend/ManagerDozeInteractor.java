@@ -36,4 +36,6 @@ public interface ManagerDozeInteractor extends ManagerInteractorDoze {
   void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors);
 
   void queueEnableJob(boolean forceDoze);
+
+  void executeDumpsys(@NonNull String cmd);
 }

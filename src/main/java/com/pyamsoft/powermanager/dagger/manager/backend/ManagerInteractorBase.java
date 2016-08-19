@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
 import rx.Observable;
 import timber.log.Timber;
 

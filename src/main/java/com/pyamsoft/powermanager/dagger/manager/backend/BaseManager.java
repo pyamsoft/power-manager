@@ -71,12 +71,10 @@ abstract class BaseManager implements Manager {
   @CheckResult @NonNull private Observable<ManagerInteractor> baseObservable() {
     final Observable<Boolean> dozeBooleanObservable =
         Observable.zip(interactor.isDozeEnabled(), interactor.isDozeExclusive(),
-            interactor.hasDumpSysPermission(), interactor.isDozeIgnoreCharging(),
-            (dozeEnabled, dozeExclusive, dumpPermission, dozeIgnoreCharging) -> dozeEnabled
-                && dozeExclusive
-                && dumpPermission
-                && ManagerDoze.isDozeAvailable()
-                && !dozeIgnoreCharging);
+            interactor.isDozeIgnoreCharging(), (dozeEnabled, dozeExclusive, dozeIgnoreCharging) ->
+                dozeEnabled
+                    && dozeExclusive
+                    && !dozeIgnoreCharging);
     return interactor.cancelJobs().zipWith(dozeBooleanObservable, (managerInteractor, doze) -> {
       Timber.d(
           "If Doze is enabled, exclusive, and permission granted, and will be acting, this is a no-op");

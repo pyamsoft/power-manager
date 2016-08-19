@@ -23,18 +23,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
 import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import javax.inject.Inject;
 import timber.log.Timber;
 
 public class DozeFragment extends ActionBarPreferenceFragment {
 
   @NonNull public static final String TAG = "DozeFragment";
+  @Inject ManagerDoze managerDoze;
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    Singleton.Dagger.with(getContext()).plusManager().inject(this);
     addPreferencesFromResource(R.xml.doze);
-
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +57,7 @@ public class DozeFragment extends ActionBarPreferenceFragment {
   }
 
   private void showInfoDialogForDoze() {
-    if (!ManagerDoze.checkDumpsysPermission(getContext()) && ManagerDoze.isDozeAvailable()) {
+    if (managerDoze.isDozeAvailable()) {
       Timber.d("Display dialog about doze mode on Marshmallow");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeDialog(), "force_doze");
     }

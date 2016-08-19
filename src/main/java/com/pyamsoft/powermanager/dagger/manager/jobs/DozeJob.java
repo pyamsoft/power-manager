@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.jobs;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
+import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
@@ -40,6 +43,7 @@ public abstract class DozeJob extends BaseJob {
   private final boolean forceDoze;
   @NonNull private final Scheduler ioScheduler;
   @NonNull private final Scheduler mainScheduler;
+  @Inject ManagerDoze managerDoze;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
   // KLUDGE created here with dagger. goes against architecture
@@ -60,6 +64,11 @@ public abstract class DozeJob extends BaseJob {
     this.mainScheduler = mainScheduler;
   }
 
+  @Override public void onAdded() {
+    super.onAdded();
+    Singleton.Dagger.with(getApplicationContext()).plusManager().inject(this);
+  }
+
   @Override public void onRun() throws Throwable {
     unsub();
 
@@ -72,25 +81,19 @@ public abstract class DozeJob extends BaseJob {
     subscription = Observable.defer(() -> Observable.just(doze)).map(doze1 -> {
       Timber.d("Run DozeJob");
       if (doze1) {
-        Timber.d("Do doze startDoze");
         if (forceDoze) {
-          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_START);
+          managerDoze.commandDozeStart();
         }
         if (manageSensors) {
-          Timber.d("Do sensor restrict");
-          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_RESTRICT);
+          managerDoze.commandSensorRestrict();
         }
       } else {
-        Timber.d("Do doze stopDoze");
         if (forceDoze) {
-          ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_DOZE_END);
+          managerDoze.commandDozeEnd();
         }
 
-        Timber.d("Do sensor enable");
-        ManagerDoze.executeDumpsys(getApplicationContext(), ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+        managerDoze.commandSensorEnable();
       }
-      // Ignore
-      Timber.d("Run a fix function if doze was stopping and current state was doze");
       return !doze1 && manageSensors;
     }).subscribeOn(ioScheduler).observeOn(mainScheduler).subscribe(shouldRunFix -> {
       if (shouldRunFix) {
@@ -103,7 +106,7 @@ public abstract class DozeJob extends BaseJob {
     }, this::unsub);
   }
 
-  private void unsub() {
+  void unsub() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }

@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
 import rx.Observable;
 
 public interface ManagerInteractor extends ManagerInteractorDoze {

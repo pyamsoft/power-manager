@@ -39,11 +39,11 @@ import timber.log.Timber;
 
   public DozeReceiver(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
-    if (!ManagerDoze.isDozeAvailable()) {
+    Singleton.Dagger.with(appContext).plusManager().inject(this);
+
+    if (!managerDoze.isDozeAvailable()) {
       throw new RuntimeException("Doze not available!");
     }
-
-    Singleton.Dagger.with(appContext).plusManager().inject(this);
   }
 
   @CheckResult public static boolean isDozeMode(Context context) {
@@ -67,7 +67,7 @@ import timber.log.Timber;
     final boolean charging = ScreenOnOffReceiver.getCurrentChargingState(context);
     final boolean state = isDozeMode(context);
     Timber.d("Doze state: %s", state);
-    managerDoze.handleDozeStateChange(context.getApplicationContext(), state, charging);
+    managerDoze.handleDozeStateChange(state, charging);
   }
 
   public void register() {

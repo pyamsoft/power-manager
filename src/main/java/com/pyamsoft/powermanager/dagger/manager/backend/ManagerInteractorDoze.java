@@ -23,7 +23,7 @@ import rx.Observable;
 // KLUDGE needs a better name
 public interface ManagerInteractorDoze {
 
-  @CheckResult @NonNull Observable<Boolean> hasDumpSysPermission();
+  @CheckResult @NonNull Observable<Boolean> isDozeAvailable();
 
   @CheckResult @NonNull Observable<Boolean> isDozeEnabled();
 

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -78,16 +77,15 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   @Override public final void onReceive(final Context context, final Intent intent) {
     if (null != intent) {
       final String action = intent.getAction();
-      final boolean hasDump = ManagerDoze.checkDumpsysPermission(context);
       final boolean charging = getCurrentChargingState(context);
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
           Timber.d("Screen off event");
-          disableManagers(charging, hasDump);
+          disableManagers(charging);
           break;
         case Intent.ACTION_SCREEN_ON:
           Timber.d("Screen on event");
-          enableManagers(hasDump);
+          enableManagers();
           break;
         default:
           Timber.e("Invalid event: %s", action);
@@ -95,34 +93,26 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     }
   }
 
-  private void enableManagers(boolean hasDump) {
+  private void enableManagers() {
     Timber.d("Enable all managed managers");
     managerWifi.enable();
     managerData.enable();
     managerBluetooth.enable();
     managerSync.enable();
 
-    if (hasDump) {
-      Timber.d("Device is currently dozing, disable Doze");
-      managerDoze.enable();
-    } else {
-      Timber.e("Missing permission %s", Manifest.permission.DUMP);
-    }
+    Timber.d("Device is currently dozing, disable Doze");
+    managerDoze.enable();
   }
 
-  private void disableManagers(boolean charging, boolean hasDump) {
+  private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
     managerWifi.disable(charging);
     managerData.disable(charging);
     managerBluetooth.disable(charging);
     managerSync.disable(charging);
 
-    if (hasDump) {
-      Timber.d("Device is currently not dozing, enable Doze");
-      managerDoze.disable(charging);
-    } else {
-      Timber.e("Missing permission %s", Manifest.permission.DUMP);
-    }
+    Timber.d("Device is currently not dozing, enable Doze");
+    managerDoze.disable(charging);
   }
 
   public final void register() {
@@ -134,14 +124,11 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void cleanup() {
-    if (ManagerDoze.checkDumpsysPermission(appContext)
-        && ManagerDoze.isDozeAvailable()
-        && managerDoze.isDozeEnabled()) {
-      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_DOZE_END);
+    if (managerDoze.isDozeEnabled()) {
+      managerDoze.commandDozeEnd();
 
       if (managerDoze.isSensorsManaged()) {
-        ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
-        managerDoze.fixSensorDisplayRotationBug();
+        managerDoze.commandSensorEnable();
       }
     }
 

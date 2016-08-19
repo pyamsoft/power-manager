@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
@@ -24,6 +25,10 @@ import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DozeJob;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -73,6 +78,37 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
 
   @Override public void queueEnableJob(boolean forceDoze) {
     Singleton.Jobs.with(appContext).addJobInBackground(new DozeJob.EnableJob(forceDoze));
+  }
+
+  @SuppressLint("NewApi") @Override public void executeDumpsys(@NonNull String cmd) {
+    final Process process;
+    boolean caughtPermissionDenial = false;
+    try {
+      final String command = "dumpsys " + cmd;
+      process = Runtime.getRuntime().exec(command);
+      try (final BufferedReader bufferedReader = new BufferedReader(
+          new InputStreamReader(process.getInputStream()))) {
+        Timber.d("Read results of exec: '%s'", command);
+        String line = bufferedReader.readLine();
+        while (line != null && !line.isEmpty()) {
+          if (line.startsWith("Permission Denial")) {
+            Timber.e("Command resulted in permission denial");
+            caughtPermissionDenial = true;
+            break;
+          }
+          Timber.d("%s", line);
+          line = bufferedReader.readLine();
+        }
+      }
+
+      if (caughtPermissionDenial) {
+        throw new IllegalStateException("Error running command: " + command);
+      }
+
+      // Will always be 0
+    } catch (IOException e) {
+      Timber.e(e, "Error running shell command");
+    }
   }
 
   @Override public void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors) {

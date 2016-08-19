@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.dagger.manager.backend.DeviceJob;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
 import com.pyamsoft.powermanager.dagger.manager.preference.ManagerTimePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;

@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.manager.jobs.DeviceJob;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import javax.inject.Inject;
 import rx.Observable;

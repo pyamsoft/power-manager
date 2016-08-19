@@ -16,21 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.app.manager.backend.Manager;
-import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
@@ -40,13 +32,18 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implements Manager {
-  @NonNull public static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
-  @NonNull public static final String DUMPSYS_DOZE_END = "deviceidle step";
-  @NonNull public static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
-  @NonNull public static final String DUMPSYS_SENSOR_RESTRICT =
+  @NonNull private static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
+  @NonNull private static final String DUMPSYS_DOZE_END = "deviceidle step";
+  @NonNull private static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
+  @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.pyamsoft.powermanager";
   @NonNull private final ManagerDozeInteractor interactor;
   @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Subscription dozeEndSubscription = Subscriptions.empty();
+  @NonNull private Subscription dozeStartSubscription = Subscriptions.empty();
+  @NonNull private Subscription sensorEnableSubscription = Subscriptions.empty();
+  @NonNull private Subscription sensorRestrictSubscription = Subscriptions.empty();
+  @NonNull private Subscription stateChangeSubscription = Subscriptions.empty();
   @Nullable private SensorFixReceiver sensorFixReceiver;
 
   @Inject ManagerDoze(@NonNull ManagerDozeInteractor interactor,
@@ -56,59 +53,90 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     this.interactor = interactor;
   }
 
-  @CheckResult public static boolean isDozeAvailable() {
-    return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
+  public void commandSensorEnable() {
+    unsubSensorEnable();
+    sensorEnableSubscription = executeDumpsys(DUMPSYS_SENSOR_ENABLE).flatMap(enable -> {
+      Timber.d("Force enable sensors");
+      return interactor.createSensorFixReceiver();
+    })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(sensorFixReceiver1 -> {
+              Timber.d(
+                  "Run sensor fix which resets both auto brightness and rotation after sensor dump");
+              setSensorFixReceiver(sensorFixReceiver1);
+              sensorFixReceiver1.register();
+            }, throwable -> Timber.e(throwable, "onError commandSensorEnable"),
+            this::unsubSensorEnable);
   }
 
-  @CheckResult public static boolean checkDumpsysPermission(@NonNull Context context) {
-    return context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
-        == PackageManager.PERMISSION_GRANTED;
-  }
-
-  @SuppressLint("NewApi")
-  public static void executeDumpsys(@NonNull Context context, @NonNull String cmd) {
-    if (!(checkDumpsysPermission(context) && isDozeAvailable())) {
-      Timber.e("Does not have permission to call dumpsys");
-      return;
-    }
-
-    final Process process;
-    boolean caughtPermissionDenial = false;
-    try {
-      final String command = "dumpsys " + cmd;
-      process = Runtime.getRuntime().exec(command);
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream()))) {
-        Timber.d("Read results of exec: '%s'", command);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          if (line.startsWith("Permission Denial")) {
-            Timber.e("Command resulted in permission denial");
-            caughtPermissionDenial = true;
-            break;
-          }
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
-
-      if (caughtPermissionDenial) {
-        throw new IllegalStateException("Error running command: " + command);
-      }
-
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
-    }
-  }
-
-  public void fixSensorDisplayRotationBug() {
-    Timber.d("Run sensor fix which resets both auto brightness and rotation after sensor dump");
+  void setSensorFixReceiver(@NonNull SensorFixReceiver receiver) {
     if (sensorFixReceiver != null) {
       sensorFixReceiver.unregister();
     }
-    sensorFixReceiver = interactor.createSensorFixReceiver().toBlocking().first();
-    sensorFixReceiver.register();
+    this.sensorFixReceiver = receiver;
+  }
+
+  void unsubSensorEnable() {
+    if (!sensorEnableSubscription.isUnsubscribed()) {
+      sensorEnableSubscription.unsubscribe();
+    }
+  }
+
+  public void commandSensorRestrict() {
+    unsubSensorRestrict();
+    sensorEnableSubscription =
+        executeDumpsys(DUMPSYS_SENSOR_RESTRICT).subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(aBoolean -> Timber.d("Force restrict sensors"),
+                throwable -> Timber.e(throwable, "onError commandSensorRestrict"),
+                this::unsubSensorRestrict);
+  }
+
+  void unsubSensorRestrict() {
+    if (!sensorRestrictSubscription.isUnsubscribed()) {
+      sensorRestrictSubscription.unsubscribe();
+    }
+  }
+
+  public void commandDozeEnd() {
+    unsubDozeEnd();
+    dozeEndSubscription = executeDumpsys(DUMPSYS_DOZE_END).subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(aBoolean -> Timber.d("Force out of doze"),
+            throwable -> Timber.e(throwable, "onError commandDozeEnd"), this::unsubDozeEnd);
+  }
+
+  void unsubDozeEnd() {
+    if (!dozeEndSubscription.isUnsubscribed()) {
+      dozeEndSubscription.unsubscribe();
+    }
+  }
+
+  public void commandDozeStart() {
+    unsubDozeStart();
+    dozeStartSubscription = executeDumpsys(DUMPSYS_DOZE_START).subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(aBoolean -> Timber.d("Force into doze"),
+            throwable -> Timber.e(throwable, "onError commandDozeStart"), this::unsubDozeStart);
+  }
+
+  void unsubDozeStart() {
+    if (!dozeStartSubscription.isUnsubscribed()) {
+      dozeStartSubscription.unsubscribe();
+    }
+  }
+
+  @CheckResult @NonNull Observable<Boolean> executeDumpsys(@NonNull String cmd) {
+    return interactor.isDozeEnabled().map(isEnabled -> {
+      if (!isEnabled) {
+        Timber.e("Does not have permission to call dumpsys");
+        return false;
+      }
+
+      interactor.executeDumpsys(cmd);
+      return true;
+    });
   }
 
   @CheckResult @NonNull Observable<Boolean> baseObservable() {
@@ -123,24 +151,30 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   }
 
   // KLUDGE blocking obs
-  public boolean isDozeEnabled() {
+  @CheckResult public boolean isDozeEnabled() {
     return interactor.isDozeEnabled().toBlocking().first();
   }
 
   // KLUDGE blocking obs
-  public boolean isSensorsManaged() {
+  @CheckResult public boolean isDozeAvailable() {
+    return interactor.isDozeAvailable().toBlocking().first();
+  }
+
+  // KLUDGE blocking obs
+  @CheckResult public boolean isSensorsManaged() {
     return isDozeEnabled() && interactor.isManageSensors().toBlocking().first();
   }
 
   void enable(boolean forceDoze) {
     unsubSubscription();
-    subscription = baseObservable().flatMap(aBoolean -> {
-      if (!isDozeAvailable()) {
+    subscription = baseObservable().flatMap(isEnabled -> {
+      if (isEnabled) {
+        Timber.d("Doze is enabled");
+        return Observable.just(0L);
+      } else {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();
       }
-
-      return Observable.just(0L);
     })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -160,18 +194,19 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   void disable(boolean charging, boolean forceDoze) {
     unsubSubscription();
-    final Observable<Long> delayObservable =
-        baseObservable().flatMap(aBoolean -> interactor.isDozeIgnoreCharging()).filter(ignore -> {
-          Timber.d("Filter out if ignore doze and device is charging");
-          return !(ignore && charging);
-        }).flatMap(aBoolean -> {
-          if (!isDozeAvailable()) {
-            Timber.e("Doze is not available on this platform");
-            return Observable.empty();
-          }
-
-          return interactor.getDozeDelay();
-        });
+    final Observable<Long> delayObservable = baseObservable().flatMap(isEnabled -> {
+      if (isEnabled) {
+        return interactor.isDozeIgnoreCharging();
+      } else {
+        return Observable.empty();
+      }
+    }).filter(ignore -> {
+      Timber.d("Filter out if ignore doze and device is charging");
+      return !(ignore && charging);
+    }).flatMap(shouldIgnore -> {
+      Timber.d("Get doze delay");
+      return interactor.getDozeDelay();
+    });
 
     final Observable<Boolean> sensorsObservable = interactor.isManageSensors();
 
@@ -188,34 +223,50 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   @Override public void cleanup() {
     unsubSubscription();
+    unsubDozeStart();
+    unsubDozeEnd();
+    unsubSensorEnable();
+    unsubSensorRestrict();
+    unsubStateChange();
   }
 
-  public void handleDozeStateChange(@NonNull Context context, boolean currentState,
-      boolean charging) {
-    if (!interactor.isDozeEnabled().toBlocking().first()) {
-      Timber.e("Doze is not enabled");
-      return;
-    }
+  public void handleDozeStateChange(boolean currentState, boolean charging) {
+    unsubStateChange();
+    stateChangeSubscription = interactor.isDozeEnabled()
+        .map(isEnabled -> {
+          if (!isEnabled) {
+            Timber.e("Doze is not enabled");
+            return false;
+          } else {
+            Timber.d("Holds DUMP permission");
+            if (currentState) {
+              Timber.d("Device has entered Doze mode");
+              // KLUDGE running blocking
+              final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
+              if (forceOut) {
+                Timber.w("Forcing device out of Doze mode");
+                enable();
+              } else {
+                Timber.d("Attempt device sensor restrict");
+                disable(charging, false);
+              }
+            } else {
+              Timber.d("Device has exited Doze mode, Attempt device sensors enable");
+              enable(false);
+            }
+          }
+          return true;
+        })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(aBoolean -> Timber.d("Handled Doze state change: %s", aBoolean),
+            throwable -> Timber.e(throwable, "onError handleDozeStateChange"),
+            this::unsubStateChange);
+  }
 
-    if (checkDumpsysPermission(context.getApplicationContext())) {
-      Timber.d("Holds DUMP permission");
-      if (currentState) {
-        Timber.d("Device has entered Doze mode");
-        // KLUDGE running blocking
-        final boolean forceOut = interactor.isForceOutOfDoze().toBlocking().first();
-        if (forceOut) {
-          Timber.w("Forcing device out of Doze mode");
-          enable();
-        } else {
-          Timber.d("Attempt device sensor restrict");
-          disable(charging, false);
-        }
-      } else {
-        Timber.d("Device has exited Doze mode, Attempt device sensors enable");
-        enable(false);
-      }
-    } else {
-      Timber.e("Does not have DUMP permission");
+  void unsubStateChange() {
+    if (!stateChangeSubscription.isUnsubscribed()) {
+      stateChangeSubscription.unsubscribe();
     }
   }
 

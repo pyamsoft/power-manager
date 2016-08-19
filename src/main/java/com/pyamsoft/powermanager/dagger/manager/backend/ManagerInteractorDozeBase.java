@@ -16,7 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -34,6 +37,12 @@ abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
     this.preferences = preferences;
   }
 
+  @NonNull @CheckResult final Observable<Boolean> hasDumpSysPermission() {
+    return Observable.defer(() -> Observable.just(
+        appContext.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
+            == PackageManager.PERMISSION_GRANTED));
+  }
+
   @CheckResult @NonNull final Context getAppContext() {
     return appContext;
   }
@@ -42,17 +51,17 @@ abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
     return preferences;
   }
 
+  @Override @NonNull public Observable<Boolean> isDozeAvailable() {
+    return hasDumpSysPermission().map(aBoolean -> Build.VERSION.SDK_INT == Build.VERSION_CODES.M);
+  }
+
   @NonNull @Override public Observable<Boolean> isDozeEnabled() {
-    return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
+    return isDozeAvailable().map(available -> available && preferences.isDozeEnabled());
   }
 
   @NonNull @Override public Observable<Boolean> isDozeExclusive() {
     // TODO replace with setting
     return Observable.defer(() -> Observable.just(false));
-  }
-
-  @NonNull @Override public Observable<Boolean> hasDumpSysPermission() {
-    return Observable.defer(() -> Observable.just(ManagerDoze.checkDumpsysPermission(appContext)));
   }
 
   @NonNull @Override public Observable<Boolean> isDozeIgnoreCharging() {
