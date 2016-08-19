@@ -17,11 +17,11 @@
 package com.pyamsoft.powermanager.dagger.modifier.manage;
 
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Subcomponent;
 import javax.inject.Singleton;
 
 @Singleton @Subcomponent(modules = ManageModifierModule.class)
 public interface ManageModifierComponent {
 
+  void inject(FullNotificationActivity.FullDialog dialog);
 }

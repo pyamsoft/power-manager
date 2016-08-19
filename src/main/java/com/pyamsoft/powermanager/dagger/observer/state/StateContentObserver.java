@@ -33,7 +33,8 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
   @NonNull private final Handler handler;
   private Uri uri;
   private boolean registered;
-  @Nullable private Callback callback;
+  @Nullable private SetCallback setCallback;
+  @Nullable private UnsetCallback unsetCallback;
 
   StateContentObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
@@ -50,12 +51,14 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
     this.uri = uri;
   }
 
-  @Override public final void register(@NonNull Callback callback) {
+  @Override public final void register(@Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (!registered) {
         Timber.d("Register new state observer for: %s", uri);
-        this.callback = callback;
+        this.setCallback = setCallback;
+        this.unsetCallback = unsetCallback;
         appContext.getContentResolver().registerContentObserver(uri, false, this);
         registered = true;
       } else {
@@ -70,7 +73,8 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
       if (registered) {
         Timber.d("Unregister new state observer");
         appContext.getContentResolver().unregisterContentObserver(this);
-        callback = null;
+        this.setCallback = null;
+        this.unsetCallback = null;
         registered = false;
       } else {
         Timber.e("Already unregistered");
@@ -89,13 +93,17 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
   @Override public final void onChange(boolean selfChange, Uri uri) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
-      if (callback == null) {
-        Timber.e("Received change event with no callback");
-      } else {
-        if (is()) {
-          callback.onSet();
+      if (is()) {
+        if (setCallback == null) {
+          Timber.e("Received set change event with no callback");
         } else {
-          callback.onUnset();
+          setCallback.call();
+        }
+      } else {
+        if (unsetCallback == null) {
+          Timber.e("Received unset change event with no callback");
+        } else {
+          unsetCallback.call();
         }
       }
     });

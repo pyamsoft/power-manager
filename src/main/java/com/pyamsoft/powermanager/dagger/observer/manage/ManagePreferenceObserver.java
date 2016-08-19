@@ -35,7 +35,8 @@ abstract class ManagePreferenceObserver
   @NonNull private final String KEY_WEAR;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
-  @Nullable private Callback callback;
+  @Nullable private SetCallback setCallback;
+  @Nullable private UnsetCallback unsetCallback;
   private boolean registered;
 
   ManagePreferenceObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
@@ -53,13 +54,17 @@ abstract class ManagePreferenceObserver
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
-      if (callback == null) {
-        Timber.e("Received change event with no callback");
-      } else {
-        if (is()) {
-          callback.onSet();
+      if (is()) {
+        if (setCallback == null) {
+          Timber.e("Received set change with no callback");
         } else {
-          callback.onUnset();
+          setCallback.call();
+        }
+      } else {
+        if (unsetCallback == null) {
+          Timber.e("Received unset change with no callback");
+        } else {
+          unsetCallback.call();
         }
       }
     } else {
@@ -67,10 +72,12 @@ abstract class ManagePreferenceObserver
     }
   }
 
-  @Override public final void register(@NonNull Callback callback) {
+  @Override public final void register(@Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback) {
     if (!registered) {
       Timber.d("Register new state observer for: %s", key);
-      this.callback = callback;
+      this.setCallback = setCallback;
+      this.unsetCallback = unsetCallback;
       preferences.register(this);
       registered = true;
     } else {
@@ -82,7 +89,8 @@ abstract class ManagePreferenceObserver
     if (registered) {
       Timber.d("Unregister new state observer");
       preferences.unregister(this);
-      callback = null;
+      this.setCallback = null;
+      this.unsetCallback = null;
       registered = false;
     } else {
       Timber.e("Already unregistered");

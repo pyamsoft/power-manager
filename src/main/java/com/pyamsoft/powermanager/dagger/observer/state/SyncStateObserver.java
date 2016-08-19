@@ -33,7 +33,8 @@ class SyncStateObserver implements InterestObserver {
   private boolean enabled;
   private boolean disabled;
   @Nullable private Object listener;
-  @Nullable private Callback callback;
+  @Nullable private SetCallback setCallback;
+  @Nullable private UnsetCallback unsetCallback;
 
   @Inject SyncStateObserver() {
     handler = new Handler(Looper.getMainLooper());
@@ -45,28 +46,32 @@ class SyncStateObserver implements InterestObserver {
   @CheckResult @NonNull private Object addStatusChangeListener() {
     return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
         i -> handler.post(() -> {
-          if (callback == null) {
-            Timber.e("Received change event with no callback");
-          } else {
-            if (is()) {
-              // Reset status of other flag here
-              disabled = false;
+          if (is()) {
+            // Reset status of other flag here
+            disabled = false;
 
-              // Only call hook once
-              if (!enabled) {
-                enabled = true;
-                Timber.d("Enabled");
-                callback.onSet();
+            // Only call hook once
+            if (!enabled) {
+              enabled = true;
+              Timber.d("Enabled");
+              if (setCallback == null) {
+                Timber.e("Received set change event with no callback");
+              } else {
+                setCallback.call();
               }
-            } else {
-              // Reset status of other flag here
-              enabled = false;
+            }
+          } else {
+            // Reset status of other flag here
+            enabled = false;
 
-              // Only call hook once
-              if (!disabled) {
-                disabled = true;
-                Timber.d("Disabled");
-                callback.onUnset();
+            // Only call hook once
+            if (!disabled) {
+              disabled = true;
+              Timber.d("Disabled");
+              if (unsetCallback == null) {
+                Timber.e("Received unset change event with no callback");
+              } else {
+                unsetCallback.call();
               }
             }
           }
@@ -91,10 +96,12 @@ class SyncStateObserver implements InterestObserver {
     return b;
   }
 
-  @Override public void register(@NonNull Callback callback) {
+  @Override
+  public void register(@Nullable SetCallback setCallback, @Nullable UnsetCallback unsetCallback) {
     handler.removeCallbacksAndMessages(null);
     if (!registered) {
-      this.callback = callback;
+      this.setCallback = setCallback;
+      this.unsetCallback = unsetCallback;
       Timber.d("Register new state observer");
       registerListener();
       registered = true;
@@ -109,7 +116,8 @@ class SyncStateObserver implements InterestObserver {
       if (registered) {
         Timber.d("Unregister new state observer");
         unregisterListener();
-        this.callback = null;
+        this.setCallback = null;
+        this.unsetCallback = null;
         registered = false;
       } else {
         Timber.e("Already unregistered");
