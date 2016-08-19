@@ -76,7 +76,10 @@ public abstract class DozeJob extends BaseJob {
     if (sensorFixReceiver != null) {
       sensorFixReceiver.unregister();
     }
-    this.sensorFixReceiver = new SensorFixReceiver(getApplicationContext());
+
+    if (sensorFixReceiver == null) {
+      this.sensorFixReceiver = new SensorFixReceiver(getApplicationContext());
+    }
 
     subscription = Observable.defer(() -> Observable.just(doze)).map(doze1 -> {
       Timber.d("Run DozeJob");
