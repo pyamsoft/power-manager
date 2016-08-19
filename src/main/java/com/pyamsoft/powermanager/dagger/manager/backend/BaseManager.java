@@ -164,7 +164,7 @@ abstract class BaseManager implements Manager {
         .observeOn(mainScheduler)
         .subscribe(managerInteractor -> {
           Timber.d("Queue enable");
-          enable(0, false);
+          enable(100L, false);
         }, throwable -> Timber.e(throwable, "onError"), () -> {
           Timber.d("onComplete");
           interactor.setOriginalState(false);

@@ -127,7 +127,7 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorBase
   }
 
   @NonNull @Override public Observable<BaseJob> createEnableJob(long delayTime, boolean periodic) {
-    return isForceOutOfDoze().map(DozeJob.EnableJob::new);
+    return isForceOutOfDoze().map(forceDoze -> new DozeJob.EnableJob(delayTime, forceDoze));
   }
 
   @NonNull @Override

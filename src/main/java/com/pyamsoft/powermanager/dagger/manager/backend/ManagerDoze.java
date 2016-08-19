@@ -169,7 +169,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     subscription = baseObservable().flatMap(isEnabled -> {
       if (isEnabled) {
         Timber.d("Doze is enabled");
-        return Observable.just(0L);
+        return Observable.just(100L);
       } else {
         Timber.e("Doze is not available on this platform");
         return Observable.empty();

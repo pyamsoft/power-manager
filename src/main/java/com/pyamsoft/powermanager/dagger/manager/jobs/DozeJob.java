@@ -114,8 +114,8 @@ public abstract class DozeJob extends BaseJob {
 
   public static final class EnableJob extends DozeJob {
 
-    public EnableJob(boolean forceDoze) {
-      super(100, false, forceDoze, false);
+    public EnableJob(long delay, boolean forceDoze) {
+      super(delay, false, forceDoze, false);
     }
   }
 
