@@ -18,10 +18,13 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
+import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = ForegroundModule.class)
-public interface ForegroundComponent {
+@ActivityScope @Subcomponent(modules = {
+    ForegroundModule.class, ManageObserverModule.class, ManageModifierModule.class
+}) public interface ForegroundComponent {
 
   void inject(ForegroundService service);
 }

@@ -112,8 +112,8 @@ public class FullNotificationActivity extends AppCompatActivity
   //    setCancelable(true);
   //    Timber.d("onCreate");
   //
-  //    Singleton.Dagger.with(getContext()).plusStateObserver().inject(this);
-  //    Singleton.Dagger.with(getContext()).plusManageObserver().inject(this);
+  //    Singleton.Dagger.with(getContext()).plusStateObserverComponent().inject(this);
+  //    Singleton.Dagger.with(getContext()).plusManageObserverComponent().inject(this);
   //    Singleton.Dagger.with(getContext()).plusStateModifier().inject(this);
   //    Singleton.Dagger.with(getContext()).plusManageModifier().inject(this);
   //
