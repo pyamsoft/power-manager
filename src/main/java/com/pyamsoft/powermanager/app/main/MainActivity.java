@@ -37,6 +37,7 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.doze.DozePagerAdapter;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
@@ -46,20 +47,20 @@ import com.pyamsoft.powermanager.app.settings.SettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerPagerAdapter;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
-import com.pyamsoft.pydroid.model.AsyncDrawable;
 import com.pyamsoft.pydroid.support.RatingDialog;
-import com.pyamsoft.pydroid.tool.AsyncTaskMap;
-import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.tool.DataHolderFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.StringUtil;
 import javax.inject.Inject;
+import rx.Subscription;
 import timber.log.Timber;
 
 public class MainActivity extends DonationActivityBase
     implements RatingDialog.ChangeLogProvider, MainPresenter.MainView {
 
-  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R.id.main_tablayout) TabLayout tabLayout;
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
@@ -74,7 +75,7 @@ public class MainActivity extends DonationActivityBase
     super.onCreate(savedInstanceState);
     setPreferenceDefaultValues();
 
-    PowerManager.getInstance().getPowerManagerComponent().plusMain().inject(this);
+    Singleton.Dagger.with(this).plusMain().inject(this);
     adapterDataHolderFragment = DataHolderFragment.getInstance(this, "adapter");
 
     presenter.bindView(this);
@@ -142,7 +143,6 @@ public class MainActivity extends DonationActivityBase
 
     recycleOldAdapter();
     viewPager.setAdapter(adapter);
-    setActionBarUpEnabled(storedType != null);
   }
 
   private void setFabStateFromAdapter() {
@@ -282,7 +282,6 @@ public class MainActivity extends DonationActivityBase
       viewPager.setAdapter(new OverviewPagerAdapter(getSupportFragmentManager()));
       tabLayout.setVisibility(View.GONE);
       tabLayout.setupWithViewPager(null);
-      setActionBarUpEnabled(false);
       setFabStateFromAdapter();
     }
   }
@@ -298,10 +297,6 @@ public class MainActivity extends DonationActivityBase
         handled = false;
     }
     return handled || super.onOptionsItemSelected(item);
-  }
-
-  @NonNull @Override protected String getPlayStoreAppPackage() {
-    return getPackageName();
   }
 
   @NonNull @Override public Spannable getChangeLogText() {
@@ -375,7 +370,6 @@ public class MainActivity extends DonationActivityBase
     viewPager.setAdapter(adapter);
     tabLayout.setVisibility(showTabs ? View.VISIBLE : View.GONE);
     tabLayout.setupWithViewPager(showTabs ? viewPager : null);
-    setActionBarUpEnabled(true);
     setFabStateFromAdapter();
   }
 
@@ -396,9 +390,8 @@ public class MainActivity extends DonationActivityBase
   }
 
   @Override public void loadFabColoring(@DrawableRes int icon, @NonNull Runnable runnable) {
-    final AsyncVectorDrawableTask fabColorTask =
-        new AsyncVectorDrawableTask(fab, android.R.color.white);
-    fabColorTask.execute(new AsyncDrawable(getApplicationContext(), icon));
+    final Subscription fabColorTask =
+        AsyncDrawable.with(this).load(icon).tint(android.R.color.white).into(fab);
     taskMap.put("fab", fabColorTask);
     fab.setOnClickListener(view -> runnable.run());
   }

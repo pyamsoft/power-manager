@@ -30,4 +30,10 @@ public interface ManagerDozeInteractor extends ManagerInteractorDoze {
   @CheckResult @NonNull Observable<Boolean> isManageSensors();
 
   @CheckResult @NonNull Observable<SensorFixReceiver> createSensorFixReceiver();
+
+  void cancelAllJobs();
+
+  void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors);
+
+  void queueEnableJob(boolean forceDoze);
 }

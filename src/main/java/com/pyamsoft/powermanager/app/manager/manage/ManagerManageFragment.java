@@ -23,13 +23,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference;
@@ -39,11 +38,12 @@ import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
 import com.pyamsoft.powermanager.dagger.observer.manage.SyncManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.WifiManageObserver;
+import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ManagerManageFragment extends PreferenceFragmentCompat
+public class ManagerManageFragment extends ActionBarPreferenceFragment
     implements ManagerManageView, WifiManageObserver.View, DataManageObserver.View,
     BluetoothManageObserver.View, SyncManageObserver.View {
 
@@ -68,16 +68,97 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
     return fragment;
   }
 
+  private void showInfoDialogForLollipop() {
+    if (!ManagerData.checkWriteSettingsPermission(getContext())
+        && ManagerData.needsPermissionToToggle()
+        && ManagerSettingsPagerAdapter.TYPE_DATA.equals(fragmentType)) {
+      Timber.d("Display dialog about data toggle on Lollipop+");
+      AppUtil.guaranteeSingleDialogFragment(getActivity(), new LollipopDataDialog(),
+          "lollipop_data");
+    }
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    setActionBarUpEnabled(false);
+    manageObserver.unregister();
+    delayPreference.unbindView();
+    presenter.unbindView();
+  }
+
+  private void findCorrectPreferences() {
+    final ManageObserverComponent manageObserverComponent =
+        Singleton.Dagger.with(getContext()).plusManageObserver();
+    fragmentType = getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
+    switch (fragmentType) {
+      case ManagerSettingsPagerAdapter.TYPE_WIFI:
+        Timber.d("Manage fragment for Wifi");
+        manageObserver = manageObserverComponent.provideWifiManagerObserver();
+        xmlResId = R.xml.manage_wifi;
+        manageKeyResId = R.string.manage_wifi_key;
+        timeKeyResId = R.string.wifi_time_key;
+        presetTimeKeyResId = R.string.preset_delay_wifi_key;
+        break;
+      case ManagerSettingsPagerAdapter.TYPE_DATA:
+        Timber.d("Manage fragment for Data");
+        manageObserver = manageObserverComponent.provideDataManagerObserver();
+        xmlResId = R.xml.manage_data;
+        manageKeyResId = R.string.manage_data_key;
+        timeKeyResId = R.string.data_time_key;
+        presetTimeKeyResId = R.string.preset_delay_data_key;
+        break;
+      case ManagerSettingsPagerAdapter.TYPE_BLUETOOTH:
+        Timber.d("Manage fragment for Bluetooth");
+        manageObserver = manageObserverComponent.provideBluetoothManagerObserver();
+        xmlResId = R.xml.manage_bluetooth;
+        manageKeyResId = R.string.manage_bluetooth_key;
+        timeKeyResId = R.string.bluetooth_time_key;
+        presetTimeKeyResId = R.string.preset_delay_bluetooth_key;
+        break;
+      case ManagerSettingsPagerAdapter.TYPE_SYNC:
+        Timber.d("Manage fragment for Sync");
+        manageObserver = manageObserverComponent.provideSyncManagerObserver();
+        xmlResId = R.xml.manage_sync;
+        manageKeyResId = R.string.manage_sync_key;
+        timeKeyResId = R.string.sync_time_key;
+        presetTimeKeyResId = R.string.preset_delay_sync_key;
+        break;
+      default:
+        throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
+    }
+  }
+
+  @Override public void onCreatePreferences(Bundle bundle, String s) {
+    Singleton.Dagger.with(getContext()).plusManagerManage().inject(this);
+
+    findCorrectPreferences();
+    addPreferencesFromResource(xmlResId);
+
+    resolvePreferences();
+  }
+
+  private void resolvePreferences() {
+    managePreference = (SwitchPreferenceCompat) findPreference(getString(manageKeyResId));
+    presetDelayPreference = (ListPreference) findPreference(getString(presetTimeKeyResId));
+    delayPreference = (ManagerDelayPreference) findPreference(getString(timeKeyResId));
+  }
+
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    final View view = super.onCreateView(inflater, container, savedInstanceState);
+
+    //noinspection unchecked
+    manageObserver.setView(this);
     manageObserver.register();
     presenter.bindView(this);
     delayPreference.bindView();
-    return super.onCreateView(inflater, container, savedInstanceState);
+
+    return view;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    setActionBarUpEnabled(true);
     showInfoDialogForLollipop();
 
     managePreference.setOnPreferenceChangeListener((preference, o) -> {
@@ -117,83 +198,6 @@ public class ManagerManageFragment extends PreferenceFragmentCompat
     presenter.setCustomDelayTimeStateFromPreference(getString(manageKeyResId),
         managePreference.isChecked());
     presenter.setManagedFromPreference(getString(manageKeyResId));
-  }
-
-  private void showInfoDialogForLollipop() {
-    if (!ManagerData.checkWriteSettingsPermission(getContext())
-        && ManagerData.needsPermissionToToggle()
-        && ManagerSettingsPagerAdapter.TYPE_DATA.equals(fragmentType)) {
-      Timber.d("Display dialog about data toggle on Lollipop+");
-      AppUtil.guaranteeSingleDialogFragment(getActivity(), new LollipopDataDialog(),
-          "lollipop_data");
-    }
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    manageObserver.unregister();
-    delayPreference.unbindView();
-    presenter.unbindView();
-  }
-
-  private void findCorrectPreferences() {
-    final ManageObserverComponent manageObserverComponent =
-        PowerManager.getInstance().getPowerManagerComponent().plusManageObserver();
-    fragmentType = getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
-    switch (fragmentType) {
-      case ManagerSettingsPagerAdapter.TYPE_WIFI:
-        Timber.d("Manage fragment for Wifi");
-        manageObserver = manageObserverComponent.provideWifiManagerObserver();
-        xmlResId = R.xml.manage_wifi;
-        manageKeyResId = R.string.manage_wifi_key;
-        timeKeyResId = R.string.wifi_time_key;
-        presetTimeKeyResId = R.string.preset_delay_wifi_key;
-        break;
-      case ManagerSettingsPagerAdapter.TYPE_DATA:
-        Timber.d("Manage fragment for Data");
-        manageObserver = manageObserverComponent.provideDataManagerObserver();
-        xmlResId = R.xml.manage_data;
-        manageKeyResId = R.string.manage_data_key;
-        timeKeyResId = R.string.data_time_key;
-        presetTimeKeyResId = R.string.preset_delay_data_key;
-        break;
-      case ManagerSettingsPagerAdapter.TYPE_BLUETOOTH:
-        Timber.d("Manage fragment for Bluetooth");
-        manageObserver = manageObserverComponent.provideBluetoothManagerObserver();
-        xmlResId = R.xml.manage_bluetooth;
-        manageKeyResId = R.string.manage_bluetooth_key;
-        timeKeyResId = R.string.bluetooth_time_key;
-        presetTimeKeyResId = R.string.preset_delay_bluetooth_key;
-        break;
-      case ManagerSettingsPagerAdapter.TYPE_SYNC:
-        Timber.d("Manage fragment for Sync");
-        manageObserver = manageObserverComponent.provideSyncManagerObserver();
-        xmlResId = R.xml.manage_sync;
-        manageKeyResId = R.string.manage_sync_key;
-        timeKeyResId = R.string.sync_time_key;
-        presetTimeKeyResId = R.string.preset_delay_sync_key;
-        break;
-      default:
-        throw new IllegalStateException("Invalid fragment type requested: " + fragmentType);
-    }
-
-    //noinspection unchecked
-    manageObserver.setView(this);
-  }
-
-  @Override public void onCreatePreferences(Bundle bundle, String s) {
-    PowerManager.getInstance().getPowerManagerComponent().plusManagerManage().inject(this);
-
-    findCorrectPreferences();
-    addPreferencesFromResource(xmlResId);
-
-    resolvePreferences();
-  }
-
-  private void resolvePreferences() {
-    managePreference = (SwitchPreferenceCompat) findPreference(getString(manageKeyResId));
-    presetDelayPreference = (ListPreference) findPreference(getString(presetTimeKeyResId));
-    delayPreference = (ManagerDelayPreference) findPreference(getString(timeKeyResId));
   }
 
   @Override public void enableCustomDelayTime() {

@@ -25,11 +25,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
-import com.pyamsoft.powermanager.dagger.manager.backend.DozeJob;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDozeInteractor;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -117,7 +114,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @CheckResult @NonNull Observable<Boolean> baseObservable() {
     return Observable.defer(() -> {
       Timber.d("Cancel old doze jobs");
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
+      interactor.cancelAllJobs();
       return interactor.isDozeEnabled();
     }).filter(aBoolean -> {
       Timber.d("filter Doze not enabled");
@@ -134,13 +131,11 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
       }
 
       return Observable.just(0L);
-    }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(delay -> {
-      PowerManager.getInstance()
-          .getJobManager()
-          .addJobInBackground(new DozeJob.EnableJob(forceDoze));
-    }, throwable -> {
-      Timber.e(throwable, "onError");
-    }, this::unsubSubscription);
+    })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(delay -> interactor.queueEnableJob(forceDoze),
+            throwable -> Timber.e(throwable, "onError"), this::unsubSubscription);
   }
 
   @Override public void enable() {
@@ -173,14 +168,8 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     subscription = Observable.zip(delayObservable, sensorsObservable, Pair::new)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(pair -> {
-          PowerManager.getInstance()
-              .getJobManager()
-              .addJobInBackground(
-                  new DozeJob.DisableJob(pair.first * 1000L, forceDoze, pair.second));
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-        }, this::unsubSubscription);
+        .subscribe(pair -> interactor.queueDisableJob(pair.first * 1000L, forceDoze, pair.second),
+            throwable -> Timber.e(throwable, "onError"), this::unsubSubscription);
   }
 
   @Override public void disable(boolean charging) {
@@ -193,6 +182,11 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
 
   public void handleDozeStateChange(@NonNull Context context, boolean currentState,
       boolean charging) {
+    if (!interactor.isDozeEnabled().toBlocking().first()) {
+      Timber.e("Doze is not enabled");
+      return;
+    }
+
     if (checkDumpsysPermission(context.getApplicationContext())) {
       Timber.d("Holds DUMP permission");
       if (currentState) {

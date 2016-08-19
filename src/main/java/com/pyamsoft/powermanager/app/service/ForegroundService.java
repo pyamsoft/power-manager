@@ -23,7 +23,7 @@ import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
@@ -51,22 +51,22 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @Override public void onCreate() {
     super.onCreate();
 
-    screenOnOffReceiver = new ScreenOnOffReceiver();
-    screenOnOffReceiver.register(this);
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    screenOnOffReceiver.register();
 
     if (ManagerDoze.isDozeAvailable()) {
-      dozeReceiver = new DozeReceiver();
-      dozeReceiver.register(this);
+      dozeReceiver = new DozeReceiver(this);
+      dozeReceiver.register();
     } else {
       dozeReceiver = null;
     }
 
-    PowerManager.getInstance().getPowerManagerComponent().plusForeground().inject(this);
+    Singleton.Dagger.with(this).plusForeground().inject(this);
 
     presenter.bindView(this);
 
     // For now, trigger every 5 minutes
-    TriggerJob.queue(new TriggerJob(5 * 60 * 1000));
+    TriggerJob.queue(this, new TriggerJob(5 * 60 * 1000));
     Timber.d("onCreate");
   }
 
@@ -75,8 +75,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     Timber.d("onDestroy");
 
     Timber.d("Cancel all trigger jobs");
-    PowerManager.getInstance()
-        .getJobManager()
+    Singleton.Jobs.with(this)
         .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
 
     screenOnOffReceiver.unregister();

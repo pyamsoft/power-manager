@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.manager.backend;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Named;
 import rx.Observable;
@@ -141,9 +140,7 @@ abstract class BaseManager implements Manager {
     enableJobSubscription = interactor.createEnableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .subscribe(deviceJob -> {
-          PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
-        }, throwable -> {
+        .subscribe(interactor::queueDeviceEnableJob, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
         }, this::unsubsEnable);
@@ -154,9 +151,7 @@ abstract class BaseManager implements Manager {
     disableJobSubscription = interactor.createDisableJob(time, periodic)
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .subscribe(deviceJob -> {
-          PowerManager.getInstance().getJobManager().addJobInBackground(deviceJob);
-        }, throwable -> {
+        .subscribe(interactor::queueDeviceDisableJob, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
         }, this::unsubsDisable);

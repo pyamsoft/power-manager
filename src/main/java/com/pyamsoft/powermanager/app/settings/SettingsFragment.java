@@ -19,27 +19,28 @@ package com.pyamsoft.powermanager.app.settings;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.observer.manage.WearableManageObserver;
+import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public final class SettingsFragment extends PreferenceFragmentCompat
+public final class SettingsFragment extends ActionBarPreferenceFragment
     implements SettingsPresenter.MainSettingsView, WearableManageObserver.View {
 
   @NonNull public static final String TAG = "settings";
@@ -50,16 +51,28 @@ public final class SettingsFragment extends PreferenceFragmentCompat
   private CheckBoxPreference wearableManage;
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    PowerManager.getInstance().getPowerManagerComponent().plusSettings().inject(this);
-    wearableObserver = PowerManager.getInstance()
-        .getPowerManagerComponent()
-        .plusManageObserver()
-        .provideWearableManageObserver();
+    Singleton.Dagger.with(getContext()).plusSettings().inject(this);
+    wearableObserver =
+        Singleton.Dagger.with(getContext()).plusManageObserver().provideWearableManageObserver();
+
+    addPreferencesFromResource(R.xml.preferences);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    setActionBarUpEnabled(true);
+    final View view = super.onCreateView(inflater, container, savedInstanceState);
 
     //noinspection unchecked
     wearableObserver.setView(this);
+    wearableObserver.register();
+    presenter.bindView(this);
 
-    addPreferencesFromResource(R.xml.preferences);
+    return view;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
 
     final Preference boot = getPreferenceScreen().findPreference(getString(R.string.boot_key));
     boot.setDefaultValue(BootReceiver.isBootEnabled(getContext()));
@@ -142,15 +155,9 @@ public final class SettingsFragment extends PreferenceFragmentCompat
     });
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    wearableObserver.register();
-    presenter.bindView(this);
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @Override public void onDestroyView() {
     super.onDestroyView();
+    setActionBarUpEnabled(false);
     presenter.unbindView();
     wearableObserver.unregister();
   }

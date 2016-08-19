@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
@@ -24,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.dagger.modifier.state.BluetoothStateModifier;
@@ -47,8 +48,8 @@ import timber.log.Timber;
 
 public class TriggerJob extends BaseJob {
 
-  private static final int PRIORITY = 2;
   @NonNull public static final String TRIGGER_TAG = "trigger";
+  private static final int PRIORITY = 2;
   @Inject WifiStateObserver wifiObserver;
   @Inject DataStateObserver dataObserver;
   @Inject BluetoothStateObserver bluetoothObserver;
@@ -62,18 +63,19 @@ public class TriggerJob extends BaseJob {
 
   public TriggerJob(long delay) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
-
-    PowerManager.getInstance().getPowerManagerComponent().plusStateModifier().inject(this);
   }
 
-  public static void queue(@NonNull TriggerJob job) {
+  public static void queue(@NonNull Context context, @NonNull TriggerJob job) {
     Timber.d("Cancel trigger jobs");
-    PowerManager.getInstance()
-        .getJobManager()
-        .cancelJobsInBackground(null, TagConstraint.ANY, TRIGGER_TAG);
+    Singleton.Jobs.with(context).cancelJobsInBackground(null, TagConstraint.ANY, TRIGGER_TAG);
 
     Timber.d("Add new trigger job");
-    PowerManager.getInstance().getJobManager().addJobInBackground(job, null);
+    Singleton.Jobs.with(context).addJobInBackground(job, null);
+  }
+
+  @Override public void onAdded() {
+    super.onAdded();
+    Singleton.Dagger.with(getApplicationContext()).plusStateModifier().inject(this);
   }
 
   @Override public void onRun() throws Throwable {
@@ -202,7 +204,7 @@ public class TriggerJob extends BaseJob {
 
           // KLUDGE the show must go on
           Timber.d("Requeue the job");
-          queue(new TriggerJob(getDelayInMs()));
+          queue(getApplicationContext(), new TriggerJob(getDelayInMs()));
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");

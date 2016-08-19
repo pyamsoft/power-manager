@@ -18,7 +18,9 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import javax.inject.Inject;
 import rx.Observable;
@@ -48,5 +50,18 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
 
   @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {
     return Observable.defer(() -> Observable.just(new SensorFixReceiver(appContext)));
+  }
+
+  @Override public void cancelAllJobs() {
+    Singleton.Jobs.with(appContext).cancelJobs(TagConstraint.ANY, DozeJob.DOZE_TAG);
+  }
+
+  @Override public void queueEnableJob(boolean forceDoze) {
+    Singleton.Jobs.with(appContext).addJobInBackground(new DozeJob.EnableJob(forceDoze));
+  }
+
+  @Override public void queueDisableJob(long delay, boolean forceDoze, boolean manageSensors) {
+    Singleton.Jobs.with(appContext)
+        .addJobInBackground(new DozeJob.DisableJob(delay, forceDoze, manageSensors));
   }
 }

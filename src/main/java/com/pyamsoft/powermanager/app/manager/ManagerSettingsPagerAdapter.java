@@ -21,8 +21,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.manager.manage.ManagerManageFragment;
 import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicFragment;
@@ -70,9 +70,9 @@ public final class ManagerSettingsPagerAdapter extends FragmentStatePagerAdapter
     this.type = type;
 
     final StateObserverComponent stateComponent =
-        PowerManager.getInstance().getPowerManagerComponent().plusStateObserver();
+        Singleton.Dagger.with(activity).plusStateObserver();
     final StateModifierComponent stateModifierComponent =
-        PowerManager.getInstance().getPowerManagerComponent().plusStateModifier();
+        Singleton.Dagger.with(activity).plusStateModifier();
 
     int icon;
     switch (type) {

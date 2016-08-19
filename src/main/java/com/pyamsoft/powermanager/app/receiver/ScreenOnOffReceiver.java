@@ -24,7 +24,7 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
@@ -44,18 +44,19 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     BATTERY_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
   }
 
+  @NonNull private final Context appContext;
   @Inject ManagerWifi managerWifi;
   @Inject ManagerData managerData;
   @Inject ManagerBluetooth managerBluetooth;
   @Inject ManagerSync managerSync;
   @Inject ManagerDoze managerDoze;
   private boolean isRegistered;
-  private Context appContext;
 
-  public ScreenOnOffReceiver() {
+  public ScreenOnOffReceiver(@NonNull Context context) {
+    this.appContext = context.getApplicationContext();
     isRegistered = false;
 
-    PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
+    Singleton.Dagger.with(appContext).plusManager().inject(this);
   }
 
   @CheckResult public static boolean getCurrentChargingState(@NonNull Context context) {
@@ -124,25 +125,24 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
     }
   }
 
-  public final void register(@NonNull Context context) {
+  public final void register() {
     if (!isRegistered) {
-      appContext = context.getApplicationContext();
-      cleanup(appContext);
+      cleanup();
       appContext.registerReceiver(this, SCREEN_FILTER);
       isRegistered = true;
     }
   }
 
-  private void cleanup(@NonNull Context context) {
+  private void cleanup() {
     managerWifi.cleanup();
     managerData.cleanup();
     managerBluetooth.cleanup();
     managerSync.cleanup();
     managerDoze.cleanup();
 
-    if (ManagerDoze.checkDumpsysPermission(context) && ManagerDoze.isDozeAvailable()) {
-      ManagerDoze.executeDumpsys(context, ManagerDoze.DUMPSYS_DOZE_END);
-      ManagerDoze.executeDumpsys(context, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
+    if (ManagerDoze.checkDumpsysPermission(appContext) && ManagerDoze.isDozeAvailable()) {
+      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_DOZE_END);
+      ManagerDoze.executeDumpsys(appContext, ManagerDoze.DUMPSYS_SENSOR_ENABLE);
       managerDoze.fixSensorDisplayRotationBug();
     }
   }
@@ -150,9 +150,8 @@ public final class ScreenOnOffReceiver extends BroadcastReceiver {
   public final void unregister() {
     if (isRegistered) {
       appContext.unregisterReceiver(this);
-      cleanup(appContext);
+      cleanup();
       isRegistered = false;
-      appContext = null;
     }
   }
 }

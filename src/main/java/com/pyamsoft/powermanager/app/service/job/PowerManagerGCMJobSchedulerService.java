@@ -20,13 +20,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import timber.log.Timber;
 
 public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
   @NonNull @Override protected JobManager getJobManager() {
-    return PowerManager.getInstance().getJobManager();
+    return Singleton.Jobs.with(getApplicationContext());
   }
 
   @Override public void onTaskRemoved(Intent rootIntent) {

@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
@@ -103,19 +103,21 @@ public final class ManagerInteractorSync extends ManagerInteractorBase {
 
   static abstract class Job extends DeviceJob {
 
-    @NonNull private final InterestModifier modifier;
-    @NonNull private final InterestObserver observer;
+    private InterestModifier modifier;
+    private InterestObserver observer;
 
     Job(@NonNull Params params, int jobType, boolean periodic, long periodicDisableTime,
         long periodicEnableTime) {
       super(params.addTags(ManagerInteractorSync.TAG), jobType, periodic, periodicDisableTime,
           periodicEnableTime);
-      modifier = PowerManager.getInstance()
-          .getPowerManagerComponent()
+    }
+
+    @Override public void onAdded() {
+      super.onAdded();
+      modifier = Singleton.Dagger.with(getApplicationContext())
           .plusStateModifier()
           .provideSyncStateModifier();
-      observer = PowerManager.getInstance()
-          .getPowerManagerComponent()
+      observer = Singleton.Dagger.with(getApplicationContext())
           .plusStateObserver()
           .provideSyncStateObserver();
     }

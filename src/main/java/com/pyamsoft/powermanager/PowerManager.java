@@ -16,95 +16,14 @@
 
 package com.pyamsoft.powermanager;
 
-import android.app.Application;
 import android.content.Intent;
-import android.os.Build;
 import android.os.StrictMode;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.config.Configuration;
-import com.birbit.android.jobqueue.network.NetworkUtil;
-import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
-import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
-import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
-import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
-import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
-
-  private volatile static PowerManager instance = null;
-  private PowerManagerComponent powerManagerComponent;
-  private JobManager jobManager;
-
-  @NonNull @CheckResult public synchronized static PowerManager getInstance() {
-    if (instance == null) {
-      throw new NullPointerException("PowerManager instance is NULL");
-    } else {
-      //noinspection ConstantConditions
-      return instance;
-    }
-  }
-
-  private synchronized static void setInstance(@Nullable PowerManager instance) {
-    PowerManager.instance = instance;
-  }
-
-  @CheckResult @NonNull
-  private static JobManager createJobManager(@NonNull Application application) {
-    final Configuration.Builder builder = new Configuration.Builder(application).minConsumerCount(1)
-        .maxConsumerCount(4)
-        .loadFactor(4)
-        .consumerKeepAlive(120);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Timber.d("Create scheduler using JobScheduler framework");
-      builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(application,
-          PowerManagerFrameworkJobSchedulerService.class));
-    } else {
-      final int googleAvailable =
-          GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(application);
-      if (googleAvailable == ConnectionResult.SUCCESS) {
-        Timber.d("Create scheduler using Google play services");
-
-        // Batch by default
-        builder.scheduler(GcmJobSchedulerService.createSchedulerFor(application,
-            PowerManagerGCMJobSchedulerService.class));
-      } else {
-        Timber.e("Could not create a scheduler to use with the JobScheduler");
-      }
-    }
-
-    // We do not use the internet, always return Disconnected
-    builder.networkUtil(context -> NetworkUtil.DISCONNECTED);
-
-    Timber.d("Create a new JobManager");
-    return new JobManager(builder.build());
-  }
-
-  @NonNull @CheckResult public synchronized final PowerManagerComponent getPowerManagerComponent() {
-    if (powerManagerComponent == null) {
-      throw new NullPointerException("PowerManagerComponent is NULL");
-    } else {
-      return powerManagerComponent;
-    }
-  }
-
-  @NonNull @CheckResult public synchronized final JobManager getJobManager() {
-    if (jobManager == null) {
-      throw new NullPointerException("JobManager is NULL");
-    } else {
-      return jobManager;
-    }
-  }
 
   @Override public void onCreate() {
     super.onCreate();
@@ -112,20 +31,6 @@ public final class PowerManager extends ApplicationBase {
     if (buildConfigDebug()) {
       new CrashHandler(getApplicationContext(), this).register();
       setStrictMode();
-    }
-
-    // Initialize instance
-    // Findbugs complains about synchronization issues
-    synchronized (this) {
-      powerManagerComponent = DaggerPowerManagerComponent.builder()
-          .powerManagerModule(new PowerManagerModule(getApplicationContext()))
-          .build();
-
-      jobManager = createJobManager(this);
-      Timber.d("Created new JobManager with scheduler: %s", jobManager.getScheduler());
-
-      // Set instance
-      setInstance(this);
     }
 
     // Start stuff
@@ -165,9 +70,5 @@ public final class PowerManager extends ApplicationBase {
 
   @Override public int buildConfigVersionCode() {
     return BuildConfig.VERSION_CODE;
-  }
-
-  @NonNull @Override public String getApplicationPackageName() {
-    return getPackageName();
   }
 }

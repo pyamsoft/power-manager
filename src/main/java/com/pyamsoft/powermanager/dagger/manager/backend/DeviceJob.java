@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import timber.log.Timber;
 
@@ -81,7 +82,7 @@ public abstract class DeviceJob extends BaseJob {
         if (getPeriodicDisableTime() < MINIMUM_ALLOWED_PERIOD) {
           Timber.e("Not queuing period disable job with interval less than 1 minute");
         } else {
-          PowerManager.getInstance().getJobManager().addJobInBackground(periodicDisableJob());
+          Singleton.Jobs.with(getApplicationContext()).addJobInBackground(periodicDisableJob());
         }
       }
     } else {
@@ -98,7 +99,7 @@ public abstract class DeviceJob extends BaseJob {
         if (getPeriodicEnableTime() < MINIMUM_ALLOWED_PERIOD) {
           Timber.e("Not queuing period enable job with interval less than 1 minute");
         } else {
-          PowerManager.getInstance().getJobManager().addJobInBackground(periodicEnableJob());
+          Singleton.Jobs.with(getApplicationContext()).addJobInBackground(periodicEnableJob());
         }
       }
     } else {

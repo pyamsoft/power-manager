@@ -18,19 +18,39 @@ package com.pyamsoft.powermanager.app.doze;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
+import com.pyamsoft.pydroid.base.fragment.ActionBarPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
-public class DozeFragment extends PreferenceFragmentCompat {
+public class DozeFragment extends ActionBarPreferenceFragment {
 
   @NonNull public static final String TAG = "DozeFragment";
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(R.xml.doze);
 
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    setActionBarUpEnabled(true);
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    setActionBarUpEnabled(false);
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
     showInfoDialogForDoze();
   }
 

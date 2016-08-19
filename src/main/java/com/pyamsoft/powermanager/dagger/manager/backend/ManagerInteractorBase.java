@@ -20,8 +20,8 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.Singleton;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -37,7 +37,7 @@ abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
   @NonNull @CheckResult final Observable<ManagerInteractor> cancelJobs(@NonNull String tag) {
     return Observable.defer(() -> {
       Timber.d("Attempt job cancel %s", tag);
-      PowerManager.getInstance().getJobManager().cancelJobs(TagConstraint.ANY, tag);
+      Singleton.Jobs.with(getAppContext()).cancelJobs(TagConstraint.ANY, tag);
       return Observable.just(this);
     });
   }
@@ -53,4 +53,12 @@ abstract class ManagerInteractorBase extends ManagerInteractorDozeBase
   @CheckResult @NonNull abstract Observable<Long> getPeriodicEnableTime();
 
   @CheckResult @NonNull abstract Observable<Long> getPeriodicDisableTime();
+
+  @Override public void queueDeviceDisableJob(@NonNull DeviceJob job) {
+    Singleton.Jobs.with(getAppContext()).addJobInBackground(job);
+  }
+
+  @Override public void queueDeviceEnableJob(@NonNull DeviceJob job) {
+    Singleton.Jobs.with(getAppContext()).addJobInBackground(job);
+  }
 }

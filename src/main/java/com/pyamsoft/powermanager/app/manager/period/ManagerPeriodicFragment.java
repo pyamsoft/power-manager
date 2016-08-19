@@ -28,8 +28,8 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
@@ -72,16 +72,16 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    final View view = super.onCreateView(inflater, container, savedInstanceState);
     manageObserver.register();
     presenter.bindView(this);
     periodicDisablePreference.bindView();
     periodicEnablePreference.bindView();
-    return super.onCreateView(inflater, container, savedInstanceState);
+    return view;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
     final String managedKey = getString(manageKeyResId);
     periodicPreference.setOnPreferenceChangeListener((preference, o) -> {
       if (o instanceof Boolean) {
@@ -157,7 +157,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
 
   private void findCorrectPreferences() {
     final ManageObserverComponent manageObserverComponent =
-        PowerManager.getInstance().getPowerManagerComponent().plusManageObserver();
+        Singleton.Dagger.with(getContext()).plusManageObserver();
     final String fragmentType =
         getArguments().getString(ManagerSettingsPagerAdapter.FRAGMENT_TYPE, null);
     switch (fragmentType) {
@@ -214,7 +214,7 @@ public class ManagerPeriodicFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onCreatePreferences(Bundle bundle, String s) {
-    PowerManager.getInstance().getPowerManagerComponent().plusManagerPeriodic().inject(this);
+    Singleton.Dagger.with(getContext()).plusManagerPeriodic().inject(this);
 
     findCorrectPreferences();
     addPreferencesFromResource(xmlResId);

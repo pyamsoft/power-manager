@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,18 +31,20 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class PowerTriggerFragment extends Fragment implements TriggerPresenter.TriggerView {
+public class PowerTriggerFragment extends ActionBarFragment
+    implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "power_triggers";
 
@@ -57,18 +58,16 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
   private Unbinder unbinder;
   private RecyclerView.ItemDecoration dividerDecoration;
 
-  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    PowerManager.getInstance().getPowerManagerComponent().plusTrigger().inject(this);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
+    setActionBarUpEnabled(true);
+    Singleton.Dagger.with(getContext()).plusTrigger().inject(this);
 
     adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
     dividerDecoration =
         new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
-  }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_powertrigger, container, false);
     unbinder = ButterKnife.bind(this, view);
     adapter.onCreate();
@@ -78,6 +77,7 @@ public class PowerTriggerFragment extends Fragment implements TriggerPresenter.T
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    setActionBarUpEnabled(false);
 
     recyclerView.removeItemDecoration(dividerDecoration);
 

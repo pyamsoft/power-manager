@@ -24,25 +24,26 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 @TargetApi(Build.VERSION_CODES.M) public class DozeReceiver extends BroadcastReceiver {
 
+  @NonNull private final Context appContext;
   @NonNull private final IntentFilter filter =
       new IntentFilter(android.os.PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
   @Inject ManagerDoze managerDoze;
   private boolean registered = false;
-  private Context appContext;
 
-  public DozeReceiver() {
+  public DozeReceiver(@NonNull Context context) {
+    this.appContext = context.getApplicationContext();
     if (!ManagerDoze.isDozeAvailable()) {
       throw new RuntimeException("Doze not available!");
     }
 
-    PowerManager.getInstance().getPowerManagerComponent().plusManager().inject(this);
+    Singleton.Dagger.with(appContext).plusManager().inject(this);
   }
 
   @CheckResult public static boolean isDozeMode(Context context) {
@@ -69,11 +70,10 @@ import timber.log.Timber;
     managerDoze.handleDozeStateChange(context.getApplicationContext(), state, charging);
   }
 
-  public void register(@NonNull Context context) {
+  public void register() {
     if (!registered) {
       Timber.d("Register DozeReceiver");
       registered = true;
-      appContext = context.getApplicationContext();
       appContext.registerReceiver(this, filter);
     } else {
       Timber.e("Already registered");
@@ -85,7 +85,6 @@ import timber.log.Timber;
       Timber.d("Unregister DozeReceiver");
       registered = false;
       appContext.unregisterReceiver(this);
-      appContext = null;
     } else {
       Timber.e("Already registered");
     }

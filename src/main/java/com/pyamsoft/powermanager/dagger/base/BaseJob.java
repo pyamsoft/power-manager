@@ -33,7 +33,7 @@ public abstract class BaseJob extends Job {
     super(params.setRequiresNetwork(false).addTags(ALL_TAG));
   }
 
-  @Override public final void onAdded() {
+  @Override public void onAdded() {
     final Set<String> tags = getTags();
     String tagString;
     if (tags != null) {

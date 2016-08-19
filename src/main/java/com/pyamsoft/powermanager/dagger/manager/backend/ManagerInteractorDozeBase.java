@@ -35,6 +35,10 @@ abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
     this.preferences = preferences;
   }
 
+  @CheckResult @NonNull final Context getAppContext() {
+    return appContext;
+  }
+
   @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
     return preferences;
   }

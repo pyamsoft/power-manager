@@ -41,4 +41,8 @@ public interface ManagerInteractor extends ManagerInteractorDoze {
   @CheckResult @NonNull Observable<DeviceJob> createEnableJob(long delayTime, boolean periodic);
 
   @CheckResult @NonNull Observable<DeviceJob> createDisableJob(long delayTime, boolean periodic);
+
+  void queueDeviceEnableJob(@NonNull DeviceJob job);
+
+  void queueDeviceDisableJob(@NonNull DeviceJob job);
 }
