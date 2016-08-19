@@ -31,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.dagger.manager.preference.ManagerTimePresenter;
 import java.util.Locale;
 import timber.log.Timber;
 

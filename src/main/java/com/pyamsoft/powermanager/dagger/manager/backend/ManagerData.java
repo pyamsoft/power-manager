@@ -14,25 +14,39 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
 
-public final class ManagerBluetooth extends WearableManager {
+public final class ManagerData extends BaseManager {
 
-  @NonNull private final WearableManagerInteractor interactor;
+  @NonNull private final ManagerInteractor interactor;
 
-  @Inject public ManagerBluetooth(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
+  @Inject ManagerData(@NonNull @Named("data") ManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    super(interactor, ioScheduler, mainScheduler);
-    Timber.d("new ManagerBluetooth");
+    super(interactor, mainScheduler, ioScheduler);
+    Timber.d("new ManagerData");
     this.interactor = interactor;
+  }
+
+  @CheckResult public static boolean needsPermissionToToggle() {
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+  }
+
+  @CheckResult public static boolean checkWriteSettingsPermission(@NonNull Context context) {
+    return context.getApplicationContext()
+        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
+        == PackageManager.PERMISSION_GRANTED;
   }
 
   @Override void onEnableComplete() {

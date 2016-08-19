@@ -25,14 +25,13 @@ import javax.inject.Inject;
 
 public class DataManageObserver extends ManagePreferenceObserver<DataManageObserver.View> {
 
-  @Nullable private View view;
-
   @Inject DataManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_data_key));
   }
 
   @Override void onChange() {
+    final View view = getView();
     if (view != null) {
       if (is()) {
         view.onDataManageEnabled();
@@ -40,10 +39,6 @@ public class DataManageObserver extends ManagePreferenceObserver<DataManageObser
         view.onDataManageDisabled();
       }
     }
-  }
-
-  @Override public void setView(@NonNull View view) {
-    this.view = view;
   }
 
   public interface View {

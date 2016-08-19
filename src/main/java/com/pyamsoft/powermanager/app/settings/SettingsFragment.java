@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.observer.manage.WearableManageObserver;
+import com.pyamsoft.powermanager.dagger.settings.SettingsPresenter;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;

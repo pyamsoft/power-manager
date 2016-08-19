@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.main;
 
-import com.pyamsoft.powermanager.app.main.MainPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

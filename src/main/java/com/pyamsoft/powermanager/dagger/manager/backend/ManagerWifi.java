@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.backend.WearableManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -27,7 +26,7 @@ public final class ManagerWifi extends WearableManager {
 
   @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject public ManagerWifi(@NonNull @Named("wifi") WearableManagerInteractor interactor,
+  @Inject ManagerWifi(@NonNull @Named("wifi") WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, ioScheduler, mainScheduler);

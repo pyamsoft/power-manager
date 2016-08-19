@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.manage;
+package com.pyamsoft.powermanager.dagger.manager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
-import com.pyamsoft.powermanager.dagger.manager.manage.ManagerManageInteractor;
+import com.pyamsoft.powermanager.app.manager.manage.ManagerManageView;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -32,7 +32,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
   @NonNull private Subscription managedSubscription = Subscriptions.empty();
   @NonNull private Subscription customDelaySubscription = Subscriptions.empty();
 
-  @Inject public ManagerManagePresenter(@NonNull ManagerManageInteractor interactor,
+  @Inject ManagerManagePresenter(@NonNull ManagerManageInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
     this.interactor = interactor;
@@ -44,19 +44,19 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
     unsubCustomDelay();
   }
 
-  private void unsubManaged() {
+  void unsubManaged() {
     if (!managedSubscription.isUnsubscribed()) {
       managedSubscription.unsubscribe();
     }
   }
 
-  private void unsubCustomDelay() {
+  void unsubCustomDelay() {
     if (!customDelaySubscription.isUnsubscribed()) {
       customDelaySubscription.unsubscribe();
     }
   }
 
-  public final void setManagedFromPreference(@NonNull String key) {
+  public void setManagedFromPreference(@NonNull String key) {
     unsubManaged();
     managedSubscription = interactor.isManaged(key)
         .subscribeOn(getSubscribeScheduler())
@@ -73,7 +73,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
         });
   }
 
-  public final void setCustomDelayTimeStateFromPreference(@NonNull String key, boolean isManaged) {
+  public void setCustomDelayTimeStateFromPreference(@NonNull String key, boolean isManaged) {
     unsubCustomDelay();
     customDelaySubscription = interactor.isCustomDelayTime(key)
         .subscribeOn(getSubscribeScheduler())
@@ -86,7 +86,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
         });
   }
 
-  public final void updateCustomDelayTimeView(boolean newState) {
+  public void updateCustomDelayTimeView(boolean newState) {
     if (newState) {
       getView().enableCustomDelayTime();
     } else {
@@ -94,7 +94,7 @@ public final class ManagerManagePresenter extends ManagerSettingsPresenter<Manag
     }
   }
 
-  public final void updateNotificationOnManageStateChange() {
+  public void updateNotificationOnManageStateChange() {
     interactor.updateNotificationOnManageStateChange();
   }
 }

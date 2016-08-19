@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.manager.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.preference.ManagerTimePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -30,7 +29,7 @@ final class ManagerDelayPresenter extends ManagerTimePresenter {
   @NonNull private final ManagerDelayInteractor interactor;
   @NonNull private Subscription delaySubscription = Subscriptions.empty();
 
-  @Inject public ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor,
+  @Inject ManagerDelayPresenter(@NonNull ManagerDelayInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
     this.interactor = interactor;
@@ -41,7 +40,7 @@ final class ManagerDelayPresenter extends ManagerTimePresenter {
     unsubDelay();
   }
 
-  private void unsubDelay() {
+  void unsubDelay() {
     if (!delaySubscription.isUnsubscribed()) {
       delaySubscription.unsubscribe();
     }

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import javax.inject.Named;
 import rx.Scheduler;
 

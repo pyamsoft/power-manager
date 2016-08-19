@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.dagger.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
-import com.pyamsoft.powermanager.dagger.service.ForegroundInteractor;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -34,7 +33,7 @@ public final class ForegroundPresenter
 
   @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
-  @Inject public ForegroundPresenter(@NonNull ForegroundInteractor interactor,
+  @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
       @NonNull @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
@@ -46,13 +45,13 @@ public final class ForegroundPresenter
     unsubNotification();
   }
 
-  private void unsubNotification() {
+  void unsubNotification() {
     if (!notificationSubscription.isUnsubscribed()) {
       notificationSubscription.unsubscribe();
     }
   }
 
-  public final void onStartNotification(boolean explicit) {
+  public void onStartNotification(boolean explicit) {
     unsubNotification();
     notificationSubscription = interactor.createNotification(explicit)
         .subscribeOn(getSubscribeScheduler())
@@ -65,23 +64,23 @@ public final class ForegroundPresenter
         });
   }
 
-  public final void updateWearableAction() {
+  public void updateWearableAction() {
     interactor.updateWearablePreferenceStatus();
   }
 
-  public final void updateWifiAction() {
+  public void updateWifiAction() {
     interactor.updateWifiPreferenceStatus();
   }
 
-  public final void updateDataAction() {
+  public void updateDataAction() {
     interactor.updateDataPreferenceStatus();
   }
 
-  public final void updateBluetoothAction() {
+  public void updateBluetoothAction() {
     interactor.updateBluetoothPreferenceStatus();
   }
 
-  public final void updateSyncAction() {
+  public void updateSyncAction() {
     interactor.updateSyncPreferenceStatus();
   }
 

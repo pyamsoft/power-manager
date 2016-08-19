@@ -54,6 +54,7 @@ import com.pyamsoft.powermanager.dagger.observer.state.BluetoothStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.DataStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.SyncStateObserver;
 import com.pyamsoft.powermanager.dagger.observer.state.WifiStateObserver;
+import com.pyamsoft.powermanager.dagger.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;

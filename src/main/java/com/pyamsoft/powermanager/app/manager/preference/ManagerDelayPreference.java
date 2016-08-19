@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.dagger.manager.preference.ManagerTimePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 

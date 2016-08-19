@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.period;
+package com.pyamsoft.powermanager.dagger.manager.period;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ManagerSettingsPresenter;
-import com.pyamsoft.powermanager.dagger.manager.period.ManagerPeriodicInteractor;
+import com.pyamsoft.powermanager.app.manager.period.ManagerPeriodicView;
+import com.pyamsoft.powermanager.dagger.manager.ManagerSettingsPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -32,7 +32,7 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
   @NonNull private Subscription customEnableSubscription = Subscriptions.empty();
   @NonNull private Subscription customDisableSubscription = Subscriptions.empty();
 
-  @Inject public ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor,
+  @Inject ManagerPeriodicPresenter(@NonNull ManagerPeriodicInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
     this.interactor = interactor;
@@ -45,25 +45,25 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
     unsubCustomEnable();
   }
 
-  private void unsubManaged() {
+  void unsubManaged() {
     if (!managedSubscription.isUnsubscribed()) {
       managedSubscription.unsubscribe();
     }
   }
 
-  private void unsubCustomEnable() {
+  void unsubCustomEnable() {
     if (!customEnableSubscription.isUnsubscribed()) {
       customEnableSubscription.unsubscribe();
     }
   }
 
-  private void unsubCustomDisable() {
+  void unsubCustomDisable() {
     if (!customDisableSubscription.isUnsubscribed()) {
       customDisableSubscription.unsubscribe();
     }
   }
 
-  public final void setPeriodicFromPreference(@NonNull String key) {
+  public void setPeriodicFromPreference(@NonNull String key) {
     unsubManaged();
     managedSubscription = interactor.isManaged(key)
         .subscribeOn(getSubscribeScheduler())
@@ -79,7 +79,7 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
         });
   }
 
-  public final void setCustomPeriodicDisableTimeStateFromPreference(@NonNull String managedKey,
+  public void setCustomPeriodicDisableTimeStateFromPreference(@NonNull String managedKey,
       @NonNull String key, boolean isPeriodic) {
     unsubCustomDisable();
     customDisableSubscription = interactor.isCustomPeriodicDisableTime(key)
@@ -92,8 +92,7 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
         });
   }
 
-  public final void updateCustomPeriodicDisableTimeView(@NonNull String managedKey,
-      boolean newState) {
+  public void updateCustomPeriodicDisableTimeView(@NonNull String managedKey, boolean newState) {
     unsubManaged();
     managedSubscription = interactor.isManaged(managedKey)
         .subscribeOn(getSubscribeScheduler())
@@ -109,7 +108,7 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
         });
   }
 
-  public final void setCustomPeriodicEnableTimeStateFromPreference(@NonNull String managedKey,
+  public void setCustomPeriodicEnableTimeStateFromPreference(@NonNull String managedKey,
       @NonNull String key, boolean isPeriodic) {
     unsubCustomEnable();
     customEnableSubscription = interactor.isCustomPeriodicEnableTime(key)
@@ -122,8 +121,7 @@ public final class ManagerPeriodicPresenter extends ManagerSettingsPresenter<Man
         });
   }
 
-  public final void updateCustomPeriodicEnableTimeView(@NonNull String managedKey,
-      boolean newState) {
+  public void updateCustomPeriodicEnableTimeView(@NonNull String managedKey, boolean newState) {
     managedSubscription = interactor.isManaged(managedKey)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
+import com.pyamsoft.powermanager.dagger.main.MainPresenter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

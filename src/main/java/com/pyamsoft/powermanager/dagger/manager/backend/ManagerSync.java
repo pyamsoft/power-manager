@@ -14,40 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
 
-public final class ManagerData extends BaseManager {
+public final class ManagerSync extends BaseManager {
 
   @NonNull private final ManagerInteractor interactor;
 
-  @Inject public ManagerData(@NonNull @Named("data") ManagerInteractor interactor,
+  @Inject ManagerSync(@NonNull @Named("sync") ManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(interactor, mainScheduler, ioScheduler);
-    Timber.d("new ManagerData");
+    Timber.d("new ManagerSync");
     this.interactor = interactor;
-  }
-
-  @CheckResult public static boolean needsPermissionToToggle() {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
-  }
-
-  @CheckResult public static boolean checkWriteSettingsPermission(@NonNull Context context) {
-    return context.getApplicationContext()
-        .checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
-        == PackageManager.PERMISSION_GRANTED;
   }
 
   @Override void onEnableComplete() {

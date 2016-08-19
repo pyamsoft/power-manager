@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.main;
+package com.pyamsoft.powermanager.dagger.main;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.app.main.FabColorBus;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.app.overview.OverviewSelectionBus;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +33,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
   @NonNull private Subscription overviewBusSubscription = Subscriptions.empty();
   @NonNull private Subscription fabColorBusSubscription = Subscriptions.empty();
 
-  @Inject public MainPresenter(@NonNull @Named("main") Scheduler mainScheduler,
+  @Inject MainPresenter(@NonNull @Named("main") Scheduler mainScheduler,
       @NonNull @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
   }
@@ -57,7 +58,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
     unregisterFromFabColorBus();
   }
 
-  private void registerToOverviewBus() {
+  void registerToOverviewBus() {
     unregisterFromOverviewBus();
 
     overviewBusSubscription = OverviewSelectionBus.get()
@@ -73,7 +74,7 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         });
   }
 
-  private void registerToFabColorBus() {
+  void registerToFabColorBus() {
     unregisterFromFabColorBus();
     fabColorBusSubscription = FabColorBus.get()
         .register()
@@ -89,13 +90,13 @@ public final class MainPresenter extends SchedulerPresenter<MainPresenter.MainVi
         });
   }
 
-  private void unregisterFromOverviewBus() {
+  void unregisterFromOverviewBus() {
     if (!overviewBusSubscription.isUnsubscribed()) {
       overviewBusSubscription.unsubscribe();
     }
   }
 
-  private void unregisterFromFabColorBus() {
+  void unregisterFromFabColorBus() {
     if (!fabColorBusSubscription.isUnsubscribed()) {
       fabColorBusSubscription.unsubscribe();
     }

@@ -33,6 +33,7 @@ import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.manager.ManagerSettingsPagerAdapter;
 import com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicPreference;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.dagger.manager.period.ManagerPeriodicPresenter;
 import com.pyamsoft.powermanager.dagger.observer.manage.BluetoothManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.DataManageObserver;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;

@@ -25,14 +25,13 @@ import javax.inject.Inject;
 
 public class WearableManageObserver extends ManagePreferenceObserver<WearableManageObserver.View> {
 
-  @Nullable private View view;
-
   @Inject WearableManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_wearable_key));
   }
 
   @Override void onChange() {
+    final View view = getView();
     if (view != null) {
       if (is()) {
         view.onWearableManageEnabled();
@@ -40,10 +39,6 @@ public class WearableManageObserver extends ManagePreferenceObserver<WearableMan
         view.onWearableManageDisabled();
       }
     }
-  }
-
-  @Override public void setView(@NonNull View view) {
-    this.view = view;
   }
 
   public interface View {

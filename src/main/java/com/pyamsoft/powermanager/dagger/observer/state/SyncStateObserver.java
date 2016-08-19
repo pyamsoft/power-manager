@@ -19,16 +19,18 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.content.ContentResolver;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.lang.ref.WeakReference;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class SyncStateObserver implements InterestObserver<SyncStateObserver.View> {
 
   @NonNull private final Handler handler;
-  @Nullable private View view;
+  @NonNull private WeakReference<View> weakView = new WeakReference<>(null);
   private Object listener;
   private boolean registered;
   private boolean enabled;
@@ -42,7 +44,12 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
   }
 
   public final void setView(@NonNull View view) {
-    this.view = view;
+    weakView.clear();
+    weakView = new WeakReference<>(view);
+  }
+
+  @Nullable @CheckResult public final View getView() {
+    return weakView.get();
   }
 
   @Override public boolean is() {
@@ -58,6 +65,7 @@ public class SyncStateObserver implements InterestObserver<SyncStateObserver.Vie
       listener =
           ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
               i -> handler.post(() -> {
+                final View view = getView();
                 if (view != null) {
                   if (is()) {
                     // Reset status of other flag here

@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.settings.SettingsPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

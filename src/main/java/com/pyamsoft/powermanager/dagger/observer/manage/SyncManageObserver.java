@@ -25,14 +25,13 @@ import javax.inject.Inject;
 
 public class SyncManageObserver extends ManagePreferenceObserver<SyncManageObserver.View> {
 
-  @Nullable private View view;
-
   @Inject SyncManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_sync_key));
   }
 
   @Override void onChange() {
+    final View view = getView();
     if (view != null) {
       if (is()) {
         view.onSyncManageEnabled();
@@ -42,9 +41,6 @@ public class SyncManageObserver extends ManagePreferenceObserver<SyncManageObser
     }
   }
 
-  @Override public void setView(@NonNull View view) {
-    this.view = view;
-  }
 
   public interface View {
 

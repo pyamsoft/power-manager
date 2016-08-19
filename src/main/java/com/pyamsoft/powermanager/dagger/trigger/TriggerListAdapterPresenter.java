@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.trigger;
+package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterInteractor;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,7 +33,7 @@ public class TriggerListAdapterPresenter
   @NonNull private final TriggerListAdapterInteractor interactor;
   @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
-  @Inject public TriggerListAdapterPresenter(@NonNull @Named("main") Scheduler observeScheduler,
+  @Inject TriggerListAdapterPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull TriggerListAdapterInteractor adapterInteractor) {
     super(observeScheduler, subscribeScheduler);
@@ -71,7 +70,7 @@ public class TriggerListAdapterPresenter
         });
   }
 
-  private void unsubUpdateSubscription() {
+  void unsubUpdateSubscription() {
     if (!updateSubscription.isUnsubscribed()) {
       updateSubscription.unsubscribe();
     }

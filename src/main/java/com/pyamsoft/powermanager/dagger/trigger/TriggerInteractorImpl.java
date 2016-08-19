@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 final class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements TriggerInteractor {
 
-  @Inject public TriggerInteractorImpl(Context context) {
+  @Inject TriggerInteractorImpl(Context context) {
     super(context);
   }
 

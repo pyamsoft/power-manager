@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import rx.Observable;
 
 // KLUDGE needs a better name

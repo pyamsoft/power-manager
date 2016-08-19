@@ -23,13 +23,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 abstract class StateContentObserver<V> extends ContentObserver implements InterestObserver<V> {
 
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
+  @NonNull private WeakReference<V> weakView = new WeakReference<>(null);
   private Uri uri;
   private boolean registered;
 
@@ -85,6 +88,15 @@ abstract class StateContentObserver<V> extends ContentObserver implements Intere
   @Override public final void onChange(boolean selfChange, Uri uri) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> onChange(uri));
+  }
+
+  @CheckResult @Nullable protected final V getView() {
+    return weakView.get();
+  }
+
+  @Override public final void setView(@NonNull V view) {
+    weakView.clear();
+    weakView = new WeakReference<>(view);
   }
 
   abstract void onChange(Uri uri);

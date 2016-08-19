@@ -24,7 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerData;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;

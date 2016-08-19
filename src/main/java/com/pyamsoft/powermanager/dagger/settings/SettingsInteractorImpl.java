@@ -30,7 +30,7 @@ final class SettingsInteractorImpl implements SettingsInteractor {
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Context appContext;
 
-  @Inject public SettingsInteractorImpl(final @NonNull Context context,
+  @Inject SettingsInteractorImpl(final @NonNull Context context,
       final @NonNull PowerManagerPreferences preferences) {
     appContext = context.getApplicationContext();
     this.preferences = preferences;

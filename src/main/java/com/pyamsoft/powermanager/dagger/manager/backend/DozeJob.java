@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager.backend;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Params;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import javax.inject.Named;

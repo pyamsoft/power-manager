@@ -35,6 +35,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.FabColorBus;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.model.FabColorEvent;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;

@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
 
-public final class ManagerSync extends BaseManager {
+public final class ManagerBluetooth extends WearableManager {
 
-  @NonNull private final ManagerInteractor interactor;
+  @NonNull private final WearableManagerInteractor interactor;
 
-  @Inject public ManagerSync(@NonNull @Named("sync") ManagerInteractor interactor,
+  @Inject ManagerBluetooth(@NonNull @Named("bluetooth") WearableManagerInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
-    super(interactor, mainScheduler, ioScheduler);
-    Timber.d("new ManagerSync");
+    super(interactor, ioScheduler, mainScheduler);
+    Timber.d("new ManagerBluetooth");
     this.interactor = interactor;
   }
 

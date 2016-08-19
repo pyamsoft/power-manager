@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.settings;
+package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.settings.SettingsInteractor;
+import com.pyamsoft.powermanager.app.settings.ConfirmationDialog;
 import com.pyamsoft.pydroid.base.Presenter;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,7 +36,7 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
   @NonNull private Subscription confirmBusSubscription = Subscriptions.empty();
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
-  @Inject public SettingsPresenter(@NonNull SettingsInteractor interactor,
+  @Inject SettingsPresenter(@NonNull SettingsInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     this.interactor = interactor;
@@ -59,27 +59,27 @@ public final class SettingsPresenter extends Presenter<SettingsPresenter.MainSet
     unsubscribeConfirm();
   }
 
-  public final void clearAll() {
+  public void clearAll() {
     getView().showConfirmDialog(CONFIRM_ALL);
   }
 
-  public final void clearDatabase() {
+  public void clearDatabase() {
     getView().showConfirmDialog(CONFIRM_DATABASE);
   }
 
-  private void unsubscribeConfirm() {
+  void unsubscribeConfirm() {
     if (!confirmedSubscription.isUnsubscribed()) {
       confirmedSubscription.unsubscribe();
     }
   }
 
-  private void unregisterFromConfirmEventBus() {
+  void unregisterFromConfirmEventBus() {
     if (!confirmBusSubscription.isUnsubscribed()) {
       confirmBusSubscription.unsubscribe();
     }
   }
 
-  private void registerOnConfirmEventBus() {
+  void registerOnConfirmEventBus() {
     unregisterFromConfirmEventBus();
     confirmBusSubscription =
         ConfirmationDialog.Bus.get().register().subscribe(confirmationEvent -> {

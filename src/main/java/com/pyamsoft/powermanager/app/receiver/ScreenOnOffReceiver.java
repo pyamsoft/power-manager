@@ -25,11 +25,11 @@ import android.os.BatteryManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerBluetooth;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerData;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerSync;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerWifi;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerBluetooth;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerData;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerSync;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerWifi;
 import javax.inject.Inject;
 import timber.log.Timber;
 

@@ -27,8 +27,6 @@ import timber.log.Timber;
 
 public class BluetoothStateObserver extends StateContentObserver<BluetoothStateObserver.View> {
 
-  @Nullable private View view;
-
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
 
@@ -42,11 +40,9 @@ public class BluetoothStateObserver extends StateContentObserver<BluetoothStateO
     setUri(uri);
   }
 
-  public final void setView(@NonNull View view) {
-    this.view = view;
-  }
 
   @Override void onChange(Uri uri) {
+    final View view = getView();
     if (view != null) {
       Timber.d("onChange. URI: %s", uri);
       if (is()) {

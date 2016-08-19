@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.backend;
+package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -25,9 +25,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.app.manager.backend.Manager;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDozeInteractor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,7 +49,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
   @NonNull private Subscription subscription = Subscriptions.empty();
   @Nullable private SensorFixReceiver sensorFixReceiver;
 
-  @Inject public ManagerDoze(@NonNull ManagerDozeInteractor interactor,
+  @Inject ManagerDoze(@NonNull ManagerDozeInteractor interactor,
       @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull @Named("main") Scheduler mainScheduler) {
     super(mainScheduler, ioScheduler);
@@ -132,7 +132,7 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     return isDozeEnabled() && interactor.isManageSensors().toBlocking().first();
   }
 
-  private void enable(boolean forceDoze) {
+  void enable(boolean forceDoze) {
     unsubSubscription();
     subscription = baseObservable().flatMap(aBoolean -> {
       if (!isDozeAvailable()) {
@@ -152,13 +152,13 @@ public class ManagerDoze extends SchedulerPresenter<ManagerDoze.DozeView> implem
     enable(true);
   }
 
-  private void unsubSubscription() {
+  void unsubSubscription() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
   }
 
-  private void disable(boolean charging, boolean forceDoze) {
+  void disable(boolean charging, boolean forceDoze) {
     unsubSubscription();
     final Observable<Long> delayObservable =
         baseObservable().flatMap(aBoolean -> interactor.isDozeIgnoreCharging()).filter(ignore -> {

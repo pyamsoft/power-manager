@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
@@ -26,14 +25,13 @@ import javax.inject.Inject;
 public class BluetoothManageObserver
     extends ManagePreferenceObserver<BluetoothManageObserver.View> {
 
-  @Nullable private View view;
-
-  @Inject BluetoothManageObserver(@NonNull Context context, @NonNull
-  PowerManagerPreferences preferences) {
+  @Inject BluetoothManageObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_bluetooth_key));
   }
 
   @Override void onChange() {
+    final View view = getView();
     if (view != null) {
       if (is()) {
         view.onBluetoothManageEnabled();
@@ -41,10 +39,6 @@ public class BluetoothManageObserver
         view.onBluetoothManageDisabled();
       }
     }
-  }
-
-  @Override public void setView(@NonNull View view) {
-    this.view = view;
   }
 
   public interface View {

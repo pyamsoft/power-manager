@@ -21,14 +21,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class DataStateObserver extends StateContentObserver<DataStateObserver.View> {
 
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
-  @Nullable private View view;
 
   @Inject DataStateObserver(@NonNull Context context) {
     super(context);
@@ -42,11 +40,8 @@ public class DataStateObserver extends StateContentObserver<DataStateObserver.Vi
     setUri(uri);
   }
 
-  public final void setView(@NonNull View view) {
-    this.view = view;
-  }
-
   @Override void onChange(Uri uri) {
+    final View view = getView();
     if (view != null) {
       Timber.d("onChange. URI: %s", uri);
       if (is()) {

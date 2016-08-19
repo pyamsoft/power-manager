@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import com.pyamsoft.pydroid.tool.RxBus;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,7 +32,7 @@ public class FullNotificationPresenter
 
   @NonNull private Subscription dismissSubscription = Subscriptions.empty();
 
-  @Inject public FullNotificationPresenter(@NonNull @Named("main") Scheduler observeScheduler,
+  @Inject FullNotificationPresenter(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
   }
@@ -47,7 +47,7 @@ public class FullNotificationPresenter
     unregisterFromDismissBus();
   }
 
-  private void registerOnDismissBus() {
+  void registerOnDismissBus() {
     dismissSubscription = Bus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
@@ -60,7 +60,7 @@ public class FullNotificationPresenter
         });
   }
 
-  private void unregisterFromDismissBus() {
+  void unregisterFromDismissBus() {
     if (!dismissSubscription.isUnsubscribed()) {
       dismissSubscription.unsubscribe();
     }

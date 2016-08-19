@@ -25,7 +25,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.manager.backend.ManagerDoze;
+import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
 import javax.inject.Inject;
 import timber.log.Timber;
 

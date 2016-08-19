@@ -18,10 +18,13 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 abstract class ManagePreferenceObserver<V>
@@ -34,6 +37,7 @@ abstract class ManagePreferenceObserver<V>
   @NonNull private final String KEY_WEAR;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
+  @NonNull private WeakReference<V> weakView = new WeakReference<>(null);
   private boolean registered;
 
   ManagePreferenceObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
@@ -48,8 +52,7 @@ abstract class ManagePreferenceObserver<V>
     KEY_WEAR = context.getString(R.string.manage_wearable_key);
   }
 
-  @Override
-  public final void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
       onChange();
@@ -95,6 +98,15 @@ abstract class ManagePreferenceObserver<V>
     }
 
     return result;
+  }
+
+  @CheckResult @Nullable protected final V getView() {
+    return weakView.get();
+  }
+
+  @Override public final void setView(@NonNull V view) {
+    weakView.clear();
+    weakView = new WeakReference<>(view);
   }
 
   abstract void onChange();

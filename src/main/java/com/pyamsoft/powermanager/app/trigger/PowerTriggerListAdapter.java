@@ -28,6 +28,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;

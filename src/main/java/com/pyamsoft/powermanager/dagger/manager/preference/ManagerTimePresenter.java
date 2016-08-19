@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager.preference;
+package com.pyamsoft.powermanager.dagger.manager.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
+import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
 import javax.inject.Named;
 import rx.Scheduler;
 import timber.log.Timber;
@@ -30,10 +30,10 @@ public abstract class ManagerTimePresenter
     super(observeScheduler, subscribeScheduler);
   }
 
-  protected abstract void updateTime(@NonNull String key, long time, boolean updateVisual,
+  public abstract void updateTime(@NonNull String key, long time, boolean updateVisual,
       boolean updateSummary);
 
-  protected abstract void setTimeFromPreference(@NonNull String key);
+  public abstract void setTimeFromPreference(@NonNull String key);
 
   protected void updateTime(long time, boolean updateVisual, boolean updateSummary) {
     if (updateVisual) {
