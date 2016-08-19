@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.FabColorEvent;
-import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.tool.RxBus;
 
 public class FabColorBus extends RxBus<FabColorEvent> {
 

@@ -24,8 +24,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.model.DeleteTriggerEvent;
-import com.pyamsoft.powermanager.model.RxBus;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.tool.RxBus;
 import timber.log.Timber;
 
 public class DeleteTriggerDialog extends DialogFragment {

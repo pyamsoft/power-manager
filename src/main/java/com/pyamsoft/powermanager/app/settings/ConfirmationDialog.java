@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.model.ConfirmationEvent;
-import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.tool.RxBus;
 
 public class ConfirmationDialog extends DialogFragment {
   @NonNull private static final String WHICH = "which_type";

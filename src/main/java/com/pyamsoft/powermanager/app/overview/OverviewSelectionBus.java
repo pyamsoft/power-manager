@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.overview;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.tool.RxBus;
 
 public class OverviewSelectionBus extends RxBus<OverviewSelectionBus.OverviewSelectionEvent> {
 

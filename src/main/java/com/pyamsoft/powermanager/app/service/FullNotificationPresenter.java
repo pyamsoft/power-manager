@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.SchedulerPresenter;
-import com.pyamsoft.powermanager.model.RxBus;
+import com.pyamsoft.pydroid.tool.RxBus;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
