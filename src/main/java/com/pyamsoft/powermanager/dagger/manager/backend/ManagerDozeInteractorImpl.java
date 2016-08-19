@@ -17,6 +17,8 @@
 package com.pyamsoft.powermanager.dagger.manager.backend;
 
 import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -24,6 +26,7 @@ import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
     implements ManagerDozeInteractor {
@@ -45,7 +48,19 @@ public class ManagerDozeInteractorImpl extends ManagerInteractorDozeBase
   }
 
   @NonNull @Override public Observable<Boolean> isManageSensors() {
-    return Observable.defer(() -> Observable.just(getPreferences().isManageSensors()));
+    return Observable.defer(() -> {
+      final boolean manage = getPreferences().isManageSensors();
+
+      final boolean hasPermission;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        Timber.d("Check that we have write permission on Marshmallow");
+        hasPermission = Settings.System.canWrite(appContext);
+      } else {
+        Timber.d("Write permission is auto-granted on <M");
+        hasPermission = true;
+      }
+      return Observable.just(manage && hasPermission);
+    });
   }
 
   @NonNull @Override public Observable<SensorFixReceiver> createSensorFixReceiver() {

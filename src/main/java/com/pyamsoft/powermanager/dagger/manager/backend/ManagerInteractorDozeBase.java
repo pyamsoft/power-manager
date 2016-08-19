@@ -46,6 +46,11 @@ abstract class ManagerInteractorDozeBase implements ManagerInteractorDoze {
     return Observable.defer(() -> Observable.just(preferences.isDozeEnabled()));
   }
 
+  @NonNull @Override public Observable<Boolean> isDozeExclusive() {
+    // TODO replace with setting
+    return Observable.defer(() -> Observable.just(true));
+  }
+
   @NonNull @Override public Observable<Boolean> hasDumpSysPermission() {
     return Observable.defer(() -> Observable.just(ManagerDoze.checkDumpsysPermission(appContext)));
   }

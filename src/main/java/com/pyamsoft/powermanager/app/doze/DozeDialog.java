@@ -17,7 +17,10 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -26,10 +29,20 @@ public class DozeDialog extends DialogFragment {
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity()).setCancelable(false)
-        .setPositiveButton("Okay", (dialogInterface, i) -> {
+        .setPositiveButton("Take Me", (dialogInterface, i) -> {
+          dismiss();
+          if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            final Intent writeSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            writeSettings.setData(Uri.fromParts("package", getContext().getPackageName(), null));
+            writeSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            writeSettings.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            getActivity().startActivity(writeSettings);
+          }
+        })
+        .setNeutralButton("Cancel", (dialogInterface, i) -> {
           dismiss();
         })
-        .setTitle("Agressive Doze on Marshmallow")
+        .setTitle("Aggressive Doze on Marshmallow")
         .setMessage(
             "Doze mode is a feature on Android Marshmallow that allows the device to enter a power saving mode after 30 minutes."
                 + "\n"
@@ -41,7 +54,11 @@ public class DozeDialog extends DialogFragment {
                 + "\n\n"
                 + "This will grant Power Manager the ability to call the dumpsys command which is critical to enabling Doze mode"
                 + "\n"
-                + "This commands the Android package manager to grant the DUMP permission to Power Manager so that it may force Doze mode")
+                + "This commands the Android package manager to grant the DUMP permission to Power Manager so that it may force Doze mode."
+                + "\n\n"
+                + "If you wish to manage device sensors, you will also need to grant the special WRITE_SETTINGS permission to control the"
+                + "\n"
+                + "brightness and rotation automatically.")
         .create();
   }
 }
