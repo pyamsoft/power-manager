@@ -16,37 +16,31 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
-import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
-import javax.inject.Inject;
+import android.support.annotation.Nullable;
 import timber.log.Timber;
 
-@TargetApi(Build.VERSION_CODES.M) public class DozeReceiver extends BroadcastReceiver {
+public class DozeReceiver extends ChargingStateAwareReceiver {
 
   @NonNull private final Context appContext;
-  @NonNull private final IntentFilter filter =
-      new IntentFilter(android.os.PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-  @Inject ManagerDoze managerDoze;
+  @Nullable private final IntentFilter filter;
   private boolean registered = false;
 
   public DozeReceiver(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
-    Singleton.Dagger.with(appContext).plusManager().inject(this);
-
-    if (!managerDoze.isDozeAvailable()) {
-      throw new RuntimeException("Doze not available!");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      filter = new IntentFilter(android.os.PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
+    } else {
+      filter = null;
     }
   }
 
-  @CheckResult public static boolean isDozeMode(Context context) {
+  @CheckResult static boolean isDozeMode(Context context) {
     final android.os.PowerManager pm = (android.os.PowerManager) context.getApplicationContext()
         .getSystemService(Context.POWER_SERVICE);
     boolean doze;
@@ -62,31 +56,36 @@ import timber.log.Timber;
   }
 
   @Override public void onReceive(Context context, Intent intent) {
-    Timber.d("onReceive: Doze change event");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      Timber.d("onReceive: Doze change event");
 
-    final boolean charging = ScreenOnOffReceiver.getCurrentChargingState(context);
-    final boolean state = isDozeMode(context);
-    Timber.d("Doze state: %s", state);
-    managerDoze.handleDozeStateChange(state, charging);
+      final boolean charging = getCurrentChargingState(context);
+      final boolean state = isDozeMode(context);
+      Timber.d("Doze state: %s", state);
+    }
   }
 
   public void register() {
-    if (!registered) {
-      Timber.d("Register DozeReceiver");
-      registered = true;
-      appContext.registerReceiver(this, filter);
-    } else {
-      Timber.e("Already registered");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (!registered) {
+        Timber.d("Register DozeReceiver");
+        registered = true;
+        appContext.registerReceiver(this, filter);
+      } else {
+        Timber.e("Already registered");
+      }
     }
   }
 
   public void unregister() {
-    if (registered) {
-      Timber.d("Unregister DozeReceiver");
-      registered = false;
-      appContext.unregisterReceiver(this);
-    } else {
-      Timber.e("Already registered");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      if (registered) {
+        Timber.d("Unregister DozeReceiver");
+        registered = false;
+        appContext.unregisterReceiver(this);
+      } else {
+        Timber.e("Already registered");
+      }
     }
   }
 }

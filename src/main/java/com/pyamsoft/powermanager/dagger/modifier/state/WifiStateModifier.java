@@ -33,14 +33,14 @@ public class WifiStateModifier extends StateModifier {
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
-  @Override void mainThreadSet() {
+  @Override void mainThreadSet(@NonNull Context context) {
     if (wifiManager != null) {
       Timber.d("setWifiEnabled: true");
       wifiManager.setWifiEnabled(true);
     }
   }
 
-  @Override void mainThreadUnset() {
+  @Override void mainThreadUnset(@NonNull Context context) {
     if (wifiManager != null) {
       Timber.d("setWifiEnabled: false");
       wifiManager.setWifiEnabled(false);

@@ -28,12 +28,12 @@ public class SyncStateModifier extends StateModifier {
     super(context);
   }
 
-  @Override void mainThreadSet() {
+  @Override void mainThreadSet(@NonNull Context context) {
     Timber.d("Set sync: true");
     ContentResolver.setMasterSyncAutomatically(true);
   }
 
-  @Override void mainThreadUnset() {
+  @Override void mainThreadUnset(@NonNull Context context) {
     Timber.d("Set sync: false");
     ContentResolver.setMasterSyncAutomatically(false);
   }

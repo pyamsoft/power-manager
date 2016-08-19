@@ -28,11 +28,13 @@ public class BluetoothManageModifier extends ManageModifier {
     super(context, preferences);
   }
 
-  @Override void mainThreadSet() {
-    getPreferences().setBluetoothManaged(true);
+  @Override void mainThreadSet(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setBluetoothManaged(true);
   }
 
-  @Override void mainThreadUnset() {
-    getPreferences().setBluetoothManaged(false);
+  @Override void mainThreadUnset(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setBluetoothManaged(false);
   }
 }

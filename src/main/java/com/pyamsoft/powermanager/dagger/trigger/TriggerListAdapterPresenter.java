@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
+import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import javax.inject.Named;

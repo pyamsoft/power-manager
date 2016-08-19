@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
+import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

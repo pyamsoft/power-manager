@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.base.SchedulerPresenter;
+import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerInteractor;
 import javax.inject.Inject;
 import javax.inject.Named;

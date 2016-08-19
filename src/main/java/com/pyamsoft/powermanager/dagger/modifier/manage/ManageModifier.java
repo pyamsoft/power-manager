@@ -40,18 +40,10 @@ abstract class ManageModifier implements InterestModifier {
     this.service = new Intent(appContext, ForegroundService.class);
   }
 
-  @NonNull @CheckResult final PowerManagerPreferences getPreferences() {
-    return preferences;
-  }
-
-  @NonNull @CheckResult final Context getAppContext() {
-    return appContext;
-  }
-
   @Override public final void set() {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
-      mainThreadSet();
+      mainThreadSet(appContext, preferences);
 
       // The notification will be notified when a manage state changes
       appContext.startService(service);
@@ -61,7 +53,7 @@ abstract class ManageModifier implements InterestModifier {
   @Override public final void unset() {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
-      mainThreadUnset();
+      mainThreadUnset(appContext, preferences);
 
       // The notification will be notified when a manage state changes
       appContext.startService(service);
@@ -69,8 +61,8 @@ abstract class ManageModifier implements InterestModifier {
   }
 
 
-  abstract void mainThreadSet();
+  abstract void mainThreadSet(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 
-  abstract void mainThreadUnset();
+  abstract void mainThreadUnset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 }
 

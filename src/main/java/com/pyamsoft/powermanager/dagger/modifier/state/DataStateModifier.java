@@ -16,22 +16,18 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerData;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class DataStateModifier extends StateModifier {
 
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
   @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
 
@@ -79,26 +75,15 @@ public class DataStateModifier extends StateModifier {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledReflection(enabled);
     } else {
-      setMobileDataEnabledSettings(enabled);
+      Timber.e("Cannot set mobile data on Lollipop and up");
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  private void setMobileDataEnabledSettings(boolean enabled) {
-    if (ManagerData.checkWriteSettingsPermission(getAppContext())) {
-      Timber.d("setMobileDataEnabledSettings: %s", enabled);
-      Settings.Global.putInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA,
-          enabled ? 1 : 0);
-    } else {
-      Timber.e("Missing WRITE_SECURE_SETTINGS permission");
-    }
-  }
-
-  @Override void mainThreadSet() {
+  @Override void mainThreadSet(@NonNull Context context) {
     setMobileDataEnabled(true);
   }
 
-  @Override void mainThreadUnset() {
+  @Override void mainThreadUnset(@NonNull Context context) {
     setMobileDataEnabled(false);
   }
 }

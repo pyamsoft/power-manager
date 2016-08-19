@@ -29,11 +29,11 @@ public class BluetoothStateModifier extends StateModifier {
     wrapper = new BluetoothAdapterWrapper(context);
   }
 
-  @Override void mainThreadSet() {
+  @Override void mainThreadSet(@NonNull Context context) {
     wrapper.enable();
   }
 
-  @Override void mainThreadUnset() {
+  @Override void mainThreadUnset(@NonNull Context context) {
     wrapper.disable();
   }
 }

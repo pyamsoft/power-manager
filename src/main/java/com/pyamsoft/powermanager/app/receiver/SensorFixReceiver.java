@@ -41,7 +41,7 @@ public class SensorFixReceiver {
     this.rotateFixReceiver = new RotateFixReceiver(appContext);
   }
 
-  @CheckResult private static boolean hasWritePermission(@NonNull Context context) {
+  @CheckResult static boolean hasWritePermission(@NonNull Context context) {
     boolean hasRuntimePermission;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       Timber.d("Runtime permissions before M are auto granted");

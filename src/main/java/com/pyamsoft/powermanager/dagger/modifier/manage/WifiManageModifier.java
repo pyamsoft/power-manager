@@ -28,11 +28,13 @@ public class WifiManageModifier extends ManageModifier {
     super(context, preferences);
   }
 
-  @Override void mainThreadSet() {
-    getPreferences().setWifiManaged(true);
+  @Override void mainThreadSet(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setWifiManaged(true);
   }
 
-  @Override void mainThreadUnset() {
-    getPreferences().setWifiManaged(false);
+  @Override void mainThreadUnset(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setWifiManaged(false);
   }
 }

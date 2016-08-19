@@ -28,11 +28,13 @@ public class SyncManageModifier extends ManageModifier {
     super(context, preferences);
   }
 
-  @Override void mainThreadSet() {
-    getPreferences().setSyncManaged(true);
+  @Override void mainThreadSet(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setSyncManaged(true);
   }
 
-  @Override void mainThreadUnset() {
-    getPreferences().setSyncManaged(false);
+  @Override void mainThreadUnset(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    preferences.setSyncManaged(false);
   }
 }

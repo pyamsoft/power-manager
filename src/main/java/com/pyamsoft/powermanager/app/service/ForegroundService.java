@@ -24,9 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.receiver.DozeReceiver;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.powermanager.dagger.manager.backend.ManagerDoze;
 import com.pyamsoft.powermanager.dagger.service.ForegroundPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import javax.inject.Inject;
@@ -42,9 +40,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @NonNull public static final String EXTRA_NOTIFICATION = "notification";
   private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
-  @Inject ManagerDoze managerDoze;
   private ScreenOnOffReceiver screenOnOffReceiver;
-  private DozeReceiver dozeReceiver;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -53,16 +49,8 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @Override public void onCreate() {
     super.onCreate();
 
-    Singleton.Dagger.with(this).plusManager().plusForeground().inject(this);
     screenOnOffReceiver = new ScreenOnOffReceiver(this);
     screenOnOffReceiver.register();
-
-    if (managerDoze.isDozeAvailable()) {
-      dozeReceiver = new DozeReceiver(this);
-      dozeReceiver.register();
-    } else {
-      dozeReceiver = null;
-    }
 
     presenter.bindView(this);
 
@@ -80,10 +68,6 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
         .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
 
     screenOnOffReceiver.unregister();
-
-    if (dozeReceiver != null) {
-      dozeReceiver.unregister();
-    }
 
     presenter.unbindView();
 

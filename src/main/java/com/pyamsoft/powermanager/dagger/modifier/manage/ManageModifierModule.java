@@ -46,4 +46,9 @@ import javax.inject.Named;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageModifier(context, preferences);
   }
+
+  @ActivityScope @Named("wear") @Provides InterestModifier provideWearModifier(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new WearableManageModifier(context, preferences);
+  }
 }

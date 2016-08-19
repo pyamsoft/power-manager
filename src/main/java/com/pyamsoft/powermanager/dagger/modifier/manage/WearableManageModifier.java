@@ -21,20 +21,20 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 
-public class DataManageModifier extends ManageModifier {
+public class WearableManageModifier extends ManageModifier {
 
-  @Inject DataManageModifier(@NonNull Context context,
+  @Inject WearableManageModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences);
   }
 
   @Override void mainThreadSet(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    preferences.setDataManaged(true);
+    preferences.setWearableManaged(true);
   }
 
   @Override void mainThreadUnset(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    preferences.setDataManaged(false);
+    preferences.setWearableManaged(false);
   }
 }
