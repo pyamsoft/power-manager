@@ -22,6 +22,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import rx.Scheduler;
@@ -38,9 +39,9 @@ class DataStateModifier extends StateModifier {
 
   @NonNull private final ConnectivityManager connectivityManager;
 
-  @Inject DataStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
-    super(context, subscribeScheduler, observeScheduler);
+  @Inject DataStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    super(context, preferences, subscribeScheduler, observeScheduler);
     connectivityManager = (ConnectivityManager) context.getApplicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
@@ -81,11 +82,11 @@ class DataStateModifier extends StateModifier {
     }
   }
 
-  @Override void set(@NonNull Context context) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     setMobileDataEnabled(true);
   }
 
-  @Override void unset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     setMobileDataEnabled(false);
   }
 }

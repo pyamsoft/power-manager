@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import rx.Scheduler;
 
@@ -26,17 +27,17 @@ class BluetoothStateModifier extends StateModifier {
   @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
-      @NonNull Scheduler subscribeScheduler,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observeScheduler) {
-    super(context, subscribeScheduler, observeScheduler);
+    super(context, preferences, subscribeScheduler, observeScheduler);
     wrapper = new BluetoothAdapterWrapper(context);
   }
 
-  @Override void set(@NonNull Context context) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     wrapper.enable();
   }
 
-  @Override void unset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     wrapper.disable();
   }
 }

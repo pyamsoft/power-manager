@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import dagger.Module;
 import dagger.Provides;
@@ -28,32 +29,37 @@ import rx.Scheduler;
 @Module public class StateModifierModule {
 
   @Singleton @Named("mod_wifi_state") @Provides InterestModifier provideWifiModifier(
-      @NonNull Context context, @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new WifiStateModifier(context, subscribeScheduler, observeScheduler);
+    return new WifiStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_data_state") @Provides InterestModifier provideDataModifier(
-      @NonNull Context context, @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new DataStateModifier(context, subscribeScheduler, observeScheduler);
+    return new DataStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides InterestModifier provideBluetoothModifier(
-      @NonNull Context context, @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new BluetoothStateModifier(context, subscribeScheduler, observeScheduler);
+    return new BluetoothStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_sync_state") @Provides InterestModifier provideSyncModifier(
-      @NonNull Context context, @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new SyncStateModifier(context, subscribeScheduler, observeScheduler);
+    return new SyncStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_doze_state") @Provides InterestModifier provideDozeModifier(
-      @NonNull Context context, @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new DozeStateModifier(context, subscribeScheduler, observeScheduler);
+    return new DozeStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 }

@@ -19,23 +19,24 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import rx.Scheduler;
 import timber.log.Timber;
 
 class SyncStateModifier extends StateModifier {
 
-  @Inject SyncStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
-    super(context, subscribeScheduler, observeScheduler);
+  @Inject SyncStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void set(@NonNull Context context) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     Timber.d("Set sync: true");
     ContentResolver.setMasterSyncAutomatically(true);
   }
 
-  @Override void unset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     Timber.d("Set sync: false");
     ContentResolver.setMasterSyncAutomatically(false);
   }

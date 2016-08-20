@@ -20,6 +20,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import rx.Scheduler;
 import timber.log.Timber;
@@ -28,21 +29,21 @@ class WifiStateModifier extends StateModifier {
 
   @Nullable private final WifiManager wifiManager;
 
-  @Inject WifiStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
-    super(context, subscribeScheduler, observeScheduler);
+  @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    super(context, preferences, subscribeScheduler, observeScheduler);
     wifiManager =
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
-  @Override void set(@NonNull Context context) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     if (wifiManager != null) {
       Timber.d("setWifiEnabled: true");
       wifiManager.setWifiEnabled(true);
     }
   }
 
-  @Override void unset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     if (wifiManager != null) {
       Timber.d("setWifiEnabled: false");
       wifiManager.setWifiEnabled(false);

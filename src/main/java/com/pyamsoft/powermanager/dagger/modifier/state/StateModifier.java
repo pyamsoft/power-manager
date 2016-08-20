@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,12 +29,14 @@ import timber.log.Timber;
 abstract class StateModifier implements InterestModifier {
 
   @NonNull private final Context appContext;
+  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Scheduler subscribeScheduler;
   @NonNull private final Scheduler observeScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
-  StateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
+  StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    this.preferences = preferences;
     this.appContext = context.getApplicationContext();
     this.subscribeScheduler = subscribeScheduler;
     this.observeScheduler = observeScheduler;
@@ -49,7 +52,7 @@ abstract class StateModifier implements InterestModifier {
     unsub();
     subscription = Observable.defer(() -> {
       Timber.d("Set on IO thread");
-      set(appContext);
+      set(appContext, preferences);
       return Observable.just(true);
     })
         .subscribeOn(subscribeScheduler)
@@ -62,7 +65,7 @@ abstract class StateModifier implements InterestModifier {
     unsub();
     subscription = Observable.defer(() -> {
       Timber.d("Unset on IO thread");
-      unset(appContext);
+      unset(appContext, preferences);
       return Observable.just(true);
     })
         .subscribeOn(subscribeScheduler)
@@ -71,7 +74,7 @@ abstract class StateModifier implements InterestModifier {
             throwable -> Timber.e(throwable, "onError unset"), this::unsub);
   }
 
-  abstract void set(@NonNull Context context);
+  abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 
-  abstract void unset(@NonNull Context context);
+  abstract void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 }
