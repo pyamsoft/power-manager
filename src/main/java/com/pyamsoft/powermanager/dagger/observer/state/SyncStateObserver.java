@@ -37,6 +37,7 @@ class SyncStateObserver implements InterestObserver {
   @Nullable private UnsetCallback unsetCallback;
 
   @Inject SyncStateObserver() {
+    Timber.d("New StateObserver for Sync");
     handler = new Handler(Looper.getMainLooper());
     registered = false;
     enabled = false;
