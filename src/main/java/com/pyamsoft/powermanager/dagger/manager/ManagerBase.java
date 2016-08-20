@@ -16,16 +16,23 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-class ManagerBase implements Manager {
+abstract class ManagerBase implements Manager {
 
   @NonNull private final ManagerInteractor interactor;
   @NonNull private final Scheduler subscribeScheduler;
   @NonNull private final Scheduler observerScheduler;
+  @NonNull private Subscription setSubscription = Subscriptions.empty();
+  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
 
   @Inject ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {
@@ -34,11 +41,84 @@ class ManagerBase implements Manager {
     this.observerScheduler = observerScheduler;
   }
 
-  @Override public void queueSet() {
-
+  void unsubSet() {
+    if (!setSubscription.isUnsubscribed()) {
+      setSubscription.unsubscribe();
+    }
   }
 
-  @Override public void queueUnset() {
+  void unsubUnset() {
+    if (!unsetSubscription.isUnsubscribed()) {
+      unsetSubscription.unsubscribe();
+    }
+  }
 
+  @CheckResult @NonNull Observable<Boolean> baseObservable() {
+    return interactor.cancelJobs().flatMap(cancelled -> {
+      if (cancelled) {
+        Timber.d("Is Managed?");
+        return interactor.isManaged();
+      } else {
+        Timber.w("Cancel jobs failed, return empty");
+        return Observable.empty();
+      }
+    });
+  }
+
+  @Override public void queueSet() {
+    unsubSet();
+    baseObservable().flatMap(managed -> {
+      if (managed) {
+        Timber.d("Is original state enabled?");
+        return interactor.isOriginalStateEnabled();
+      } else {
+        Timber.w("Is not managed, return empty");
+        return Observable.empty();
+      }
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
+      // Technically can ignore this as if we are here we are non-empty
+      // If we are non empty it means we pass the test
+      if (originalState) {
+        interactor.queueEnableJob();
+      }
+    }, throwable -> Timber.e(throwable, "onError queueSet"), this::unsubSet);
+  }
+
+  @Override public void queueUnset(boolean deviceCharging) {
+    unsubUnset();
+    baseObservable().flatMap(managed -> {
+      if (managed) {
+        Timber.d("Is ignore while charging?");
+        return interactor.isIgnoreWhileCharging();
+      } else {
+        Timber.w("Is not managed, return empty");
+        return Observable.empty();
+      }
+    }).map(ignoreWhileCharging -> {
+      Timber.d("Is device currently charging?");
+      return ignoreWhileCharging && deviceCharging;
+    }).flatMap(ignore -> {
+      if (ignore) {
+        Timber.w("Set to ignore on charging, and device is charging, return empty");
+        return Observable.empty();
+      } else {
+        Timber.d("Is not ignored while charging, or is not charging");
+        return interactor.isEnabled();
+      }
+    }).map(enabled -> {
+      Timber.d("Set original state enabled: %s", enabled);
+      interactor.setOriginalStateEnabled(enabled);
+      return enabled;
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(safelyIgnore -> {
+      // We can ignore the actual value, if we are here it means we are non-empty
+      // If we are non empty it means we pass the test
+      interactor.queueDisableJob();
+    }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
+  }
+
+  @Override public void cleanup() {
+    interactor.destroy();
+    unsubSet();
+    unsubUnset();
   }
 }

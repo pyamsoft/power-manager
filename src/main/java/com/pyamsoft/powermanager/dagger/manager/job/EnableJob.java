@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager.job;
 
-public interface Manager {
+import android.support.annotation.NonNull;
 
-  void queueSet();
+abstract class EnableJob extends ManageJob {
 
-  void queueUnset(boolean deviceCharging);
-
-  void cleanup();
+  protected EnableJob(@NonNull String tag, long delayInSeconds, boolean periodic,
+      long periodicEnableInSeconds, long periodicDisableInSeconds) {
+    super(tag, JobType.ENABLE, delayInSeconds, periodic, periodicEnableInSeconds,
+        periodicDisableInSeconds);
+  }
 }

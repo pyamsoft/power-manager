@@ -16,5 +16,27 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
+
 public interface ManagerInteractor {
+
+  void destroy();
+
+  @NonNull @CheckResult Observable<Boolean> cancelJobs();
+
+  @NonNull @CheckResult Observable<Boolean> isManaged();
+
+  @NonNull @CheckResult Observable<Boolean> isIgnoreWhileCharging();
+
+  @NonNull @CheckResult Observable<Boolean> isOriginalStateEnabled();
+
+  @NonNull @CheckResult Observable<Boolean> isEnabled();
+
+  void setOriginalStateEnabled(boolean enabled);
+
+  void queueEnableJob();
+
+  void queueDisableJob();
 }
