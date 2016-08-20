@@ -109,10 +109,11 @@ abstract class ManagerBase implements Manager {
       Timber.d("Set original state enabled: %s", enabled);
       interactor.setOriginalStateEnabled(enabled);
       return enabled;
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(safelyIgnore -> {
-      // We can ignore the actual value, if we are here it means we are non-empty
-      // If we are non empty it means we pass the test
-      interactor.queueDisableJob();
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(isEnabled -> {
+      // Only queue a disable job if the radio begins the cycle enabled
+      if (isEnabled) {
+        interactor.queueDisableJob();
+      }
     }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
   }
 
