@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.Manager;
-import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -88,6 +87,18 @@ abstract class ManagerBase implements Manager {
     unsubUnset();
     baseObservable().flatMap(managed -> {
       if (managed) {
+        Timber.d("Is original state enabled?");
+        return interactor.isEnabled();
+      } else {
+        Timber.w("Is not managed, return empty");
+        return Observable.empty();
+      }
+    }).map(enabled -> {
+      Timber.d("Set original state enabled: %s", enabled);
+      interactor.setOriginalStateEnabled(enabled);
+      return enabled;
+    }).flatMap(enabled -> {
+      if (enabled) {
         Timber.d("Is ignore while charging?");
         return interactor.isIgnoreWhileCharging();
       } else {
@@ -97,21 +108,9 @@ abstract class ManagerBase implements Manager {
     }).map(ignoreWhileCharging -> {
       Timber.d("Is device currently charging?");
       return ignoreWhileCharging && deviceCharging;
-    }).flatMap(ignore -> {
-      if (ignore) {
-        Timber.w("Set to ignore on charging, and device is charging, return empty");
-        return Observable.empty();
-      } else {
-        Timber.d("Is not ignored while charging, or is not charging");
-        return interactor.isEnabled();
-      }
-    }).map(enabled -> {
-      Timber.d("Set original state enabled: %s", enabled);
-      interactor.setOriginalStateEnabled(enabled);
-      return enabled;
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(isEnabled -> {
-      // Only queue a disable job if the radio begins the cycle enabled
-      if (isEnabled) {
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(ignore -> {
+      // Only queue a disable job if the radio is not ignored
+      if (!ignore) {
         interactor.queueDisableJob();
       }
     }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
