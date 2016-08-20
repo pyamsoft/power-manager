@@ -36,13 +36,13 @@ public abstract class WifiManageJob extends ManageJob {
 
   @NonNull @Override protected Job createPeriodicDisableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new WifiDisableJob(periodicDisableInSeconds, true, periodicEnableInSeconds,
+    return new WifiDisableJob(periodicDisableInSeconds * 1000L, true, periodicEnableInSeconds,
         periodicDisableInSeconds);
   }
 
   @NonNull @Override protected Job createPeriodicEnableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new WifiEnableJob(periodicEnableInSeconds, true, periodicEnableInSeconds,
+    return new WifiEnableJob(periodicEnableInSeconds * 1000L, true, periodicEnableInSeconds,
         periodicDisableInSeconds);
   }
 
@@ -51,9 +51,10 @@ public abstract class WifiManageJob extends ManageJob {
     @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
     @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
 
-    public WifiEnableJob(long delayTime, boolean periodic, long periodicEnableInSeconds,
+    public WifiEnableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
-      super(JobType.ENABLE, delayTime, periodic, periodicEnableInSeconds, periodicDisableInSeconds);
+      super(JobType.ENABLE, delayTimeInMillis, periodic, periodicEnableInSeconds,
+          periodicDisableInSeconds);
     }
 
     @Override public void onAdded() {
@@ -73,9 +74,9 @@ public abstract class WifiManageJob extends ManageJob {
     @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
     @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
 
-    public WifiDisableJob(long delayTime, boolean periodic, long periodicEnableInSeconds,
+    public WifiDisableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
-      super(JobType.DISABLE, delayTime, periodic, periodicEnableInSeconds,
+      super(JobType.DISABLE, delayTimeInMillis, periodic, periodicEnableInSeconds,
           periodicDisableInSeconds);
     }
 

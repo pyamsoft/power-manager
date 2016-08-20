@@ -53,13 +53,12 @@ final class ManagerWifiInteractor extends ManagerBaseInteractor implements Manag
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new WifiManageJob.WifiEnableJob(getDelayTime(), isPeriodic(), getPeriodicEnableTime(),
-        getPeriodicDisableTime());
+    return new WifiManageJob.WifiEnableJob(100L, false, 0, 0);
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new WifiManageJob.WifiDisableJob(getDelayTime(), isPeriodic(), getPeriodicEnableTime(),
-        getPeriodicDisableTime());
+    return new WifiManageJob.WifiDisableJob(getDelayTime() * 1000L, isPeriodic(),
+        getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {

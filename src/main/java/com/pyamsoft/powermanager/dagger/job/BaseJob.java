@@ -41,7 +41,7 @@ abstract class BaseJob extends Job {
     } else {
       tagString = "<NO TAGS>";
     }
-    Timber.w("Job is added %s %s with delay: %d", getId(), tagString, getDelayInMs());
+    Timber.w("Job is added %s %s (%d)", getId(), tagString, getDelayInMs());
   }
 
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
@@ -52,7 +52,7 @@ abstract class BaseJob extends Job {
     } else {
       tagString = "<NO TAGS>";
     }
-    Timber.w("Job is cancelled %s %s", getId(), tagString);
+    Timber.w("Job is cancelled %s %s (%d)", getId(), tagString, getDelayInMs());
 
     if (throwable != null) {
       Timber.e(throwable, "JOB CANCELLED");

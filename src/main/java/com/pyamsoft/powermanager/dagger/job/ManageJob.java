@@ -33,9 +33,9 @@ public abstract class ManageJob extends BaseJob implements Runnable {
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
 
-  protected ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInSeconds,
+  protected ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInMilliseconds,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInSeconds * 1000L));
+    super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
     this.jobType = jobType;
     this.periodic = periodic;
     this.periodicEnableInSeconds = periodicEnableInSeconds;
