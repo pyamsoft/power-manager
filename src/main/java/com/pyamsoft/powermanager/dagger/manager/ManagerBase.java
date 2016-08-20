@@ -34,7 +34,7 @@ abstract class ManagerBase implements Manager {
   @NonNull private Subscription setSubscription = Subscriptions.empty();
   @NonNull private Subscription unsetSubscription = Subscriptions.empty();
 
-  @Inject ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
+  ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {
     this.interactor = interactor;
     this.subscribeScheduler = subscribeScheduler;
