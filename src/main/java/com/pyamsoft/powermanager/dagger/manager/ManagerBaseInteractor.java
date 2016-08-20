@@ -61,7 +61,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    Timber.d("Set original state: %s", originalStateEnabled);
+    Timber.d("Set original state: %s", enabled);
     originalStateEnabled = enabled;
   }
 
