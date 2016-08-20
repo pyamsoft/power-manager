@@ -20,20 +20,22 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
+import rx.Scheduler;
 import timber.log.Timber;
 
 class SyncStateModifier extends StateModifier {
 
-  @Inject SyncStateModifier(@NonNull Context context) {
-    super(context);
+  @Inject SyncStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
+    super(context, subscribeScheduler, observeScheduler);
   }
 
-  @Override void mainThreadSet(@NonNull Context context) {
+  @Override void set(@NonNull Context context) {
     Timber.d("Set sync: true");
     ContentResolver.setMasterSyncAutomatically(true);
   }
 
-  @Override void mainThreadUnset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context) {
     Timber.d("Set sync: false");
     ContentResolver.setMasterSyncAutomatically(false);
   }

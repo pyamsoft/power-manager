@@ -17,32 +17,61 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 abstract class StateModifier implements InterestModifier {
 
   @NonNull private final Context appContext;
-  @NonNull private final Handler handler;
+  @NonNull private final Scheduler subscribeScheduler;
+  @NonNull private final Scheduler observeScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
-  StateModifier(@NonNull Context context) {
+  StateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
     this.appContext = context.getApplicationContext();
-    this.handler = new Handler(Looper.getMainLooper());
+    this.subscribeScheduler = subscribeScheduler;
+    this.observeScheduler = observeScheduler;
+  }
+
+  void unsub() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 
   @Override public final void set() {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> mainThreadSet(appContext));
+    unsub();
+    subscription = Observable.defer(() -> {
+      Timber.d("Set on IO thread");
+      set(appContext);
+      return Observable.just(true);
+    })
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(aBoolean -> Timber.d("Set success"),
+            throwable -> Timber.e(throwable, "onError set"), this::unsub);
   }
 
   @Override public final void unset() {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> mainThreadUnset(appContext));
+    unsub();
+    subscription = Observable.defer(() -> {
+      Timber.d("Unset on IO thread");
+      unset(appContext);
+      return Observable.just(true);
+    })
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(aBoolean -> Timber.d("Unset success"),
+            throwable -> Timber.e(throwable, "onError unset"), this::unsub);
   }
 
-  abstract void mainThreadSet(@NonNull Context context);
+  abstract void set(@NonNull Context context);
 
-  abstract void mainThreadUnset(@NonNull Context context);
+  abstract void unset(@NonNull Context context);
 }

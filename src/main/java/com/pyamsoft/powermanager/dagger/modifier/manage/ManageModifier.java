@@ -18,51 +18,68 @@ package com.pyamsoft.powermanager.dagger.modifier.manage;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 abstract class ManageModifier implements InterestModifier {
 
   @NonNull private final Context appContext;
   @NonNull private final Intent service;
-  @NonNull private final Handler handler;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final Scheduler subscribeScheduler;
+  @NonNull private final Scheduler observeScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
-  ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
-    this.handler = new Handler(Looper.getMainLooper());
     this.service = new Intent(appContext, ForegroundService.class);
+    this.subscribeScheduler = subscribeScheduler;
+    this.observeScheduler = observeScheduler;
+  }
+
+  void unsub() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
   }
 
   @Override public final void set() {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      mainThreadSet(appContext, preferences);
-
-      // The notification will be notified when a manage state changes
-      appContext.startService(service);
-    });
+    unsub();
+    subscription = Observable.defer(() -> {
+      Timber.d("Set on IO thread");
+      set(appContext, preferences);
+      return Observable.just(true);
+    })
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(aBoolean -> Timber.d("Set success"),
+            throwable -> Timber.e(throwable, "onError set"), this::unsub);
   }
 
   @Override public final void unset() {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      mainThreadUnset(appContext, preferences);
-
-      // The notification will be notified when a manage state changes
-      appContext.startService(service);
-    });
+    unsub();
+    subscription = Observable.defer(() -> {
+      Timber.d("Unset on IO thread");
+      unset(appContext, preferences);
+      return Observable.just(true);
+    })
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(aBoolean -> Timber.d("Unset success"),
+            throwable -> Timber.e(throwable, "onError unset"), this::unsub);
   }
 
+  abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 
-  abstract void mainThreadSet(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
-
-  abstract void mainThreadUnset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
+  abstract void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 }
 

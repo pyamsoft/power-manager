@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
+import rx.Scheduler;
 import timber.log.Timber;
 
 class DataStateModifier extends StateModifier {
@@ -37,8 +38,9 @@ class DataStateModifier extends StateModifier {
 
   @NonNull private final ConnectivityManager connectivityManager;
 
-  @Inject DataStateModifier(@NonNull Context context) {
-    super(context);
+  @Inject DataStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
+    super(context, subscribeScheduler, observeScheduler);
     connectivityManager = (ConnectivityManager) context.getApplicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
@@ -79,11 +81,11 @@ class DataStateModifier extends StateModifier {
     }
   }
 
-  @Override void mainThreadSet(@NonNull Context context) {
+  @Override void set(@NonNull Context context) {
     setMobileDataEnabled(true);
   }
 
-  @Override void mainThreadUnset(@NonNull Context context) {
+  @Override void unset(@NonNull Context context) {
     setMobileDataEnabled(false);
   }
 }

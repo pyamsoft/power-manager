@@ -17,35 +17,22 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import rx.Scheduler;
-import timber.log.Timber;
 
-class WifiStateModifier extends StateModifier {
+class DozeStateModifier extends StateModifier {
 
-  @Nullable private final WifiManager wifiManager;
-
-  @Inject WifiStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
+  @Inject DozeStateModifier(@NonNull Context context, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observeScheduler) {
     super(context, subscribeScheduler, observeScheduler);
-    wifiManager =
-        (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
   @Override void set(@NonNull Context context) {
-    if (wifiManager != null) {
-      Timber.d("setWifiEnabled: true");
-      wifiManager.setWifiEnabled(true);
-    }
+
   }
 
   @Override void unset(@NonNull Context context) {
-    if (wifiManager != null) {
-      Timber.d("setWifiEnabled: false");
-      wifiManager.setWifiEnabled(false);
-    }
+
   }
 }

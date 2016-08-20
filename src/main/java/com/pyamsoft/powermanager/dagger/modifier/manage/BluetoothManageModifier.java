@@ -20,21 +20,21 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
+import rx.Scheduler;
 
 class BluetoothManageModifier extends ManageModifier {
 
   @Inject BluetoothManageModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences);
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
+    super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void mainThreadSet(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     preferences.setBluetoothManaged(true);
   }
 
-  @Override void mainThreadUnset(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     preferences.setBluetoothManaged(false);
   }
 }
