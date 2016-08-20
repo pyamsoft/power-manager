@@ -134,7 +134,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setCancelable(true);
       Timber.d("onCreate");
 
-      Singleton.Dagger.with(getContext()).inject(this);
+      Singleton.Dagger.with(getContext()).plusFullDialogComponent().inject(this);
 
       wifiStateObserver.register(() -> setWifiToggleState(true), () -> setWifiToggleState(false));
       dataStateObserver.register(() -> setDataToggleState(true), () -> setDataToggleState(false));
