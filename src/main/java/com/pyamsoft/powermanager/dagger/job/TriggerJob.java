@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.trigger;
+package com.pyamsoft.powermanager.dagger.job;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -30,7 +30,6 @@ import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
-import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -42,7 +41,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class TriggerJob extends BaseJob {
+public final class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
   private static final int PRIORITY = 2;

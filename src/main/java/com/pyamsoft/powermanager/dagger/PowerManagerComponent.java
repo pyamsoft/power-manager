@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger;
 
-import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
@@ -26,7 +25,6 @@ import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.FullDialogComponent;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
 import dagger.Component;
 import javax.inject.Singleton;

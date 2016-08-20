@@ -35,7 +35,7 @@ import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
+import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import rx.Observable;

@@ -40,7 +40,34 @@ public class Singleton {
     throw new RuntimeException("No instances");
   }
 
-  // Call only in Interactor
+  public static final class Dagger {
+
+    private static volatile Dagger instance = null;
+    @NonNull private final PowerManagerComponent component;
+
+    private Dagger(@NonNull Context context) {
+      component = DaggerPowerManagerComponent.builder()
+          .powerManagerModule(new PowerManagerModule(context.getApplicationContext()))
+          .build();
+    }
+
+    @CheckResult @NonNull public static PowerManagerComponent with(@NonNull Context context) {
+      if (instance == null) {
+        synchronized (Dagger.class) {
+          if (instance == null) {
+            instance = new Dagger(context.getApplicationContext());
+          }
+        }
+      }
+
+      if (instance == null) {
+        throw new NullPointerException("Dagger instance is NULL");
+      } else {
+        return instance.component;
+      }
+    }
+  }
+
   public static final class Jobs {
 
     private static volatile Jobs instance = null;
@@ -95,34 +122,6 @@ public class Singleton {
 
       Timber.d("Create a new JobManager");
       return new JobManager(builder.build());
-    }
-  }
-
-  public static final class Dagger {
-
-    private static volatile Dagger instance = null;
-    @NonNull private final PowerManagerComponent component;
-
-    private Dagger(@NonNull Context context) {
-      component = DaggerPowerManagerComponent.builder()
-          .powerManagerModule(new PowerManagerModule(context.getApplicationContext()))
-          .build();
-    }
-
-    @CheckResult @NonNull public static PowerManagerComponent with(@NonNull Context context) {
-      if (instance == null) {
-        synchronized (Dagger.class) {
-          if (instance == null) {
-            instance = new Dagger(context.getApplicationContext());
-          }
-        }
-      }
-
-      if (instance == null) {
-        throw new NullPointerException("Dagger instance is NULL");
-      } else {
-        return instance.component;
-      }
     }
   }
 }

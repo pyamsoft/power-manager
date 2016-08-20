@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.job;
+package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.NonNull;
 
-abstract class EnableJob extends ManageJob {
+abstract class DisableJob extends ManageJob {
 
-  protected EnableJob(@NonNull String tag, long delayInSeconds, boolean periodic,
+  protected DisableJob(@NonNull String tag, long delayInSeconds, boolean periodic,
       long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(tag, JobType.ENABLE, delayInSeconds, periodic, periodicEnableInSeconds,
+    super(tag, JobType.DISABLE, delayInSeconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds);
   }
 }

@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager.job;
+package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.dagger.base.BaseJob;
 import timber.log.Timber;
 
 abstract class ManageJob extends BaseJob {
