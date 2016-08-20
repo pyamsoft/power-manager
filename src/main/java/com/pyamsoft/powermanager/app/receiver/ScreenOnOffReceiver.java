@@ -38,6 +38,9 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   @NonNull private final Context appContext;
 
   @Inject @Named("wifi_manager") Manager managerWifi;
+  @Inject @Named("data_manager") Manager managerData;
+  @Inject @Named("bluetooth_manager") Manager managerBluetooth;
+  @Inject @Named("sync_manager") Manager managerSync;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
@@ -69,11 +72,17 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   private void enableManagers() {
     Timber.d("Enable all managed managers");
     managerWifi.queueSet();
+    managerData.queueSet();
+    managerBluetooth.queueSet();
+    managerSync.queueSet();
   }
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
     managerWifi.queueUnset(charging);
+    managerData.queueUnset(charging);
+    managerBluetooth.queueUnset(charging);
+    managerSync.queueUnset(charging);
   }
 
   public final void register() {

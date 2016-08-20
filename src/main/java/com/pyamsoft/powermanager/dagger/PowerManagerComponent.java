@@ -16,8 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import com.pyamsoft.powermanager.dagger.job.JobComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
-import com.pyamsoft.powermanager.dagger.job.WifiJobComponent;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
@@ -49,5 +49,5 @@ import javax.inject.Singleton;
 
   ManagerComponent plusManagerComponent();
 
-  WifiJobComponent plusWifiJobComponent();
+  JobComponent plusJobComponent();
 }

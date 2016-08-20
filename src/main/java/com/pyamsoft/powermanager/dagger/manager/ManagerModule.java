@@ -30,14 +30,54 @@ import rx.Scheduler;
 @Module public class ManagerModule {
 
   @ActivityScope @Provides @Named("wifi_manager") Manager provideManagerWifi(
-      @NonNull ManagerInteractor interactor, @Named("io") Scheduler ioScheduler,
-      @Named("main") Scheduler mainScheduler) {
+      @Named("wifi_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerWifi(interactor, ioScheduler, mainScheduler);
   }
 
-  @ActivityScope @Provides ManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
+  @ActivityScope @Provides @Named("wifi_manager_interactor")
+  ManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_state") InterestObserver interestObserver) {
     return new ManagerWifiInteractor(context, preferences, interestObserver);
+  }
+
+  @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
+      @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+    return new ManagerData(interactor, ioScheduler, mainScheduler);
+  }
+
+  @ActivityScope @Provides @Named("data_manager_interactor")
+  ManagerInteractor provideManagerDataInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @Named("obs_data_state") InterestObserver observer) {
+    return new ManagerDataInteractor(context, preferences, observer);
+  }
+
+  @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
+      @Named("bluetooth_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+    return new ManagerBluetooth(interactor, ioScheduler, mainScheduler);
+  }
+
+  @ActivityScope @Provides @Named("bluetooth_manager_interactor")
+  ManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @Named("obs_bluetooth_state") InterestObserver observer) {
+    return new ManagerBluetoothInteractor(context, preferences, observer);
+  }
+
+  @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(
+      @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+    return new ManagerSync(interactor, ioScheduler, mainScheduler);
+  }
+
+  @ActivityScope @Provides @Named("sync_manager_interactor")
+  ManagerInteractor provideManagerSyncInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @Named("obs_sync_state") InterestObserver observer) {
+    return new ManagerSyncInteractor(context, preferences, observer);
   }
 }

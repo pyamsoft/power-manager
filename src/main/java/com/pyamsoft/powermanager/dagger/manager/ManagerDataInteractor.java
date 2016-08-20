@@ -22,62 +22,62 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.job.WifiManageJob;
+import com.pyamsoft.powermanager.dagger.job.DataManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerWifiInteractor extends ManagerBaseInteractor implements ManagerInteractor {
+final class ManagerDataInteractor extends ManagerBaseInteractor implements ManagerInteractor {
 
-  @NonNull private final InterestObserver wifiObserver;
+  @NonNull private final InterestObserver dataObserver;
 
-  @Inject ManagerWifiInteractor(@NonNull Context context,
+  @Inject ManagerDataInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
     super(context, preferences);
-    this.wifiObserver = observer;
+    this.dataObserver = observer;
   }
 
   @CheckResult long getDelayTime() {
-    return getPreferences().getWifiDelay();
+    return getPreferences().getDataDelay();
   }
 
   @CheckResult boolean isPeriodic() {
-    return getPreferences().isPeriodicWifi();
+    return getPreferences().isPeriodicData();
   }
 
   @CheckResult long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeWifi();
+    return getPreferences().getPeriodicEnableTimeData();
   }
 
   @CheckResult long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeWifi();
+    return getPreferences().getPeriodicDisableTimeData();
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new WifiManageJob.EnableJob(100L, false, 0, 0);
+    return new DataManageJob.EnableJob(100L, false, 0, 0);
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new WifiManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
+    return new DataManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
         getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {
-    destroy(WifiManageJob.JOB_TAG);
+    destroy(DataManageJob.JOB_TAG);
   }
 
   @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(WifiManageJob.JOB_TAG);
+    return cancelJobs(DataManageJob.JOB_TAG);
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isWifiManaged()));
+    return Observable.defer(() -> Observable.just(getPreferences().isDataManaged()));
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingWifi()));
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingData()));
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(wifiObserver.is()));
+    return Observable.defer(() -> Observable.just(dataObserver.is()));
   }
 }

@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.dagger.manager;
 
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-@ActivityScope @Subcomponent public interface WifiJobComponent {
+final class ManagerData extends ManagerBase {
 
-  void inject(WifiManageJob.WifiEnableJob job);
-
-  void inject(WifiManageJob.WifiDisableJob job);
+  @Inject ManagerData(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observerScheduler) {
+    super(interactor, subscribeScheduler, observerScheduler);
+  }
 }

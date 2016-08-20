@@ -24,11 +24,11 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public abstract class WifiManageJob extends ManageJob {
+public abstract class BluetoothManageJob extends ManageJob {
 
-  @NonNull public static final String JOB_TAG = "wifi_job";
+  @NonNull public static final String JOB_TAG = "bluetooth_job";
 
-  WifiManageJob(@NonNull JobType jobType, long delayInSeconds, boolean periodic,
+  BluetoothManageJob(@NonNull JobType jobType, long delayInSeconds, boolean periodic,
       long periodicEnableInSeconds, long periodicDisableInSeconds) {
     super(JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds);
@@ -46,10 +46,10 @@ public abstract class WifiManageJob extends ManageJob {
         periodicDisableInSeconds);
   }
 
-  public static final class EnableJob extends WifiManageJob {
+  public static final class EnableJob extends BluetoothManageJob {
 
-    @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
-    @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
+    @Inject @Named("mod_bluetooth_state") InterestModifier interestModifier;
+    @Inject @Named("obs_bluetooth_state") InterestObserver interestObserver;
 
     public EnableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
@@ -69,10 +69,10 @@ public abstract class WifiManageJob extends ManageJob {
     }
   }
 
-  public static final class DisableJob extends WifiManageJob {
+  public static final class DisableJob extends BluetoothManageJob {
 
-    @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
-    @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
+    @Inject @Named("mod_bluetooth_state") InterestModifier interestModifier;
+    @Inject @Named("obs_bluetooth_state") InterestObserver interestObserver;
 
     public DisableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
