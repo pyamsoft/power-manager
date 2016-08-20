@@ -22,11 +22,13 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
-  @CheckResult boolean isManageSensors();
+  @CheckResult boolean isSensorsManaged();
 
   @CheckResult long getDozeDelay();
 
-  @CheckResult boolean isDozeEnabled();
+  void setDozeManaged(boolean enable);
+
+  @CheckResult boolean isDozeManaged();
 
   @CheckResult boolean isIgnoreChargingDoze();
 

@@ -22,15 +22,15 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="@bool/doze_default"
-        android:key="@string/doze_key"
-        android:summaryOff="@string/doze_summary_unchecked"
-        android:summaryOn="@string/doze_summary_checked"
-        android:title="@string/doze_title"
+        android:key="@string/manage_doze_key"
+        android:summaryOff="@string/manage_doze_summary_unchecked"
+        android:summaryOn="@string/manage_doze_summary_checked"
+        android:title="@string/manage_doze_title"
         />
 
     <ListPreference
         android:defaultValue="@string/doze_time_default"
-        android:dependency="@string/doze_key"
+        android:dependency="@string/manage_doze_key"
         android:entries="@array/preset_doze_names"
         android:entryValues="@array/preset_doze_values"
         android:key="@string/doze_time_key"
@@ -40,7 +40,7 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="@bool/sensors_doze_default"
-        android:dependency="@string/doze_key"
+        android:dependency="@string/manage_doze_key"
         android:key="@string/sensors_doze_key"
         android:summaryOff="@string/sensors_doze_summary_unchecked"
         android:summaryOn="@string/sensors_doze_summary_checked"
@@ -49,7 +49,7 @@
 
     <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_doze_default"
-        android:dependency="@string/doze_key"
+        android:dependency="@string/manage_doze_key"
         android:key="@string/ignore_charging_doze_key"
         android:summaryOff="@string/ignore_charging_doze_summary_unchecked"
         android:summaryOn="@string/ignore_charging_doze_summary_checked"
@@ -58,7 +58,7 @@
 
     <CheckBoxPreference
         android:defaultValue="@bool/force_out_doze_default"
-        android:dependency="@string/doze_key"
+        android:dependency="@string/manage_doze_key"
         android:key="@string/force_out_doze_key"
         android:summaryOff="@string/force_out_doze_summary_unchecked"
         android:summaryOn="@string/force_out_doze_summary_checked"

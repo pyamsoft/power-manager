@@ -198,7 +198,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     fullNotification = appContext.getString(R.string.full_notification_key);
     fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
 
-    forceDoze = appContext.getString(R.string.doze_key);
+    forceDoze = appContext.getString(R.string.manage_doze_key);
     forceOutOfDoze = appContext.getString(R.string.force_out_doze_key);
     ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
     dozeDelay = appContext.getString(R.string.doze_time_key);
@@ -211,7 +211,7 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageSensorsDefault = resources.getBoolean(R.bool.sensors_doze_default);
   }
 
-  @Override public boolean isManageSensors() {
+  @Override public boolean isSensorsManaged() {
     return get(manageSensors, manageSensorsDefault);
   }
 
@@ -231,8 +231,12 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(fullNotification, fullNotificationDefault);
   }
 
-  @Override public boolean isDozeEnabled() {
+  @Override public boolean isDozeManaged() {
     return get(forceDoze, forceDozeDefault);
+  }
+
+  @Override public void setDozeManaged(boolean enable) {
+    put(forceDoze, enable);
   }
 
   @Override public boolean isIgnoreChargingWifi() {

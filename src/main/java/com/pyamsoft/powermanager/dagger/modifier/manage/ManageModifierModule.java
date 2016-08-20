@@ -51,4 +51,9 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageModifier(context, preferences);
   }
+
+  @Singleton @Named("mod_doze_manage") @Provides InterestModifier provideDozModifier(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new DozeManageModifier(context, preferences);
+  }
 }

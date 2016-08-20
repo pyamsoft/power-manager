@@ -44,4 +44,9 @@ import javax.inject.Singleton;
   @Singleton @Named("obs_sync_state") @Provides InterestObserver provideSyncObserver() {
     return new SyncStateObserver();
   }
+
+  @Singleton @Named("obs_doze_state") @Provides InterestObserver provideDozeObserver(
+      @NonNull Context context) {
+    return new DozeStateObserver(context);
+  }
 }

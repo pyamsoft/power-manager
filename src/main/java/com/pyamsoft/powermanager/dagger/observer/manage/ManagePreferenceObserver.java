@@ -33,6 +33,7 @@ abstract class ManagePreferenceObserver
   @NonNull private final String KEY_BLUETOOTH;
   @NonNull private final String KEY_SYNC;
   @NonNull private final String KEY_WEAR;
+  @NonNull private final String KEY_DOZE;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
   @Nullable private SetCallback setCallback;
@@ -49,6 +50,7 @@ abstract class ManagePreferenceObserver
     KEY_BLUETOOTH = context.getString(R.string.manage_bluetooth_key);
     KEY_SYNC = context.getString(R.string.manage_sync_key);
     KEY_WEAR = context.getString(R.string.manage_wearable_key);
+    KEY_DOZE = context.getString(R.string.manage_doze_key);
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
@@ -109,6 +111,8 @@ abstract class ManagePreferenceObserver
       result = preferences.isSyncManaged();
     } else if (key.equals(KEY_WEAR)) {
       result = preferences.isWearableManaged();
+    } else if (key.equals(KEY_DOZE)) {
+      result = preferences.isDozeManaged();
     } else {
       throw new RuntimeException("Unsupported key: " + key);
     }

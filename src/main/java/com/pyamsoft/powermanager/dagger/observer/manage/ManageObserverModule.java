@@ -51,4 +51,9 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageObserver(context, preferences);
   }
+
+  @Singleton @Named("obs_doze_manage") @Provides InterestObserver provideDozeObserver(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new DozeManageObserver(context, preferences);
+  }
 }
