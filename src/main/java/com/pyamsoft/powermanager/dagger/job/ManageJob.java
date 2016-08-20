@@ -23,7 +23,7 @@ import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.Singleton;
 import timber.log.Timber;
 
-abstract class ManageJob extends BaseJob {
+public abstract class ManageJob extends BaseJob implements Runnable {
 
   private static final long MINIMUM_PERIOD_SECONDS = 60L;
   private static final int JOB_PRIORITY = 1;
@@ -33,8 +33,8 @@ abstract class ManageJob extends BaseJob {
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
 
-  ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInSeconds, boolean periodic,
-      long periodicEnableInSeconds, long periodicDisableInSeconds) {
+  protected ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInSeconds,
+      boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInSeconds * 1000L));
     this.jobType = jobType;
     this.periodic = periodic;
@@ -54,7 +54,8 @@ abstract class ManageJob extends BaseJob {
     return periodicEnableInSeconds;
   }
 
-  @Override public void onRun() throws Throwable {
+  @Override public final void onRun() throws Throwable {
+    run();
     Timber.d("Run job type: %s", jobType.name());
     switch (jobType) {
       case ENABLE:
@@ -69,48 +70,30 @@ abstract class ManageJob extends BaseJob {
   }
 
   private void internalEnable() {
-    // Only turn wifi on if it is off
-    if (!isEnabled()) {
-      enable();
-      if (isPeriodic()) {
-        if (getPeriodicEnableInSeconds() < MINIMUM_PERIOD_SECONDS) {
-          Timber.e("Not queuing period disable job with interval less than 1 minute");
-        } else {
-          Timber.d("Queue periodic enable job");
-          Singleton.Jobs.with(getApplicationContext())
-              .addJobInBackground(createPeriodicDisableJob(getPeriodicEnableInSeconds(),
-                  getPeriodicDisableInSeconds()));
-        }
+    if (isPeriodic()) {
+      if (getPeriodicEnableInSeconds() < MINIMUM_PERIOD_SECONDS) {
+        Timber.e("Not queuing period disable job with interval less than 1 minute");
+      } else {
+        Timber.d("Queue periodic enable job");
+        Singleton.Jobs.with(getApplicationContext())
+            .addJobInBackground(createPeriodicDisableJob(getPeriodicEnableInSeconds(),
+                getPeriodicDisableInSeconds()));
       }
-    } else {
-      Timber.w("Cannot enable, already enabled");
     }
   }
 
   private void internalDisable() {
-    // Only turn wifi on if it is off
-    if (isEnabled()) {
-      disable();
-      if (isPeriodic()) {
-        if (getPeriodicDisableInSeconds() < MINIMUM_PERIOD_SECONDS) {
-          Timber.e("Not queuing period enable job with interval less than 1 minute");
-        } else {
-          Timber.d("Queue periodic enable job");
-          Singleton.Jobs.with(getApplicationContext())
-              .addJobInBackground(createPeriodicEnableJob(getPeriodicEnableInSeconds(),
-                  getPeriodicDisableInSeconds()));
-        }
+    if (isPeriodic()) {
+      if (getPeriodicDisableInSeconds() < MINIMUM_PERIOD_SECONDS) {
+        Timber.e("Not queuing period enable job with interval less than 1 minute");
+      } else {
+        Timber.d("Queue periodic enable job");
+        Singleton.Jobs.with(getApplicationContext())
+            .addJobInBackground(createPeriodicEnableJob(getPeriodicEnableInSeconds(),
+                getPeriodicDisableInSeconds()));
       }
-    } else {
-      Timber.w("Cannot disable, already disabled");
     }
   }
-
-  protected abstract void enable();
-
-  protected abstract void disable();
-
-  @CheckResult protected abstract boolean isEnabled();
 
   @CheckResult @NonNull
   protected abstract Job createPeriodicDisableJob(long periodicEnableInSeconds,

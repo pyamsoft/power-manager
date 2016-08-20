@@ -16,13 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.ActivityScope;
+import dagger.Subcomponent;
 
-abstract class EnableJob extends ManageJob {
+@ActivityScope @Subcomponent public interface WifiJobComponent {
 
-  protected EnableJob(@NonNull String tag, long delayInSeconds, boolean periodic,
-      long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(tag, JobType.ENABLE, delayInSeconds, periodic, periodicEnableInSeconds,
-        periodicDisableInSeconds);
-  }
+  void inject(WifiManageJob.WifiEnableJob job);
+
+  void inject(WifiManageJob.WifiDisableJob job);
 }

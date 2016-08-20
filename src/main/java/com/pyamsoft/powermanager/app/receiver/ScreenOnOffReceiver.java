@@ -20,6 +20,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.manager.Manager;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
@@ -32,11 +36,15 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   }
 
   @NonNull private final Context appContext;
+
+  @Inject @Named("wifi_manager") Manager managerWifi;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
     isRegistered = false;
+
+    Singleton.Dagger.with(appContext).plusManagerComponent().inject(this);
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {
@@ -60,10 +68,12 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
+    managerWifi.queueSet();
   }
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
+    managerWifi.queueUnset(charging);
   }
 
   public final void register() {
@@ -75,6 +85,7 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   }
 
   private void cleanup() {
+    managerWifi.cleanup();
   }
 
   public final void unregister() {

@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-abstract class DisableJob extends ManageJob {
+final class ManagerWifi extends ManagerBase {
 
-  protected DisableJob(@NonNull String tag, long delayInSeconds, boolean periodic,
-      long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(tag, JobType.DISABLE, delayInSeconds, periodic, periodicEnableInSeconds,
-        periodicDisableInSeconds);
+  @Inject ManagerWifi(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observerScheduler) {
+    super(interactor, subscribeScheduler, observerScheduler);
   }
 }
