@@ -25,11 +25,11 @@ import java.util.Arrays;
 import java.util.Set;
 import timber.log.Timber;
 
-public abstract class BaseJob extends Job {
+abstract class BaseJob extends Job {
 
-  @NonNull private static final String ALL_TAG = "ALL";
+  @NonNull static final String ALL_TAG = "ALL";
 
-  protected BaseJob(Params params) {
+  BaseJob(Params params) {
     super(params.setRequiresNetwork(false).addTags(ALL_TAG));
   }
 

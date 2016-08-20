@@ -27,18 +27,15 @@ abstract class ManageJob extends BaseJob {
 
   private static final long MINIMUM_PERIOD_SECONDS = 60L;
   private static final int JOB_PRIORITY = 1;
-  @NonNull private static final String ALL_TAG = "all_tag";
 
   @NonNull private final JobType jobType;
   private final boolean periodic;
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
 
-  protected ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInSeconds,
-      boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(new Params(JOB_PRIORITY).setRequiresNetwork(false)
-        .addTags(ALL_TAG, tag)
-        .setDelayMs(delayInSeconds * 1000L));
+  ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInSeconds, boolean periodic,
+      long periodicEnableInSeconds, long periodicDisableInSeconds) {
+    super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInSeconds * 1000L));
     this.jobType = jobType;
     this.periodic = periodic;
     this.periodicEnableInSeconds = periodicEnableInSeconds;
