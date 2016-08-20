@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class DozeManageObserver extends ManagePreferenceObserver {
+class DozeManageObserver extends ManageObserver {
 
   @Inject DozeManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

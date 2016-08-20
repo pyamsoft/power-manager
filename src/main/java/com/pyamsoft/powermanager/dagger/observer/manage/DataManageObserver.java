@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import javax.inject.Inject;
 
-class DataManageObserver extends ManagePreferenceObserver {
+class DataManageObserver extends ManageObserver {
 
   @Inject DataManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

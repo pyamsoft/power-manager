@@ -40,8 +40,14 @@ public final class ForegroundPresenter
     this.interactor = interactor;
   }
 
+  @Override protected void onBind(@NonNull ForegroundProvider view) {
+    super.onBind(view);
+    interactor.create();
+  }
+
   @Override protected void onUnbind(@NonNull ForegroundProvider view) {
     super.onUnbind(view);
+    interactor.destroy();
     unsubNotification();
   }
 

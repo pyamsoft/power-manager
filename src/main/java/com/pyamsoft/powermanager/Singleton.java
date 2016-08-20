@@ -40,6 +40,7 @@ public class Singleton {
     throw new RuntimeException("No instances");
   }
 
+  // Call only in Interactor
   public static final class Jobs {
 
     private static volatile Jobs instance = null;

@@ -27,7 +27,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
-abstract class StateContentObserver extends ContentObserver implements InterestObserver {
+abstract class StateObserver extends ContentObserver implements InterestObserver {
 
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
@@ -36,7 +36,7 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
   @Nullable private SetCallback setCallback;
   @Nullable private UnsetCallback unsetCallback;
 
-  StateContentObserver(@NonNull Context context) {
+  StateObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
     handler = new Handler(Looper.getMainLooper());
@@ -48,6 +48,7 @@ abstract class StateContentObserver extends ContentObserver implements InterestO
   }
 
   final void setUri(@NonNull Uri uri) {
+    Timber.d("New StateObserver with uri: %s", uri);
     this.uri = uri;
   }
 

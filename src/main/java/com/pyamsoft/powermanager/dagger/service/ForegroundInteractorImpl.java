@@ -26,13 +26,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
+import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import rx.Observable;
@@ -74,6 +77,17 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     this.bluetoothManageObserver = bluetoothManageObserver;
     this.syncManageObserver = syncManageObserver;
     this.wearManageObserver = wearManageObserver;
+  }
+
+  @Override public void create() {
+    // For now, trigger every 5 minutes
+    TriggerJob.queue(appContext, new TriggerJob(5 * 60 * 1000));
+  }
+
+  @Override public void destroy() {
+    Timber.d("Cancel all trigger jobs");
+    Singleton.Jobs.with(appContext)
+        .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
   @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {

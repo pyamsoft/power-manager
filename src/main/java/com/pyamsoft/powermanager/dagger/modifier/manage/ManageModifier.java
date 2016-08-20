@@ -39,6 +39,7 @@ abstract class ManageModifier implements InterestModifier {
 
   ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    Timber.d("New ManageModifier");
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.service = new Intent(appContext, ForegroundService.class);
@@ -58,11 +59,10 @@ abstract class ManageModifier implements InterestModifier {
       Timber.d("Set on IO thread");
       set(appContext, preferences);
       return Observable.just(true);
-    })
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe(aBoolean -> Timber.d("Set success"),
-            throwable -> Timber.e(throwable, "onError set"), this::unsub);
+    }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
+      Timber.d("Set success");
+      appContext.startService(service);
+    }, throwable -> Timber.e(throwable, "onError set"), this::unsub);
   }
 
   @Override public final void unset() {
@@ -71,11 +71,10 @@ abstract class ManageModifier implements InterestModifier {
       Timber.d("Unset on IO thread");
       unset(appContext, preferences);
       return Observable.just(true);
-    })
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe(aBoolean -> Timber.d("Unset success"),
-            throwable -> Timber.e(throwable, "onError unset"), this::unsub);
+    }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
+      Timber.d("Unset success");
+      appContext.startService(service);
+    }, throwable -> Timber.e(throwable, "onError unset"), this::unsub);
   }
 
   abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);

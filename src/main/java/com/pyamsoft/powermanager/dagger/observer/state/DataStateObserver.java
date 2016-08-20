@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataStateObserver extends StateContentObserver {
+class DataStateObserver extends StateObserver {
 
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
 

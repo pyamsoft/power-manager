@@ -22,11 +22,9 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.dagger.service.ForegroundPresenter;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -48,6 +46,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public void onCreate() {
     super.onCreate();
+    Timber.d("onCreate");
 
     Singleton.Dagger.with(this).plusForegroundServiceComponent().inject(this);
 
@@ -55,22 +54,13 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     screenOnOffReceiver.register();
 
     presenter.bindView(this);
-
-    // For now, trigger every 5 minutes
-    TriggerJob.queue(this, new TriggerJob(5 * 60 * 1000));
-    Timber.d("onCreate");
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     Timber.d("onDestroy");
 
-    Timber.d("Cancel all trigger jobs");
-    Singleton.Jobs.with(this)
-        .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
-
     screenOnOffReceiver.unregister();
-
     presenter.unbindView();
 
     stopForeground(true);

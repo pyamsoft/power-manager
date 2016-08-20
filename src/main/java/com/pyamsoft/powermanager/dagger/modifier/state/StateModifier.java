@@ -36,8 +36,9 @@ abstract class StateModifier implements InterestModifier {
 
   StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    this.preferences = preferences;
+    Timber.d("New StateModifier");
     this.appContext = context.getApplicationContext();
+    this.preferences = preferences;
     this.subscribeScheduler = subscribeScheduler;
     this.observeScheduler = observeScheduler;
   }

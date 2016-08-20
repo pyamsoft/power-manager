@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothStateObserver extends StateContentObserver {
+class BluetoothStateObserver extends StateObserver {
 
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);

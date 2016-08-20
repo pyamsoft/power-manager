@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import timber.log.Timber;
 
-abstract class ManagePreferenceObserver
+abstract class ManageObserver
     implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver {
 
   @NonNull private final String KEY_WIFI;
@@ -40,8 +40,9 @@ abstract class ManagePreferenceObserver
   @Nullable private UnsetCallback unsetCallback;
   private boolean registered;
 
-  ManagePreferenceObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  ManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull String key) {
+    Timber.d("New ManageObserver with key: %s", key);
     this.preferences = preferences;
     this.key = key;
 
