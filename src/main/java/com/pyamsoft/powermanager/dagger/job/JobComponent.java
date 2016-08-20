@@ -36,4 +36,8 @@ import dagger.Subcomponent;
   void inject(SyncManageJob.EnableJob job);
 
   void inject(SyncManageJob.DisableJob job);
+
+  void inject(DozeManageJob.EnableJob job);
+
+  void inject(DozeManageJob.DisableJob job);
 }

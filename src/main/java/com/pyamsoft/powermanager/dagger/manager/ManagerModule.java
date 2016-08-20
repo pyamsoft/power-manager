@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
@@ -79,5 +80,18 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_sync_state") InterestObserver observer) {
     return new ManagerSyncInteractor(context, preferences, observer);
+  }
+
+  @ActivityScope @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
+      @Named("doze_manager_interactor") @NonNull ExclusiveManagerInteractor interactor,
+      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+    return new ManagerDoze(interactor, ioScheduler, mainScheduler);
+  }
+
+  @ActivityScope @Provides @Named("doze_manager_interactor")
+  ExclusiveManagerInteractor provideManagerDozeInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @Named("obs_doze_state") InterestObserver observer) {
+    return new ManagerDozeInteractor(context, preferences, observer);
   }
 }

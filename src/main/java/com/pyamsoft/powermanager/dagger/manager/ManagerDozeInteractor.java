@@ -22,62 +22,72 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.job.BluetoothManageJob;
+import com.pyamsoft.powermanager.dagger.job.DozeManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerBluetoothInteractor extends ManagerBaseInteractor {
+final class ManagerDozeInteractor extends ManagerBaseInteractor
+    implements ExclusiveManagerInteractor {
 
-  @NonNull private final InterestObserver bluetoothObserver;
+  @NonNull private final InterestObserver dozeObserver;
 
-  @Inject ManagerBluetoothInteractor(@NonNull Context context,
+  @Inject ManagerDozeInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
     super(context, preferences);
-    this.bluetoothObserver = observer;
+    this.dozeObserver = observer;
   }
 
   @CheckResult long getDelayTime() {
-    return getPreferences().getBluetoothDelay();
+    return getPreferences().getDozeDelay();
   }
 
+  // KLUDGE Should Doze be periodic too? The system already makes it so
   @CheckResult boolean isPeriodic() {
-    return getPreferences().isPeriodicBluetooth();
+    return false;
   }
 
+  // KLUDGE Should Doze be periodic too? The system already makes it so
   @CheckResult long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeBluetooth();
+    return 0;
   }
 
+  // KLUDGE Should Doze be periodic too? The system already makes it so
   @CheckResult long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeBluetooth();
+    return 0;
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new BluetoothManageJob.EnableJob(100L, false, 0, 0);
+    return new DozeManageJob.EnableJob(100L, false, 0, 0);
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new BluetoothManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
+    return new DozeManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
         getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {
-    destroy(BluetoothManageJob.JOB_TAG);
+    destroy(DozeManageJob.JOB_TAG);
   }
 
   @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(BluetoothManageJob.JOB_TAG);
+    return cancelJobs(DozeManageJob.JOB_TAG);
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isBluetoothManaged()));
+    return Observable.defer(() -> Observable.just(getPreferences().isDozeManaged()));
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingBluetooth()));
+    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(bluetoothObserver.is()));
+    return Observable.defer(() -> Observable.just(dozeObserver.is()));
+  }
+
+  // TODO read from preference
+  // TODO observable?
+  @Override public boolean isExclusive() {
+    return false;
   }
 }

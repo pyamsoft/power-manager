@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.SyncManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerSyncInteractor extends ManagerBaseInteractor implements ManagerInteractor {
+final class ManagerSyncInteractor extends ManagerBaseInteractor {
 
   @NonNull private final InterestObserver syncObserver;
 

@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,6 +42,7 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   @Inject @Named("data_manager") Manager managerData;
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
   @Inject @Named("sync_manager") Manager managerSync;
+  @Inject @Named("doze_manager") ExclusiveManager managerDoze;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
@@ -71,18 +73,22 @@ public final class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
-    managerWifi.queueSet();
-    managerData.queueSet();
-    managerBluetooth.queueSet();
-    managerSync.queueSet();
+    managerDoze.queueExclusiveSet(() -> {
+      managerWifi.queueSet();
+      managerData.queueSet();
+      managerBluetooth.queueSet();
+      managerSync.queueSet();
+    });
   }
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
-    managerWifi.queueUnset(charging);
-    managerData.queueUnset(charging);
-    managerBluetooth.queueUnset(charging);
-    managerSync.queueUnset(charging);
+    managerDoze.queueExclusiveUnset(charging, () -> {
+      managerWifi.queueUnset(charging);
+      managerData.queueUnset(charging);
+      managerBluetooth.queueUnset(charging);
+      managerSync.queueUnset(charging);
+    });
   }
 
   public final void register() {

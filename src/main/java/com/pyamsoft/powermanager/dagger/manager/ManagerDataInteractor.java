@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.DataManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerDataInteractor extends ManagerBaseInteractor implements ManagerInteractor {
+final class ManagerDataInteractor extends ManagerBaseInteractor {
 
   @NonNull private final InterestObserver dataObserver;
 
