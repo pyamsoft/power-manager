@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.util.HashMap;
+import java.util.Map;
 import timber.log.Timber;
 
 abstract class ManageObserver
@@ -36,8 +38,8 @@ abstract class ManageObserver
   @NonNull private final String KEY_DOZE;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
-  @Nullable private SetCallback setCallback;
-  @Nullable private UnsetCallback unsetCallback;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
   ManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
@@ -52,22 +54,25 @@ abstract class ManageObserver
     KEY_SYNC = context.getString(R.string.manage_sync_key);
     KEY_WEAR = context.getString(R.string.manage_wearable_key);
     KEY_DOZE = context.getString(R.string.manage_doze_key);
+
+    setMap = new HashMap<>();
+    unsetMap = new HashMap<>();
   }
 
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
       if (is()) {
-        if (setCallback == null) {
-          Timber.e("Received set change with no callback");
-        } else {
-          setCallback.call();
+        for (final SetCallback setCallback : setMap.values()) {
+          if (setCallback != null) {
+            setCallback.call();
+          }
         }
       } else {
-        if (unsetCallback == null) {
-          Timber.e("Received unset change with no callback");
-        } else {
-          unsetCallback.call();
+        for (final UnsetCallback unsetCallback : unsetMap.values()) {
+          if (unsetCallback != null) {
+            unsetCallback.call();
+          }
         }
       }
     } else {
@@ -75,12 +80,12 @@ abstract class ManageObserver
     }
   }
 
-  @Override public final void register(@Nullable SetCallback setCallback,
+  @Override public final void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
     if (!registered) {
       Timber.d("Register new state observer for: %s", key);
-      this.setCallback = setCallback;
-      this.unsetCallback = unsetCallback;
+      setMap.put(tag, setCallback);
+      unsetMap.put(tag, unsetCallback);
       preferences.register(this);
       registered = true;
     } else {
@@ -88,12 +93,12 @@ abstract class ManageObserver
     }
   }
 
-  @Override public final void unregister() {
+  @Override public final void unregister(@NonNull String tag) {
     if (registered) {
       Timber.d("Unregister new state observer");
       preferences.unregister(this);
-      this.setCallback = null;
-      this.unsetCallback = null;
+      setMap.remove(tag);
+      unsetMap.remove(tag);
       registered = false;
     } else {
       Timber.e("Already unregistered");

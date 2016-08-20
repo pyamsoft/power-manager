@@ -135,33 +135,46 @@ public class FullNotificationActivity extends AppCompatActivity
       Timber.d("onCreate");
 
       Singleton.Dagger.with(getContext()).plusFullDialogComponent().inject(this);
+    }
 
-      wifiStateObserver.register(() -> setWifiToggleState(true), () -> setWifiToggleState(false));
-      dataStateObserver.register(() -> setDataToggleState(true), () -> setDataToggleState(false));
-      bluetoothStateObserver.register(() -> setBluetoothToggleState(true),
+    @Override public void onStart() {
+      super.onStart();
+      wifiStateObserver.register("wifi", () -> setWifiToggleState(true),
+          () -> setWifiToggleState(false));
+      dataStateObserver.register("data", () -> setDataToggleState(true),
+          () -> setDataToggleState(false));
+      bluetoothStateObserver.register("bluetooth", () -> setBluetoothToggleState(true),
           () -> setBluetoothToggleState(false));
-      syncStateObserver.register(() -> setSyncToggleState(true), () -> setSyncToggleState(false));
+      syncStateObserver.register("sync", () -> setSyncToggleState(true),
+          () -> setSyncToggleState(false));
 
-      wifiManageObserver.register(() -> setWifiManageState(true), () -> setWifiManageState(false));
-      dataManageObserver.register(() -> setDataManageState(true), () -> setDataManageState(false));
-      bluetoothManageObserver.register(() -> setBluetoothManageState(true),
+      wifiManageObserver.register("wifi", () -> setWifiManageState(true),
+          () -> setWifiManageState(false));
+      dataManageObserver.register("data", () -> setDataManageState(true),
+          () -> setDataManageState(false));
+      bluetoothManageObserver.register("bluetooth", () -> setBluetoothManageState(true),
           () -> setBluetoothManageState(false));
-      syncManageObserver.register(() -> setSyncManageState(true), () -> setSyncManageState(false));
+      syncManageObserver.register("sync", () -> setSyncManageState(true),
+          () -> setSyncManageState(false));
+    }
+
+    @Override public void onStop() {
+      super.onStop();
+
+      wifiStateObserver.unregister("wifi");
+      dataStateObserver.unregister("data");
+      bluetoothStateObserver.unregister("bluetooth");
+      syncStateObserver.unregister("sync");
+
+      wifiManageObserver.unregister("wifi");
+      dataManageObserver.unregister("data");
+      bluetoothManageObserver.unregister("bluetooth");
+      syncManageObserver.unregister("sync");
     }
 
     @Override public void onDestroy() {
       super.onDestroy();
       Timber.d("onDestroy");
-
-      wifiStateObserver.unregister();
-      dataStateObserver.unregister();
-      bluetoothStateObserver.unregister();
-      syncStateObserver.unregister();
-
-      wifiManageObserver.unregister();
-      dataManageObserver.unregister();
-      bluetoothManageObserver.unregister();
-      syncManageObserver.unregister();
 
       taskMap.clear();
       unbinder.unbind();

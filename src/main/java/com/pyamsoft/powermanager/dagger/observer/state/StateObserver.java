@@ -25,22 +25,26 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.util.HashMap;
+import java.util.Map;
 import timber.log.Timber;
 
 abstract class StateObserver extends ContentObserver implements InterestObserver {
 
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
   private Uri uri;
   private boolean registered;
-  @Nullable private SetCallback setCallback;
-  @Nullable private UnsetCallback unsetCallback;
 
   StateObserver(@NonNull Context context) {
     super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
     handler = new Handler(Looper.getMainLooper());
     registered = false;
+    setMap = new HashMap<>();
+    unsetMap = new HashMap<>();
   }
 
   @NonNull @CheckResult final Context getAppContext() {
@@ -52,14 +56,14 @@ abstract class StateObserver extends ContentObserver implements InterestObserver
     this.uri = uri;
   }
 
-  @Override public final void register(@Nullable SetCallback setCallback,
+  @Override public final void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (!registered) {
         Timber.d("Register new state observer for: %s", uri);
-        this.setCallback = setCallback;
-        this.unsetCallback = unsetCallback;
+        setMap.put(tag, setCallback);
+        unsetMap.put(tag, unsetCallback);
         appContext.getContentResolver().registerContentObserver(uri, false, this);
         registered = true;
       } else {
@@ -68,14 +72,14 @@ abstract class StateObserver extends ContentObserver implements InterestObserver
     });
   }
 
-  @Override public final void unregister() {
+  @Override public final void unregister(@NonNull String tag) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (registered) {
         Timber.d("Unregister new state observer");
         appContext.getContentResolver().unregisterContentObserver(this);
-        this.setCallback = null;
-        this.unsetCallback = null;
+        setMap.remove(tag);
+        unsetMap.remove(tag);
         registered = false;
       } else {
         Timber.e("Already unregistered");
@@ -95,16 +99,16 @@ abstract class StateObserver extends ContentObserver implements InterestObserver
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (is()) {
-        if (setCallback == null) {
-          Timber.e("Received set change event with no callback");
-        } else {
-          setCallback.call();
+        for (final SetCallback setCallback : setMap.values()) {
+          if (setCallback != null) {
+            setCallback.call();
+          }
         }
       } else {
-        if (unsetCallback == null) {
-          Timber.e("Received unset change event with no callback");
-        } else {
-          unsetCallback.call();
+        for (final UnsetCallback unsetCallback : unsetMap.values()) {
+          if (unsetCallback != null) {
+            unsetCallback.call();
+          }
         }
       }
     });

@@ -28,6 +28,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -36,8 +38,8 @@ class DozeStateObserver extends BroadcastReceiver implements InterestObserver {
   @NonNull private final Context appContext;
   @NonNull private final Handler handler;
   @Nullable private final IntentFilter filter;
-  @Nullable private SetCallback setCallback;
-  @Nullable private UnsetCallback unsetCallback;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
   @Inject DozeStateObserver(@NonNull Context context) {
@@ -48,21 +50,23 @@ class DozeStateObserver extends BroadcastReceiver implements InterestObserver {
     } else {
       filter = null;
     }
+    setMap = new HashMap<>();
+    unsetMap = new HashMap<>();
   }
 
   @CheckResult static boolean isDozeAvailable() {
     return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
   }
 
-  @Override
-  public void register(@Nullable SetCallback setCallback, @Nullable UnsetCallback unsetCallback) {
+  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback) {
     handler.removeCallbacksAndMessages(null);
     if (isDozeAvailable()) {
       handler.post(() -> {
         if (!registered) {
           Timber.d("Register new state observer for: Doze");
-          this.setCallback = setCallback;
-          this.unsetCallback = unsetCallback;
+          setMap.put(tag, setCallback);
+          unsetMap.put(tag, unsetCallback);
           appContext.registerReceiver(this, filter);
           registered = true;
         } else {
@@ -72,15 +76,15 @@ class DozeStateObserver extends BroadcastReceiver implements InterestObserver {
     }
   }
 
-  @Override public void unregister() {
+  @Override public void unregister(@NonNull String tag) {
     handler.removeCallbacksAndMessages(null);
     if (isDozeAvailable()) {
       handler.post(() -> {
         if (registered) {
           Timber.d("Unregister new state observer");
           appContext.unregisterReceiver(this);
-          this.setCallback = null;
-          this.unsetCallback = null;
+          setMap.remove(tag);
+          unsetMap.remove(tag);
           registered = false;
         } else {
           Timber.e("Already unregistered");
@@ -107,16 +111,16 @@ class DozeStateObserver extends BroadcastReceiver implements InterestObserver {
   @Override public void onReceive(Context context, Intent intent) {
     if (isDozeAvailable()) {
       if (is()) {
-        if (setCallback == null) {
-          Timber.e("Received set change event with no callback");
-        } else {
-          setCallback.call();
+        for (final SetCallback setCallback : setMap.values()) {
+          if (setCallback != null) {
+            setCallback.call();
+          }
         }
       } else {
-        if (unsetCallback == null) {
-          Timber.e("Received unset change event with no callback");
-        } else {
-          unsetCallback.call();
+        for (final UnsetCallback unsetCallback : unsetMap.values()) {
+          if (unsetCallback != null) {
+            unsetCallback.call();
+          }
         }
       }
     }

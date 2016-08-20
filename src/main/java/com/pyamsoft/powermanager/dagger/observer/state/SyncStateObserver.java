@@ -23,18 +23,20 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class SyncStateObserver implements InterestObserver {
 
   @NonNull private final Handler handler;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
   private boolean enabled;
   private boolean disabled;
   @Nullable private Object listener;
-  @Nullable private SetCallback setCallback;
-  @Nullable private UnsetCallback unsetCallback;
 
   @Inject SyncStateObserver() {
     Timber.d("New StateObserver for Sync");
@@ -42,6 +44,9 @@ class SyncStateObserver implements InterestObserver {
     registered = false;
     enabled = false;
     disabled = false;
+
+    setMap = new HashMap<>();
+    unsetMap = new HashMap<>();
   }
 
   @CheckResult @NonNull private Object addStatusChangeListener() {
@@ -55,10 +60,10 @@ class SyncStateObserver implements InterestObserver {
             if (!enabled) {
               enabled = true;
               Timber.d("Enabled");
-              if (setCallback == null) {
-                Timber.e("Received set change event with no callback");
-              } else {
-                setCallback.call();
+              for (final SetCallback setCallback : setMap.values()) {
+                if (setCallback != null) {
+                  setCallback.call();
+                }
               }
             }
           } else {
@@ -69,10 +74,10 @@ class SyncStateObserver implements InterestObserver {
             if (!disabled) {
               disabled = true;
               Timber.d("Disabled");
-              if (unsetCallback == null) {
-                Timber.e("Received unset change event with no callback");
-              } else {
-                unsetCallback.call();
+              for (final UnsetCallback unsetCallback : unsetMap.values()) {
+                if (unsetCallback != null) {
+                  unsetCallback.call();
+                }
               }
             }
           }
@@ -97,12 +102,12 @@ class SyncStateObserver implements InterestObserver {
     return b;
   }
 
-  @Override
-  public void register(@Nullable SetCallback setCallback, @Nullable UnsetCallback unsetCallback) {
+  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback) {
     handler.removeCallbacksAndMessages(null);
     if (!registered) {
-      this.setCallback = setCallback;
-      this.unsetCallback = unsetCallback;
+      setMap.put(tag, setCallback);
+      unsetMap.put(tag, unsetCallback);
       Timber.d("Register new state observer");
       registerListener();
       registered = true;
@@ -111,14 +116,14 @@ class SyncStateObserver implements InterestObserver {
     }
   }
 
-  @Override public void unregister() {
+  @Override public void unregister(@NonNull String tag) {
     handler.removeCallbacksAndMessages(null);
     handler.post(() -> {
       if (registered) {
         Timber.d("Unregister new state observer");
         unregisterListener();
-        this.setCallback = null;
-        this.unsetCallback = null;
+        setMap.remove(tag);
+        unsetMap.remove(tag);
         registered = false;
       } else {
         Timber.e("Already unregistered");

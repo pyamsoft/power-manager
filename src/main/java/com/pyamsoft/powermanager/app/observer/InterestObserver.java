@@ -17,13 +17,15 @@
 package com.pyamsoft.powermanager.app.observer;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public interface InterestObserver {
 
-  void register(@Nullable SetCallback setCallback, @Nullable UnsetCallback unsetCallback);
+  void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback);
 
-  void unregister();
+  void unregister(@NonNull String tag);
 
   @CheckResult boolean is();
 
