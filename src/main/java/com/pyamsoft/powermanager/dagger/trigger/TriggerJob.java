@@ -72,8 +72,6 @@ public class TriggerJob extends BaseJob {
   @Override public void onAdded() {
     super.onAdded();
     Singleton.Dagger.with(getApplicationContext())
-        .plusStateObserverComponent()
-        .plusStateModifier()
         .inject(this);
   }
 

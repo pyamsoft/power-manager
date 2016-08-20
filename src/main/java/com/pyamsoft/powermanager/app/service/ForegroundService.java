@@ -49,7 +49,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @Override public void onCreate() {
     super.onCreate();
 
-    Singleton.Dagger.with(this).plusForegroundComponent().inject(this);
+    Singleton.Dagger.with(this).inject(this);
 
     screenOnOffReceiver = new ScreenOnOffReceiver(this);
     screenOnOffReceiver.register();

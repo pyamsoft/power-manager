@@ -43,6 +43,7 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;
@@ -55,7 +56,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Singleton.Dagger.with(this).plusFullNotification().inject(this);
+    Singleton.Dagger.with(this).plusFullNotificationComponent().inject(this);
 
     presenter.bindView(this);
   }
@@ -82,8 +83,8 @@ public class FullNotificationActivity extends AppCompatActivity
   @Override protected void onPostResume() {
     super.onPostResume();
     Timber.d("Show Full Notification");
-    //AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new FullDialog(),
-    //    "full_dialog");
+    AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new FullDialog(),
+        "full_dialog");
   }
 
   @Override public void onDismissEvent() {
@@ -133,14 +134,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setCancelable(true);
       Timber.d("onCreate");
 
-      Singleton.Dagger.with(getContext())
-          .plusStateObserverComponent()
-          .plusStateModifier()
-          .inject(this);
-      Singleton.Dagger.with(getContext())
-          .plusManageObserverComponent()
-          .plusManageModifier()
-          .inject(this);
+      Singleton.Dagger.with(getContext()).inject(this);
 
       wifiStateObserver.register(() -> setWifiToggleState(true), () -> setWifiToggleState(false));
       dataStateObserver.register(() -> setDataToggleState(true), () -> setDataToggleState(false));

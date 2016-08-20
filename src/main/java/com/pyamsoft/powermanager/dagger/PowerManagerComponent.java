@@ -16,28 +16,32 @@
 
 package com.pyamsoft.powermanager.dagger;
 
-import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverComponent;
-import com.pyamsoft.powermanager.dagger.observer.state.StateObserverComponent;
-import com.pyamsoft.powermanager.dagger.service.ForegroundComponent;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
+import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
+import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
+import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
+import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
+import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerJob;
 import dagger.Component;
 import javax.inject.Singleton;
 
-@Singleton @Component(modules = PowerManagerModule.class) public interface PowerManagerComponent {
+@Singleton @Component(modules = {
+    PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
+    ManageModifierModule.class, ManageObserverModule.class, ForegroundModule.class
+}) public interface PowerManagerComponent {
 
   // Subcomponent Trigger
   TriggerComponent plusTrigger();
 
-  // Subcomponent StateObserver
-  StateObserverComponent plusStateObserverComponent();
+  FullNotificationComponent plusFullNotificationComponent();
 
-  // Subcomponent ManageObserver
-  ManageObserverComponent plusManageObserverComponent();
+  void inject(ForegroundService service);
 
-  // Subcomponent Foreground
-  ForegroundComponent plusForegroundComponent();
+  void inject(FullNotificationActivity.FullDialog dialog);
 
-  // Subcomponent FullNotification
-  FullNotificationComponent plusFullNotification();
+  void inject(TriggerJob job);
 }
