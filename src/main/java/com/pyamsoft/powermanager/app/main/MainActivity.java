@@ -18,17 +18,53 @@ package com.pyamsoft.powermanager.app.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 
 public class MainActivity extends DonationActivityBase {
 
+  @BindView(R.id.main_toolbar) Toolbar toolbar;
+  private Unbinder unbinder;
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
+    unbinder = ButterKnife.bind(this);
+
+    setupPreferenceDefaults();
+    setupAppBar();
   }
 
   @Override protected int bindActivityToView() {
     setContentView(R.layout.activity_main);
     return R.id.ad_view;
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    unbinder.unbind();
+  }
+
+  private void setupPreferenceDefaults() {
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    PreferenceManager.setDefaultValues(this, R.xml.manage_wifi, false);
+    PreferenceManager.setDefaultValues(this, R.xml.manage_data, false);
+    PreferenceManager.setDefaultValues(this, R.xml.manage_bluetooth, false);
+    PreferenceManager.setDefaultValues(this, R.xml.manage_sync, false);
+    PreferenceManager.setDefaultValues(this, R.xml.periodic_wifi, false);
+    PreferenceManager.setDefaultValues(this, R.xml.periodic_data, false);
+    PreferenceManager.setDefaultValues(this, R.xml.periodic_bluetooth, false);
+    PreferenceManager.setDefaultValues(this, R.xml.periodic_sync, false);
+    PreferenceManager.setDefaultValues(this, R.xml.doze, false);
+  }
+
+  private void setupAppBar() {
+    setSupportActionBar(toolbar);
+    toolbar.setTitle(getString(R.string.app_name));
   }
 }
