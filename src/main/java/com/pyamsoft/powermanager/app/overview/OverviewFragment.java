@@ -63,7 +63,7 @@ public class OverviewFragment extends ActionBarFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
-    setupRecyclerView();
+    setupRecyclerView(view);
   }
 
   @Override public void onResume() {
@@ -71,9 +71,9 @@ public class OverviewFragment extends ActionBarFragment {
     setActionBarUpEnabled(false);
   }
 
-  private void setupRecyclerView() {
+  private void setupRecyclerView(@NonNull View view) {
     final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-    adapter = new OverviewAdapter();
+    adapter = new OverviewAdapter(getFragmentManager(), view);
 
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);

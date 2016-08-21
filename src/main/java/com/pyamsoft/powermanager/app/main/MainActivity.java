@@ -59,6 +59,15 @@ public class MainActivity extends DonationActivityBase {
     unbinder.unbind();
   }
 
+  @Override public void onBackPressed() {
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.getBackStackEntryCount() > 0) {
+      fragmentManager.popBackStack();
+    } else {
+      super.onBackPressed();
+    }
+  }
+
   private void setupPreferenceDefaults() {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_wifi, false);

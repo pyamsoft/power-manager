@@ -19,6 +19,8 @@ package com.pyamsoft.powermanager.app.overview;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,9 +33,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import rx.Subscription;
+import timber.log.Timber;
 
 public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
 
@@ -45,8 +49,14 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
   private static final int POSITION_DOZE = 5;
   private static final int POSITION_SETTINGS = 6;
   private static final int NUMBER_ITEMS = 7;
-
+  @NonNull private final FragmentManager fragmentManager;
+  @NonNull private final View rootView;
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+
+  public OverviewAdapter(@NonNull FragmentManager fragmentManager, @NonNull View rootView) {
+    this.fragmentManager = fragmentManager;
+    this.rootView = rootView;
+  }
 
   @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     final View view = LayoutInflater.from(parent.getContext())
@@ -56,7 +66,8 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     final String title;
-    final String tag;
+    final String tag = PowerTriggerFragment.TAG;
+    final Fragment fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
     @DrawableRes final int image;
     @ColorRes final int background;
     switch (position) {
@@ -102,10 +113,10 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
     holder.itemView.setBackgroundColor(
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
-    holder.root.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        // TODO load a new fragment
-      }
+    holder.root.setOnClickListener(view -> {
+      // TODO load a new fragment
+      Timber.d("Click on item: %s", title);
+      loadFragmentFromOverview(tag, fragment);
     });
 
     holder.title.setText(title);
@@ -130,6 +141,15 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
   @Override public int getItemCount() {
     return NUMBER_ITEMS;
+  }
+
+  private void loadFragmentFromOverview(@NonNull String tag, @NonNull Fragment fragment) {
+    if (fragmentManager.findFragmentByTag(tag) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, fragment)
+          .addToBackStack(null)
+          .commit();
+    }
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {

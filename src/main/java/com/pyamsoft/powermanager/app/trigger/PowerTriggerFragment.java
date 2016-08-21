@@ -36,6 +36,7 @@ import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.tool.RxBus;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -56,6 +57,14 @@ public class PowerTriggerFragment extends ActionBarFragment
   private PowerTriggerListAdapter adapter;
   private Unbinder unbinder;
   private RecyclerView.ItemDecoration dividerDecoration;
+
+  @CheckResult @NonNull
+  public static PowerTriggerFragment newInstance(@NonNull View view, @NonNull View container) {
+    final Bundle args = CircularRevealFragmentUtil.bundleArguments(view, container);
+    final PowerTriggerFragment fragment = new PowerTriggerFragment();
+    fragment.setArguments(args);
+    return fragment;
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -97,6 +106,7 @@ public class PowerTriggerFragment extends ActionBarFragment
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     setupFab();
     setupRecyclerView();
     presenter.loadTriggerView();
