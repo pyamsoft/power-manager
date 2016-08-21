@@ -21,10 +21,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class WifiStateObserver extends StateObserver {
+
+  @NonNull private final WifiManagerWrapper wrapper;
 
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);
@@ -37,22 +39,11 @@ class WifiStateObserver extends StateObserver {
       uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
     }
     setUri(uri);
+
+    wrapper = new WifiManagerWrapper(context);
   }
 
   @Override public boolean is() {
-    boolean enabled;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.WIFI_ON, 0)
-              == 1;
-    } else {
-      //noinspection deprecation
-      enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.WIFI_ON, 0)
-              == 1;
-    }
-
-    Timber.d("Is %s", enabled);
-    return enabled;
+    return wrapper.isEnabled();
   }
 }

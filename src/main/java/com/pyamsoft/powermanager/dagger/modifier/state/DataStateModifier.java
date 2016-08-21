@@ -59,8 +59,9 @@ class DataStateModifier extends StateModifier {
       return method;
     } catch (final Exception e) {
       Timber.e(e, "ManagerData reflectSetMethod ERROR");
-      return null;
     }
+
+    return null;
   }
 
   private void setMobileDataEnabledReflection(boolean enabled) {
@@ -78,7 +79,7 @@ class DataStateModifier extends StateModifier {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledReflection(enabled);
     } else {
-      Timber.e("Cannot set mobile data on Lollipop and up");
+      Timber.e("Cannot set mobile data using reflection");
     }
   }
 

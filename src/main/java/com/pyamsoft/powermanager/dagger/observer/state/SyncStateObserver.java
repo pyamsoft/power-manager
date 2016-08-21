@@ -97,9 +97,9 @@ class SyncStateObserver implements InterestObserver {
   }
 
   @Override public boolean is() {
-    final boolean b = ContentResolver.getMasterSyncAutomatically();
-    Timber.d("Is %s", b);
-    return b;
+    final boolean enabled = ContentResolver.getMasterSyncAutomatically();
+    Timber.d("Is sync enabled?: %s", enabled);
+    return enabled;
   }
 
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,

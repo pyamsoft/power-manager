@@ -21,10 +21,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class BluetoothStateObserver extends StateObserver {
+
+  @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
@@ -37,22 +39,10 @@ class BluetoothStateObserver extends StateObserver {
       uri = Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON);
     }
     setUri(uri);
+    wrapper = new BluetoothAdapterWrapper(context);
   }
 
   @Override public boolean is() {
-    boolean enabled;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), Settings.Global.BLUETOOTH_ON,
-              0) == 1;
-    } else {
-      //noinspection deprecation
-      enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), Settings.Secure.BLUETOOTH_ON,
-              0) == 1;
-    }
-
-    Timber.d("Is %s", enabled);
-    return enabled;
+    return wrapper.isEnabled();
   }
 }

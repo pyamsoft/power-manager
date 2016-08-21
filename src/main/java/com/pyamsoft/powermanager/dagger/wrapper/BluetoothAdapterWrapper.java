@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.state;
+package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -25,11 +25,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import timber.log.Timber;
 
-final class BluetoothAdapterWrapper {
+public final class BluetoothAdapterWrapper {
 
   @Nullable private final BluetoothAdapter adapter;
 
-  BluetoothAdapterWrapper(@NonNull Context context) {
+  public BluetoothAdapterWrapper(@NonNull Context context) {
     this.adapter = getBluetoothAdapter(context);
   }
 
@@ -57,5 +57,11 @@ final class BluetoothAdapterWrapper {
       Timber.d("Bluetooth: disable");
       adapter.disable();
     }
+  }
+
+  @CheckResult public final boolean isEnabled() {
+    final boolean enabled = adapter != null && adapter.isEnabled();
+    Timber.d("Bluetooth enabled: %s", enabled);
+    return enabled;
   }
 }
