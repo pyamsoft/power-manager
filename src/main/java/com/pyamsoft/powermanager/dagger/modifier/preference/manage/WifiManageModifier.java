@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.manage;
+package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class DozeManageModifier extends ManageModifier {
+class WifiManageModifier extends BooleanPreferenceModifier {
 
-  @Inject DozeManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject WifiManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    // Don't allow the setting of Doze if we don't have permission
-    preferences.setDozeManaged(PowerManager.hasDozePermission(context));
+  @Override
+  protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setWifiManaged(true);
   }
 
-  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    preferences.setDozeManaged(false);
+  @Override
+  protected void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setWifiManaged(false);
   }
 }

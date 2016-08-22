@@ -20,10 +20,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.observer.preference.PreferenceObserver;
+import com.pyamsoft.powermanager.dagger.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 
-class WifiPeriodicObserver extends PreferenceObserver {
+class WifiPeriodicObserver extends BooleanPreferenceObserver {
 
   @Inject WifiPeriodicObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

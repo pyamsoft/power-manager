@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.manage;
+package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class SyncManageModifier extends ManageModifier {
+class BluetoothManageModifier extends BooleanPreferenceModifier {
 
-  @Inject SyncManageModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
-    @NonNull Scheduler subscribeScheduler,
-    @NonNull Scheduler observeScheduler) {
+  @Inject BluetoothManageModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void set(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    preferences.setSyncManaged(true);
+  @Override
+  protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setBluetoothManaged(true);
   }
 
-  @Override void unset(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    preferences.setSyncManaged(false);
+  @Override
+  protected void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setBluetoothManaged(false);
   }
 }

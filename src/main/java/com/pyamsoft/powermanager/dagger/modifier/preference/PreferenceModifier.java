@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.manage;
+package com.pyamsoft.powermanager.dagger.modifier.preference;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,7 +27,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class ManageModifier implements BooleanInterestModifier {
+public abstract class PreferenceModifier {
 
   @NonNull private final Context appContext;
   @NonNull private final Intent service;
@@ -37,9 +36,10 @@ abstract class ManageModifier implements BooleanInterestModifier {
   @NonNull private final Scheduler observeScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
-  ManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    Timber.d("New ManageModifier");
+  protected PreferenceModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
+    Timber.d("New PreferenceModifier");
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.service = new Intent(appContext, ForegroundService.class);
@@ -53,32 +53,21 @@ abstract class ManageModifier implements BooleanInterestModifier {
     }
   }
 
-  @Override public final void set() {
+  protected void wrapInSubscription(@NonNull WrappedSubscription wrappedSubscription) {
     unsub();
     subscription = Observable.defer(() -> {
-      Timber.d("Set on IO thread");
-      set(appContext, preferences);
+      Timber.d("Run modifier on subscription thread");
+      wrappedSubscription.call(appContext, preferences);
       return Observable.just(true);
     }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
-      Timber.d("Set success");
+      Timber.d("Modifier success");
       appContext.startService(service);
-    }, throwable -> Timber.e(throwable, "onError set"), this::unsub);
+    }, throwable -> Timber.e(throwable, "onError wrapInSubscription"), this::unsub);
   }
 
-  @Override public final void unset() {
-    unsub();
-    subscription = Observable.defer(() -> {
-      Timber.d("Unset on IO thread");
-      unset(appContext, preferences);
-      return Observable.just(true);
-    }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
-      Timber.d("Unset success");
-      appContext.startService(service);
-    }, throwable -> Timber.e(throwable, "onError unset"), this::unsub);
+  protected interface WrappedSubscription {
+
+    void call(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
   }
-
-  abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
-
-  abstract void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
 }
 

@@ -14,26 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.manage;
+package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class WifiManageModifier extends ManageModifier {
+class SyncManageModifier extends BooleanPreferenceModifier {
 
-  @Inject WifiManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject SyncManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    preferences.setWifiManaged(true);
+  @Override
+  protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setSyncManaged(true);
   }
 
-  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    preferences.setWifiManaged(false);
+  @Override
+  protected void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    preferences.setSyncManaged(false);
   }
 }

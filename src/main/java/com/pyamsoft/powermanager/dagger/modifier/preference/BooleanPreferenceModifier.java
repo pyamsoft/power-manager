@@ -14,30 +14,35 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.manage;
+package com.pyamsoft.powermanager.dagger.modifier.preference;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import javax.inject.Inject;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import rx.Scheduler;
 
-class DataManageModifier extends ManageModifier {
+public abstract class BooleanPreferenceModifier extends PreferenceModifier
+    implements BooleanInterestModifier {
 
-  @Inject DataManageModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
-    @NonNull Scheduler subscribeScheduler,
-    @NonNull Scheduler observeScheduler) {
+  protected BooleanPreferenceModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override void set(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    preferences.setDataManaged(true);
+  @Override public final void set() {
+    wrapInSubscription(this::set);
   }
 
-  @Override void unset(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    preferences.setDataManaged(false);
+  @Override public final void unset() {
+    wrapInSubscription(this::unset);
   }
+
+  abstract protected void set(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences);
+
+  abstract protected void unset(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences);
 }
+

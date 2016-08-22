@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger;
 import com.pyamsoft.powermanager.dagger.job.JobComponent;
 import com.pyamsoft.powermanager.dagger.managepreference.ManagePreferenceComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
-import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
+import com.pyamsoft.powermanager.dagger.modifier.preference.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;

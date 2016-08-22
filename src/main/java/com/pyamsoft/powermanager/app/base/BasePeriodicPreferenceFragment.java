@@ -21,11 +21,18 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.Nullable;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
 
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat {
+
+  private String periodicKey;
+
+  private SwitchPreferenceCompat managePreference;
+  private BasePeriodPreferencePresenter presenter;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());

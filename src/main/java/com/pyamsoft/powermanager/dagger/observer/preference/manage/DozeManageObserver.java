@@ -20,10 +20,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.observer.preference.PreferenceObserver;
+import com.pyamsoft.powermanager.dagger.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 
-class DozeManageObserver extends PreferenceObserver {
+class DozeManageObserver extends BooleanPreferenceObserver {
 
   @Inject DozeManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

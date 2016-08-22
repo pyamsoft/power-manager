@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public abstract class PreferenceObserver
+public abstract class BooleanPreferenceObserver
     implements SharedPreferences.OnSharedPreferenceChangeListener, BooleanInterestObserver {
 
   @NonNull private final PowerManagerPreferences preferences;
@@ -37,9 +37,9 @@ public abstract class PreferenceObserver
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
-  protected PreferenceObserver(@NonNull Context context,
+  protected BooleanPreferenceObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull String key) {
-    Timber.d("New ManageObserver with key: %s", key);
+    Timber.d("New PreferenceObserver with key: %s", key);
     this.preferences = preferences;
     this.key = key;
 
