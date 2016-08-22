@@ -34,8 +34,6 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
   @NonNull private final IntentFilter filter;
   @NonNull private final Map<String, SetCallback> setMap;
   @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean enabled;
-  private boolean disabled;
   private boolean registered;
 
   StateObserver(@NonNull Context context) {
@@ -43,8 +41,6 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     filter = new IntentFilter();
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
-    enabled = false;
-    disabled = false;
     registered = false;
   }
 
@@ -122,31 +118,15 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     Timber.d("Received event for action: %s", action);
 
     if (is()) {
-      // Reset status of other flag here
-      disabled = false;
-
-      // Only call hook once
-      if (!enabled) {
-        enabled = true;
-        Timber.d("Run enable hooks");
-        for (final SetCallback setCallback : setMap.values()) {
-          if (setCallback != null) {
-            setCallback.call();
-          }
+      for (final SetCallback setCallback : setMap.values()) {
+        if (setCallback != null) {
+          setCallback.call();
         }
       }
     } else {
-      // Reset status of other flag here
-      enabled = false;
-
-      // Only call hook once
-      if (!disabled) {
-        disabled = true;
-        Timber.d("Run disable hooks");
-        for (final UnsetCallback unsetCallback : unsetMap.values()) {
-          if (unsetCallback != null) {
-            unsetCallback.call();
-          }
+      for (final UnsetCallback unsetCallback : unsetMap.values()) {
+        if (unsetCallback != null) {
+          unsetCallback.call();
         }
       }
     }
