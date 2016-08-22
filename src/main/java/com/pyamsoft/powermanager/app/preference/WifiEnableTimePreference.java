@@ -25,28 +25,28 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class WifiDelayPreference extends CustomTimeInputPreference {
-  @Inject @Named("wifi_custom_delay") CustomTimeInputPreferencePresenter presenter;
+public class WifiEnableTimePreference extends CustomTimeInputPreference {
+  @Inject @Named("wifi_custom_enable") CustomTimeInputPreferencePresenter presenter;
 
-  public WifiDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public WifiEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public WifiDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public WifiEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public WifiDelayPreference(Context context, AttributeSet attrs) {
+  public WifiEnableTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public WifiDelayPreference(Context context) {
+  public WifiEnableTimePreference(Context context) {
     super(context);
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current delay time: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current enable time period: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

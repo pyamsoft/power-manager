@@ -16,18 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
-import com.pyamsoft.powermanager.app.preference.WifiDelayPreference;
-import com.pyamsoft.powermanager.app.preference.WifiDisableTimePreference;
-import com.pyamsoft.powermanager.app.preference.WifiEnableTimePreference;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-@ActivityScope @Subcomponent(modules = WifiCustomPreferenceModule.class)
-public interface CustomPreferenceComponent {
+final class WifiEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenter {
 
-  void inject(WifiDelayPreference preference);
-
-  void inject(WifiEnableTimePreference preference);
-
-  void inject(WifiDisableTimePreference preference);
+  @Inject WifiEnableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observeScheduler, subscribeScheduler);
+  }
 }

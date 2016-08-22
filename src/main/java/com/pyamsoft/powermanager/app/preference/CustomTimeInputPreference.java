@@ -49,6 +49,7 @@ public abstract class CustomTimeInputPreference extends Preference
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     setLayoutResource(R.layout.preference_custom_time_input);
+    injectPresenter(context);
   }
 
   CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -65,8 +66,11 @@ public abstract class CustomTimeInputPreference extends Preference
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
+
+    // We call unbind because when a preference is changed it can be re-bound without being properly recycled
+    unbind();
+
     Timber.d("onBindViewHolder");
-    injectPresenter(holder.itemView.getContext());
     presenter = getPresenter();
     presenter.bindView(this);
 
