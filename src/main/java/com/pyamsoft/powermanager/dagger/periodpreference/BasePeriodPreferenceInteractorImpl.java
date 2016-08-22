@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.periodpreference;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 
-abstract class BasePeriodPreferenceInteractorImpl implements BasePeriodPreferenceInteractor {
+public abstract class BasePeriodPreferenceInteractorImpl implements BasePeriodPreferenceInteractor {
 
   @NonNull private final BooleanInterestModifier periodModifier;
 
-  BasePeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
+  protected BasePeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
     this.periodModifier = periodModifier;
   }
 

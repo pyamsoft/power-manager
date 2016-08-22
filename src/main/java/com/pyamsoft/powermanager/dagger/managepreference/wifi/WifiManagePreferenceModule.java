@@ -14,26 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.dagger.managepreference.wifi;
 
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class ManagePreferenceModule {
-
-  @ActivityScope @Provides @Named("doze_manage_pref")
-  BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
-      @Named("doze_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
-      @Named("obs_doze_manage") BooleanInterestObserver manageObserver) {
-    return new DozeManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
-        manageObserver);
-  }
+@Module public class WifiManagePreferenceModule {
 
   @ActivityScope @Provides @Named("wifi_manage_pref")
   BaseManagePreferencePresenter provideWifiManagePreferencePresenter(
@@ -42,12 +35,6 @@ import rx.Scheduler;
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver) {
     return new WifiManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
         manageObserver);
-  }
-
-  @ActivityScope @Provides @Named("doze_manage_pref_interactor")
-  BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
-      @Named("mod_doze_manage") BooleanInterestModifier manageModifier) {
-    return new DozeManagePreferenceInteractorImpl(manageModifier);
   }
 
   @ActivityScope @Provides @Named("wifi_manage_pref_interactor")

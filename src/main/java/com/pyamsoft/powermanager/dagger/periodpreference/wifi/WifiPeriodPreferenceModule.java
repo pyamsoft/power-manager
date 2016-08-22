@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.periodpreference;
+package com.pyamsoft.powermanager.dagger.periodpreference.wifi;
 
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class PeriodPreferenceModule {
+@Module public class WifiPeriodPreferenceModule {
 
   @ActivityScope @Provides @Named("wifi_period_pref")
   BasePeriodPreferencePresenter provideWifiManagePreferencePresenter(

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.managepreference;
 
-interface BaseManagePreferenceInteractor {
+public interface BaseManagePreferenceInteractor {
 
   void updateManage(boolean state);
 }

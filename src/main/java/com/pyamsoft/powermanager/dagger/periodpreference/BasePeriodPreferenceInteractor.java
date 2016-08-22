@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.periodpreference;
 
-interface BasePeriodPreferenceInteractor {
+public interface BasePeriodPreferenceInteractor {
 
   void updatePeriodic(boolean state);
 }

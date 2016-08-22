@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.dagger.managepreference.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
 final class DozeManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {

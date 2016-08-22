@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.dagger.periodpreference.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class WifiManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
-
-  @Inject WifiManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
-    super(manageModifier);
+final class WifiPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+  @Inject WifiPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
+    super(periodModifier);
   }
 }

@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.managepreference;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 
-abstract class BaseManagePreferenceInteractorImpl implements BaseManagePreferenceInteractor {
+public abstract class BaseManagePreferenceInteractorImpl implements BaseManagePreferenceInteractor {
 
   @NonNull private final BooleanInterestModifier manageModifier;
 
-  BaseManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
+  protected BaseManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     this.manageModifier = manageModifier;
   }
 
