@@ -22,12 +22,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v7.preference.Preference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
 import timber.log.Timber;
 
@@ -40,6 +41,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   private SwitchPreferenceCompat managePreference;
   private BaseManagePreferencePresenter presenter;
+  private ListPreference presetTimePreference;
+  private CustomTimeInputPreference customTimePreference;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -56,38 +59,54 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
+  private void resolvePreferences() {
+    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
+    presetTimePreference = (ListPreference) findPreference(presetTimeKey);
+    customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
+
+    if (managePreference == null) {
+      throw new NullPointerException("Manage Preference is NULL");
+    }
+
+    if (presetTimePreference == null) {
+      throw new NullPointerException("Preset Time Preference is NULL");
+    }
+  }
+
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
-    if (managePreference != null) {
-      managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-        if (newValue instanceof Boolean) {
-          final boolean b = (boolean) newValue;
-          Timber.d("onPreferenceChange for key: %s", preference.getKey());
-          final boolean canChange = onManagePreferenceChanged(b);
-          if (canChange) {
-            presenter.updateManage(b);
-          }
-        }
+    resolvePreferences();
 
-        // We always return false so the preference is updated by the modifier/observer backend
-        return false;
-      });
-    }
+    managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean b = (boolean) newValue;
+        Timber.d("onPreferenceChange for key: %s", preference.getKey());
+        final boolean canChange = onManagePreferenceChanged(b);
+        if (canChange) {
+          presenter.updateManage(b);
 
-    final Preference customTimePreference = findPreference(timeKey);
-    final Preference presetTimePreference = findPreference(presetTimeKey);
-    if (presetTimePreference != null) {
-      presetTimePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-        if (newValue instanceof String) {
-          final String string = (String) newValue;
-          final long time = Long.parseLong(string);
-          Timber.d("onPreferenceChange for key: %s", preference.getKey());
-          return onPresetTimePreferenceChanged(time, customTimePreference);
+          setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
         }
-        return false;
-      });
-    }
+      }
+
+      // We always return false so the preference is updated by the modifier/observer backend
+      return false;
+    });
+
+    presetTimePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof String) {
+        final String presetDelay = (String) newValue;
+        Timber.d("onPreferenceChange for key: %s", preference.getKey());
+        final boolean canChange = onPresetTimePreferenceChanged(presetDelay, customTimePreference);
+        if (canChange) {
+          setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
+          return true;
+        }
+      }
+      return false;
+    });
+
+    setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
   }
 
   @Override public final void onStart() {
@@ -105,6 +124,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     presenter.unbindView();
   }
 
+  private void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
+    if (customTimePreference != null) {
+      // Disable delay custom when unchecked
+      // Enable delay custom when checked and custom delay time
+      final long delayTime = Long.parseLong(presetDelay);
+      customTimePreference.setEnabled(managed && delayTime == -1);
+    }
+  }
+
   /**
    * Override if you implement any custom conditions for changing preferences
    */
@@ -115,8 +143,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult protected boolean onPresetTimePreferenceChanged(long time,
-      @Nullable Preference customTimePreference) {
+  @CheckResult protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
+      @Nullable CustomTimeInputPreference customTimePreference) {
     return true;
   }
 
