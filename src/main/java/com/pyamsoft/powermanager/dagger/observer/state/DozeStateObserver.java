@@ -16,113 +16,56 @@
 
 package com.pyamsoft.powermanager.dagger.observer.state;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import java.util.HashMap;
-import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozeStateObserver extends BroadcastReceiver implements InterestObserver {
+class DozeStateObserver extends StateObserver {
 
-  @NonNull private final Context appContext;
-  @NonNull private final Handler handler;
-  @Nullable private final IntentFilter filter;
-  @NonNull private final Map<String, SetCallback> setMap;
-  @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean registered;
+  @NonNull private final PowerManager androidPowerManager;
 
   @Inject DozeStateObserver(@NonNull Context context) {
-    appContext = context.getApplicationContext();
-    handler = new Handler(Looper.getMainLooper());
+    super(context);
     if (isDozeAvailable()) {
-      filter = new IntentFilter(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-    } else {
-      filter = null;
+      setFilterActions(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
     }
-    setMap = new HashMap<>();
-    unsetMap = new HashMap<>();
+
+    androidPowerManager = (android.os.PowerManager) getAppContext().getApplicationContext()
+        .getSystemService(Context.POWER_SERVICE);
   }
 
   @CheckResult static boolean isDozeAvailable() {
-    return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
   }
 
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
-    handler.removeCallbacksAndMessages(null);
     if (isDozeAvailable()) {
-      handler.post(() -> {
-        if (!registered) {
-          Timber.d("Register new state observer for: Doze");
-          setMap.put(tag, setCallback);
-          unsetMap.put(tag, unsetCallback);
-          appContext.registerReceiver(this, filter);
-          registered = true;
-        } else {
-          Timber.e("Already registered");
-        }
-      });
+      super.register(tag, setCallback, unsetCallback);
     }
   }
 
   @Override public void unregister(@NonNull String tag) {
-    handler.removeCallbacksAndMessages(null);
     if (isDozeAvailable()) {
-      handler.post(() -> {
-        if (registered) {
-          Timber.d("Unregister new state observer");
-          appContext.unregisterReceiver(this);
-          setMap.remove(tag);
-          unsetMap.remove(tag);
-          registered = false;
-        } else {
-          Timber.e("Already unregistered");
-        }
-      });
+      super.unregister(tag);
     }
   }
 
   @Override public boolean is() {
-    final android.os.PowerManager pm =
-        (android.os.PowerManager) appContext.getSystemService(Context.POWER_SERVICE);
     boolean doze;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    if (isDozeAvailable()) {
       Timber.d("Get doze state");
-      doze = pm.isDeviceIdleMode();
+      doze = androidPowerManager.isDeviceIdleMode();
     } else {
       Timber.e("Default doze state false");
       doze = false;
     }
 
     return doze;
-  }
-
-  @Override public void onReceive(Context context, Intent intent) {
-    if (isDozeAvailable()) {
-      if (is()) {
-        for (final SetCallback setCallback : setMap.values()) {
-          if (setCallback != null) {
-            setCallback.call();
-          }
-        }
-      } else {
-        for (final UnsetCallback unsetCallback : unsetMap.values()) {
-          if (unsetCallback != null) {
-            unsetCallback.call();
-          }
-        }
-      }
-    }
   }
 }

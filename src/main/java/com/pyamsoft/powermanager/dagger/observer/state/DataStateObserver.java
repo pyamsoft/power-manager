@@ -43,13 +43,7 @@ class DataStateObserver extends StateObserver {
   @Inject DataStateObserver(@NonNull Context context) {
     super(context);
 
-    Uri uri;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(SETTINGS_MOBILE_DATA);
-    } else {
-      uri = Settings.Secure.getUriFor(SETTINGS_MOBILE_DATA);
-    }
-    setUri(uri);
+    setFilterActions(ConnectivityManager.CONNECTIVITY_ACTION);
 
     connectivityManager = (ConnectivityManager) context.getApplicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -59,7 +59,7 @@ class SyncStateObserver implements InterestObserver {
             // Only call hook once
             if (!enabled) {
               enabled = true;
-              Timber.d("Enabled");
+              Timber.d("Run enable hooks");
               for (final SetCallback setCallback : setMap.values()) {
                 if (setCallback != null) {
                   setCallback.call();
@@ -73,7 +73,7 @@ class SyncStateObserver implements InterestObserver {
             // Only call hook once
             if (!disabled) {
               disabled = true;
-              Timber.d("Disabled");
+              Timber.d("Run disable hooks");
               for (final UnsetCallback unsetCallback : unsetMap.values()) {
                 if (unsetCallback != null) {
                   unsetCallback.call();

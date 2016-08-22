@@ -17,9 +17,7 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
+import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import javax.inject.Inject;
@@ -31,15 +29,7 @@ class WifiStateObserver extends StateObserver {
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);
 
-    Uri uri;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(Settings.Global.WIFI_ON);
-    } else {
-      //noinspection deprecation
-      uri = Settings.Secure.getUriFor(Settings.Secure.WIFI_ON);
-    }
-    setUri(uri);
-
+    setFilterActions(WifiManager.NETWORK_STATE_CHANGED_ACTION);
     wrapper = new WifiManagerWrapper(context);
   }
 

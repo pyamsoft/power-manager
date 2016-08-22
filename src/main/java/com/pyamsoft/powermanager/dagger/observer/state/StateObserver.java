@@ -16,11 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.observer.state;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,19 +28,19 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class StateObserver extends ContentObserver implements InterestObserver {
+abstract class StateObserver extends BroadcastReceiver implements InterestObserver {
 
   @NonNull private final Context appContext;
-  @NonNull private final Handler handler;
+  @NonNull private final IntentFilter filter;
   @NonNull private final Map<String, SetCallback> setMap;
   @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private Uri uri;
   private boolean registered;
+  private boolean enabled;
+  private boolean disabled;
 
   StateObserver(@NonNull Context context) {
-    super(new Handler(Looper.getMainLooper()));
     appContext = context.getApplicationContext();
-    handler = new Handler(Looper.getMainLooper());
+    filter = new IntentFilter();
     registered = false;
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
@@ -51,66 +50,84 @@ abstract class StateObserver extends ContentObserver implements InterestObserver
     return appContext;
   }
 
-  final void setUri(@NonNull Uri uri) {
-    Timber.d("New StateObserver with uri: %s", uri);
-    this.uri = uri;
+  final void setFilterActions(@NonNull String... actions) {
+    for (final String action : actions) {
+      if (action != null) {
+        filter.addAction(action);
+      }
+    }
   }
 
-  @Override public final void register(@NonNull String tag, @Nullable SetCallback setCallback,
+  void throwEmptyFilter() {
+    if (filter.countActions() == 0) {
+      throw new RuntimeException("Filter cannot be empty");
+    }
+  }
+
+  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      if (!registered) {
-        Timber.d("Register new state observer for: %s", uri);
-        setMap.put(tag, setCallback);
-        unsetMap.put(tag, unsetCallback);
-        appContext.getContentResolver().registerContentObserver(uri, false, this);
-        registered = true;
-      } else {
-        Timber.e("Already registered");
-      }
-    });
+    throwEmptyFilter();
+    if (!registered) {
+      Timber.d("Register new state observer for: %s", filter.actionsIterator());
+      setMap.put(tag, setCallback);
+      unsetMap.put(tag, unsetCallback);
+      appContext.getApplicationContext().registerReceiver(this, filter);
+      registered = true;
+    } else {
+      Timber.e("Already registered");
+    }
   }
 
-  @Override public final void unregister(@NonNull String tag) {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      if (registered) {
-        Timber.d("Unregister new state observer");
-        appContext.getContentResolver().unregisterContentObserver(this);
-        setMap.remove(tag);
-        unsetMap.remove(tag);
-        registered = false;
-      } else {
-        Timber.e("Already unregistered");
-      }
-    });
+  @Override public void unregister(@NonNull String tag) {
+    throwEmptyFilter();
+    if (registered) {
+      Timber.d("Unregister new state observer");
+      appContext.getApplicationContext().unregisterReceiver(this);
+      setMap.remove(tag);
+      unsetMap.remove(tag);
+      registered = false;
+    } else {
+      Timber.e("Already unregistered");
+    }
   }
 
-  @Override public final boolean deliverSelfNotifications() {
-    return false;
-  }
+  @Override public void onReceive(Context context, Intent intent) {
+    if (intent == null) {
+      Timber.e("Received event from NULL intent");
+      return;
+    }
 
-  @Override public final void onChange(boolean selfChange) {
-    onChange(selfChange, null);
-  }
+    final String action = intent.getAction();
+    Timber.d("Received event for action: %s", action);
 
-  @Override public final void onChange(boolean selfChange, Uri uri) {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      if (is()) {
+    if (is()) {
+      // Reset status of other flag here
+      disabled = false;
+
+      // Only call hook once
+      if (!enabled) {
+        enabled = true;
+        Timber.d("Run enable hooks");
         for (final SetCallback setCallback : setMap.values()) {
           if (setCallback != null) {
             setCallback.call();
           }
         }
-      } else {
+      }
+    } else {
+      // Reset status of other flag here
+      enabled = false;
+
+      // Only call hook once
+      if (!disabled) {
+        disabled = true;
+        Timber.d("Run disable hooks");
         for (final UnsetCallback unsetCallback : unsetMap.values()) {
           if (unsetCallback != null) {
             unsetCallback.call();
           }
         }
       }
-    });
+    }
   }
 }

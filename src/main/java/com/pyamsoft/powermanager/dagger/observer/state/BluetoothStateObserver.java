@@ -16,10 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.observer.state;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
 import javax.inject.Inject;
@@ -31,14 +29,7 @@ class BluetoothStateObserver extends StateObserver {
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
 
-    Uri uri;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      uri = Settings.Global.getUriFor(Settings.Global.BLUETOOTH_ON);
-    } else {
-      //noinspection deprecation
-      uri = Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON);
-    }
-    setUri(uri);
+    setFilterActions(BluetoothAdapter.ACTION_STATE_CHANGED);
     wrapper = new BluetoothAdapterWrapper(context);
   }
 
