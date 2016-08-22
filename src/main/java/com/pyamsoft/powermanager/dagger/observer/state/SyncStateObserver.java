@@ -17,13 +17,10 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.ContentResolver;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -31,7 +28,6 @@ import timber.log.Timber;
 
 class SyncStateObserver implements BooleanInterestObserver {
 
-  @NonNull private final Handler handler;
   @NonNull private final Map<String, SetCallback> setMap;
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
@@ -41,7 +37,6 @@ class SyncStateObserver implements BooleanInterestObserver {
 
   @Inject SyncStateObserver() {
     Timber.d("New StateObserver for Sync");
-    handler = new Handler(Looper.getMainLooper());
     registered = false;
     enabled = false;
     disabled = false;
@@ -52,7 +47,7 @@ class SyncStateObserver implements BooleanInterestObserver {
 
   @CheckResult @NonNull private Object addStatusChangeListener() {
     return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
-        i -> handler.post(() -> {
+        i -> {
           if (is()) {
             // Reset status of other flag here
             disabled = false;
@@ -82,18 +77,30 @@ class SyncStateObserver implements BooleanInterestObserver {
               }
             }
           }
-        }));
+        });
   }
 
   private void registerListener() {
     unregisterListener();
-    listener = addStatusChangeListener();
+    if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
+      if (!registered) {
+        Timber.d("Register real listener");
+        listener = addStatusChangeListener();
+        registered = true;
+      }
+    }
   }
 
   private void unregisterListener() {
-    if (listener != null) {
-      ContentResolver.removeStatusChangeListener(listener);
-      listener = null;
+    if (setMap.isEmpty() && unsetMap.isEmpty()) {
+      if (listener != null) {
+        if (registered) {
+          Timber.d("Unregister real listener");
+          ContentResolver.removeStatusChangeListener(listener);
+          listener = null;
+          registered = false;
+        }
+      }
     }
   }
 
@@ -105,30 +112,24 @@ class SyncStateObserver implements BooleanInterestObserver {
 
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
-    handler.removeCallbacksAndMessages(null);
-    if (!registered) {
+    if (!setMap.containsKey(tag) && !unsetMap.containsKey(tag)) {
       setMap.put(tag, setCallback);
       unsetMap.put(tag, unsetCallback);
-      Timber.d("Register new state observer");
+      Timber.d("Register new state observer with tag: %s", tag);
       registerListener();
-      registered = true;
     } else {
-      Timber.e("Already registered");
+      Timber.e("Already registered with tag: %s", tag);
     }
   }
 
   @Override public void unregister(@NonNull String tag) {
-    handler.removeCallbacksAndMessages(null);
-    handler.post(() -> {
-      if (registered) {
-        Timber.d("Unregister new state observer");
-        unregisterListener();
-        setMap.remove(tag);
-        unsetMap.remove(tag);
-        registered = false;
-      } else {
-        Timber.e("Already unregistered");
-      }
-    });
+    if (setMap.containsKey(tag) && unsetMap.containsKey(tag)) {
+      Timber.d("Unregister state observer for tag: %s", tag);
+      unregisterListener();
+      setMap.remove(tag);
+      unsetMap.remove(tag);
+    } else {
+      Timber.e("Already unregistered with tag: %s", tag);
+    }
   }
 }

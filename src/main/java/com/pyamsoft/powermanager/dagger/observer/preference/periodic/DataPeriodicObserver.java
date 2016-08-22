@@ -27,10 +27,10 @@ class DataPeriodicObserver extends BooleanPreferenceObserver {
 
   @Inject DataPeriodicObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, context.getString(R.string.periodic_data_key));
+    super(preferences, context.getString(R.string.periodic_data_key));
   }
 
-  @Override protected boolean is(PowerManagerPreferences preferences) {
+  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
     return preferences.isPeriodicData();
   }
 }

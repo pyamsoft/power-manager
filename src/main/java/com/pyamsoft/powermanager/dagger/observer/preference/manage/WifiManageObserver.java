@@ -27,10 +27,10 @@ class WifiManageObserver extends BooleanPreferenceObserver {
 
   @Inject WifiManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, context.getString(R.string.manage_wifi_key));
+    super(preferences, context.getString(R.string.manage_wifi_key));
   }
 
-  @Override protected boolean is(PowerManagerPreferences preferences) {
+  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
     return preferences.isWifiManaged();
   }
 }

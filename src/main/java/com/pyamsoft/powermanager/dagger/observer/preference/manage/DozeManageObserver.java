@@ -27,10 +27,10 @@ class DozeManageObserver extends BooleanPreferenceObserver {
 
   @Inject DozeManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, context.getString(R.string.manage_doze_key));
+    super(preferences, context.getString(R.string.manage_doze_key));
   }
 
-  @Override protected boolean is(PowerManagerPreferences preferences) {
+  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
     return preferences.isDozeManaged();
   }
 }

@@ -24,7 +24,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -35,16 +34,18 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
   @NonNull private final IntentFilter filter;
   @NonNull private final Map<String, SetCallback> setMap;
   @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean registered;
   private boolean enabled;
   private boolean disabled;
+  private boolean registered;
 
   StateObserver(@NonNull Context context) {
     appContext = context.getApplicationContext();
     filter = new IntentFilter();
-    registered = false;
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
+    enabled = false;
+    disabled = false;
+    registered = false;
   }
 
   @NonNull @CheckResult final Context getAppContext() {
@@ -65,30 +66,49 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     }
   }
 
+  void registerListener() {
+    unregisterListener();
+    if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
+      if (!registered) {
+        Timber.d("Register real receiver for action: %s", filter.getAction(0));
+        appContext.getApplicationContext().registerReceiver(this, filter);
+        registered = true;
+      }
+    }
+  }
+
+  void unregisterListener() {
+    if (setMap.isEmpty() && unsetMap.isEmpty()) {
+      if (registered) {
+        Timber.d("Unregister real receiver for action: %s", filter.getAction(0));
+        appContext.getApplicationContext().unregisterReceiver(this);
+        registered = false;
+      }
+    }
+  }
+
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
     throwEmptyFilter();
-    if (!registered) {
-      Timber.d("Register new state observer for: %s", filter.actionsIterator());
+    if (!setMap.containsKey(tag) && !unsetMap.containsKey(tag)) {
+      Timber.d("Register new state observer for: %s", tag);
       setMap.put(tag, setCallback);
       unsetMap.put(tag, unsetCallback);
-      appContext.getApplicationContext().registerReceiver(this, filter);
-      registered = true;
+      registerListener();
     } else {
-      Timber.e("Already registered");
+      Timber.e("Already registered with tag: %s", tag);
     }
   }
 
   @Override public void unregister(@NonNull String tag) {
     throwEmptyFilter();
-    if (registered) {
-      Timber.d("Unregister new state observer");
-      appContext.getApplicationContext().unregisterReceiver(this);
+    if (setMap.containsKey(tag) && unsetMap.containsKey(tag)) {
+      Timber.d("Unregister state observer for: %s", tag);
       setMap.remove(tag);
       unsetMap.remove(tag);
-      registered = false;
+      unregisterListener();
     } else {
-      Timber.e("Already unregistered");
+      Timber.e("Already unregistered with tag: %s", tag);
     }
   }
 

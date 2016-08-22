@@ -68,7 +68,6 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
-    observer.unregister(FAB_TAG);
     removeTabLayout();
     setActionBarUpEnabled(false);
     asyncDrawableMap.clear();
@@ -84,6 +83,18 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     addTabLayoutToAppBar();
     selectCurrentTab(savedInstanceState);
     setupFab();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    if (!isFabHidden()) {
+      observer.register(FAB_TAG, this::setFab, this::unsetFab);
+    }
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    observer.unregister(FAB_TAG);
   }
 
   @Override public final void onResume() {
@@ -153,7 +164,6 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
       return;
     }
 
-    observer.register(FAB_TAG, this::setFab, this::unsetFab);
     if (observer.is()) {
       setFab();
     } else {

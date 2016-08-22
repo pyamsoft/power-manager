@@ -27,10 +27,10 @@ class WearableManageObserver extends BooleanPreferenceObserver {
 
   @Inject WearableManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, context.getString(R.string.manage_wearable_key));
+    super(preferences, context.getString(R.string.manage_wearable_key));
   }
 
-  @Override protected boolean is(PowerManagerPreferences preferences) {
+  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
     return preferences.isWearableManaged();
   }
 }

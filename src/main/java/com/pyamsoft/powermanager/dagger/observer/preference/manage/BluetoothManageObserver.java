@@ -27,10 +27,10 @@ class BluetoothManageObserver extends BooleanPreferenceObserver {
 
   @Inject BluetoothManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, context.getString(R.string.manage_bluetooth_key));
+    super(preferences, context.getString(R.string.manage_bluetooth_key));
   }
 
-  @Override protected boolean is(PowerManagerPreferences preferences) {
+  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
     return preferences.isBluetoothManaged();
   }
 }

@@ -16,14 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.observer.preference;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -37,11 +35,12 @@ public abstract class BooleanPreferenceObserver
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
-  protected BooleanPreferenceObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull String key) {
+  protected BooleanPreferenceObserver(@NonNull PowerManagerPreferences preferences,
+      @NonNull String key) {
     Timber.d("New PreferenceObserver with key: %s", key);
     this.preferences = preferences;
     this.key = key;
+    this.registered = false;
 
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
@@ -66,28 +65,47 @@ public abstract class BooleanPreferenceObserver
     }
   }
 
+  void registerListener() {
+    unregisterListener();
+    if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
+      if (!registered) {
+        Timber.d("Register real listener for key: %s", key);
+        preferences.register(this);
+        registered = true;
+      }
+    }
+  }
+
+  void unregisterListener() {
+    if (setMap.isEmpty() && unsetMap.isEmpty()) {
+      if (registered) {
+        Timber.d("Unregister real listener for key: %s", key);
+        preferences.unregister(this);
+        registered = false;
+      }
+    }
+  }
+
   @Override public final void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
-    if (!registered) {
-      Timber.d("Register new state observer for: %s", key);
+    if (!setMap.containsKey(tag) && !unsetMap.containsKey(tag)) {
+      Timber.d("Register new preference observer for: %s", tag);
       setMap.put(tag, setCallback);
       unsetMap.put(tag, unsetCallback);
-      preferences.register(this);
-      registered = true;
+      registerListener();
     } else {
-      Timber.e("Already registered");
+      Timber.e("Already registered with tag: %s", tag);
     }
   }
 
   @Override public final void unregister(@NonNull String tag) {
-    if (registered) {
-      Timber.d("Unregister new state observer");
-      preferences.unregister(this);
+    if (setMap.containsKey(tag) && unsetMap.containsKey(tag)) {
+      Timber.d("Unregister preference observer for tag: %s", tag);
       setMap.remove(tag);
       unsetMap.remove(tag);
-      registered = false;
+      unregisterListener();
     } else {
-      Timber.e("Already unregistered");
+      Timber.e("Already unregistered with tag: %s", tag);
     }
   }
 
@@ -95,5 +113,5 @@ public abstract class BooleanPreferenceObserver
     return is(preferences);
   }
 
-  @CheckResult protected abstract boolean is(PowerManagerPreferences preferences);
+  @CheckResult protected abstract boolean is(@NonNull PowerManagerPreferences preferences);
 }
