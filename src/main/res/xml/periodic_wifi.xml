@@ -41,7 +41,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicDisablePreference
+    <com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference
         android:key="@string/periodic_wifi_disable_key"/>
 
     <ListPreference
@@ -55,7 +55,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.manager.preference.ManagerPeriodicEnablePreference
+    <com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference
         android:key="@string/periodic_wifi_enable_key"/>
 
   </PreferenceCategory>

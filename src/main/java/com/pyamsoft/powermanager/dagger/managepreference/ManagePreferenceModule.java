@@ -30,4 +30,10 @@ import rx.Scheduler;
       @Named("obs_doze_manage") InterestObserver manageObserver) {
     return new DozeManagePreferencePresenter(mainScheduler, ioScheduler, manageObserver);
   }
+
+  @ActivityScope @Provides WifiManagePreferencePresenter provideWifiManagePreferencePresenter(
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
+      @Named("obs_wifi_manage") InterestObserver manageObserver) {
+    return new WifiManagePreferencePresenter(mainScheduler, ioScheduler, manageObserver);
+  }
 }

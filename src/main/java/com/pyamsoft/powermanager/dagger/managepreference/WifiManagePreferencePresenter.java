@@ -21,11 +21,10 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-public final class DozeManagePreferencePresenter extends BaseManagePreferencePresenter {
+public final class WifiManagePreferencePresenter extends BaseManagePreferencePresenter {
 
-  @Inject DozeManagePreferencePresenter(@NonNull Scheduler observeScheduler,
+  @Inject WifiManagePreferencePresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler, manageObserver);
   }
-
 }

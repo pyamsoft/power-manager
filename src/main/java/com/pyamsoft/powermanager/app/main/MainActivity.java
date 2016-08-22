@@ -20,11 +20,13 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,9 +36,15 @@ import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
+import java.util.HashMap;
+import java.util.Map;
+import timber.log.Timber;
 
 public class MainActivity extends DonationActivityBase {
 
+  @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
+
+  @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_root) CoordinatorLayout rootView;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   private Unbinder unbinder;
@@ -60,6 +68,12 @@ public class MainActivity extends DonationActivityBase {
 
   @Override protected void onDestroy() {
     super.onDestroy();
+
+    for (final String key : addedViewMap.keySet()) {
+      removeViewFromAppBar(key);
+    }
+    addedViewMap.clear();
+
     unbinder.unbind();
   }
 
@@ -127,5 +141,30 @@ public class MainActivity extends DonationActivityBase {
             }
           }
         });
+  }
+
+  public void addViewToAppBar(@NonNull String tag, @NonNull View view) {
+    if (addedViewMap.containsKey(tag)) {
+      Timber.w("AppBar already has view with this tag: %s", tag);
+      removeViewFromAppBar(tag);
+    }
+
+    Timber.d("Add view to map with tag: %s", tag);
+    addedViewMap.put(tag, view);
+    appBarLayout.addView(view);
+  }
+
+  public void removeViewFromAppBar(@NonNull String tag) {
+    if (addedViewMap.containsKey(tag)) {
+      Timber.d("Remove tag from map: %s", tag);
+      final View viewToRemove = addedViewMap.remove(tag);
+      if (viewToRemove == null) {
+        Timber.e("View to remove was NULL for tag: %s", tag);
+      } else {
+        appBarLayout.removeView(viewToRemove);
+      }
+    } else {
+      Timber.e("Viewmap does not contain a view for tag: %s", tag);
+    }
   }
 }

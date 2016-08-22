@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.app.wifi;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import javax.inject.Inject;
-import rx.Scheduler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 
-public final class DozeManagePreferencePresenter extends BaseManagePreferencePresenter {
+final class WifiPagerAdapter extends BasePagerAdapter {
 
-  @Inject DozeManagePreferencePresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
-    super(observeScheduler, subscribeScheduler, manageObserver);
+  public WifiPagerAdapter(FragmentManager fm) {
+    super(fm);
   }
 
+  @NonNull @Override protected Fragment getManageFragment() {
+    return new WifiManagePreferenceFragment();
+  }
+
+  @NonNull @Override protected Fragment getPeriodicFragment() {
+    return new WifiPeriodicPreferenceFragment();
+  }
 }

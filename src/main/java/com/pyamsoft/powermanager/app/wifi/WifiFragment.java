@@ -14,33 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.doze;
+package com.pyamsoft.powermanager.app.wifi;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.View;
-import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
+import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 
-public class DozeFragment extends BaseOverviewSingleItemFragment {
+public class WifiFragment extends BaseOverviewPagerFragment {
 
-  @NonNull public static final String TAG = "Doze";
+  @NonNull public static final String TAG = "Wifi";
 
   @CheckResult @NonNull
-  public static DozeFragment newInstance(@NonNull View from, @NonNull View container) {
+  public static WifiFragment newInstance(@NonNull View from, @NonNull View container) {
     final Bundle args = CircularRevealFragmentUtil.bundleArguments(from, container);
-    final DozeFragment fragment = new DozeFragment();
+    final WifiFragment fragment = new WifiFragment();
     fragment.setArguments(args);
     return fragment;
   }
 
-  @NonNull @Override protected Fragment getPreferenceFragment() {
-    return new DozeManagePreferenceFragment();
-  }
-
-  @NonNull @Override protected String getPreferenceTag() {
-    return DozeManagePreferenceFragment.TAG;
+  @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
+    return new WifiPagerAdapter(getChildFragmentManager());
   }
 }

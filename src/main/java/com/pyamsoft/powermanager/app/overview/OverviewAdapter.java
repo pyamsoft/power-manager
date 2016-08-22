@@ -35,6 +35,7 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import rx.Subscription;
@@ -73,11 +74,11 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
     @ColorRes final int background;
     switch (position) {
       case POSITION_WIFI:
-        tag = PowerTriggerFragment.TAG;
+        tag = WifiFragment.TAG;
         title = "WiFi";
         image = R.drawable.ic_network_wifi_24dp;
         background = R.color.green500;
-        fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
+        fragment = WifiFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_DATA:
         tag = PowerTriggerFragment.TAG;
@@ -129,7 +130,6 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
     holder.root.setOnClickListener(view -> {
-      // TODO load a new fragment
       Timber.d("Click on item: %s", title);
       loadFragmentFromOverview(tag, fragment);
     });

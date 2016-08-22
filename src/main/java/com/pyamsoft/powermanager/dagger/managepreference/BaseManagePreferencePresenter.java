@@ -22,7 +22,7 @@ import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import rx.Scheduler;
 
 public abstract class BaseManagePreferencePresenter
-    extends SchedulerPresenter<BaseManagePreferencePresenter.BaseManagerPreferenceView> {
+    extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView> {
 
   @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
   @NonNull private final InterestObserver manageObserver;
@@ -33,18 +33,17 @@ public abstract class BaseManagePreferencePresenter
     this.manageObserver = manageObserver;
   }
 
-  @Override protected void onStart(@NonNull BaseManagerPreferenceView view) {
+  @Override protected void onStart(@NonNull ManagePreferenceView view) {
     super.onStart(view);
-    manageObserver.register(OBS_TAG, () -> getView().onManageSet(),
-        () -> getView().onManageUnset());
+    manageObserver.register(OBS_TAG, view::onManageSet, view::onManageUnset);
   }
 
-  @Override protected void onStop(@NonNull BaseManagerPreferenceView view) {
+  @Override protected void onStop(@NonNull ManagePreferenceView view) {
     super.onStop(view);
     manageObserver.unregister(OBS_TAG);
   }
 
-  public interface BaseManagerPreferenceView {
+  public interface ManagePreferenceView {
 
     void onManageSet();
 

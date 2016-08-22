@@ -32,7 +32,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePre
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
-    implements BaseManagePreferencePresenter.BaseManagerPreferenceView {
+    implements BaseManagePreferencePresenter.ManagePreferenceView {
 
   private String manageKey;
   private String presetTimeKey;
@@ -41,21 +41,22 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   private SwitchPreferenceCompat managePreference;
   private BaseManagePreferencePresenter presenter;
 
-  @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+  @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
     manageKey = getString(getManageKeyResId());
     presetTimeKey = getString(getPresetTimeKeyResId());
     timeKey = getString(getTimeKeyResId());
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+  @Override public final View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    injectPresenter();
     presenter = providePresenter();
     presenter.bindView(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
     if (managePreference != null) {
@@ -84,17 +85,17 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public void onStart() {
+  @Override public final void onStart() {
     super.onStart();
     presenter.start();
   }
 
-  @Override public void onStop() {
+  @Override public final void onStop() {
     super.onStop();
     presenter.stop();
   }
 
-  @Override public void onDestroyView() {
+  @Override public final void onDestroyView() {
     super.onDestroyView();
     presenter.unbindView();
   }
@@ -114,6 +115,16 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return true;
   }
 
+  @Override public void onManageSet() {
+    managePreference.setChecked(true);
+  }
+
+  @Override public void onManageUnset() {
+    managePreference.setChecked(false);
+  }
+
+  protected abstract void injectPresenter();
+
   @CheckResult @NonNull protected abstract BaseManagePreferencePresenter providePresenter();
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
@@ -123,12 +134,4 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @StringRes @CheckResult protected abstract int getTimeKeyResId();
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
-
-  @Override public void onManageSet() {
-    managePreference.setChecked(true);
-  }
-
-  @Override public void onManageUnset() {
-    managePreference.setChecked(false);
-  }
 }

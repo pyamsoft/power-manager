@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.app.wifi;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import javax.inject.Inject;
-import rx.Scheduler;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
 
-public final class DozeManagePreferencePresenter extends BaseManagePreferencePresenter {
+public class WifiPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
-  @Inject DozeManagePreferencePresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
-    super(observeScheduler, subscribeScheduler, manageObserver);
+  @Override protected int getPreferencesResId() {
+    return R.xml.periodic_wifi;
   }
-
 }
