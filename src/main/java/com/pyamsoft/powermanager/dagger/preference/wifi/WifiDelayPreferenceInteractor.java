@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.preference;
+package com.pyamsoft.powermanager.dagger.preference.wifi;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractorImpl;
 import javax.inject.Inject;
-import rx.Scheduler;
 
-final class WifiDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenter {
+final class WifiDelayPreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
 
-  @Inject WifiDisableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(interactor, observeScheduler, subscribeScheduler);
+  @Inject WifiDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+    super(preferences);
+  }
+
+  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+    preferences.setWifiDelay(time);
+  }
+
+  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+    return preferences.getWifiDelay();
   }
 }

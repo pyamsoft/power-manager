@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.preference;
+package com.pyamsoft.powermanager.dagger.preference.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractorImpl;
 import javax.inject.Inject;
 
 final class WifiEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {

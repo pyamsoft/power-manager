@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import rx.Observable;
 
-abstract class CustomTimeInputPreferenceInteractorImpl
+public abstract class CustomTimeInputPreferenceInteractorImpl
     implements CustomTimeInputPreferenceInteractor {
 
   @NonNull private final PowerManagerPreferences preferences;

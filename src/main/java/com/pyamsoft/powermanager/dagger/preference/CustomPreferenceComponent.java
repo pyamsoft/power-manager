@@ -20,6 +20,7 @@ import com.pyamsoft.powermanager.app.preference.WifiDelayPreference;
 import com.pyamsoft.powermanager.app.preference.WifiDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.WifiEnableTimePreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = WifiCustomPreferenceModule.class)
