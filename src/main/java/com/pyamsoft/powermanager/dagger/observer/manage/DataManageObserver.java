@@ -28,4 +28,8 @@ class DataManageObserver extends ManageObserver {
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences, context.getString(R.string.manage_data_key));
   }
+
+  @Override protected boolean is(PowerManagerPreferences preferences) {
+    return preferences.isDataManaged();
+  }
 }

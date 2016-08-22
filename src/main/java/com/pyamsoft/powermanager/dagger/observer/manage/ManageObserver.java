@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.observer.manage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +30,6 @@ import timber.log.Timber;
 abstract class ManageObserver
     implements SharedPreferences.OnSharedPreferenceChangeListener, InterestObserver {
 
-  @NonNull private final String KEY_WIFI;
-  @NonNull private final String KEY_DATA;
-  @NonNull private final String KEY_BLUETOOTH;
-  @NonNull private final String KEY_SYNC;
-  @NonNull private final String KEY_WEAR;
-  @NonNull private final String KEY_DOZE;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
   @NonNull private final Map<String, SetCallback> setMap;
@@ -47,13 +41,6 @@ abstract class ManageObserver
     Timber.d("New ManageObserver with key: %s", key);
     this.preferences = preferences;
     this.key = key;
-
-    KEY_WIFI = context.getString(R.string.manage_wifi_key);
-    KEY_DATA = context.getString(R.string.manage_data_key);
-    KEY_BLUETOOTH = context.getString(R.string.manage_bluetooth_key);
-    KEY_SYNC = context.getString(R.string.manage_sync_key);
-    KEY_WEAR = context.getString(R.string.manage_wearable_key);
-    KEY_DOZE = context.getString(R.string.manage_doze_key);
 
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
@@ -106,23 +93,8 @@ abstract class ManageObserver
   }
 
   @Override public final boolean is() {
-    boolean result;
-    if (key.equals(KEY_WIFI)) {
-      result = preferences.isWifiManaged();
-    } else if (key.equals(KEY_DATA)) {
-      result = preferences.isDataManaged();
-    } else if (key.equals(KEY_BLUETOOTH)) {
-      result = preferences.isBluetoothManaged();
-    } else if (key.equals(KEY_SYNC)) {
-      result = preferences.isSyncManaged();
-    } else if (key.equals(KEY_WEAR)) {
-      result = preferences.isWearableManaged();
-    } else if (key.equals(KEY_DOZE)) {
-      result = preferences.isDozeManaged();
-    } else {
-      throw new RuntimeException("Unsupported key: " + key);
-    }
-
-    return result;
+    return is(preferences);
   }
+
+  @CheckResult protected abstract boolean is(PowerManagerPreferences preferences);
 }
