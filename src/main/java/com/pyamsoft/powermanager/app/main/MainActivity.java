@@ -32,9 +32,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
+import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,6 +124,10 @@ public class MainActivity extends DonationActivityBase {
   @CheckResult private boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(WifiFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(DataFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(BluetoothFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(SyncFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(DozeFragment.TAG) == null;
   }
