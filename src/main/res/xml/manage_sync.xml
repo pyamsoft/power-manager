@@ -55,7 +55,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.manager.preference.ManagerDelayPreference
+    <com.pyamsoft.powermanager.app.preference.sync.SyncDelayPreference
         android:key="@string/sync_time_key"/>
 
   </PreferenceCategory>

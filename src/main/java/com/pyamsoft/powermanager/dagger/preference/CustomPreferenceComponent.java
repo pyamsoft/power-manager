@@ -16,19 +16,28 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
+import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDelayPreference;
+import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.data.DataDelayPreference;
 import com.pyamsoft.powermanager.app.preference.data.DataDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.data.DataEnableTimePreference;
+import com.pyamsoft.powermanager.app.preference.sync.SyncDelayPreference;
+import com.pyamsoft.powermanager.app.preference.sync.SyncDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.sync.SyncEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDelayPreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.preference.bluetooth.BluetoothCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
+import com.pyamsoft.powermanager.dagger.preference.sync.SyncCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {
-    WifiCustomPreferenceModule.class, DataCustomPreferenceModule.class
+    WifiCustomPreferenceModule.class, DataCustomPreferenceModule.class,
+    BluetoothCustomPreferenceModule.class, SyncCustomPreferenceModule.class
 }) public interface CustomPreferenceComponent {
 
   void inject(WifiDelayPreference preference);
@@ -42,4 +51,16 @@ import dagger.Subcomponent;
   void inject(DataEnableTimePreference preference);
 
   void inject(DataDisableTimePreference preference);
+
+  void inject(BluetoothDelayPreference preference);
+
+  void inject(BluetoothEnableTimePreference preference);
+
+  void inject(BluetoothDisableTimePreference preference);
+
+  void inject(SyncDelayPreference preference);
+
+  void inject(SyncEnableTimePreference preference);
+
+  void inject(SyncDisableTimePreference preference);
 }

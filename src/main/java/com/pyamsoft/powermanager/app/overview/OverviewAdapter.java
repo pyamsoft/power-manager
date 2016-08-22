@@ -33,8 +33,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -86,16 +88,16 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
         fragment = DataFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_BLUETOOTH:
-        title = PowerTriggerFragment.TAG;
+        title = BluetoothFragment.TAG;
         image = R.drawable.ic_bluetooth_24dp;
         background = R.color.blue500;
-        fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
+        fragment = BluetoothFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_SYNC:
-        title = PowerTriggerFragment.TAG;
+        title = SyncFragment.TAG;
         image = R.drawable.ic_sync_24dp;
         background = R.color.yellow500;
-        fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
+        fragment = SyncFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_TRIGGERS:
         title = PowerTriggerFragment.TAG;
