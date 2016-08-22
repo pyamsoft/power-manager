@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.managepreference;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import rx.Scheduler;
@@ -24,7 +25,8 @@ import rx.Scheduler;
 public final class WifiManagePreferencePresenter extends BaseManagePreferencePresenter {
 
   @Inject WifiManagePreferencePresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
-    super(observeScheduler, subscribeScheduler, manageObserver);
+      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver,
+      @NonNull InterestModifier manageModifier) {
+    super(observeScheduler, subscribeScheduler, manageObserver, manageModifier);
   }
 }
