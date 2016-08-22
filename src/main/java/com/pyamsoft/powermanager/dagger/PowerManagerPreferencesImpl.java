@@ -388,16 +388,32 @@ final class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(periodicWifi, periodicWifiDefault);
   }
 
+  @Override public void setPeriodicWifi(boolean state) {
+    put(periodicWifi, state);
+  }
+
   @Override public boolean isPeriodicData() {
     return get(periodicData, periodicDataDefault);
+  }
+
+  @Override public void setPeriodicData(boolean state) {
+    put(periodicData, state);
   }
 
   @Override public boolean isPeriodicBluetooth() {
     return get(periodicBluetooth, periodicBluetoothDefault);
   }
 
+  @Override public void setPeriodicBluetooth(boolean state) {
+    put(periodicBluetooth, state);
+  }
+
   @Override public boolean isPeriodicSync() {
     return get(periodicSync, periodicSyncDefault);
+  }
+
+  @Override public void setPeriodicSync(boolean state) {
+    put(periodicSync, state);
   }
 
   @Override public long getPeriodicDisableTimeWifi() {

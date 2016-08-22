@@ -26,9 +26,9 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getDozeDelay();
 
-  void setDozeManaged(boolean enable);
-
   @CheckResult boolean isDozeManaged();
+
+  void setDozeManaged(boolean enable);
 
   @CheckResult boolean isIgnoreChargingDoze();
 
@@ -108,11 +108,19 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isPeriodicWifi();
 
+  void setPeriodicWifi(boolean state);
+
   @CheckResult boolean isPeriodicData();
+
+  void setPeriodicData(boolean state);
 
   @CheckResult boolean isPeriodicBluetooth();
 
+  void setPeriodicBluetooth(boolean state);
+
   @CheckResult boolean isPeriodicSync();
+
+  void setPeriodicSync(boolean state);
 
   @CheckResult long getPeriodicDisableTimeWifi();
 
