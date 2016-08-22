@@ -48,12 +48,18 @@ public class DozeFragment extends ActionBarFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    setActionBarUpEnabled(false);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     addPreferenceFragment();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    setActionBarUpEnabled(true);
   }
 
   private void addPreferenceFragment() {

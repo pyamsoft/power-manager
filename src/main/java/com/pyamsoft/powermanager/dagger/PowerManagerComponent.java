@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger;
 
 import com.pyamsoft.powermanager.dagger.job.JobComponent;
+import com.pyamsoft.powermanager.dagger.managepreference.ManagePreferenceComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
@@ -50,4 +51,6 @@ import javax.inject.Singleton;
   ManagerComponent plusManagerComponent();
 
   JobComponent plusJobComponent();
+
+  ManagePreferenceComponent plusManagePreferenceComponent();
 }

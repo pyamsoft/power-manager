@@ -18,19 +18,28 @@ package com.pyamsoft.powermanager.app.base;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
 import timber.log.Timber;
 
-public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat {
+public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
+    implements BaseManagePreferencePresenter.BaseManagerPreferenceView {
 
   private String manageKey;
   private String presetTimeKey;
   private String timeKey;
+
+  private SwitchPreferenceCompat managePreference;
+  private BaseManagePreferencePresenter presenter;
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -39,9 +48,16 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     timeKey = getString(getTimeKeyResId());
   }
 
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    presenter = providePresenter();
+    presenter.bindView(this);
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    final Preference managePreference = findPreference(manageKey);
+    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
     if (managePreference != null) {
       managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
         if (newValue instanceof Boolean) {
@@ -68,6 +84,21 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
+  @Override public void onStart() {
+    super.onStart();
+    presenter.start();
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.stop();
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    presenter.unbindView();
+  }
+
   /**
    * Override if you implement any custom conditions for changing preferences
    */
@@ -83,11 +114,21 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return true;
   }
 
-  @StringRes protected abstract int getManageKeyResId();
+  @CheckResult @NonNull protected abstract BaseManagePreferencePresenter providePresenter();
 
-  @StringRes protected abstract int getPresetTimeKeyResId();
+  @StringRes @CheckResult protected abstract int getManageKeyResId();
 
-  @StringRes protected abstract int getTimeKeyResId();
+  @StringRes @CheckResult protected abstract int getPresetTimeKeyResId();
 
-  @XmlRes protected abstract int getPreferencesResId();
+  @StringRes @CheckResult protected abstract int getTimeKeyResId();
+
+  @XmlRes @CheckResult protected abstract int getPreferencesResId();
+
+  @Override public void onManageSet() {
+    managePreference.setChecked(true);
+  }
+
+  @Override public void onManageUnset() {
+    managePreference.setChecked(false);
+  }
 }

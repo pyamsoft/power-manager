@@ -18,11 +18,13 @@ package com.pyamsoft.powermanager.app.main;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,6 +83,19 @@ public class MainActivity extends DonationActivityBase {
     PreferenceManager.setDefaultValues(this, R.xml.periodic_bluetooth, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_sync, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_doze, false);
+  }
+
+  @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    boolean handled;
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        handled = true;
+        break;
+      default:
+        handled = false;
+    }
+    return handled || super.onOptionsItemSelected(item);
   }
 
   private void setupAppBar() {

@@ -16,14 +16,33 @@
 
 package com.pyamsoft.powermanager.app.doze;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.dagger.managepreference.DozeManagePreferencePresenter;
+import javax.inject.Inject;
 
 public class DozePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozePreferenceFragment";
+  @Inject DozeManagePreferencePresenter presenter;
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+    Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);
+    return super.onCreateView(inflater, container, savedInstanceState);
+  }
+
+  @NonNull @Override protected BaseManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
 
   @Override protected boolean onManagePreferenceChanged(boolean b) {
     return PowerManager.hasDozePermission(getContext());
