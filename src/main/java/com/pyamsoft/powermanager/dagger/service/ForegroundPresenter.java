@@ -90,6 +90,10 @@ public final class ForegroundPresenter
     interactor.updateSyncPreferenceStatus();
   }
 
+  public void updateDozeAction() {
+    interactor.updateDozePreferenceStatus();
+  }
+
   public interface ForegroundProvider {
 
     void startNotificationInForeground(@NonNull Notification notification);

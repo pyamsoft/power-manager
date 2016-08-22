@@ -23,6 +23,7 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -30,9 +31,14 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final InterestObserver manageObserver;
+  @NonNull private final InterestObserver stateObserver;
   private boolean originalStateEnabled;
 
-  ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull InterestObserver manageObserver, @NonNull InterestObserver stateObserver) {
+    this.manageObserver = manageObserver;
+    this.stateObserver = stateObserver;
     this.appContext = context.getApplicationContext();
     originalStateEnabled = false;
     this.preferences = preferences;
@@ -81,6 +87,14 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CheckResult @NonNull PowerManagerPreferences getPreferences() {
     return preferences;
+  }
+
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return Observable.defer(() -> Observable.just(manageObserver.is()));
+  }
+
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    return Observable.defer(() -> Observable.just(stateObserver.is()));
   }
 
   @CheckResult @NonNull protected abstract Job createEnableJob();

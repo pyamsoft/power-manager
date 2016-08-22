@@ -28,12 +28,10 @@ import rx.Observable;
 
 final class ManagerDataInteractor extends ManagerBaseInteractor {
 
-  @NonNull private final InterestObserver dataObserver;
-
   @Inject ManagerDataInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
-    super(context, preferences);
-    this.dataObserver = observer;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
+      @NonNull InterestObserver stateObserver) {
+    super(context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult long getDelayTime() {
@@ -69,15 +67,7 @@ final class ManagerDataInteractor extends ManagerBaseInteractor {
     return cancelJobs(DataManageJob.JOB_TAG);
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isDataManaged()));
-  }
-
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingData()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(dataObserver.is()));
   }
 }

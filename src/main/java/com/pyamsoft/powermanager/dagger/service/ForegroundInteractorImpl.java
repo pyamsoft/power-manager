@@ -20,11 +20,13 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.RemoteViews;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -51,32 +53,38 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   @NonNull private final InterestObserver bluetoothManageObserver;
   @NonNull private final InterestObserver syncManageObserver;
   @NonNull private final InterestObserver wearManageObserver;
+  @NonNull private final InterestObserver dozeManageObserver;
   @NonNull private final InterestModifier wifiManageModifier;
   @NonNull private final InterestModifier dataManageModifier;
   @NonNull private final InterestModifier bluetoothManageModifier;
   @NonNull private final InterestModifier syncManageModifier;
   @NonNull private final InterestModifier wearManageModifier;
+  @NonNull private final InterestModifier dozeManageModifier;
 
   @Inject ForegroundInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver wifiManageObserver,
       @NonNull InterestObserver dataManageObserver,
       @NonNull InterestObserver bluetoothManageObserver,
       @NonNull InterestObserver syncManageObserver, @NonNull InterestObserver wearManageObserver,
-      @NonNull InterestModifier wifiManageModifier, @NonNull InterestModifier dataManageModifier,
+      @NonNull InterestObserver dozeManageObserver, @NonNull InterestModifier wifiManageModifier,
+      @NonNull InterestModifier dataManageModifier,
       @NonNull InterestModifier bluetoothManageModifier,
-      @NonNull InterestModifier syncManageModifier, @NonNull InterestModifier wearManageModifier) {
+      @NonNull InterestModifier syncManageModifier, @NonNull InterestModifier wearManageModifier,
+      @NonNull InterestModifier dozeManageModifier) {
+    this.dozeManageObserver = dozeManageObserver;
     this.wifiManageModifier = wifiManageModifier;
     this.dataManageModifier = dataManageModifier;
     this.bluetoothManageModifier = bluetoothManageModifier;
     this.syncManageModifier = syncManageModifier;
     this.wearManageModifier = wearManageModifier;
-    this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
+    this.dozeManageModifier = dozeManageModifier;
     this.wifiManageObserver = wifiManageObserver;
     this.dataManageObserver = dataManageObserver;
     this.bluetoothManageObserver = bluetoothManageObserver;
     this.syncManageObserver = syncManageObserver;
     this.wearManageObserver = wearManageObserver;
+    this.appContext = context.getApplicationContext();
+    this.preferences = preferences;
   }
 
   @Override public void create() {
@@ -144,6 +152,9 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     final Intent syncIntent =
         new Intent(appContext, ForegroundService.class).putExtra(ForegroundService.EXTRA_SYNC,
             true);
+    final Intent dozeIntent =
+        new Intent(appContext, ForegroundService.class).putExtra(ForegroundService.EXTRA_DOZE,
+            true);
     final PendingIntent wearAction =
         PendingIntent.getService(appContext, PENDING_RC + 4, wearIntent, 0);
     final PendingIntent wifiAction =
@@ -154,6 +165,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         PendingIntent.getService(appContext, PENDING_RC + 7, bluetoothIntent, 0);
     final PendingIntent syncAction =
         PendingIntent.getService(appContext, PENDING_RC + 8, syncIntent, 0);
+    final PendingIntent dozeAction =
+        PendingIntent.getService(appContext, PENDING_RC + 9, dozeIntent, 0);
 
     @DrawableRes final int wearIcon =
         wearManageObserver.is() ? R.drawable.ic_watch_24dp : R.drawable.ic_watch_off_24dp;
@@ -166,6 +179,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
             : R.drawable.ic_bluetooth_disabled_24dp;
     @DrawableRes final int syncIcon =
         syncManageObserver.is() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
+    @DrawableRes final int dozeIcon =
+        dozeManageObserver.is() ? R.drawable.ic_doze_24dp : R.drawable.ic_close_24dp;
 
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_wear_image, wearIcon);
@@ -177,6 +192,8 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
         R.id.remoteview_notification_bluetooth_image, bluetoothIcon);
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_sync_image, syncIcon);
+    AppUtil.setVectorIconForNotification(appContext, customView,
+        R.id.remoteview_notification_doze_image, dozeIcon);
 
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wear_touch, wearAction);
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wifi_touch, wifiAction);
@@ -184,6 +201,13 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
     customView.setOnClickPendingIntent(R.id.remoteview_notification_bluetooth_touch,
         bluetoothAction);
     customView.setOnClickPendingIntent(R.id.remoteview_notification_sync_touch, syncAction);
+    customView.setOnClickPendingIntent(R.id.remoteview_notification_doze_touch, dozeAction);
+
+    if (Build.VERSION.SDK_INT != Build.VERSION_CODES.M) {
+      Timber.d("Hide doze button in notification");
+      customView.setViewVisibility(R.id.remoteview_notification_doze_touch, View.GONE);
+    }
+
     return customView;
   }
 
@@ -235,5 +259,15 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
       syncManageModifier.set();
     }
     Timber.d("Update sync managed from %s to %s", state, !state);
+  }
+
+  @Override public void updateDozePreferenceStatus() {
+    final boolean state = dozeManageObserver.is();
+    if (state) {
+      dozeManageModifier.unset();
+    } else {
+      dozeManageModifier.set();
+    }
+    Timber.d("Update doze managed from %s to %s", state, !state);
   }
 }

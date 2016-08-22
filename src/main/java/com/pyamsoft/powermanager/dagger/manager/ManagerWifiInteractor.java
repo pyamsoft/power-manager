@@ -28,12 +28,10 @@ import rx.Observable;
 
 final class ManagerWifiInteractor extends ManagerBaseInteractor {
 
-  @NonNull private final InterestObserver wifiObserver;
-
   @Inject ManagerWifiInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
-    super(context, preferences);
-    this.wifiObserver = observer;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
+      @NonNull InterestObserver stateObserver) {
+    super(context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult long getDelayTime() {
@@ -69,15 +67,7 @@ final class ManagerWifiInteractor extends ManagerBaseInteractor {
     return cancelJobs(WifiManageJob.JOB_TAG);
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isWifiManaged()));
-  }
-
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingWifi()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(wifiObserver.is()));
   }
 }

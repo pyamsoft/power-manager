@@ -39,8 +39,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_manager_interactor")
   ManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_wifi_state") InterestObserver interestObserver) {
-    return new ManagerWifiInteractor(context, preferences, interestObserver);
+      @Named("obs_wifi_manage") InterestObserver manageObserver,
+      @Named("obs_wifi_state") InterestObserver stateObserver) {
+    return new ManagerWifiInteractor(context, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
@@ -52,8 +53,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_manager_interactor")
   ManagerInteractor provideManagerDataInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_data_state") InterestObserver observer) {
-    return new ManagerDataInteractor(context, preferences, observer);
+      @Named("obs_data_manage") InterestObserver manageObserver,
+      @Named("obs_data_state") InterestObserver stateObserver) {
+    return new ManagerDataInteractor(context, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
@@ -65,8 +67,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_manager_interactor")
   ManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_bluetooth_state") InterestObserver observer) {
-    return new ManagerBluetoothInteractor(context, preferences, observer);
+      @Named("obs_bluetooth_manage") InterestObserver manageObserver,
+      @Named("obs_bluetooth_state") InterestObserver stateObserver) {
+    return new ManagerBluetoothInteractor(context, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(
@@ -78,8 +81,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_manager_interactor")
   ManagerInteractor provideManagerSyncInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_sync_state") InterestObserver observer) {
-    return new ManagerSyncInteractor(context, preferences, observer);
+      @Named("obs_sync_manage") InterestObserver manageObserver,
+      @Named("obs_sync_state") InterestObserver stateObserver) {
+    return new ManagerSyncInteractor(context, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
@@ -91,7 +95,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("doze_manager_interactor")
   ExclusiveManagerInteractor provideManagerDozeInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_doze_state") InterestObserver observer) {
-    return new ManagerDozeInteractor(context, preferences, observer);
+      @Named("obs_doze_manage") InterestObserver manageObserver,
+      @Named("obs_doze_state") InterestObserver stateObserver) {
+    return new ManagerDozeInteractor(context, preferences, manageObserver, stateObserver);
   }
 }

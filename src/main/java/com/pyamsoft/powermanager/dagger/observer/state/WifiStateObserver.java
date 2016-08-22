@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class WifiStateObserver extends StateObserver {
 
@@ -28,6 +29,7 @@ class WifiStateObserver extends StateObserver {
 
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);
+    Timber.d("New StateObserver for Wifi");
 
     setFilterActions(WifiManager.NETWORK_STATE_CHANGED_ACTION);
     wrapper = new WifiManagerWrapper(context);

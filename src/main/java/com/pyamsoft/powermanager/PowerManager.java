@@ -16,14 +16,26 @@
 
 package com.pyamsoft.powermanager;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.StrictMode;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 
 public final class PowerManager extends ApplicationBase {
+
+  // KLUDGE Move to better location
+  @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
+    return Build.VERSION.SDK_INT == Build.VERSION_CODES.M
+        && context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
+        == PackageManager.PERMISSION_GRANTED;
+  }
 
   @Override public void onCreate() {
     super.onCreate();

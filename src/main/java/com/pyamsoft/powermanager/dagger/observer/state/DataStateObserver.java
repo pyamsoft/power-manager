@@ -42,6 +42,7 @@ class DataStateObserver extends StateObserver {
 
   @Inject DataStateObserver(@NonNull Context context) {
     super(context);
+    Timber.d("New StateObserver for Data");
 
     setFilterActions(ConnectivityManager.CONNECTIVITY_ACTION);
 

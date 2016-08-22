@@ -30,6 +30,7 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
+  @NonNull public static final String EXTRA_DOZE = "doze";
   @NonNull public static final String EXTRA_WEARABLE = "wearable";
   @NonNull public static final String EXTRA_WIFI = "wifi";
   @NonNull public static final String EXTRA_DATA = "data";
@@ -93,6 +94,11 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
       if (intent.getBooleanExtra(EXTRA_SYNC, false)) {
         Timber.d("Update sync status");
         presenter.updateSyncAction();
+      }
+
+      if (intent.getBooleanExtra(EXTRA_DOZE, false)) {
+        Timber.d("Update doze status");
+        presenter.updateDozeAction();
       }
 
       if (intent.getBooleanExtra(EXTRA_NOTIFICATION, false)) {

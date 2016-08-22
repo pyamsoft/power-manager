@@ -29,12 +29,10 @@ import rx.Observable;
 final class ManagerDozeInteractor extends ManagerBaseInteractor
     implements ExclusiveManagerInteractor {
 
-  @NonNull private final InterestObserver dozeObserver;
-
   @Inject ManagerDozeInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
-    super(context, preferences);
-    this.dozeObserver = observer;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
+      @NonNull InterestObserver stateObserver) {
+    super(context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult long getDelayTime() {
@@ -73,16 +71,8 @@ final class ManagerDozeInteractor extends ManagerBaseInteractor
     return cancelJobs(DozeManageJob.JOB_TAG);
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isDozeManaged()));
-  }
-
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(dozeObserver.is()));
   }
 
   // TODO read from preference

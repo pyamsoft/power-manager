@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,7 +73,7 @@ class DozeStateModifier extends StateModifier {
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+    if (PowerManager.hasDozePermission(context)) {
       Timber.d("Begin Doze");
       executeDumpsys(DUMPSYS_DOZE_START);
       if (preferences.isSensorsManaged()) {
@@ -84,7 +84,7 @@ class DozeStateModifier extends StateModifier {
   }
 
   @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+    if (PowerManager.hasDozePermission(context)) {
       Timber.d("End Doze");
       executeDumpsys(DUMPSYS_DOZE_END);
 

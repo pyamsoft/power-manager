@@ -28,12 +28,10 @@ import rx.Observable;
 
 final class ManagerSyncInteractor extends ManagerBaseInteractor {
 
-  @NonNull private final InterestObserver syncObserver;
-
   @Inject ManagerSyncInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
-    super(context, preferences);
-    this.syncObserver = observer;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
+      @NonNull InterestObserver stateObserver) {
+    super(context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult long getDelayTime() {
@@ -69,15 +67,7 @@ final class ManagerSyncInteractor extends ManagerBaseInteractor {
     return cancelJobs(SyncManageJob.JOB_TAG);
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isSyncManaged()));
-  }
-
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingSync()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(syncObserver.is()));
   }
 }

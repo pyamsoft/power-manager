@@ -42,14 +42,16 @@ import rx.Scheduler;
       @Named("obs_bluetooth_manage") @NonNull InterestObserver bluetoothManageObserver,
       @Named("obs_sync_manage") @NonNull InterestObserver syncManageObserver,
       @Named("obs_wear_manage") @NonNull InterestObserver wearManageObserver,
+      @Named("obs_doze_manage") @NonNull InterestObserver dozeManageObserver,
       @Named("mod_wifi_manage") @NonNull InterestModifier wifiManageModifier,
       @Named("mod_data_manage") @NonNull InterestModifier dataManageModifier,
       @Named("mod_bluetooth_manage") @NonNull InterestModifier bluetoothManageModifier,
       @Named("mod_sync_manage") @NonNull InterestModifier syncManageModifier,
-      @Named("mod_wear_manage") @NonNull InterestModifier wearManageModifier) {
+      @Named("mod_wear_manage") @NonNull InterestModifier wearManageModifier,
+      @Named("mod_doze_manage") @NonNull InterestModifier dozeManageModifier) {
     return new ForegroundInteractorImpl(context, preferences, wifiManageObserver,
         dataManageObserver, bluetoothManageObserver, syncManageObserver, wearManageObserver,
-        wifiManageModifier, dataManageModifier, bluetoothManageModifier, syncManageModifier,
-        wearManageModifier);
+        dozeManageObserver, wifiManageModifier, dataManageModifier, bluetoothManageModifier,
+        syncManageModifier, wearManageModifier, dozeManageModifier);
   }
 }

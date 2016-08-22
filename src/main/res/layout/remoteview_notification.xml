@@ -35,8 +35,6 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="64dp"
-      android:layout_marginEnd="12dp"
-      android:layout_marginRight="12dp"
       android:baselineAligned="false"
       android:orientation="horizontal"
       >
@@ -53,8 +51,8 @@
 
       <ImageView
           android:id="@+id/remoteview_notification_wifi_image"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
@@ -73,8 +71,8 @@
 
       <ImageView
           android:id="@+id/remoteview_notification_data_image"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
@@ -93,8 +91,8 @@
 
       <ImageView
           android:id="@+id/remoteview_notification_bluetooth_image"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
@@ -113,8 +111,8 @@
 
       <ImageView
           android:id="@+id/remoteview_notification_sync_image"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />
@@ -139,8 +137,28 @@
 
       <ImageView
           android:id="@+id/remoteview_notification_wear_image"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_gravity="center"
+          android:contentDescription="@string/blank"
+          />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/remoteview_notification_doze_touch"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:background="@drawable/ic_notification_background_touched"
+        >
+
+      <ImageView
+          android:id="@+id/remoteview_notification_doze_image"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
           android:layout_gravity="center"
           android:contentDescription="@string/blank"
           />

@@ -21,6 +21,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class BluetoothStateObserver extends StateObserver {
 
@@ -28,6 +29,7 @@ class BluetoothStateObserver extends StateObserver {
 
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);
+    Timber.d("New StateObserver for Bluetooth");
 
     setFilterActions(BluetoothAdapter.ACTION_STATE_CHANGED);
     wrapper = new BluetoothAdapterWrapper(context);

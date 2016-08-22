@@ -28,12 +28,10 @@ import rx.Observable;
 
 final class ManagerBluetoothInteractor extends ManagerBaseInteractor {
 
-  @NonNull private final InterestObserver bluetoothObserver;
-
   @Inject ManagerBluetoothInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver observer) {
-    super(context, preferences);
-    this.bluetoothObserver = observer;
+      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
+      @NonNull InterestObserver stateObserver) {
+    super(context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult long getDelayTime() {
@@ -69,15 +67,7 @@ final class ManagerBluetoothInteractor extends ManagerBaseInteractor {
     return cancelJobs(BluetoothManageJob.JOB_TAG);
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(getPreferences().isBluetoothManaged()));
-  }
-
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingBluetooth()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(bluetoothObserver.is()));
   }
 }

@@ -38,4 +38,6 @@ public interface ForegroundInteractor {
   void updateBluetoothPreferenceStatus();
 
   void updateSyncPreferenceStatus();
+
+  void updateDozePreferenceStatus();
 }
