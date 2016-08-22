@@ -99,6 +99,13 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
         final boolean canChange = onPresetTimePreferenceChanged(presetDelay, customTimePreference);
         if (canChange) {
+          final long delayTime = Long.parseLong(presetDelay);
+          if (delayTime != -1) {
+            // Update the delay time to a preset instantly
+            customTimePreference.updatePresetDelay(presetDelay);
+          }
+
+          // Defer updates to the custom view
           setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
           return true;
         }
@@ -122,6 +129,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
+    customTimePreference.unbind();
     presenter.unbindView();
   }
 
@@ -130,7 +138,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
       final long delayTime = Long.parseLong(presetDelay);
-      customTimePreference.setEnabled(managed && delayTime == -1);
+      customTimePreference.setEnabled(managed && delayTime != -1);
     }
   }
 

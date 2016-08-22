@@ -16,5 +16,21 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
-interface CustomTimeInputInteractor {
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import javax.inject.Inject;
+
+final class WifiDelayPreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
+
+  @Inject WifiDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+    super(preferences);
+  }
+
+  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+    preferences.setWifiDelay(time);
+  }
+
+  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+    return preferences.getWifiDelay();
+  }
 }

@@ -16,18 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
-import rx.Scheduler;
+import rx.Observable;
 
-abstract class CustomTimeInputPresenter extends SchedulerPresenter<CustomTimeInputPresenter.View>{
+public interface CustomTimeInputPreferenceInteractor {
 
-  protected CustomTimeInputPresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    super(observeScheduler, subscribeScheduler);
-  }
+  @NonNull @CheckResult Observable<Long> saveTime(long time);
 
-  public interface View {
-
-  }
+  @NonNull @CheckResult Observable<Long> getTime();
 }

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.managepreference;
+package com.pyamsoft.powermanager.dagger.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class DozeManagePreferencePresenter extends BaseManagePreferencePresenter {
+final class WifiDelayPreferencePresenter extends CustomTimeInputPreferencePresenter {
 
-  @Inject DozeManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
-    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
+  @Inject WifiDelayPreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observeScheduler, subscribeScheduler);
   }
 }

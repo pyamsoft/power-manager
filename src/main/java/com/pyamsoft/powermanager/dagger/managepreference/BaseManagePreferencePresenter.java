@@ -28,11 +28,11 @@ public abstract class BaseManagePreferencePresenter
   @NonNull private final InterestObserver manageObserver;
   @NonNull private final BaseManagePreferenceInteractor interactor;
 
-  protected BaseManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor interactor,
+  protected BaseManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler);
-    this.interactor = interactor;
+    this.interactor = manageInteractor;
     this.manageObserver = manageObserver;
   }
 

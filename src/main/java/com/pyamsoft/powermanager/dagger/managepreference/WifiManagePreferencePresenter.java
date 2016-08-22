@@ -23,9 +23,9 @@ import rx.Scheduler;
 
 final class WifiManagePreferencePresenter extends BaseManagePreferencePresenter {
 
-  @Inject WifiManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor interactor,
+  @Inject WifiManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver) {
-    super(interactor, observeScheduler, subscribeScheduler, manageObserver);
+    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
   }
 }
