@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.preference;
+package com.pyamsoft.powermanager.app.preference.wifi;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -46,7 +47,7 @@ public class WifiDisableTimePreference extends CustomTimeInputPreference {
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current disable time period: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current Wifi disable time period: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

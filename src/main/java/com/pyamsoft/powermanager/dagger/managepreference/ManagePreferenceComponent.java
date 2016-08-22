@@ -16,18 +16,23 @@
 
 package com.pyamsoft.powermanager.dagger.managepreference;
 
+import com.pyamsoft.powermanager.app.data.DataManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.doze.DozeManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiManagePreferenceFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.managepreference.data.DataManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.doze.DozeManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.wifi.WifiManagePreferenceModule;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {
-    DozeManagePreferenceModule.class, WifiManagePreferenceModule.class
+    DozeManagePreferenceModule.class, WifiManagePreferenceModule.class,
+    DataManagePreferenceModule.class
 }) public interface ManagePreferenceComponent {
 
   void inject(DozeManagePreferenceFragment fragment);
 
   void inject(WifiManagePreferenceFragment fragment);
+
+  void inject(DataManagePreferenceFragment fragment);
 }

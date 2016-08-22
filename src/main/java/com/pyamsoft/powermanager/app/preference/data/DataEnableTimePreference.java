@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.preference;
+package com.pyamsoft.powermanager.app.preference.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class WifiDelayPreference extends CustomTimeInputPreference {
-  @Inject @Named("wifi_custom_delay") CustomTimeInputPreferencePresenter presenter;
+public class DataEnableTimePreference extends CustomTimeInputPreference {
+  @Inject @Named("wifi_custom_enable") CustomTimeInputPreferencePresenter presenter;
 
-  public WifiDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public DataEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public WifiDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public DataEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public WifiDelayPreference(Context context, AttributeSet attrs) {
+  public DataEnableTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public WifiDelayPreference(Context context) {
+  public DataEnableTimePreference(Context context) {
     super(context);
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current delay time: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current Data enable time period: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

@@ -16,19 +16,30 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
-import com.pyamsoft.powermanager.app.preference.WifiDelayPreference;
-import com.pyamsoft.powermanager.app.preference.WifiDisableTimePreference;
-import com.pyamsoft.powermanager.app.preference.WifiEnableTimePreference;
+import com.pyamsoft.powermanager.app.preference.data.DataDelayPreference;
+import com.pyamsoft.powermanager.app.preference.data.DataDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.data.DataEnableTimePreference;
+import com.pyamsoft.powermanager.app.preference.wifi.WifiDelayPreference;
+import com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = WifiCustomPreferenceModule.class)
-public interface CustomPreferenceComponent {
+@ActivityScope @Subcomponent(modules = {
+    WifiCustomPreferenceModule.class, DataCustomPreferenceModule.class
+}) public interface CustomPreferenceComponent {
 
   void inject(WifiDelayPreference preference);
 
   void inject(WifiEnableTimePreference preference);
 
   void inject(WifiDisableTimePreference preference);
+
+  void inject(DataDelayPreference preference);
+
+  void inject(DataEnableTimePreference preference);
+
+  void inject(DataDisableTimePreference preference);
 }

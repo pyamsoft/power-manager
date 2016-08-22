@@ -55,7 +55,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.WifiDelayPreference
+    <com.pyamsoft.powermanager.app.preference.wifi.WifiDelayPreference
         android:key="@string/wifi_time_key"/>
 
   </PreferenceCategory>

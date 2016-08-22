@@ -45,22 +45,22 @@ public abstract class CustomTimeInputPreference extends Preference
   private CustomTimeInputPreferencePresenter presenter;
   private EditText editText;
 
-  CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     setLayoutResource(R.layout.preference_custom_time_input);
     injectPresenter(context);
   }
 
-  CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     this(context, attrs, defStyleAttr, 0);
   }
 
-  CustomTimeInputPreference(Context context, AttributeSet attrs) {
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs) {
     this(context, attrs, 0);
   }
 
-  CustomTimeInputPreference(Context context) {
+  protected CustomTimeInputPreference(Context context) {
     this(context, null);
   }
 

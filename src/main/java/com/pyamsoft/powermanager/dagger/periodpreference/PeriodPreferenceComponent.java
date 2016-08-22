@@ -16,13 +16,18 @@
 
 package com.pyamsoft.powermanager.dagger.periodpreference;
 
+import com.pyamsoft.powermanager.app.data.DataPeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiPeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.powermanager.dagger.periodpreference.data.DataPeriodPreferenceModule;
 import com.pyamsoft.powermanager.dagger.periodpreference.wifi.WifiPeriodPreferenceModule;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = WifiPeriodPreferenceModule.class)
-public interface PeriodPreferenceComponent {
+@ActivityScope @Subcomponent(modules = {
+    WifiPeriodPreferenceModule.class, DataPeriodPreferenceModule.class
+}) public interface PeriodPreferenceComponent {
 
   void inject(WifiPeriodicPreferenceFragment fragment);
+
+  void inject(DataPeriodicPreferenceFragment fragment);
 }

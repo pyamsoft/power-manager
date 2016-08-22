@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
@@ -68,56 +69,48 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     final String title;
-    final String tag;
     final Fragment fragment;
     @DrawableRes final int image;
     @ColorRes final int background;
     switch (position) {
       case POSITION_WIFI:
-        tag = WifiFragment.TAG;
-        title = "WiFi";
+        title = WifiFragment.TAG;
         image = R.drawable.ic_network_wifi_24dp;
         background = R.color.green500;
         fragment = WifiFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_DATA:
-        tag = PowerTriggerFragment.TAG;
-        title = "Data";
+        title = DataFragment.TAG;
         image = R.drawable.ic_network_cell_24dp;
         background = R.color.orange500;
-        fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
+        fragment = DataFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_BLUETOOTH:
-        tag = PowerTriggerFragment.TAG;
-        title = "Bluetooth";
+        title = PowerTriggerFragment.TAG;
         image = R.drawable.ic_bluetooth_24dp;
         background = R.color.blue500;
         fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_SYNC:
-        tag = PowerTriggerFragment.TAG;
-        title = "Sync";
+        title = PowerTriggerFragment.TAG;
         image = R.drawable.ic_sync_24dp;
         background = R.color.yellow500;
         fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_TRIGGERS:
-        tag = PowerTriggerFragment.TAG;
-        title = "Power Triggers";
+        title = PowerTriggerFragment.TAG;
         image = R.drawable.ic_battery_24dp;
         background = R.color.red500;
         fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_DOZE:
-        tag = DozeFragment.TAG;
-        title = "Doze";
+        title = DozeFragment.TAG;
         image = R.drawable.ic_doze_24dp;
         background = R.color.orange500;
         fragment = DozeFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_SETTINGS:
-        tag = PowerTriggerFragment.TAG;
-        title = "Settings";
+        title = PowerTriggerFragment.TAG;
         image = R.drawable.ic_settings_24dp;
         background = R.color.pink500;
         fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
@@ -131,7 +124,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
     holder.root.setOnClickListener(view -> {
       Timber.d("Click on item: %s", title);
-      loadFragmentFromOverview(tag, fragment);
+      loadFragmentFromOverview(title, fragment);
     });
 
     holder.title.setText(title);
