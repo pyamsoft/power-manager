@@ -19,14 +19,14 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class StateModifier implements InterestModifier {
+abstract class StateModifier implements BooleanInterestModifier {
 
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;

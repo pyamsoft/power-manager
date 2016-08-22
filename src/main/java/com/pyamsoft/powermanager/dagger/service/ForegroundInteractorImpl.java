@@ -33,7 +33,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
@@ -54,23 +54,25 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   @NonNull private final InterestObserver syncManageObserver;
   @NonNull private final InterestObserver wearManageObserver;
   @NonNull private final InterestObserver dozeManageObserver;
-  @NonNull private final InterestModifier wifiManageModifier;
-  @NonNull private final InterestModifier dataManageModifier;
-  @NonNull private final InterestModifier bluetoothManageModifier;
-  @NonNull private final InterestModifier syncManageModifier;
-  @NonNull private final InterestModifier wearManageModifier;
-  @NonNull private final InterestModifier dozeManageModifier;
+  @NonNull private final BooleanInterestModifier wifiManageModifier;
+  @NonNull private final BooleanInterestModifier dataManageModifier;
+  @NonNull private final BooleanInterestModifier bluetoothManageModifier;
+  @NonNull private final BooleanInterestModifier syncManageModifier;
+  @NonNull private final BooleanInterestModifier wearManageModifier;
+  @NonNull private final BooleanInterestModifier dozeManageModifier;
 
   @Inject ForegroundInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver wifiManageObserver,
       @NonNull InterestObserver dataManageObserver,
       @NonNull InterestObserver bluetoothManageObserver,
       @NonNull InterestObserver syncManageObserver, @NonNull InterestObserver wearManageObserver,
-      @NonNull InterestObserver dozeManageObserver, @NonNull InterestModifier wifiManageModifier,
-      @NonNull InterestModifier dataManageModifier,
-      @NonNull InterestModifier bluetoothManageModifier,
-      @NonNull InterestModifier syncManageModifier, @NonNull InterestModifier wearManageModifier,
-      @NonNull InterestModifier dozeManageModifier) {
+      @NonNull InterestObserver dozeManageObserver, @NonNull
+  BooleanInterestModifier wifiManageModifier,
+      @NonNull BooleanInterestModifier dataManageModifier,
+      @NonNull BooleanInterestModifier bluetoothManageModifier,
+      @NonNull BooleanInterestModifier syncManageModifier, @NonNull
+  BooleanInterestModifier wearManageModifier,
+      @NonNull BooleanInterestModifier dozeManageModifier) {
     this.dozeManageObserver = dozeManageObserver;
     this.wifiManageModifier = wifiManageModifier;
     this.dataManageModifier = dataManageModifier;

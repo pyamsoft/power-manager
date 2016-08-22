@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,35 +28,36 @@ import rx.Scheduler;
 
 @Module public class StateModifierModule {
 
-  @Singleton @Named("mod_wifi_state") @Provides InterestModifier provideWifiModifier(
+  @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new WifiStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Singleton @Named("mod_data_state") @Provides InterestModifier provideDataModifier(
+  @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new DataStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Singleton @Named("mod_bluetooth_state") @Provides InterestModifier provideBluetoothModifier(
+  @Singleton @Named("mod_bluetooth_state") @Provides
+  BooleanInterestModifier provideBluetoothModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new BluetoothStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Singleton @Named("mod_sync_state") @Provides InterestModifier provideSyncModifier(
+  @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new SyncStateModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Singleton @Named("mod_doze_state") @Provides InterestModifier provideDozeModifier(
+  @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {

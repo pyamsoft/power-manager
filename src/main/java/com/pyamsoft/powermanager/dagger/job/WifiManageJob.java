@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.job;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,7 +48,7 @@ public abstract class WifiManageJob extends ManageJob {
 
   public static final class EnableJob extends WifiManageJob {
 
-    @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
+    @Inject @Named("mod_wifi_state") BooleanInterestModifier interestModifier;
     @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
 
     public EnableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
@@ -71,7 +71,7 @@ public abstract class WifiManageJob extends ManageJob {
 
   public static final class DisableJob extends WifiManageJob {
 
-    @Inject @Named("mod_wifi_state") InterestModifier interestModifier;
+    @Inject @Named("mod_wifi_state") BooleanInterestModifier interestModifier;
     @Inject @Named("obs_wifi_state") InterestObserver interestObserver;
 
     public DisableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,

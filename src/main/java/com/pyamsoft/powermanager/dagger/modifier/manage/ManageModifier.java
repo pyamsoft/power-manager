@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,7 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-abstract class ManageModifier implements InterestModifier {
+abstract class ManageModifier implements BooleanInterestModifier {
 
   @NonNull private final Context appContext;
   @NonNull private final Intent service;

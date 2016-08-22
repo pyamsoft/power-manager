@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.ManagePreferenceCompone
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
-import com.pyamsoft.powermanager.dagger.observer.manage.ManageObserverModule;
+import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;

@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -43,12 +43,12 @@ import rx.Scheduler;
       @Named("obs_sync_manage") @NonNull InterestObserver syncManageObserver,
       @Named("obs_wear_manage") @NonNull InterestObserver wearManageObserver,
       @Named("obs_doze_manage") @NonNull InterestObserver dozeManageObserver,
-      @Named("mod_wifi_manage") @NonNull InterestModifier wifiManageModifier,
-      @Named("mod_data_manage") @NonNull InterestModifier dataManageModifier,
-      @Named("mod_bluetooth_manage") @NonNull InterestModifier bluetoothManageModifier,
-      @Named("mod_sync_manage") @NonNull InterestModifier syncManageModifier,
-      @Named("mod_wear_manage") @NonNull InterestModifier wearManageModifier,
-      @Named("mod_doze_manage") @NonNull InterestModifier dozeManageModifier) {
+      @Named("mod_wifi_manage") @NonNull BooleanInterestModifier wifiManageModifier,
+      @Named("mod_data_manage") @NonNull BooleanInterestModifier dataManageModifier,
+      @Named("mod_bluetooth_manage") @NonNull BooleanInterestModifier bluetoothManageModifier,
+      @Named("mod_sync_manage") @NonNull BooleanInterestModifier syncManageModifier,
+      @Named("mod_wear_manage") @NonNull BooleanInterestModifier wearManageModifier,
+      @Named("mod_doze_manage") @NonNull BooleanInterestModifier dozeManageModifier) {
     return new ForegroundInteractorImpl(context, preferences, wifiManageObserver,
         dataManageObserver, bluetoothManageObserver, syncManageObserver, wearManageObserver,
         dozeManageObserver, wifiManageModifier, dataManageModifier, bluetoothManageModifier,

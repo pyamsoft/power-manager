@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
@@ -50,10 +50,10 @@ public final class TriggerJob extends BaseJob {
   @Inject @Named("obs_bluetooth_state") InterestObserver bluetoothObserver;
   @Inject @Named("obs_sync_state") InterestObserver syncObserver;
 
-  @Inject @Named("mod_wifi_state") InterestModifier wifiModifier;
-  @Inject @Named("mod_data_state") InterestModifier dataModifier;
-  @Inject @Named("mod_bluetooth_state") InterestModifier bluetoothModifier;
-  @Inject @Named("mod_sync_state") InterestModifier syncModifier;
+  @Inject @Named("mod_wifi_state") BooleanInterestModifier wifiModifier;
+  @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;
+  @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
+  @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
   @NonNull private Subscription runSubscription = Subscriptions.empty();
 
   public TriggerJob(long delay) {

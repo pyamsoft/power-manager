@@ -17,12 +17,12 @@
 package com.pyamsoft.powermanager.dagger.managepreference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import javax.inject.Inject;
 
 final class DozeManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
-  @Inject DozeManagePreferenceInteractorImpl(@NonNull InterestModifier manageModifier) {
+  @Inject DozeManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     super(manageModifier);
   }
 }

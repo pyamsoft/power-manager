@@ -38,7 +38,7 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -117,15 +117,15 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject @Named("obs_bluetooth_manage") InterestObserver bluetoothManageObserver;
     @Inject @Named("obs_sync_manage") InterestObserver syncManageObserver;
 
-    @Inject @Named("mod_wifi_state") InterestModifier wifiStateModifier;
-    @Inject @Named("mod_data_state") InterestModifier dataStateModifier;
-    @Inject @Named("mod_bluetooth_state") InterestModifier bluetoothStateModifier;
-    @Inject @Named("mod_sync_state") InterestModifier syncStateModifier;
+    @Inject @Named("mod_wifi_state") BooleanInterestModifier wifiStateModifier;
+    @Inject @Named("mod_data_state") BooleanInterestModifier dataStateModifier;
+    @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothStateModifier;
+    @Inject @Named("mod_sync_state") BooleanInterestModifier syncStateModifier;
 
-    @Inject @Named("mod_wifi_manage") InterestModifier wifiManageModifier;
-    @Inject @Named("mod_data_manage") InterestModifier dataManageModifier;
-    @Inject @Named("mod_bluetooth_manage") InterestModifier bluetoothManageModifier;
-    @Inject @Named("mod_sync_manage") InterestModifier syncManageModifier;
+    @Inject @Named("mod_wifi_manage") BooleanInterestModifier wifiManageModifier;
+    @Inject @Named("mod_data_manage") BooleanInterestModifier dataManageModifier;
+    @Inject @Named("mod_bluetooth_manage") BooleanInterestModifier bluetoothManageModifier;
+    @Inject @Named("mod_sync_manage") BooleanInterestModifier syncManageModifier;
 
     private Unbinder unbinder;
 

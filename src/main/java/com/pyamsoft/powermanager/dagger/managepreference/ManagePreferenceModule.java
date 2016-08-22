@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.managepreference;
 
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
@@ -46,13 +46,13 @@ import rx.Scheduler;
 
   @ActivityScope @Provides @Named("doze_manage_pref_interactor")
   BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
-      @Named("mod_doze_manage") InterestModifier manageModifier) {
+      @Named("mod_doze_manage") BooleanInterestModifier manageModifier) {
     return new DozeManagePreferenceInteractorImpl(manageModifier);
   }
 
   @ActivityScope @Provides @Named("wifi_manage_pref_interactor")
   BaseManagePreferenceInteractor provideWifiManagePreferenceInteractor(
-      @Named("mod_wifi_manage") InterestModifier manageModifier) {
+      @Named("mod_wifi_manage") BooleanInterestModifier manageModifier) {
     return new WifiManagePreferenceInteractorImpl(manageModifier);
   }
 }

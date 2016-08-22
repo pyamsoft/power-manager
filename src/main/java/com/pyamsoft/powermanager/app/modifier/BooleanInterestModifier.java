@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.modifier;
 
-public interface InterestModifier {
+public interface BooleanInterestModifier {
 
   void set();
 
