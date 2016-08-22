@@ -62,8 +62,6 @@ abstract class ManageObserver
           }
         }
       }
-    } else {
-      Timber.e("Received preference change for other key: %s", s);
     }
   }
 
