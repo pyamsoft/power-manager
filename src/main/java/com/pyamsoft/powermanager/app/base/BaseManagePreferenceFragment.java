@@ -42,20 +42,44 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     final Preference managePreference = findPreference(manageKey);
-    managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean b = (boolean) newValue;
-        Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        return onManagePreferenceChanged(b);
-      }
-      return false;
-    });
+    if (managePreference != null) {
+      managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        if (newValue instanceof Boolean) {
+          final boolean b = (boolean) newValue;
+          Timber.d("onPreferenceChange for key: %s", preference.getKey());
+          return onManagePreferenceChanged(b);
+        }
+        return false;
+      });
+    }
+
+    final Preference customTimePreference = findPreference(timeKey);
+    final Preference presetTimePreference = findPreference(presetTimeKey);
+    if (presetTimePreference != null) {
+      presetTimePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+        if (newValue instanceof String) {
+          final String string = (String) newValue;
+          final long time = Long.parseLong(string);
+          Timber.d("onPreferenceChange for key: %s", preference.getKey());
+          return onPresetTimePreferenceChanged(time, customTimePreference);
+        }
+        return false;
+      });
+    }
   }
 
   /**
    * Override if you implement any custom conditions for changing preferences
    */
   @CheckResult protected boolean onManagePreferenceChanged(boolean b) {
+    return true;
+  }
+
+  /**
+   * Override if you implement any custom conditions for changing preferences
+   */
+  @CheckResult protected boolean onPresetTimePreferenceChanged(long time,
+      @Nullable Preference customTimePreference) {
     return true;
   }
 
