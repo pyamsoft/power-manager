@@ -46,7 +46,7 @@ import timber.log.Timber;
 public class PowerTriggerFragment extends ActionBarFragment
     implements TriggerPresenter.TriggerView {
 
-  @NonNull public static final String TAG = "power_triggers";
+  @NonNull public static final String TAG = "Power Triggers";
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
   @BindView(R.id.power_trigger_empty) FrameLayout emptyView;

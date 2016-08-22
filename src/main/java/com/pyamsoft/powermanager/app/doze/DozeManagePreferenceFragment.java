@@ -47,11 +47,11 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
   }
 
   @Override protected int getPresetTimeKeyResId() {
-    return R.string.preset_delay_doze_key;
+    return R.string.doze_time_key;
   }
 
   @Override protected int getTimeKeyResId() {
-    return R.string.doze_time_key;
+    return R.string.preset_delay_doze_key;
   }
 
   @Override protected int getPreferencesResId() {
