@@ -55,7 +55,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.DataDelayPreference
+    <com.pyamsoft.powermanager.app.preference.data.DataDelayPreference
         android:key="@string/data_time_key"/>
 
   </PreferenceCategory>
