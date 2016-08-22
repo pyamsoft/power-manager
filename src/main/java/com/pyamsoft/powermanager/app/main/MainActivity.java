@@ -28,7 +28,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
 
 public class MainActivity extends DonationActivityBase {
@@ -78,7 +80,7 @@ public class MainActivity extends DonationActivityBase {
     PreferenceManager.setDefaultValues(this, R.xml.periodic_data, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_bluetooth, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_sync, false);
-    PreferenceManager.setDefaultValues(this, R.xml.doze, false);
+    PreferenceManager.setDefaultValues(this, R.xml.manage_doze, false);
   }
 
   private void setupAppBar() {
@@ -88,7 +90,9 @@ public class MainActivity extends DonationActivityBase {
 
   @CheckResult private boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null;
+    return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(DozeFragment.TAG) == null;
   }
 
   private void loadOverviewFragment() {

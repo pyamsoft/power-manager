@@ -23,7 +23,8 @@
   <string name="manage_doze_summary_checked">Force the device into Doze mode after the screen turns off (Marshmallow only)</string>
   <string name="manage_doze_summary_unchecked">The device will enter Doze after about 30 minutes of inactivity</string>
 
-  <string-array name="preset_doze_names">
+  <string name="preset_delay_doze_key">preset_delay_doze</string>
+  <string-array name="preset_delay_doze_names">
     <item name="delay_0">No delay</item>
     <item name="delay_5">5 Seconds</item>
     <item name="delay_10">10 Seconds</item>
@@ -32,10 +33,10 @@
     <item name="delay_60">1 Minute</item>
     <item name="delay_120">2 Minutes</item>
     <item name="delay_300">5 Minutes</item>
-    <item name="delay_600">5 Minutes</item>
+    <item name="delay_600">10 Minutes</item>
   </string-array>
 
-  <string-array name="preset_doze_values">
+  <string-array name="preset_delay_doze_values">
     <item name="delay_0">0</item>
     <item name="delay_5">5</item>
     <item name="delay_10">10</item>

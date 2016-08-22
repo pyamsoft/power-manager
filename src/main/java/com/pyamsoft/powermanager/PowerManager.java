@@ -27,14 +27,17 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
+import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
 
   // KLUDGE Move to better location
   @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
-    return Build.VERSION.SDK_INT == Build.VERSION_CODES.M
+    final boolean hasPermission = Build.VERSION.SDK_INT == Build.VERSION_CODES.M
         && context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
         == PackageManager.PERMISSION_GRANTED;
+    Timber.d("Has doze permission? %s", hasPermission);
+    return hasPermission;
   }
 
   @Override public void onCreate() {

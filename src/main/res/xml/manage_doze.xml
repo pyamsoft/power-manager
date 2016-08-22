@@ -31,8 +31,8 @@
     <ListPreference
         android:defaultValue="@string/doze_time_default"
         android:dependency="@string/manage_doze_key"
-        android:entries="@array/preset_doze_names"
-        android:entryValues="@array/preset_doze_values"
+        android:entries="@array/preset_delay_doze_names"
+        android:entryValues="@array/preset_delay_doze_values"
         android:key="@string/doze_time_key"
         android:summary="@string/doze_time_summary"
         android:title="@string/doze_time_title"
