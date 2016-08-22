@@ -32,8 +32,8 @@ import com.pyamsoft.powermanager.R;
 
 public class CustomTimeInputPreference extends Preference {
 
-  @BindView(R.id.preference_custom_summary) TextView summary;
-  @BindView(R.id.preference_custom_times) TextInputLayout textInputLayout;
+  @BindView(R.id.preference_custom_time_summary) TextView summary;
+  @BindView(R.id.preference_custom_time_input) TextInputLayout textInputLayout;
   private TextWatcher watcher;
   private Unbinder unbinder;
   private String customSummary;

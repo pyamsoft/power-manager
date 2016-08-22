@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-public interface ForegroundInteractor {
+interface ForegroundInteractor {
 
   void create();
 

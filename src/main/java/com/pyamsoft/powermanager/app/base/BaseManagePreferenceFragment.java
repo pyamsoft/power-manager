@@ -103,6 +103,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
           return true;
         }
       }
+
       return false;
     });
 

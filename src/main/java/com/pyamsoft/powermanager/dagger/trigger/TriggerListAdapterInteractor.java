@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 
-public interface TriggerListAdapterInteractor extends BaseTriggerInteractor {
+interface TriggerListAdapterInteractor extends BaseTriggerInteractor {
 
   @CheckResult @NonNull Observable<PowerTriggerEntry> get(int position);
 

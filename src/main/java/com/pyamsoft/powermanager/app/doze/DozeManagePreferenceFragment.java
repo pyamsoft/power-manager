@@ -22,13 +22,13 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.dagger.managepreference.DozeManagePreferencePresenter;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
-  @Inject DozeManagePreferencePresenter presenter;
+  @Inject @Named("doze_manage_pref") BaseManagePreferencePresenter presenter;
 
   @Override protected void injectPresenter() {
     Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);

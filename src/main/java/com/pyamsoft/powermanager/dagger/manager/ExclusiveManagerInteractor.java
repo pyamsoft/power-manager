@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-public interface ExclusiveManagerInteractor extends ManagerInteractor {
+interface ExclusiveManagerInteractor extends ManagerInteractor {
 
   @CheckResult boolean isExclusive();
 }

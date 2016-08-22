@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-public interface BaseTriggerInteractor {
+interface BaseTriggerInteractor {
 
   @CheckResult @NonNull Observable<Integer> size();
 

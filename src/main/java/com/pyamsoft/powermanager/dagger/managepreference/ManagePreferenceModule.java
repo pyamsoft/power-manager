@@ -26,19 +26,33 @@ import rx.Scheduler;
 
 @Module public class ManagePreferenceModule {
 
-  @ActivityScope @Provides DozeManagePreferencePresenter provideDozeManagePreferencePresenter(
+  @ActivityScope @Provides @Named("doze_manage_pref")
+  BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
+      @Named("doze_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
-      @Named("obs_doze_manage") InterestObserver manageObserver,
-      @Named("mod_doze_manage") InterestModifier manageModifier) {
-    return new DozeManagePreferencePresenter(mainScheduler, ioScheduler, manageObserver,
-        manageModifier);
+      @Named("obs_doze_manage") InterestObserver manageObserver) {
+    return new DozeManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
+        manageObserver);
   }
 
-  @ActivityScope @Provides WifiManagePreferencePresenter provideWifiManagePreferencePresenter(
+  @ActivityScope @Provides @Named("wifi_manage_pref")
+  BaseManagePreferencePresenter provideWifiManagePreferencePresenter(
+      @Named("wifi_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
-      @Named("obs_wifi_manage") InterestObserver manageObserver,
+      @Named("obs_wifi_manage") InterestObserver manageObserver) {
+    return new WifiManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
+        manageObserver);
+  }
+
+  @ActivityScope @Provides @Named("doze_manage_pref_interactor")
+  BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
+      @Named("mod_doze_manage") InterestModifier manageModifier) {
+    return new DozeManagePreferenceInteractorImpl(manageModifier);
+  }
+
+  @ActivityScope @Provides @Named("wifi_manage_pref_interactor")
+  BaseManagePreferenceInteractor provideWifiManagePreferenceInteractor(
       @Named("mod_wifi_manage") InterestModifier manageModifier) {
-    return new WifiManagePreferencePresenter(mainScheduler, ioScheduler, manageObserver,
-        manageModifier);
+    return new WifiManagePreferenceInteractorImpl(manageModifier);
   }
 }

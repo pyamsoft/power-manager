@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.managepreference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.modifier.InterestModifier;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import rx.Scheduler;
@@ -27,14 +26,14 @@ public abstract class BaseManagePreferencePresenter
 
   @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
   @NonNull private final InterestObserver manageObserver;
-  @NonNull private final InterestModifier manageModifier;
+  @NonNull private final BaseManagePreferenceInteractor interactor;
 
-  protected BaseManagePreferencePresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver,
-      @NonNull InterestModifier manageModifier) {
+  protected BaseManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler);
+    this.interactor = interactor;
     this.manageObserver = manageObserver;
-    this.manageModifier = manageModifier;
   }
 
   @Override protected void onStart(@NonNull ManagePreferenceView view) {
@@ -48,11 +47,7 @@ public abstract class BaseManagePreferencePresenter
   }
 
   public void updateManage(boolean state) {
-    if (state) {
-      manageModifier.set();
-    } else {
-      manageModifier.unset();
-    }
+    interactor.updateManage(state);
   }
 
   public interface ManagePreferenceView {
