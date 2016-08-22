@@ -142,6 +142,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
+  @Override public void onManageSet() {
+    managePreference.setChecked(true);
+  }
+
+  @Override public void onManageUnset() {
+    managePreference.setChecked(false);
+  }
+
   /**
    * Override if you implement any custom conditions for changing preferences
    */
@@ -155,14 +163,6 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @CheckResult protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
       @Nullable CustomTimeInputPreference customTimePreference) {
     return true;
-  }
-
-  @Override public void onManageSet() {
-    managePreference.setChecked(true);
-  }
-
-  @Override public void onManageUnset() {
-    managePreference.setChecked(false);
   }
 
   protected abstract void injectPresenter();

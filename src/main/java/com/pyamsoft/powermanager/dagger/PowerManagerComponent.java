@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
+import com.pyamsoft.powermanager.dagger.periodpreference.PeriodPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
@@ -57,6 +58,8 @@ import javax.inject.Singleton;
   JobComponent plusJobComponent();
 
   ManagePreferenceComponent plusManagePreferenceComponent();
+
+  PeriodPreferenceComponent plusPeriodPreferenceComponent();
 
   CustomPreferenceComponent plusCustomPreferenceComponent();
 }

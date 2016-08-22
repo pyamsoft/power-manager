@@ -16,12 +16,47 @@
 
 package com.pyamsoft.powermanager.app.wifi;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class WifiPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
+  @Inject @Named("wifi_period_pref") BasePeriodPreferencePresenter presenter;
+
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_wifi;
+  }
+
+  @Override protected int getPeriodicKeyResId() {
+    return R.string.periodic_wifi_key;
+  }
+
+  @NonNull @Override protected BasePeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected int getPresetDisableTimeKeyResId() {
+    return R.string.preset_periodic_wifi_disable_key;
+  }
+
+  @Override protected int getPresetEnableTimeKeyResId() {
+    return R.string.preset_periodic_wifi_enable_key;
+  }
+
+  @Override protected int getEnableTimeKeyResId() {
+    return R.string.periodic_wifi_enable_key;
+  }
+
+  @Override protected int getDisableTimeKeyResId() {
+    return R.string.periodic_wifi_disable_key;
+  }
+
+  @Override protected void injectPresenter() {
+    Singleton.Dagger.with(getContext()).plusPeriodPreferenceComponent().inject(this);
   }
 }
