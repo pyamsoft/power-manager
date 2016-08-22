@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class DataDelayPreference extends CustomTimeInputPreference {
-  @Inject @Named("wifi_custom_delay") CustomTimeInputPreferencePresenter presenter;
+  @Inject @Named("data_custom_delay") CustomTimeInputPreferencePresenter presenter;
 
   public DataDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -47,7 +47,7 @@ public class DataDelayPreference extends CustomTimeInputPreference {
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current delay time: %d seconds", time);
+    return String.format(Locale.getDefault(), "Data off delay time: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

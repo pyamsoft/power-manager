@@ -27,7 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 public class DataEnableTimePreference extends CustomTimeInputPreference {
-  @Inject @Named("wifi_custom_enable") CustomTimeInputPreferencePresenter presenter;
+  @Inject @Named("data_custom_enable") CustomTimeInputPreferencePresenter presenter;
 
   public DataEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
