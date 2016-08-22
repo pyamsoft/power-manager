@@ -69,12 +69,17 @@ public abstract class ManageJob extends BaseJob implements Runnable {
     }
   }
 
+  @CheckResult private boolean hasValidPeriodicInterval() {
+    return getPeriodicDisableInSeconds() >= MINIMUM_PERIOD_SECONDS
+        && getPeriodicEnableInSeconds() >= MINIMUM_PERIOD_SECONDS;
+  }
+
   private void internalEnable() {
     if (isPeriodic()) {
-      if (getPeriodicEnableInSeconds() < MINIMUM_PERIOD_SECONDS) {
+      if (hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute");
       } else {
-        Timber.d("Queue periodic enable job");
+        Timber.d("Queue periodic disable job for: %d", getPeriodicDisableInSeconds());
         Singleton.Jobs.with(getApplicationContext())
             .addJobInBackground(createPeriodicDisableJob(getPeriodicEnableInSeconds(),
                 getPeriodicDisableInSeconds()));
@@ -84,10 +89,10 @@ public abstract class ManageJob extends BaseJob implements Runnable {
 
   private void internalDisable() {
     if (isPeriodic()) {
-      if (getPeriodicDisableInSeconds() < MINIMUM_PERIOD_SECONDS) {
+      if (hasValidPeriodicInterval()) {
         Timber.e("Not queuing period enable job with interval less than 1 minute");
       } else {
-        Timber.d("Queue periodic enable job");
+        Timber.d("Queue periodic enable job for: %d", getPeriodicDisableInSeconds());
         Singleton.Jobs.with(getApplicationContext())
             .addJobInBackground(createPeriodicEnableJob(getPeriodicEnableInSeconds(),
                 getPeriodicDisableInSeconds()));

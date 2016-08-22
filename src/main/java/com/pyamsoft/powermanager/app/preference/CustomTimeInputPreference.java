@@ -68,7 +68,7 @@ public abstract class CustomTimeInputPreference extends Preference
     super.onBindViewHolder(holder);
 
     // We call unbind because when a preference is changed it can be re-bound without being properly recycled
-    unbind();
+    unbind(false);
 
     Timber.d("onBindViewHolder");
     presenter = getPresenter();
@@ -103,6 +103,10 @@ public abstract class CustomTimeInputPreference extends Preference
   }
 
   public final void unbind() {
+    unbind(true);
+  }
+
+  final void unbind(boolean finalSave) {
     if (unbinder == null) {
       Timber.w(
           "onBindViewHolder was never called for this preference. Maybe it never came into view?");
@@ -112,9 +116,11 @@ public abstract class CustomTimeInputPreference extends Preference
         editText.setOnFocusChangeListener(null);
         editText.setOnEditorActionListener(null);
 
-        // Save the last entered value to preferences
-        final String text = editText.getText().toString();
-        presenter.updateCustomTime(text, 0, false);
+        if (finalSave) {
+          // Save the last entered value to preferences
+          final String text = editText.getText().toString();
+          presenter.updateCustomTime(text, 0, false);
+        }
       }
 
       presenter.unbindView();
@@ -140,6 +146,7 @@ public abstract class CustomTimeInputPreference extends Preference
   }
 
   public void updatePresetDelay(@NonNull String presetDelay) {
+    Timber.d("Update time with preset delay of: %s", presetDelay);
     presenter.updateCustomTime(presetDelay, 0);
   }
 

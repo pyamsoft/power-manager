@@ -138,7 +138,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
       final long delayTime = Long.parseLong(presetDelay);
-      customTimePreference.setEnabled(managed && delayTime != -1);
+      customTimePreference.setEnabled(managed && delayTime == -1);
     }
   }
 
