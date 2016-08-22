@@ -107,8 +107,8 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     tabLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT));
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-    tabLayout.setSelectedTabIndicatorColor(
-        ContextCompat.getColor(getContext(), android.R.color.white));
+    tabLayout.setTabTextColors(ContextCompat.getColor(getContext(), android.R.color.white),
+        ContextCompat.getColor(getContext(), R.color.lightblueA200));
     tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
     addTabLayout(tabLayout);
