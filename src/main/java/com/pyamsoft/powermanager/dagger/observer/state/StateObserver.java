@@ -23,12 +23,13 @@ import android.content.IntentFilter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class StateObserver extends BroadcastReceiver implements InterestObserver {
+abstract class StateObserver extends BroadcastReceiver implements BooleanInterestObserver {
 
   @NonNull private final Context appContext;
   @NonNull private final IntentFilter filter;

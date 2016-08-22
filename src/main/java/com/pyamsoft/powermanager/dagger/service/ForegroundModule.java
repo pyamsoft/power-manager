@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -37,12 +37,12 @@ import rx.Scheduler;
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_wifi_manage") @NonNull InterestObserver wifiManageObserver,
-      @Named("obs_data_manage") @NonNull InterestObserver dataManageObserver,
-      @Named("obs_bluetooth_manage") @NonNull InterestObserver bluetoothManageObserver,
-      @Named("obs_sync_manage") @NonNull InterestObserver syncManageObserver,
-      @Named("obs_wear_manage") @NonNull InterestObserver wearManageObserver,
-      @Named("obs_doze_manage") @NonNull InterestObserver dozeManageObserver,
+      @Named("obs_wifi_manage") @NonNull BooleanInterestObserver wifiManageObserver,
+      @Named("obs_data_manage") @NonNull BooleanInterestObserver dataManageObserver,
+      @Named("obs_bluetooth_manage") @NonNull BooleanInterestObserver bluetoothManageObserver,
+      @Named("obs_sync_manage") @NonNull BooleanInterestObserver syncManageObserver,
+      @Named("obs_wear_manage") @NonNull BooleanInterestObserver wearManageObserver,
+      @Named("obs_doze_manage") @NonNull BooleanInterestObserver dozeManageObserver,
       @Named("mod_wifi_manage") @NonNull BooleanInterestModifier wifiManageModifier,
       @Named("mod_data_manage") @NonNull BooleanInterestModifier dataManageModifier,
       @Named("mod_bluetooth_manage") @NonNull BooleanInterestModifier bluetoothManageModifier,

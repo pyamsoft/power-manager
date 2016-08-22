@@ -34,7 +34,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.job.TriggerJob;
@@ -48,12 +48,12 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   private static final int PENDING_RC = 1004;
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final InterestObserver wifiManageObserver;
-  @NonNull private final InterestObserver dataManageObserver;
-  @NonNull private final InterestObserver bluetoothManageObserver;
-  @NonNull private final InterestObserver syncManageObserver;
-  @NonNull private final InterestObserver wearManageObserver;
-  @NonNull private final InterestObserver dozeManageObserver;
+  @NonNull private final BooleanInterestObserver wifiManageObserver;
+  @NonNull private final BooleanInterestObserver dataManageObserver;
+  @NonNull private final BooleanInterestObserver bluetoothManageObserver;
+  @NonNull private final BooleanInterestObserver syncManageObserver;
+  @NonNull private final BooleanInterestObserver wearManageObserver;
+  @NonNull private final BooleanInterestObserver dozeManageObserver;
   @NonNull private final BooleanInterestModifier wifiManageModifier;
   @NonNull private final BooleanInterestModifier dataManageModifier;
   @NonNull private final BooleanInterestModifier bluetoothManageModifier;
@@ -62,16 +62,18 @@ final class ForegroundInteractorImpl implements ForegroundInteractor {
   @NonNull private final BooleanInterestModifier dozeManageModifier;
 
   @Inject ForegroundInteractorImpl(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver wifiManageObserver,
-      @NonNull InterestObserver dataManageObserver,
-      @NonNull InterestObserver bluetoothManageObserver,
-      @NonNull InterestObserver syncManageObserver, @NonNull InterestObserver wearManageObserver,
-      @NonNull InterestObserver dozeManageObserver, @NonNull
-  BooleanInterestModifier wifiManageModifier,
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver wifiManageObserver,
+      @NonNull BooleanInterestObserver dataManageObserver,
+      @NonNull BooleanInterestObserver bluetoothManageObserver,
+      @NonNull BooleanInterestObserver syncManageObserver,
+      @NonNull BooleanInterestObserver wearManageObserver,
+      @NonNull BooleanInterestObserver dozeManageObserver,
+      @NonNull BooleanInterestModifier wifiManageModifier,
       @NonNull BooleanInterestModifier dataManageModifier,
       @NonNull BooleanInterestModifier bluetoothManageModifier,
-      @NonNull BooleanInterestModifier syncManageModifier, @NonNull
-  BooleanInterestModifier wearManageModifier,
+      @NonNull BooleanInterestModifier syncManageModifier,
+      @NonNull BooleanInterestModifier wearManageModifier,
       @NonNull BooleanInterestModifier dozeManageModifier) {
     this.dozeManageObserver = dozeManageObserver;
     this.wifiManageModifier = wifiManageModifier;

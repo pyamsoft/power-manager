@@ -28,7 +28,7 @@ import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
@@ -45,10 +45,10 @@ public final class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
   private static final int PRIORITY = 2;
-  @Inject @Named("obs_wifi_state") InterestObserver wifiObserver;
-  @Inject @Named("obs_data_state") InterestObserver dataObserver;
-  @Inject @Named("obs_bluetooth_state") InterestObserver bluetoothObserver;
-  @Inject @Named("obs_sync_state") InterestObserver syncObserver;
+  @Inject @Named("obs_wifi_state") BooleanInterestObserver wifiObserver;
+  @Inject @Named("obs_data_state") BooleanInterestObserver dataObserver;
+  @Inject @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver;
+  @Inject @Named("obs_sync_state") BooleanInterestObserver syncObserver;
 
   @Inject @Named("mod_wifi_state") BooleanInterestModifier wifiModifier;
   @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;

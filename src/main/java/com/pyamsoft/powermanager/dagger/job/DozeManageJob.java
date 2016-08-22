@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -49,7 +50,7 @@ public abstract class DozeManageJob extends ManageJob {
   public static final class EnableJob extends DozeManageJob {
 
     @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") InterestObserver interestObserver;
+    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
 
     public EnableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
@@ -72,7 +73,7 @@ public abstract class DozeManageJob extends ManageJob {
   public static final class DisableJob extends DozeManageJob {
 
     @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") InterestObserver interestObserver;
+    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
 
     public DisableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {

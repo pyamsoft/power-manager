@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,26 +26,26 @@ import javax.inject.Singleton;
 
 @Module public class StateObserverModule {
 
-  @Singleton @Named("obs_wifi_state") @Provides InterestObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_state") @Provides BooleanInterestObserver provideWifiObserver(
       @NonNull Context context) {
     return new WifiStateObserver(context);
   }
 
-  @Singleton @Named("obs_data_state") @Provides InterestObserver provideDataObserver(
+  @Singleton @Named("obs_data_state") @Provides BooleanInterestObserver provideDataObserver(
       @NonNull Context context) {
     return new DataStateObserver(context);
   }
 
-  @Singleton @Named("obs_bluetooth_state") @Provides InterestObserver provideBluetoothObserver(
+  @Singleton @Named("obs_bluetooth_state") @Provides BooleanInterestObserver provideBluetoothObserver(
       @NonNull Context context) {
     return new BluetoothStateObserver(context);
   }
 
-  @Singleton @Named("obs_sync_state") @Provides InterestObserver provideSyncObserver() {
+  @Singleton @Named("obs_sync_state") @Provides BooleanInterestObserver provideSyncObserver() {
     return new SyncStateObserver();
   }
 
-  @Singleton @Named("obs_doze_state") @Provides InterestObserver provideDozeObserver(
+  @Singleton @Named("obs_doze_state") @Provides BooleanInterestObserver provideDozeObserver(
       @NonNull Context context) {
     return new DozeStateObserver(context);
   }

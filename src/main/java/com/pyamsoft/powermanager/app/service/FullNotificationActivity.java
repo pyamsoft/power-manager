@@ -39,7 +39,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -107,15 +107,15 @@ public class FullNotificationActivity extends AppCompatActivity
     @BindView(R.id.full_notification_main) ImageView mainButton;
     @BindView(R.id.full_notification_close) ImageView closeButton;
 
-    @Inject @Named("obs_wifi_state") InterestObserver wifiStateObserver;
-    @Inject @Named("obs_data_state") InterestObserver dataStateObserver;
-    @Inject @Named("obs_bluetooth_state") InterestObserver bluetoothStateObserver;
-    @Inject @Named("obs_sync_state") InterestObserver syncStateObserver;
+    @Inject @Named("obs_wifi_state") BooleanInterestObserver wifiStateObserver;
+    @Inject @Named("obs_data_state") BooleanInterestObserver dataStateObserver;
+    @Inject @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothStateObserver;
+    @Inject @Named("obs_sync_state") BooleanInterestObserver syncStateObserver;
 
-    @Inject @Named("obs_wifi_manage") InterestObserver wifiManageObserver;
-    @Inject @Named("obs_data_manage") InterestObserver dataManageObserver;
-    @Inject @Named("obs_bluetooth_manage") InterestObserver bluetoothManageObserver;
-    @Inject @Named("obs_sync_manage") InterestObserver syncManageObserver;
+    @Inject @Named("obs_wifi_manage") BooleanInterestObserver wifiManageObserver;
+    @Inject @Named("obs_data_manage") BooleanInterestObserver dataManageObserver;
+    @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver bluetoothManageObserver;
+    @Inject @Named("obs_sync_manage") BooleanInterestObserver syncManageObserver;
 
     @Inject @Named("mod_wifi_state") BooleanInterestModifier wifiStateModifier;
     @Inject @Named("mod_data_state") BooleanInterestModifier dataStateModifier;

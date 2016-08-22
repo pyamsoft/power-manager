@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.observer;
+package com.pyamsoft.powermanager.dagger.observer.preference.manage;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.dagger.observer.preference.PreferenceObserver;
+import javax.inject.Inject;
 
-public interface InterestObserver {
+class DozeManageObserver extends PreferenceObserver {
 
-  void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback);
-
-  void unregister(@NonNull String tag);
-
-  interface SetCallback {
-
-    void call();
+  @Inject DozeManageObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences, context.getString(R.string.manage_doze_key));
   }
 
-  interface UnsetCallback {
-
-    void call();
+  @Override protected boolean is(PowerManagerPreferences preferences) {
+    return preferences.isDozeManaged();
   }
 }

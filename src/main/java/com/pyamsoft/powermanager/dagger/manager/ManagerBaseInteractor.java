@@ -23,7 +23,7 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -31,12 +31,13 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final InterestObserver manageObserver;
-  @NonNull private final InterestObserver stateObserver;
+  @NonNull private final BooleanInterestObserver manageObserver;
+  @NonNull private final BooleanInterestObserver stateObserver;
   private boolean originalStateEnabled;
 
   ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull InterestObserver manageObserver, @NonNull InterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver) {
     this.manageObserver = manageObserver;
     this.stateObserver = stateObserver;
     this.appContext = context.getApplicationContext();

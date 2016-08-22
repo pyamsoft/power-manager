@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -39,8 +39,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_manager_interactor")
   ManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_wifi_manage") InterestObserver manageObserver,
-      @Named("obs_wifi_state") InterestObserver stateObserver) {
+      @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_wifi_state") BooleanInterestObserver stateObserver) {
     return new ManagerWifiInteractor(context, preferences, manageObserver, stateObserver);
   }
 
@@ -53,8 +53,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_manager_interactor")
   ManagerInteractor provideManagerDataInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_data_manage") InterestObserver manageObserver,
-      @Named("obs_data_state") InterestObserver stateObserver) {
+      @Named("obs_data_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_data_state") BooleanInterestObserver stateObserver) {
     return new ManagerDataInteractor(context, preferences, manageObserver, stateObserver);
   }
 
@@ -67,8 +67,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_manager_interactor")
   ManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_bluetooth_manage") InterestObserver manageObserver,
-      @Named("obs_bluetooth_state") InterestObserver stateObserver) {
+      @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver) {
     return new ManagerBluetoothInteractor(context, preferences, manageObserver, stateObserver);
   }
 
@@ -81,8 +81,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_manager_interactor")
   ManagerInteractor provideManagerSyncInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_sync_manage") InterestObserver manageObserver,
-      @Named("obs_sync_state") InterestObserver stateObserver) {
+      @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
     return new ManagerSyncInteractor(context, preferences, manageObserver, stateObserver);
   }
 
@@ -95,8 +95,8 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("doze_manager_interactor")
   ExclusiveManagerInteractor provideManagerDozeInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_doze_manage") InterestObserver manageObserver,
-      @Named("obs_doze_state") InterestObserver stateObserver) {
+      @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_doze_state") BooleanInterestObserver stateObserver) {
     return new ManagerDozeInteractor(context, preferences, manageObserver, stateObserver);
   }
 }

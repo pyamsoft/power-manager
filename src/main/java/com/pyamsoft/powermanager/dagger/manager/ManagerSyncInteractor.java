@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.SyncManageJob;
 import javax.inject.Inject;
 import rx.Observable;
@@ -29,8 +29,8 @@ import rx.Observable;
 final class ManagerSyncInteractor extends ManagerBaseInteractor {
 
   @Inject ManagerSyncInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull InterestObserver manageObserver,
-      @NonNull InterestObserver stateObserver) {
+      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver) {
     super(context, preferences, manageObserver, stateObserver);
   }
 

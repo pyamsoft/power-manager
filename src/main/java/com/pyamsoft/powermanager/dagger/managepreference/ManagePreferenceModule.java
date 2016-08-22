@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.managepreference;
 
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -30,7 +30,7 @@ import rx.Scheduler;
   BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
       @Named("doze_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
-      @Named("obs_doze_manage") InterestObserver manageObserver) {
+      @Named("obs_doze_manage") BooleanInterestObserver manageObserver) {
     return new DozeManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
         manageObserver);
   }
@@ -39,7 +39,7 @@ import rx.Scheduler;
   BaseManagePreferencePresenter provideWifiManagePreferencePresenter(
       @Named("wifi_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
-      @Named("obs_wifi_manage") InterestObserver manageObserver) {
+      @Named("obs_wifi_manage") BooleanInterestObserver manageObserver) {
     return new WifiManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
         manageObserver);
   }
