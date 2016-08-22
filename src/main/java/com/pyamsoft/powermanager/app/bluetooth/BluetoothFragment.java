@@ -20,13 +20,21 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class BluetoothFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Bluetooth";
+  @Inject @Named("obs_bluetooth_state") BooleanInterestObserver observer;
+  @Inject @Named("mod_bluetooth_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static BluetoothFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -34,6 +42,27 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
     final BluetoothFragment fragment = new BluetoothFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override protected void injectObserverModifier() {
+    Singleton.Dagger.with(getContext())
+        .plusBluetoothScreenComponent().inject(this);
+  }
+
+  @NonNull @Override protected BooleanInterestObserver getObserver() {
+    return observer;
+  }
+
+  @NonNull @Override protected BooleanInterestModifier getModifier() {
+    return modifier;
+  }
+
+  @Override protected int getFabSetIcon() {
+    return R.drawable.ic_bluetooth_24dp;
+  }
+
+  @Override protected int getFabUnsetIcon() {
+    return R.drawable.ic_bluetooth_disabled_24dp;
   }
 
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {

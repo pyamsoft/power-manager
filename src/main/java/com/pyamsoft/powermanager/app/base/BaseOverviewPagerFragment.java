@@ -18,8 +18,10 @@ package com.pyamsoft.powermanager.app.base;
 
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -33,20 +35,31 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import rx.Subscription;
 
 public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
+  @NonNull private static final String FAB_TAG = "fab_tag";
+  @NonNull private final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
+  @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
   private TabLayout tabLayout;
   private Unbinder unbinder;
+  private BooleanInterestObserver observer;
+  private BooleanInterestModifier modifier;
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    injectObserverModifier();
     final View view =
         inflater.inflate(R.layout.fragment_preference_container_pager, container, false);
     unbinder = ButterKnife.bind(this, view);
@@ -55,17 +68,22 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
+    observer.unregister(FAB_TAG);
     removeTabLayout();
     setActionBarUpEnabled(false);
+    asyncDrawableMap.clear();
     unbinder.unbind();
   }
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
+    observer = getObserver();
+    modifier = getModifier();
     addPreferenceFragments();
     addTabLayoutToAppBar();
     selectCurrentTab(savedInstanceState);
+    setupFab();
   }
 
   @Override public final void onResume() {
@@ -128,6 +146,59 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
       tab.select();
     }
   }
+
+  private void setupFab() {
+    if (isFabHidden()) {
+      fab.hide();
+      return;
+    }
+
+    observer.register(FAB_TAG, this::setFab, this::unsetFab);
+    if (observer.is()) {
+      setFab();
+    } else {
+      unsetFab();
+    }
+
+    fab.setOnClickListener(view -> {
+      if (observer.is()) {
+        modifier.unset();
+      } else {
+        modifier.set();
+      }
+    });
+  }
+
+  private void setFab() {
+    loadDrawableIntoFab(getFabSetIcon());
+  }
+
+  private void unsetFab() {
+    loadDrawableIntoFab(getFabUnsetIcon());
+  }
+
+  private void loadDrawableIntoFab(@DrawableRes int fabIcon) {
+    final Subscription subscription =
+        AsyncDrawable.with(getContext()).load(fabIcon).tint(android.R.color.white).into(fab);
+    asyncDrawableMap.put("fab", subscription);
+  }
+
+  /**
+   * Override to not use the FAB
+   */
+  @CheckResult boolean isFabHidden() {
+    return false;
+  }
+
+  protected abstract void injectObserverModifier();
+
+  @CheckResult @NonNull protected abstract BooleanInterestObserver getObserver();
+
+  @CheckResult @NonNull protected abstract BooleanInterestModifier getModifier();
+
+  @CheckResult @DrawableRes protected abstract int getFabSetIcon();
+
+  @CheckResult @DrawableRes protected abstract int getFabUnsetIcon();
 
   @CheckResult @NonNull protected abstract BasePagerAdapter getPagerAdapter();
 }

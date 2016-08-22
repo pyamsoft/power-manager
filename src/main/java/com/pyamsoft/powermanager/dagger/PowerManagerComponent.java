@@ -27,6 +27,10 @@ import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObs
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.periodpreference.PeriodPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.screen.BluetoothScreenComponent;
+import com.pyamsoft.powermanager.dagger.screen.DataScreenComponent;
+import com.pyamsoft.powermanager.dagger.screen.SyncScreenComponent;
+import com.pyamsoft.powermanager.dagger.screen.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.FullDialogComponent;
@@ -62,4 +66,12 @@ import javax.inject.Singleton;
   PeriodPreferenceComponent plusPeriodPreferenceComponent();
 
   CustomPreferenceComponent plusCustomPreferenceComponent();
+
+  WifiScreenComponent plusWifiScreenComponent();
+
+  DataScreenComponent plusDataScreenComponent();
+
+  BluetoothScreenComponent plusBluetoothScreenComponent();
+
+  SyncScreenComponent plusSyncScreenComponent();
 }

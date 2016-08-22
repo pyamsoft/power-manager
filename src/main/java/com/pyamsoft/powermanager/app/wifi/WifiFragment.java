@@ -20,13 +20,21 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class WifiFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Wifi";
+  @Inject @Named("obs_wifi_state") BooleanInterestObserver observer;
+  @Inject @Named("mod_wifi_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static WifiFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -34,6 +42,26 @@ public class WifiFragment extends BaseOverviewPagerFragment {
     final WifiFragment fragment = new WifiFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override protected void injectObserverModifier() {
+    Singleton.Dagger.with(getContext()).plusWifiScreenComponent().inject(this);
+  }
+
+  @NonNull @Override protected BooleanInterestObserver getObserver() {
+    return observer;
+  }
+
+  @NonNull @Override protected BooleanInterestModifier getModifier() {
+    return modifier;
+  }
+
+  @Override protected int getFabSetIcon() {
+    return R.drawable.ic_network_wifi_24dp;
+  }
+
+  @Override protected int getFabUnsetIcon() {
+    return R.drawable.ic_signal_wifi_off_24dp;
   }
 
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {

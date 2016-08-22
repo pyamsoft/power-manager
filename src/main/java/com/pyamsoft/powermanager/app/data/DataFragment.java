@@ -20,13 +20,21 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DataFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Data";
+  @Inject @Named("obs_data_state") BooleanInterestObserver observer;
+  @Inject @Named("mod_data_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static DataFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -34,6 +42,26 @@ public class DataFragment extends BaseOverviewPagerFragment {
     final DataFragment fragment = new DataFragment();
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override protected void injectObserverModifier() {
+    Singleton.Dagger.with(getContext()).plusDataScreenComponent().inject(this);
+  }
+
+  @NonNull @Override protected BooleanInterestObserver getObserver() {
+    return observer;
+  }
+
+  @NonNull @Override protected BooleanInterestModifier getModifier() {
+    return modifier;
+  }
+
+  @Override protected int getFabSetIcon() {
+    return R.drawable.ic_network_cell_24dp;
+  }
+
+  @Override protected int getFabUnsetIcon() {
+    return R.drawable.ic_signal_cellular_off_24dp;
   }
 
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
