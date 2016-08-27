@@ -18,8 +18,9 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
+import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -27,13 +28,14 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class TriggerListAdapterPresenter
-    extends SchedulerPresenter<TriggerListAdapterPresenter.TriggerListAdapterView> {
+class TriggerListAdapterPresenterImpl
+    extends SchedulerPresenter<TriggerListAdapterPresenter.TriggerListAdapterView>
+    implements TriggerListAdapterPresenter {
 
   @NonNull private final TriggerListAdapterInteractor interactor;
   @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
-  @Inject TriggerListAdapterPresenter(@NonNull @Named("main") Scheduler observeScheduler,
+  @Inject TriggerListAdapterPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull TriggerListAdapterInteractor adapterInteractor) {
     super(observeScheduler, subscribeScheduler);
@@ -45,18 +47,19 @@ public class TriggerListAdapterPresenter
     unsubUpdateSubscription();
   }
 
-  @CheckResult public int size() {
+  @Override @CheckResult public int size() {
     return interactor.size().toBlocking().first();
   }
 
-  @CheckResult @NonNull public PowerTriggerEntry get(int position) {
+  @Override @CheckResult @NonNull public PowerTriggerEntry get(int position) {
     return interactor.get(position).toBlocking().first();
   }
 
-  @CheckResult public int getPositionForPercent(int percent) {
+  @Override @CheckResult public int getPositionForPercent(int percent) {
     return interactor.getPosition(percent).toBlocking().first();
   }
 
+  @Override
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled) {
     unsubUpdateSubscription();
     updateSubscription = interactor.update(entry, enabled)
@@ -74,10 +77,5 @@ public class TriggerListAdapterPresenter
     if (!updateSubscription.isUnsubscribed()) {
       updateSubscription.unsubscribe();
     }
-  }
-
-  public interface TriggerListAdapterView {
-
-    void updateViewHolder(int position);
   }
 }

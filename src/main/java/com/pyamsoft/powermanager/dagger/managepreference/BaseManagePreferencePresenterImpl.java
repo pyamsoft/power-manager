@@ -17,43 +17,38 @@
 package com.pyamsoft.powermanager.dagger.managepreference;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import rx.Scheduler;
 
-public abstract class BaseManagePreferencePresenter
-    extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView> {
+public abstract class BaseManagePreferencePresenterImpl
+    extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView>
+    implements BaseManagePreferencePresenter {
 
   @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
   @NonNull private final InterestObserver manageObserver;
   @NonNull private final BaseManagePreferenceInteractor interactor;
 
-  protected BaseManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
+  protected BaseManagePreferencePresenterImpl(
+      @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = manageInteractor;
     this.manageObserver = manageObserver;
   }
 
-  @Override protected void onStart(@NonNull ManagePreferenceView view) {
-    super.onStart(view);
+  @Override protected void onBind(@NonNull ManagePreferenceView view) {
+    super.onBind(view);
     manageObserver.register(OBS_TAG, view::onManageSet, view::onManageUnset);
   }
 
-  @Override protected void onStop(@NonNull ManagePreferenceView view) {
-    super.onStop(view);
+  @Override protected void onUnbind(@NonNull ManagePreferenceView view) {
+    super.onUnbind(view);
     manageObserver.unregister(OBS_TAG);
   }
 
-  public void updateManage(boolean state) {
+  @Override public void updateManage(boolean state) {
     interactor.updateManage(state);
-  }
-
-  public interface ManagePreferenceView {
-
-    void onManageSet();
-
-    void onManageUnset();
   }
 }

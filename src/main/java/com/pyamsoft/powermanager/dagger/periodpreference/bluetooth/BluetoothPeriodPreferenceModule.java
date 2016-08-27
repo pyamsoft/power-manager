@@ -16,11 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.periodpreference.bluetooth;
 
+import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

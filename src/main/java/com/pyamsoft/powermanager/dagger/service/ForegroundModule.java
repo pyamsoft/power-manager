@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -32,7 +33,7 @@ import rx.Scheduler;
   @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
       @NonNull ForegroundInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
-    return new ForegroundPresenter(interactor, mainScheduler, ioScheduler);
+    return new ForegroundPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,

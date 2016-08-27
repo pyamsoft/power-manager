@@ -26,6 +26,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -40,7 +42,6 @@ import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -52,32 +53,39 @@ import timber.log.Timber;
 public class FullNotificationActivity extends AppCompatActivity
     implements FullNotificationPresenter.FullNotificationView {
 
-  @Inject FullNotificationPresenter presenter;
+  FullNotificationPresenter presenter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Singleton.Dagger.with(this).plusFullNotificationComponent().inject(this);
+    getSupportLoaderManager().initLoader(0, null,
+        new LoaderManager.LoaderCallbacks<FullNotificationPresenter>() {
+          @Override public Loader<FullNotificationPresenter> onCreateLoader(int id, Bundle args) {
+            return new FullNotificationPresenterLoader(getApplicationContext());
+          }
 
-    presenter.bindView(this);
+          @Override public void onLoadFinished(Loader<FullNotificationPresenter> loader,
+              FullNotificationPresenter data) {
+            presenter = data;
+          }
+
+          @Override public void onLoaderReset(Loader<FullNotificationPresenter> loader) {
+            presenter = null;
+          }
+        });
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
     presenter.unbindView();
   }
 
-  @Override protected void onResume() {
-    super.onResume();
-
-    Timber.d("resume");
-    presenter.resume();
-  }
-
-  @Override protected void onPause() {
-    super.onPause();
-
-    Timber.d("pause");
-    presenter.pause();
+  @Override protected void onStart() {
+    super.onStart();
+    presenter.bindView(this);
   }
 
   @Override protected void onPostResume() {
@@ -183,7 +191,7 @@ public class FullNotificationActivity extends AppCompatActivity
     private void destroy() {
       Timber.d("Destroy FullNotification");
       dismiss();
-      FullNotificationPresenter.Bus.get().post(new FullNotificationPresenter.DismissEvent());
+      FullNotificationBus.get().post(new FullNotificationBus.DismissEvent());
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {

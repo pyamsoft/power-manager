@@ -16,8 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.Notification;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,14 +26,14 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public final class ForegroundPresenter
-    extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider> {
+class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
+    implements ForegroundPresenter {
 
   @NonNull private final ForegroundInteractor interactor;
 
   @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
-  @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
+  @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
       @NonNull @Named("io") Scheduler ioScheduler) {
     super(mainScheduler, ioScheduler);
@@ -92,10 +92,5 @@ public final class ForegroundPresenter
 
   public void updateDozeAction() {
     interactor.updateDozePreferenceStatus();
-  }
-
-  public interface ForegroundProvider {
-
-    void startNotificationInForeground(@NonNull Notification notification);
   }
 }

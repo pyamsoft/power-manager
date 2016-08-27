@@ -17,18 +17,20 @@
 package com.pyamsoft.powermanager.dagger.periodpreference;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import rx.Scheduler;
 
-public abstract class BasePeriodPreferencePresenter
-    extends SchedulerPresenter<BasePeriodPreferencePresenter.PeriodPreferenceView> {
+public abstract class BasePeriodPreferencePresenterImpl
+    extends SchedulerPresenter<BasePeriodPreferencePresenter.PeriodPreferenceView>
+    implements BasePeriodPreferencePresenter {
 
   @NonNull private static final String OBS_TAG = "BasePeriodPreferencePresenter";
   @NonNull private final InterestObserver observer;
   @NonNull private final BasePeriodPreferenceInteractor interactor;
 
-  protected BasePeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
+  protected BasePeriodPreferencePresenterImpl(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver periodObserver) {
     super(observeScheduler, subscribeScheduler);
@@ -36,24 +38,17 @@ public abstract class BasePeriodPreferencePresenter
     this.observer = periodObserver;
   }
 
-  @Override protected void onStart(@NonNull PeriodPreferenceView view) {
-    super.onStart(view);
+  @Override protected void onBind(@NonNull PeriodPreferenceView view) {
+    super.onBind(view);
     observer.register(OBS_TAG, view::onPeriodicSet, view::onPeriodicUnset);
   }
 
-  @Override protected void onStop(@NonNull PeriodPreferenceView view) {
-    super.onStop(view);
+  @Override protected void onUnbind(@NonNull PeriodPreferenceView view) {
+    super.onUnbind(view);
     observer.unregister(OBS_TAG);
   }
 
   public void updatePeriodic(boolean state) {
     interactor.updatePeriodic(state);
-  }
-
-  public interface PeriodPreferenceView {
-
-    void onPeriodicSet();
-
-    void onPeriodicUnset();
   }
 }

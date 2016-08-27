@@ -16,24 +16,18 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
-import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 
 public class SyncManagePreferenceFragment extends BaseManagePreferenceFragment {
 
-  @Inject @Named("sync_manage_pref") BaseManagePreferencePresenter presenter;
-
-  @Override protected void injectPresenter() {
-    Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);
-  }
-
-  @NonNull @Override protected BaseManagePreferencePresenter providePresenter() {
-    return presenter;
+  @NonNull @Override
+  protected Loader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
+    return new SyncManagePresenterLoader(context);
   }
 
   @Override protected int getManageKeyResId() {

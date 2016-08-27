@@ -16,12 +16,15 @@
 
 package com.pyamsoft.powermanager.app.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -29,24 +32,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import timber.log.Timber;
 
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
     implements BasePeriodPreferencePresenter.PeriodPreferenceView {
 
-  private String periodicKey;
-  private String presetEnableTimeKey;
-  private String presetDisableTimeKey;
-  private String enableTimeKey;
-  private String disableTimeKey;
+  String periodicKey;
+  String presetEnableTimeKey;
+  String presetDisableTimeKey;
+  String enableTimeKey;
+  String disableTimeKey;
 
-  private SwitchPreferenceCompat periodicPreference;
-  private BasePeriodPreferencePresenter presenter;
-  private ListPreference presetEnableTimePreference;
-  private CustomTimeInputPreference customEnableTimePreference;
-  private ListPreference presetDisableTimePreference;
-  private CustomTimeInputPreference customDisableTimePreference;
+  BasePeriodPreferencePresenter presenter;
+  SwitchPreferenceCompat periodicPreference;
+  ListPreference presetEnableTimePreference;
+  CustomTimeInputPreference customEnableTimePreference;
+  ListPreference presetDisableTimePreference;
+  CustomTimeInputPreference customDisableTimePreference;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -59,9 +62,23 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @Override public final View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    injectPresenter();
-    presenter = providePresenter();
-    presenter.bindView(this);
+    getLoaderManager().initLoader(0, null,
+        new LoaderManager.LoaderCallbacks<BasePeriodPreferencePresenter>() {
+          @Override
+          public Loader<BasePeriodPreferencePresenter> onCreateLoader(int id, Bundle args) {
+            return createPresenterLoader(getContext());
+          }
+
+          @Override public void onLoadFinished(Loader<BasePeriodPreferencePresenter> loader,
+              BasePeriodPreferencePresenter data) {
+            presenter = data;
+          }
+
+          @Override public void onLoaderReset(Loader<BasePeriodPreferencePresenter> loader) {
+            presenter = null;
+          }
+        });
+
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -197,21 +214,20 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
-  @Override public final void onStart() {
-    super.onStart();
-    presenter.start();
+  @Override public void onResume() {
+    super.onResume();
+    presenter.bindView(this);
   }
 
-  @Override public final void onStop() {
-    super.onStop();
-    presenter.stop();
+  @Override public void onPause() {
+    super.onPause();
+    presenter.unbindView();
   }
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
     customEnableTimePreference.unbind();
     customDisableTimePreference.unbind();
-    presenter.unbindView();
   }
 
   @Override public void onPeriodicSet() {
@@ -226,8 +242,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @CheckResult @StringRes protected abstract int getPeriodicKeyResId();
 
-  @CheckResult @NonNull protected abstract BasePeriodPreferencePresenter providePresenter();
-
   @CheckResult @StringRes protected abstract int getPresetDisableTimeKeyResId();
 
   @CheckResult @StringRes protected abstract int getPresetEnableTimeKeyResId();
@@ -236,5 +250,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
 
-  protected abstract void injectPresenter();
+  @CheckResult @NonNull
+  protected abstract Loader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context);
 }

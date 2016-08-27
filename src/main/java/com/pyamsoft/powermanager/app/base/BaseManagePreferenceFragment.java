@@ -16,12 +16,15 @@
 
 package com.pyamsoft.powermanager.app.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -29,20 +32,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
     implements BaseManagePreferencePresenter.ManagePreferenceView {
 
-  private String manageKey;
-  private String presetTimeKey;
-  private String timeKey;
+  String manageKey;
+  String presetTimeKey;
+  String timeKey;
 
-  private SwitchPreferenceCompat managePreference;
-  private BaseManagePreferencePresenter presenter;
-  private ListPreference presetTimePreference;
-  private CustomTimeInputPreference customTimePreference;
+  BaseManagePreferencePresenter presenter;
+  SwitchPreferenceCompat managePreference;
+  ListPreference presetTimePreference;
+  CustomTimeInputPreference customTimePreference;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -53,9 +55,22 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public final View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    injectPresenter();
-    presenter = providePresenter();
-    presenter.bindView(this);
+    getLoaderManager().initLoader(0, null,
+        new LoaderManager.LoaderCallbacks<BaseManagePreferencePresenter>() {
+          @Override
+          public Loader<BaseManagePreferencePresenter> onCreateLoader(int id, Bundle args) {
+            return createPresenterLoader(getContext());
+          }
+
+          @Override public void onLoadFinished(Loader<BaseManagePreferencePresenter> loader,
+              BaseManagePreferencePresenter data) {
+            presenter = data;
+          }
+
+          @Override public void onLoaderReset(Loader<BaseManagePreferencePresenter> loader) {
+            presenter = null;
+          }
+        });
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -117,14 +132,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
   }
 
-  @Override public final void onStart() {
-    super.onStart();
-    presenter.start();
+  @Override public void onResume() {
+    super.onResume();
+    presenter.bindView(this);
   }
 
-  @Override public final void onStop() {
-    super.onStop();
-    presenter.stop();
+  @Override public void onPause() {
+    super.onPause();
+    presenter.unbindView();
   }
 
   @Override public final void onDestroyView() {
@@ -132,7 +147,6 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     if (customTimePreference != null) {
       customTimePreference.unbind();
     }
-    presenter.unbindView();
   }
 
   private void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
@@ -167,9 +181,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return true;
   }
 
-  protected abstract void injectPresenter();
-
-  @CheckResult @NonNull protected abstract BaseManagePreferencePresenter providePresenter();
+  @CheckResult @NonNull
+  protected abstract Loader<BaseManagePreferencePresenter> createPresenterLoader(Context context);
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
 

@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
+import com.pyamsoft.powermanager.app.service.FullNotificationPresenterLoader;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Subcomponent;
 
@@ -24,5 +25,5 @@ import dagger.Subcomponent;
 @Subcomponent(modules = FullNotificationModule.class)
 public interface FullNotificationComponent {
 
-  void inject(FullNotificationActivity activity);
+  void inject(FullNotificationPresenterLoader loader);
 }

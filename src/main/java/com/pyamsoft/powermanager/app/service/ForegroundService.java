@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.powermanager.dagger.service.ForegroundPresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 

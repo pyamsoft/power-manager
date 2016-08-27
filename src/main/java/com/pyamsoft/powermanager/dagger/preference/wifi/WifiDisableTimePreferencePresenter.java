@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.preference.wifi;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class WifiDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenter {
+final class WifiDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
   @Inject WifiDisableTimePreferencePresenter(@Nullable
   CustomTimeInputPreferenceInteractor interactor,

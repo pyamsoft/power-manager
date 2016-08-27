@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -28,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides TriggerListAdapterPresenter provideTriggerListAdapterPresenter(
       @NonNull @Named("main") Scheduler mainScheduler, @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull TriggerListAdapterInteractor interactor) {
-    return new TriggerListAdapterPresenter(mainScheduler, ioScheduler, interactor);
+    return new TriggerListAdapterPresenterImpl(mainScheduler, ioScheduler, interactor);
   }
 
   @ActivityScope @Provides TriggerListAdapterInteractor provideTriggerListAdapterInteractor(

@@ -16,10 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.service.FullNotificationBus;
+import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
-import com.pyamsoft.pydroid.tool.RxBus;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -27,34 +27,35 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class FullNotificationPresenter
-    extends SchedulerPresenter<FullNotificationPresenter.FullNotificationView> {
+class FullNotificationPresenterImpl
+    extends SchedulerPresenter<FullNotificationPresenter.FullNotificationView>
+    implements FullNotificationPresenter {
 
-  @NonNull private Subscription dismissSubscription = Subscriptions.empty();
+  @NonNull Subscription dismissSubscription = Subscriptions.empty();
 
-  @Inject FullNotificationPresenter(@NonNull @Named("main") Scheduler observeScheduler,
+  @Inject FullNotificationPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
   }
 
-  @Override protected void onResume(@NonNull FullNotificationView view) {
-    super.onResume(view);
-    registerOnDismissBus();
+  @Override protected void onBind(@NonNull FullNotificationView view) {
+    super.onBind(view);
+    registerOnDismissBus(view);
   }
 
-  @Override protected void onPause(@NonNull FullNotificationView view) {
-    super.onPause(view);
+  @Override protected void onUnbind(@NonNull FullNotificationView view) {
+    super.onUnbind(view);
     unregisterFromDismissBus();
   }
 
-  void registerOnDismissBus() {
+  void registerOnDismissBus(@NonNull FullNotificationView view) {
     unregisterFromDismissBus();
-    dismissSubscription = Bus.get()
+    dismissSubscription = FullNotificationBus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(dismissEvent -> {
-          getView().onDismissEvent();
+          view.onDismissEvent();
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
@@ -64,24 +65,6 @@ public class FullNotificationPresenter
   void unregisterFromDismissBus() {
     if (!dismissSubscription.isUnsubscribed()) {
       dismissSubscription.unsubscribe();
-    }
-  }
-
-  public interface FullNotificationView {
-
-    void onDismissEvent();
-  }
-
-  public static final class DismissEvent {
-
-  }
-
-  public static final class Bus extends RxBus<DismissEvent> {
-
-    @NonNull private static final RxBus<DismissEvent> instance = new Bus();
-
-    @CheckResult @NonNull public static RxBus<DismissEvent> get() {
-      return instance;
     }
   }
 }

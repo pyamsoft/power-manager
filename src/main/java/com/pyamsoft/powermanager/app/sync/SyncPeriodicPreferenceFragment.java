@@ -16,17 +16,14 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
-
-  @Inject @Named("sync_period_pref") BasePeriodPreferencePresenter presenter;
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_sync;
@@ -34,10 +31,6 @@ public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
 
   @Override protected int getPeriodicKeyResId() {
     return R.string.periodic_sync_key;
-  }
-
-  @NonNull @Override protected BasePeriodPreferencePresenter providePresenter() {
-    return presenter;
   }
 
   @Override protected int getPresetDisableTimeKeyResId() {
@@ -56,7 +49,8 @@ public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
     return R.string.periodic_sync_disable_key;
   }
 
-  @Override protected void injectPresenter() {
-    Singleton.Dagger.with(getContext()).plusPeriodPreferenceComponent().inject(this);
+  @NonNull @Override
+  protected Loader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context) {
+    return new SyncPeriodPresenterLoader(context);
   }
 }

@@ -31,7 +31,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends Preference

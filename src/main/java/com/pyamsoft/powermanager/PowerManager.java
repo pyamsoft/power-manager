@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
+import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
 public final class PowerManager extends ApplicationBase {
@@ -46,6 +47,7 @@ public final class PowerManager extends ApplicationBase {
     if (buildConfigDebug()) {
       new CrashHandler(getApplicationContext(), this).register();
       setStrictMode();
+      LeakCanary.install(this);
     }
 
     // Start stuff

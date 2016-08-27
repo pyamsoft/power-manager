@@ -16,10 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.periodpreference;
 
-import com.pyamsoft.powermanager.app.bluetooth.BluetoothPeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.app.data.DataPeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.app.sync.SyncPeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.app.wifi.WifiPeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.data.DataPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.sync.SyncPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.wifi.WifiPeriodPresenterLoader;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.periodpreference.bluetooth.BluetoothPeriodPreferenceModule;
 import com.pyamsoft.powermanager.dagger.periodpreference.data.DataPeriodPreferenceModule;
@@ -32,11 +32,11 @@ import dagger.Subcomponent;
     BluetoothPeriodPreferenceModule.class, SyncPeriodPreferenceModule.class
 }) public interface PeriodPreferenceComponent {
 
-  void inject(WifiPeriodicPreferenceFragment fragment);
+  void inject(WifiPeriodPresenterLoader loader);
 
-  void inject(DataPeriodicPreferenceFragment fragment);
+  void inject(DataPeriodPresenterLoader loader);
 
-  void inject(BluetoothPeriodicPreferenceFragment fragment);
+  void inject(BluetoothPeriodPresenterLoader loader);
 
-  void inject(SyncPeriodicPreferenceFragment fragment);
+  void inject(SyncPeriodPresenterLoader loader);
 }

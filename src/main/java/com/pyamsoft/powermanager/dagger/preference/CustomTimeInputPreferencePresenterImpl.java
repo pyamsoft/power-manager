@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.preference;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
@@ -25,13 +26,14 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class CustomTimeInputPreferencePresenter
-    extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View> {
+public abstract class CustomTimeInputPreferencePresenterImpl
+    extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
+    implements CustomTimeInputPreferencePresenter {
 
-  @Nullable private final CustomTimeInputPreferenceInteractor interactor;
-  @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
+  @Nullable final CustomTimeInputPreferenceInteractor interactor;
+  @NonNull Subscription customTimeSubscription = Subscriptions.empty();
 
-  protected CustomTimeInputPreferencePresenter(
+  protected CustomTimeInputPreferencePresenterImpl(
       @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
@@ -43,19 +45,19 @@ public abstract class CustomTimeInputPreferencePresenter
     unsubCustomTimeUpdate();
   }
 
-  public void updateCustomTime(@NonNull String time) {
+  @Override public void updateCustomTime(@NonNull String time) {
     updateCustomTime(time, true);
   }
 
-  public void updateCustomTime(@NonNull String time, long delay) {
+  @Override public void updateCustomTime(@NonNull String time, long delay) {
     updateCustomTime(time, delay, true);
   }
 
-  public void updateCustomTime(@NonNull String time, boolean updateView) {
+  @Override public void updateCustomTime(@NonNull String time, boolean updateView) {
     updateCustomTime(time, 600L, updateView);
   }
 
-  public void updateCustomTime(@NonNull String time, long delay, boolean updateView) {
+  @Override public void updateCustomTime(@NonNull String time, long delay, boolean updateView) {
     if (interactor != null) {
       final long longTime;
       if (time.isEmpty()) {
@@ -84,7 +86,7 @@ public abstract class CustomTimeInputPreferencePresenter
     }
   }
 
-  public void initializeCustomTime() {
+  @Override public void initializeCustomTime() {
     if (interactor != null) {
       unsubCustomTimeUpdate();
       customTimeSubscription = interactor.getTime()
@@ -105,12 +107,5 @@ public abstract class CustomTimeInputPreferencePresenter
     if (!customTimeSubscription.isUnsubscribed()) {
       customTimeSubscription.unsubscribe();
     }
-  }
-
-  public interface View {
-
-    void onCustomTimeUpdate(long time);
-
-    void onCustomTimeError();
   }
 }

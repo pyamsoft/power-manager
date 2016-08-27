@@ -31,22 +31,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.pydroid.model.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncTaskMap;
-import com.pyamsoft.pydroid.tool.AsyncVectorDrawableTask;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import rx.Subscription;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
-  @NonNull private final AsyncTaskMap taskMap = new AsyncTaskMap();
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
   @BindView(R.id.new_trigger_pager) ViewPager viewPager;
-  private CreateTriggerPagerAdapter adapter;
-  private Unbinder unbinder;
-  private ViewPager.OnPageChangeListener pageChangeListener;
+  CreateTriggerPagerAdapter adapter;
+  Unbinder unbinder;
+  ViewPager.OnPageChangeListener pageChangeListener;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -140,9 +140,10 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final AsyncVectorDrawableTask continueButtonTask = new AsyncVectorDrawableTask(continueButton);
-    continueButtonTask.execute(new AsyncDrawable(getContext(), R.drawable.ic_arrow_forward_24dp));
-    taskMap.put("continue", continueButtonTask);
+    final Subscription continueTask = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_arrow_forward_24dp)
+        .into(continueButton);
+    taskMap.put("continue", continueTask);
   }
 
   private void setupToolbarButtons() {
@@ -156,15 +157,15 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final AsyncVectorDrawableTask backButtonTask = new AsyncVectorDrawableTask(backButton);
-    backButtonTask.execute(
-        new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_arrow_back_24dp));
-    taskMap.put("back", backButtonTask);
+    final Subscription backTask = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_arrow_back_24dp)
+        .into(backButton);
+    taskMap.put("back", backTask);
 
-    final AsyncVectorDrawableTask closeButtonTask = new AsyncVectorDrawableTask(closeButton);
-    closeButtonTask.execute(
-        new AsyncDrawable(getContext().getApplicationContext(), R.drawable.ic_close_24dp));
-    taskMap.put("close", closeButtonTask);
+    final Subscription closeTask = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_close_24dp)
+        .into(closeButton);
+    taskMap.put("close", closeTask);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {

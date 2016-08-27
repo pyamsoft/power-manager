@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.preference.data;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class DataDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenter {
+final class DataDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
   @Inject DataDisableTimePreferencePresenter(@Nullable
   CustomTimeInputPreferenceInteractor interactor,

@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;

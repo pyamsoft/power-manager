@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.periodpreference.wifi;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class WifiPeriodPreferencePresenter extends BasePeriodPreferencePresenter {
+final class WifiPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
 
   @Inject WifiPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

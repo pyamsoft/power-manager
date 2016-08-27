@@ -16,11 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.managepreference.wifi;
 
+import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.periodpreference.sync;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class SyncPeriodPreferencePresenter extends BasePeriodPreferencePresenter {
+final class SyncPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
 
   @Inject SyncPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

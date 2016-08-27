@@ -24,7 +24,7 @@ apply plugin: 'me.tatarka.retrolambda'
 android {
 
   compileSdkVersion 24
-  buildToolsVersion '24.0.1'
+  buildToolsVersion '24.0.2'
 
   defaultConfig {
     applicationId "com.pyamsoft.powermanager"
@@ -82,6 +82,11 @@ dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
 
   retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
+
+  // Leak Canary
+  debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+  releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+  testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 
   // Support
   // Needs to compile support annotations into actual project

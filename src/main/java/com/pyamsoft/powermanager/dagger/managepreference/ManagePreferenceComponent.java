@@ -16,11 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.managepreference;
 
-import com.pyamsoft.powermanager.app.bluetooth.BluetoothManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.data.DataManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.doze.DozeManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.sync.SyncManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.wifi.WifiManagePreferenceFragment;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothManagePresenterLoader;
+import com.pyamsoft.powermanager.app.data.DataManagePresenterLoader;
+import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
+import com.pyamsoft.powermanager.app.sync.SyncManagePresenterLoader;
+import com.pyamsoft.powermanager.app.wifi.WifiManagePresenterLoader;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.managepreference.bluetooth.BluetoothManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.data.DataManagePreferenceModule;
@@ -35,13 +35,13 @@ import dagger.Subcomponent;
     SyncManagePreferenceModule.class
 }) public interface ManagePreferenceComponent {
 
-  void inject(DozeManagePreferenceFragment fragment);
+  void inject(DozePresenterLoader loader);
 
-  void inject(WifiManagePreferenceFragment fragment);
+  void inject(WifiManagePresenterLoader loader);
 
-  void inject(DataManagePreferenceFragment fragment);
+  void inject(DataManagePresenterLoader loader);
 
-  void inject(BluetoothManagePreferenceFragment fragment);
+  void inject(BluetoothManagePresenterLoader loader);
 
-  void inject(SyncManagePreferenceFragment fragment);
+  void inject(SyncManagePresenterLoader loader);
 }

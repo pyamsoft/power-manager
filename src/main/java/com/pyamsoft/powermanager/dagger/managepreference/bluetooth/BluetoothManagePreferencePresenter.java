@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.dagger.managepreference.bluetooth;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class BluetoothManagePreferencePresenter extends BaseManagePreferencePresenter {
+final class BluetoothManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Inject BluetoothManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

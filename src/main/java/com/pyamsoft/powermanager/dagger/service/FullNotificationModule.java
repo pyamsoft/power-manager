@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
+import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
 import com.pyamsoft.powermanager.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -26,6 +27,6 @@ import rx.Scheduler;
 
   @ActivityScope @Provides FullNotificationPresenter provideFullNotificationPresenter(
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
-    return new FullNotificationPresenter(mainScheduler, ioScheduler);
+    return new FullNotificationPresenterImpl(mainScheduler, ioScheduler);
   }
 }
