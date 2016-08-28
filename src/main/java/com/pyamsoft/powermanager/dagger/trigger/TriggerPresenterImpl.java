@@ -56,10 +56,6 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     super.onUnbind(view);
     unregisterFromDeleteTriggerBus();
     unregisterFromCreateTriggerBus();
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
     unsubViewSubscription();
     unsubDeleteSubscription();
     unsubCreateSubscription();
