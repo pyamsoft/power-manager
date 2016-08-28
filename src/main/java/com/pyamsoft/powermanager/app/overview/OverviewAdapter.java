@@ -44,21 +44,21 @@ import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import rx.Subscription;
 import timber.log.Timber;
 
-public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
+class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
 
-  private static final int POSITION_WIFI = 0;
-  private static final int POSITION_DATA = 1;
-  private static final int POSITION_BLUETOOTH = 2;
-  private static final int POSITION_SYNC = 3;
-  private static final int POSITION_TRIGGERS = 4;
-  private static final int POSITION_DOZE = 5;
-  private static final int POSITION_SETTINGS = 6;
-  private static final int NUMBER_ITEMS = 7;
-  @NonNull private final FragmentManager fragmentManager;
-  @NonNull private final View rootView;
-  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  static final int POSITION_WIFI = 0;
+  static final int POSITION_DATA = 1;
+  static final int POSITION_BLUETOOTH = 2;
+  static final int POSITION_SYNC = 3;
+  static final int POSITION_TRIGGERS = 4;
+  static final int POSITION_DOZE = 5;
+  static final int POSITION_SETTINGS = 6;
+  static final int NUMBER_ITEMS = 7;
+  @NonNull final FragmentManager fragmentManager;
+  @NonNull final View rootView;
+  @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
 
-  public OverviewAdapter(@NonNull FragmentManager fragmentManager, @NonNull View rootView) {
+  OverviewAdapter(@NonNull FragmentManager fragmentManager, @NonNull View rootView) {
     this.fragmentManager = fragmentManager;
     this.rootView = rootView;
   }
@@ -153,7 +153,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
     return NUMBER_ITEMS;
   }
 
-  private void loadFragmentFromOverview(@NonNull String tag, @NonNull Fragment fragment) {
+  void loadFragmentFromOverview(@NonNull String tag, @NonNull Fragment fragment) {
     if (fragmentManager.findFragmentByTag(tag) == null) {
       fragmentManager.beginTransaction()
           .replace(R.id.main_container, fragment, tag)
@@ -164,7 +164,7 @@ public class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHo
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull private final Unbinder unbinder;
+    @NonNull final Unbinder unbinder;
     @BindView(R.id.adapter_item_overview_root) FrameLayout root;
     @BindView(R.id.adapter_item_overview_image) ImageView image;
     @BindView(R.id.adapter_item_overview_title) TextView title;

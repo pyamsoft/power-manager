@@ -82,7 +82,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  private void resolvePreferences() {
+  void resolvePreferences() {
     periodicPreference = (SwitchPreferenceCompat) findPreference(periodicKey);
     presetEnableTimePreference = (ListPreference) findPreference(presetEnableTimeKey);
     presetDisableTimePreference = (ListPreference) findPreference(presetDisableTimeKey);
@@ -175,7 +175,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult private boolean onPresetEnableTimePreferenceChanged(String presetDelay,
+  @CheckResult boolean onPresetEnableTimePreferenceChanged(String presetDelay,
       @Nullable CustomTimeInputPreference customEnableTimePreference) {
     return true;
   }
@@ -183,7 +183,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult private boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
+  @CheckResult boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
       @Nullable CustomTimeInputPreference customDisableTimePreference) {
     return true;
   }
@@ -191,11 +191,11 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult private boolean onPeriodicPreferenceChanged(boolean periodic) {
+  @CheckResult boolean onPeriodicPreferenceChanged(boolean periodic) {
     return true;
   }
 
-  private void setCustomEnableTimePreferenceEnabled(boolean periodic, @NonNull String presetDelay) {
+  void setCustomEnableTimePreferenceEnabled(boolean periodic, @NonNull String presetDelay) {
     if (customEnableTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
@@ -204,7 +204,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
-  private void setCustomDisableTimePreferenceEnabled(boolean periodic,
+  void setCustomDisableTimePreferenceEnabled(boolean periodic,
       @NonNull String presetDelay) {
     if (customDisableTimePreference != null) {
       // Disable delay custom when unchecked

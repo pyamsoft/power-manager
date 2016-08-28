@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 abstract class ChargingStateAwareReceiver extends BroadcastReceiver {
 
-  @NonNull private static final IntentFilter BATTERY_FILTER;
+  @NonNull static final IntentFilter BATTERY_FILTER;
 
   static {
     BATTERY_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);

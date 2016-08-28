@@ -29,7 +29,7 @@ public class WifiManagePresenterLoader extends PresenterLoader<BaseManagePrefere
 
   @Inject @Named("wifi_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  public WifiManagePresenterLoader(@NonNull Context context) {
+  WifiManagePresenterLoader(@NonNull Context context) {
     super(context);
   }
 

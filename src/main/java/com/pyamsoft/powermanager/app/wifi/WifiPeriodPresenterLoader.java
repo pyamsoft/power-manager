@@ -29,7 +29,7 @@ public class WifiPeriodPresenterLoader extends PresenterLoader<BasePeriodPrefere
 
   @Inject @Named("wifi_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  public WifiPeriodPresenterLoader(@NonNull Context context) {
+  WifiPeriodPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

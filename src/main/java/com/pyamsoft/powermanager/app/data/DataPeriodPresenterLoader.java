@@ -29,7 +29,7 @@ public class DataPeriodPresenterLoader extends PresenterLoader<BasePeriodPrefere
 
   @Inject @Named("data_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  public DataPeriodPresenterLoader(@NonNull Context context) {
+  DataPeriodPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

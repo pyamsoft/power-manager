@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.FullNotificationBus;
+import com.pyamsoft.powermanager.app.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import javax.inject.Inject;

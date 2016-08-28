@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -38,7 +37,6 @@ import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
-import com.pyamsoft.pydroid.tool.RxBus;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
@@ -135,16 +133,10 @@ public class PowerTriggerFragment extends ActionBarFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
-    setupFab();
     setupRecyclerView();
   }
 
-  private void setupFab() {
-    //FabColorBus.get()
-    //    .post(FabColorEvent.create(R.drawable.ic_add_24dp, () -> presenter.showNewTriggerDialog()));
-  }
-
-  private void setupRecyclerView() {
+  void setupRecyclerView() {
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     recyclerView.setHasFixedSize(true);
     recyclerView.addItemDecoration(dividerDecoration);
@@ -193,15 +185,6 @@ public class PowerTriggerFragment extends ActionBarFragment
     if (adapter.getItemCount() == 0) {
       Timber.d("Last trigger, hide list");
       loadEmptyView();
-    }
-  }
-
-  public static final class Bus extends RxBus<ContentValues> {
-
-    @NonNull private static final Bus instance = new Bus();
-
-    @CheckResult @NonNull public static Bus get() {
-      return instance;
     }
   }
 }

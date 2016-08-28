@@ -46,12 +46,12 @@ import timber.log.Timber;
 
 public class MainActivity extends DonationActivityBase {
 
-  @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
+  @NonNull final Map<String, View> addedViewMap = new HashMap<>();
 
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_root) CoordinatorLayout rootView;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
-  private Unbinder unbinder;
+  Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -90,7 +90,7 @@ public class MainActivity extends DonationActivityBase {
     }
   }
 
-  private void setupPreferenceDefaults() {
+  void setupPreferenceDefaults() {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_wifi, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_data, false);
@@ -116,12 +116,12 @@ public class MainActivity extends DonationActivityBase {
     return handled || super.onOptionsItemSelected(item);
   }
 
-  private void setupAppBar() {
+  void setupAppBar() {
     setSupportActionBar(toolbar);
     toolbar.setTitle(getString(R.string.app_name));
   }
 
-  @CheckResult private boolean hasNoActiveFragment() {
+  @CheckResult boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(WifiFragment.TAG) == null &&
@@ -132,7 +132,7 @@ public class MainActivity extends DonationActivityBase {
         fragmentManager.findFragmentByTag(DozeFragment.TAG) == null;
   }
 
-  private void loadOverviewFragment() {
+  void loadOverviewFragment() {
     rootView.getViewTreeObserver()
         .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
           @Override public void onGlobalLayout() {

@@ -39,6 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -102,7 +103,7 @@ public class FullNotificationActivity extends AppCompatActivity
 
   public static final class FullDialog extends DialogFragment {
 
-    @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+    @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
     @BindView(R.id.full_notification_wifi_manage) SwitchCompat wifiManage;
     @BindView(R.id.full_notification_wifi_toggle) ImageButton wifiToggle;
     @BindView(R.id.full_notification_bluetooth_manage) SwitchCompat bluetoothManage;
@@ -135,7 +136,7 @@ public class FullNotificationActivity extends AppCompatActivity
     @Inject @Named("mod_bluetooth_manage") BooleanInterestModifier bluetoothManageModifier;
     @Inject @Named("mod_sync_manage") BooleanInterestModifier syncManageModifier;
 
-    private Unbinder unbinder;
+    Unbinder unbinder;
 
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -280,7 +281,7 @@ public class FullNotificationActivity extends AppCompatActivity
       destroy();
     }
 
-    private void setWifiToggleState(boolean enabled) {
+    void setWifiToggleState(boolean enabled) {
       @DrawableRes final int icon =
           enabled ? R.drawable.ic_network_wifi_24dp : R.drawable.ic_signal_wifi_off_24dp;
       @ColorRes final int color = enabled ? R.color.lightblueA200 : android.R.color.black;
@@ -289,7 +290,7 @@ public class FullNotificationActivity extends AppCompatActivity
       taskMap.put("wifi", task);
     }
 
-    private void setDataToggleState(boolean enabled) {
+    void setDataToggleState(boolean enabled) {
       @DrawableRes final int icon =
           enabled ? R.drawable.ic_network_cell_24dp : R.drawable.ic_signal_cellular_off_24dp;
       @ColorRes final int color = enabled ? R.color.lightblueA200 : android.R.color.black;
@@ -298,7 +299,7 @@ public class FullNotificationActivity extends AppCompatActivity
       taskMap.put("data", task);
     }
 
-    private void setBluetoothToggleState(boolean enabled) {
+    void setBluetoothToggleState(boolean enabled) {
       @DrawableRes final int icon =
           enabled ? R.drawable.ic_bluetooth_24dp : R.drawable.ic_bluetooth_disabled_24dp;
       @ColorRes final int color = enabled ? R.color.lightblueA200 : android.R.color.black;
@@ -307,7 +308,7 @@ public class FullNotificationActivity extends AppCompatActivity
       taskMap.put("bluetooth", task);
     }
 
-    private void setSyncToggleState(boolean enabled) {
+    void setSyncToggleState(boolean enabled) {
       @DrawableRes final int icon =
           enabled ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
       @ColorRes final int color = enabled ? R.color.lightblueA200 : android.R.color.black;
@@ -316,7 +317,7 @@ public class FullNotificationActivity extends AppCompatActivity
       taskMap.put("sync", task);
     }
 
-    private void setWifiManageState(boolean state) {
+    void setWifiManageState(boolean state) {
       wifiManage.setOnCheckedChangeListener(null);
       wifiManage.setChecked(state);
       wifiManage.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -329,7 +330,7 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    private void setDataManageState(boolean state) {
+    void setDataManageState(boolean state) {
       dataManage.setOnCheckedChangeListener(null);
       dataManage.setChecked(state);
       dataManage.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -342,7 +343,7 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    private void setBluetoothManageState(boolean state) {
+    void setBluetoothManageState(boolean state) {
       bluetoothManage.setOnCheckedChangeListener(null);
       bluetoothManage.setChecked(state);
       bluetoothManage.setOnCheckedChangeListener((compoundButton, b) -> {
@@ -355,7 +356,7 @@ public class FullNotificationActivity extends AppCompatActivity
       });
     }
 
-    private void setSyncManageState(boolean state) {
+    void setSyncManageState(boolean state) {
       syncManage.setOnCheckedChangeListener(null);
       syncManage.setChecked(state);
       syncManage.setOnCheckedChangeListener((compoundButton, b) -> {

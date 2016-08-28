@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bluetooth;
+package com.pyamsoft.powermanager.app.bus;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.pydroid.tool.RxBus;
 
-class BluetoothPagerAdapter extends BasePagerAdapter {
+public class FullNotificationBus extends RxBus<FullNotificationBus.DismissEvent> {
 
-  BluetoothPagerAdapter(FragmentManager fm) {
-    super(fm);
+  @NonNull
+  static final RxBus<DismissEvent> instance = new FullNotificationBus();
+
+  @CheckResult @NonNull public static RxBus<DismissEvent> get() {
+    return instance;
   }
 
-  @NonNull @Override protected Fragment getManageFragment() {
-    return new BluetoothManagePreferenceFragment();
-  }
+  public static final class DismissEvent {
 
-  @NonNull @Override protected Fragment getPeriodicFragment() {
-    return new BluetoothPeriodicPreferenceFragment();
   }
 }

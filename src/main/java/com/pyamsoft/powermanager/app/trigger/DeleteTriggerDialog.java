@@ -23,18 +23,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import com.pyamsoft.powermanager.app.bus.DeleteTriggerBus;
 import com.pyamsoft.powermanager.model.DeleteTriggerEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.tool.RxBus;
 import timber.log.Timber;
 
 public class DeleteTriggerDialog extends DialogFragment {
 
-  @NonNull private static final String TRIGGER_NAME = "trigger_name";
-  @NonNull private static final String TRIGGER_PERCENT = "trigger_percent";
+  @NonNull static final String TRIGGER_NAME = "trigger_name";
+  @NonNull static final String TRIGGER_PERCENT = "trigger_percent";
 
-  private String name;
-  private int percent;
+  String name;
+  int percent;
 
   @CheckResult @NonNull
   public static DeleteTriggerDialog newInstance(@NonNull PowerTriggerEntry trigger) {
@@ -65,17 +65,8 @@ public class DeleteTriggerDialog extends DialogFragment {
         })
         .setPositiveButton("Okay", (dialogInterface, i) -> {
           dismiss();
-          Bus.get().post(DeleteTriggerEvent.create(percent));
+          DeleteTriggerBus.get().post(DeleteTriggerEvent.create(percent));
         })
         .create();
-  }
-
-  public static final class Bus extends RxBus<DeleteTriggerEvent> {
-
-    @NonNull private static final Bus instance = new Bus();
-
-    @CheckResult @NonNull public static Bus get() {
-      return instance;
-    }
   }
 }

@@ -27,7 +27,7 @@ public class FullNotificationPresenterLoader extends PresenterLoader<FullNotific
 
   @Inject Provider<FullNotificationPresenter> presenterProvider;
 
-  public FullNotificationPresenterLoader(@NonNull Context context) {
+  FullNotificationPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

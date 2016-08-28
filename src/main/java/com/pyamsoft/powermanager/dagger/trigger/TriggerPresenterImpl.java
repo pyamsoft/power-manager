@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.trigger.DeleteTriggerDialog;
-import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.bus.DeleteTriggerBus;
+import com.pyamsoft.powermanager.app.bus.TriggerBus;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
 import javax.inject.Inject;
@@ -128,7 +128,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   void registerOnDeleteTriggerBus() {
     unregisterFromDeleteTriggerBus();
-    deleteTriggerBusSubscription = DeleteTriggerDialog.Bus.get()
+    deleteTriggerBusSubscription = DeleteTriggerBus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -152,7 +152,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   void registerOnCreateTriggerBus() {
     unregisterFromCreateTriggerBus();
-    createTriggerBusSubscription = PowerTriggerFragment.Bus.get()
+    createTriggerBusSubscription = TriggerBus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

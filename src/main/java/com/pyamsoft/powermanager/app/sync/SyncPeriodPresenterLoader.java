@@ -29,7 +29,7 @@ public class SyncPeriodPresenterLoader extends PresenterLoader<BasePeriodPrefere
 
   @Inject @Named("sync_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  public SyncPeriodPresenterLoader(@NonNull Context context) {
+  SyncPeriodPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

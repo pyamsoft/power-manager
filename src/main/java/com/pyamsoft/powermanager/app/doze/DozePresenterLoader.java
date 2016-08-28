@@ -29,7 +29,7 @@ public class DozePresenterLoader extends PresenterLoader<BaseManagePreferencePre
 
   @Inject @Named("doze_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  public DozePresenterLoader(@NonNull Context context) {
+  DozePresenterLoader(@NonNull Context context) {
     super(context);
   }
 

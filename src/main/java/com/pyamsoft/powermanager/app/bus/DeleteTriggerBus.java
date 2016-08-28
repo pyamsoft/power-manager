@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.app.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.trigger.DeleteTriggerDialog;
+import com.pyamsoft.powermanager.model.DeleteTriggerEvent;
 import com.pyamsoft.pydroid.tool.RxBus;
 
-public final class FullNotificationBus extends RxBus<FullNotificationBus.DismissEvent> {
+public class DeleteTriggerBus extends RxBus<DeleteTriggerEvent> {
 
-  @NonNull
-  private static final RxBus<DismissEvent> instance = new FullNotificationBus();
+  @NonNull private static final DeleteTriggerBus instance = new DeleteTriggerBus();
 
-  @CheckResult @NonNull public static RxBus<DismissEvent> get() {
+  @CheckResult @NonNull public static DeleteTriggerBus get() {
     return instance;
-  }
-
-  public static final class DismissEvent {
-
   }
 }

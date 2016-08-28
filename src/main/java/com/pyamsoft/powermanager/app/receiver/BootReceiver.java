@@ -24,7 +24,7 @@ import android.content.pm.PackageManager;
 import android.widget.Toast;
 import timber.log.Timber;
 
-public final class BootReceiver extends BroadcastReceiver {
+public class BootReceiver extends BroadcastReceiver {
 
   public static void setBootEnabled(final Context context, final boolean bootEnabled) {
     Timber.d("set boot enabled state: %s", bootEnabled);

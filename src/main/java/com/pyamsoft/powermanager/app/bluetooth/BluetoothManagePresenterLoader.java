@@ -29,7 +29,7 @@ public class BluetoothManagePresenterLoader extends PresenterLoader<BaseManagePr
 
   @Inject @Named("bluetooth_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  public BluetoothManagePresenterLoader(@NonNull Context context) {
+  BluetoothManagePresenterLoader(@NonNull Context context) {
     super(context);
   }
 

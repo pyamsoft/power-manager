@@ -21,9 +21,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 
-final class DataPagerAdapter extends BasePagerAdapter {
+class DataPagerAdapter extends BasePagerAdapter {
 
-  public DataPagerAdapter(FragmentManager fm) {
+  DataPagerAdapter(FragmentManager fm) {
     super(fm);
   }
 

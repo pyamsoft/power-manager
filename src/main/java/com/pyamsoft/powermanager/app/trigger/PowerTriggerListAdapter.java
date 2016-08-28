@@ -32,14 +32,14 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
-public class PowerTriggerListAdapter
+class PowerTriggerListAdapter
     extends RecyclerView.Adapter<PowerTriggerListAdapter.ViewHolder>
     implements TriggerListAdapterPresenter.TriggerListAdapterView {
 
-  @NonNull private final TriggerListAdapterPresenter presenter;
-  @NonNull private final Fragment fragment;
+  @NonNull final TriggerListAdapterPresenter presenter;
+  @NonNull final Fragment fragment;
 
-  public PowerTriggerListAdapter(@NonNull Fragment fragment,
+  PowerTriggerListAdapter(@NonNull Fragment fragment,
       @NonNull TriggerListAdapterPresenter presenter) {
     this.fragment = fragment;
     this.presenter = presenter;

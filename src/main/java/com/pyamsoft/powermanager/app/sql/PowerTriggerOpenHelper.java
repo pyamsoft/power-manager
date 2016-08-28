@@ -23,10 +23,10 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
-public final class PowerTriggerOpenHelper extends SQLiteOpenHelper {
+public class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
   @NonNull public static final String DB_NAME = "power_trigger_db";
-  private static final int DATABASE_VERSION = 1;
+  static final int DATABASE_VERSION = 1;
 
   public PowerTriggerOpenHelper(final @NonNull Context context) {
     super(context.getApplicationContext(), DB_NAME, null, DATABASE_VERSION);

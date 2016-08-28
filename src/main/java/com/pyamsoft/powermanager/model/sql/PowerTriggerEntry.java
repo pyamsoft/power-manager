@@ -97,7 +97,7 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  private static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
+  static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
       boolean available) {
     return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, available,
         old.toggleWifi(), old.toggleData(), old.toggleBluetooth(), old.toggleSync(),

@@ -29,7 +29,7 @@ public class SyncManagePresenterLoader extends PresenterLoader<BaseManagePrefere
 
   @Inject @Named("sync_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  public SyncManagePresenterLoader(@NonNull Context context) {
+  SyncManagePresenterLoader(@NonNull Context context) {
     super(context);
   }
 

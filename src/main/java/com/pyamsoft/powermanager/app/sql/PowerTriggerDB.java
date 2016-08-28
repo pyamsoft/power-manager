@@ -29,11 +29,11 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 
-public final class PowerTriggerDB {
+public class PowerTriggerDB {
   private static volatile Delegate instance = null;
   @NonNull private final BriteDatabase briteDatabase;
 
-  private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
+  PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
     final SqlBrite sqlBrite = SqlBrite.create();
     final PowerTriggerOpenHelper openHelper =
         new PowerTriggerOpenHelper(context.getApplicationContext());
@@ -61,13 +61,13 @@ public final class PowerTriggerDB {
     return instance;
   }
 
-  @CheckResult @NonNull private BriteDatabase getDatabase() {
+  @CheckResult @NonNull BriteDatabase getDatabase() {
     return briteDatabase;
   }
 
   public static class Delegate {
 
-    @NonNull private final PowerTriggerDB database;
+    @NonNull final PowerTriggerDB database;
 
     public Delegate(@NonNull Context context) {
       this(context, Schedulers.io());

@@ -31,9 +31,9 @@ import timber.log.Timber;
 
 public class SensorFixReceiver {
 
-  @NonNull private final Context appContext;
-  @NonNull private final BrightnessFixReceiver brightnessFixReceiver;
-  @NonNull private final RotateFixReceiver rotateFixReceiver;
+  @NonNull final Context appContext;
+  @NonNull final BrightnessFixReceiver brightnessFixReceiver;
+  @NonNull final RotateFixReceiver rotateFixReceiver;
 
   public SensorFixReceiver(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
@@ -73,16 +73,16 @@ public class SensorFixReceiver {
 
   static final class BrightnessFixReceiver extends ContentObserver {
 
-    @NonNull private final Context appContext;
-    private boolean originalAutoBright;
-    private boolean registered = false;
+    @NonNull final Context appContext;
+    boolean originalAutoBright;
+    boolean registered = false;
 
-    public BrightnessFixReceiver(@NonNull Context context) {
+    BrightnessFixReceiver(@NonNull Context context) {
       super(new Handler(Looper.getMainLooper()));
       this.appContext = context.getApplicationContext();
     }
 
-    @CheckResult private boolean isAutoBrightnessEnabled() {
+    @CheckResult boolean isAutoBrightnessEnabled() {
       try {
         final boolean autobright = Settings.System.getInt(appContext.getContentResolver(),
             Settings.System.SCREEN_BRIGHTNESS_MODE)
@@ -95,7 +95,7 @@ public class SensorFixReceiver {
       }
     }
 
-    private void setAutoBrightnessEnabled(boolean enabled) {
+    void setAutoBrightnessEnabled(boolean enabled) {
       if (hasWritePermission(appContext)) {
         Timber.d("Set auto brightness: %s", enabled);
         Settings.System.putInt(appContext.getContentResolver(),
@@ -107,7 +107,7 @@ public class SensorFixReceiver {
       }
     }
 
-    public final void register() {
+    final void register() {
       if (!registered) {
         originalAutoBright = isAutoBrightnessEnabled();
         appContext.getContentResolver()
@@ -117,7 +117,7 @@ public class SensorFixReceiver {
       }
     }
 
-    public final void unregister() {
+    final void unregister() {
       if (registered) {
         Timber.d("Unregister BrightnessFixReceiver");
         appContext.getContentResolver().unregisterContentObserver(this);
@@ -148,23 +148,23 @@ public class SensorFixReceiver {
 
   static final class RotateFixReceiver extends ContentObserver {
 
-    @NonNull private final Context appContext;
-    private boolean originalAutoRotate;
-    private boolean registered = false;
+    @NonNull final Context appContext;
+    boolean originalAutoRotate;
+    boolean registered = false;
 
-    public RotateFixReceiver(@NonNull Context context) {
+    RotateFixReceiver(@NonNull Context context) {
       super(new Handler(Looper.getMainLooper()));
       this.appContext = context.getApplicationContext();
     }
 
-    @CheckResult private boolean isAutoRotateEnabled() {
+    @CheckResult boolean isAutoRotateEnabled() {
       final boolean autorotate = Settings.System.getInt(appContext.getContentResolver(),
           Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
       Timber.d("is auto rotate: %s", autorotate);
       return autorotate;
     }
 
-    private void setAutoRotateEnabled(boolean enabled) {
+    void setAutoRotateEnabled(boolean enabled) {
       if (hasWritePermission(appContext)) {
         Timber.d("Set auto rotate: %s", enabled);
         Settings.System.putInt(appContext.getContentResolver(),
@@ -174,7 +174,7 @@ public class SensorFixReceiver {
       }
     }
 
-    public final void register() {
+    final void register() {
       if (!registered) {
         originalAutoRotate = isAutoRotateEnabled();
         appContext.getContentResolver()
@@ -184,7 +184,7 @@ public class SensorFixReceiver {
       }
     }
 
-    public final void unregister() {
+    final void unregister() {
       if (registered) {
         Timber.d("Unregister RotateFixReceiver");
         appContext.getContentResolver().unregisterContentObserver(this);

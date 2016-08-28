@@ -27,7 +27,7 @@ public class TriggerListAdapterPresenterLoader extends PresenterLoader<TriggerLi
 
   @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
 
-  public TriggerListAdapterPresenterLoader(@NonNull Context context) {
+  TriggerListAdapterPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

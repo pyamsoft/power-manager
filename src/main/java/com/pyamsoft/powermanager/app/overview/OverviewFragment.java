@@ -36,8 +36,8 @@ public class OverviewFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "Overview";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
-  private Unbinder unbinder;
-  private OverviewAdapter adapter;
+  Unbinder unbinder;
+  OverviewAdapter adapter;
 
   @CheckResult @NonNull public static OverviewFragment newInstance(int cX, int cY) {
     final Bundle args = CircularRevealFragmentUtil.bundleArguments(cX, cY, 600L);
@@ -71,7 +71,7 @@ public class OverviewFragment extends ActionBarFragment {
     setActionBarUpEnabled(false);
   }
 
-  private void setupRecyclerView(@NonNull View view) {
+  void setupRecyclerView(@NonNull View view) {
     final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
     adapter = new OverviewAdapter(getFragmentManager(), view);
 

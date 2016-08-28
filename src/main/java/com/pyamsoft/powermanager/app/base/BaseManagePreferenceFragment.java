@@ -74,7 +74,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  private void resolvePreferences() {
+  void resolvePreferences() {
     managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
     presetTimePreference = (ListPreference) findPreference(presetTimeKey);
     customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
@@ -149,7 +149,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  private void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
+  void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
     if (customTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time

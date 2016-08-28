@@ -27,7 +27,7 @@ public class TriggerPresenterLoader extends PresenterLoader<TriggerPresenter> {
 
   @Inject Provider<TriggerPresenter> presenterProvider;
 
-  public TriggerPresenterLoader(@NonNull Context context) {
+  TriggerPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

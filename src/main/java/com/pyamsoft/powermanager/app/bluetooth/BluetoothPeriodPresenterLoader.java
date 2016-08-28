@@ -29,7 +29,7 @@ public class BluetoothPeriodPresenterLoader extends PresenterLoader<BasePeriodPr
 
   @Inject @Named("bluetooth_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  public BluetoothPeriodPresenterLoader(@NonNull Context context) {
+  BluetoothPeriodPresenterLoader(@NonNull Context context) {
     super(context);
   }
 

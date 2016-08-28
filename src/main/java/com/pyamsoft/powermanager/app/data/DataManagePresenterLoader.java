@@ -29,7 +29,7 @@ public class DataManagePresenterLoader extends PresenterLoader<BaseManagePrefere
 
   @Inject @Named("data_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  public DataManagePresenterLoader(@NonNull Context context) {
+  DataManagePresenterLoader(@NonNull Context context) {
     super(context);
   }
 

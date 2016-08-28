@@ -21,9 +21,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 
-final class SyncPagerAdapter extends BasePagerAdapter {
+class SyncPagerAdapter extends BasePagerAdapter {
 
-  public SyncPagerAdapter(FragmentManager fm) {
+  SyncPagerAdapter(FragmentManager fm) {
     super(fm);
   }
 

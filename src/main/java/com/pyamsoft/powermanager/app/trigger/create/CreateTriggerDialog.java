@@ -38,8 +38,8 @@ import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
-  private static final String CURRENT_PAGE = "current_page";
-  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  static final String CURRENT_PAGE = "current_page";
+  @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
@@ -79,7 +79,7 @@ public class CreateTriggerDialog extends DialogFragment {
     setupViewPager(savedInstanceState);
   }
 
-  private void setupViewPager(@Nullable Bundle bundle) {
+  void setupViewPager(@Nullable Bundle bundle) {
     pageChangeListener = new ViewPager.OnPageChangeListener() {
       @Override
       public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -127,7 +127,7 @@ public class CreateTriggerDialog extends DialogFragment {
     }
   }
 
-  private void setupContinueButton() {
+  void setupContinueButton() {
     continueButton.setOnClickListener(view -> {
       final int currentItem = viewPager.getCurrentItem();
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
@@ -146,7 +146,7 @@ public class CreateTriggerDialog extends DialogFragment {
     taskMap.put("continue", continueTask);
   }
 
-  private void setupToolbarButtons() {
+  void setupToolbarButtons() {
     backButton.setOnClickListener(view -> {
       Timber.d("Go back one item");
       viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
