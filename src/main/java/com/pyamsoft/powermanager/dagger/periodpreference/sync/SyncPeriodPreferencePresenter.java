@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class SyncPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
+class SyncPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
 
   @Inject SyncPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

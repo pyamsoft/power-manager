@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.WifiManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerWifiInteractor extends ManagerBaseInteractor {
+class ManagerWifiInteractor extends ManagerBaseInteractor {
 
   @Inject ManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,

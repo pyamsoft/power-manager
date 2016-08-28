@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class BluetoothPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
+class BluetoothPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
 
   @Inject BluetoothPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

@@ -25,13 +25,13 @@ import timber.log.Timber;
 
 public abstract class ManageJob extends BaseJob implements Runnable {
 
-  private static final long MINIMUM_PERIOD_SECONDS = 60L;
-  private static final int JOB_PRIORITY = 1;
+  static final long MINIMUM_PERIOD_SECONDS = 60L;
+  static final int JOB_PRIORITY = 1;
 
-  @NonNull private final JobType jobType;
-  private final boolean periodic;
-  private final long periodicEnableInSeconds;
-  private final long periodicDisableInSeconds;
+  @NonNull final JobType jobType;
+  final boolean periodic;
+  final long periodicEnableInSeconds;
+  final long periodicDisableInSeconds;
 
   protected ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInMilliseconds,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {

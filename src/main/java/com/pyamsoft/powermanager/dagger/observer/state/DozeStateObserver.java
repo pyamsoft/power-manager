@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 class DozeStateObserver extends StateObserver {
 
-  @NonNull private final PowerManager androidPowerManager;
+  @NonNull final PowerManager androidPowerManager;
 
   @Inject DozeStateObserver(@NonNull Context context) {
     super(context);

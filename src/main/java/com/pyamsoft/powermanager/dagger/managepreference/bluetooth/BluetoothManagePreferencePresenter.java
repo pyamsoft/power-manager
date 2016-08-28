@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class BluetoothManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+class BluetoothManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Inject BluetoothManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

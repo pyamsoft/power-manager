@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-final class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
+class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
     implements TriggerListAdapterInteractor {
 
   @Inject TriggerListAdapterInteractorImpl(Context context) {

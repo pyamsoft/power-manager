@@ -25,95 +25,95 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
 import javax.inject.Inject;
 
-final class PowerManagerPreferencesImpl extends ApplicationPreferences
+class PowerManagerPreferencesImpl extends ApplicationPreferences
     implements PowerManagerPreferences {
 
-  @NonNull private final String manageWifi;
-  @NonNull private final String manageData;
-  @NonNull private final String manageBluetooth;
-  @NonNull private final String manageSync;
-  private final boolean manageWifiDefault;
-  private final boolean manageDataDefault;
-  private final boolean manageBluetoothDefault;
-  private final boolean manageSyncDefault;
+  @NonNull final String manageWifi;
+  @NonNull final String manageData;
+  @NonNull final String manageBluetooth;
+  @NonNull final String manageSync;
+  final boolean manageWifiDefault;
+  final boolean manageDataDefault;
+  final boolean manageBluetoothDefault;
+  final boolean manageSyncDefault;
 
-  @NonNull private final String delayWifi;
-  @NonNull private final String delayData;
-  @NonNull private final String delayBluetooth;
-  @NonNull private final String delaySync;
-  @NonNull private final String delayWifiDefault;
-  @NonNull private final String delayDataDefault;
-  @NonNull private final String delayBluetoothDefault;
-  @NonNull private final String delaySyncDefault;
+  @NonNull final String delayWifi;
+  @NonNull final String delayData;
+  @NonNull final String delayBluetooth;
+  @NonNull final String delaySync;
+  @NonNull final String delayWifiDefault;
+  @NonNull final String delayDataDefault;
+  @NonNull final String delayBluetoothDefault;
+  @NonNull final String delaySyncDefault;
 
-  @NonNull private final String presetDelayWifi;
-  @NonNull private final String presetDelayData;
-  @NonNull private final String presetDelayBluetooth;
-  @NonNull private final String presetDelaySync;
+  @NonNull final String presetDelayWifi;
+  @NonNull final String presetDelayData;
+  @NonNull final String presetDelayBluetooth;
+  @NonNull final String presetDelaySync;
 
-  @NonNull private final String periodicWifi;
-  @NonNull private final String periodicData;
-  @NonNull private final String periodicBluetooth;
-  @NonNull private final String periodicSync;
-  private final boolean periodicWifiDefault;
-  private final boolean periodicDataDefault;
-  private final boolean periodicBluetoothDefault;
-  private final boolean periodicSyncDefault;
+  @NonNull final String periodicWifi;
+  @NonNull final String periodicData;
+  @NonNull final String periodicBluetooth;
+  @NonNull final String periodicSync;
+  final boolean periodicWifiDefault;
+  final boolean periodicDataDefault;
+  final boolean periodicBluetoothDefault;
+  final boolean periodicSyncDefault;
 
-  @NonNull private final String periodicDisableWifi;
-  @NonNull private final String periodicDisableData;
-  @NonNull private final String periodicDisableBluetooth;
-  @NonNull private final String periodicDisableSync;
-  @NonNull private final String periodicDisableWifiDefault;
-  @NonNull private final String periodicDisableDataDefault;
-  @NonNull private final String periodicDisableBluetoothDefault;
-  @NonNull private final String periodicDisableSyncDefault;
+  @NonNull final String periodicDisableWifi;
+  @NonNull final String periodicDisableData;
+  @NonNull final String periodicDisableBluetooth;
+  @NonNull final String periodicDisableSync;
+  @NonNull final String periodicDisableWifiDefault;
+  @NonNull final String periodicDisableDataDefault;
+  @NonNull final String periodicDisableBluetoothDefault;
+  @NonNull final String periodicDisableSyncDefault;
 
-  @NonNull private final String presetPeriodicDisableWifi;
-  @NonNull private final String presetPeriodicDisableData;
-  @NonNull private final String presetPeriodicDisableBluetooth;
-  @NonNull private final String presetPeriodicDisableSync;
+  @NonNull final String presetPeriodicDisableWifi;
+  @NonNull final String presetPeriodicDisableData;
+  @NonNull final String presetPeriodicDisableBluetooth;
+  @NonNull final String presetPeriodicDisableSync;
 
-  @NonNull private final String periodicEnableWifi;
-  @NonNull private final String periodicEnableData;
-  @NonNull private final String periodicEnableBluetooth;
-  @NonNull private final String periodicEnableSync;
-  @NonNull private final String periodicEnableWifiDefault;
-  @NonNull private final String periodicEnableDataDefault;
-  @NonNull private final String periodicEnableBluetoothDefault;
-  @NonNull private final String periodicEnableSyncDefault;
+  @NonNull final String periodicEnableWifi;
+  @NonNull final String periodicEnableData;
+  @NonNull final String periodicEnableBluetooth;
+  @NonNull final String periodicEnableSync;
+  @NonNull final String periodicEnableWifiDefault;
+  @NonNull final String periodicEnableDataDefault;
+  @NonNull final String periodicEnableBluetoothDefault;
+  @NonNull final String periodicEnableSyncDefault;
 
-  @NonNull private final String presetPeriodicEnableWifi;
-  @NonNull private final String presetPeriodicEnableData;
-  @NonNull private final String presetPeriodicEnableBluetooth;
-  @NonNull private final String presetPeriodicEnableSync;
+  @NonNull final String presetPeriodicEnableWifi;
+  @NonNull final String presetPeriodicEnableData;
+  @NonNull final String presetPeriodicEnableBluetooth;
+  @NonNull final String presetPeriodicEnableSync;
 
-  @NonNull private final String ignoreChargingWifi;
-  @NonNull private final String ignoreChargingData;
-  @NonNull private final String ignoreChargingBluetooth;
-  @NonNull private final String ignoreChargingSync;
-  private final boolean ignoreChargingWifiDefault;
-  private final boolean ignoreChargingDataDefault;
-  private final boolean ignoreChargingBluetoothDefault;
-  private final boolean ignoreChargingSyncDefault;
+  @NonNull final String ignoreChargingWifi;
+  @NonNull final String ignoreChargingData;
+  @NonNull final String ignoreChargingBluetooth;
+  @NonNull final String ignoreChargingSync;
+  final boolean ignoreChargingWifiDefault;
+  final boolean ignoreChargingDataDefault;
+  final boolean ignoreChargingBluetoothDefault;
+  final boolean ignoreChargingSyncDefault;
 
-  @NonNull private final String manageWearable;
-  private final boolean manageWearableDefault;
+  @NonNull final String manageWearable;
+  final boolean manageWearableDefault;
 
-  @NonNull private final String fullNotification;
-  private final boolean fullNotificationDefault;
+  @NonNull final String fullNotification;
+  final boolean fullNotificationDefault;
 
-  @NonNull private final String forceDoze;
-  @NonNull private final String forceOutOfDoze;
-  @NonNull private final String ignoreChargingDoze;
-  @NonNull private final String dozeDelay;
-  @NonNull private final String manageSensors;
+  @NonNull final String forceDoze;
+  @NonNull final String forceOutOfDoze;
+  @NonNull final String ignoreChargingDoze;
+  @NonNull final String dozeDelay;
+  @NonNull final String manageSensors;
 
-  private final boolean forceDozeDefault;
-  private final boolean forceOutOfDozeDefault;
-  private final boolean ignoreChargingDozeDefault;
-  @NonNull private final String dozeDelayDefault;
-  private final boolean manageSensorsDefault;
+  final boolean forceDozeDefault;
+  final boolean forceOutOfDozeDefault;
+  final boolean ignoreChargingDozeDefault;
+  @NonNull final String dozeDelayDefault;
+  final boolean manageSensorsDefault;
 
   @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);

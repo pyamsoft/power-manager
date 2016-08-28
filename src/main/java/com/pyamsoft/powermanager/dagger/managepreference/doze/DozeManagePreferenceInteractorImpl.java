@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class DozeManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class DozeManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
   @Inject DozeManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     super(manageModifier);

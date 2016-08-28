@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class WifiPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
+class WifiPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
 
   @Inject WifiPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePres
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class WifiEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
+class WifiEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
   @Inject WifiEnableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {

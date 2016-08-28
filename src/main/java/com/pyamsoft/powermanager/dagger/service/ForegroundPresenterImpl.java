@@ -29,9 +29,9 @@ import timber.log.Timber;
 class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
-  @NonNull private final ForegroundInteractor interactor;
+  @NonNull final ForegroundInteractor interactor;
 
-  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
+  @NonNull Subscription notificationSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
@@ -57,7 +57,7 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     }
   }
 
-  public void onStartNotification(boolean explicit) {
+  @Override public void onStartNotification(boolean explicit) {
     unsubNotification();
     notificationSubscription = interactor.createNotification(explicit)
         .subscribeOn(getSubscribeScheduler())
@@ -70,27 +70,27 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
         });
   }
 
-  public void updateWearableAction() {
+  @Override public void updateWearableAction() {
     interactor.updateWearablePreferenceStatus();
   }
 
-  public void updateWifiAction() {
+  @Override public void updateWifiAction() {
     interactor.updateWifiPreferenceStatus();
   }
 
-  public void updateDataAction() {
+  @Override public void updateDataAction() {
     interactor.updateDataPreferenceStatus();
   }
 
-  public void updateBluetoothAction() {
+  @Override public void updateBluetoothAction() {
     interactor.updateBluetoothPreferenceStatus();
   }
 
-  public void updateSyncAction() {
+  @Override public void updateSyncAction() {
     interactor.updateSyncPreferenceStatus();
   }
 
-  public void updateDozeAction() {
+  @Override public void updateDozeAction() {
     interactor.updateDozePreferenceStatus();
   }
 }

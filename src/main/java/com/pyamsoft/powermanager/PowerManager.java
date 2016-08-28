@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.crash.CrashHandler;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
-public final class PowerManager extends ApplicationBase {
+public class PowerManager extends ApplicationBase {
 
   // KLUDGE Move to better location
   @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
@@ -54,7 +54,7 @@ public final class PowerManager extends ApplicationBase {
     startForegroundService();
   }
 
-  private void setStrictMode() {
+  void setStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
         .penaltyLog()
         .penaltyDeath()
@@ -65,7 +65,7 @@ public final class PowerManager extends ApplicationBase {
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
-  private void startForegroundService() {
+  void startForegroundService() {
     startService(new Intent(this, ForegroundService.class));
   }
 

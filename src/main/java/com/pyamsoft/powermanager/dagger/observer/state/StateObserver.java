@@ -30,11 +30,11 @@ import timber.log.Timber;
 
 abstract class StateObserver extends BroadcastReceiver implements BooleanInterestObserver {
 
-  @NonNull private final Context appContext;
-  @NonNull private final IntentFilter filter;
-  @NonNull private final Map<String, SetCallback> setMap;
-  @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean registered;
+  @NonNull final Context appContext;
+  @NonNull final IntentFilter filter;
+  @NonNull final Map<String, SetCallback> setMap;
+  @NonNull final Map<String, UnsetCallback> unsetMap;
+  boolean registered;
 
   StateObserver(@NonNull Context context) {
     appContext = context.getApplicationContext();

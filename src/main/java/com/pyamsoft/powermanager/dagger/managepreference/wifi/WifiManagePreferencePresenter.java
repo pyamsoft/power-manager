@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class WifiManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+class WifiManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Inject WifiManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

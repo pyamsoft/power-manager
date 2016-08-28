@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class WifiManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class WifiManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
   @Inject WifiManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     super(manageModifier);

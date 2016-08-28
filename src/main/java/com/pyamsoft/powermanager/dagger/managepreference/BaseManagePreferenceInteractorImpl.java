@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 
 public abstract class BaseManagePreferenceInteractorImpl implements BaseManagePreferenceInteractor {
 
-  @NonNull private final BooleanInterestModifier manageModifier;
+  @NonNull final BooleanInterestModifier manageModifier;
 
   protected BaseManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     this.manageModifier = manageModifier;

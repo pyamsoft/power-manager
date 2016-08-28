@@ -30,15 +30,15 @@ import timber.log.Timber;
 
 class DataStateObserver extends StateObserver {
 
-  @NonNull private static final String GET_METHOD_NAME = "setMobileDataEnabled";
-  @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
+  @NonNull static final String GET_METHOD_NAME = "setMobileDataEnabled";
+  @Nullable static final Method GET_MOBILE_DATA_ENABLED_METHOD;
+  @NonNull static final String SETTINGS_MOBILE_DATA = "mobile_data";
 
   static {
     GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
   }
 
-  @NonNull private final ConnectivityManager connectivityManager;
+  @NonNull final ConnectivityManager connectivityManager;
 
   @Inject DataStateObserver(@NonNull Context context) {
     super(context);
@@ -50,7 +50,7 @@ class DataStateObserver extends StateObserver {
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
-  @CheckResult @Nullable private static Method reflectGetMethod() {
+  @CheckResult @Nullable static Method reflectGetMethod() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Timber.e("Reflection method %s does not exist on Lollipop+", GET_METHOD_NAME);
       return null;
@@ -67,7 +67,7 @@ class DataStateObserver extends StateObserver {
     return null;
   }
 
-  @CheckResult private boolean getMobileDataEnabledReflection() {
+  @CheckResult boolean getMobileDataEnabledReflection() {
     if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
       try {
         return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
@@ -79,7 +79,7 @@ class DataStateObserver extends StateObserver {
     return false;
   }
 
-  @CheckResult private boolean getMobileDataEnabledSettings() {
+  @CheckResult boolean getMobileDataEnabledSettings() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
       enabled =
@@ -94,7 +94,7 @@ class DataStateObserver extends StateObserver {
     return enabled;
   }
 
-  @CheckResult private boolean getMobileDataEnabled() {
+  @CheckResult boolean getMobileDataEnabled() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       return getMobileDataEnabledReflection();
     } else {

@@ -28,11 +28,11 @@ import timber.log.Timber;
 
 abstract class StateModifier implements BooleanInterestModifier {
 
-  @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler observeScheduler;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull final Context appContext;
+  @NonNull final PowerManagerPreferences preferences;
+  @NonNull final Scheduler subscribeScheduler;
+  @NonNull final Scheduler observeScheduler;
+  @NonNull Subscription subscription = Subscriptions.empty();
 
   StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {

@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class SyncPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+class SyncPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
   @Inject SyncPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
     super(periodModifier);
   }

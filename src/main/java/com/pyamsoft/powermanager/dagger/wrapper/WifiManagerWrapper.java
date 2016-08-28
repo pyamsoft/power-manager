@@ -23,9 +23,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import timber.log.Timber;
 
-public final class WifiManagerWrapper {
+public class WifiManagerWrapper {
 
-  @Nullable private final WifiManager wifiManager;
+  @Nullable final WifiManager wifiManager;
 
   public WifiManagerWrapper(@NonNull Context context) {
     this.wifiManager =

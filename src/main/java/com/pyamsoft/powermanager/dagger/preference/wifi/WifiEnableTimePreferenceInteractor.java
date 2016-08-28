@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class WifiEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
+class WifiEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
 
   @Inject WifiEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

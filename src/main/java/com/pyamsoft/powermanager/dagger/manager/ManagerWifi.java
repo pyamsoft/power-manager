@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class ManagerWifi extends ManagerBase {
+class ManagerWifi extends ManagerBase {
 
   @Inject ManagerWifi(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {

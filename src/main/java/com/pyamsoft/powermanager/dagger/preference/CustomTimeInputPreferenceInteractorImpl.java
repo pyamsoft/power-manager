@@ -24,7 +24,7 @@ import rx.Observable;
 public abstract class CustomTimeInputPreferenceInteractorImpl
     implements CustomTimeInputPreferenceInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull final PowerManagerPreferences preferences;
 
   protected CustomTimeInputPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;

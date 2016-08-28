@@ -25,7 +25,7 @@ import timber.log.Timber;
 
 class BluetoothStateObserver extends StateObserver {
 
-  @NonNull private final BluetoothAdapterWrapper wrapper;
+  @NonNull final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateObserver(@NonNull Context context) {
     super(context);

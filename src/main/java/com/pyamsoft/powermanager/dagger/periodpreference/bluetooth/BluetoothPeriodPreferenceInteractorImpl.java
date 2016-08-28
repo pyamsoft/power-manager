@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class BluetoothPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+class BluetoothPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
   @Inject BluetoothPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
     super(periodModifier);
   }

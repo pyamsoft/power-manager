@@ -23,9 +23,9 @@ import javax.inject.Inject;
 import rx.Scheduler;
 import timber.log.Timber;
 
-final class ManagerDoze extends ManagerBase implements ExclusiveManager {
+class ManagerDoze extends ManagerBase implements ExclusiveManager {
 
-  @NonNull private final ExclusiveManagerInteractor interactor;
+  @NonNull final ExclusiveManagerInteractor interactor;
 
   @Inject ManagerDoze(@NonNull ExclusiveManagerInteractor interactor,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {

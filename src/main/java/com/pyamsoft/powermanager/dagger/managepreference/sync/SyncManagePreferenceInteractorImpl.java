@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class SyncManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class SyncManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
   @Inject SyncManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
     super(manageModifier);

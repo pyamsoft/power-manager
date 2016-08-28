@@ -25,9 +25,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import timber.log.Timber;
 
-public final class BluetoothAdapterWrapper {
+public class BluetoothAdapterWrapper {
 
-  @Nullable private final BluetoothAdapter adapter;
+  @Nullable final BluetoothAdapter adapter;
 
   public BluetoothAdapterWrapper(@NonNull Context context) {
     this.adapter = getBluetoothAdapter(context);

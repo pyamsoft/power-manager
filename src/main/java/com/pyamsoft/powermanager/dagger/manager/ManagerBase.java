@@ -27,11 +27,11 @@ import timber.log.Timber;
 
 abstract class ManagerBase implements Manager {
 
-  @NonNull private final ManagerInteractor interactor;
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler observerScheduler;
-  @NonNull private Subscription setSubscription = Subscriptions.empty();
-  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
+  @NonNull final ManagerInteractor interactor;
+  @NonNull final Scheduler subscribeScheduler;
+  @NonNull final Scheduler observerScheduler;
+  @NonNull Subscription setSubscription = Subscriptions.empty();
+  @NonNull Subscription unsetSubscription = Subscriptions.empty();
 
   ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {

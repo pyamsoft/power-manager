@@ -29,11 +29,11 @@ import timber.log.Timber;
 
 abstract class ManagerBaseInteractor implements ManagerInteractor {
 
-  @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final BooleanInterestObserver manageObserver;
-  @NonNull private final BooleanInterestObserver stateObserver;
-  private boolean originalStateEnabled;
+  @NonNull final Context appContext;
+  @NonNull final PowerManagerPreferences preferences;
+  @NonNull final BooleanInterestObserver manageObserver;
+  @NonNull final BooleanInterestObserver stateObserver;
+  boolean originalStateEnabled;
 
   ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,

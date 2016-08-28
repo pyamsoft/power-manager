@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.BluetoothManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerBluetoothInteractor extends ManagerBaseInteractor {
+class ManagerBluetoothInteractor extends ManagerBaseInteractor {
 
   @Inject ManagerBluetoothInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,

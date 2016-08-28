@@ -29,11 +29,11 @@ import timber.log.Timber;
 public abstract class BooleanPreferenceObserver
     implements SharedPreferences.OnSharedPreferenceChangeListener, BooleanInterestObserver {
 
-  @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final String key;
-  @NonNull private final Map<String, SetCallback> setMap;
-  @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean registered;
+  @NonNull final PowerManagerPreferences preferences;
+  @NonNull final String key;
+  @NonNull final Map<String, SetCallback> setMap;
+  @NonNull final Map<String, UnsetCallback> unsetMap;
+  boolean registered;
 
   protected BooleanPreferenceObserver(@NonNull PowerManagerPreferences preferences,
       @NonNull String key) {

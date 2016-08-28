@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class SyncDisableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
+class SyncDisableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
 
   @Inject SyncDisableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

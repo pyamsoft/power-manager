@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class SyncManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+class SyncManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Inject SyncManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

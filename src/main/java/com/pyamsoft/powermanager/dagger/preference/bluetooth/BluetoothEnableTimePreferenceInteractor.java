@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-final class BluetoothEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
+class BluetoothEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractorImpl {
 
   @Inject BluetoothEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

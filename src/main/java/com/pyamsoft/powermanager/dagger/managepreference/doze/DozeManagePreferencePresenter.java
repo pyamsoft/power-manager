@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.BaseManagePreferencePre
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Inject DozeManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

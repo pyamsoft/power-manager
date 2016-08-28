@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferencePres
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class SyncEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
+class SyncEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
   @Inject SyncEnableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {

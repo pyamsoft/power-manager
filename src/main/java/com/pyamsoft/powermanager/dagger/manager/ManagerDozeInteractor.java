@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.DozeManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-final class ManagerDozeInteractor extends ManagerBaseInteractor
+class ManagerDozeInteractor extends ManagerBaseInteractor
     implements ExclusiveManagerInteractor {
 
   @Inject ManagerDozeInteractor(@NonNull Context context,

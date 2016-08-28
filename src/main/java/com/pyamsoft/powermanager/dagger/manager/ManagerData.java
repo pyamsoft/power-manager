@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class ManagerData extends ManagerBase {
+class ManagerData extends ManagerBase {
 
   @Inject ManagerData(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {

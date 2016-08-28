@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-final class ManagerBluetooth extends ManagerBase {
+class ManagerBluetooth extends ManagerBase {
 
   @Inject ManagerBluetooth(@NonNull ManagerInteractor interactor,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
