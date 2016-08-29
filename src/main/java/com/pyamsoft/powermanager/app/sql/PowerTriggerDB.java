@@ -28,32 +28,39 @@ import java.util.List;
 import rx.Observable;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class PowerTriggerDB {
-  private static volatile Delegate instance = null;
-  @NonNull private final BriteDatabase briteDatabase;
+  @NonNull static final Object lock = new Object();
+  private static volatile PowerTriggerDB instance = null;
 
-  PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler dbScheduler) {
-    final SqlBrite sqlBrite = SqlBrite.create();
-    final PowerTriggerOpenHelper openHelper =
-        new PowerTriggerOpenHelper(context.getApplicationContext());
-    briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
+  @NonNull private final SqlBrite sqlBrite;
+  @NonNull private final PowerTriggerOpenHelper openHelper;
+  @NonNull private final Scheduler dbScheduler;
+  volatile BriteDatabase briteDatabase;
+  volatile int openCount;
+
+  PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
+    sqlBrite = SqlBrite.create();
+    openHelper = new PowerTriggerOpenHelper(context.getApplicationContext());
+    dbScheduler = scheduler;
+    openCount = 0;
   }
 
-  public static void setDelegate(@Nullable Delegate delegate) {
-    instance = delegate;
+  public static void setDB(@Nullable PowerTriggerDB db) {
+    instance = db;
   }
 
-  @CheckResult @NonNull public static Delegate with(@NonNull Context context) {
+  @CheckResult @NonNull public static PowerTriggerDB with(@NonNull Context context) {
     return with(context, Schedulers.io());
   }
 
   @CheckResult @NonNull
-  public static Delegate with(@NonNull Context context, @NonNull Scheduler scheduler) {
+  public static PowerTriggerDB with(@NonNull Context context, @NonNull Scheduler scheduler) {
     if (instance == null) {
-      synchronized (Delegate.class) {
+      synchronized (lock) {
         if (instance == null) {
-          instance = new Delegate(context, scheduler);
+          instance = new PowerTriggerDB(context, scheduler);
         }
       }
     }
@@ -61,52 +68,85 @@ public class PowerTriggerDB {
     return instance;
   }
 
-  @CheckResult @NonNull BriteDatabase getDatabase() {
-    return briteDatabase;
+  synchronized void openDatabase() {
+    if (briteDatabase == null) {
+      Timber.d("Open new Database instance");
+      briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
+    }
+
+    ++openCount;
+    Timber.d("Increment open count to: %d", openCount);
   }
 
-  public static class Delegate {
+  synchronized void closeDatabase() {
+    --openCount;
+    Timber.d("Decrement open count to: %d", openCount);
 
-    @NonNull final PowerTriggerDB database;
-
-    public Delegate(@NonNull Context context) {
-      this(context, Schedulers.io());
+    if (openCount == 0) {
+      close();
     }
+  }
 
-    public Delegate(@NonNull Context context, @NonNull Scheduler scheduler) {
-      this.database = new PowerTriggerDB(context.getApplicationContext(), scheduler);
-    }
+  @CheckResult @NonNull public Observable<Long> insert(final @NonNull ContentValues contentValues) {
+    openDatabase();
+    return Observable.defer(() -> {
+      final long result = briteDatabase.insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+      closeDatabase();
+      return Observable.just(result);
+    });
+  }
 
-    @CheckResult @NonNull
-    public Observable<Long> insert(final @NonNull ContentValues contentValues) {
-      return Observable.defer(() -> Observable.just(
-          database.getDatabase().insert(PowerTriggerEntry.TABLE_NAME, contentValues)));
-    }
+  @CheckResult @NonNull
+  public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent) {
+    openDatabase();
+    return Observable.defer(() -> {
+      final int result = briteDatabase.update(PowerTriggerEntry.TABLE_NAME, contentValues,
+          PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
+      closeDatabase();
+      return Observable.just(result);
+    });
+  }
 
-    @CheckResult @NonNull
-    public Observable<Integer> update(final @NonNull ContentValues contentValues,
-        final int percent) {
-      return Observable.defer(() -> Observable.just(database.getDatabase()
-          .update(PowerTriggerEntry.TABLE_NAME, contentValues,
-              PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent))));
-    }
+  @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
+    openDatabase();
 
-    @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
-      return database.getDatabase()
-          .createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-          .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
-          .filter(padLockEntries -> padLockEntries != null);
-    }
+    return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
+        .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
+        .filter(padLockEntries -> padLockEntries != null)
+        .map(powerTriggerEntries -> {
+          closeDatabase();
+          return powerTriggerEntries;
+        });
+  }
 
-    @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
-      return Observable.defer(() -> Observable.just(database.getDatabase()
-          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
-              Integer.toString(percent))));
-    }
+  @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
+    openDatabase();
 
-    @CheckResult @NonNull public Observable<Integer> deleteAll() {
-      return Observable.defer(() -> Observable.just(database.getDatabase()
-          .delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL)));
+    return Observable.defer(() -> {
+      final int result =
+          briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
+              Integer.toString(percent));
+      closeDatabase();
+      return Observable.just(result);
+    });
+  }
+
+  @CheckResult @NonNull public Observable<Integer> deleteAll() {
+    openDatabase();
+
+    return Observable.defer(() -> {
+      final int result =
+          briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
+      closeDatabase();
+      return Observable.just(result);
+    });
+  }
+
+  public void close() {
+    Timber.d("Close and recycle database connection");
+    if (briteDatabase != null) {
+      briteDatabase.close();
+      briteDatabase = null;
     }
   }
 }
