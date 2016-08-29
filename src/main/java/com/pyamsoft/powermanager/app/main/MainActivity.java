@@ -39,12 +39,12 @@ import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.base.activity.DonationActivityBase;
+import com.pyamsoft.pydroid.base.activity.DonationActivity;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class MainActivity extends DonationActivityBase {
+public class MainActivity extends DonationActivity {
 
   @NonNull final Map<String, View> addedViewMap = new HashMap<>();
 
