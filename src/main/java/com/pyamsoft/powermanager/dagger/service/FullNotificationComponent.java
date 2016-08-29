@@ -16,13 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.app.service.FullNotificationPresenterLoader;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope
-@Subcomponent(modules = FullNotificationModule.class)
+@ActivityScope @Subcomponent(modules = FullNotificationModule.class)
 public interface FullNotificationComponent {
 
   void inject(FullNotificationPresenterLoader loader);

@@ -28,11 +28,11 @@ import com.pyamsoft.powermanager.app.preference.sync.SyncEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDelayPreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.preference.bluetooth.BluetoothCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.sync.SyncCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

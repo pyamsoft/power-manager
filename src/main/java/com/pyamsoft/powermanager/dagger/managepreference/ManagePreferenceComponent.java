@@ -21,12 +21,12 @@ import com.pyamsoft.powermanager.app.data.DataManagePresenterLoader;
 import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
 import com.pyamsoft.powermanager.app.sync.SyncManagePresenterLoader;
 import com.pyamsoft.powermanager.app.wifi.WifiManagePresenterLoader;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
 import com.pyamsoft.powermanager.dagger.managepreference.bluetooth.BluetoothManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.data.DataManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.doze.DozeManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.sync.SyncManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.wifi.WifiManagePreferenceModule;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

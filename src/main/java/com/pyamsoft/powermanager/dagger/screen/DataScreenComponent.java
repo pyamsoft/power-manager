@@ -16,9 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.screen;
 
-import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent public interface DataScreenComponent {

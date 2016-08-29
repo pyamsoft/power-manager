@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.preference.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -30,7 +30,8 @@ import rx.Scheduler;
 
   @ActivityScope @Provides @Named("wifi_custom_delay")
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(
-      @NonNull @Named("wifi_custom_delay_interactor") CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+      @NonNull @Named("wifi_custom_delay_interactor")
+      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new WifiDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }

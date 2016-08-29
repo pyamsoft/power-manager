@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.preference.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
-import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

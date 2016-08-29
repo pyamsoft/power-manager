@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
-import com.pyamsoft.powermanager.dagger.ActivityScope;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
