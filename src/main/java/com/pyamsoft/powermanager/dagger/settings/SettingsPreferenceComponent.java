@@ -16,12 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.settings;
 
+import com.pyamsoft.powermanager.app.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenterLoader;
 import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = SettingsPreferenceModule.class)
 public interface SettingsPreferenceComponent {
+
+  void inject(SettingsPreferenceFragment fragment);
 
   void inject(SettingsPreferencePresenterLoader loader);
 }

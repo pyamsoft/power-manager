@@ -24,25 +24,38 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
     implements SettingsPreferencePresenter.SettingsPreferenceView {
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
+  @NonNull private static final String OBS_TAG = "settings_wear_obs";
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
+  @Inject @Named("obs_wear_manage") BooleanInterestObserver wearObserver;
+  @Inject @Named("mod_wear_manage") BooleanInterestModifier wearModifier;
+  @SuppressWarnings("WeakerAccess") CheckBoxPreference wearPreference;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    Singleton.Dagger.with(getContext()).plusSettingsPreferenceComponent().inject(this);
+
     getLoaderManager().initLoader(0, null,
         new LoaderManager.LoaderCallbacks<SettingsPreferencePresenter>() {
           @Override public Loader<SettingsPreferencePresenter> onCreateLoader(int id, Bundle args) {
@@ -83,6 +96,23 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     final SwitchPreferenceCompat showAds =
         (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
+
+    final Preference startBoot = findPreference(getString(R.string.boot_key));
+    startBoot.setOnPreferenceClickListener(preference -> {
+      final boolean currentState = BootReceiver.isBootEnabled(getContext());
+      BootReceiver.setBootEnabled(getContext(), !currentState);
+      return true;
+    });
+
+    wearPreference = (CheckBoxPreference) findPreference(getString(R.string.manage_wearable_key));
+    wearPreference.setOnPreferenceClickListener(preference -> {
+      if (wearObserver.is()) {
+        wearModifier.unset();
+      } else {
+        wearModifier.set();
+      }
+      return true;
+    });
   }
 
   @Override public void onCreatePreferences(@Nullable Bundle bundle, @Nullable String s) {
@@ -96,7 +126,8 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onClearAll() {
     Timber.d("Everything is cleared, kill self");
-    getActivity().getApplicationContext().stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
+    getActivity().getApplicationContext()
+        .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
     final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
         .getSystemService(Context.ACTIVITY_SERVICE);
     activityManager.clearApplicationUserData();
@@ -109,10 +140,20 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onResume() {
     super.onResume();
     presenter.bindView(this);
+
+    if (wearObserver.is()) {
+      wearPreference.setChecked(true);
+    } else {
+      wearPreference.setChecked(false);
+    }
+
+    wearObserver.register(OBS_TAG, () -> wearPreference.setChecked(true),
+        () -> wearPreference.setChecked(false));
   }
 
   @Override public void onPause() {
     super.onPause();
     presenter.unbindView();
+    wearObserver.unregister(OBS_TAG);
   }
 }

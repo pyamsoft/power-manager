@@ -36,6 +36,7 @@ import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
@@ -129,7 +130,8 @@ public class MainActivity extends DonationActivity {
         fragmentManager.findFragmentByTag(BluetoothFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(SyncFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(DozeFragment.TAG) == null;
+        fragmentManager.findFragmentByTag(DozeFragment.TAG) == null &&
+        fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null;
   }
 
   private void loadOverviewFragment() {

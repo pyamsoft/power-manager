@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.model.event;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.model.AutoValue_ConfirmationEvent;
 
 @AutoValue public abstract class ConfirmationEvent {
 
