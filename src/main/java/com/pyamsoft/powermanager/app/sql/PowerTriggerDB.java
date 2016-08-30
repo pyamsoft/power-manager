@@ -69,7 +69,7 @@ public class PowerTriggerDB {
     return instance;
   }
 
-  private synchronized void openDatabase() {
+  @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
     if (briteDatabase == null) {
       Timber.d("Open new Database instance");
       briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
@@ -87,17 +87,22 @@ public class PowerTriggerDB {
   }
 
   @CheckResult @NonNull public Observable<Long> insert(final @NonNull ContentValues contentValues) {
-    openDatabase();
-    return Observable.defer(() -> {
+    // KLUDGE ugly
+    final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
+    return deleteWithPercent(percent).map(deleted -> {
+      Timber.d("Delete result: %d", deleted);
+
+      openDatabase();
       final long result = briteDatabase.insert(PowerTriggerEntry.TABLE_NAME, contentValues);
       closeDatabase();
-      return Observable.just(result);
+      return result;
     });
   }
 
   @CheckResult @NonNull
   public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent) {
     openDatabase();
+
     return Observable.defer(() -> {
       final int result = briteDatabase.update(PowerTriggerEntry.TABLE_NAME, contentValues,
           PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
@@ -111,11 +116,11 @@ public class PowerTriggerDB {
 
     return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
         .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
-        .filter(padLockEntries -> padLockEntries != null)
         .map(powerTriggerEntries -> {
           closeDatabase();
           return powerTriggerEntries;
-        });
+        })
+        .filter(padLockEntries -> padLockEntries != null);
   }
 
   @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
@@ -143,6 +148,7 @@ public class PowerTriggerDB {
 
   public void close() {
     Timber.d("Close and recycle database connection");
+    openCount.set(0);
     if (briteDatabase != null) {
       briteDatabase.close();
       briteDatabase = null;
