@@ -43,8 +43,9 @@ public abstract class ManageJob extends BaseJob implements Runnable {
   }
 
   @Override public final void onRun() throws Throwable {
-    run();
     Timber.d("Run job type: %s", jobType.name());
+    run();
+
     switch (jobType) {
       case ENABLE:
         internalEnable();
