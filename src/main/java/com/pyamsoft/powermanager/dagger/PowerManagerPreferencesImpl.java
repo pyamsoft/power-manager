@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -102,81 +101,80 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
-    final Context appContext = context.getApplicationContext();
-    final Resources resources = appContext.getResources();
-    manageWifi = appContext.getString(R.string.manage_wifi_key);
-    manageData = appContext.getString(R.string.manage_data_key);
-    manageBluetooth = appContext.getString(R.string.manage_bluetooth_key);
-    manageSync = appContext.getString(R.string.manage_sync_key);
-    manageWifiDefault = resources.getBoolean(R.bool.manage_wifi_default);
-    manageDataDefault = resources.getBoolean(R.bool.manage_data_default);
-    manageBluetoothDefault = resources.getBoolean(R.bool.manage_bluetooth_default);
-    manageSyncDefault = resources.getBoolean(R.bool.manage_sync_default);
+    manageWifi = getResources().getString(R.string.manage_wifi_key);
+    manageData = getResources().getString(R.string.manage_data_key);
+    manageBluetooth = getResources().getString(R.string.manage_bluetooth_key);
+    manageSync = getResources().getString(R.string.manage_sync_key);
+    manageWifiDefault = getResources().getBoolean(R.bool.manage_wifi_default);
+    manageDataDefault = getResources().getBoolean(R.bool.manage_data_default);
+    manageBluetoothDefault = getResources().getBoolean(R.bool.manage_bluetooth_default);
+    manageSyncDefault = getResources().getBoolean(R.bool.manage_sync_default);
 
-    delayWifi = appContext.getString(R.string.wifi_time_key);
-    delayData = appContext.getString(R.string.data_time_key);
-    delayBluetooth = appContext.getString(R.string.bluetooth_time_key);
-    delaySync = appContext.getString(R.string.sync_time_key);
-    delayWifiDefault = appContext.getString(R.string.wifi_time_default);
-    delayDataDefault = appContext.getString(R.string.data_time_default);
-    delayBluetoothDefault = appContext.getString(R.string.bluetooth_time_default);
-    delaySyncDefault = appContext.getString(R.string.sync_time_default);
+    delayWifi = getResources().getString(R.string.wifi_time_key);
+    delayData = getResources().getString(R.string.data_time_key);
+    delayBluetooth = getResources().getString(R.string.bluetooth_time_key);
+    delaySync = getResources().getString(R.string.sync_time_key);
+    delayWifiDefault = getResources().getString(R.string.wifi_time_default);
+    delayDataDefault = getResources().getString(R.string.data_time_default);
+    delayBluetoothDefault = getResources().getString(R.string.bluetooth_time_default);
+    delaySyncDefault = getResources().getString(R.string.sync_time_default);
 
-    periodicWifi = appContext.getString(R.string.periodic_wifi_key);
-    periodicData = appContext.getString(R.string.periodic_data_key);
-    periodicBluetooth = appContext.getString(R.string.periodic_bluetooth_key);
-    periodicSync = appContext.getString(R.string.periodic_sync_key);
-    periodicWifiDefault = resources.getBoolean(R.bool.periodic_wifi_default);
-    periodicDataDefault = resources.getBoolean(R.bool.periodic_data_default);
-    periodicBluetoothDefault = resources.getBoolean(R.bool.periodic_bluetooth_default);
-    periodicSyncDefault = resources.getBoolean(R.bool.periodic_sync_default);
+    periodicWifi = getResources().getString(R.string.periodic_wifi_key);
+    periodicData = getResources().getString(R.string.periodic_data_key);
+    periodicBluetooth = getResources().getString(R.string.periodic_bluetooth_key);
+    periodicSync = getResources().getString(R.string.periodic_sync_key);
+    periodicWifiDefault = getResources().getBoolean(R.bool.periodic_wifi_default);
+    periodicDataDefault = getResources().getBoolean(R.bool.periodic_data_default);
+    periodicBluetoothDefault = getResources().getBoolean(R.bool.periodic_bluetooth_default);
+    periodicSyncDefault = getResources().getBoolean(R.bool.periodic_sync_default);
 
-    periodicDisableWifi = appContext.getString(R.string.periodic_wifi_disable_key);
-    periodicDisableData = appContext.getString(R.string.periodic_data_disable_key);
-    periodicDisableBluetooth = appContext.getString(R.string.periodic_bluetooth_disable_key);
-    periodicDisableSync = appContext.getString(R.string.periodic_sync_disable_key);
-    periodicDisableWifiDefault = appContext.getString(R.string.periodic_wifi_disable_default);
-    periodicDisableDataDefault = appContext.getString(R.string.periodic_data_disable_default);
+    periodicDisableWifi = getResources().getString(R.string.periodic_wifi_disable_key);
+    periodicDisableData = getResources().getString(R.string.periodic_data_disable_key);
+    periodicDisableBluetooth = getResources().getString(R.string.periodic_bluetooth_disable_key);
+    periodicDisableSync = getResources().getString(R.string.periodic_sync_disable_key);
+    periodicDisableWifiDefault = getResources().getString(R.string.periodic_wifi_disable_default);
+    periodicDisableDataDefault = getResources().getString(R.string.periodic_data_disable_default);
     periodicDisableBluetoothDefault =
-        appContext.getString(R.string.periodic_bluetooth_disable_default);
-    periodicDisableSyncDefault = appContext.getString(R.string.periodic_sync_disable_default);
+        getResources().getString(R.string.periodic_bluetooth_disable_default);
+    periodicDisableSyncDefault = getResources().getString(R.string.periodic_sync_disable_default);
 
-    periodicEnableWifi = appContext.getString(R.string.periodic_wifi_enable_key);
-    periodicEnableData = appContext.getString(R.string.periodic_data_enable_key);
-    periodicEnableBluetooth = appContext.getString(R.string.periodic_bluetooth_enable_key);
-    periodicEnableSync = appContext.getString(R.string.periodic_sync_enable_key);
-    periodicEnableWifiDefault = appContext.getString(R.string.periodic_wifi_enable_default);
-    periodicEnableDataDefault = appContext.getString(R.string.periodic_data_enable_default);
+    periodicEnableWifi = getResources().getString(R.string.periodic_wifi_enable_key);
+    periodicEnableData = getResources().getString(R.string.periodic_data_enable_key);
+    periodicEnableBluetooth = getResources().getString(R.string.periodic_bluetooth_enable_key);
+    periodicEnableSync = getResources().getString(R.string.periodic_sync_enable_key);
+    periodicEnableWifiDefault = getResources().getString(R.string.periodic_wifi_enable_default);
+    periodicEnableDataDefault = getResources().getString(R.string.periodic_data_enable_default);
     periodicEnableBluetoothDefault =
-        appContext.getString(R.string.periodic_bluetooth_enable_default);
-    periodicEnableSyncDefault = appContext.getString(R.string.periodic_sync_enable_default);
+        getResources().getString(R.string.periodic_bluetooth_enable_default);
+    periodicEnableSyncDefault = getResources().getString(R.string.periodic_sync_enable_default);
 
-    ignoreChargingWifi = appContext.getString(R.string.ignore_charging_wifi_key);
-    ignoreChargingData = appContext.getString(R.string.ignore_charging_data_key);
-    ignoreChargingBluetooth = appContext.getString(R.string.ignore_charging_bluetooth_key);
-    ignoreChargingSync = appContext.getString(R.string.ignore_charging_sync_key);
-    ignoreChargingWifiDefault = resources.getBoolean(R.bool.ignore_charging_wifi_default);
-    ignoreChargingDataDefault = resources.getBoolean(R.bool.ignore_charging_data_default);
-    ignoreChargingBluetoothDefault = resources.getBoolean(R.bool.ignore_charging_bluetooth_default);
-    ignoreChargingSyncDefault = resources.getBoolean(R.bool.ignore_charging_sync_default);
+    ignoreChargingWifi = getResources().getString(R.string.ignore_charging_wifi_key);
+    ignoreChargingData = getResources().getString(R.string.ignore_charging_data_key);
+    ignoreChargingBluetooth = getResources().getString(R.string.ignore_charging_bluetooth_key);
+    ignoreChargingSync = getResources().getString(R.string.ignore_charging_sync_key);
+    ignoreChargingWifiDefault = getResources().getBoolean(R.bool.ignore_charging_wifi_default);
+    ignoreChargingDataDefault = getResources().getBoolean(R.bool.ignore_charging_data_default);
+    ignoreChargingBluetoothDefault =
+        getResources().getBoolean(R.bool.ignore_charging_bluetooth_default);
+    ignoreChargingSyncDefault = getResources().getBoolean(R.bool.ignore_charging_sync_default);
 
-    manageWearable = appContext.getString(R.string.manage_wearable_key);
-    manageWearableDefault = resources.getBoolean(R.bool.manage_wearable_default);
+    manageWearable = getResources().getString(R.string.manage_wearable_key);
+    manageWearableDefault = getResources().getBoolean(R.bool.manage_wearable_default);
 
-    fullNotification = appContext.getString(R.string.full_notification_key);
-    fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
+    fullNotification = getResources().getString(R.string.full_notification_key);
+    fullNotificationDefault = getResources().getBoolean(R.bool.full_notification_default);
 
-    forceDoze = appContext.getString(R.string.manage_doze_key);
-    exclusiveDoze = appContext.getString(R.string.exclusive_doze_key);
-    ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
-    dozeDelay = appContext.getString(R.string.doze_time_key);
-    manageSensors = appContext.getString(R.string.sensors_doze_key);
+    forceDoze = getResources().getString(R.string.manage_doze_key);
+    exclusiveDoze = getResources().getString(R.string.exclusive_doze_key);
+    ignoreChargingDoze = getResources().getString(R.string.ignore_charging_doze_key);
+    dozeDelay = getResources().getString(R.string.doze_time_key);
+    manageSensors = getResources().getString(R.string.sensors_doze_key);
 
-    forceDozeDefault = resources.getBoolean(R.bool.doze_default);
-    exclusiveDozeDefault = resources.getBoolean(R.bool.exclusive_doze_default);
-    ignoreChargingDozeDefault = resources.getBoolean(R.bool.ignore_charging_doze_default);
-    dozeDelayDefault = appContext.getString(R.string.doze_time_default);
-    manageSensorsDefault = resources.getBoolean(R.bool.sensors_doze_default);
+    forceDozeDefault = getResources().getBoolean(R.bool.doze_default);
+    exclusiveDozeDefault = getResources().getBoolean(R.bool.exclusive_doze_default);
+    ignoreChargingDozeDefault = getResources().getBoolean(R.bool.ignore_charging_doze_default);
+    dozeDelayDefault = getResources().getString(R.string.doze_time_default);
+    manageSensorsDefault = getResources().getBoolean(R.bool.sensors_doze_default);
   }
 
   @Override public boolean isSensorsManaged() {
