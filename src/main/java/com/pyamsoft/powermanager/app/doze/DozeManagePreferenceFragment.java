@@ -23,13 +23,23 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.pydroid.util.AppUtil;
 
 public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
 
   @Override protected boolean onManagePreferenceChanged(boolean b) {
-    return PowerManager.hasDozePermission(getContext());
+    if (b) {
+      final boolean hasPermission = PowerManager.hasDozePermission(getContext());
+      if (!hasPermission) {
+        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+            "doze_explain");
+      }
+      return hasPermission;
+    } else {
+      return true;
+    }
   }
 
   @NonNull @Override
