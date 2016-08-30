@@ -46,7 +46,7 @@ public class OverviewFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "Overview";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
-  @NonNull private FastItemAdapter<OverviewItem> adapter = new FastItemAdapter<>();
+  private FastItemAdapter<OverviewItem> adapter;
   private Unbinder unbinder;
 
   @CheckResult @NonNull public static OverviewFragment newInstance(int cX, int cY) {
@@ -82,6 +82,7 @@ public class OverviewFragment extends ActionBarFragment {
   }
 
   private void populateAdapter(@NonNull View view) {
+    adapter = new FastItemAdapter<>();
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             this::loadFragment));

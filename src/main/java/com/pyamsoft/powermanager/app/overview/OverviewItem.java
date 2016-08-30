@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
@@ -109,7 +110,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
         fragment = SettingsFragment.newInstance(holder.itemView, rootView);
         break;
       default:
-        throw new IllegalStateException("Position out of range");
+        throw new IllegalStateException("Position out of range: " + position);
     }
 
     holder.itemView.setBackgroundColor(
@@ -117,7 +118,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
     holder.title.setText(title);
 
-    holder.itemView.setOnClickListener(
+    holder.root.setOnClickListener(
         view -> getItemClickListener().onItemClicked(getTitle(), getFragment()));
 
     final Subscription task = AsyncDrawable.with(holder.itemView.getContext())
@@ -129,7 +130,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   private void recycleOld(ViewHolder holder) {
     taskMap.clear();
-    holder.itemView.setOnClickListener(null);
+    holder.root.setOnClickListener(null);
     holder.image.setImageDrawable(null);
     holder.image.setOnClickListener(null);
     holder.title.setText(null);
@@ -172,6 +173,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
   protected static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final Unbinder unbinder;
+    @BindView(R.id.adapter_item_overview_root) FrameLayout root;
     @BindView(R.id.adapter_item_overview_image) ImageView image;
     @BindView(R.id.adapter_item_overview_title) TextView title;
 
