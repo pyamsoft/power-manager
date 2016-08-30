@@ -34,19 +34,19 @@ class ManagerBluetoothInteractor extends ManagerBaseInteractor {
     super(context, preferences, manageObserver, stateObserver);
   }
 
-  @CheckResult long getDelayTime() {
+  @CheckResult private long getDelayTime() {
     return getPreferences().getBluetoothDelay();
   }
 
-  @CheckResult boolean isPeriodic() {
+  @CheckResult private boolean isPeriodic() {
     return getPreferences().isPeriodicBluetooth();
   }
 
-  @CheckResult long getPeriodicEnableTime() {
+  @CheckResult private long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeBluetooth();
   }
 
-  @CheckResult long getPeriodicDisableTime() {
+  @CheckResult private long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeBluetooth();
   }
 

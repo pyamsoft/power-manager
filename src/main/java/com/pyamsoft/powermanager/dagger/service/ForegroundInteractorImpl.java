@@ -45,21 +45,21 @@ import timber.log.Timber;
 
 class ForegroundInteractorImpl implements ForegroundInteractor {
 
-  static final int PENDING_RC = 1004;
-  @NonNull final Context appContext;
-  @NonNull final PowerManagerPreferences preferences;
-  @NonNull final BooleanInterestObserver wifiManageObserver;
-  @NonNull final BooleanInterestObserver dataManageObserver;
-  @NonNull final BooleanInterestObserver bluetoothManageObserver;
-  @NonNull final BooleanInterestObserver syncManageObserver;
-  @NonNull final BooleanInterestObserver wearManageObserver;
-  @NonNull final BooleanInterestObserver dozeManageObserver;
-  @NonNull final BooleanInterestModifier wifiManageModifier;
-  @NonNull final BooleanInterestModifier dataManageModifier;
-  @NonNull final BooleanInterestModifier bluetoothManageModifier;
-  @NonNull final BooleanInterestModifier syncManageModifier;
-  @NonNull final BooleanInterestModifier wearManageModifier;
-  @NonNull final BooleanInterestModifier dozeManageModifier;
+  private static final int PENDING_RC = 1004;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @NonNull private final BooleanInterestObserver wifiManageObserver;
+  @NonNull private final BooleanInterestObserver dataManageObserver;
+  @NonNull private final BooleanInterestObserver bluetoothManageObserver;
+  @NonNull private final BooleanInterestObserver syncManageObserver;
+  @NonNull private final BooleanInterestObserver wearManageObserver;
+  @NonNull private final BooleanInterestObserver dozeManageObserver;
+  @NonNull private final BooleanInterestModifier wifiManageModifier;
+  @NonNull private final BooleanInterestModifier dataManageModifier;
+  @NonNull private final BooleanInterestModifier bluetoothManageModifier;
+  @NonNull private final BooleanInterestModifier syncManageModifier;
+  @NonNull private final BooleanInterestModifier wearManageModifier;
+  @NonNull private final BooleanInterestModifier dozeManageModifier;
+  @NonNull private final Context appContext;
 
   @Inject ForegroundInteractorImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
@@ -102,8 +102,12 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
         .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
-  @NonNull @CheckResult Observable<Boolean> isFullNotificationEnabled() {
+  @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {
     return Observable.defer(() -> Observable.just(preferences.isFullNotificationEnabled()));
+  }
+
+  @NonNull @CheckResult private Observable<Integer> getNotificationPriority() {
+    return Observable.defer(() -> Observable.just(preferences.getNotificationPriority()));
   }
 
   @NonNull @Override public Observable<Notification> createNotification(boolean explicit) {
@@ -131,13 +135,13 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
           .setAutoCancel(false)
           .setNumber(0)
           .setContentIntent(pendingIntent)
-          .setPriority(preferences.getNotificationPriority())
-          .setCustomContentView(customRemoteView)
-          .build();
+          .setCustomContentView(customRemoteView);
+    }).zipWith(getNotificationPriority(), (builder, priority) -> {
+      return builder.setPriority(priority).build();
     });
   }
 
-  @CheckResult @NonNull RemoteViews createCustomRemoteViews() {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull RemoteViews createCustomRemoteViews() {
     final RemoteViews customView =
         new RemoteViews(appContext.getPackageName(), R.layout.remoteview_notification);
 

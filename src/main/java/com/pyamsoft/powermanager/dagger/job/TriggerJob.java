@@ -44,7 +44,7 @@ import timber.log.Timber;
 public class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
-  static final int PRIORITY = 2;
+  private static final int PRIORITY = 2;
   @Inject @Named("obs_wifi_state") BooleanInterestObserver wifiObserver;
   @Inject @Named("obs_data_state") BooleanInterestObserver dataObserver;
   @Inject @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver;
@@ -54,7 +54,7 @@ public class TriggerJob extends BaseJob {
   @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;
   @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
   @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
-  @NonNull Subscription runSubscription = Subscriptions.empty();
+  @NonNull private Subscription runSubscription = Subscriptions.empty();
 
   public TriggerJob(long delay) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));

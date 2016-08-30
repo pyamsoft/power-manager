@@ -30,10 +30,10 @@ import timber.log.Timber;
 
 class DozeStateModifier extends StateModifier {
 
-  @NonNull static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
-  @NonNull static final String DUMPSYS_DOZE_END = "deviceidle step";
-  @NonNull static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
-  @NonNull static final String DUMPSYS_SENSOR_RESTRICT =
+  @NonNull private static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
+  @NonNull private static final String DUMPSYS_DOZE_END = "deviceidle step";
+  @NonNull private static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
+  @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.google.android.gms*";
 
   @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
@@ -41,7 +41,7 @@ class DozeStateModifier extends StateModifier {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @SuppressLint("NewApi") static void executeDumpsys(@NonNull String cmd) {
+  @SuppressLint("NewApi") private static void executeDumpsys(@NonNull String cmd) {
     final Process process;
     boolean caughtPermissionDenial = false;
     try {

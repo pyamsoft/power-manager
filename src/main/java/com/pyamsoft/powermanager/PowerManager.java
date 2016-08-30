@@ -53,7 +53,7 @@ public class PowerManager extends ApplicationBase {
     startForegroundService();
   }
 
-  void setStrictMode() {
+  private void setStrictMode() {
     StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
         .penaltyLog()
         .penaltyDeath()
@@ -64,7 +64,7 @@ public class PowerManager extends ApplicationBase {
     StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
-  void startForegroundService() {
+  private void startForegroundService() {
     startService(new Intent(this, ForegroundService.class));
   }
 

@@ -30,14 +30,14 @@ import timber.log.Timber;
 
 class DataStateModifier extends StateModifier {
 
-  @NonNull static final String SET_METHOD_NAME = "setMobileDataEnabled";
-  @Nullable static final Method SET_MOBILE_DATA_ENABLED_METHOD;
+  @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
+  @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
 
   static {
     SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
   }
 
-  @NonNull final ConnectivityManager connectivityManager;
+  @NonNull private final ConnectivityManager connectivityManager;
 
   @Inject DataStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
@@ -46,7 +46,7 @@ class DataStateModifier extends StateModifier {
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 
-  @CheckResult @Nullable static Method reflectSetMethod() {
+  @CheckResult @Nullable private static Method reflectSetMethod() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Timber.e("Reflection method %s does not exist on Lollipop+", SET_METHOD_NAME);
       return null;
@@ -64,7 +64,7 @@ class DataStateModifier extends StateModifier {
     return null;
   }
 
-  void setMobileDataEnabledReflection(boolean enabled) {
+  private void setMobileDataEnabledReflection(boolean enabled) {
     if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
       try {
         Timber.d("setMobileDataEnabledReflection: %s", enabled);
@@ -75,7 +75,7 @@ class DataStateModifier extends StateModifier {
     }
   }
 
-  void setMobileDataEnabled(boolean enabled) {
+  private void setMobileDataEnabled(boolean enabled) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledReflection(enabled);
     } else {

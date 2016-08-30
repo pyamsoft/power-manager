@@ -25,7 +25,7 @@ import rx.Scheduler;
 
 class WifiStateModifier extends StateModifier {
 
-  @NonNull final WifiManagerWrapper wrapper;
+  @NonNull private final WifiManagerWrapper wrapper;
 
   @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {

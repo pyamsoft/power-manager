@@ -26,8 +26,7 @@ import com.pyamsoft.powermanager.dagger.job.DozeManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerDozeInteractor extends ManagerBaseInteractor
-    implements ExclusiveManagerInteractor {
+class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
 
   @Inject ManagerDozeInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
@@ -35,22 +34,22 @@ class ManagerDozeInteractor extends ManagerBaseInteractor
     super(context, preferences, manageObserver, stateObserver);
   }
 
-  @CheckResult long getDelayTime() {
+  @CheckResult private long getDelayTime() {
     return getPreferences().getDozeDelay();
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult boolean isPeriodic() {
+  @CheckResult private boolean isPeriodic() {
     return false;
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult long getPeriodicEnableTime() {
+  @CheckResult private long getPeriodicEnableTime() {
     return 0;
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult long getPeriodicDisableTime() {
+  @CheckResult private long getPeriodicDisableTime() {
     return 0;
   }
 
@@ -75,9 +74,10 @@ class ManagerDozeInteractor extends ManagerBaseInteractor
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 
-  // TODO read from preference
-  // TODO observable?
-  @Override public boolean isExclusive() {
-    return false;
+  @NonNull @Override public Observable<Boolean> isExclusive() {
+    return Observable.defer(() -> {
+      // TODO read from preference
+      return Observable.just(false);
+    });
   }
 }

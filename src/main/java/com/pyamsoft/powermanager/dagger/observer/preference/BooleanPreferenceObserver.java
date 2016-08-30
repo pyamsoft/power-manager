@@ -29,11 +29,11 @@ import timber.log.Timber;
 public abstract class BooleanPreferenceObserver
     implements SharedPreferences.OnSharedPreferenceChangeListener, BooleanInterestObserver {
 
-  @NonNull final PowerManagerPreferences preferences;
-  @NonNull final String key;
-  @NonNull final Map<String, SetCallback> setMap;
-  @NonNull final Map<String, UnsetCallback> unsetMap;
-  boolean registered;
+  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final String key;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
+  private boolean registered;
 
   protected BooleanPreferenceObserver(@NonNull PowerManagerPreferences preferences,
       @NonNull String key) {
@@ -65,7 +65,7 @@ public abstract class BooleanPreferenceObserver
     }
   }
 
-  void registerListener() {
+  private void registerListener() {
     unregisterListener();
     if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
       if (!registered) {
@@ -76,7 +76,7 @@ public abstract class BooleanPreferenceObserver
     }
   }
 
-  void unregisterListener() {
+  private void unregisterListener() {
     if (setMap.isEmpty() && unsetMap.isEmpty()) {
       if (registered) {
         Timber.d("Unregister real listener for key: %s", key);

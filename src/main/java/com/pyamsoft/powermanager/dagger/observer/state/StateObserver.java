@@ -30,11 +30,11 @@ import timber.log.Timber;
 
 abstract class StateObserver extends BroadcastReceiver implements BooleanInterestObserver {
 
-  @NonNull final Context appContext;
-  @NonNull final IntentFilter filter;
-  @NonNull final Map<String, SetCallback> setMap;
-  @NonNull final Map<String, UnsetCallback> unsetMap;
-  boolean registered;
+  @NonNull private final Context appContext;
+  @NonNull private final IntentFilter filter;
+  @NonNull private final Map<String, SetCallback> setMap;
+  @NonNull private final Map<String, UnsetCallback> unsetMap;
+  private boolean registered;
 
   StateObserver(@NonNull Context context) {
     appContext = context.getApplicationContext();
@@ -56,13 +56,13 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     }
   }
 
-  void throwEmptyFilter() {
+  private void throwEmptyFilter() {
     if (filter.countActions() == 0) {
       throw new RuntimeException("Filter cannot be empty");
     }
   }
 
-  void registerListener() {
+  private void registerListener() {
     unregisterListener();
     if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
       if (!registered) {
@@ -73,7 +73,7 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     }
   }
 
-  void unregisterListener() {
+  private void unregisterListener() {
     if (setMap.isEmpty() && unsetMap.isEmpty()) {
       if (registered) {
         Timber.d("Unregister real receiver for action: %s", filter.getAction(0));

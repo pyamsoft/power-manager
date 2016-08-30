@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 
 public abstract class BasePeriodPreferenceInteractorImpl implements BasePeriodPreferenceInteractor {
 
-  @NonNull final BooleanInterestModifier periodModifier;
+  @NonNull private final BooleanInterestModifier periodModifier;
 
   protected BasePeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
     this.periodModifier = periodModifier;

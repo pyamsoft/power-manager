@@ -38,10 +38,10 @@ public abstract class CustomTimeInputPreference extends Preference
 
   @BindView(R.id.preference_custom_time_summary) TextView summary;
   @BindView(R.id.preference_custom_time_input) TextInputLayout textInputLayout;
-  TextWatcher watcher;
-  Unbinder unbinder;
-  CustomTimeInputPreferencePresenter presenter;
-  EditText editText;
+  private TextWatcher watcher;
+  private Unbinder unbinder;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
+  private EditText editText;
 
   protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -104,7 +104,7 @@ public abstract class CustomTimeInputPreference extends Preference
     unbind(true);
   }
 
-  final void unbind(boolean finalSave) {
+  private void unbind(boolean finalSave) {
     if (unbinder == null) {
       Timber.w(
           "onBindViewHolder was never called for this preference. Maybe it never came into view?");

@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 abstract class BaseJob extends Job {
 
-  @NonNull static final String ALL_TAG = "ALL";
+  @NonNull private static final String ALL_TAG = "ALL";
 
   BaseJob(Params params) {
     super(params.setRequiresNetwork(false).addTags(ALL_TAG));

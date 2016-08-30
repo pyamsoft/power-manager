@@ -36,9 +36,9 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @NonNull public static final String EXTRA_BLUETOOTH = "bluetooth";
   @NonNull public static final String EXTRA_SYNC = "sync";
   @NonNull public static final String EXTRA_NOTIFICATION = "notification";
-  static final int NOTIFICATION_ID = 1000;
+  private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
-  ScreenOnOffReceiver screenOnOffReceiver;
+  private ScreenOnOffReceiver screenOnOffReceiver;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;

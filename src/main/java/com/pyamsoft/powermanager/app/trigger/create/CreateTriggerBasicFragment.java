@@ -37,7 +37,7 @@ public class CreateTriggerBasicFragment extends Fragment {
 
   @BindView(R.id.create_trigger_basic_name_layout) TextInputLayout nameLayout;
   @BindView(R.id.create_trigger_basic_percent_layout) TextInputLayout percentLayout;
-  Unbinder unbinder;
+  private Unbinder unbinder;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -49,7 +49,6 @@ public class CreateTriggerBasicFragment extends Fragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
     unbinder.unbind();
   }
 

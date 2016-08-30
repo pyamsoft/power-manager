@@ -26,9 +26,9 @@ public abstract class BaseManagePreferencePresenterImpl
     extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView>
     implements BaseManagePreferencePresenter {
 
-  @NonNull static final String OBS_TAG = "BaseManagePreferencePresenter";
-  @NonNull final InterestObserver manageObserver;
-  @NonNull final BaseManagePreferenceInteractor interactor;
+  @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
+  @NonNull private final InterestObserver manageObserver;
+  @NonNull private final BaseManagePreferenceInteractor interactor;
 
   protected BaseManagePreferencePresenterImpl(
       @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,

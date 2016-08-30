@@ -53,7 +53,7 @@ public abstract class BaseOverviewSingleItemFragment extends ActionBarFragment {
     setActionBarUpEnabled(true);
   }
 
-  void addPreferenceFragment() {
+  private void addPreferenceFragment() {
     final FragmentManager fragmentManager = getChildFragmentManager();
     if (fragmentManager.findFragmentByTag(getPreferenceTag()) == null) {
       fragmentManager.beginTransaction()

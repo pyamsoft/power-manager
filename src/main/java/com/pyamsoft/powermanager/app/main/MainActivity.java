@@ -46,12 +46,12 @@ import timber.log.Timber;
 
 public class MainActivity extends DonationActivity {
 
-  @NonNull final Map<String, View> addedViewMap = new HashMap<>();
+  @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
 
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
   @BindView(R.id.main_root) CoordinatorLayout rootView;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
-  Unbinder unbinder;
+  private Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
@@ -90,7 +90,7 @@ public class MainActivity extends DonationActivity {
     }
   }
 
-  void setupPreferenceDefaults() {
+  private void setupPreferenceDefaults() {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_wifi, false);
     PreferenceManager.setDefaultValues(this, R.xml.manage_data, false);
@@ -116,12 +116,12 @@ public class MainActivity extends DonationActivity {
     return handled || super.onOptionsItemSelected(item);
   }
 
-  void setupAppBar() {
+  private void setupAppBar() {
     setSupportActionBar(toolbar);
     toolbar.setTitle(getString(R.string.app_name));
   }
 
-  @CheckResult boolean hasNoActiveFragment() {
+  @CheckResult private boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null &&
         fragmentManager.findFragmentByTag(WifiFragment.TAG) == null &&
@@ -132,23 +132,29 @@ public class MainActivity extends DonationActivity {
         fragmentManager.findFragmentByTag(DozeFragment.TAG) == null;
   }
 
-  void loadOverviewFragment() {
-    rootView.getViewTreeObserver()
-        .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-          @Override public void onGlobalLayout() {
-            rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-            final FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
-              final int cX = rootView.getLeft() + rootView.getWidth() / 2;
-              final int cY = rootView.getBottom() + rootView.getHeight() / 2;
-              fragmentManager.beginTransaction()
-                  .replace(R.id.main_container, OverviewFragment.newInstance(cX, cY),
-                      OverviewFragment.TAG)
-                  .commit();
+  private void loadOverviewFragment() {
+    if (rootView.isLaidOut()) {
+      realLoadOverviewFragment();
+    } else {
+      rootView.getViewTreeObserver()
+          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+              rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+              realLoadOverviewFragment();
             }
-          }
-        });
+          });
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") void realLoadOverviewFragment() {
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
+      final int cX = rootView.getLeft() + rootView.getWidth() / 2;
+      final int cY = rootView.getBottom() + rootView.getHeight() / 2;
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, OverviewFragment.newInstance(cX, cY), OverviewFragment.TAG)
+          .commit();
+    }
   }
 
   public void addViewToAppBar(@NonNull String tag, @NonNull View view) {

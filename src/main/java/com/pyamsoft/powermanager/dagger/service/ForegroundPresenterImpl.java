@@ -29,9 +29,9 @@ import timber.log.Timber;
 class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
-  @NonNull final ForegroundInteractor interactor;
+  @NonNull private final ForegroundInteractor interactor;
 
-  @NonNull Subscription notificationSubscription = Subscriptions.empty();
+  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("main") Scheduler mainScheduler,
@@ -51,7 +51,7 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     unsubNotification();
   }
 
-  void unsubNotification() {
+  @SuppressWarnings("WeakerAccess") void unsubNotification() {
     if (!notificationSubscription.isUnsubscribed()) {
       notificationSubscription.unsubscribe();
     }

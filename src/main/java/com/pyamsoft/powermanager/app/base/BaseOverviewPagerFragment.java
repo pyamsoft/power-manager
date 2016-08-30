@@ -45,16 +45,16 @@ import rx.Subscription;
 
 public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
-  @NonNull static final String TABS_TAG = "tablayout";
-  @NonNull static final String CURRENT_TAB_KEY = "current_tab";
-  @NonNull static final String FAB_TAG = "fab_tag";
-  @NonNull final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
+  @NonNull private static final String TABS_TAG = "tablayout";
+  @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
+  @NonNull private static final String FAB_TAG = "fab_tag";
+  @NonNull private final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
   @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
-  TabLayout tabLayout;
-  Unbinder unbinder;
-  BooleanInterestObserver observer;
-  BooleanInterestModifier modifier;
+  private TabLayout tabLayout;
+  private Unbinder unbinder;
+  @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
+  @SuppressWarnings("WeakerAccess") BooleanInterestModifier modifier;
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -102,7 +102,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     setActionBarUpEnabled(true);
   }
 
-  @CheckResult @NonNull MainActivity getMainActivity() {
+  @CheckResult @NonNull private MainActivity getMainActivity() {
     final FragmentActivity fragmentActivity = getActivity();
     if (fragmentActivity instanceof MainActivity) {
       return (MainActivity) fragmentActivity;
@@ -118,20 +118,20 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     super.onSaveInstanceState(outState);
   }
 
-  void addTabLayout(@NonNull TabLayout tabLayout) {
+  private void addTabLayout(@NonNull TabLayout tabLayout) {
     getMainActivity().addViewToAppBar(TABS_TAG, tabLayout);
   }
 
-  void removeTabLayout() {
+  private void removeTabLayout() {
     getMainActivity().removeViewFromAppBar(TABS_TAG);
   }
 
-  void addPreferenceFragments() {
+  private void addPreferenceFragments() {
     final PagerAdapter adapter = getPagerAdapter();
     pager.setAdapter(adapter);
   }
 
-  void addTabLayoutToAppBar() {
+  private void addTabLayoutToAppBar() {
     tabLayout = new TabLayout(getActivity());
     tabLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -144,7 +144,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     tabLayout.setupWithViewPager(pager);
   }
 
-  void selectCurrentTab(@Nullable Bundle savedInstanceState) {
+  private void selectCurrentTab(@Nullable Bundle savedInstanceState) {
     int index;
     if (savedInstanceState == null) {
       index = 0;
@@ -158,7 +158,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     }
   }
 
-  void setupFab() {
+  private void setupFab() {
     if (isFabHidden()) {
       fab.hide();
       return;
@@ -179,15 +179,15 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     });
   }
 
-  void setFab() {
+  private void setFab() {
     loadDrawableIntoFab(getFabSetIcon());
   }
 
-  void unsetFab() {
+  private void unsetFab() {
     loadDrawableIntoFab(getFabUnsetIcon());
   }
 
-  void loadDrawableIntoFab(@DrawableRes int fabIcon) {
+  private void loadDrawableIntoFab(@DrawableRes int fabIcon) {
     final Subscription subscription =
         AsyncDrawable.with(getContext()).load(fabIcon).tint(android.R.color.white).into(fab);
     asyncDrawableMap.put("fab", subscription);
@@ -196,7 +196,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
   /**
    * Override to not use the FAB
    */
-  @CheckResult boolean isFabHidden() {
+  @CheckResult private boolean isFabHidden() {
     return false;
   }
 

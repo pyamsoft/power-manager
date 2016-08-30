@@ -25,7 +25,7 @@ import timber.log.Timber;
 
 public class WifiManagerWrapper {
 
-  @Nullable final WifiManager wifiManager;
+  @Nullable private final WifiManager wifiManager;
 
   public WifiManagerWrapper(@NonNull Context context) {
     this.wifiManager =

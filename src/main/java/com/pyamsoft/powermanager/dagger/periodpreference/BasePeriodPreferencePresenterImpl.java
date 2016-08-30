@@ -26,9 +26,9 @@ public abstract class BasePeriodPreferencePresenterImpl
     extends SchedulerPresenter<BasePeriodPreferencePresenter.PeriodPreferenceView>
     implements BasePeriodPreferencePresenter {
 
-  @NonNull static final String OBS_TAG = "BasePeriodPreferencePresenter";
-  @NonNull final InterestObserver observer;
-  @NonNull final BasePeriodPreferenceInteractor interactor;
+  @NonNull private static final String OBS_TAG = "BasePeriodPreferencePresenter";
+  @NonNull private final InterestObserver observer;
+  @NonNull private final BasePeriodPreferenceInteractor interactor;
 
   protected BasePeriodPreferencePresenterImpl(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,

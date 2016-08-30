@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.bus.DeleteTriggerBus;
 import com.pyamsoft.powermanager.app.bus.TriggerBus;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
@@ -33,12 +34,12 @@ import timber.log.Timber;
 class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerView>
     implements TriggerPresenter {
 
-  @NonNull final TriggerInteractor interactor;
-  @NonNull Subscription viewSubscription = Subscriptions.empty();
-  @NonNull Subscription deleteTriggerBusSubscription = Subscriptions.empty();
-  @NonNull Subscription createTriggerBusSubscription = Subscriptions.empty();
-  @NonNull Subscription deleteSubscription = Subscriptions.empty();
-  @NonNull Subscription createSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
+  @NonNull private Subscription viewSubscription = Subscriptions.empty();
+  @NonNull private Subscription deleteTriggerBusSubscription = Subscriptions.empty();
+  @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription = Subscriptions.empty();
+  @NonNull private Subscription createSubscription = Subscriptions.empty();
 
   @Inject public TriggerPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -67,13 +68,13 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     }
   }
 
-  void unsubDeleteSubscription() {
+  @SuppressWarnings("WeakerAccess") void unsubDeleteSubscription() {
     if (!deleteSubscription.isUnsubscribed()) {
       deleteSubscription.unsubscribe();
     }
   }
 
-  void unsubCreateSubscription() {
+  @SuppressWarnings("WeakerAccess") void unsubCreateSubscription() {
     if (!createSubscription.isUnsubscribed()) {
       createSubscription.unsubscribe();
     }
@@ -102,7 +103,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     getView().onShowNewTriggerDialog();
   }
 
-  void createPowerTrigger(@NonNull ContentValues values) {
+  @SuppressWarnings("WeakerAccess") void createPowerTrigger(@NonNull ContentValues values) {
     Timber.d("Create new power trigger");
     unsubCreateSubscription();
     createSubscription = interactor.put(values)
@@ -122,7 +123,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  void registerOnDeleteTriggerBus() {
+  @VisibleForTesting
+  @SuppressWarnings("WeakerAccess") void registerOnDeleteTriggerBus() {
     unregisterFromDeleteTriggerBus();
     deleteTriggerBusSubscription = DeleteTriggerBus.get()
         .register()
@@ -146,7 +148,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  void registerOnCreateTriggerBus() {
+  @VisibleForTesting
+  @SuppressWarnings("WeakerAccess") void registerOnCreateTriggerBus() {
     unregisterFromCreateTriggerBus();
     createTriggerBusSubscription = TriggerBus.get()
         .register()
@@ -158,13 +161,13 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  void unregisterFromDeleteTriggerBus() {
+  private void unregisterFromDeleteTriggerBus() {
     if (!deleteTriggerBusSubscription.isUnsubscribed()) {
       deleteTriggerBusSubscription.unsubscribe();
     }
   }
 
-  void unregisterFromCreateTriggerBus() {
+  private void unregisterFromCreateTriggerBus() {
     if (!createTriggerBusSubscription.isUnsubscribed()) {
       createTriggerBusSubscription.unsubscribe();
     }

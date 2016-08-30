@@ -54,7 +54,7 @@ import timber.log.Timber;
 public class FullNotificationActivity extends AppCompatActivity
     implements FullNotificationPresenter.FullNotificationView {
 
-  FullNotificationPresenter presenter;
+  @SuppressWarnings("WeakerAccess") FullNotificationPresenter presenter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

@@ -29,19 +29,17 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-public class SensorFixReceiver {
+class SensorFixReceiver {
 
-  @NonNull final Context appContext;
-  @NonNull final BrightnessFixReceiver brightnessFixReceiver;
-  @NonNull final RotateFixReceiver rotateFixReceiver;
+  @NonNull private final BrightnessFixReceiver brightnessFixReceiver;
+  @NonNull private final RotateFixReceiver rotateFixReceiver;
 
   public SensorFixReceiver(@NonNull Context context) {
-    this.appContext = context.getApplicationContext();
-    this.brightnessFixReceiver = new BrightnessFixReceiver(appContext);
-    this.rotateFixReceiver = new RotateFixReceiver(appContext);
+    this.brightnessFixReceiver = new BrightnessFixReceiver(context);
+    this.rotateFixReceiver = new RotateFixReceiver(context);
   }
 
-  @CheckResult static boolean hasWritePermission(@NonNull Context context) {
+  @SuppressWarnings("WeakerAccess") @CheckResult static boolean hasWritePermission(@NonNull Context context) {
     boolean hasRuntimePermission;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       Timber.d("Runtime permissions before M are auto granted");

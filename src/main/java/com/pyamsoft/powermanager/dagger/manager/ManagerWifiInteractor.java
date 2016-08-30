@@ -34,19 +34,19 @@ class ManagerWifiInteractor extends ManagerBaseInteractor {
     super(context, preferences, manageObserver, stateObserver);
   }
 
-  @CheckResult long getDelayTime() {
+  @CheckResult private long getDelayTime() {
     return getPreferences().getWifiDelay();
   }
 
-  @CheckResult boolean isPeriodic() {
+  @CheckResult private boolean isPeriodic() {
     return getPreferences().isPeriodicWifi();
   }
 
-  @CheckResult long getPeriodicEnableTime() {
+  @CheckResult private long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeWifi();
   }
 
-  @CheckResult long getPeriodicDisableTime() {
+  @CheckResult private long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeWifi();
   }
 

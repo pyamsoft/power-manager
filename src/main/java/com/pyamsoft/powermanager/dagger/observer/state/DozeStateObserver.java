@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 class DozeStateObserver extends StateObserver {
 
-  @NonNull final PowerManager androidPowerManager;
+  @NonNull private final PowerManager androidPowerManager;
 
   @Inject DozeStateObserver(@NonNull Context context) {
     super(context);
@@ -39,7 +39,7 @@ class DozeStateObserver extends StateObserver {
         .getSystemService(Context.POWER_SERVICE);
   }
 
-  @CheckResult static boolean isDozeAvailable() {
+  @CheckResult private static boolean isDozeAvailable() {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
   }
 

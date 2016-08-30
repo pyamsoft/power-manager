@@ -27,11 +27,11 @@ import timber.log.Timber;
 
 abstract class ManagerBase implements Manager {
 
-  @NonNull final ManagerInteractor interactor;
-  @NonNull final Scheduler subscribeScheduler;
-  @NonNull final Scheduler observerScheduler;
-  @NonNull Subscription setSubscription = Subscriptions.empty();
-  @NonNull Subscription unsetSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
+  @NonNull private final Scheduler subscribeScheduler;
+  @NonNull private final Scheduler observerScheduler;
+  @NonNull private Subscription setSubscription = Subscriptions.empty();
+  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
 
   ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {
@@ -40,19 +40,27 @@ abstract class ManagerBase implements Manager {
     this.observerScheduler = observerScheduler;
   }
 
-  void unsubSet() {
+  @NonNull @CheckResult Scheduler getSubscribeScheduler() {
+    return subscribeScheduler;
+  }
+
+  @NonNull @CheckResult Scheduler getObserverScheduler() {
+    return observerScheduler;
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubSet() {
     if (!setSubscription.isUnsubscribed()) {
       setSubscription.unsubscribe();
     }
   }
 
-  void unsubUnset() {
+  @SuppressWarnings("WeakerAccess") void unsubUnset() {
     if (!unsetSubscription.isUnsubscribed()) {
       unsetSubscription.unsubscribe();
     }
   }
 
-  @CheckResult @NonNull Observable<Boolean> baseObservable() {
+  @CheckResult @NonNull private Observable<Boolean> baseObservable() {
     return interactor.cancelJobs().flatMap(cancelled -> {
       if (cancelled) {
         Timber.d("Is Managed?");
@@ -66,7 +74,7 @@ abstract class ManagerBase implements Manager {
 
   @Override public void queueSet() {
     unsubSet();
-    baseObservable().flatMap(managed -> {
+    setSubscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
         return interactor.isOriginalStateEnabled();
@@ -85,7 +93,7 @@ abstract class ManagerBase implements Manager {
 
   @Override public void queueUnset(boolean deviceCharging) {
     unsubUnset();
-    baseObservable().flatMap(managed -> {
+    unsetSubscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
         return interactor.isEnabled();

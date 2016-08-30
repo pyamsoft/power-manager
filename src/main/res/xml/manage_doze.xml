@@ -20,6 +20,7 @@
   <PreferenceCategory
       android:title="Doze Settings">
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/doze_default"
         android:key="@string/manage_doze_key"
@@ -38,6 +39,7 @@
         android:title="@string/doze_time_title"
         />
 
+    <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
         android:defaultValue="@bool/sensors_doze_default"
         android:dependency="@string/manage_doze_key"

@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
 import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
@@ -31,7 +32,7 @@ class FullNotificationPresenterImpl
     extends SchedulerPresenter<FullNotificationPresenter.FullNotificationView>
     implements FullNotificationPresenter {
 
-  @NonNull Subscription dismissSubscription = Subscriptions.empty();
+  @NonNull private Subscription dismissSubscription = Subscriptions.empty();
 
   @Inject FullNotificationPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler) {
@@ -48,7 +49,8 @@ class FullNotificationPresenterImpl
     unregisterFromDismissBus();
   }
 
-  void registerOnDismissBus(@NonNull FullNotificationView view) {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnDismissBus(
+      @NonNull FullNotificationView view) {
     unregisterFromDismissBus();
     dismissSubscription = FullNotificationBus.get()
         .register()
@@ -62,7 +64,7 @@ class FullNotificationPresenterImpl
         });
   }
 
-  void unregisterFromDismissBus() {
+  private void unregisterFromDismissBus() {
     if (!dismissSubscription.isUnsubscribed()) {
       dismissSubscription.unsubscribe();
     }

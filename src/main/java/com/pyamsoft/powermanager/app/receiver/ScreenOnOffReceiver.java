@@ -29,21 +29,21 @@ import timber.log.Timber;
 
 public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
-  @NonNull final static IntentFilter SCREEN_FILTER;
+  @NonNull private final static IntentFilter SCREEN_FILTER;
 
   static {
     SCREEN_FILTER = new IntentFilter(Intent.ACTION_SCREEN_OFF);
     SCREEN_FILTER.addAction(Intent.ACTION_SCREEN_ON);
   }
 
-  @NonNull final Context appContext;
+  @NonNull private final Context appContext;
 
   @Inject @Named("wifi_manager") Manager managerWifi;
   @Inject @Named("data_manager") Manager managerData;
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
   @Inject @Named("sync_manager") Manager managerSync;
   @Inject @Named("doze_manager") ExclusiveManager managerDoze;
-  boolean isRegistered;
+  private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
     this.appContext = context.getApplicationContext();
@@ -71,7 +71,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
     }
   }
 
-  void enableManagers() {
+  private void enableManagers() {
     Timber.d("Enable all managed managers");
     managerDoze.queueExclusiveSet(() -> {
       managerWifi.queueSet();
@@ -81,7 +81,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
     });
   }
 
-  void disableManagers(boolean charging) {
+  private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
     managerDoze.queueExclusiveUnset(charging, () -> {
       managerWifi.queueUnset(charging);
@@ -99,7 +99,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
     }
   }
 
-  void cleanup() {
+  private void cleanup() {
     managerWifi.cleanup();
     managerData.cleanup();
     managerBluetooth.cleanup();

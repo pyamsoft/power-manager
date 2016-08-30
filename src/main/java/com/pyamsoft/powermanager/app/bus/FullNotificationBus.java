@@ -22,8 +22,7 @@ import com.pyamsoft.pydroid.tool.RxBus;
 
 public class FullNotificationBus extends RxBus<FullNotificationBus.DismissEvent> {
 
-  @NonNull
-  static final RxBus<DismissEvent> instance = new FullNotificationBus();
+  @NonNull private static final RxBus<DismissEvent> instance = new FullNotificationBus();
 
   @CheckResult @NonNull public static RxBus<DismissEvent> get() {
     return instance;

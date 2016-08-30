@@ -27,18 +27,17 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class PreferenceModifier {
+abstract class PreferenceModifier {
 
-  @NonNull final Context appContext;
-  @NonNull final Intent service;
-  @NonNull final PowerManagerPreferences preferences;
-  @NonNull final Scheduler subscribeScheduler;
-  @NonNull final Scheduler observeScheduler;
-  @NonNull Subscription subscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final Intent service;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @NonNull private final Scheduler subscribeScheduler;
+  @NonNull private final Scheduler observeScheduler;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
-  protected PreferenceModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
+  PreferenceModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     Timber.d("New PreferenceModifier");
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
@@ -47,13 +46,13 @@ public abstract class PreferenceModifier {
     this.observeScheduler = observeScheduler;
   }
 
-  void unsub() {
+  @SuppressWarnings("WeakerAccess") void unsub() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
     }
   }
 
-  protected void wrapInSubscription(@NonNull WrappedSubscription wrappedSubscription) {
+  void wrapInSubscription(@NonNull WrappedSubscription wrappedSubscription) {
     unsub();
     subscription = Observable.defer(() -> {
       Timber.d("Run modifier on subscription thread");
@@ -65,7 +64,7 @@ public abstract class PreferenceModifier {
     }, throwable -> Timber.e(throwable, "onError wrapInSubscription"), this::unsub);
   }
 
-  protected interface WrappedSubscription {
+  interface WrappedSubscription {
 
     void call(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
   }

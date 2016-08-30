@@ -25,7 +25,7 @@ import rx.Scheduler;
 
 class BluetoothStateModifier extends StateModifier {
 
-  @NonNull final BluetoothAdapterWrapper wrapper;
+  @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,

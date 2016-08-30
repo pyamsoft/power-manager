@@ -32,8 +32,8 @@ class TriggerListAdapterPresenterImpl
     extends SchedulerPresenter<TriggerListAdapterPresenter.TriggerListAdapterView>
     implements TriggerListAdapterPresenter {
 
-  @NonNull final TriggerListAdapterInteractor interactor;
-  @NonNull Subscription updateSubscription = Subscriptions.empty();
+  @NonNull private final TriggerListAdapterInteractor interactor;
+  @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
   @Inject TriggerListAdapterPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler,
@@ -73,7 +73,7 @@ class TriggerListAdapterPresenterImpl
         });
   }
 
-  void unsubUpdateSubscription() {
+  @SuppressWarnings("WeakerAccess") void unsubUpdateSubscription() {
     if (!updateSubscription.isUnsubscribed()) {
       updateSubscription.unsubscribe();
     }

@@ -30,11 +30,11 @@ import timber.log.Timber;
 
 public class DeleteTriggerDialog extends DialogFragment {
 
-  @NonNull static final String TRIGGER_NAME = "trigger_name";
-  @NonNull static final String TRIGGER_PERCENT = "trigger_percent";
+  @NonNull private static final String TRIGGER_NAME = "trigger_name";
+  @NonNull private static final String TRIGGER_PERCENT = "trigger_percent";
 
-  String name;
-  int percent;
+  private String name;
+  @SuppressWarnings("WeakerAccess") int percent;
 
   @CheckResult @NonNull
   public static DeleteTriggerDialog newInstance(@NonNull PowerTriggerEntry trigger) {

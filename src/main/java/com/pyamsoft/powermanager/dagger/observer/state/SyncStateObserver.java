@@ -27,11 +27,10 @@ import javax.inject.Inject;
 import timber.log.Timber;
 
 class SyncStateObserver implements BooleanInterestObserver {
-
-  @NonNull final Map<String, SetCallback> setMap;
-  @NonNull final Map<String, UnsetCallback> unsetMap;
-  boolean registered;
-  @Nullable Object listener;
+  @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
+  @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;
+  private boolean registered;
+  @Nullable private Object listener;
 
   @Inject SyncStateObserver() {
     Timber.d("New StateObserver for Sync");
@@ -41,7 +40,7 @@ class SyncStateObserver implements BooleanInterestObserver {
     unsetMap = new HashMap<>();
   }
 
-  @CheckResult @NonNull Object addStatusChangeListener() {
+  @CheckResult @NonNull private Object addStatusChangeListener() {
     return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
         i -> {
           if (is()) {
@@ -60,7 +59,7 @@ class SyncStateObserver implements BooleanInterestObserver {
         });
   }
 
-  void registerListener() {
+  private void registerListener() {
     unregisterListener();
     if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
       if (!registered) {
@@ -71,7 +70,7 @@ class SyncStateObserver implements BooleanInterestObserver {
     }
   }
 
-  void unregisterListener() {
+  private void unregisterListener() {
     if (setMap.isEmpty() && unsetMap.isEmpty()) {
       if (listener != null) {
         if (registered) {

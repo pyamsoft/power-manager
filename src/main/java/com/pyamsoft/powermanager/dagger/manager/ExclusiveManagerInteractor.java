@@ -22,5 +22,5 @@ import rx.Observable;
 
 interface ExclusiveManagerInteractor extends ManagerInteractor {
 
-  @CheckResult boolean isExclusive();
+  @CheckResult @NonNull Observable<Boolean> isExclusive();
 }

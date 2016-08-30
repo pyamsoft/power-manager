@@ -25,26 +25,27 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import rx.Observable;
 import rx.Scheduler;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class PowerTriggerDB {
-  @NonNull static final Object lock = new Object();
+  @NonNull private static final Object lock = new Object();
   private static volatile PowerTriggerDB instance = null;
 
   @NonNull private final SqlBrite sqlBrite;
   @NonNull private final PowerTriggerOpenHelper openHelper;
   @NonNull private final Scheduler dbScheduler;
-  volatile BriteDatabase briteDatabase;
-  volatile int openCount;
+  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
+  @NonNull private final AtomicInteger openCount;
 
-  PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
+  private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
     sqlBrite = SqlBrite.create();
     openHelper = new PowerTriggerOpenHelper(context.getApplicationContext());
     dbScheduler = scheduler;
-    openCount = 0;
+    openCount = new AtomicInteger(0);
   }
 
   public static void setDB(@Nullable PowerTriggerDB db) {
@@ -55,7 +56,7 @@ public class PowerTriggerDB {
     return with(context, Schedulers.io());
   }
 
-  @CheckResult @NonNull
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   public static PowerTriggerDB with(@NonNull Context context, @NonNull Scheduler scheduler) {
     if (instance == null) {
       synchronized (lock) {
@@ -68,21 +69,19 @@ public class PowerTriggerDB {
     return instance;
   }
 
-  synchronized void openDatabase() {
+  private synchronized void openDatabase() {
     if (briteDatabase == null) {
       Timber.d("Open new Database instance");
       briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
     }
 
-    ++openCount;
-    Timber.d("Increment open count to: %d", openCount);
+    Timber.d("Increment open count to: %d", openCount.incrementAndGet());
   }
 
-  synchronized void closeDatabase() {
-    --openCount;
-    Timber.d("Decrement open count to: %d", openCount);
+  @SuppressWarnings("WeakerAccess") synchronized void closeDatabase() {
+    Timber.d("Decrement open count to: %d", openCount.decrementAndGet());
 
-    if (openCount == 0) {
+    if (openCount.get() == 0) {
       close();
     }
   }

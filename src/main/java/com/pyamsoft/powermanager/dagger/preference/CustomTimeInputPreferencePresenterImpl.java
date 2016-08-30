@@ -30,8 +30,8 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
     implements CustomTimeInputPreferencePresenter {
 
-  @Nullable final CustomTimeInputPreferenceInteractor interactor;
-  @NonNull Subscription customTimeSubscription = Subscriptions.empty();
+  @Nullable private final CustomTimeInputPreferenceInteractor interactor;
+  @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
 
   protected CustomTimeInputPreferencePresenterImpl(
       @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
@@ -103,7 +103,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     }
   }
 
-  void unsubCustomTimeUpdate() {
+  @SuppressWarnings("WeakerAccess") void unsubCustomTimeUpdate() {
     if (!customTimeSubscription.isUnsubscribed()) {
       customTimeSubscription.unsubscribe();
     }

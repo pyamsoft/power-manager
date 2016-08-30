@@ -38,15 +38,15 @@ import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
-  static final String CURRENT_PAGE = "current_page";
-  @NonNull final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  private static final String CURRENT_PAGE = "current_page";
+  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
   @BindView(R.id.new_trigger_pager) ViewPager viewPager;
-  CreateTriggerPagerAdapter adapter;
-  Unbinder unbinder;
-  ViewPager.OnPageChangeListener pageChangeListener;
+  private CreateTriggerPagerAdapter adapter;
+  private Unbinder unbinder;
+  private ViewPager.OnPageChangeListener pageChangeListener;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -79,7 +79,7 @@ public class CreateTriggerDialog extends DialogFragment {
     setupViewPager(savedInstanceState);
   }
 
-  void setupViewPager(@Nullable Bundle bundle) {
+  private void setupViewPager(@Nullable Bundle bundle) {
     pageChangeListener = new ViewPager.OnPageChangeListener() {
       @Override
       public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -127,7 +127,7 @@ public class CreateTriggerDialog extends DialogFragment {
     }
   }
 
-  void setupContinueButton() {
+  private void setupContinueButton() {
     continueButton.setOnClickListener(view -> {
       final int currentItem = viewPager.getCurrentItem();
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
@@ -146,7 +146,7 @@ public class CreateTriggerDialog extends DialogFragment {
     taskMap.put("continue", continueTask);
   }
 
-  void setupToolbarButtons() {
+  private void setupToolbarButtons() {
     backButton.setOnClickListener(view -> {
       Timber.d("Go back one item");
       viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);

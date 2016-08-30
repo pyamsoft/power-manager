@@ -29,11 +29,11 @@ import timber.log.Timber;
 
 abstract class ManagerBaseInteractor implements ManagerInteractor {
 
-  @NonNull final Context appContext;
-  @NonNull final PowerManagerPreferences preferences;
-  @NonNull final BooleanInterestObserver manageObserver;
-  @NonNull final BooleanInterestObserver stateObserver;
-  boolean originalStateEnabled;
+  @NonNull private final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
@@ -53,7 +53,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
     return Observable.defer(() -> {
       Timber.d("Cancel jobs in with tag: %s", jobTag);
-      return Observable.just(Singleton.Jobs.with(appContext)
+      return Observable.just(Singleton.Jobs.with(getAppContext())
           .cancelJobs(TagConstraint.ANY, jobTag)
           .getFailedToCancel()
           .isEmpty());
@@ -82,7 +82,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     Singleton.Jobs.with(appContext).addJobInBackground(createDisableJob());
   }
 
-  @CheckResult @NonNull Context getAppContext() {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Context getAppContext() {
     return appContext.getApplicationContext();
   }
 

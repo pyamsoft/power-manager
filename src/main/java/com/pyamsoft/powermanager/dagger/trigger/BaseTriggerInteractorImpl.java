@@ -26,7 +26,7 @@ import timber.log.Timber;
 
 abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
 
-  @NonNull final Context appContext;
+  @NonNull private final Context appContext;
 
   BaseTriggerInteractorImpl(Context context) {
     this.appContext = context.getApplicationContext();

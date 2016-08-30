@@ -21,11 +21,15 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import javax.inject.Inject;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class ManagerDoze extends ManagerBase implements ExclusiveManager {
 
-  @NonNull final ExclusiveManagerInteractor interactor;
+  @NonNull private final ExclusiveManagerInteractor interactor;
+  @NonNull private Subscription dozeSetSubscription = Subscriptions.empty();
+  @NonNull private Subscription dozeUnsetSubscription = Subscriptions.empty();
 
   @Inject ManagerDoze(@NonNull ExclusiveManagerInteractor interactor,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
@@ -35,30 +39,62 @@ class ManagerDoze extends ManagerBase implements ExclusiveManager {
 
   @Override public void queueExclusiveSet(@Nullable NonExclusiveCallback callback) {
     queueSet();
-    if (interactor.isExclusive()) {
-      Timber.d("ManagerDoze is exclusive");
-    } else {
-      Timber.d("ManagerDoze is not exclusive");
-      if (callback == null) {
-        Timber.e("Callback is null but ManagerDoze is not exclusive");
-      } else {
-        callback.call();
-      }
+
+    unsubDozeSet();
+    dozeSetSubscription = interactor.isExclusive()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserverScheduler())
+        .subscribe(exclusive -> {
+          if (exclusive) {
+            Timber.d("ManagerDoze is exclusive");
+          } else {
+            Timber.d("ManagerDoze is not exclusive");
+            if (callback == null) {
+              Timber.e("Callback is null but ManagerDoze is not exclusive");
+            } else {
+              callback.call();
+            }
+          }
+        }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"), this::unsubDozeSet);
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubDozeSet() {
+    if (!dozeSetSubscription.isUnsubscribed()) {
+      dozeSetSubscription.unsubscribe();
     }
   }
 
   @Override
   public void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback) {
     queueUnset(deviceCharging);
-    if (interactor.isExclusive()) {
-      Timber.d("ManagerDoze is exclusive");
-    } else {
-      Timber.d("ManagerDoze is not exclusive");
-      if (callback == null) {
-        Timber.e("Callback is null but ManagerDoze is not exclusive");
-      } else {
-        callback.call();
-      }
+
+    unsubDozeUnset();
+    dozeUnsetSubscription = interactor.isExclusive()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserverScheduler())
+        .subscribe(exclusive -> {
+          if (exclusive) {
+            Timber.d("ManagerDoze is exclusive");
+          } else {
+            Timber.d("ManagerDoze is not exclusive");
+            if (callback == null) {
+              Timber.e("Callback is null but ManagerDoze is not exclusive");
+            } else {
+              callback.call();
+            }
+          }
+        }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"), this::unsubDozeUnset);
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubDozeUnset() {
+    if (!dozeUnsetSubscription.isUnsubscribed()) {
+      dozeUnsetSubscription.unsubscribe();
     }
+  }
+
+  @Override public void cleanup() {
+    super.cleanup();
+    unsubDozeSet();
+    unsubDozeUnset();
   }
 }

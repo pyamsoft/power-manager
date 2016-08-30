@@ -25,7 +25,7 @@ import timber.log.Timber;
 
 class WifiStateObserver extends StateObserver {
 
-  @NonNull final WifiManagerWrapper wrapper;
+  @NonNull private final WifiManagerWrapper wrapper;
 
   @Inject WifiStateObserver(@NonNull Context context) {
     super(context);

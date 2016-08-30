@@ -37,13 +37,13 @@ public class CreateTriggerManageFragment extends Fragment {
   public static final int TYPE_DATA = 1;
   public static final int TYPE_BLUETOOTH = 2;
   public static final int TYPE_SYNC = 3;
-  @NonNull static final String FRAGMENT_TYPE = "fragment_type";
+  @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
   @BindView(R.id.create_trigger_manage_toggle) SwitchCompat switchToggle;
   @BindView(R.id.create_trigger_manage_enable) SwitchCompat switchEnable;
   @BindView(R.id.create_trigger_manage_toggle_explanation) TextView toggleExplain;
   @BindView(R.id.create_trigger_manage_enable_explanation) TextView enableExplain;
-  int type;
-  Unbinder unbinder;
+  private int type;
+  private Unbinder unbinder;
 
   @CheckResult @NonNull public static CreateTriggerManageFragment newInstance(int type) {
     final Bundle args = new Bundle();
@@ -71,7 +71,7 @@ public class CreateTriggerManageFragment extends Fragment {
     setExplanation();
   }
 
-  void setExplanation() {
+  private void setExplanation() {
     String radio;
     switch (type) {
       case TYPE_WIFI:

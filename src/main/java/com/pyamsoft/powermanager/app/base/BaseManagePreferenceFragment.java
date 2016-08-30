@@ -37,14 +37,14 @@ import timber.log.Timber;
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
     implements BaseManagePreferencePresenter.ManagePreferenceView {
 
-  String manageKey;
-  String presetTimeKey;
-  String timeKey;
+  private String manageKey;
+  private String presetTimeKey;
+  private String timeKey;
 
-  BaseManagePreferencePresenter presenter;
-  SwitchPreferenceCompat managePreference;
-  ListPreference presetTimePreference;
-  CustomTimeInputPreference customTimePreference;
+  @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
+  @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -74,7 +74,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  void resolvePreferences() {
+  private void resolvePreferences() {
     managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
     presetTimePreference = (ListPreference) findPreference(presetTimeKey);
     customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
@@ -149,7 +149,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
+  @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
     if (customTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
@@ -176,7 +176,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
+  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
       @Nullable CustomTimeInputPreference customTimePreference) {
     return true;
   }

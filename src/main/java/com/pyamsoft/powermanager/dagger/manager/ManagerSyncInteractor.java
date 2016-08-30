@@ -34,19 +34,19 @@ class ManagerSyncInteractor extends ManagerBaseInteractor {
     super(context, preferences, manageObserver, stateObserver);
   }
 
-  @CheckResult long getDelayTime() {
+  @CheckResult private long getDelayTime() {
     return getPreferences().getMasterSyncDelay();
   }
 
-  @CheckResult boolean isPeriodic() {
+  @CheckResult private boolean isPeriodic() {
     return getPreferences().isPeriodicSync();
   }
 
-  @CheckResult long getPeriodicEnableTime() {
+  @CheckResult private long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeSync();
   }
 
-  @CheckResult long getPeriodicDisableTime() {
+  @CheckResult private long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeSync();
   }
 

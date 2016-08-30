@@ -38,18 +38,18 @@ import timber.log.Timber;
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
     implements BasePeriodPreferencePresenter.PeriodPreferenceView {
 
-  String periodicKey;
-  String presetEnableTimeKey;
-  String presetDisableTimeKey;
-  String enableTimeKey;
-  String disableTimeKey;
+  private String periodicKey;
+  private String presetEnableTimeKey;
+  private String presetDisableTimeKey;
+  private String enableTimeKey;
+  private String disableTimeKey;
 
-  BasePeriodPreferencePresenter presenter;
-  SwitchPreferenceCompat periodicPreference;
-  ListPreference presetEnableTimePreference;
-  CustomTimeInputPreference customEnableTimePreference;
-  ListPreference presetDisableTimePreference;
-  CustomTimeInputPreference customDisableTimePreference;
+  @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
+  @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
+  @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -82,7 +82,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
-  void resolvePreferences() {
+  private void resolvePreferences() {
     periodicPreference = (SwitchPreferenceCompat) findPreference(periodicKey);
     presetEnableTimePreference = (ListPreference) findPreference(presetEnableTimeKey);
     presetDisableTimePreference = (ListPreference) findPreference(presetDisableTimeKey);
@@ -175,7 +175,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult boolean onPresetEnableTimePreferenceChanged(String presetDelay,
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetEnableTimePreferenceChanged(String presetDelay,
       @Nullable CustomTimeInputPreference customEnableTimePreference) {
     return true;
   }
@@ -183,7 +183,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
       @Nullable CustomTimeInputPreference customDisableTimePreference) {
     return true;
   }
@@ -191,11 +191,11 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult boolean onPeriodicPreferenceChanged(boolean periodic) {
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPeriodicPreferenceChanged(boolean periodic) {
     return true;
   }
 
-  void setCustomEnableTimePreferenceEnabled(boolean periodic, @NonNull String presetDelay) {
+  @SuppressWarnings("WeakerAccess") void setCustomEnableTimePreferenceEnabled(boolean periodic, @NonNull String presetDelay) {
     if (customEnableTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
@@ -204,7 +204,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
-  void setCustomDisableTimePreferenceEnabled(boolean periodic,
+  @SuppressWarnings("WeakerAccess") void setCustomDisableTimePreferenceEnabled(boolean periodic,
       @NonNull String presetDelay) {
     if (customDisableTimePreference != null) {
       // Disable delay custom when unchecked

@@ -27,13 +27,13 @@ import timber.log.Timber;
 
 public class BluetoothAdapterWrapper {
 
-  @Nullable final BluetoothAdapter adapter;
+  @Nullable private final BluetoothAdapter adapter;
 
   public BluetoothAdapterWrapper(@NonNull Context context) {
     this.adapter = getBluetoothAdapter(context);
   }
 
-  @CheckResult @Nullable BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
+  @CheckResult @Nullable private BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
     final BluetoothAdapter adapter;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
       adapter = BluetoothAdapter.getDefaultAdapter();
