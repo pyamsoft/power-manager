@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bus;
+package com.pyamsoft.powermanager.model.event;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.event.DeleteTriggerEvent;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.google.auto.value.AutoValue;
+import com.pyamsoft.powermanager.model.AutoValue_DeleteTriggerEvent;
 
-public class DeleteTriggerBus extends RxBus<DeleteTriggerEvent> {
+@AutoValue public abstract class DeleteTriggerEvent {
 
-  @NonNull private static final DeleteTriggerBus instance = new DeleteTriggerBus();
-
-  @CheckResult @NonNull public static DeleteTriggerBus get() {
-    return instance;
+  @CheckResult @NonNull public static DeleteTriggerEvent create(int percent) {
+    return new AutoValue_DeleteTriggerEvent(percent);
   }
+
+  public abstract int percent();
 }

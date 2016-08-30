@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.app.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import com.pyamsoft.powermanager.model.event.ConfirmationEvent;
+import com.pyamsoft.pydroid.tool.RxBus;
 
-@AutoValue public abstract class DeleteTriggerEvent {
+public class ConfirmDialogBus extends RxBus<ConfirmationEvent> {
 
-  @CheckResult @NonNull public static DeleteTriggerEvent create(int percent) {
-    return new AutoValue_DeleteTriggerEvent(percent);
+  @NonNull private static final ConfirmDialogBus instance = new ConfirmDialogBus();
+
+  @CheckResult @NonNull public static ConfirmDialogBus get() {
+    return instance;
   }
-
-  public abstract int percent();
 }

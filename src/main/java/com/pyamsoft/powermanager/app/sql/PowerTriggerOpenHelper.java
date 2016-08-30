@@ -23,9 +23,9 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
-class PowerTriggerOpenHelper extends SQLiteOpenHelper {
+public class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
-  @NonNull private static final String DB_NAME = "power_trigger_db";
+  @NonNull public static final String DB_NAME = "power_trigger_db";
   private static final int DATABASE_VERSION = 1;
 
   public PowerTriggerOpenHelper(final @NonNull Context context) {

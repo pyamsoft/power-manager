@@ -36,6 +36,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
@@ -108,14 +109,14 @@ class OverviewAdapter extends RecyclerView.Adapter<OverviewAdapter.ViewHolder> {
       case POSITION_DOZE:
         title = DozeFragment.TAG;
         image = R.drawable.ic_doze_24dp;
-        background = R.color.orange500;
+        background = R.color.purple500;
         fragment = DozeFragment.newInstance(holder.root, rootView);
         break;
       case POSITION_SETTINGS:
-        title = PowerTriggerFragment.TAG;
+        title = SettingsFragment.TAG;
         image = R.drawable.ic_settings_24dp;
         background = R.color.pink500;
-        fragment = PowerTriggerFragment.newInstance(holder.root, rootView);
+        fragment = SettingsFragment.newInstance(holder.root, rootView);
         break;
       default:
         throw new IllegalStateException("Position out of range");

@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bus;
+package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.event.DeleteTriggerEvent;
-import com.pyamsoft.pydroid.tool.RxBus;
+import android.support.annotation.WorkerThread;
+import rx.Observable;
 
-public class DeleteTriggerBus extends RxBus<DeleteTriggerEvent> {
+public interface SettingsPreferenceInteractor {
 
-  @NonNull private static final DeleteTriggerBus instance = new DeleteTriggerBus();
+  @CheckResult @WorkerThread @NonNull Observable<Boolean> clearDatabase();
 
-  @CheckResult @NonNull public static DeleteTriggerBus get() {
-    return instance;
-  }
+  @CheckResult @WorkerThread @NonNull Observable<Boolean> clearAll();
 }

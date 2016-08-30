@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.app.settings;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.base.presenter.Presenter;
 
-@AutoValue public abstract class ConfirmationEvent {
+public interface SettingsPreferencePresenter
+    extends Presenter<SettingsPreferencePresenter.SettingsPreferenceView> {
 
-  @CheckResult @NonNull public static ConfirmationEvent create(int type) {
-    return new AutoValue_ConfirmationEvent(type);
+  void requestClearAll();
+
+  void requestClearDatabase();
+
+  interface SettingsPreferenceView {
+
+    void showConfirmDialog(int type);
+
+    void onClearAll();
+
+    void onClearDatabase();
   }
-
-  public abstract int type();
 }

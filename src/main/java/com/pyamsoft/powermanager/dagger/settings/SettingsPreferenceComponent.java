@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.dagger.settings;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenterLoader;
+import com.pyamsoft.pydroid.base.app.ActivityScope;
+import dagger.Subcomponent;
 
-@AutoValue public abstract class FabColorEvent {
+@ActivityScope @Subcomponent(modules = SettingsPreferenceModule.class)
+public interface SettingsPreferenceComponent {
 
-  @CheckResult @NonNull
-  public static FabColorEvent create(@DrawableRes int icon, @NonNull Runnable onClick) {
-    return new AutoValue_FabColorEvent(icon, onClick);
-  }
-
-  @DrawableRes public abstract int icon();
-
-  @NonNull public abstract Runnable onClick();
+  void inject(SettingsPreferencePresenterLoader loader);
 }
