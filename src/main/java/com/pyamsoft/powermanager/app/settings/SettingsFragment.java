@@ -30,7 +30,7 @@ import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 
 public class SettingsFragment extends ActionBarFragment {
 
-  @NonNull public static final String TAG = "SettingsFragment";
+  @NonNull public static final String TAG = "Settings";
 
   @CheckResult @NonNull
   public static Fragment newInstance(@NonNull View fromView, @NonNull View containerView) {
