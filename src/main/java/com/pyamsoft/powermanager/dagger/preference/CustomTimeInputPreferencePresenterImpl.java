@@ -40,8 +40,8 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind(@NonNull View view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     unsubCustomTimeUpdate();
   }
 

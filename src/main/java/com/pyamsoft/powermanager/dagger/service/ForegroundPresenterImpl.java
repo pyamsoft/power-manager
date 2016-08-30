@@ -45,8 +45,8 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     interactor.create();
   }
 
-  @Override protected void onUnbind(@NonNull ForegroundProvider view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     interactor.destroy();
     unsubNotification();
   }

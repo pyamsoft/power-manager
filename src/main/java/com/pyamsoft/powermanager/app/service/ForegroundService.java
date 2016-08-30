@@ -62,7 +62,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
     screenOnOffReceiver.unregister();
     presenter.unbindView();
-    presenter.destroyView();
+    presenter.destroy();
 
     stopForeground(true);
   }

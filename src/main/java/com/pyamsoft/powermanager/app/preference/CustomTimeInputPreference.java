@@ -122,7 +122,7 @@ public abstract class CustomTimeInputPreference extends Preference
       }
 
       presenter.unbindView();
-      presenter.destroyView();
+      presenter.destroy();
       unbinder.unbind();
     }
   }

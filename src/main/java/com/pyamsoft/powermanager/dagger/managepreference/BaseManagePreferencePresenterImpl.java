@@ -43,8 +43,8 @@ public abstract class BaseManagePreferencePresenterImpl
     manageObserver.register(OBS_TAG, view::onManageSet, view::onManageUnset);
   }
 
-  @Override protected void onUnbind(@NonNull ManagePreferenceView view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     manageObserver.unregister(OBS_TAG);
   }
 

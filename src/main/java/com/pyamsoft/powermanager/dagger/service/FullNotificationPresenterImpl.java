@@ -44,8 +44,8 @@ class FullNotificationPresenterImpl
     registerOnDismissBus(view);
   }
 
-  @Override protected void onUnbind(@NonNull FullNotificationView view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     unregisterFromDismissBus();
   }
 

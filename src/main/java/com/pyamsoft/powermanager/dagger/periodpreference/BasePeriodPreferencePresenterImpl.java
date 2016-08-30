@@ -43,8 +43,8 @@ public abstract class BasePeriodPreferencePresenterImpl
     observer.register(OBS_TAG, view::onPeriodicSet, view::onPeriodicUnset);
   }
 
-  @Override protected void onUnbind(@NonNull PeriodPreferenceView view) {
-    super.onUnbind(view);
+  @Override protected void onUnbind() {
+    super.onUnbind();
     observer.unregister(OBS_TAG);
   }
 
