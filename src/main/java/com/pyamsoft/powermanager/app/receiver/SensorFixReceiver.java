@@ -29,7 +29,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import timber.log.Timber;
 
-class SensorFixReceiver {
+public class SensorFixReceiver {
 
   @NonNull private final BrightnessFixReceiver brightnessFixReceiver;
   @NonNull private final RotateFixReceiver rotateFixReceiver;
@@ -108,6 +108,7 @@ class SensorFixReceiver {
 
     final void register() {
       if (!registered) {
+        Timber.d("Register BrightnessFixReceiver");
         originalAutoBright = isAutoBrightnessEnabled();
         appContext.getContentResolver()
             .registerContentObserver(
@@ -175,6 +176,7 @@ class SensorFixReceiver {
 
     final void register() {
       if (!registered) {
+        Timber.d("Register RotateFixReceiver");
         originalAutoRotate = isAutoRotateEnabled();
         appContext.getContentResolver()
             .registerContentObserver(

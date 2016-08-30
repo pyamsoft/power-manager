@@ -21,6 +21,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,12 +36,13 @@ class DozeStateModifier extends StateModifier {
   @NonNull private static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
   @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.google.android.gms*";
+  @NonNull private final SensorFixReceiver sensorFixReceiver;
 
   @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
+    sensorFixReceiver = new SensorFixReceiver(context.getApplicationContext());
   }
-
 
   @SuppressLint("NewApi") private static void executeDumpsys(@NonNull String cmd) {
     final Process process;
@@ -74,6 +76,7 @@ class DozeStateModifier extends StateModifier {
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    sensorFixReceiver.unregister();
     if (PowerManager.hasDozePermission(context)) {
       Timber.d("Begin Doze");
       executeDumpsys(DUMPSYS_DOZE_START);
@@ -85,6 +88,7 @@ class DozeStateModifier extends StateModifier {
   }
 
   @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    sensorFixReceiver.unregister();
     if (PowerManager.hasDozePermission(context)) {
       Timber.d("End Doze");
       executeDumpsys(DUMPSYS_DOZE_END);
@@ -92,6 +96,11 @@ class DozeStateModifier extends StateModifier {
       // We always do this to put the device in a 'normal' operation mode
       Timber.d("Enable device sensors");
       executeDumpsys(DUMPSYS_SENSOR_ENABLE);
+
+      // If the sensors were managed then we need to do this work around for brightness and rotation
+      if (preferences.isSensorsManaged()) {
+        sensorFixReceiver.register();
+      }
     }
   }
 }
