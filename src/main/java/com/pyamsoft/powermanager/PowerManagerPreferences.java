@@ -40,30 +40,6 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isIgnoreChargingSync();
 
-  @CheckResult boolean isCustomDelayTimeWifi();
-
-  @CheckResult boolean isCustomDelayTimeData();
-
-  @CheckResult boolean isCustomDelayTimeBluetooth();
-
-  @CheckResult boolean isCustomDelayTimeSync();
-
-  @CheckResult boolean isCustomPeriodicDisableTimeWifi();
-
-  @CheckResult boolean isCustomPeriodicDisableTimeData();
-
-  @CheckResult boolean isCustomPeriodicDisableTimeBluetooth();
-
-  @CheckResult boolean isCustomPeriodicDisableTimeSync();
-
-  @CheckResult boolean isCustomPeriodicEnableTimeWifi();
-
-  @CheckResult boolean isCustomPeriodicEnableTimeData();
-
-  @CheckResult boolean isCustomPeriodicEnableTimeBluetooth();
-
-  @CheckResult boolean isCustomPeriodicEnableTimeSync();
-
   @CheckResult long getWifiDelay();
 
   void setWifiDelay(long time);
@@ -158,5 +134,5 @@ public interface PowerManagerPreferences {
 
   void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 
-  @CheckResult boolean isForceOutDoze();
+  @CheckResult boolean isExclusiveDoze();
 }

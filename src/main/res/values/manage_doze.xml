@@ -65,9 +65,9 @@
   <string name="sensors_doze_summary_checked">Prevent device from waking out of Doze due to movement. EXPERIMENTAL (Marshmallow only)</string>
   <string name="sensors_doze_summary_unchecked">Device will Doze normally, and be awoken with movement</string>
 
-  <bool name="force_out_doze_default">false</bool>
-  <string name="force_out_doze_key">force_out_doze</string>
-  <string name="force_out_doze_title">Never Doze</string>
-  <string name="force_out_doze_summary_checked">Force the device out of Doze mode (Marshmallow only)</string>
-  <string name="force_out_doze_summary_unchecked">The device will use the normal Doze cycle</string>
+  <bool name="exclusive_doze_default">false</bool>
+  <string name="exclusive_doze_key">exclusive_doze</string>
+  <string name="exclusive_doze_title">Exclusive Doze</string>
+  <string name="exclusive_doze_summary_checked">All radios will be managed by Doze state instead of individually (Marshmallow only)</string>
+  <string name="exclusive_doze_summary_unchecked">All radios will be managed individually as normal instead of by Doze state</string>
 </resources>

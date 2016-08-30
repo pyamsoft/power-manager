@@ -59,12 +59,12 @@
         />
 
     <CheckBoxPreference
-        android:defaultValue="@bool/force_out_doze_default"
+        android:defaultValue="@bool/exclusive_doze_default"
         android:dependency="@string/manage_doze_key"
-        android:key="@string/force_out_doze_key"
-        android:summaryOff="@string/force_out_doze_summary_unchecked"
-        android:summaryOn="@string/force_out_doze_summary_checked"
-        android:title="@string/force_out_doze_title"
+        android:key="@string/exclusive_doze_key"
+        android:summaryOff="@string/exclusive_doze_summary_unchecked"
+        android:summaryOn="@string/exclusive_doze_summary_checked"
+        android:title="@string/exclusive_doze_title"
         />
 
   </PreferenceCategory>

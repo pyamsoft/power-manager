@@ -46,11 +46,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String delayBluetoothDefault;
   @NonNull private final String delaySyncDefault;
 
-  @NonNull private final String presetDelayWifi;
-  @NonNull private final String presetDelayData;
-  @NonNull private final String presetDelayBluetooth;
-  @NonNull private final String presetDelaySync;
-
   @NonNull private final String periodicWifi;
   @NonNull private final String periodicData;
   @NonNull private final String periodicBluetooth;
@@ -69,11 +64,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String periodicDisableBluetoothDefault;
   @NonNull private final String periodicDisableSyncDefault;
 
-  @NonNull private final String presetPeriodicDisableWifi;
-  @NonNull private final String presetPeriodicDisableData;
-  @NonNull private final String presetPeriodicDisableBluetooth;
-  @NonNull private final String presetPeriodicDisableSync;
-
   @NonNull private final String periodicEnableWifi;
   @NonNull private final String periodicEnableData;
   @NonNull private final String periodicEnableBluetooth;
@@ -82,11 +72,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String periodicEnableDataDefault;
   @NonNull private final String periodicEnableBluetoothDefault;
   @NonNull private final String periodicEnableSyncDefault;
-
-  @NonNull private final String presetPeriodicEnableWifi;
-  @NonNull private final String presetPeriodicEnableData;
-  @NonNull private final String presetPeriodicEnableBluetooth;
-  @NonNull private final String presetPeriodicEnableSync;
 
   @NonNull private final String ignoreChargingWifi;
   @NonNull private final String ignoreChargingData;
@@ -104,18 +89,18 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean fullNotificationDefault;
 
   @NonNull private final String forceDoze;
-  @NonNull private final String forceOutOfDoze;
+  @NonNull private final String exclusiveDoze;
   @NonNull private final String ignoreChargingDoze;
   @NonNull private final String dozeDelay;
   @NonNull private final String manageSensors;
 
   private final boolean forceDozeDefault;
-  private final boolean forceOutOfDozeDefault;
+  private final boolean exclusiveDozeDefault;
   private final boolean ignoreChargingDozeDefault;
   @NonNull private final String dozeDelayDefault;
   private final boolean manageSensorsDefault;
 
-  @Inject protected PowerManagerPreferencesImpl(@NonNull Context context) {
+  @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     final Context appContext = context.getApplicationContext();
     final Resources resources = appContext.getResources();
@@ -137,11 +122,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     delayBluetoothDefault = appContext.getString(R.string.bluetooth_time_default);
     delaySyncDefault = appContext.getString(R.string.sync_time_default);
 
-    presetDelayWifi = appContext.getString(R.string.preset_delay_wifi_key);
-    presetDelayData = appContext.getString(R.string.preset_delay_data_key);
-    presetDelayBluetooth = appContext.getString(R.string.preset_delay_bluetooth_key);
-    presetDelaySync = appContext.getString(R.string.preset_delay_sync_key);
-
     periodicWifi = appContext.getString(R.string.periodic_wifi_key);
     periodicData = appContext.getString(R.string.periodic_data_key);
     periodicBluetooth = appContext.getString(R.string.periodic_bluetooth_key);
@@ -161,12 +141,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
         appContext.getString(R.string.periodic_bluetooth_disable_default);
     periodicDisableSyncDefault = appContext.getString(R.string.periodic_sync_disable_default);
 
-    presetPeriodicDisableWifi = appContext.getString(R.string.preset_periodic_wifi_disable_key);
-    presetPeriodicDisableData = appContext.getString(R.string.preset_periodic_data_disable_key);
-    presetPeriodicDisableBluetooth =
-        appContext.getString(R.string.preset_periodic_bluetooth_disable_key);
-    presetPeriodicDisableSync = appContext.getString(R.string.preset_periodic_sync_disable_key);
-
     periodicEnableWifi = appContext.getString(R.string.periodic_wifi_enable_key);
     periodicEnableData = appContext.getString(R.string.periodic_data_enable_key);
     periodicEnableBluetooth = appContext.getString(R.string.periodic_bluetooth_enable_key);
@@ -176,12 +150,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     periodicEnableBluetoothDefault =
         appContext.getString(R.string.periodic_bluetooth_enable_default);
     periodicEnableSyncDefault = appContext.getString(R.string.periodic_sync_enable_default);
-
-    presetPeriodicEnableWifi = appContext.getString(R.string.preset_periodic_wifi_enable_key);
-    presetPeriodicEnableData = appContext.getString(R.string.preset_periodic_data_enable_key);
-    presetPeriodicEnableBluetooth =
-        appContext.getString(R.string.preset_periodic_bluetooth_enable_key);
-    presetPeriodicEnableSync = appContext.getString(R.string.preset_periodic_sync_enable_key);
 
     ignoreChargingWifi = appContext.getString(R.string.ignore_charging_wifi_key);
     ignoreChargingData = appContext.getString(R.string.ignore_charging_data_key);
@@ -199,13 +167,13 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     fullNotificationDefault = resources.getBoolean(R.bool.full_notification_default);
 
     forceDoze = appContext.getString(R.string.manage_doze_key);
-    forceOutOfDoze = appContext.getString(R.string.force_out_doze_key);
+    exclusiveDoze = appContext.getString(R.string.exclusive_doze_key);
     ignoreChargingDoze = appContext.getString(R.string.ignore_charging_doze_key);
     dozeDelay = appContext.getString(R.string.doze_time_key);
     manageSensors = appContext.getString(R.string.sensors_doze_key);
 
     forceDozeDefault = resources.getBoolean(R.bool.doze_default);
-    forceOutOfDozeDefault = resources.getBoolean(R.bool.force_out_doze_default);
+    exclusiveDozeDefault = resources.getBoolean(R.bool.exclusive_doze_default);
     ignoreChargingDozeDefault = resources.getBoolean(R.bool.ignore_charging_doze_default);
     dozeDelayDefault = appContext.getString(R.string.doze_time_default);
     manageSensorsDefault = resources.getBoolean(R.bool.sensors_doze_default);
@@ -219,8 +187,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return Long.parseLong(get(dozeDelay, dozeDelayDefault));
   }
 
-  @Override public boolean isForceOutDoze() {
-    return get(forceOutOfDoze, forceOutOfDozeDefault);
+  @Override public boolean isExclusiveDoze() {
+    return get(exclusiveDoze, exclusiveDozeDefault);
   }
 
   @Override public boolean isIgnoreChargingDoze() {
@@ -253,55 +221,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public boolean isIgnoreChargingSync() {
     return get(ignoreChargingSync, ignoreChargingSyncDefault);
-  }
-
-  @Override public boolean isCustomDelayTimeWifi() {
-    return Long.parseLong(get(presetDelayWifi, delayWifiDefault)) == -1;
-  }
-
-  @Override public boolean isCustomDelayTimeData() {
-    return Long.parseLong(get(presetDelayData, delayDataDefault)) == -1;
-  }
-
-  @Override public boolean isCustomDelayTimeBluetooth() {
-    return Long.parseLong(get(presetDelayBluetooth, delayBluetoothDefault)) == -1;
-  }
-
-  @Override public boolean isCustomDelayTimeSync() {
-    return Long.parseLong(get(presetDelaySync, delaySyncDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicDisableTimeWifi() {
-    return Long.parseLong(get(presetPeriodicDisableWifi, periodicDisableWifiDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicDisableTimeData() {
-    return Long.parseLong(get(presetPeriodicDisableData, periodicDisableDataDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicDisableTimeBluetooth() {
-    return Long.parseLong(get(presetPeriodicDisableBluetooth, periodicDisableBluetoothDefault))
-        == -1;
-  }
-
-  @Override public boolean isCustomPeriodicDisableTimeSync() {
-    return Long.parseLong(get(presetPeriodicDisableSync, periodicDisableSyncDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicEnableTimeWifi() {
-    return Long.parseLong(get(presetPeriodicEnableWifi, periodicEnableWifiDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicEnableTimeData() {
-    return Long.parseLong(get(presetPeriodicEnableData, periodicEnableDataDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicEnableTimeBluetooth() {
-    return Long.parseLong(get(presetPeriodicEnableBluetooth, periodicEnableBluetoothDefault)) == -1;
-  }
-
-  @Override public boolean isCustomPeriodicEnableTimeSync() {
-    return Long.parseLong(get(presetPeriodicEnableSync, periodicEnableSyncDefault)) == -1;
   }
 
   @Override public long getWifiDelay() {

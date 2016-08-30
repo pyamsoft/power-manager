@@ -75,9 +75,6 @@ class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveMa
   }
 
   @NonNull @Override public Observable<Boolean> isExclusive() {
-    return Observable.defer(() -> {
-      // TODO read from preference
-      return Observable.just(false);
-    });
+    return Observable.defer(() -> Observable.just(getPreferences().isExclusiveDoze()));
   }
 }
