@@ -35,10 +35,11 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     implements TriggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
+      Subscriptions.empty();
   @NonNull private Subscription viewSubscription = Subscriptions.empty();
   @NonNull private Subscription deleteTriggerBusSubscription = Subscriptions.empty();
   @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription = Subscriptions.empty();
   @NonNull private Subscription createSubscription = Subscriptions.empty();
 
   @Inject public TriggerPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
@@ -123,8 +124,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  @VisibleForTesting
-  @SuppressWarnings("WeakerAccess") void registerOnDeleteTriggerBus() {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnDeleteTriggerBus() {
     unregisterFromDeleteTriggerBus();
     deleteTriggerBusSubscription = DeleteTriggerBus.get()
         .register()
@@ -148,8 +148,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  @VisibleForTesting
-  @SuppressWarnings("WeakerAccess") void registerOnCreateTriggerBus() {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnCreateTriggerBus() {
     unregisterFromCreateTriggerBus();
     createTriggerBusSubscription = TriggerBus.get()
         .register()

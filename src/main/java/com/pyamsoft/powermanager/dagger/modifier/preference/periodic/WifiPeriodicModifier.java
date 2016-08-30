@@ -25,8 +25,9 @@ import rx.Scheduler;
 
 class WifiPeriodicModifier extends BooleanPreferenceModifier {
 
-  @Inject WifiPeriodicModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+  @Inject WifiPeriodicModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 

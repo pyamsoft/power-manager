@@ -37,8 +37,9 @@ import javax.inject.Singleton;
     return new DataPeriodicObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_bluetooth_periodic") @Provides BooleanInterestObserver provideBluetoothObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Singleton @Named("obs_bluetooth_periodic") @Provides
+  BooleanInterestObserver provideBluetoothObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
     return new BluetoothPeriodicObserver(context, preferences);
   }
 

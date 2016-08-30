@@ -25,9 +25,9 @@ import rx.Scheduler;
 
 class BluetoothManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
-  @Inject BluetoothManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
+  @Inject BluetoothManagePreferencePresenter(
+      @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
   }
 }

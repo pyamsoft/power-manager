@@ -47,7 +47,8 @@ public class BluetoothDisableTimePreference extends CustomTimeInputPreference {
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current Bluetooth disable time period: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current Bluetooth disable time period: %d seconds",
+        time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

@@ -36,8 +36,8 @@ import javax.inject.Singleton;
     return new DataStateObserver(context);
   }
 
-  @Singleton @Named("obs_bluetooth_state") @Provides BooleanInterestObserver provideBluetoothObserver(
-      @NonNull Context context) {
+  @Singleton @Named("obs_bluetooth_state") @Provides
+  BooleanInterestObserver provideBluetoothObserver(@NonNull Context context) {
     return new BluetoothStateObserver(context);
   }
 

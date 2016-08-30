@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import dagger.Subcomponent;
 import javax.inject.Singleton;
 

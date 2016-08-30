@@ -25,8 +25,9 @@ import rx.Scheduler;
 
 class WifiEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject WifiEnableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+  @Inject WifiEnableTimePreferencePresenter(
+      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
   }
 }

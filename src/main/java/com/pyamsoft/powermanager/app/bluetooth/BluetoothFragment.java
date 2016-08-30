@@ -45,8 +45,7 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    Singleton.Dagger.with(getContext())
-        .plusBluetoothScreenComponent().inject(this);
+    Singleton.Dagger.with(getContext()).plusBluetoothScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

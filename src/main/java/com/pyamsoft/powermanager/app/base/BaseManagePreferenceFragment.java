@@ -37,14 +37,13 @@ import timber.log.Timber;
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
     implements BaseManagePreferencePresenter.ManagePreferenceView {
 
-  private String manageKey;
-  private String presetTimeKey;
-  private String timeKey;
-
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
+  private String manageKey;
+  private String presetTimeKey;
+  private String timeKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -149,7 +148,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed, @NonNull String presetDelay) {
+  @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed,
+      @NonNull String presetDelay) {
     if (customTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
@@ -176,8 +176,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference) {
+  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean onPresetTimePreferenceChanged(
+      @NonNull String presetDelay, @Nullable CustomTimeInputPreference customTimePreference) {
     return true;
   }
 

@@ -21,7 +21,6 @@ import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 

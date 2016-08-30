@@ -29,10 +29,10 @@ import timber.log.Timber;
 
 abstract class ManagerBaseInteractor implements ManagerInteractor {
 
-  @NonNull private final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @NonNull private final Context appContext;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,

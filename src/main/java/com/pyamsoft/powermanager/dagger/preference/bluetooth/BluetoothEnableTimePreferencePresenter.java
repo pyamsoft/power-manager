@@ -25,8 +25,9 @@ import rx.Scheduler;
 
 class BluetoothEnableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject BluetoothEnableTimePreferencePresenter(@Nullable CustomTimeInputPreferenceInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+  @Inject BluetoothEnableTimePreferencePresenter(
+      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
   }
 }

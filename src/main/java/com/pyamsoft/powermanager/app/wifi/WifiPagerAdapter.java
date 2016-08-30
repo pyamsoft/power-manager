@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.wifi;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 
 class WifiPagerAdapter extends BasePagerAdapter {

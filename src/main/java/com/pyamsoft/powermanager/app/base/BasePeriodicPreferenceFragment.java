@@ -32,17 +32,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import timber.log.Timber;
 
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
     implements BasePeriodPreferencePresenter.PeriodPreferenceView {
-
-  private String periodicKey;
-  private String presetEnableTimeKey;
-  private String presetDisableTimeKey;
-  private String enableTimeKey;
-  private String disableTimeKey;
 
   @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
@@ -50,6 +43,11 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
+  private String periodicKey;
+  private String presetEnableTimeKey;
+  private String presetDisableTimeKey;
+  private String enableTimeKey;
+  private String disableTimeKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -175,15 +173,16 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetEnableTimePreferenceChanged(String presetDelay,
-      @Nullable CustomTimeInputPreference customEnableTimePreference) {
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetEnableTimePreferenceChanged(
+      String presetDelay, @Nullable CustomTimeInputPreference customEnableTimePreference) {
     return true;
   }
 
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetDisableTimePreferenceChanged(
+      @NonNull String presetDelay,
       @Nullable CustomTimeInputPreference customDisableTimePreference) {
     return true;
   }
@@ -191,11 +190,13 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPeriodicPreferenceChanged(boolean periodic) {
+  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPeriodicPreferenceChanged(
+      boolean periodic) {
     return true;
   }
 
-  @SuppressWarnings("WeakerAccess") void setCustomEnableTimePreferenceEnabled(boolean periodic, @NonNull String presetDelay) {
+  @SuppressWarnings("WeakerAccess") void setCustomEnableTimePreferenceEnabled(boolean periodic,
+      @NonNull String presetDelay) {
     if (customEnableTimePreference != null) {
       // Disable delay custom when unchecked
       // Enable delay custom when checked and custom delay time
@@ -251,5 +252,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
 
   @CheckResult @NonNull
-  protected abstract Loader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context);
+  protected abstract Loader<BasePeriodPreferencePresenter> createPresenterLoader(
+      @NonNull Context context);
 }

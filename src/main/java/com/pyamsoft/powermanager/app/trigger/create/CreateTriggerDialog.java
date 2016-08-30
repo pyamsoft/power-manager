@@ -157,14 +157,12 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final Subscription backTask = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_arrow_back_24dp)
-        .into(backButton);
+    final Subscription backTask =
+        AsyncDrawable.with(getContext()).load(R.drawable.ic_arrow_back_24dp).into(backButton);
     taskMap.put("back", backTask);
 
-    final Subscription closeTask = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_close_24dp)
-        .into(closeButton);
+    final Subscription closeTask =
+        AsyncDrawable.with(getContext()).load(R.drawable.ic_close_24dp).into(closeButton);
     taskMap.put("close", closeTask);
   }
 

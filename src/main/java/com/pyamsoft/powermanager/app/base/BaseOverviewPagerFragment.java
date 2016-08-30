@@ -51,10 +51,10 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
   @NonNull private final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
   @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
-  private TabLayout tabLayout;
-  private Unbinder unbinder;
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") BooleanInterestModifier modifier;
+  private TabLayout tabLayout;
+  private Unbinder unbinder;
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

@@ -38,8 +38,8 @@ public class PowerTriggerDB {
   @NonNull private final SqlBrite sqlBrite;
   @NonNull private final PowerTriggerOpenHelper openHelper;
   @NonNull private final Scheduler dbScheduler;
-  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
   @NonNull private final AtomicInteger openCount;
+  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
 
   private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
     sqlBrite = SqlBrite.create();

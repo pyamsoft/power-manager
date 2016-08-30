@@ -48,8 +48,7 @@ public abstract class BasePeriodPreferencePresenterImpl
     observer.unregister(OBS_TAG);
   }
 
-  @Override
-  public void updatePeriodic(boolean state) {
+  @Override public void updatePeriodic(boolean state) {
     interactor.updatePeriodic(state);
   }
 }

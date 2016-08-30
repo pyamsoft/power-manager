@@ -43,8 +43,8 @@ import rx.Scheduler;
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides
-  BooleanInterestModifier provideBluetoothModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new BluetoothStateModifier(context, preferences, subscribeScheduler, observeScheduler);

@@ -23,7 +23,8 @@ import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class TriggerListAdapterPresenterLoader extends PresenterLoader<TriggerListAdapterPresenter> {
+public class TriggerListAdapterPresenterLoader
+    extends PresenterLoader<TriggerListAdapterPresenter> {
 
   @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
 

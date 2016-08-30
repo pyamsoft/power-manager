@@ -25,9 +25,9 @@ import rx.Scheduler;
 
 class SyncDisableTimePreferencePresenter extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject SyncDisableTimePreferencePresenter(@Nullable
-  CustomTimeInputPreferenceInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+  @Inject SyncDisableTimePreferencePresenter(
+      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
   }
 }

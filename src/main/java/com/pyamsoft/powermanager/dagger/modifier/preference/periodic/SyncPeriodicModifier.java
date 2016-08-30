@@ -25,8 +25,9 @@ import rx.Scheduler;
 
 class SyncPeriodicModifier extends BooleanPreferenceModifier {
 
-  @Inject SyncPeriodicModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+  @Inject SyncPeriodicModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
+      @NonNull Scheduler observeScheduler) {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 

@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.bus;
 import android.content.ContentValues;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.pydroid.tool.RxBus;
 
 public class TriggerBus extends RxBus<ContentValues> {

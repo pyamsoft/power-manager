@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.observer;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 

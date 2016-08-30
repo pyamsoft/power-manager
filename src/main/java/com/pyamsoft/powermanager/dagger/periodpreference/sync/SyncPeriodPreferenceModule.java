@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.periodpreference.BasePeriodPreferencePresenterImpl;
 import com.pyamsoft.pydroid.base.app.ActivityScope;
 import dagger.Module;
 import dagger.Provides;

@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.app.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.trigger.DeleteTriggerDialog;
 import com.pyamsoft.powermanager.model.DeleteTriggerEvent;
 import com.pyamsoft.pydroid.tool.RxBus;
 

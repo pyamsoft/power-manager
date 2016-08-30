@@ -32,9 +32,8 @@ public class DeleteTriggerDialog extends DialogFragment {
 
   @NonNull private static final String TRIGGER_NAME = "trigger_name";
   @NonNull private static final String TRIGGER_PERCENT = "trigger_percent";
-
-  private String name;
   @SuppressWarnings("WeakerAccess") int percent;
+  private String name;
 
   @CheckResult @NonNull
   public static DeleteTriggerDialog newInstance(@NonNull PowerTriggerEntry trigger) {

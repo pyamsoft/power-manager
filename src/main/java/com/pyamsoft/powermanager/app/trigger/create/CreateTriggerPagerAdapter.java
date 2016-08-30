@@ -89,7 +89,8 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final boolean syncEnable = syncFragment.getTriggerEnable();
 
     Timber.d("Post content values to bus");
-    final ContentValues values = PowerTriggerEntry.FACTORY.marshal().name(name)
+    final ContentValues values = PowerTriggerEntry.FACTORY.marshal()
+        .name(name)
         .percent(percent)
         .enabled(true)
         .available(true)

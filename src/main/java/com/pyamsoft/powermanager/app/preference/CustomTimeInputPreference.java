@@ -38,9 +38,9 @@ public abstract class CustomTimeInputPreference extends Preference
 
   @BindView(R.id.preference_custom_time_summary) TextView summary;
   @BindView(R.id.preference_custom_time_input) TextInputLayout textInputLayout;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   private TextWatcher watcher;
   private Unbinder unbinder;
-  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   private EditText editText;
 
   protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,

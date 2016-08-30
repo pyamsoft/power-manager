@@ -27,7 +27,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.pyamsoft.pydroid.crash.CrashHandler;
-import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
 public class PowerManager extends ApplicationBase {

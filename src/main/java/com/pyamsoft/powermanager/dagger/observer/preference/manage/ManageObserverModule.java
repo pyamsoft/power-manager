@@ -37,8 +37,9 @@ import javax.inject.Singleton;
     return new DataManageObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_bluetooth_manage") @Provides BooleanInterestObserver provideBluetoothObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Singleton @Named("obs_bluetooth_manage") @Provides
+  BooleanInterestObserver provideBluetoothObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageObserver(context, preferences);
   }
 
