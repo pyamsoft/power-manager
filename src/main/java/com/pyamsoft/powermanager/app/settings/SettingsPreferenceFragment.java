@@ -47,6 +47,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
   @NonNull private static final String OBS_TAG = "settings_wear_obs";
+  @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearObserver;
   @Inject @Named("mod_wear_manage") BooleanInterestModifier wearModifier;
@@ -54,6 +55,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
+    service = new Intent(getContext().getApplicationContext(), ForegroundService.class);
     Singleton.Dagger.with(getContext()).plusSettingsPreferenceComponent().inject(this);
 
     getLoaderManager().initLoader(0, null,
@@ -76,6 +78,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
@@ -104,12 +107,25 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       return true;
     });
 
+    final Preference notification = findPreference(getString(R.string.full_notification_key));
+    notification.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean state = (boolean) newValue;
+        service.removeExtra(ForegroundService.EXTRA_NOTIFICATION);
+        service.putExtra(ForegroundService.EXTRA_NOTIFICATION, state);
+        getContext().getApplicationContext().startService(service);
+        return true;
+      }
+      return false;
+    });
+
     wearPreference = (CheckBoxPreference) findPreference(getString(R.string.manage_wearable_key));
     wearPreference.setOnPreferenceClickListener(preference -> {
+      // Do this just to trigger a notification refresh
       if (wearObserver.is()) {
-        wearModifier.unset();
-      } else {
         wearModifier.set();
+      } else {
+        wearModifier.unset();
       }
       return true;
     });
