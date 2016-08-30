@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -49,7 +48,6 @@ public abstract class DozeManageJob extends ManageJob {
   public static final class EnableJob extends DozeManageJob {
 
     @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
 
     public EnableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
@@ -63,16 +61,15 @@ public abstract class DozeManageJob extends ManageJob {
     }
 
     @Override public void run() {
-      if (!interestObserver.is()) {
-        interestModifier.set();
-      }
+      // Doze job is a bit backwards since Doze is thought of differently
+      // Doze being 'enabled' actually means to turn it off
+      interestModifier.unset();
     }
   }
 
   public static final class DisableJob extends DozeManageJob {
 
     @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
 
     public DisableJob(long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
@@ -86,9 +83,9 @@ public abstract class DozeManageJob extends ManageJob {
     }
 
     @Override public void run() {
-      if (interestObserver.is()) {
-        interestModifier.unset();
-      }
+      // Doze job is a bit backwards since Doze is thought of differently
+      // Doze being 'disabled' actually means to turn it on
+      interestModifier.set();
     }
   }
 }

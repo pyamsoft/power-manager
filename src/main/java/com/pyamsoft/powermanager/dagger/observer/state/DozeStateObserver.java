@@ -59,13 +59,13 @@ class DozeStateObserver extends StateObserver {
   @Override public boolean is() {
     boolean doze;
     if (isDozeAvailable()) {
-      Timber.d("Get doze state");
-      doze = androidPowerManager.isDeviceIdleMode();
+      // We invert this because the device will want to be waiting for Doze not already Dozing
+      doze = !androidPowerManager.isDeviceIdleMode();
     } else {
-      Timber.e("Default doze state false");
       doze = false;
     }
 
+    Timber.d("Is waiting to doze?: %s", doze);
     return doze;
   }
 }
