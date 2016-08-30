@@ -41,6 +41,7 @@ class DozeStateModifier extends StateModifier {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
+
   @SuppressLint("NewApi") private static void executeDumpsys(@NonNull String cmd) {
     final Process process;
     boolean caughtPermissionDenial = false;

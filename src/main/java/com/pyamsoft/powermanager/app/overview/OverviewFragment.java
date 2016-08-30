@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,7 +30,15 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
+import com.pyamsoft.powermanager.app.data.DataFragment;
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
+import com.pyamsoft.powermanager.app.sync.SyncFragment;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 
@@ -36,8 +46,8 @@ public class OverviewFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "Overview";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
+  @NonNull private FastItemAdapter<OverviewItem> adapter = new FastItemAdapter<>();
   private Unbinder unbinder;
-  private OverviewAdapter adapter;
 
   @CheckResult @NonNull public static OverviewFragment newInstance(int cX, int cY) {
     final Bundle args = CircularRevealFragmentUtil.bundleArguments(cX, cY, 600L);
@@ -56,14 +66,14 @@ public class OverviewFragment extends ActionBarFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    adapter.cleanup();
     unbinder.unbind();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
-    setupRecyclerView(view);
+    populateAdapter(view);
+    setupRecyclerView();
   }
 
   @Override public void onResume() {
@@ -71,10 +81,43 @@ public class OverviewFragment extends ActionBarFragment {
     setActionBarUpEnabled(false);
   }
 
-  private void setupRecyclerView(@NonNull View view) {
-    final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-    adapter = new OverviewAdapter(getFragmentManager(), view);
+  private void populateAdapter(@NonNull View view) {
+    adapter.add(
+        new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
+            this::loadFragment));
+    adapter.add(
+        new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
+            this::loadFragment));
+    adapter.add(
+        new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
+            this::loadFragment));
+    adapter.add(new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
+        this::loadFragment));
+    adapter.add(
+        new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
+            this::loadFragment));
+    adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
+        this::loadFragment));
+    adapter.add(
+        new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
+            this::loadFragment));
 
+    // Can't use the normal withOnClickListener on the adapter for some reason
+  }
+
+  @SuppressWarnings("WeakerAccess") void loadFragment(@NonNull String title,
+      @NonNull Fragment fragment) {
+    final FragmentManager fragmentManager = getFragmentManager();
+    if (fragmentManager.findFragmentByTag(title) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, fragment, title)
+          .addToBackStack(null)
+          .commit();
+    }
+  }
+
+  private void setupRecyclerView() {
+    final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(adapter);
