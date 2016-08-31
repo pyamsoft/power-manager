@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.app.doze;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 
 public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
@@ -43,7 +43,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
   }
 
   @NonNull @Override
-  protected Loader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
     return new DozePresenterLoader(context);
   }
 

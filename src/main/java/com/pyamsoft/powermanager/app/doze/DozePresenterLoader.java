@@ -20,12 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class DozePresenterLoader extends PresenterLoader<BaseManagePreferencePresenter> {
+public class DozePresenterLoader extends PersistLoader<BaseManagePreferencePresenter> {
 
   @Inject @Named("doze_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
@@ -33,7 +33,7 @@ public class DozePresenterLoader extends PresenterLoader<BaseManagePreferencePre
     super(context);
   }
 
-  @NonNull @Override protected BaseManagePreferencePresenter loadPresenter() {
+  @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
     Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);
     return presenterProvider.get();
   }

@@ -20,12 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
-import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class BluetoothPeriodPresenterLoader extends PresenterLoader<BasePeriodPreferencePresenter> {
+public class BluetoothPeriodPresenterLoader extends PersistLoader<BasePeriodPreferencePresenter> {
 
   @Inject @Named("bluetooth_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
 
@@ -33,7 +33,7 @@ public class BluetoothPeriodPresenterLoader extends PresenterLoader<BasePeriodPr
     super(context);
   }
 
-  @NonNull @Override protected BasePeriodPreferencePresenter loadPresenter() {
+  @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
     Singleton.Dagger.with(getContext()).plusPeriodPreferenceComponent().inject(this);
     return presenterProvider.get();
   }

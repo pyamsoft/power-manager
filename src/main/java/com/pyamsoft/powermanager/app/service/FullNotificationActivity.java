@@ -26,8 +26,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
@@ -43,9 +41,11 @@ import com.pyamsoft.powermanager.app.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;
@@ -54,29 +54,34 @@ import timber.log.Timber;
 public class FullNotificationActivity extends AppCompatActivity
     implements FullNotificationPresenter.FullNotificationView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_full_notif_presenter";
   @SuppressWarnings("WeakerAccess") FullNotificationPresenter presenter;
+  private long loadedKey;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    getSupportLoaderManager().initLoader(0, null,
-        new LoaderManager.LoaderCallbacks<FullNotificationPresenter>() {
-          @Override public Loader<FullNotificationPresenter> onCreateLoader(int id, Bundle args) {
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<FullNotificationPresenter>() {
+          @NonNull @Override public PersistLoader<FullNotificationPresenter> createLoader() {
             return new FullNotificationPresenterLoader(getApplicationContext());
           }
 
-          @Override public void onLoadFinished(Loader<FullNotificationPresenter> loader,
-              FullNotificationPresenter data) {
-            presenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<FullNotificationPresenter> loader) {
-            presenter = null;
+          @Override public void onPersistentLoaded(@NonNull FullNotificationPresenter persist) {
+            presenter = persist;
           }
         });
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
+    if (!isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
   }
 
   @Override protected void onStop() {

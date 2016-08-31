@@ -22,11 +22,12 @@ import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 
 public class BluetoothManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull @Override
-  protected Loader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
     return new BluetoothManagePresenterLoader(context);
   }
 

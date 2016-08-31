@@ -22,8 +22,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -36,8 +34,10 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -47,32 +47,32 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
   @NonNull private static final String OBS_TAG = "settings_wear_obs";
+  @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearObserver;
   @Inject @Named("mod_wear_manage") BooleanInterestModifier wearModifier;
   @SuppressWarnings("WeakerAccess") CheckBoxPreference wearPreference;
+  private long loadedKey;
+
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<SettingsPreferencePresenter>() {
+          @NonNull @Override public PersistLoader<SettingsPreferencePresenter> createLoader() {
+            return new SettingsPreferencePresenterLoader(getContext());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull SettingsPreferencePresenter persist) {
+            presenter = persist;
+          }
+        });
+  }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     service = new Intent(getContext().getApplicationContext(), ForegroundService.class);
     Singleton.Dagger.with(getContext()).plusSettingsPreferenceComponent().inject(this);
-
-    getLoaderManager().initLoader(0, null,
-        new LoaderManager.LoaderCallbacks<SettingsPreferencePresenter>() {
-          @Override public Loader<SettingsPreferencePresenter> onCreateLoader(int id, Bundle args) {
-            return new SettingsPreferencePresenterLoader(getContext());
-          }
-
-          @Override public void onLoadFinished(Loader<SettingsPreferencePresenter> loader,
-              SettingsPreferencePresenter data) {
-            presenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<SettingsPreferencePresenter> loader) {
-            presenter = null;
-          }
-        });
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -153,8 +153,8 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     Timber.d("Cleared the trigger database");
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override public void onStart() {
+    super.onStart();
     presenter.bindView(this);
 
     if (wearObserver.is()) {
@@ -167,9 +167,21 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
         () -> wearPreference.setChecked(false));
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onStop() {
+    super.onStop();
     presenter.unbindView();
     wearObserver.unregister(OBS_TAG);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
   }
 }

@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.app.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 
 public class DataPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
@@ -50,7 +50,7 @@ public class DataPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
   }
 
   @NonNull @Override
-  protected Loader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context) {
+  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context) {
     return new DataPeriodPresenterLoader(context);
   }
 }

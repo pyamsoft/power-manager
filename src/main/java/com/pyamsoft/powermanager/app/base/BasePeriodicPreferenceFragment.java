@@ -23,20 +23,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
     implements BasePeriodPreferencePresenter.PeriodPreferenceView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_period_pref_presenter";
   @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
@@ -48,6 +47,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   private String presetDisableTimeKey;
   private String enableTimeKey;
   private String disableTimeKey;
+  private long loadedKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -58,26 +58,18 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     disableTimeKey = getString(getDisableTimeKeyResId());
   }
 
-  @Override public final View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    getLoaderManager().initLoader(0, null,
-        new LoaderManager.LoaderCallbacks<BasePeriodPreferencePresenter>() {
-          @Override
-          public Loader<BasePeriodPreferencePresenter> onCreateLoader(int id, Bundle args) {
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<BasePeriodPreferencePresenter>() {
+          @NonNull @Override public PersistLoader<BasePeriodPreferencePresenter> createLoader() {
             return createPresenterLoader(getContext());
           }
 
-          @Override public void onLoadFinished(Loader<BasePeriodPreferencePresenter> loader,
-              BasePeriodPreferencePresenter data) {
-            presenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<BasePeriodPreferencePresenter> loader) {
-            presenter = null;
+          @Override public void onPersistentLoaded(@NonNull BasePeriodPreferencePresenter persist) {
+            presenter = persist;
           }
         });
-
-    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   private void resolvePreferences() {
@@ -215,14 +207,26 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override public void onStart() {
+    super.onStart();
     presenter.bindView(this);
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onStop() {
+    super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public final void onDestroyView() {
@@ -252,6 +256,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
 
   @CheckResult @NonNull
-  protected abstract Loader<BasePeriodPreferencePresenter> createPresenterLoader(
+  protected abstract PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
       @NonNull Context context);
 }

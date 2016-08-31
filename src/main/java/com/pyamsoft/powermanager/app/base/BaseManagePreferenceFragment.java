@@ -23,20 +23,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
     implements BaseManagePreferencePresenter.ManagePreferenceView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_manage_pref_presenter";
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
@@ -44,6 +43,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   private String manageKey;
   private String presetTimeKey;
   private String timeKey;
+  private long loadedKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -52,25 +52,18 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     timeKey = getString(getTimeKeyResId());
   }
 
-  @Override public final View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    getLoaderManager().initLoader(0, null,
-        new LoaderManager.LoaderCallbacks<BaseManagePreferencePresenter>() {
-          @Override
-          public Loader<BaseManagePreferencePresenter> onCreateLoader(int id, Bundle args) {
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<BaseManagePreferencePresenter>() {
+          @NonNull @Override public PersistLoader<BaseManagePreferencePresenter> createLoader() {
             return createPresenterLoader(getContext());
           }
 
-          @Override public void onLoadFinished(Loader<BaseManagePreferencePresenter> loader,
-              BaseManagePreferencePresenter data) {
-            presenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<BaseManagePreferencePresenter> loader) {
-            presenter = null;
+          @Override public void onPersistentLoaded(@NonNull BaseManagePreferencePresenter persist) {
+            presenter = persist;
           }
         });
-    return super.onCreateView(inflater, container, savedInstanceState);
   }
 
   private void resolvePreferences() {
@@ -131,14 +124,26 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
   }
 
-  @Override public void onResume() {
-    super.onResume();
+  @Override public void onStart() {
+    super.onStart();
     presenter.bindView(this);
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onStop() {
+    super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedKey);
+    }
   }
 
   @Override public final void onDestroyView() {
@@ -182,7 +187,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   @CheckResult @NonNull
-  protected abstract Loader<BaseManagePreferencePresenter> createPresenterLoader(Context context);
+  protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(
+      Context context);
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
 

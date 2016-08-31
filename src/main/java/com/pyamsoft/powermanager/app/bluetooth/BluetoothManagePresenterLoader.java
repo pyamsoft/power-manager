@@ -20,12 +20,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class BluetoothManagePresenterLoader extends PresenterLoader<BaseManagePreferencePresenter> {
+public class BluetoothManagePresenterLoader extends PersistLoader<BaseManagePreferencePresenter> {
 
   @Inject @Named("bluetooth_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
 
@@ -33,7 +33,7 @@ public class BluetoothManagePresenterLoader extends PresenterLoader<BaseManagePr
     super(context);
   }
 
-  @NonNull @Override protected BaseManagePreferencePresenter loadPresenter() {
+  @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
     Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);
     return presenterProvider.get();
   }

@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.pydroid.base.presenter.PresenterLoader;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class TriggerPresenterLoader extends PresenterLoader<TriggerPresenter> {
+public class TriggerPresenterLoader extends PersistLoader<TriggerPresenter> {
 
   @Inject Provider<TriggerPresenter> presenterProvider;
 
@@ -31,7 +31,7 @@ public class TriggerPresenterLoader extends PresenterLoader<TriggerPresenter> {
     super(context);
   }
 
-  @NonNull @Override protected TriggerPresenter loadPresenter() {
+  @NonNull @Override public TriggerPresenter loadPersistent() {
     Singleton.Dagger.with(getContext()).plusTrigger().inject(this);
     return presenterProvider.get();
   }

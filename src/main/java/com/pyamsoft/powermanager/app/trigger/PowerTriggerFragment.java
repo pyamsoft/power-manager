@@ -20,8 +20,6 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,16 +32,20 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
+import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class PowerTriggerFragment extends ActionBarFragment
     implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "Power Triggers";
+  @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
+  @NonNull private static final String KEY_PRESENTER_ADAPTER = "key_trigger_adapter_presenter";
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
   @BindView(R.id.power_trigger_empty) FrameLayout emptyView;
@@ -54,6 +56,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   PowerTriggerListAdapter adapter;
   Unbinder unbinder;
   RecyclerView.ItemDecoration dividerDecoration;
+  private long loadedPresenterKey;
+  private long loadedPresenterAdapterKey;
 
   @CheckResult @NonNull
   public static PowerTriggerFragment newInstance(@NonNull View view, @NonNull View container) {
@@ -63,41 +67,36 @@ public class PowerTriggerFragment extends ActionBarFragment
     return fragment;
   }
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedPresenterKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+        new PersistLoader.Callback<TriggerPresenter>() {
+          @NonNull @Override public PersistLoader<TriggerPresenter> createLoader() {
+            return new TriggerPresenterLoader(getContext());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull TriggerPresenter persist) {
+            presenter = persist;
+          }
+        });
+
+    loadedPresenterAdapterKey = PersistentCache.load(KEY_PRESENTER_ADAPTER, savedInstanceState,
+        new PersistLoader.Callback<TriggerListAdapterPresenter>() {
+          @NonNull @Override public PersistLoader<TriggerListAdapterPresenter> createLoader() {
+            return new TriggerListAdapterPresenterLoader(getContext());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull TriggerListAdapterPresenter persist) {
+            listAdapterPresenter = persist;
+          }
+        });
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     dividerDecoration =
         new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
-
-    getLoaderManager().initLoader(0, null, new LoaderManager.LoaderCallbacks<TriggerPresenter>() {
-      @Override public Loader<TriggerPresenter> onCreateLoader(int id, Bundle args) {
-        return new TriggerPresenterLoader(getContext());
-      }
-
-      @Override public void onLoadFinished(Loader<TriggerPresenter> loader, TriggerPresenter data) {
-        presenter = data;
-      }
-
-      @Override public void onLoaderReset(Loader<TriggerPresenter> loader) {
-        presenter = null;
-      }
-    });
-
-    getLoaderManager().initLoader(1, null,
-        new LoaderManager.LoaderCallbacks<TriggerListAdapterPresenter>() {
-          @Override public Loader<TriggerListAdapterPresenter> onCreateLoader(int id, Bundle args) {
-            return new TriggerListAdapterPresenterLoader(getContext());
-          }
-
-          @Override public void onLoadFinished(Loader<TriggerListAdapterPresenter> loader,
-              TriggerListAdapterPresenter data) {
-            listAdapterPresenter = data;
-          }
-
-          @Override public void onLoaderReset(Loader<TriggerListAdapterPresenter> loader) {
-            listAdapterPresenter = null;
-          }
-        });
 
     final View view = inflater.inflate(R.layout.fragment_powertrigger, container, false);
     unbinder = ButterKnife.bind(this, view);
@@ -112,9 +111,8 @@ public class PowerTriggerFragment extends ActionBarFragment
     unbinder.unbind();
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    setActionBarUpEnabled(true);
+  @Override public void onStart() {
+    super.onStart();
     if (adapter == null) {
       adapter = new PowerTriggerListAdapter(this, listAdapterPresenter);
     }
@@ -124,10 +122,29 @@ public class PowerTriggerFragment extends ActionBarFragment
     presenter.loadTriggerView();
   }
 
-  @Override public void onPause() {
-    super.onPause();
+  @Override public void onResume() {
+    super.onResume();
+    setActionBarUpEnabled(true);
+  }
+
+  @Override public void onStop() {
+    super.onStop();
     adapter.onDestroy();
     presenter.unbindView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.unload(loadedPresenterKey);
+      PersistentCache.unload(loadedPresenterAdapterKey);
+    }
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedPresenterKey);
+    PersistentCache.saveKey(KEY_PRESENTER_ADAPTER, outState, loadedPresenterAdapterKey);
+    super.onSaveInstanceState(outState);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
