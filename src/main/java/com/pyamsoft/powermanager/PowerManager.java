@@ -25,12 +25,12 @@ import android.os.StrictMode;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.app.ApplicationBase;
+import com.pyamsoft.pydroid.base.app.CrashHandlerApplication;
 import com.pyamsoft.pydroid.crash.CrashHandler;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
-public class PowerManager extends ApplicationBase {
+public class PowerManager extends CrashHandlerApplication {
 
   // KLUDGE Move to better location
   @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
