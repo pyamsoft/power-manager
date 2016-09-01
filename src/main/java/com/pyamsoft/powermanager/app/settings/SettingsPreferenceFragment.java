@@ -100,7 +100,9 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
         (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
 
-    final Preference startBoot = findPreference(getString(R.string.boot_key));
+    final SwitchPreferenceCompat startBoot =
+        (SwitchPreferenceCompat) findPreference(getString(R.string.boot_key));
+    startBoot.setChecked(BootReceiver.isBootEnabled(getContext()));
     startBoot.setOnPreferenceClickListener(preference -> {
       final boolean currentState = BootReceiver.isBootEnabled(getContext());
       BootReceiver.setBootEnabled(getContext(), !currentState);
