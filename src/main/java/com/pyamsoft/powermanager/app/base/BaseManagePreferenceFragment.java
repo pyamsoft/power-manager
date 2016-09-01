@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.app.base;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,7 +30,7 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
@@ -80,7 +81,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     resolvePreferences();
 

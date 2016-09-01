@@ -17,11 +17,16 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.preference.SwitchPreferenceCompat;
+import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 
@@ -40,6 +45,29 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
     } else {
       return true;
     }
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+
+    final SwitchPreferenceCompat manageSensors =
+        (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
+    manageSensors.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean b = (boolean) newValue;
+        if (b) {
+          final boolean hasPermission = SensorFixReceiver.hasWritePermission(getContext());
+          if (!hasPermission) {
+            AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+                new SensorsExplanationDialog(), "sensors_explain");
+          }
+          return hasPermission;
+        } else {
+          return true;
+        }
+      }
+      return false;
+    });
   }
 
   @NonNull @Override

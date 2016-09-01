@@ -45,7 +45,7 @@ import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;

@@ -40,7 +40,7 @@ public class SensorFixReceiver {
   }
 
   @SuppressWarnings("WeakerAccess") @CheckResult
-  static boolean hasWritePermission(@NonNull Context context) {
+  public static boolean hasWritePermission(@NonNull Context context) {
     boolean hasRuntimePermission;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       Timber.d("Runtime permissions before M are auto granted");

@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import timber.log.Timber;
 
 public class PowerTriggerFragment extends ActionBarFragment

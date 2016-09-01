@@ -37,7 +37,7 @@ import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.tool.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
