@@ -126,7 +126,8 @@ public class PowerTriggerDB {
   @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(int percent) {
     openDatabase();
 
-    return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT)
+    return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
+        Integer.toString(percent))
         .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
             PowerTriggerEntry.empty())
         .map(entry -> {
