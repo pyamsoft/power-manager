@@ -31,6 +31,7 @@ import android.view.ViewTreeObserver;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
@@ -71,6 +72,14 @@ public class MainActivity extends DonationActivity {
     return R.id.ad_view;
   }
 
+  @NonNull @Override protected String provideAdViewUnitId() {
+    return getString(R.string.banner_ad_id);
+  }
+
+  @Override protected boolean isAdDebugMode() {
+    return BuildConfig.DEBUG;
+  }
+
   @Override protected void onDestroy() {
     super.onDestroy();
 
@@ -78,7 +87,6 @@ public class MainActivity extends DonationActivity {
       removeViewFromAppBar(key);
     }
     addedViewMap.clear();
-
     unbinder.unbind();
   }
 

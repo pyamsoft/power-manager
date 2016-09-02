@@ -21,16 +21,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.StrictMode;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.app.CrashHandlerApplication;
-import com.pyamsoft.pydroid.crash.CrashHandler;
+import com.pyamsoft.pydroid.base.app.ApplicationBase;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
-public class PowerManager extends CrashHandlerApplication {
+public class PowerManager extends ApplicationBase {
 
   // KLUDGE Move to better location
   @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
@@ -50,20 +48,7 @@ public class PowerManager extends CrashHandlerApplication {
 
   @Override protected void installInDebugMode() {
     super.installInDebugMode();
-    new CrashHandler(getApplicationContext(), this).register();
-    setStrictMode();
     LeakCanary.install(this);
-  }
-
-  private void setStrictMode() {
-    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll()
-        .penaltyLog()
-        .penaltyDeath()
-        .permitDiskWrites()
-        .permitDiskReads()
-        .penaltyFlashScreen()
-        .build());
-    StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
   }
 
   private void startForegroundService() {
@@ -72,21 +57,5 @@ public class PowerManager extends CrashHandlerApplication {
 
   @Override protected boolean buildConfigDebug() {
     return BuildConfig.DEBUG;
-  }
-
-  @NonNull @Override public String appName() {
-    return getString(R.string.app_name);
-  }
-
-  @NonNull @Override public String buildConfigApplicationId() {
-    return BuildConfig.APPLICATION_ID;
-  }
-
-  @NonNull @Override public String buildConfigVersionName() {
-    return BuildConfig.VERSION_NAME;
-  }
-
-  @Override public int buildConfigVersionCode() {
-    return BuildConfig.VERSION_CODE;
   }
 }

@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,8 +37,8 @@ import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.tool.PersistentCache;
+import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
 public class PowerTriggerFragment extends ActionBarFragment
@@ -49,6 +50,7 @@ public class PowerTriggerFragment extends ActionBarFragment
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
   @BindView(R.id.power_trigger_empty) FrameLayout emptyView;
+  @BindView(R.id.power_trigger_fab) FloatingActionButton floatingActionButton;
 
   TriggerListAdapterPresenter listAdapterPresenter;
   TriggerPresenter presenter;
