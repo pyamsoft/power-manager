@@ -36,9 +36,12 @@ import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.base.app.PersistLoader;
 import com.pyamsoft.pydroid.base.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.tool.DividerItemDecoration;
 import com.pyamsoft.pydroid.tool.PersistentCache;
 import com.pyamsoft.pydroid.util.AppUtil;
+import rx.Subscription;
 import timber.log.Timber;
 
 public class PowerTriggerFragment extends ActionBarFragment
@@ -47,6 +50,7 @@ public class PowerTriggerFragment extends ActionBarFragment
   @NonNull public static final String TAG = "Power Triggers";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
   @NonNull private static final String KEY_PRESENTER_ADAPTER = "key_trigger_adapter_presenter";
+  @NonNull private final AsyncDrawableMap drawableMap = new AsyncDrawableMap();
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
   @BindView(R.id.power_trigger_empty) FrameLayout emptyView;
@@ -109,6 +113,7 @@ public class PowerTriggerFragment extends ActionBarFragment
     super.onDestroyView();
     setActionBarUpEnabled(false);
 
+    drawableMap.clear();
     recyclerView.removeItemDecoration(dividerDecoration);
     unbinder.unbind();
   }
@@ -153,6 +158,19 @@ public class PowerTriggerFragment extends ActionBarFragment
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     setupRecyclerView();
+    setupFab();
+  }
+
+  private void setupFab() {
+    final Subscription subscription = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_add_24dp)
+        .tint(android.R.color.white)
+        .into(floatingActionButton);
+    drawableMap.put("fab", subscription);
+
+    floatingActionButton.setOnClickListener(
+        view -> AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+            new CreateTriggerDialog(), "create_trigger"));
   }
 
   void setupRecyclerView() {

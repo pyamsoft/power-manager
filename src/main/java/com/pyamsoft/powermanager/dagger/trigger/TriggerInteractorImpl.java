@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
@@ -32,26 +33,34 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
-    return Observable.defer(() -> {
-      if (PowerTriggerEntry.isEmpty(values)) {
-        Timber.e("Trigger is EMPTY");
-        return Observable.just(-1L);
-      } else if (values.getAsInteger(PowerTriggerEntry.PERCENT) > 100) {
-        Timber.e("Percent too high");
-        return Observable.just(-1L);
-      } else {
-        Timber.d("Insert new Trigger into DB");
-        // Throws SQLiteConstraintException
-        return PowerTriggerDB.with(getAppContext()).insert(values);
-      }
-    }).map(aLong -> {
-      if (aLong == -1L) {
-        throw new IllegalStateException("Trigger is EMPTY");
-      } else {
-        Timber.d("new trigger created");
-        return PowerTriggerEntry.asTrigger(values);
-      }
-    });
+    return PowerTriggerDB.with(getAppContext())
+        .queryWithPercent(values.getAsInteger(PowerTriggerEntry.PERCENT))
+        .flatMap(entry -> {
+          if (!PowerTriggerEntry.isEmpty(entry)) {
+            Timber.e("Entry already exists, throw");
+            throw new SQLiteConstraintException(
+                "Entry already exists with percent: " + entry.percent());
+          }
+
+          if (PowerTriggerEntry.isEmpty(values)) {
+            Timber.e("Trigger is EMPTY");
+            return Observable.just(-1L);
+          } else if (values.getAsInteger(PowerTriggerEntry.PERCENT) > 100) {
+            Timber.e("Percent too high");
+            return Observable.just(-1L);
+          } else {
+            Timber.d("Insert new Trigger into DB");
+            return PowerTriggerDB.with(getAppContext()).insert(values);
+          }
+        })
+        .map(aLong -> {
+          if (aLong == -1L) {
+            throw new IllegalStateException("Trigger is EMPTY");
+          } else {
+            Timber.d("new trigger created");
+            return PowerTriggerEntry.asTrigger(values);
+          }
+        });
   }
 
   @NonNull @Override public Observable<Integer> delete(int percent) {

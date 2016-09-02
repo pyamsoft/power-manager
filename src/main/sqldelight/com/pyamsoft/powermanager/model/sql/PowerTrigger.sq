@@ -19,3 +19,8 @@ all_entries:
 SELECT *
 FROM power_triggers;
 
+with_percent:
+SELECT *
+FROM power_triggers
+WHERE percent = ?;
+
