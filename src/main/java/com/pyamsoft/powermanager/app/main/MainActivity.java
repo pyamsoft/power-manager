@@ -25,6 +25,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -42,11 +43,13 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.activity.DonationActivity;
+import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class MainActivity extends DonationActivity {
+public class MainActivity extends DonationActivity implements RatingDialog.ChangeLogProvider {
 
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
 
@@ -156,6 +159,11 @@ public class MainActivity extends DonationActivity {
     }
   }
 
+  @Override protected void onPostResume() {
+    super.onPostResume();
+    RatingDialog.showRatingDialog(this, this);
+  }
+
   @SuppressWarnings("WeakerAccess") void realLoadOverviewFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
@@ -190,5 +198,54 @@ public class MainActivity extends DonationActivity {
     } else {
       Timber.e("Viewmap does not contain a view for tag: %s", tag);
     }
+  }
+
+  @NonNull @Override public Spannable getChangeLogText() {
+    // The changelog text
+    final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
+    final String line1 =
+        "FEATURE: Doze mode management! Force the device into Doze, or enter Doze mode sooner";
+    final String line2 = "BUGFIX: Large code clean up and re-write";
+    final String line3 = "BUGFIX: Less memory usage";
+    final String line4 = "BUGFIX: Less battery usage";
+
+    // Turn it into a spannable
+    final Spannable spannable =
+        StringUtil.createLineBreakBuilder(title, line1, line2, line3, line4);
+
+    int start = 0;
+    int end = title.length();
+    final int largeSize =
+        StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceLarge);
+    final int largeColor =
+        StringUtil.getTextColorFromAppearance(this, android.R.attr.textAppearanceLarge);
+    final int smallSize =
+        StringUtil.getTextSizeFromAppearance(this, android.R.attr.textAppearanceSmall);
+    final int smallColor =
+        StringUtil.getTextColorFromAppearance(this, android.R.attr.textAppearanceSmall);
+
+    StringUtil.boldSpan(spannable, start, end);
+    StringUtil.sizeSpan(spannable, start, end, largeSize);
+    StringUtil.colorSpan(spannable, start, end, largeColor);
+
+    start += end + 2;
+    end += 2 + line1.length() + 2 + line2.length() + 2 + line3.length() + 2 + line4.length();
+
+    StringUtil.sizeSpan(spannable, start, end, smallSize);
+    StringUtil.colorSpan(spannable, start, end, smallColor);
+
+    return spannable;
+  }
+
+  @Override public int getChangeLogIcon() {
+    return R.mipmap.ic_launcher;
+  }
+
+  @NonNull @Override public String getChangeLogPackageName() {
+    return getPackageName();
+  }
+
+  @Override public int getChangeLogVersion() {
+    return BuildConfig.VERSION_CODE;
   }
 }
