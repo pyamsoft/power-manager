@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -40,6 +41,33 @@ class WearStateObserver extends StateObserver {
             .build();
   }
 
+  @WorkerThread @CheckResult private boolean isWearableNodeConnected() {
+    final NodeApi.GetConnectedNodesResult nodesResult =
+        Wearable.NodeApi.getConnectedNodes(googleApiClient).await(4, TimeUnit.SECONDS);
+    Node wearableNode = null;
+    final List<Node> nodes = nodesResult.getNodes();
+    Timber.d("Search node list of size : %d", nodes.size());
+    for (final Node node : nodes) {
+      if (node.isNearby()) {
+        Timber.d("Wearable node: %s %s", node.getDisplayName(), node.getId());
+        wearableNode = node;
+        break;
+      }
+    }
+
+    final boolean result;
+    if (wearableNode == null) {
+      Timber.w("No wearable node was found");
+      result = true;
+    } else {
+      Timber.d("Found a wearable node");
+      result = false;
+    }
+
+    disconnectGoogleApiClient();
+    return result;
+  }
+
   /**
    * Return true if stream should continue, false otherwise
    */
@@ -49,26 +77,7 @@ class WearStateObserver extends StateObserver {
     boolean result;
     if (connectionResult.isSuccess()) {
       Timber.d("Connect Google APIs");
-      final NodeApi.GetConnectedNodesResult nodesResult =
-          Wearable.NodeApi.getConnectedNodes(googleApiClient).await(4, TimeUnit.SECONDS);
-      Node wearableNode = null;
-      final List<Node> nodes = nodesResult.getNodes();
-      Timber.d("Search node list of size : %d", nodes.size());
-      for (final Node node : nodes) {
-        if (node.isNearby()) {
-          Timber.d("Wearable node: %s %s", node.getDisplayName(), node.getId());
-          wearableNode = node;
-          break;
-        }
-      }
-
-      if (wearableNode == null) {
-        Timber.w("No wearable node was found");
-        result = true;
-      } else {
-        Timber.d("Found a wearable node");
-        result = false;
-      }
+      result = isWearableNodeConnected();
     } else {
       Timber.e("Could not connect to Google APIs");
       result = true;
