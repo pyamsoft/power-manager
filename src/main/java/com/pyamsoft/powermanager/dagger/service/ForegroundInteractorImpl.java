@@ -179,28 +179,38 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
 
     @DrawableRes final int wearIcon =
         wearManageObserver.is() ? R.drawable.ic_watch_24dp : R.drawable.ic_watch_off_24dp;
+    @ColorRes final int wearIconTint =
+        wearManageObserver.is() ? android.R.color.white : R.color.grey500;
     @DrawableRes final int wifiIcon = wifiManageObserver.is() ? R.drawable.ic_network_wifi_24dp
         : R.drawable.ic_signal_wifi_off_24dp;
+    @ColorRes final int wifiIconTint =
+        wifiManageObserver.is() ? android.R.color.white : R.color.grey500;
     @DrawableRes final int dataIcon = dataManageObserver.is() ? R.drawable.ic_network_cell_24dp
         : R.drawable.ic_signal_cellular_off_24dp;
+    @ColorRes final int dataIconTint =
+        dataManageObserver.is() ? android.R.color.white : R.color.grey500;
     @DrawableRes final int bluetoothIcon =
         bluetoothManageObserver.is() ? R.drawable.ic_bluetooth_24dp
             : R.drawable.ic_bluetooth_disabled_24dp;
+    @ColorRes final int bluetoothIconTint =
+        bluetoothManageObserver.is() ? android.R.color.white : R.color.grey500;
     @DrawableRes final int syncIcon =
         syncManageObserver.is() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
+    @ColorRes final int syncIconTint =
+        syncManageObserver.is() ? android.R.color.white : R.color.grey500;
     @ColorRes final int dozeIconTint =
         dozeManageObserver.is() ? android.R.color.white : R.color.grey500;
 
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_wear_image, wearIcon);
+        R.id.remoteview_notification_wear_image, wearIcon, wearIconTint);
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_wifi_image, wifiIcon);
+        R.id.remoteview_notification_wifi_image, wifiIcon, wifiIconTint);
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_data_image, dataIcon);
+        R.id.remoteview_notification_data_image, dataIcon, dataIconTint);
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_bluetooth_image, bluetoothIcon);
+        R.id.remoteview_notification_bluetooth_image, bluetoothIcon, bluetoothIconTint);
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_sync_image, syncIcon);
+        R.id.remoteview_notification_sync_image, syncIcon, syncIconTint);
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_doze_image, R.drawable.ic_doze_24dp, dozeIconTint);
 
