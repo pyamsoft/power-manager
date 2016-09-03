@@ -49,4 +49,9 @@ import javax.inject.Singleton;
       @NonNull Context context) {
     return new DozeStateObserver(context);
   }
+
+  @Singleton @Named("obs_wear_state") @Provides BooleanInterestObserver provideWearObserver(
+      @NonNull Context context) {
+    return new WearStateObserver(context);
+  }
 }

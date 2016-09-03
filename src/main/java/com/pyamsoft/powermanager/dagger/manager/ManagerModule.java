@@ -31,17 +31,20 @@ import rx.Scheduler;
 @Module public class ManagerModule {
 
   @ActivityScope @Provides @Named("wifi_manager") Manager provideManagerWifi(
-      @Named("wifi_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerWifi(interactor, ioScheduler, mainScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_manager_interactor")
-  ManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
+  WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_wifi_state") BooleanInterestObserver stateObserver) {
-    return new ManagerWifiInteractor(context, preferences, manageObserver, stateObserver);
+      @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
+      @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
+      @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
+    return new ManagerWifiInteractor(context, preferences, manageObserver, stateObserver,
+        wearManageObserver, wearStateObserver);
   }
 
   @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
@@ -59,17 +62,20 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
-      @Named("bluetooth_manager_interactor") @NonNull ManagerInteractor interactor,
+      @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerBluetooth(interactor, ioScheduler, mainScheduler);
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager_interactor")
-  ManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
+  WearAwareManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver) {
-    return new ManagerBluetoothInteractor(context, preferences, manageObserver, stateObserver);
+      @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver,
+      @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
+      @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
+    return new ManagerBluetoothInteractor(context, preferences, manageObserver, stateObserver,
+        wearManageObserver, wearStateObserver);
   }
 
   @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(

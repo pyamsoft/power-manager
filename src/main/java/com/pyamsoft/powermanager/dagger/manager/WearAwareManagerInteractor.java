@@ -16,14 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
-import rx.Scheduler;
+import rx.Observable;
 
-class ManagerBluetooth extends WearAwareManagerBase {
+interface WearAwareManagerInteractor extends ManagerInteractor {
 
-  @Inject ManagerBluetooth(@NonNull WearAwareManagerInteractor interactor,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
-    super(interactor, subscribeScheduler, observerScheduler);
-  }
+  @CheckResult @NonNull Observable<Boolean> isWearManaged();
+
+  @CheckResult @NonNull Observable<Boolean> isWearEnabled();
 }

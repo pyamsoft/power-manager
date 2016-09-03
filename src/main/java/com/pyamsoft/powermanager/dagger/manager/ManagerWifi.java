@@ -20,10 +20,10 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class ManagerWifi extends ManagerBase {
+class ManagerWifi extends WearAwareManagerBase {
 
-  @Inject ManagerWifi(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observerScheduler) {
+  @Inject ManagerWifi(@NonNull WearAwareManagerInteractor interactor,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
     super(interactor, subscribeScheduler, observerScheduler);
   }
 }

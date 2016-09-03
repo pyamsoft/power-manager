@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class ManagerSync extends ManagerBase {
+class ManagerSync extends WearUnawareManagerBase {
 
   @Inject ManagerSync(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observerScheduler) {

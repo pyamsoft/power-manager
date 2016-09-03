@@ -60,17 +60,7 @@ abstract class ManagerBase implements Manager {
     }
   }
 
-  @CheckResult @NonNull private Observable<Boolean> baseObservable() {
-    return interactor.cancelJobs().flatMap(cancelled -> {
-      if (cancelled) {
-        Timber.d("Is Managed?");
-        return interactor.isManaged();
-      } else {
-        Timber.w("Cancel jobs failed, return empty");
-        return Observable.empty();
-      }
-    });
-  }
+  @CheckResult @NonNull abstract Observable<Boolean> baseObservable();
 
   @Override public void queueSet() {
     unsubSet();

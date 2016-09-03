@@ -25,7 +25,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ManagerDoze extends ManagerBase implements ExclusiveManager {
+class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
 
   @NonNull private final ExclusiveManagerInteractor interactor;
   @NonNull private Subscription dozeSetSubscription = Subscriptions.empty();

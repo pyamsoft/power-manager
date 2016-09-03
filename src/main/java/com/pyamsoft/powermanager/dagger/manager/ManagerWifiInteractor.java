@@ -26,12 +26,15 @@ import com.pyamsoft.powermanager.dagger.job.WifiManageJob;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerWifiInteractor extends ManagerBaseInteractor {
+class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
 
   @Inject ManagerWifiInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(context, preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestObserver wearManageObserver,
+      @NonNull BooleanInterestObserver wearStateObserver) {
+    super(context, preferences, manageObserver, stateObserver, wearManageObserver,
+        wearStateObserver);
   }
 
   @CheckResult private long getDelayTime() {

@@ -16,14 +16,32 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
+import rx.Observable;
 import rx.Scheduler;
+import timber.log.Timber;
 
-class ManagerBluetooth extends WearAwareManagerBase {
+abstract class WearUnawareManagerBase extends ManagerBase {
 
-  @Inject ManagerBluetooth(@NonNull WearAwareManagerInteractor interactor,
+  WearUnawareManagerBase(@NonNull ManagerInteractor interactor,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
     super(interactor, subscribeScheduler, observerScheduler);
+  }
+
+  @Override @CheckResult @NonNull Observable<Boolean> baseObservable() {
+    return jobCancellingObservable();
+  }
+
+  @CheckResult @NonNull Observable<Boolean> jobCancellingObservable() {
+    return interactor.cancelJobs().flatMap(cancelled -> {
+      if (cancelled) {
+        Timber.d("Is Managed?");
+        return interactor.isManaged();
+      } else {
+        Timber.w("Cancel jobs failed, return empty");
+        return Observable.empty();
+      }
+    });
   }
 }
