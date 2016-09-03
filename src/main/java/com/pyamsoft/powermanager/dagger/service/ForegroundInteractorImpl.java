@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.CheckResult;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -187,8 +188,8 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
             : R.drawable.ic_bluetooth_disabled_24dp;
     @DrawableRes final int syncIcon =
         syncManageObserver.is() ? R.drawable.ic_sync_24dp : R.drawable.ic_sync_disabled_24dp;
-    @DrawableRes final int dozeIcon =
-        dozeManageObserver.is() ? R.drawable.ic_doze_24dp : R.drawable.ic_close_24dp;
+    @ColorRes final int dozeIconTint =
+        dozeManageObserver.is() ? android.R.color.white : R.color.grey500;
 
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_wear_image, wearIcon);
@@ -201,7 +202,7 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
     AppUtil.setVectorIconForNotification(appContext, customView,
         R.id.remoteview_notification_sync_image, syncIcon);
     AppUtil.setVectorIconForNotification(appContext, customView,
-        R.id.remoteview_notification_doze_image, dozeIcon);
+        R.id.remoteview_notification_doze_image, R.drawable.ic_doze_24dp, dozeIconTint);
 
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wear_touch, wearAction);
     customView.setOnClickPendingIntent(R.id.remoteview_notification_wifi_touch, wifiAction);
