@@ -53,4 +53,9 @@ abstract class WearAwareManagerBase extends WearUnawareManagerBase {
       return shouldContinue;
     });
   }
+
+  @Override public void cleanup() {
+    super.cleanup();
+    wearAwareManagerInteractor.cleanup();
+  }
 }

@@ -45,4 +45,8 @@ abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
   @NonNull @Override public Observable<Boolean> isWearManaged() {
     return Observable.defer(() -> Observable.just(wearManageObserver.is()));
   }
+
+  @Override public void cleanup() {
+    wearStateObserver.unregister(getClass().getName());
+  }
 }

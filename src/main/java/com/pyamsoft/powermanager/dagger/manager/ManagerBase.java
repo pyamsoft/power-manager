@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.manager.Manager;
@@ -114,7 +115,7 @@ abstract class ManagerBase implements Manager {
     }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
   }
 
-  @Override public void cleanup() {
+  @CallSuper @Override public void cleanup() {
     interactor.destroy();
     unsubSet();
     unsubUnset();
