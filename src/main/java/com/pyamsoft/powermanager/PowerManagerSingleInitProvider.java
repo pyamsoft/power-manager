@@ -16,23 +16,15 @@
 
 package com.pyamsoft.powermanager;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.support.annotation.CheckResult;
+import android.content.Intent;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.ApplicationBase;
-import timber.log.Timber;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.pydroid.base.SingleInitContentProvider;
 
-public class PowerManager extends ApplicationBase {
+public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
 
-  // KLUDGE Move to better location
-  @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
-    final boolean hasPermission = Build.VERSION.SDK_INT == Build.VERSION_CODES.M
-        && context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
-        == PackageManager.PERMISSION_GRANTED;
-    Timber.d("Has doze permission? %s", hasPermission);
-    return hasPermission;
+  @Override protected void installInNonTestMode(@NonNull Context context) {
+    context.startService(new Intent(context, ForegroundService.class));
   }
 }
