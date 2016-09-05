@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.bus;
 
-import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.event.DismissEvent;
+import com.pyamsoft.pydroid.bus.RxBus;
 
-@Module public class FullNotificationModule {
+public class FullNotificationBus extends RxBus<DismissEvent> {
 
-  @ActivityScope @Provides FullNotificationPresenter provideFullNotificationPresenter(
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
-    return new FullNotificationPresenterImpl(mainScheduler, ioScheduler);
+  @NonNull private static final FullNotificationBus instance = new FullNotificationBus();
+
+  @CheckResult @NonNull public static FullNotificationBus get() {
+    return instance;
   }
 }

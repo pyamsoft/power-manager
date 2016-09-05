@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
 import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
 import rx.Subscription;

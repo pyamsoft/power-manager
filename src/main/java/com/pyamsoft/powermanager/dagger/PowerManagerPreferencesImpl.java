@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.pydroid.base.app.ApplicationPreferences;
+import com.pyamsoft.pydroid.base.ApplicationPreferences;
 import javax.inject.Inject;
 
 class PowerManagerPreferencesImpl extends ApplicationPreferences

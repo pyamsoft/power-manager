@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.periodpreference;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.pydroid.base.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
 import rx.Scheduler;
 
 public abstract class BasePeriodPreferencePresenterImpl

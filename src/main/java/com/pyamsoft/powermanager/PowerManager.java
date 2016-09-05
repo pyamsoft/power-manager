@@ -24,7 +24,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.app.ApplicationBase;
+import com.pyamsoft.pydroid.base.ApplicationBase;
 import com.squareup.leakcanary.LeakCanary;
 import timber.log.Timber;
 
@@ -39,23 +39,13 @@ public class PowerManager extends ApplicationBase {
     return hasPermission;
   }
 
-  @Override public void onCreate() {
-    super.onCreate();
-
-    // Start stuff
-    startForegroundService();
-  }
-
   @Override protected void installInDebugMode() {
     super.installInDebugMode();
     LeakCanary.install(this);
   }
 
-  private void startForegroundService() {
+  @Override protected void installInNonTestMode() {
+    super.installInNonTestMode();
     startService(new Intent(this, ForegroundService.class));
-  }
-
-  @Override protected boolean buildConfigDebug() {
-    return BuildConfig.DEBUG;
   }
 }

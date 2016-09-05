@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.dagger.managepreference.data.DataManagePreferen
 import com.pyamsoft.powermanager.dagger.managepreference.doze.DozeManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.sync.SyncManagePreferenceModule;
 import com.pyamsoft.powermanager.dagger.managepreference.wifi.WifiManagePreferenceModule;
-import com.pyamsoft.pydroid.base.app.ActivityScope;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

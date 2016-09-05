@@ -42,7 +42,8 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.base.activity.DonationActivity;
+import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashMap;
@@ -77,10 +78,6 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
   @NonNull @Override protected String provideAdViewUnitId() {
     return getString(R.string.banner_ad_id);
-  }
-
-  @Override protected boolean isAdDebugMode() {
-    return BuildConfig.DEBUG;
   }
 
   @Override protected void onDestroy() {
@@ -135,14 +132,15 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
   @CheckResult private boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(WifiFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(DataFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(BluetoothFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(SyncFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(DozeFragment.TAG) == null &&
-        fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null;
+    return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(WifiFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(DataFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(BluetoothFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(SyncFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(DozeFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null;
   }
 
   private void loadOverviewFragment() {
@@ -241,11 +239,11 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     return R.mipmap.ic_launcher;
   }
 
-  @NonNull @Override public String getChangeLogPackageName() {
-    return getPackageName();
+  @NonNull @Override public String provideApplicationName() {
+    return "Power Manager";
   }
 
-  @Override public int getChangeLogVersion() {
+  @Override public int getCurrentApplicationVersion() {
     return BuildConfig.VERSION_CODE;
   }
 }

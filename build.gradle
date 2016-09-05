@@ -101,7 +101,6 @@ dependencies {
   // Support
   // Needs to compile support annotations into actual project
   compile 'com.android.support:support-annotations:24.2.0'
-  compile 'com.android.support:cardview-v7:24.2.0'
 
   // Job Scheduling
   compile 'com.birbit:android-priority-jobqueue:2.0.0'
@@ -143,8 +142,9 @@ dependencies {
   // Mockito for unit tests
   testCompile 'org.mockito:mockito-core:2.0.104-beta'
 
-  // PYDroid 3.5.1
-  compile project(':PYDroid')
+  // PYDroid 3.6.0
+  debugCompile project(path: ':PYDroid', configuration: "debug")
+  releaseCompile project(path: ':PYDroid', configuration: "release")
 }
 
 // AdView

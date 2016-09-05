@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
-import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 
 public class DataPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 

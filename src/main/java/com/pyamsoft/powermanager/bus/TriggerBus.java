@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bus;
+package com.pyamsoft.powermanager.bus;
 
+import android.content.ContentValues;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.event.ConfirmationEvent;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.pyamsoft.pydroid.bus.RxBus;
 
-public class ConfirmDialogBus extends RxBus<ConfirmationEvent> {
+public class TriggerBus extends RxBus<ContentValues> {
 
-  @NonNull private static final ConfirmDialogBus instance = new ConfirmDialogBus();
+  @NonNull private static final TriggerBus instance = new TriggerBus();
 
-  @CheckResult @NonNull public static ConfirmDialogBus get() {
+  @CheckResult @NonNull public static TriggerBus get() {
     return instance;
   }
 }

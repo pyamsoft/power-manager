@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.service;
 
-import com.pyamsoft.pydroid.base.presenter.Presenter;
+import com.pyamsoft.pydroid.dagger.presenter.Presenter;
 
 public interface FullNotificationPresenter
     extends Presenter<FullNotificationPresenter.FullNotificationView> {

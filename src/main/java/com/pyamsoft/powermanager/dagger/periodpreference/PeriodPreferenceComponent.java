@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.dagger.periodpreference.bluetooth.BluetoothPeri
 import com.pyamsoft.powermanager.dagger.periodpreference.data.DataPeriodPreferenceModule;
 import com.pyamsoft.powermanager.dagger.periodpreference.sync.SyncPeriodPreferenceModule;
 import com.pyamsoft.powermanager.dagger.periodpreference.wifi.WifiPeriodPreferenceModule;
-import com.pyamsoft.pydroid.base.app.ActivityScope;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

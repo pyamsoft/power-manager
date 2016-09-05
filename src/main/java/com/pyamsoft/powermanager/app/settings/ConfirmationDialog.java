@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.powermanager.app.bus.ConfirmDialogBus;
+import com.pyamsoft.powermanager.bus.ConfirmDialogBus;
 import com.pyamsoft.powermanager.model.event.ConfirmationEvent;
 
 public class ConfirmationDialog extends DialogFragment {

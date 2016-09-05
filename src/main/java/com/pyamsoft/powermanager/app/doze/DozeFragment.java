@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
-import com.pyamsoft.pydroid.base.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
 public class DozeFragment extends BaseOverviewSingleItemFragment {
 

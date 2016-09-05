@@ -29,8 +29,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.base.app.PersistLoader;
-import com.pyamsoft.pydroid.tool.PersistentCache;
+import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.settings;
 
-import com.pyamsoft.pydroid.base.presenter.Presenter;
+import com.pyamsoft.pydroid.dagger.presenter.Presenter;
 
 public interface SettingsPreferencePresenter
     extends Presenter<SettingsPreferencePresenter.SettingsPreferenceView> {

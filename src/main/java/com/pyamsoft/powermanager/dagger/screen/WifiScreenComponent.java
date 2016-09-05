@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.screen;
 
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.base.app.ActivityScope;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent public interface WifiScreenComponent {

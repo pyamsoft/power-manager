@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bus;
+package com.pyamsoft.powermanager.model.event;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.google.auto.value.AutoValue;
 
-public class FullNotificationBus extends RxBus<FullNotificationBus.DismissEvent> {
+@AutoValue public abstract class DismissEvent {
 
-  @NonNull private static final RxBus<DismissEvent> instance = new FullNotificationBus();
-
-  @CheckResult @NonNull public static RxBus<DismissEvent> get() {
-    return instance;
+  @NonNull @CheckResult public static DismissEvent create() {
+    return new AutoValue_DismissEvent();
   }
 
-  public static final class DismissEvent {
-
-  }
 }

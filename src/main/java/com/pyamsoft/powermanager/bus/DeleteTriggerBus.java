@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.bus;
+package com.pyamsoft.powermanager.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.event.DeleteTriggerEvent;
-import com.pyamsoft.pydroid.tool.RxBus;
+import com.pyamsoft.pydroid.bus.RxBus;
 
 public class DeleteTriggerBus extends RxBus<DeleteTriggerEvent> {
 

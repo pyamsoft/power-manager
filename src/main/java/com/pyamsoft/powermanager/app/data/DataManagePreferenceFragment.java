@@ -18,11 +18,10 @@ package com.pyamsoft.powermanager.app.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.content.Loader;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.pydroid.base.PersistLoader;
 
 public class DataManagePreferenceFragment extends BaseManagePreferenceFragment {
 

@@ -37,15 +37,16 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.app.bus.FullNotificationBus;
+import com.pyamsoft.powermanager.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.pydroid.base.app.PersistLoader;
+import com.pyamsoft.powermanager.model.event.DismissEvent;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.tool.PersistentCache;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;
@@ -197,7 +198,7 @@ public class FullNotificationActivity extends AppCompatActivity
     private void destroy() {
       Timber.d("Destroy FullNotification");
       dismiss();
-      FullNotificationBus.get().post(new FullNotificationBus.DismissEvent());
+      FullNotificationBus.get().post(DismissEvent.create());
     }
 
     @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
