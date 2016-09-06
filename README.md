@@ -2,7 +2,10 @@
 
 Power Manager Android application by pyamsoft
 
+[![Get it on Google Play](art/google-play-badge.png)][1]
+
 ## What is Power Manager
+
 Power Manager smartly manages the WiFi, Cellular Data*, Bluetooth, and Sync  
 on your Android device. When the device's screen is off and the device is  
 idle, Power Manager will automatically turn off the interfaces that you ask  
@@ -52,3 +55,4 @@ as the request goes in line with the design of the application. Pull Requests
 will only be accepted for new features of the application, for general  
 purpose bug fixes, creating an issue is simply faster.
 
+[1]: https://play.google.com/store/apps/details?id=com.pyamsoft.powermanager
