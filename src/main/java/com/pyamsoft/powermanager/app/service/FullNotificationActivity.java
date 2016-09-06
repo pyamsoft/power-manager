@@ -37,10 +37,10 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.Singleton;
-import com.pyamsoft.powermanager.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.bus.FullNotificationBus;
 import com.pyamsoft.powermanager.model.event.DismissEvent;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -55,12 +55,13 @@ import timber.log.Timber;
 public class FullNotificationActivity extends AppCompatActivity
     implements FullNotificationPresenter.FullNotificationView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_notification_presenter";
   @SuppressWarnings("WeakerAccess") FullNotificationPresenter presenter;
-  private String loadedKey;
+  private long loadedKey;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<FullNotificationPresenter>() {
           @NonNull @Override public PersistLoader<FullNotificationPresenter> createLoader() {
             return new FullNotificationPresenterLoader(getApplicationContext());
@@ -80,7 +81,7 @@ public class FullNotificationActivity extends AppCompatActivity
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

@@ -36,6 +36,7 @@ import timber.log.Timber;
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
     implements BaseManagePreferencePresenter.ManagePreferenceView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
@@ -43,7 +44,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   private String manageKey;
   private String presetTimeKey;
   private String timeKey;
-  private String loadedKey;
+  private long loadedKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -54,7 +55,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<BaseManagePreferencePresenter>() {
           @NonNull @Override public PersistLoader<BaseManagePreferencePresenter> createLoader() {
             return createPresenterLoader(getContext());
@@ -135,7 +136,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

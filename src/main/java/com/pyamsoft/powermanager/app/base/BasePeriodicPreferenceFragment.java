@@ -35,6 +35,7 @@ import timber.log.Timber;
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
     implements BasePeriodPreferencePresenter.PeriodPreferenceView {
 
+  @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
@@ -46,7 +47,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   private String presetDisableTimeKey;
   private String enableTimeKey;
   private String disableTimeKey;
-  private String loadedKey;
+  private long loadedKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -59,7 +60,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<BasePeriodPreferencePresenter>() {
           @NonNull @Override public PersistLoader<BasePeriodPreferencePresenter> createLoader() {
             return createPresenterLoader(getContext());
@@ -224,7 +225,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

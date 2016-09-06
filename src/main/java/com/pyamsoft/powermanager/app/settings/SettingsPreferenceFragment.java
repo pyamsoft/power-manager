@@ -35,8 +35,8 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -49,16 +49,17 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
   @NonNull private static final String OBS_TAG = "settings_wear_obs";
+  @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearObserver;
   @Inject @Named("mod_wear_manage") BooleanInterestModifier wearModifier;
   @SuppressWarnings("WeakerAccess") CheckBoxPreference wearPreference;
-  private String loadedKey;
+  private long loadedKey;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
+    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<SettingsPreferencePresenter>() {
           @NonNull @Override public PersistLoader<SettingsPreferencePresenter> createLoader() {
             return new SettingsPreferencePresenterLoader(getContext());
@@ -197,7 +198,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 }

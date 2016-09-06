@@ -48,6 +48,8 @@ public class PowerTriggerFragment extends ActionBarFragment
     implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "Power Triggers";
+  @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
+  @NonNull private static final String KEY_ADAPTER = "key_trigger_adapter";
   @NonNull private final AsyncDrawableMap drawableMap = new AsyncDrawableMap();
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
@@ -60,8 +62,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   PowerTriggerListAdapter adapter;
   Unbinder unbinder;
   RecyclerView.ItemDecoration dividerDecoration;
-  private String loadedPresenterKey;
-  private String loadedPresenterAdapterKey;
+  private long loadedPresenterKey;
+  private long loadedPresenterAdapterKey;
 
   @CheckResult @NonNull
   public static PowerTriggerFragment newInstance(@NonNull View view, @NonNull View container) {
@@ -73,7 +75,7 @@ public class PowerTriggerFragment extends ActionBarFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedPresenterKey = PersistentCache.load(loadedPresenterKey, savedInstanceState,
+    loadedPresenterKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
         new PersistLoader.Callback<TriggerPresenter>() {
           @NonNull @Override public PersistLoader<TriggerPresenter> createLoader() {
             return new TriggerPresenterLoader(getContext());
@@ -84,7 +86,7 @@ public class PowerTriggerFragment extends ActionBarFragment
           }
         });
 
-    loadedPresenterAdapterKey = PersistentCache.load(loadedPresenterAdapterKey, savedInstanceState,
+    loadedPresenterAdapterKey = PersistentCache.load(KEY_ADAPTER, savedInstanceState,
         new PersistLoader.Callback<TriggerListAdapterPresenter>() {
           @NonNull @Override public PersistLoader<TriggerListAdapterPresenter> createLoader() {
             return new TriggerListAdapterPresenterLoader(getContext());
@@ -147,8 +149,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, loadedPresenterKey);
-    PersistentCache.saveKey(outState, loadedPresenterAdapterKey);
+    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedPresenterKey);
+    PersistentCache.saveKey(outState, KEY_ADAPTER, loadedPresenterAdapterKey);
     super.onSaveInstanceState(outState);
   }
 
