@@ -33,7 +33,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
-    return new ManagerWifi(interactor, ioScheduler, mainScheduler);
+    return new ManagerWifi(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_manager_interactor")
@@ -50,7 +50,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
-    return new ManagerData(interactor, ioScheduler, mainScheduler);
+    return new ManagerData(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("data_manager_interactor")
@@ -64,7 +64,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
-    return new ManagerBluetooth(interactor, ioScheduler, mainScheduler);
+    return new ManagerBluetooth(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager_interactor")
@@ -81,7 +81,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
-    return new ManagerSync(interactor, ioScheduler, mainScheduler);
+    return new ManagerSync(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("sync_manager_interactor")
@@ -95,7 +95,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ExclusiveManagerInteractor interactor,
       @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
-    return new ManagerDoze(interactor, ioScheduler, mainScheduler);
+    return new ManagerDoze(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("doze_manager_interactor")

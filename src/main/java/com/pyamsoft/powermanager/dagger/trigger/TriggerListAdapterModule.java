@@ -29,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides TriggerListAdapterPresenter provideTriggerListAdapterPresenter(
       @NonNull @Named("main") Scheduler mainScheduler, @NonNull @Named("io") Scheduler ioScheduler,
       @NonNull TriggerListAdapterInteractor interactor) {
-    return new TriggerListAdapterPresenterImpl(mainScheduler, ioScheduler, interactor);
+    return new TriggerListAdapterPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides TriggerListAdapterInteractor provideTriggerListAdapterInteractor(

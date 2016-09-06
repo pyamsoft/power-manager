@@ -32,8 +32,8 @@ class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
   @NonNull private Subscription dozeUnsetSubscription = Subscriptions.empty();
 
   @Inject ManagerDoze(@NonNull ExclusiveManagerInteractor interactor,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
-    super(interactor, subscribeScheduler, observerScheduler);
+      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observerScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 

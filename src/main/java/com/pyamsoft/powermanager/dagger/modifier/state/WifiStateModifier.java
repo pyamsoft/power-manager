@@ -28,8 +28,8 @@ class WifiStateModifier extends StateModifier {
   @NonNull private final WifiManagerWrapper wrapper;
 
   @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(context, preferences, observeScheduler, subscribeScheduler);
     wrapper = new WifiManagerWrapper(context);
   }
 

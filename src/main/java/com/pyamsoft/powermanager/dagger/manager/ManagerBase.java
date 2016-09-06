@@ -34,11 +34,11 @@ abstract class ManagerBase implements Manager {
   @NonNull private Subscription setSubscription = Subscriptions.empty();
   @NonNull private Subscription unsetSubscription = Subscriptions.empty();
 
-  ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observerScheduler) {
+  ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
+      @NonNull Scheduler subscribeScheduler) {
     this.interactor = interactor;
-    this.subscribeScheduler = subscribeScheduler;
     this.observerScheduler = observerScheduler;
+    this.subscribeScheduler = subscribeScheduler;
   }
 
   @NonNull @CheckResult Scheduler getSubscribeScheduler() {

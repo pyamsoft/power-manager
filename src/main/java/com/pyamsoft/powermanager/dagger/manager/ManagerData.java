@@ -22,8 +22,8 @@ import rx.Scheduler;
 
 class ManagerData extends WearUnawareManagerBase {
 
-  @Inject ManagerData(@NonNull ManagerInteractor interactor, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observerScheduler) {
-    super(interactor, subscribeScheduler, observerScheduler);
+  @Inject ManagerData(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
+      @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observerScheduler, subscribeScheduler);
   }
 }

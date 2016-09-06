@@ -25,8 +25,8 @@ import timber.log.Timber;
 abstract class WearUnawareManagerBase extends ManagerBase {
 
   WearUnawareManagerBase(@NonNull ManagerInteractor interactor,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
-    super(interactor, subscribeScheduler, observerScheduler);
+      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observerScheduler, subscribeScheduler);
   }
 
   @Override @CheckResult @NonNull Observable<Boolean> baseObservable() {

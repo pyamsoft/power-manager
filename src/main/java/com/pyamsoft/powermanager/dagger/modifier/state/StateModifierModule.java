@@ -32,14 +32,14 @@ import rx.Scheduler;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new WifiStateModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new WifiStateModifier(context, preferences, observeScheduler, subscribeScheduler);
   }
 
   @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new DataStateModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new DataStateModifier(context, preferences, observeScheduler, subscribeScheduler);
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides
@@ -47,20 +47,20 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new BluetoothStateModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new BluetoothStateModifier(context, preferences, observeScheduler, subscribeScheduler);
   }
 
   @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new SyncStateModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new SyncStateModifier(context, preferences, observeScheduler, subscribeScheduler);
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
-    return new DozeStateModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new DozeStateModifier(context, preferences, observeScheduler, subscribeScheduler);
   }
 }

@@ -35,9 +35,9 @@ class TriggerListAdapterPresenterImpl
   @NonNull private final TriggerListAdapterInteractor interactor;
   @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
-  @Inject TriggerListAdapterPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
-      @NonNull @Named("io") Scheduler subscribeScheduler,
-      @NonNull TriggerListAdapterInteractor adapterInteractor) {
+  @Inject TriggerListAdapterPresenterImpl(@NonNull TriggerListAdapterInteractor adapterInteractor,
+      @NonNull @Named("main") Scheduler observeScheduler,
+      @NonNull @Named("io") Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = adapterInteractor;
   }

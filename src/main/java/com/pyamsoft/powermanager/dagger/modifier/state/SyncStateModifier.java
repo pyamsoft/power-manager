@@ -27,8 +27,8 @@ import timber.log.Timber;
 class SyncStateModifier extends StateModifier {
 
   @Inject SyncStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(context, preferences, observeScheduler, subscribeScheduler);
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {

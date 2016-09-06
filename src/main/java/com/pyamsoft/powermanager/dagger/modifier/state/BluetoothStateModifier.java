@@ -28,9 +28,9 @@ class BluetoothStateModifier extends StateModifier {
   @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler) {
+    super(context, preferences, observeScheduler, subscribeScheduler);
     wrapper = new BluetoothAdapterWrapper(context);
   }
 

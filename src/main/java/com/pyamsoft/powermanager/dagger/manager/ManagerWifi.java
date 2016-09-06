@@ -23,7 +23,7 @@ import rx.Scheduler;
 class ManagerWifi extends WearAwareManagerBase {
 
   @Inject ManagerWifi(@NonNull WearAwareManagerInteractor interactor,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observerScheduler) {
-    super(interactor, subscribeScheduler, observerScheduler);
+      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observerScheduler, subscribeScheduler);
   }
 }

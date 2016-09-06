@@ -39,8 +39,8 @@ class DozeStateModifier extends StateModifier {
   @NonNull private final SensorFixReceiver sensorFixReceiver;
 
   @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(context, preferences, observeScheduler, subscribeScheduler);
     sensorFixReceiver = new SensorFixReceiver(context.getApplicationContext());
   }
 

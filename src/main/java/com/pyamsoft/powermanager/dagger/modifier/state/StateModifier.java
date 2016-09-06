@@ -35,7 +35,7 @@ abstract class StateModifier implements BooleanInterestModifier {
   @NonNull private Subscription subscription = Subscriptions.empty();
 
   StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     Timber.d("New StateModifier");
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;

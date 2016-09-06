@@ -40,8 +40,8 @@ class DataStateModifier extends StateModifier {
   @NonNull private final ConnectivityManager connectivityManager;
 
   @Inject DataStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(context, preferences, observeScheduler, subscribeScheduler);
     connectivityManager = (ConnectivityManager) context.getApplicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }
