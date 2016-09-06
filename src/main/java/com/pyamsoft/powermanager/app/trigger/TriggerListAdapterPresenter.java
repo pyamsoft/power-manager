@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.trigger;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.dagger.presenter.Presenter;
+import com.pyamsoft.pydroid.base.Presenter;
 
 public interface TriggerListAdapterPresenter
     extends Presenter<TriggerListAdapterPresenter.TriggerListAdapterView> {

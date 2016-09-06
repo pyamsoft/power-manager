@@ -33,14 +33,14 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
-import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.app.widget.DividerItemDecoration;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
-import com.pyamsoft.pydroid.app.widget.DividerItemDecoration;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 import timber.log.Timber;
 
@@ -48,8 +48,6 @@ public class PowerTriggerFragment extends ActionBarFragment
     implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "Power Triggers";
-  @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
-  @NonNull private static final String KEY_PRESENTER_ADAPTER = "key_trigger_adapter_presenter";
   @NonNull private final AsyncDrawableMap drawableMap = new AsyncDrawableMap();
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
@@ -62,8 +60,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   PowerTriggerListAdapter adapter;
   Unbinder unbinder;
   RecyclerView.ItemDecoration dividerDecoration;
-  private long loadedPresenterKey;
-  private long loadedPresenterAdapterKey;
+  private String loadedPresenterKey;
+  private String loadedPresenterAdapterKey;
 
   @CheckResult @NonNull
   public static PowerTriggerFragment newInstance(@NonNull View view, @NonNull View container) {
@@ -75,7 +73,7 @@ public class PowerTriggerFragment extends ActionBarFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedPresenterKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+    loadedPresenterKey = PersistentCache.load(loadedPresenterKey, savedInstanceState,
         new PersistLoader.Callback<TriggerPresenter>() {
           @NonNull @Override public PersistLoader<TriggerPresenter> createLoader() {
             return new TriggerPresenterLoader(getContext());
@@ -86,7 +84,7 @@ public class PowerTriggerFragment extends ActionBarFragment
           }
         });
 
-    loadedPresenterAdapterKey = PersistentCache.load(KEY_PRESENTER_ADAPTER, savedInstanceState,
+    loadedPresenterAdapterKey = PersistentCache.load(loadedPresenterAdapterKey, savedInstanceState,
         new PersistLoader.Callback<TriggerListAdapterPresenter>() {
           @NonNull @Override public PersistLoader<TriggerListAdapterPresenter> createLoader() {
             return new TriggerListAdapterPresenterLoader(getContext());
@@ -149,8 +147,8 @@ public class PowerTriggerFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedPresenterKey);
-    PersistentCache.saveKey(KEY_PRESENTER_ADAPTER, outState, loadedPresenterAdapterKey);
+    PersistentCache.saveKey(outState, loadedPresenterKey);
+    PersistentCache.saveKey(outState, loadedPresenterAdapterKey);
     super.onSaveInstanceState(outState);
   }
 

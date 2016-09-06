@@ -55,13 +55,12 @@ import timber.log.Timber;
 public class FullNotificationActivity extends AppCompatActivity
     implements FullNotificationPresenter.FullNotificationView {
 
-  @NonNull private static final String KEY_PRESENTER = "key_full_notif_presenter";
   @SuppressWarnings("WeakerAccess") FullNotificationPresenter presenter;
-  private long loadedKey;
+  private String loadedKey;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
+    loadedKey = PersistentCache.load(loadedKey, savedInstanceState,
         new PersistLoader.Callback<FullNotificationPresenter>() {
           @NonNull @Override public PersistLoader<FullNotificationPresenter> createLoader() {
             return new FullNotificationPresenterLoader(getApplicationContext());
@@ -81,7 +80,7 @@ public class FullNotificationActivity extends AppCompatActivity
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(KEY_PRESENTER, outState, loadedKey);
+    PersistentCache.saveKey(outState, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
