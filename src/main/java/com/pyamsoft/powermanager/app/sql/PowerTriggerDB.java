@@ -34,17 +34,12 @@ import timber.log.Timber;
 public class PowerTriggerDB {
   @NonNull private static final Object lock = new Object();
   private static volatile PowerTriggerDB instance = null;
-
-  @NonNull private final SqlBrite sqlBrite;
-  @NonNull private final PowerTriggerOpenHelper openHelper;
-  @NonNull private final Scheduler dbScheduler;
+  @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @NonNull private final AtomicInteger openCount;
-  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
 
   private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
-    sqlBrite = SqlBrite.create();
-    openHelper = new PowerTriggerOpenHelper(context.getApplicationContext());
-    dbScheduler = scheduler;
+    briteDatabase =
+        SqlBrite.create().wrapDatabaseHelper(new PowerTriggerOpenHelper(context), scheduler);
     openCount = new AtomicInteger(0);
   }
 
@@ -70,11 +65,6 @@ public class PowerTriggerDB {
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    if (briteDatabase == null) {
-      Timber.d("Open new Database instance");
-      briteDatabase = sqlBrite.wrapDatabaseHelper(openHelper, dbScheduler);
-    }
-
     Timber.d("Increment open count to: %d", openCount.incrementAndGet());
   }
 
@@ -89,6 +79,7 @@ public class PowerTriggerDB {
   @CheckResult @NonNull public Observable<Long> insert(final @NonNull ContentValues contentValues) {
     // KLUDGE ugly
     final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
+    Timber.i("DB: INSERT");
     return deleteWithPercent(percent).map(deleted -> {
       Timber.d("Delete result: %d", deleted);
 
@@ -101,6 +92,7 @@ public class PowerTriggerDB {
 
   @CheckResult @NonNull
   public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent) {
+    Timber.i("DB: UPDATE");
     openDatabase();
 
     return Observable.defer(() -> {
@@ -112,6 +104,7 @@ public class PowerTriggerDB {
   }
 
   @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
+    Timber.i("DB: QUERY");
     openDatabase();
 
     return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
@@ -124,6 +117,7 @@ public class PowerTriggerDB {
   }
 
   @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(int percent) {
+    Timber.i("DB: QUERY");
     openDatabase();
 
     return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
@@ -138,6 +132,7 @@ public class PowerTriggerDB {
   }
 
   @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
+    Timber.i("DB: DELETE");
     openDatabase();
 
     return Observable.defer(() -> {
@@ -150,6 +145,7 @@ public class PowerTriggerDB {
   }
 
   @CheckResult @NonNull public Observable<Integer> deleteAll() {
+    Timber.i("DB: DELETE");
     openDatabase();
 
     return Observable.defer(() -> {
@@ -163,9 +159,6 @@ public class PowerTriggerDB {
   public void close() {
     Timber.d("Close and recycle database connection");
     openCount.set(0);
-    if (briteDatabase != null) {
-      briteDatabase.close();
-      briteDatabase = null;
-    }
+    briteDatabase.close();
   }
 }
