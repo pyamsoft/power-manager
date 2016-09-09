@@ -17,9 +17,8 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import rx.Observable;
@@ -28,13 +27,12 @@ import timber.log.Timber;
 class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
     implements TriggerListAdapterInteractor {
 
-  @Inject TriggerListAdapterInteractorImpl(Context context) {
-    super(context);
+  @Inject TriggerListAdapterInteractorImpl(PowerTriggerDB powerTriggerDB) {
+    super(powerTriggerDB);
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> get(int position) {
-    return PowerTriggerDB.with(getAppContext())
-        .queryAll()
+    return getPowerTriggerDB().queryAll()
         .first()
         .flatMap(Observable::from)
         .toSortedList((entry, entry2) -> {
@@ -65,7 +63,7 @@ class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
       Timber.d("Update entry to enabled state: %s", updated.enabled());
 
       // KLUDGE Update states it is successful, but changes are not actually written
-      return PowerTriggerDB.with(getAppContext()).update(values, percent);
+      return getPowerTriggerDB().update(values, percent);
     }).map(integer -> {
       // TODO handle the int return value
       Timber.d("Return code for update(): %d", integer);

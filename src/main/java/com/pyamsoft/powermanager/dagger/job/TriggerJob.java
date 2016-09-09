@@ -29,7 +29,7 @@ import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -55,6 +55,7 @@ public class TriggerJob extends BaseJob {
   @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
   @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
   @Inject JobManager jobManager;
+  @Inject PowerTriggerDB powerTriggerDB;
   @NonNull private Subscription runSubscription = Subscriptions.empty();
 
   public TriggerJob(long delay) {
@@ -103,17 +104,13 @@ public class TriggerJob extends BaseJob {
 
   private void runTriggerForPercent(int percent, boolean charging) {
     unsubRun();
-    runSubscription = PowerTriggerDB.with(getApplicationContext())
-        .queryAll()
-        .first()
-        .flatMap(powerTriggerEntries -> {
-          Timber.d("Flatten and filter");
-          return Observable.from(powerTriggerEntries);
-        })
-        .filter(entry -> {
-          Timber.d("Filter empty triggers");
-          return !PowerTriggerEntry.isEmpty(entry);
-        })
+    runSubscription = powerTriggerDB.queryAll().first().flatMap(powerTriggerEntries -> {
+      Timber.d("Flatten and filter");
+      return Observable.from(powerTriggerEntries);
+    }).filter(entry -> {
+      Timber.d("Filter empty triggers");
+      return !PowerTriggerEntry.isEmpty(entry);
+    })
         // KLUDGE Entries do not implement comparable
         .toSortedList((entry, entry2) -> {
           Timber.d("Sort entries");
@@ -127,8 +124,7 @@ public class TriggerJob extends BaseJob {
           } else {
             return 0;
           }
-        })
-        .flatMap(powerTriggerEntries -> {
+        }).flatMap(powerTriggerEntries -> {
           // KLUDGE this is really bad. Is there another way to update in the background?
           Observable<Integer> updatedAvailability = Observable.just(-1);
           PowerTriggerEntry trigger = PowerTriggerEntry.empty();
@@ -141,8 +137,8 @@ public class TriggerJob extends BaseJob {
                 Timber.d("Mark entry available for percent: %d", entry.percent());
                 final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
                 final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-                updatedAvailability = updatedAvailability.mergeWith(
-                    PowerTriggerDB.with(getApplicationContext()).update(values, updated.percent()));
+                updatedAvailability =
+                    updatedAvailability.mergeWith(powerTriggerDB.update(values, updated.percent()));
               }
             }
           } else {
@@ -175,8 +171,7 @@ public class TriggerJob extends BaseJob {
               Timber.d("Mark trigger as unavailable: %s %d", best.name(), best.percent());
               final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(best, false);
               final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-              updatedAvailability =
-                  PowerTriggerDB.with(getApplicationContext()).update(values, updated.percent());
+              updatedAvailability = powerTriggerDB.update(values, updated.percent());
               trigger = updated;
             }
           }
@@ -192,9 +187,7 @@ public class TriggerJob extends BaseJob {
         })
         // KLUDGE hardcoded schedulers
         // KLUDGE need to subscribe even if we are noop so that the other operations run
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(entry -> {
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(entry -> {
           if (!charging && !PowerTriggerEntry.isEmpty(entry)) {
             onTriggerRun(entry);
           } else {

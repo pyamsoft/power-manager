@@ -43,9 +43,13 @@ import timber.log.Timber;
 
   @NonNull private final Context appContext;
   @NonNull private final JobManager jobManager;
+  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final PowerTriggerDB powerTriggerDB;
 
   public PowerManagerModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
+    preferences = new PowerManagerPreferencesImpl(appContext);
+    powerTriggerDB = new PowerTriggerDB(appContext, Schedulers.io());
     this.jobManager = createJobManager();
   }
 
@@ -53,9 +57,12 @@ import timber.log.Timber;
     return appContext;
   }
 
-  @Singleton @Provides PowerManagerPreferences providePreferences(
-      final @NonNull PowerManagerPreferencesImpl padLockPreferences) {
-    return padLockPreferences;
+  @Singleton @Provides PowerTriggerDB providePowerTriggerDB() {
+    return powerTriggerDB;
+  }
+
+  @Singleton @Provides PowerManagerPreferences providePreferences() {
+    return preferences;
   }
 
   @Singleton @Provides @Named("io") Scheduler provideIOScheduler() {

@@ -14,54 +14,34 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.sql;
+package com.pyamsoft.powermanager.dagger;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class PowerTriggerDB {
-  @NonNull private static final Object lock = new Object();
-  private static volatile PowerTriggerDB instance = null;
+
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @NonNull private final AtomicInteger openCount;
+  @NonNull private final PowerTriggerOpenHelper openHelper;
 
-  private PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
-    briteDatabase =
-        SqlBrite.create().wrapDatabaseHelper(new PowerTriggerOpenHelper(context), scheduler);
+  @Inject PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
+    openHelper = new PowerTriggerOpenHelper(context);
+    briteDatabase = SqlBrite.create().wrapDatabaseHelper(openHelper, scheduler);
     openCount = new AtomicInteger(0);
-  }
-
-  public static void setDB(@Nullable PowerTriggerDB db) {
-    instance = db;
-  }
-
-  @CheckResult @NonNull public static PowerTriggerDB with(@NonNull Context context) {
-    return with(context, Schedulers.io());
-  }
-
-  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
-  public static PowerTriggerDB with(@NonNull Context context, @NonNull Scheduler scheduler) {
-    if (instance == null) {
-      synchronized (lock) {
-        if (instance == null) {
-          instance = new PowerTriggerDB(context, scheduler);
-        }
-      }
-    }
-
-    return instance;
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
@@ -72,7 +52,9 @@ public class PowerTriggerDB {
     Timber.d("Decrement open count to: %d", openCount.decrementAndGet());
 
     if (openCount.get() == 0) {
-      close();
+      Timber.d("Close and recycle database connection");
+      openCount.set(0);
+      briteDatabase.close();
     }
   }
 
@@ -156,9 +138,33 @@ public class PowerTriggerDB {
     });
   }
 
-  public void close() {
-    Timber.d("Close and recycle database connection");
-    openCount.set(0);
-    briteDatabase.close();
+  public void deleteDatabase() {
+    openHelper.deleteDatabase();
+  }
+
+  static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
+
+    @NonNull private static final String DB_NAME = "power_trigger_db";
+    private static final int DATABASE_VERSION = 1;
+    @NonNull private final Context appContext;
+
+    PowerTriggerOpenHelper(final @NonNull Context context) {
+      super(context.getApplicationContext(), DB_NAME, null, DATABASE_VERSION);
+      appContext = context.getApplicationContext();
+    }
+
+    void deleteDatabase() {
+      appContext.deleteDatabase(DB_NAME);
+    }
+
+    @Override public void onCreate(@NonNull SQLiteDatabase sqLiteDatabase) {
+      Timber.d("onCreate");
+      sqLiteDatabase.execSQL(PowerTriggerEntry.CREATE_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+      Timber.d("onUpgrade from old version %d to new %d", oldVersion, newVersion);
+    }
   }
 }

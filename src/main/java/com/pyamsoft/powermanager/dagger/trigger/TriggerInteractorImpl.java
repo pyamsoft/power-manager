@@ -17,10 +17,9 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
 import rx.Observable;
@@ -28,13 +27,12 @@ import timber.log.Timber;
 
 class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements TriggerInteractor {
 
-  @Inject TriggerInteractorImpl(Context context) {
-    super(context);
+  @Inject TriggerInteractorImpl(PowerTriggerDB powerTriggerDB) {
+    super(powerTriggerDB);
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
-    return PowerTriggerDB.with(getAppContext())
-        .queryWithPercent(values.getAsInteger(PowerTriggerEntry.PERCENT))
+    return getPowerTriggerDB().queryWithPercent(values.getAsInteger(PowerTriggerEntry.PERCENT))
         .flatMap(entry -> {
           if (!PowerTriggerEntry.isEmpty(entry)) {
             Timber.e("Entry already exists, throw");
@@ -50,7 +48,7 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
             return Observable.just(-1L);
           } else {
             Timber.d("Insert new Trigger into DB");
-            return PowerTriggerDB.with(getAppContext()).insert(values);
+            return getPowerTriggerDB().insert(values);
           }
         })
         .map(aLong -> {
@@ -72,7 +70,7 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
 
     return positionObservable.flatMap(integer -> {
       Timber.d("Delete trigger with percent: %d", percent);
-      return PowerTriggerDB.with(getAppContext()).deleteWithPercent(percent);
+      return getPowerTriggerDB().deleteWithPercent(percent);
     }).flatMap(integer -> {
       Timber.d("Flat map back to cached observable");
       return positionObservable;

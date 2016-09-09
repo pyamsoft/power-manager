@@ -17,7 +17,9 @@
 package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenter;
+import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
@@ -33,7 +35,7 @@ import rx.Scheduler;
   }
 
   @ActivityScope @Provides SettingsPreferenceInteractor provideSettingsInteractor(
-      final @NonNull SettingsPrefrenceInteractorImpl interactor) {
-    return interactor;
+      PowerTriggerDB powerTriggerDB, PowerManagerPreferences preferences) {
+    return new SettingsPrefrenceInteractorImpl(powerTriggerDB, preferences);
   }
 }

@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.settings;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.sql.PowerTriggerDB;
-import com.pyamsoft.powermanager.dagger.sql.PowerTriggerOpenHelper;
+import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -28,25 +26,21 @@ import timber.log.Timber;
 class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
 
-  @Inject SettingsPrefrenceInteractorImpl(final @NonNull Context context,
-      final @NonNull PowerManagerPreferences preferences) {
-    appContext = context.getApplicationContext();
+  @Inject SettingsPrefrenceInteractorImpl(@NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull PowerManagerPreferences preferences) {
+    this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
   }
 
   @NonNull @Override public Observable<Boolean> clearDatabase() {
     return Observable.defer(() -> {
       Timber.d("Clear database of all entries");
-      return PowerTriggerDB.with(appContext).deleteAll();
-    }).map(integer -> {
-      // TODO do something with result
-      Timber.d("Database is cleared: %s", integer);
-      return appContext.deleteDatabase(PowerTriggerOpenHelper.DB_NAME);
-    }).map(deleteResult -> {
-      Timber.d("Database is deleted: %s", deleteResult);
-      PowerTriggerDB.with(appContext).close();
+      return powerTriggerDB.deleteAll();
+    }).map(result -> {
+      Timber.d("Database is cleared: %s", result);
+      powerTriggerDB.deleteDatabase();
 
       // TODO just return something valid
       return true;
