@@ -21,14 +21,12 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -42,8 +40,8 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.activity.DonationActivity;
+import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashMap;
@@ -55,7 +53,6 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
 
   @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
-  @BindView(R.id.main_root) CoordinatorLayout rootView;
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   private Unbinder unbinder;
 
@@ -144,33 +141,17 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   }
 
   private void loadOverviewFragment() {
-    if (rootView.isLaidOut()) {
-      realLoadOverviewFragment();
-    } else {
-      rootView.getViewTreeObserver()
-          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
-              rootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-              realLoadOverviewFragment();
-            }
-          });
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, new OverviewFragment(), OverviewFragment.TAG)
+          .commitNow();
     }
   }
 
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
-  }
-
-  @SuppressWarnings("WeakerAccess") void realLoadOverviewFragment() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
-      final int cX = rootView.getLeft() + rootView.getWidth() / 2;
-      final int cY = rootView.getBottom() + rootView.getHeight() / 2;
-      fragmentManager.beginTransaction()
-          .replace(R.id.main_container, OverviewFragment.newInstance(cX, cY), OverviewFragment.TAG)
-          .commit();
-    }
   }
 
   public void addViewToAppBar(@NonNull String tag, @NonNull View view) {

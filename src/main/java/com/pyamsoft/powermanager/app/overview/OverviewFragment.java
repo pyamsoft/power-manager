@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.overview;
 
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -40,7 +39,6 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
-import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
 public class OverviewFragment extends ActionBarFragment {
 
@@ -48,13 +46,6 @@ public class OverviewFragment extends ActionBarFragment {
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
   private FastItemAdapter<OverviewItem> adapter;
   private Unbinder unbinder;
-
-  @CheckResult @NonNull public static OverviewFragment newInstance(int cX, int cY) {
-    final Bundle args = CircularRevealFragmentUtil.bundleArguments(cX, cY, 600L);
-    final OverviewFragment fragment = new OverviewFragment();
-    fragment.setArguments(args);
-    return fragment;
-  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,7 +62,6 @@ public class OverviewFragment extends ActionBarFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     populateAdapter(view);
     setupRecyclerView();
   }
