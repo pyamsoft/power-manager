@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.dagger.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.Params;
-import com.pyamsoft.powermanager.Singleton;
 import timber.log.Timber;
 
 public abstract class ManageJob extends BaseJob implements Runnable {
@@ -28,18 +28,25 @@ public abstract class ManageJob extends BaseJob implements Runnable {
   private static final long MINIMUM_PERIOD_SECONDS = 60L;
   private static final int JOB_PRIORITY = 1;
 
+  @NonNull private final JobManager jobManager;
   @NonNull private final JobType jobType;
   private final boolean periodic;
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
 
-  ManageJob(@NonNull String tag, @NonNull JobType jobType, long delayInMilliseconds,
-      boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
+  ManageJob(@NonNull JobManager jobManager, @NonNull String tag, @NonNull JobType jobType,
+      long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
+      long periodicDisableInSeconds) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
+    this.jobManager = jobManager;
     this.jobType = jobType;
     this.periodic = periodic;
     this.periodicEnableInSeconds = periodicEnableInSeconds;
     this.periodicDisableInSeconds = periodicDisableInSeconds;
+  }
+
+  @CheckResult @NonNull final JobManager getJobManager() {
+    return jobManager;
   }
 
   @Override public final void onRun() throws Throwable {
@@ -70,9 +77,8 @@ public abstract class ManageJob extends BaseJob implements Runnable {
             periodicEnableInSeconds, periodicDisableInSeconds);
       } else {
         Timber.d("Queue periodic disable job for: %d", periodicDisableInSeconds);
-        Singleton.Jobs.with(getApplicationContext())
-            .addJobInBackground(
-                createPeriodicDisableJob(periodicEnableInSeconds, periodicDisableInSeconds));
+        jobManager.addJobInBackground(
+            createPeriodicDisableJob(periodicEnableInSeconds, periodicDisableInSeconds));
       }
     }
   }
@@ -84,9 +90,8 @@ public abstract class ManageJob extends BaseJob implements Runnable {
             periodicEnableInSeconds, periodicDisableInSeconds);
       } else {
         Timber.d("Queue periodic enable job for: %d", periodicEnableInSeconds);
-        Singleton.Jobs.with(getApplicationContext())
-            .addJobInBackground(
-                createPeriodicEnableJob(periodicEnableInSeconds, periodicDisableInSeconds));
+        jobManager.addJobInBackground(
+            createPeriodicEnableJob(periodicEnableInSeconds, periodicDisableInSeconds));
       }
     }
   }

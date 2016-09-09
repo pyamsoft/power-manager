@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.wifi;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class WifiManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusManagePreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusManagePreferenceComponent().inject(this);
     return presenterProvider.get();
   }
 }

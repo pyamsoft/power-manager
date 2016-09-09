@@ -17,8 +17,19 @@
 package com.pyamsoft.powermanager.dagger;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.config.Configuration;
+import com.birbit.android.jobqueue.network.NetworkUtil;
+import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
+import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,13 +37,16 @@ import javax.inject.Singleton;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 @Module public class PowerManagerModule {
 
   @NonNull private final Context appContext;
+  @NonNull private final JobManager jobManager;
 
   public PowerManagerModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
+    this.jobManager = createJobManager();
   }
 
   @Singleton @Provides Context provideContext() {
@@ -50,5 +64,40 @@ import rx.schedulers.Schedulers;
 
   @Singleton @Provides @Named("main") Scheduler provideMainThreadScheduler() {
     return AndroidSchedulers.mainThread();
+  }
+
+  @Singleton @Provides JobManager provideJobManager() {
+    return jobManager;
+  }
+
+  @CheckResult @NonNull JobManager createJobManager() {
+    final Configuration.Builder builder =
+        new Configuration.Builder(appContext).minConsumerCount(1)
+            .maxConsumerCount(4)
+            .loadFactor(4)
+            .consumerKeepAlive(120);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      Timber.d("Create scheduler using JobScheduler framework");
+      builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(appContext,
+          PowerManagerFrameworkJobSchedulerService.class));
+    } else {
+      final int googleAvailable =
+          GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(appContext);
+      if (googleAvailable == ConnectionResult.SUCCESS) {
+        Timber.d("Create scheduler using Google play services");
+
+        // Batch by default
+        builder.scheduler(GcmJobSchedulerService.createSchedulerFor(appContext,
+            PowerManagerGCMJobSchedulerService.class));
+      } else {
+        Timber.e("Could not create a scheduler to use with the JobScheduler");
+      }
+    }
+
+    // We don't actually use the network
+    builder.networkUtil(context -> NetworkUtil.DISCONNECTED);
+
+    Timber.d("Create a new JobManager");
+    return new JobManager(builder.build());
   }
 }

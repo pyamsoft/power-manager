@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.settings;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,10 @@ public class SettingsPreferencePresenterLoader extends PersistLoader<SettingsPre
   }
 
   @NonNull @Override public SettingsPreferencePresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusSettingsPreferenceComponent().inject(this);
+    PowerManager.get(getContext())
+        .provideComponent()
+        .plusSettingsPreferenceComponent()
+        .inject(this);
     return presenterProvider.get();
   }
 }

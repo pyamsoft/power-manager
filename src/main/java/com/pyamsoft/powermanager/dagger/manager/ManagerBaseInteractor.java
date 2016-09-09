@@ -20,9 +20,9 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import rx.Observable;
 import timber.log.Timber;
@@ -32,12 +32,14 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @NonNull final JobManager jobManager;
   @NonNull private final Context appContext;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
-  ManagerBaseInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver manageObserver,
+  ManagerBaseInteractor(@NonNull JobManager jobManager, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
+    this.jobManager = jobManager;
     this.manageObserver = manageObserver;
     this.stateObserver = stateObserver;
     this.appContext = context.getApplicationContext();
@@ -47,16 +49,14 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   void destroy(@NonNull String jobTag) {
     Timber.d("Cancel jobs in background with tag: %s", jobTag);
-    Singleton.Jobs.with(appContext).cancelJobsInBackground(null, TagConstraint.ANY, jobTag);
+    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, jobTag);
   }
 
   @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
     return Observable.defer(() -> {
       Timber.d("Cancel jobs in with tag: %s", jobTag);
-      return Observable.just(Singleton.Jobs.with(getAppContext())
-          .cancelJobs(TagConstraint.ANY, jobTag)
-          .getFailedToCancel()
-          .isEmpty());
+      return Observable.just(
+          jobManager.cancelJobs(TagConstraint.ANY, jobTag).getFailedToCancel().isEmpty());
     });
   }
 
@@ -74,12 +74,12 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
-    Singleton.Jobs.with(appContext).addJobInBackground(createEnableJob());
+    jobManager.addJobInBackground(createEnableJob());
   }
 
   @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
-    Singleton.Jobs.with(appContext).addJobInBackground(createDisableJob());
+    jobManager.addJobInBackground(createDisableJob());
   }
 
   @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Context getAppContext() {
@@ -88,6 +88,10 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CheckResult @NonNull PowerManagerPreferences getPreferences() {
     return preferences;
+  }
+
+  @NonNull @CheckResult JobManager getJobManager() {
+    return jobManager;
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {

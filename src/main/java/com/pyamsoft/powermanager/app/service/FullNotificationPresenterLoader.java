@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,7 @@ public class FullNotificationPresenterLoader extends PersistLoader<FullNotificat
   }
 
   @NonNull @Override public FullNotificationPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusFullNotificationComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusFullNotificationComponent().inject(this);
     return presenterProvider.get();
   }
 }

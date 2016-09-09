@@ -35,8 +35,8 @@ import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -61,27 +61,28 @@ public class FullNotificationActivity extends AppCompatActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<FullNotificationPresenter>() {
-          @NonNull @Override public PersistLoader<FullNotificationPresenter> createLoader() {
-            return new FullNotificationPresenterLoader(getApplicationContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<FullNotificationPresenter>() {
+              @NonNull @Override public PersistLoader<FullNotificationPresenter> createLoader() {
+                return new FullNotificationPresenterLoader(getApplicationContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull FullNotificationPresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override public void onPersistentLoaded(@NonNull FullNotificationPresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
     if (!isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
@@ -149,7 +150,7 @@ public class FullNotificationActivity extends AppCompatActivity
       setCancelable(true);
       Timber.d("onCreate");
 
-      Singleton.Dagger.with(getContext()).plusFullDialogComponent().inject(this);
+      PowerManager.get(getContext()).provideComponent().plusFullDialogComponent().inject(this);
     }
 
     @Override public void onStart() {

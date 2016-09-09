@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.preference.wifi;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import java.util.Locale;
@@ -55,6 +55,6 @@ public class WifiDisableTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectPresenter(@NonNull Context context) {
-    Singleton.Dagger.with(context).plusCustomPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusCustomPreferenceComponent().inject(this);
   }
 }

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.DozeManageJob;
@@ -28,10 +29,10 @@ import rx.Observable;
 
 class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
 
-  @Inject ManagerDozeInteractor(@NonNull Context context,
+  @Inject ManagerDozeInteractor(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    super(context, preferences, manageObserver, stateObserver);
+    super(jobManager, context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult private long getDelayTime() {
@@ -54,12 +55,12 @@ class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveMa
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new DozeManageJob.EnableJob(100L, false, 0, 0);
+    return DozeManageJob.EnableJob.createManagerEnableJob(getJobManager());
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new DozeManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
-        getPeriodicEnableTime(), getPeriodicDisableTime());
+    return DozeManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
+        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {

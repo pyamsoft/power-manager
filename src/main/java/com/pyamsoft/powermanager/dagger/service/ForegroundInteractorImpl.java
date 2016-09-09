@@ -29,10 +29,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
+import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -61,8 +61,9 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
   @NonNull private final BooleanInterestModifier wearManageModifier;
   @NonNull private final BooleanInterestModifier dozeManageModifier;
   @NonNull private final Context appContext;
+  @NonNull private final JobManager jobManager;
 
-  @Inject ForegroundInteractorImpl(@NonNull Context context,
+  @Inject ForegroundInteractorImpl(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver wifiManageObserver,
       @NonNull BooleanInterestObserver dataManageObserver,
@@ -76,6 +77,7 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
       @NonNull BooleanInterestModifier syncManageModifier,
       @NonNull BooleanInterestModifier wearManageModifier,
       @NonNull BooleanInterestModifier dozeManageModifier) {
+    this.jobManager = jobManager;
     this.dozeManageObserver = dozeManageObserver;
     this.wifiManageModifier = wifiManageModifier;
     this.dataManageModifier = dataManageModifier;
@@ -94,13 +96,12 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
 
   @Override public void create() {
     // For now, trigger every 5 minutes
-    TriggerJob.queue(appContext, new TriggerJob(5 * 60 * 1000));
+    TriggerJob.queue(jobManager, new TriggerJob(5 * 60 * 1000));
   }
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    Singleton.Jobs.with(appContext)
-        .cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
   @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {

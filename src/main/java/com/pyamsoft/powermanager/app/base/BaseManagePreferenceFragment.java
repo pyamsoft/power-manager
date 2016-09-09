@@ -55,16 +55,19 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<BaseManagePreferencePresenter>() {
-          @NonNull @Override public PersistLoader<BaseManagePreferencePresenter> createLoader() {
-            return createPresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<BaseManagePreferencePresenter>() {
+              @NonNull @Override
+              public PersistLoader<BaseManagePreferencePresenter> createLoader() {
+                return createPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull BaseManagePreferencePresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override
+              public void onPersistentLoaded(@NonNull BaseManagePreferencePresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   private void resolvePreferences() {
@@ -136,14 +139,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 

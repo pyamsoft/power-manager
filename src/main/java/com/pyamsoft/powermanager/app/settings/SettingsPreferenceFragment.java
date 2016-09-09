@@ -28,15 +28,15 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.lib.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.model.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -59,22 +59,27 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<SettingsPreferencePresenter>() {
-          @NonNull @Override public PersistLoader<SettingsPreferencePresenter> createLoader() {
-            return new SettingsPreferencePresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<SettingsPreferencePresenter>() {
+              @NonNull @Override public PersistLoader<SettingsPreferencePresenter> createLoader() {
+                return new SettingsPreferencePresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull SettingsPreferencePresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override
+              public void onPersistentLoaded(@NonNull SettingsPreferencePresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     service = new Intent(getContext().getApplicationContext(), ForegroundService.class);
-    Singleton.Dagger.with(getContext()).plusSettingsPreferenceComponent().inject(this);
+    PowerManager.get(getContext())
+        .provideComponent()
+        .plusSettingsPreferenceComponent()
+        .inject(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -193,12 +198,12 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 }

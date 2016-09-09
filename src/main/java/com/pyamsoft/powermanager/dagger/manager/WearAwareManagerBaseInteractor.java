@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import rx.Observable;
@@ -28,12 +29,12 @@ abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
   @NonNull final BooleanInterestObserver wearManageObserver;
   @NonNull final BooleanInterestObserver wearStateObserver;
 
-  WearAwareManagerBaseInteractor(@NonNull Context context,
+  WearAwareManagerBaseInteractor(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(context, preferences, manageObserver, stateObserver);
+    super(jobManager, context, preferences, manageObserver, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
   }

@@ -60,16 +60,19 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.load(KEY_PRESENTER, savedInstanceState,
-        new PersistLoader.Callback<BasePeriodPreferencePresenter>() {
-          @NonNull @Override public PersistLoader<BasePeriodPreferencePresenter> createLoader() {
-            return createPresenterLoader(getContext());
-          }
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<BasePeriodPreferencePresenter>() {
+              @NonNull @Override
+              public PersistLoader<BasePeriodPreferencePresenter> createLoader() {
+                return createPresenterLoader(getContext());
+              }
 
-          @Override public void onPersistentLoaded(@NonNull BasePeriodPreferencePresenter persist) {
-            presenter = persist;
-          }
-        });
+              @Override
+              public void onPersistentLoaded(@NonNull BasePeriodPreferencePresenter persist) {
+                presenter = persist;
+              }
+            });
   }
 
   private void resolvePreferences() {
@@ -220,12 +223,12 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.unload(loadedKey);
+      PersistentCache.get().unload(loadedKey);
     }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 

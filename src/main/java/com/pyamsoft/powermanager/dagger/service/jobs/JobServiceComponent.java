@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager;
+package com.pyamsoft.powermanager.dagger.service.jobs;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.SingleInitContentProvider;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
+import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
+import com.pyamsoft.pydroid.dagger.ActivityScope;
+import dagger.Subcomponent;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+@ActivityScope
+@Subcomponent
+public interface JobServiceComponent {
 
-  @Override protected void install(@NonNull Context context) {
-    super.install(context);
-    context.startService(new Intent(context, ForegroundService.class));
-  }
+  void inject(PowerManagerFrameworkJobSchedulerService service);
+  void inject(PowerManagerGCMJobSchedulerService service);
 }

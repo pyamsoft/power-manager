@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -37,7 +38,7 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
+      @NonNull JobManager jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") @NonNull BooleanInterestObserver wifiManageObserver,
       @Named("obs_data_manage") @NonNull BooleanInterestObserver dataManageObserver,
       @Named("obs_bluetooth_manage") @NonNull BooleanInterestObserver bluetoothManageObserver,
@@ -50,7 +51,7 @@ import rx.Scheduler;
       @Named("mod_sync_manage") @NonNull BooleanInterestModifier syncManageModifier,
       @Named("mod_wear_manage") @NonNull BooleanInterestModifier wearManageModifier,
       @Named("mod_doze_manage") @NonNull BooleanInterestModifier dozeManageModifier) {
-    return new ForegroundInteractorImpl(context, preferences, wifiManageObserver,
+    return new ForegroundInteractorImpl(jobManager, context, preferences, wifiManageObserver,
         dataManageObserver, bluetoothManageObserver, syncManageObserver, wearManageObserver,
         dozeManageObserver, wifiManageModifier, dataManageModifier, bluetoothManageModifier,
         syncManageModifier, wearManageModifier, dozeManageModifier);

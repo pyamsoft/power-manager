@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -48,11 +48,15 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onCreate();
     Timber.d("onCreate");
 
-    Singleton.Dagger.with(this).plusForegroundServiceComponent().inject(this);
+    if (presenter == null) {
+      PowerManager.get(getApplicationContext()).provideComponent().plusForegroundServiceComponent().inject(this);
+    }
 
-    screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    if (screenOnOffReceiver == null) {
+      screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    }
+
     screenOnOffReceiver.register();
-
     presenter.bindView(this);
   }
 

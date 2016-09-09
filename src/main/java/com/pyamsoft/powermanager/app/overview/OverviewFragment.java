@@ -39,7 +39,7 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
 public class OverviewFragment extends ActionBarFragment {

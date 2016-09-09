@@ -20,8 +20,8 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.Singleton;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
@@ -45,7 +45,8 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    Singleton.Dagger.with(getContext()).plusWifiScreenComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent()
+        .plusWifiScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

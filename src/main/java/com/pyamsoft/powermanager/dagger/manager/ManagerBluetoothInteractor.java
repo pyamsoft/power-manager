@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.BluetoothManageJob;
@@ -28,12 +29,12 @@ import rx.Observable;
 
 class ManagerBluetoothInteractor extends WearAwareManagerBaseInteractor {
 
-  @Inject ManagerBluetoothInteractor(@NonNull Context context,
+  @Inject ManagerBluetoothInteractor(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(context, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, context, preferences, manageObserver, stateObserver, wearManageObserver,
         wearStateObserver);
   }
 
@@ -54,12 +55,12 @@ class ManagerBluetoothInteractor extends WearAwareManagerBaseInteractor {
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new BluetoothManageJob.EnableJob(100L, false, 0, 0);
+    return BluetoothManageJob.EnableJob.createManagerEnableJob(getJobManager());
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new BluetoothManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
-        getPeriodicEnableTime(), getPeriodicDisableTime());
+    return BluetoothManageJob.DisableJob.createManagerDisableJob(getJobManager(),
+        getDelayTime() * 1000L, isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {

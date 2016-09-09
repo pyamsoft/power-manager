@@ -16,21 +16,28 @@
 
 package com.pyamsoft.powermanager.app.service.job;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.pyamsoft.powermanager.Singleton;
-import timber.log.Timber;
+import com.pyamsoft.powermanager.PowerManager;
+import javax.inject.Inject;
 
 public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
+  @Inject JobManager jobManager;
+
   @NonNull @Override protected JobManager getJobManager() {
-    return Singleton.Jobs.with(getApplicationContext());
+    if (jobManager == null) {
+      throw new NullPointerException("JobManager is NULL");
+    }
+    return jobManager;
   }
 
-  @Override public void onTaskRemoved(Intent rootIntent) {
-    super.onTaskRemoved(rootIntent);
-    Timber.d("onTaskRemoved");
+  @Override public void onCreate() {
+    super.onCreate();
+    PowerManager.get(getApplicationContext())
+        .provideComponent()
+        .plusJobServiceComponent()
+        .inject(this);
   }
 }

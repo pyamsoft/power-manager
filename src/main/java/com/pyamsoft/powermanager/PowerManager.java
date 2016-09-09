@@ -22,10 +22,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.ApplicationBase;
+import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.PowerManagerModule;
+import com.pyamsoft.pydroid.lib.PYDroidApplication;
 import timber.log.Timber;
 
-public class PowerManager extends ApplicationBase {
+public class PowerManager extends PYDroidApplication implements IPowerManager {
+
+  private PowerManagerComponent component;
 
   // KLUDGE Move to better location
   @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
@@ -34,5 +39,29 @@ public class PowerManager extends ApplicationBase {
         == PackageManager.PERMISSION_GRANTED;
     Timber.d("Has doze permission? %s", hasPermission);
     return hasPermission;
+  }
+
+  @NonNull @CheckResult public static IPowerManager get(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    if (appContext instanceof IPowerManager) {
+      return (IPowerManager) appContext;
+    } else {
+      throw new ClassCastException("Cannot cast Application Context to PowerManagerBase");
+    }
+  }
+
+  @Override protected void onFirstCreate() {
+    super.onFirstCreate();
+    component = DaggerPowerManagerComponent.builder()
+        .powerManagerModule(new PowerManagerModule(getApplicationContext()))
+        .build();
+  }
+
+  @SuppressWarnings("unchecked") @NonNull @Override
+  public PowerManagerComponent provideComponent() {
+    if (component == null) {
+      throw new NullPointerException("PowerManagerComponent is NULL");
+    }
+    return component;
   }
 }

@@ -16,16 +16,11 @@
 
 package com.pyamsoft.powermanager;
 
-import android.content.Context;
-import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.SingleInitContentProvider;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+public interface IPowerManager {
 
-  @Override protected void install(@NonNull Context context) {
-    super.install(context);
-    context.startService(new Intent(context, ForegroundService.class));
-  }
+  @CheckResult @NonNull <T extends PowerManagerComponent> T provideComponent();
 }

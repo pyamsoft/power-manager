@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.trigger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,7 @@ public class TriggerListAdapterPresenterLoader extends PersistLoader<TriggerList
   }
 
   @NonNull @Override public TriggerListAdapterPresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusTrigger().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusTrigger().inject(this);
     return presenterProvider.get();
   }
 }

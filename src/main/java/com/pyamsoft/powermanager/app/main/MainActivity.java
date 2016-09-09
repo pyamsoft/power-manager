@@ -42,7 +42,7 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.activity.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;

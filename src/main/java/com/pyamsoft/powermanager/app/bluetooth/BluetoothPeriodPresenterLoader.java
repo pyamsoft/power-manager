@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.bluetooth;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Singleton;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class BluetoothPeriodPresenterLoader extends PersistLoader<BasePeriodPref
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
-    Singleton.Dagger.with(getContext()).plusPeriodPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusPeriodPreferenceComponent().inject(this);
     return presenterProvider.get();
   }
 }

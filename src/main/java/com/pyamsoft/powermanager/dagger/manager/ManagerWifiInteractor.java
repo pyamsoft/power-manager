@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.WifiManageJob;
@@ -28,12 +29,12 @@ import rx.Observable;
 
 class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
 
-  @Inject ManagerWifiInteractor(@NonNull Context context,
+  @Inject ManagerWifiInteractor(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(context, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, context, preferences, manageObserver, stateObserver, wearManageObserver,
         wearStateObserver);
   }
 
@@ -54,12 +55,12 @@ class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new WifiManageJob.EnableJob(100L, false, 0, 0);
+    return WifiManageJob.EnableJob.createManagerEnableJob(getJobManager());
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new WifiManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
-        getPeriodicEnableTime(), getPeriodicDisableTime());
+    return WifiManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
+        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {

@@ -35,6 +35,7 @@ import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.FullDialogComponent;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
+import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
@@ -77,4 +78,6 @@ import javax.inject.Singleton;
   SyncScreenComponent plusSyncScreenComponent();
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
+
+  JobServiceComponent plusJobServiceComponent();
 }

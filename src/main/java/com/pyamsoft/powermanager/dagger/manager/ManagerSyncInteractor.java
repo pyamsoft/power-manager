@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.SyncManageJob;
@@ -28,10 +29,10 @@ import rx.Observable;
 
 class ManagerSyncInteractor extends ManagerBaseInteractor {
 
-  @Inject ManagerSyncInteractor(@NonNull Context context,
+  @Inject ManagerSyncInteractor(@NonNull JobManager jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    super(context, preferences, manageObserver, stateObserver);
+    super(jobManager, context, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult private long getDelayTime() {
@@ -51,12 +52,12 @@ class ManagerSyncInteractor extends ManagerBaseInteractor {
   }
 
   @NonNull @Override protected Job createEnableJob() {
-    return new SyncManageJob.EnableJob(100L, false, 0, 0);
+    return SyncManageJob.EnableJob.createManagerEnableJob(getJobManager());
   }
 
   @NonNull @Override protected Job createDisableJob() {
-    return new SyncManageJob.DisableJob(getDelayTime() * 1000L, isPeriodic(),
-        getPeriodicEnableTime(), getPeriodicDisableTime());
+    return SyncManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
+        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
   }
 
   @Override public void destroy() {
