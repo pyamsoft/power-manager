@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.powermanager.bus.ConfirmDialogBus;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenter;
+import com.pyamsoft.powermanager.bus.ConfirmDialogBus;
 import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;

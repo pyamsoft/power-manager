@@ -25,8 +25,8 @@ import com.pyamsoft.pydroid.base.PersistLoader;
 
 public class BluetoothPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
-  @NonNull @Override
-  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context) {
+  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
+      @NonNull Context context) {
     return new BluetoothPeriodPresenterLoader(context);
   }
 

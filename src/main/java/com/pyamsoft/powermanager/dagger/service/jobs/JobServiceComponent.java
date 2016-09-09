@@ -21,10 +21,9 @@ import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerServ
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope
-@Subcomponent
-public interface JobServiceComponent {
+@ActivityScope @Subcomponent public interface JobServiceComponent {
 
   void inject(PowerManagerFrameworkJobSchedulerService service);
+
   void inject(PowerManagerGCMJobSchedulerService service);
 }

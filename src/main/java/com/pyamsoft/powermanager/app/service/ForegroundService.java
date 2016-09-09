@@ -49,7 +49,10 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     Timber.d("onCreate");
 
     if (presenter == null) {
-      PowerManager.get(getApplicationContext()).provideComponent().plusForegroundServiceComponent().inject(this);
+      PowerManager.get(getApplicationContext())
+          .provideComponent()
+          .plusForegroundServiceComponent()
+          .inject(this);
     }
 
     if (screenOnOffReceiver == null) {

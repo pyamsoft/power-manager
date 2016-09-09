@@ -49,8 +49,8 @@ public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
     return R.string.periodic_sync_disable_key;
   }
 
-  @NonNull @Override
-  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(@NonNull Context context) {
+  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
+      @NonNull Context context) {
     return new SyncPeriodPresenterLoader(context);
   }
 }

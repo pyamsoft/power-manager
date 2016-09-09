@@ -45,8 +45,7 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManager.get(getContext()).provideComponent()
-        .plusWifiScreenComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusWifiScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

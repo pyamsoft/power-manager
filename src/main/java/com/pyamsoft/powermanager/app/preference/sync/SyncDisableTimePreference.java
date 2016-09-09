@@ -55,7 +55,6 @@ public class SyncDisableTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectPresenter(@NonNull Context context) {
-    PowerManager.get(getContext()).provideComponent()
-        .plusCustomPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusCustomPreferenceComponent().inject(this);
   }
 }

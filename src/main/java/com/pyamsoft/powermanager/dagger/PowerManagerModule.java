@@ -71,11 +71,10 @@ import timber.log.Timber;
   }
 
   @CheckResult @NonNull JobManager createJobManager() {
-    final Configuration.Builder builder =
-        new Configuration.Builder(appContext).minConsumerCount(1)
-            .maxConsumerCount(4)
-            .loadFactor(4)
-            .consumerKeepAlive(120);
+    final Configuration.Builder builder = new Configuration.Builder(appContext).minConsumerCount(1)
+        .maxConsumerCount(4)
+        .loadFactor(4)
+        .consumerKeepAlive(120);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       Timber.d("Create scheduler using JobScheduler framework");
       builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(appContext,

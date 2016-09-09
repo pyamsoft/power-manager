@@ -25,5 +25,4 @@ import com.google.auto.value.AutoValue;
   @NonNull @CheckResult public static DismissEvent create() {
     return new AutoValue_DismissEvent();
   }
-
 }
