@@ -46,7 +46,7 @@ public class PowerManager extends PYDroidApplication implements IPowerManager {
     if (appContext instanceof IPowerManager) {
       return (IPowerManager) appContext;
     } else {
-      throw new ClassCastException("Cannot cast Application Context to PowerManagerBase");
+      throw new ClassCastException("Cannot cast Application Context to IPowerManager");
     }
   }
 
