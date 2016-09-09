@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.sql.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.sql.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 import timber.log.Timber;

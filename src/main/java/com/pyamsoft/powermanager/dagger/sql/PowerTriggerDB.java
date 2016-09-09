@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.sql;
+package com.pyamsoft.powermanager.dagger.sql;
 
 import android.content.ContentValues;
 import android.content.Context;
