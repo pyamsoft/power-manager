@@ -30,7 +30,7 @@
       android:padding="8dp"
       >
 
-    <TextView
+    <com.pyamsoft.pydroid.app.widget.NoLeakTextView
         android:id="@+id/create_trigger_manage_toggle_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         />
 
-    <TextView
+    <com.pyamsoft.pydroid.app.widget.NoLeakTextView
         android:id="@+id/create_trigger_manage_enable_explanation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

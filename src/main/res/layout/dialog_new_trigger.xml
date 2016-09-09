@@ -61,7 +61,6 @@
       android:layout_alignParentBottom="true"
       android:layout_marginBottom="8dp"
       android:layout_marginEnd="8dp"
-      android:layout_marginRight="8dp"
       android:orientation="horizontal"
       >
 
