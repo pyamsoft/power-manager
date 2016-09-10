@@ -28,7 +28,8 @@ import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.lib.PYDroidApplication;
 import timber.log.Timber;
 
-public class PowerManager extends PYDroidApplication implements IPowerManager {
+public class PowerManager extends PYDroidApplication
+    implements IPowerManager<PowerManagerComponent> {
 
   private PowerManagerComponent component;
 
@@ -41,10 +42,11 @@ public class PowerManager extends PYDroidApplication implements IPowerManager {
     return hasPermission;
   }
 
-  @NonNull @CheckResult public static IPowerManager get(@NonNull Context context) {
+  @NonNull @CheckResult
+  public static IPowerManager<PowerManagerComponent> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     if (appContext instanceof IPowerManager) {
-      return (IPowerManager) appContext;
+      return PowerManager.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPowerManager");
     }
@@ -57,8 +59,7 @@ public class PowerManager extends PYDroidApplication implements IPowerManager {
         .build();
   }
 
-  @SuppressWarnings("unchecked") @NonNull @Override
-  public PowerManagerComponent provideComponent() {
+  @NonNull @Override public PowerManagerComponent provideComponent() {
     if (component == null) {
       throw new NullPointerException("PowerManagerComponent is NULL");
     }
