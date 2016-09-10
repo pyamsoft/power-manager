@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 import rx.Scheduler;
 import timber.log.Timber;
@@ -51,7 +52,7 @@ class DozeStateModifier extends StateModifier {
       final String command = "dumpsys " + cmd;
       process = Runtime.getRuntime().exec(command);
       try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream()))) {
+          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
         Timber.d("Read results of exec: '%s'", command);
         String line = bufferedReader.readLine();
         while (line != null && !line.isEmpty()) {
