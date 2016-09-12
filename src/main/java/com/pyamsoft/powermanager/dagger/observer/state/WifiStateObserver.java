@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
@@ -31,7 +32,8 @@ class WifiStateObserver extends StateObserver {
     super(context);
     Timber.d("New StateObserver for Wifi");
 
-    setFilterActions(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    setFilterActions(WifiManager.NETWORK_STATE_CHANGED_ACTION,
+        ConnectivityManager.CONNECTIVITY_ACTION);
     wrapper = new WifiManagerWrapper(context);
   }
 
