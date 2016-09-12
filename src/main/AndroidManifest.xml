@@ -75,18 +75,6 @@
         android:noHistory="true"
         android:theme="@style/Theme.PowerManager.Light.FullNotification"/>
 
-    <!-- Job Scheduling -->
-    <service
-        android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
-        android:permission="android.permission.BIND_JOB_SERVICE"/>`
-    <service
-        android:name=".app.service.job.PowerManagerGCMJobSchedulerService"
-        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-      <intent-filter>
-        <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
-      </intent-filter>
-    </service>
-
     <!-- Service -->
     <service android:name=".app.service.ForegroundService"/>
 
@@ -104,6 +92,21 @@
         android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"
         android:exported="false"
         android:syncable="false"/>
+
+    <!-- Framework Job Scheduler -->
+    <service
+        android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
+        android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+    <!-- GCM Job Scheduler -->
+    <service
+        android:name=".app.service.job.PowerManagerGCMJobSchedulerService"
+        android:exported="true"
+        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+      <intent-filter>
+        <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
+      </intent-filter>
+    </service>
 
   </application>
 </manifest>

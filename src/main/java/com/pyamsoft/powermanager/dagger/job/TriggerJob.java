@@ -23,13 +23,13 @@ import android.os.BatteryManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -54,7 +54,7 @@ public class TriggerJob extends BaseJob {
   @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;
   @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
   @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
-  @Inject JobManager jobManager;
+  @Inject JobSchedulerCompat jobSchedulerCompat;
   @Inject PowerTriggerDB powerTriggerDB;
   @NonNull private Subscription runSubscription = Subscriptions.empty();
 
@@ -62,12 +62,12 @@ public class TriggerJob extends BaseJob {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
   }
 
-  public static void queue(@NonNull JobManager jobManager, @NonNull TriggerJob job) {
+  public static void queue(@NonNull JobSchedulerCompat jobManager, @NonNull TriggerJob job) {
     Timber.d("Cancel trigger jobs");
-    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, TRIGGER_TAG);
+    jobManager.cancelJobsInBackground(TagConstraint.ANY, TRIGGER_TAG);
 
     Timber.d("Add new trigger job");
-    jobManager.addJobInBackground(job, null);
+    jobManager.addJobInBackground(job);
   }
 
   @Override public void onAdded() {
@@ -196,7 +196,7 @@ public class TriggerJob extends BaseJob {
 
           // KLUDGE the show must go on
           Timber.d("Requeue the job");
-          queue(jobManager, new TriggerJob(getDelayInMs()));
+          queue(jobSchedulerCompat, new TriggerJob(getDelayInMs()));
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");

@@ -20,17 +20,15 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 
 public class PowerManagerFrameworkJobSchedulerService extends FrameworkJobSchedulerService {
 
-  @Inject JobManager jobManager;
+  @Inject JobSchedulerCompat jobSchedulerCompat;
 
   @NonNull @Override protected JobManager getJobManager() {
-    if (jobManager == null) {
-      throw new NullPointerException("JobManager is NULL");
-    }
-    return jobManager;
+    return jobSchedulerCompat.provideManagerToService(this);
   }
 
   @Override public void onCreate() {

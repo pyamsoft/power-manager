@@ -17,154 +17,26 @@
 package com.pyamsoft.powermanager.dagger;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.squareup.sqlbrite.BriteDatabase;
-import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.inject.Inject;
 import rx.Observable;
-import rx.Scheduler;
-import timber.log.Timber;
 
-public class PowerTriggerDB {
+public interface PowerTriggerDB {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
-  @NonNull private final AtomicInteger openCount;
-  @NonNull private final PowerTriggerOpenHelper openHelper;
+  @CheckResult @NonNull Observable<Long> insert(final @NonNull ContentValues contentValues);
 
-  @Inject PowerTriggerDB(final @NonNull Context context, final @NonNull Scheduler scheduler) {
-    openHelper = new PowerTriggerOpenHelper(context);
-    briteDatabase = SqlBrite.create().wrapDatabaseHelper(openHelper, scheduler);
-    openCount = new AtomicInteger(0);
-  }
+  @CheckResult @NonNull Observable<Integer> update(final @NonNull ContentValues contentValues,
+      final int percent);
 
-  @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    Timber.d("Increment open count to: %d", openCount.incrementAndGet());
-  }
+  @NonNull @CheckResult Observable<List<PowerTriggerEntry>> queryAll();
 
-  @SuppressWarnings("WeakerAccess") synchronized void closeDatabase() {
-    Timber.d("Decrement open count to: %d", openCount.decrementAndGet());
+  @NonNull @CheckResult Observable<PowerTriggerEntry> queryWithPercent(int percent);
 
-    if (openCount.get() == 0) {
-      Timber.d("Close and recycle database connection");
-      openCount.set(0);
-      briteDatabase.close();
-    }
-  }
+  @CheckResult @NonNull Observable<Integer> deleteWithPercent(final int percent);
 
-  @CheckResult @NonNull public Observable<Long> insert(final @NonNull ContentValues contentValues) {
-    // KLUDGE ugly
-    final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
-    Timber.i("DB: INSERT");
-    return deleteWithPercent(percent).map(deleted -> {
-      Timber.d("Delete result: %d", deleted);
+  @CheckResult @NonNull Observable<Integer> deleteAll();
 
-      openDatabase();
-      final long result = briteDatabase.insert(PowerTriggerEntry.TABLE_NAME, contentValues);
-      closeDatabase();
-      return result;
-    });
-  }
-
-  @CheckResult @NonNull
-  public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent) {
-    Timber.i("DB: UPDATE");
-    openDatabase();
-
-    return Observable.defer(() -> {
-      final int result = briteDatabase.update(PowerTriggerEntry.TABLE_NAME, contentValues,
-          PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
-      closeDatabase();
-      return Observable.just(result);
-    });
-  }
-
-  @NonNull @CheckResult public Observable<List<PowerTriggerEntry>> queryAll() {
-    Timber.i("DB: QUERY");
-    openDatabase();
-
-    return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-        .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
-        .map(powerTriggerEntries -> {
-          closeDatabase();
-          return powerTriggerEntries;
-        })
-        .filter(padLockEntries -> padLockEntries != null);
-  }
-
-  @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(int percent) {
-    Timber.i("DB: QUERY");
-    openDatabase();
-
-    return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-        Integer.toString(percent))
-        .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
-            PowerTriggerEntry.empty())
-        .map(entry -> {
-          closeDatabase();
-          return entry;
-        })
-        .filter(entry -> entry != null);
-  }
-
-  @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
-    Timber.i("DB: DELETE");
-    openDatabase();
-
-    return Observable.defer(() -> {
-      final int result =
-          briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
-              Integer.toString(percent));
-      closeDatabase();
-      return Observable.just(result);
-    });
-  }
-
-  @CheckResult @NonNull public Observable<Integer> deleteAll() {
-    Timber.i("DB: DELETE");
-    openDatabase();
-
-    return Observable.defer(() -> {
-      final int result =
-          briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
-      closeDatabase();
-      return Observable.just(result);
-    });
-  }
-
-  public void deleteDatabase() {
-    openHelper.deleteDatabase();
-  }
-
-  static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
-
-    @NonNull private static final String DB_NAME = "power_trigger_db";
-    private static final int DATABASE_VERSION = 1;
-    @NonNull private final Context appContext;
-
-    PowerTriggerOpenHelper(final @NonNull Context context) {
-      super(context.getApplicationContext(), DB_NAME, null, DATABASE_VERSION);
-      appContext = context.getApplicationContext();
-    }
-
-    void deleteDatabase() {
-      appContext.deleteDatabase(DB_NAME);
-    }
-
-    @Override public void onCreate(@NonNull SQLiteDatabase sqLiteDatabase) {
-      Timber.d("onCreate");
-      sqLiteDatabase.execSQL(PowerTriggerEntry.CREATE_TABLE);
-    }
-
-    @Override
-    public void onUpgrade(@NonNull SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-      Timber.d("onUpgrade from old version %d to new %d", oldVersion, newVersion);
-    }
-  }
+  void deleteDatabase();
 }

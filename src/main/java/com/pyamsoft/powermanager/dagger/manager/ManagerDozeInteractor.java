@@ -24,12 +24,13 @@ import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.DozeManageJob;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
 
-  @Inject ManagerDozeInteractor(@NonNull JobManager jobManager, @NonNull Context context,
+  @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
     super(jobManager, context, preferences, manageObserver, stateObserver);

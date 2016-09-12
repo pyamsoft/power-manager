@@ -24,12 +24,13 @@ import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.BluetoothManageJob;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerBluetoothInteractor extends WearAwareManagerBaseInteractor {
 
-  @Inject ManagerBluetoothInteractor(@NonNull JobManager jobManager, @NonNull Context context,
+  @Inject ManagerBluetoothInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,

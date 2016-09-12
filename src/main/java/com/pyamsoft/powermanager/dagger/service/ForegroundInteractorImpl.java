@@ -39,6 +39,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.job.TriggerJob;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import rx.Observable;
@@ -61,9 +62,9 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
   @NonNull private final BooleanInterestModifier wearManageModifier;
   @NonNull private final BooleanInterestModifier dozeManageModifier;
   @NonNull private final Context appContext;
-  @NonNull private final JobManager jobManager;
+  @NonNull private final JobSchedulerCompat jobManager;
 
-  @Inject ForegroundInteractorImpl(@NonNull JobManager jobManager, @NonNull Context context,
+  @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver wifiManageObserver,
       @NonNull BooleanInterestObserver dataManageObserver,
@@ -101,7 +102,7 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+    jobManager.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
   @NonNull @CheckResult private Observable<Boolean> isFullNotificationEnabled() {

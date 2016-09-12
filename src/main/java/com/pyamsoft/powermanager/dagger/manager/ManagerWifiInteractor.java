@@ -24,12 +24,13 @@ import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.job.WifiManageJob;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
 
-  @Inject ManagerWifiInteractor(@NonNull JobManager jobManager, @NonNull Context context,
+  @Inject ManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,

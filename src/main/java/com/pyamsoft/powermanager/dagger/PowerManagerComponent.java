@@ -39,13 +39,14 @@ import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageModifierModule.class, ManageObserverModule.class, PeriodicObserverModule.class,
-    PeriodicModifierModule.class, ForegroundModule.class
+    PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class
 }) public interface PowerManagerComponent {
 
   // Subcomponent Trigger

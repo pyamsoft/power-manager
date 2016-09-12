@@ -19,10 +19,10 @@ package com.pyamsoft.powermanager.dagger.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
-import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -30,21 +30,22 @@ public abstract class SyncManageJob extends ManageJob {
 
   @NonNull public static final String JOB_TAG = "sync_job";
 
-  SyncManageJob(@NonNull JobManager jobManager, @NonNull JobType jobType, long delayInSeconds,
-      boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    super(jobManager, JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
+  SyncManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull JobType jobType,
+      long delayInSeconds, boolean periodic, long periodicEnableInSeconds,
+      long periodicDisableInSeconds) {
+    super(jobSchedulerCompat, JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds);
   }
 
   @NonNull @Override protected Job createPeriodicDisableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new DisableJob(getJobManager(), periodicDisableInSeconds * 1000L, true,
+    return new DisableJob(getJobSchedulerCompat(), periodicDisableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds);
   }
 
   @NonNull @Override protected Job createPeriodicEnableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new EnableJob(getJobManager(), periodicEnableInSeconds * 1000L, true,
+    return new EnableJob(getJobSchedulerCompat(), periodicEnableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds);
   }
 
@@ -53,15 +54,15 @@ public abstract class SyncManageJob extends ManageJob {
     @Inject @Named("mod_sync_state") BooleanInterestModifier interestModifier;
     @Inject @Named("obs_sync_state") BooleanInterestObserver interestObserver;
 
-    EnableJob(@NonNull JobManager jobManager, long delayTimeInMillis, boolean periodic,
-        long periodicEnableInSeconds, long periodicDisableInSeconds) {
-      super(jobManager, JobType.ENABLE, delayTimeInMillis, periodic, periodicEnableInSeconds,
-          periodicDisableInSeconds);
+    EnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat, long delayTimeInMillis,
+        boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
+      super(jobSchedulerCompat, JobType.ENABLE, delayTimeInMillis, periodic,
+          periodicEnableInSeconds, periodicDisableInSeconds);
     }
 
     @CheckResult @NonNull
-    public static EnableJob createManagerEnableJob(@NonNull JobManager jobManager) {
-      return new EnableJob(jobManager, 100L, false, 0, 0);
+    public static EnableJob createManagerEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat) {
+      return new EnableJob(jobSchedulerCompat, 100L, false, 0, 0);
     }
 
     @Override public void onAdded() {
@@ -81,18 +82,18 @@ public abstract class SyncManageJob extends ManageJob {
     @Inject @Named("mod_sync_state") BooleanInterestModifier interestModifier;
     @Inject @Named("obs_sync_state") BooleanInterestObserver interestObserver;
 
-    DisableJob(@NonNull JobManager jobManager, long delayTimeInMillis, boolean periodic,
-        long periodicEnableInSeconds, long periodicDisableInSeconds) {
-      super(jobManager, JobType.DISABLE, delayTimeInMillis, periodic, periodicEnableInSeconds,
-          periodicDisableInSeconds);
+    DisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat, long delayTimeInMillis,
+        boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
+      super(jobSchedulerCompat, JobType.DISABLE, delayTimeInMillis, periodic,
+          periodicEnableInSeconds, periodicDisableInSeconds);
     }
 
     @CheckResult @NonNull
-    public static DisableJob createManagerDisableJob(@NonNull JobManager jobManager,
+    public static DisableJob createManagerDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
         long delayTimeInMillis, boolean periodic, long periodicEnableInSeconds,
         long periodicDisableInSeconds) {
-      return new DisableJob(jobManager, delayTimeInMillis, periodic, periodicEnableInSeconds,
-          periodicDisableInSeconds);
+      return new DisableJob(jobSchedulerCompat, delayTimeInMillis, periodic,
+          periodicEnableInSeconds, periodicDisableInSeconds);
     }
 
     @Override public void onAdded() {

@@ -24,6 +24,7 @@ import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -32,11 +33,11 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
-  @NonNull final JobManager jobManager;
+  @NonNull final JobSchedulerCompat jobManager;
   @NonNull private final Context appContext;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
-  ManagerBaseInteractor(@NonNull JobManager jobManager, @NonNull Context context,
+  ManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
     this.jobManager = jobManager;
@@ -49,14 +50,14 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   void destroy(@NonNull String jobTag) {
     Timber.d("Cancel jobs in background with tag: %s", jobTag);
-    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, jobTag);
+    jobManager.cancelJobsInBackground(TagConstraint.ANY, jobTag);
   }
 
   @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
     return Observable.defer(() -> {
       Timber.d("Cancel jobs in with tag: %s", jobTag);
-      return Observable.just(
-          jobManager.cancelJobs(TagConstraint.ANY, jobTag).getFailedToCancel().isEmpty());
+      jobManager.cancelJobs(TagConstraint.ANY, jobTag);
+      return Observable.just(true);
     });
   }
 
@@ -90,7 +91,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     return preferences;
   }
 
-  @NonNull @CheckResult JobManager getJobManager() {
+  @NonNull @CheckResult JobSchedulerCompat getJobManager() {
     return jobManager;
   }
 

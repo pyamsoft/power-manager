@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
+import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -38,7 +38,7 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
-      @NonNull JobManager jobManager, @NonNull PowerManagerPreferences preferences,
+      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") @NonNull BooleanInterestObserver wifiManageObserver,
       @Named("obs_data_manage") @NonNull BooleanInterestObserver dataManageObserver,
       @Named("obs_bluetooth_manage") @NonNull BooleanInterestObserver bluetoothManageObserver,

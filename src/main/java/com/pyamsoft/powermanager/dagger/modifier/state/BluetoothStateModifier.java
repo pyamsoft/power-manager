@@ -21,16 +21,14 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
 import javax.inject.Inject;
-import rx.Scheduler;
 
 class BluetoothStateModifier extends StateModifier {
 
   @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
-    super(context, preferences, observeScheduler, subscribeScheduler);
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
     wrapper = new BluetoothAdapterWrapper(context);
   }
 

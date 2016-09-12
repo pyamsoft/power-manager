@@ -21,15 +21,14 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import javax.inject.Inject;
-import rx.Scheduler;
 
 class WifiStateModifier extends StateModifier {
 
   @NonNull private final WifiManagerWrapper wrapper;
 
-  @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(context, preferences, observeScheduler, subscribeScheduler);
+  @Inject WifiStateModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
     wrapper = new WifiManagerWrapper(context);
   }
 

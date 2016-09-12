@@ -20,59 +20,25 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 abstract class StateModifier implements BooleanInterestModifier {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler observeScheduler;
-  @NonNull private Subscription subscription = Subscriptions.empty();
 
-  StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+  StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     Timber.d("New StateModifier");
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
-    this.subscribeScheduler = subscribeScheduler;
-    this.observeScheduler = observeScheduler;
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsub() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
   }
 
   @Override public final void set() {
-    unsub();
-    subscription = Observable.defer(() -> {
-      Timber.d("Set on IO thread");
-      set(appContext, preferences);
-      return Observable.just(true);
-    })
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe(aBoolean -> Timber.d("Set success"),
-            throwable -> Timber.e(throwable, "onError set"), this::unsub);
+    set(appContext, preferences);
   }
 
   @Override public final void unset() {
-    unsub();
-    subscription = Observable.defer(() -> {
-      Timber.d("Unset on IO thread");
-      unset(appContext, preferences);
-      return Observable.just(true);
-    })
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe(aBoolean -> Timber.d("Unset success"),
-            throwable -> Timber.e(throwable, "onError unset"), this::unsub);
+    unset(appContext, preferences);
   }
 
   abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);

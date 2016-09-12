@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
-import rx.Scheduler;
 import timber.log.Timber;
 
 class DataStateModifier extends StateModifier {
@@ -39,9 +38,9 @@ class DataStateModifier extends StateModifier {
 
   @NonNull private final ConnectivityManager connectivityManager;
 
-  @Inject DataStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(context, preferences, observeScheduler, subscribeScheduler);
+  @Inject DataStateModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
     connectivityManager = (ConnectivityManager) context.getApplicationContext()
         .getSystemService(Context.CONNECTIVITY_SERVICE);
   }

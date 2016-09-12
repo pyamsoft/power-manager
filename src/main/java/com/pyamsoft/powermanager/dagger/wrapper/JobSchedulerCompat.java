@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service.job;
+package com.pyamsoft.powermanager.dagger.wrapper;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.TagConstraint;
+import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
-import javax.inject.Inject;
 
-public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
+public interface JobSchedulerCompat {
 
-  @Inject JobSchedulerCompat jobSchedulerCompat;
+  @CheckResult @NonNull JobManager provideManagerToService(
+      @NonNull FrameworkJobSchedulerService service);
 
-  @NonNull @Override protected JobManager getJobManager() {
-    return jobSchedulerCompat.provideManagerToService(this);
-  }
+  @CheckResult @NonNull JobManager provideManagerToService(@NonNull GcmJobSchedulerService service);
 
-  @Override public void onCreate() {
-    super.onCreate();
-    PowerManager.get(getApplicationContext())
-        .provideComponent()
-        .plusJobServiceComponent()
-        .inject(this);
-  }
+  void cancelJobsInBackground(@NonNull TagConstraint constraint, @NonNull String... tags);
+
+  void addJobInBackground(@NonNull Job job);
+
+  void cancelJobs(@NonNull TagConstraint constraint, @NonNull String... tags);
 }

@@ -21,14 +21,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
-import rx.Scheduler;
 import timber.log.Timber;
 
 class SyncStateModifier extends StateModifier {
 
-  @Inject SyncStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(context, preferences, observeScheduler, subscribeScheduler);
+  @Inject SyncStateModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {

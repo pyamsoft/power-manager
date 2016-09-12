@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
-import rx.Scheduler;
 import timber.log.Timber;
 
 class DozeStateModifier extends StateModifier {
@@ -39,9 +38,9 @@ class DozeStateModifier extends StateModifier {
       "sensorservice restrict com.google.android.gms*";
   @NonNull private final SensorFixReceiver sensorFixReceiver;
 
-  @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(context, preferences, observeScheduler, subscribeScheduler);
+  @Inject DozeStateModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
     sensorFixReceiver = new SensorFixReceiver(context.getApplicationContext());
   }
 
