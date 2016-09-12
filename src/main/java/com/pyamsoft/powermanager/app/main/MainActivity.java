@@ -182,11 +182,10 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 =
-        "FEATURE: Doze mode management! Force the device into Doze, or enter Doze mode sooner";
-    final String line2 = "BUGFIX: Large code clean up and re-write";
-    final String line3 = "BUGFIX: Less memory usage";
-    final String line4 = "BUGFIX: Less battery usage";
+    final String line1 = "BUGFIX: Lower battery consumption";
+    final String line2 = "BUGFIX: Fix a crash on manage screens";
+    final String line3 = "BUGFIX: Fix typos";
+    final String line4 = "BUGFIX: Clean up wearable handling";
 
     // Turn it into a spannable
     final Spannable spannable =
