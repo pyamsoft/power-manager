@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
-import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import timber.log.Timber;
@@ -36,9 +34,9 @@ public abstract class ManageJob extends BaseJob implements Runnable {
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
 
-  ManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, @NonNull JobType jobType,
-      long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
-      long periodicDisableInSeconds) {
+  ManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+      @NonNull JobType jobType, long delayInMilliseconds, boolean periodic,
+      long periodicEnableInSeconds, long periodicDisableInSeconds) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.jobType = jobType;

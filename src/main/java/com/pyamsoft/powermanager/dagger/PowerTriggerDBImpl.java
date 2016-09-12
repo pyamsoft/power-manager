@@ -32,7 +32,7 @@ import rx.Observable;
 import rx.Scheduler;
 import timber.log.Timber;
 
-class PowerTriggerDBImpl implements PowerTriggerDB{
+class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @NonNull private final AtomicInteger openCount;
@@ -58,7 +58,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB{
     }
   }
 
-  @Override @CheckResult @NonNull public Observable<Long> insert(final @NonNull ContentValues contentValues) {
+  @Override @CheckResult @NonNull
+  public Observable<Long> insert(final @NonNull ContentValues contentValues) {
     // KLUDGE ugly
     final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
     Timber.i("DB: INSERT");
@@ -98,7 +99,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB{
         .filter(padLockEntries -> padLockEntries != null);
   }
 
-  @Override @NonNull @CheckResult public Observable<PowerTriggerEntry> queryWithPercent(int percent) {
+  @Override @NonNull @CheckResult
+  public Observable<PowerTriggerEntry> queryWithPercent(int percent) {
     Timber.i("DB: QUERY");
     openDatabase();
 

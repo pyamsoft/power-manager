@@ -30,8 +30,9 @@ public abstract class DataManageJob extends ManageJob {
 
   @NonNull public static final String JOB_TAG = "data_job";
 
-  DataManageJob(@NonNull JobSchedulerCompat jobManager, @NonNull JobType jobType, long delayInSeconds,
-      boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
+  DataManageJob(@NonNull JobSchedulerCompat jobManager, @NonNull JobType jobType,
+      long delayInSeconds, boolean periodic, long periodicEnableInSeconds,
+      long periodicDisableInSeconds) {
     super(jobManager, JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds);
   }
@@ -81,8 +82,8 @@ public abstract class DataManageJob extends ManageJob {
     @Inject @Named("mod_data_state") BooleanInterestModifier interestModifier;
     @Inject @Named("obs_data_state") BooleanInterestObserver interestObserver;
 
-    public DisableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis, boolean periodic,
-        long periodicEnableInSeconds, long periodicDisableInSeconds) {
+    public DisableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis,
+        boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds) {
       super(jobManager, JobType.DISABLE, delayTimeInMillis, periodic, periodicEnableInSeconds,
           periodicDisableInSeconds);
     }

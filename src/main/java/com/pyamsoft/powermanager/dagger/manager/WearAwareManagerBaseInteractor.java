@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.JobManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
