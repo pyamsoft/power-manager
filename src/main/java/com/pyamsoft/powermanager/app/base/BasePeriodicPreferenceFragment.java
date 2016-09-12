@@ -234,8 +234,32 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
-    customEnableTimePreference.unbind();
-    customDisableTimePreference.unbind();
+    if (customEnableTimePreference != null) {
+      customEnableTimePreference.unbind();
+      customEnableTimePreference.setOnPreferenceChangeListener(null);
+      customEnableTimePreference.setOnPreferenceClickListener(null);
+    }
+
+    if (customDisableTimePreference != null) {
+      customDisableTimePreference.unbind();
+      customDisableTimePreference.setOnPreferenceChangeListener(null);
+      customDisableTimePreference.setOnPreferenceClickListener(null);
+    }
+
+    if (periodicPreference != null) {
+      periodicPreference.setOnPreferenceChangeListener(null);
+      periodicPreference.setOnPreferenceClickListener(null);
+    }
+
+    if (presetEnableTimePreference != null) {
+      presetEnableTimePreference.setOnPreferenceChangeListener(null);
+      presetEnableTimePreference.setOnPreferenceClickListener(null);
+    }
+
+    if (presetDisableTimePreference != null) {
+      presetDisableTimePreference.setOnPreferenceChangeListener(null);
+      presetDisableTimePreference.setOnPreferenceClickListener(null);
+    }
   }
 
   @Override public void onPeriodicSet() {
