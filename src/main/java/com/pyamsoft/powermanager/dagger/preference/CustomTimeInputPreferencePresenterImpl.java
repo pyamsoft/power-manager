@@ -30,6 +30,8 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
     implements CustomTimeInputPreferencePresenter {
 
+  private static final int MAX_CUSTOM_LENGTH = 10;
+
   @Nullable private final CustomTimeInputPreferenceInteractor interactor;
   @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
 
@@ -62,6 +64,8 @@ public abstract class CustomTimeInputPreferencePresenterImpl
       final long longTime;
       if (time.isEmpty()) {
         longTime = 0;
+      } else if (time.length() > MAX_CUSTOM_LENGTH) {
+        longTime = Long.parseLong(time.substring(0, MAX_CUSTOM_LENGTH + 1));
       } else {
         longTime = Long.parseLong(time);
       }
