@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 class DataStateObserver extends StateObserver {
 
-  @NonNull private static final String GET_METHOD_NAME = "setMobileDataEnabled";
+  @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
   @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
   @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
 
@@ -60,7 +60,7 @@ class DataStateObserver extends StateObserver {
       method.setAccessible(true);
       return method;
     } catch (final Exception e) {
-      Timber.e(e, "ManagerData reflectSetMethod ERROR");
+      Timber.e(e, "ManagerData reflectGetMethod ERROR");
     }
 
     return null;
@@ -75,7 +75,7 @@ class DataStateObserver extends StateObserver {
       }
     }
 
-    return false;
+    return getMobileDataEnabledSettings();
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {
