@@ -25,12 +25,10 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.birbit.android.jobqueue.config.Configuration;
-import com.birbit.android.jobqueue.log.CustomLogger;
 import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
 import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
 import javax.inject.Inject;
@@ -46,38 +44,19 @@ class JobSchedulerCompatImpl implements JobSchedulerCompat {
 
   @CheckResult @NonNull JobManager createJobManager(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    final Configuration.Builder builder =
-        new Configuration.Builder(appContext).customLogger(new CustomLogger() {
-          @Override public boolean isDebugEnabled() {
-            return BuildConfig.DEBUG;
-          }
+    final Configuration.Builder builder = new Configuration.Builder(appContext);
 
-          @Override public void d(String text, Object... args) {
-            Timber.d(text, args);
-          }
-
-          @Override public void e(Throwable t, String text, Object... args) {
-            Timber.e(t, text, args);
-          }
-
-          @Override public void e(String text, Object... args) {
-            Timber.e(text, args);
-          }
-
-          @Override public void v(String text, Object... args) {
-            Timber.v(text, args);
-          }
-        });
-
+    Timber.d("Create scheduler");
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Timber.d("Create scheduler using JobScheduler framework");
+      Timber.i("Create scheduler using JobScheduler framework");
       builder.scheduler(FrameworkJobSchedulerService.createSchedulerFor(appContext,
           PowerManagerFrameworkJobSchedulerService.class));
     } else {
+      Timber.d("Check Google play availability");
       final int googleAvailable =
           GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(appContext);
       if (googleAvailable == ConnectionResult.SUCCESS) {
-        Timber.d("Create scheduler using Google play services");
+        Timber.i("Create scheduler using Google play services");
 
         // Batch by default
         builder.scheduler(GcmJobSchedulerService.createSchedulerFor(appContext,
@@ -91,19 +70,9 @@ class JobSchedulerCompatImpl implements JobSchedulerCompat {
     return new JobManager(builder.build());
   }
 
-  @CheckResult @NonNull
-  public JobManager provideManagerToServiceInternal(@NonNull Service service) {
+  @CheckResult @NonNull @Override
+  public JobManager provideManagerToService(@NonNull Service service) {
     return jobManager;
-  }
-
-  @NonNull @Override
-  public JobManager provideManagerToService(@NonNull FrameworkJobSchedulerService service) {
-    return provideManagerToServiceInternal(service);
-  }
-
-  @NonNull @Override
-  public JobManager provideManagerToService(@NonNull GcmJobSchedulerService service) {
-    return provideManagerToServiceInternal(service);
   }
 
   @Override

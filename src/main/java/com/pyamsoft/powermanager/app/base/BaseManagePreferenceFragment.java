@@ -153,9 +153,10 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @Override public final void onDestroyView() {
     super.onDestroyView();
     if (customTimePreference != null) {
-      customTimePreference.unbind();
       customTimePreference.setOnPreferenceChangeListener(null);
       customTimePreference.setOnPreferenceClickListener(null);
+      customTimePreference.unbind();
+      customTimePreference.destroy();
     }
 
     if (managePreference != null) {

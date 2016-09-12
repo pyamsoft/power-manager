@@ -145,7 +145,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
             onPresetDisableTimePreferenceChanged(presetDelay, customDisableTimePreference);
         if (canChange) {
           final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1) {
+          if (delayTime != -1 && customDisableTimePreference != null) {
             // Update the delay time to a preset instantly
             customDisableTimePreference.updatePresetDelay(presetDelay);
           }
@@ -235,15 +235,17 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @Override public final void onDestroyView() {
     super.onDestroyView();
     if (customEnableTimePreference != null) {
-      customEnableTimePreference.unbind();
       customEnableTimePreference.setOnPreferenceChangeListener(null);
       customEnableTimePreference.setOnPreferenceClickListener(null);
+      customEnableTimePreference.unbind();
+      customEnableTimePreference.destroy();
     }
 
     if (customDisableTimePreference != null) {
-      customDisableTimePreference.unbind();
       customDisableTimePreference.setOnPreferenceChangeListener(null);
       customDisableTimePreference.setOnPreferenceClickListener(null);
+      customDisableTimePreference.unbind();
+      customDisableTimePreference.destroy();
     }
 
     if (periodicPreference != null) {

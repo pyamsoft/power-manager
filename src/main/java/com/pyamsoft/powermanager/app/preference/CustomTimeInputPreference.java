@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.preference;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
@@ -36,30 +37,52 @@ import timber.log.Timber;
 public abstract class CustomTimeInputPreference extends Preference
     implements CustomTimeInputPreferencePresenter.View {
 
+  @NonNull final CustomTimeInputPreferencePresenter presenter;
   @BindView(R.id.preference_custom_time_summary) TextView summary;
   @BindView(R.id.preference_custom_time_input) TextInputLayout textInputLayout;
-  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   private TextWatcher watcher;
-  private Unbinder unbinder;
   private EditText editText;
+  @Nullable private Unbinder unbinder;
 
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     setLayoutResource(R.layout.preference_custom_time_input);
     injectPresenter(context);
+    presenter = getPresenter();
+
+    Timber.d("onBindViewHolder");
+    presenter.bindView(this);
   }
 
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-    this(context, attrs, defStyleAttr, 0);
+  public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+    setLayoutResource(R.layout.preference_custom_time_input);
+    injectPresenter(context);
+    presenter = getPresenter();
+
+    Timber.d("onBindViewHolder");
+    presenter.bindView(this);
   }
 
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs) {
-    this(context, attrs, 0);
+  public CustomTimeInputPreference(Context context, AttributeSet attrs) {
+    super(context, attrs);
+    setLayoutResource(R.layout.preference_custom_time_input);
+    injectPresenter(context);
+    presenter = getPresenter();
+
+    Timber.d("onBindViewHolder");
+    presenter.bindView(this);
   }
 
-  protected CustomTimeInputPreference(Context context) {
-    this(context, null);
+  public CustomTimeInputPreference(Context context) {
+    super(context);
+    setLayoutResource(R.layout.preference_custom_time_input);
+    injectPresenter(context);
+    presenter = getPresenter();
+
+    Timber.d("onBindViewHolder");
+    presenter.bindView(this);
   }
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
@@ -67,10 +90,6 @@ public abstract class CustomTimeInputPreference extends Preference
 
     // We call unbind because when a preference is changed it can be re-bound without being properly recycled
     unbind(false);
-
-    Timber.d("onBindViewHolder");
-    presenter = getPresenter();
-    presenter.bindView(this);
 
     holder.itemView.setClickable(false);
     unbinder = ButterKnife.bind(this, holder.itemView);
@@ -100,6 +119,11 @@ public abstract class CustomTimeInputPreference extends Preference
     presenter.initializeCustomTime();
   }
 
+  public final void destroy() {
+    presenter.unbindView();
+    presenter.destroy();
+  }
+
   public final void unbind() {
     unbind(true);
   }
@@ -121,26 +145,29 @@ public abstract class CustomTimeInputPreference extends Preference
         }
       }
 
-      presenter.unbindView();
-      presenter.destroy();
       unbinder.unbind();
     }
   }
 
   @Override public void onCustomTimeUpdate(long time) {
-    Timber.d("Custom time updated to: %d", time);
-    if (watcher != null) {
-      Timber.d("Remove text watcher");
-      editText.removeTextChangedListener(watcher);
-    }
+    if (unbinder != null) {
+      Timber.d("Custom time updated to: %d", time);
+      if (watcher != null) {
+        Timber.d("Remove text watcher");
+        editText.removeTextChangedListener(watcher);
+      }
 
-    editText.setText(String.valueOf(time));
-    editText.setSelection(editText.getText().length());
-    summary.setText(formatSummaryStringForTime(time));
+      textInputLayout.setErrorEnabled(false);
+      editText.setText(String.valueOf(time));
+      editText.setSelection(editText.getText().length());
+      summary.setText(formatSummaryStringForTime(time));
 
-    if (watcher != null) {
-      Timber.d("Add text watcher");
-      editText.addTextChangedListener(watcher);
+      if (watcher != null) {
+        Timber.d("Add text watcher");
+        editText.addTextChangedListener(watcher);
+      }
+    } else {
+      Timber.e("Failed to update view, but presenter updated storage");
     }
   }
 
