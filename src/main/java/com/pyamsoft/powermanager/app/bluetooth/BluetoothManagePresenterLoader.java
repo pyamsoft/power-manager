@@ -34,7 +34,7 @@ public class BluetoothManagePresenterLoader extends PersistLoader<BaseManagePref
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusManagePreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusBluetoothScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

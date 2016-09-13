@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.sync;
+package com.pyamsoft.powermanager.dagger.doze;
 
-import com.pyamsoft.powermanager.app.sync.SyncFragment;
-import com.pyamsoft.powermanager.app.sync.SyncManagePresenterLoader;
-import com.pyamsoft.powermanager.app.sync.SyncOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.sync.SyncPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = {
-    SyncOverviewModule.class, SyncManagePreferenceModule.class, SyncPeriodPreferenceModule.class
-}) public interface SyncScreenComponent {
+@ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class) public interface DozeScreenComponent {
 
-  void inject(SyncFragment fragment);
-
-  void inject(SyncOverviewPresenterLoader loader);
-
-  void inject(SyncManagePresenterLoader loader);
-
-  void inject(SyncPeriodPresenterLoader loader);
+  void inject(DozePresenterLoader loader);
 }

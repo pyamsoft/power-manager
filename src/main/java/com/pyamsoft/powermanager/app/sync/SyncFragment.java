@@ -23,10 +23,12 @@ import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -52,8 +54,8 @@ public class SyncFragment extends BaseOverviewPagerFragment {
     return observer;
   }
 
-  @NonNull @Override protected BooleanInterestModifier getModifier() {
-    return modifier;
+  @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
+    return new SyncOverviewPresenterLoader(getContext());
   }
 
   @Override protected int getFabSetIcon() {

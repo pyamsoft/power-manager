@@ -16,22 +16,20 @@
 
 package com.pyamsoft.powermanager.dagger.data;
 
-import com.pyamsoft.powermanager.app.data.DataFragment;
-import com.pyamsoft.powermanager.app.data.DataManagePresenterLoader;
-import com.pyamsoft.powermanager.app.data.DataOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.data.DataPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
-@ActivityScope @Subcomponent(modules = {
-    DataOverviewModule.class, DataManagePreferenceModule.class, DataPeriodPreferenceModule.class
-}) public interface DataScreenComponent {
+@Module public class DataOverviewModule {
 
-  void inject(DataFragment fragment);
-
-  void inject(DataOverviewPresenterLoader loader);
-
-  void inject(DataManagePresenterLoader loader);
-
-  void inject(DataPeriodPresenterLoader loader);
+  @ActivityScope @Provides @Named("data_overview")
+  BaseOverviewPagerPresenter provideDataOverviewPagerPresenter(
+      @Named("mod_data_state") BooleanInterestModifier stateModifier,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    return new DataOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+  }
 }

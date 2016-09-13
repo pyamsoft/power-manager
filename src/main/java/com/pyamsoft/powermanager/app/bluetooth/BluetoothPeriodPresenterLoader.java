@@ -34,7 +34,7 @@ public class BluetoothPeriodPresenterLoader extends PersistLoader<BasePeriodPref
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusPeriodPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusBluetoothScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

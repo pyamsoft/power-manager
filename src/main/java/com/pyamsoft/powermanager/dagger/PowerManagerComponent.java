@@ -16,8 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
+import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
+import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
 import com.pyamsoft.powermanager.dagger.job.JobComponent;
-import com.pyamsoft.powermanager.dagger.base.ManagePreferenceComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.preference.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.preference.periodic.PeriodicModifierModule;
@@ -25,20 +27,17 @@ import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
-import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
-import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
-import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
-import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
-import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.FullDialogComponent;
 import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
+import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -49,7 +48,6 @@ import javax.inject.Singleton;
     PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class
 }) public interface PowerManagerComponent {
 
-  // Subcomponent Trigger
   TriggerComponent plusTrigger();
 
   FullNotificationComponent plusFullNotificationComponent();
@@ -64,10 +62,6 @@ import javax.inject.Singleton;
 
   JobComponent plusJobComponent();
 
-  ManagePreferenceComponent plusManagePreferenceComponent();
-
-  PeriodPreferenceComponent plusPeriodPreferenceComponent();
-
   CustomPreferenceComponent plusCustomPreferenceComponent();
 
   WifiScreenComponent plusWifiScreenComponent();
@@ -77,6 +71,8 @@ import javax.inject.Singleton;
   BluetoothScreenComponent plusBluetoothScreenComponent();
 
   SyncScreenComponent plusSyncScreenComponent();
+
+  DozeScreenComponent plusDozeScreenComponent();
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
 

@@ -34,7 +34,7 @@ public class SyncManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusManagePreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusSyncScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

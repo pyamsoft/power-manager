@@ -19,21 +19,21 @@ package com.pyamsoft.powermanager.app.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class DataManagePresenterLoader extends PersistLoader<BaseManagePreferencePresenter> {
+public class DataOverviewPresenterLoader extends PersistLoader<BaseOverviewPagerPresenter> {
 
-  @Inject @Named("data_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
+  @Inject @Named("data_overview") Provider<BaseOverviewPagerPresenter> presenterProvider;
 
-  DataManagePresenterLoader(@NonNull Context context) {
+  DataOverviewPresenterLoader(@NonNull Context context) {
     super(context);
   }
 
-  @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
+  @NonNull @Override public BaseOverviewPagerPresenter loadPersistent() {
     PowerManager.get(getContext()).provideComponent().plusDataScreenComponent().inject(this);
     return presenterProvider.get();
   }

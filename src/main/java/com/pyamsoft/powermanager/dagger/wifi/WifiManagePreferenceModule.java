@@ -33,7 +33,7 @@ import rx.Scheduler;
       @Named("wifi_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver) {
-    return new WifiManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
+    return new WifiManagePreferencePresenterImpl(interactor, mainScheduler, ioScheduler,
         manageObserver);
   }
 

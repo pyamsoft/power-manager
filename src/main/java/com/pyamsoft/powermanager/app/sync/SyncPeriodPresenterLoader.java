@@ -34,7 +34,7 @@ public class SyncPeriodPresenterLoader extends PersistLoader<BasePeriodPreferenc
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusPeriodPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusSyncScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

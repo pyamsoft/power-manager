@@ -16,22 +16,20 @@
 
 package com.pyamsoft.powermanager.dagger.sync;
 
-import com.pyamsoft.powermanager.app.sync.SyncFragment;
-import com.pyamsoft.powermanager.app.sync.SyncManagePresenterLoader;
-import com.pyamsoft.powermanager.app.sync.SyncOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.sync.SyncPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
-@ActivityScope @Subcomponent(modules = {
-    SyncOverviewModule.class, SyncManagePreferenceModule.class, SyncPeriodPreferenceModule.class
-}) public interface SyncScreenComponent {
+@Module public class SyncOverviewModule {
 
-  void inject(SyncFragment fragment);
-
-  void inject(SyncOverviewPresenterLoader loader);
-
-  void inject(SyncManagePresenterLoader loader);
-
-  void inject(SyncPeriodPresenterLoader loader);
+  @ActivityScope @Provides @Named("sync_overview")
+  BaseOverviewPagerPresenter provideSyncOverviewPagerPresenter(
+      @Named("mod_sync_state") BooleanInterestModifier stateModifier,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    return new SyncOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+  }
 }

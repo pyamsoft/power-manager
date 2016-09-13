@@ -33,7 +33,7 @@ import rx.Scheduler;
       @Named("wifi_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
       @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
       @Named("obs_wifi_periodic") BooleanInterestObserver periodicObserver) {
-    return new WifiPeriodPreferencePresenter(interactor, mainScheduler, ioScheduler,
+    return new WifiPeriodPreferencePresenterImpl(interactor, mainScheduler, ioScheduler,
         periodicObserver);
   }
 

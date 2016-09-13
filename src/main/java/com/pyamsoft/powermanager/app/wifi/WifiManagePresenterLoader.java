@@ -34,7 +34,7 @@ public class WifiManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusManagePreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusWifiScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

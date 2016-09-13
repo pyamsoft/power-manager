@@ -45,7 +45,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 
 public abstract class BaseOverviewPagerFragment extends ActionBarFragment
-    implements BaseOverviewPagePresenter.View {
+    implements BaseOverviewPagerPresenter.View {
 
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
@@ -55,7 +55,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment
   @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
-  @SuppressWarnings("WeakerAccess") BaseOverviewPagePresenter presenter;
+  @SuppressWarnings("WeakerAccess") BaseOverviewPagerPresenter presenter;
   private TabLayout tabLayout;
   private Unbinder unbinder;
   private long loadedKey;
@@ -64,12 +64,12 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment
     super.onCreate(savedInstanceState);
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<BaseOverviewPagePresenter>() {
-              @NonNull @Override public PersistLoader<BaseOverviewPagePresenter> createLoader() {
+            new PersistLoader.Callback<BaseOverviewPagerPresenter>() {
+              @NonNull @Override public PersistLoader<BaseOverviewPagerPresenter> createLoader() {
                 return getPresenterLoader();
               }
 
-              @Override public void onPersistentLoaded(@NonNull BaseOverviewPagePresenter persist) {
+              @Override public void onPersistentLoaded(@NonNull BaseOverviewPagerPresenter persist) {
                 presenter = persist;
               }
             });
@@ -219,7 +219,7 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment
   @CheckResult @NonNull protected abstract BooleanInterestObserver getObserver();
 
   @CheckResult @NonNull
-  protected abstract PersistLoader<BaseOverviewPagePresenter> getPresenterLoader();
+  protected abstract PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader();
 
   @CheckResult @DrawableRes protected abstract int getFabSetIcon();
 

@@ -22,10 +22,9 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagePresenter;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.PersistLoader;
@@ -53,7 +52,7 @@ public class WifiFragment extends BaseOverviewPagerFragment {
     return observer;
   }
 
-  @NonNull @Override protected PersistLoader<BaseOverviewPagePresenter> getPresenterLoader() {
+  @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
     return new WifiOverviewPresenterLoader(getContext());
   }
 

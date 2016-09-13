@@ -16,22 +16,20 @@
 
 package com.pyamsoft.powermanager.dagger.wifi;
 
-import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.powermanager.app.wifi.WifiManagePresenterLoader;
-import com.pyamsoft.powermanager.app.wifi.WifiOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.wifi.WifiPeriodPresenterLoader;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import rx.Scheduler;
 
-@ActivityScope @Subcomponent(modules = {
-    WifiOverviewModule.class, WifiManagePreferenceModule.class, WifiPeriodPreferenceModule.class
-}) public interface WifiScreenComponent {
+@Module public class WifiOverviewModule {
 
-  void inject(WifiFragment fragment);
-
-  void inject(WifiOverviewPresenterLoader loader);
-
-  void inject(WifiManagePresenterLoader loader);
-
-  void inject(WifiPeriodPresenterLoader loader);
+  @ActivityScope @Provides @Named("wifi_overview")
+  BaseOverviewPagerPresenter provideWifiOverviewPagerPresenter(
+      @Named("mod_wifi_state") BooleanInterestModifier stateModifier,
+      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+    return new WifiOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+  }
 }

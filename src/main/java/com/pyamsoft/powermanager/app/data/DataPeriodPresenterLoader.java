@@ -34,7 +34,7 @@ public class DataPeriodPresenterLoader extends PersistLoader<BasePeriodPreferenc
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusPeriodPreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusDataScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

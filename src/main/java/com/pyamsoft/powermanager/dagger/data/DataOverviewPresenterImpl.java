@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.wifi;
+package com.pyamsoft.powermanager.dagger.data;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferencePresenterImpl;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.dagger.base.BaseOverviewPagerPresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class WifiPeriodPreferencePresenter extends BasePeriodPreferencePresenterImpl {
+class DataOverviewPresenterImpl extends BaseOverviewPagerPresenterImpl {
 
-  @Inject WifiPeriodPreferencePresenter(@NonNull BasePeriodPreferenceInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver periodObserver) {
-    super(interactor, observeScheduler, subscribeScheduler, periodObserver);
+  @Inject DataOverviewPresenterImpl(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
+    super(observeScheduler, subscribeScheduler, modifier);
   }
 }

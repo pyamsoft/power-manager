@@ -34,7 +34,7 @@ public class DozePresenterLoader extends PersistLoader<BaseManagePreferencePrese
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusManagePreferenceComponent().inject(this);
+    PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

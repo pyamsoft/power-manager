@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.base;
 
 import com.pyamsoft.pydroid.base.Presenter;
 
-public interface BaseOverviewPagePresenter extends Presenter<BaseOverviewPagePresenter.View> {
+public interface BaseOverviewPagerPresenter extends Presenter<BaseOverviewPagerPresenter.View> {
 
   void wrapSet();
 
