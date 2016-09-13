@@ -30,8 +30,8 @@ import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
-import com.pyamsoft.powermanager.dagger.service.FullDialogComponent;
-import com.pyamsoft.powermanager.dagger.service.FullNotificationComponent;
+import com.pyamsoft.powermanager.dagger.service.notification.NotificationDialogComponent;
+import com.pyamsoft.powermanager.dagger.service.notification.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
@@ -52,7 +52,7 @@ import javax.inject.Singleton;
 
   FullNotificationComponent plusFullNotificationComponent();
 
-  FullDialogComponent plusFullDialogComponent();
+  NotificationDialogComponent plusNotificationDialogComponent();
 
   ForegroundServiceComponent plusForegroundServiceComponent();
 

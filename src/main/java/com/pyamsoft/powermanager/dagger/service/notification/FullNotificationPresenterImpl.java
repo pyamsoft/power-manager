@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.dagger.service.notification;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.powermanager.app.service.FullNotificationPresenter;
+import com.pyamsoft.powermanager.app.service.notification.FullNotificationPresenter;
 import com.pyamsoft.powermanager.bus.FullNotificationBus;
 import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
 import javax.inject.Inject;

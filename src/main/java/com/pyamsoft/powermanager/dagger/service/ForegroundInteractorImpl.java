@@ -36,7 +36,7 @@ import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.app.service.FullNotificationActivity;
+import com.pyamsoft.powermanager.app.service.notification.FullNotificationActivity;
 import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import com.pyamsoft.pydroid.util.AppUtil;

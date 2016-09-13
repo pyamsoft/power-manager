@@ -69,7 +69,7 @@
 
     <!-- Full Notification -->
     <activity
-        android:name=".app.service.FullNotificationActivity"
+        android:name=".app.service.notification.FullNotificationActivity"
         android:excludeFromRecents="true"
         android:launchMode="singleInstance"
         android:noHistory="true"

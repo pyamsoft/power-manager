@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.service;
+package com.pyamsoft.powermanager.app.service.notification;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

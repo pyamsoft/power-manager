@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.app.service.notification;
 
-import com.pyamsoft.powermanager.app.service.FullNotificationPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import com.pyamsoft.pydroid.base.Presenter;
 
-@ActivityScope @Subcomponent(modules = FullNotificationModule.class)
-public interface FullNotificationComponent {
+public interface FullNotificationPresenter
+    extends Presenter<FullNotificationPresenter.FullNotificationView> {
 
-  void inject(FullNotificationPresenterLoader loader);
+  interface FullNotificationView {
+
+    void onDismissEvent();
+  }
 }
