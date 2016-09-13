@@ -16,52 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.wrapper;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.os.Build;
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import timber.log.Timber;
 
-public class BluetoothAdapterWrapper {
+public interface BluetoothAdapterWrapper {
 
-  @Nullable private final BluetoothAdapter adapter;
+  void enable();
 
-  public BluetoothAdapterWrapper(@NonNull Context context) {
-    this.adapter = getBluetoothAdapter(context);
-  }
+  void disable();
 
-  @CheckResult @Nullable private BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
-    final BluetoothAdapter adapter;
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      adapter = BluetoothAdapter.getDefaultAdapter();
-    } else {
-      final BluetoothManager bluetoothManager = (BluetoothManager) context.getApplicationContext()
-          .getSystemService(Context.BLUETOOTH_SERVICE);
-      adapter = bluetoothManager.getAdapter();
-    }
-    return adapter;
-  }
-
-  public final void enable() {
-    if (adapter != null) {
-      Timber.d("Bluetooth: enable");
-      adapter.enable();
-    }
-  }
-
-  public final void disable() {
-    if (adapter != null) {
-      Timber.d("Bluetooth: disable");
-      adapter.disable();
-    }
-  }
-
-  @CheckResult public final boolean isEnabled() {
-    final boolean enabled = adapter != null && adapter.isEnabled();
-    Timber.d("Bluetooth enabled: %s", enabled);
-    return enabled;
-  }
+  @CheckResult boolean isEnabled();
 }

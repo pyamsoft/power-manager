@@ -27,12 +27,13 @@ class BluetoothStateObserver extends StateObserver {
 
   @NonNull private final BluetoothAdapterWrapper wrapper;
 
-  @Inject BluetoothStateObserver(@NonNull Context context) {
+  @Inject BluetoothStateObserver(@NonNull Context context,
+      @NonNull BluetoothAdapterWrapper wrapper) {
     super(context);
+    this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");
 
     setFilterActions(BluetoothAdapter.ACTION_STATE_CHANGED);
-    wrapper = new BluetoothAdapterWrapper(context);
   }
 
   @Override public boolean is() {

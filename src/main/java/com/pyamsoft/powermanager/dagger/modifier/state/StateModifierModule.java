@@ -20,6 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,8 +30,9 @@ import javax.inject.Singleton;
 @Module public class StateModifierModule {
 
   @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new WifiStateModifier(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull WifiManagerWrapper wrapper) {
+    return new WifiStateModifier(context, preferences, wrapper);
   }
 
   @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
@@ -39,8 +42,8 @@ import javax.inject.Singleton;
 
   @Singleton @Named("mod_bluetooth_state") @Provides
   BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothStateModifier(context, preferences);
+      @NonNull PowerManagerPreferences preferences, @NonNull BluetoothAdapterWrapper wrapper) {
+    return new BluetoothStateModifier(context, preferences, wrapper);
   }
 
   @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(

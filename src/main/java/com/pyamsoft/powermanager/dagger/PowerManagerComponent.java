@@ -30,22 +30,24 @@ import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
-import com.pyamsoft.powermanager.dagger.service.notification.NotificationDialogComponent;
-import com.pyamsoft.powermanager.dagger.service.notification.FullNotificationComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
+import com.pyamsoft.powermanager.dagger.service.notification.FullNotificationComponent;
+import com.pyamsoft.powermanager.dagger.service.notification.NotificationDialogComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
+import com.pyamsoft.powermanager.dagger.wrapper.WrapperModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageModifierModule.class, ManageObserverModule.class, PeriodicObserverModule.class,
-    PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class
+    PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class,
+    WrapperModule.class
 }) public interface PowerManagerComponent {
 
   TriggerComponent plusTrigger();

@@ -19,6 +19,8 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -27,8 +29,8 @@ import javax.inject.Singleton;
 @Module public class StateObserverModule {
 
   @Singleton @Named("obs_wifi_state") @Provides BooleanInterestObserver provideWifiObserver(
-      @NonNull Context context) {
-    return new WifiStateObserver(context);
+      @NonNull Context context, @NonNull WifiManagerWrapper wrapper) {
+    return new WifiStateObserver(context, wrapper);
   }
 
   @Singleton @Named("obs_data_state") @Provides BooleanInterestObserver provideDataObserver(
@@ -37,8 +39,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_bluetooth_state") @Provides
-  BooleanInterestObserver provideBluetoothObserver(@NonNull Context context) {
-    return new BluetoothStateObserver(context);
+  BooleanInterestObserver provideBluetoothObserver(@NonNull Context context,
+      @NonNull BluetoothAdapterWrapper wrapper) {
+    return new BluetoothStateObserver(context, wrapper);
   }
 
   @Singleton @Named("obs_sync_state") @Provides BooleanInterestObserver provideSyncObserver() {

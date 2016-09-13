@@ -27,9 +27,9 @@ class BluetoothStateModifier extends StateModifier {
   @NonNull private final BluetoothAdapterWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences, @NonNull BluetoothAdapterWrapper wrapper) {
     super(context, preferences);
-    wrapper = new BluetoothAdapterWrapper(context);
+    this.wrapper = wrapper;
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {

@@ -16,13 +16,19 @@
 
 package com.pyamsoft.powermanager.dagger.wrapper;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Singleton;
 
-public interface WifiManagerWrapper {
+@Module public class WrapperModule {
 
-  void enable();
+  @Singleton @Provides WifiManagerWrapper provideWifiManagerWrapper(@NonNull Context context) {
+    return new WifiManagerWrapperImpl(context);
+  }
 
-  void disable();
-
-  @CheckResult boolean isEnabled();
+  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
+    return new BluetoothAdapterWrapperImpl(context);
+  }
 }

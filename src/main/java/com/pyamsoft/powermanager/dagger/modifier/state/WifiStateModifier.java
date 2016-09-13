@@ -26,10 +26,10 @@ class WifiStateModifier extends StateModifier {
 
   @NonNull private final WifiManagerWrapper wrapper;
 
-  @Inject WifiStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull WifiManagerWrapper wrapper) {
     super(context, preferences);
-    wrapper = new WifiManagerWrapper(context);
+    this.wrapper = wrapper;
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
