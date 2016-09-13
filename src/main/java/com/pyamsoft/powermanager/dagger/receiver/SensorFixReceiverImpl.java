@@ -14,48 +14,32 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.receiver;
+package com.pyamsoft.powermanager.dagger.receiver;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SensorFixReceiver {
+class SensorFixReceiverImpl implements SensorFixReceiver {
 
   @NonNull private final BrightnessFixReceiver brightnessFixReceiver;
   @NonNull private final RotateFixReceiver rotateFixReceiver;
 
-  public SensorFixReceiver(@NonNull Context context) {
-    this.brightnessFixReceiver = new BrightnessFixReceiver(context);
-    this.rotateFixReceiver = new RotateFixReceiver(context);
+  @Inject SensorFixReceiverImpl(@NonNull Context context,
+      @NonNull BooleanInterestObserver writePermissionObserver) {
+    this.brightnessFixReceiver = new BrightnessFixReceiver(context, writePermissionObserver);
+    this.rotateFixReceiver = new RotateFixReceiver(context, writePermissionObserver);
   }
 
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  public static boolean hasWritePermission(@NonNull Context context) {
-    boolean hasRuntimePermission;
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      Timber.d("Runtime permissions before M are auto granted");
-      hasRuntimePermission = context.getApplicationContext()
-          .checkCallingOrSelfPermission(Manifest.permission.WRITE_SETTINGS)
-          == PackageManager.PERMISSION_GRANTED;
-    } else {
-      Timber.d("Check if system setting is granted");
-      hasRuntimePermission = Settings.System.canWrite(context);
-    }
-
-    return hasRuntimePermission;
-  }
-
-  public void register() {
+  @Override public void register() {
     brightnessFixReceiver.register();
     rotateFixReceiver.register();
 
@@ -65,7 +49,7 @@ public class SensorFixReceiver {
     rotateFixReceiver.setAutoRotateEnabled(!rotateFixReceiver.isAutoRotateEnabled());
   }
 
-  public void unregister() {
+  @Override public void unregister() {
     brightnessFixReceiver.unregister();
     rotateFixReceiver.unregister();
   }
@@ -73,12 +57,15 @@ public class SensorFixReceiver {
   static final class BrightnessFixReceiver extends ContentObserver {
 
     @NonNull final Context appContext;
+    @NonNull private final BooleanInterestObserver writePermissionObserver;
     boolean originalAutoBright;
     boolean registered = false;
 
-    BrightnessFixReceiver(@NonNull Context context) {
+    BrightnessFixReceiver(@NonNull Context context,
+        @NonNull BooleanInterestObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
       this.appContext = context.getApplicationContext();
+      this.writePermissionObserver = writePermissionObserver;
     }
 
     @CheckResult boolean isAutoBrightnessEnabled() {
@@ -95,7 +82,7 @@ public class SensorFixReceiver {
     }
 
     void setAutoBrightnessEnabled(boolean enabled) {
-      if (hasWritePermission(appContext)) {
+      if (writePermissionObserver.is()) {
         Timber.d("Set auto brightness: %s", enabled);
         Settings.System.putInt(appContext.getContentResolver(),
             Settings.System.SCREEN_BRIGHTNESS_MODE,
@@ -149,12 +136,15 @@ public class SensorFixReceiver {
   static final class RotateFixReceiver extends ContentObserver {
 
     @NonNull final Context appContext;
+    @NonNull private final BooleanInterestObserver writePermissionObserver;
     boolean originalAutoRotate;
     boolean registered = false;
 
-    RotateFixReceiver(@NonNull Context context) {
+    RotateFixReceiver(@NonNull Context context,
+        @NonNull BooleanInterestObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
       this.appContext = context.getApplicationContext();
+      this.writePermissionObserver = writePermissionObserver;
     }
 
     @CheckResult boolean isAutoRotateEnabled() {
@@ -165,7 +155,7 @@ public class SensorFixReceiver {
     }
 
     void setAutoRotateEnabled(boolean enabled) {
-      if (hasWritePermission(appContext)) {
+      if (writePermissionObserver.is()) {
         Timber.d("Set auto rotate: %s", enabled);
         Settings.System.putInt(appContext.getContentResolver(),
             Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);

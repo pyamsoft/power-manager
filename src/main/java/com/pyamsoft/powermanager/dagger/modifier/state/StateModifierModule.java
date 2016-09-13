@@ -20,6 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
 import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
 import dagger.Module;
@@ -52,7 +54,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozeStateModifier(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull SensorFixReceiver sensorFixReceiver,
+      @Named("obs_doze_permission") BooleanInterestObserver dozePermissionObserver) {
+    return new DozeStateModifier(context, preferences, sensorFixReceiver, dozePermissionObserver);
   }
 }

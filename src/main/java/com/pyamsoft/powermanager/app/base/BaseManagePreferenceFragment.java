@@ -51,6 +51,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     manageKey = getString(getManageKeyResId());
     presetTimeKey = getString(getPresetTimeKeyResId());
     timeKey = getString(getTimeKeyResId());
+    injectDependencies();
+  }
+
+  /**
+   * Inject anything here is individual fragment instances
+   */
+  protected void injectDependencies() {
+
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {

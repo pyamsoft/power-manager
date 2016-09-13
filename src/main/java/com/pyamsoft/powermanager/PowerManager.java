@@ -16,31 +16,18 @@
 
 package com.pyamsoft.powermanager;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.lib.PYDroidApplication;
-import timber.log.Timber;
 
 public class PowerManager extends PYDroidApplication
     implements IPowerManager<PowerManagerComponent> {
 
   private PowerManagerComponent component;
-
-  // KLUDGE Move to better location
-  @CheckResult public static boolean hasDozePermission(@NonNull Context context) {
-    final boolean hasPermission = Build.VERSION.SDK_INT == Build.VERSION_CODES.M
-        && context.getApplicationContext().checkCallingOrSelfPermission(Manifest.permission.DUMP)
-        == PackageManager.PERMISSION_GRANTED;
-    Timber.d("Has doze permission? %s", hasPermission);
-    return hasPermission;
-  }
 
   @NonNull @CheckResult
   public static IPowerManager<PowerManagerComponent> get(@NonNull Context context) {

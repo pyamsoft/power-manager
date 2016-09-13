@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.doze;
+package com.pyamsoft.powermanager.dagger.receiver;
 
-import com.pyamsoft.powermanager.app.doze.DozeManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
-@ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class) public interface DozeScreenComponent {
+@Module public class ReceiverModule {
 
-  void inject(DozeManagePreferenceFragment fragment);
-
-  void inject(DozePresenterLoader loader);
+  @Singleton @Provides SensorFixReceiver provideSensorFixReceiver(@NonNull Context context,
+      @Named("obs_write_permission") BooleanInterestObserver writePermissionObserver) {
+    return new SensorFixReceiverImpl(context, writePermissionObserver);
+  }
 }

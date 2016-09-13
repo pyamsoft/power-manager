@@ -24,10 +24,12 @@ import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.preference.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.preference.periodic.PeriodicModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
+import com.pyamsoft.powermanager.dagger.observer.permission.PermissionObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.receiver.ReceiverModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
@@ -47,7 +49,7 @@ import javax.inject.Singleton;
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageModifierModule.class, ManageObserverModule.class, PeriodicObserverModule.class,
     PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class,
-    WrapperModule.class
+    WrapperModule.class, ReceiverModule.class, PermissionObserverModule.class
 }) public interface PowerManagerComponent {
 
   TriggerComponent plusTrigger();

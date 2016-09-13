@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.doze;
+package com.pyamsoft.powermanager.dagger.receiver;
 
-import com.pyamsoft.powermanager.app.doze.DozeManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
-import dagger.Subcomponent;
+public interface SensorFixReceiver {
 
-@ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class) public interface DozeScreenComponent {
+  void register();
 
-  void inject(DozeManagePreferenceFragment fragment);
-
-  void inject(DozePresenterLoader loader);
+  void unregister();
 }

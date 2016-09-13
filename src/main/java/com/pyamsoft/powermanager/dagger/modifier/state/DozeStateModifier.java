@@ -19,9 +19,9 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,11 +37,14 @@ class DozeStateModifier extends StateModifier {
   @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.google.android.gms*";
   @NonNull private final SensorFixReceiver sensorFixReceiver;
+  @NonNull private final BooleanInterestObserver dozePermissionObserver;
 
-  @Inject DozeStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull SensorFixReceiver sensorFixReceiver,
+      @NonNull BooleanInterestObserver dozePermissionObserver) {
     super(context, preferences);
-    sensorFixReceiver = new SensorFixReceiver(context.getApplicationContext());
+    this.sensorFixReceiver = sensorFixReceiver;
+    this.dozePermissionObserver = dozePermissionObserver;
   }
 
   @SuppressLint("NewApi") private static void executeDumpsys(@NonNull String cmd) {
@@ -77,7 +80,7 @@ class DozeStateModifier extends StateModifier {
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     sensorFixReceiver.unregister();
-    if (PowerManager.hasDozePermission(context)) {
+    if (dozePermissionObserver.is()) {
       Timber.d("Begin Doze");
       executeDumpsys(DUMPSYS_DOZE_START);
       if (preferences.isSensorsManaged()) {
@@ -89,7 +92,7 @@ class DozeStateModifier extends StateModifier {
 
   @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     sensorFixReceiver.unregister();
-    if (PowerManager.hasDozePermission(context)) {
+    if (dozePermissionObserver.is()) {
       Timber.d("End Doze");
       executeDumpsys(DUMPSYS_DOZE_END);
 

@@ -26,17 +26,25 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.receiver.SensorFixReceiver;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
+  @Inject @Named("obs_doze_permission") BooleanInterestObserver dozePermissionObserver;
+  @Inject @Named("obs_write_permission") BooleanInterestObserver writePermissionObserver;
+
+  @Override protected void injectDependencies() {
+    PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
+  }
 
   @Override protected boolean onManagePreferenceChanged(boolean b) {
     if (b) {
-      final boolean hasPermission = PowerManager.hasDozePermission(getContext());
+      final boolean hasPermission = dozePermissionObserver.is();
       if (!hasPermission) {
         AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
             "doze_explain");
@@ -56,7 +64,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         if (b) {
-          final boolean hasPermission = SensorFixReceiver.hasWritePermission(getContext());
+          final boolean hasPermission = writePermissionObserver.is();
           if (!hasPermission) {
             AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
                 new SensorsExplanationDialog(), "sensors_explain");

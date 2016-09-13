@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -67,7 +68,9 @@ import rx.Scheduler;
   @Singleton @Named("mod_doze_manage") @Provides BooleanInterestModifier provideDozModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("io") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
-    return new DozeManageModifier(context, preferences, subscribeScheduler, observeScheduler);
+      @NonNull @Named("main") Scheduler observeScheduler,
+      @Named("obs_doze_permission") BooleanInterestObserver observer) {
+    return new DozeManageModifier(context, preferences, subscribeScheduler, observeScheduler,
+        observer);
   }
 }

@@ -18,23 +18,27 @@ package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
 
 class DozeManageModifier extends BooleanPreferenceModifier {
 
+  @NonNull private final BooleanInterestObserver observer;
+
   @Inject DozeManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler,
+      @NonNull BooleanInterestObserver observer) {
     super(context, preferences, subscribeScheduler, observeScheduler);
+    this.observer = observer;
   }
 
   @Override
   protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     // Don't allow the setting of Doze if we don't have permission
-    preferences.setDozeManaged(PowerManager.hasDozePermission(context));
+    preferences.setDozeManaged(observer.is());
   }
 
   @Override
