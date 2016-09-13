@@ -52,14 +52,13 @@
       android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
-      android:supportsRtl="false"
       android:theme="@style/Theme.PowerManager.Light">
 
     <!-- Main Activity -->
     <activity
         android:name=".app.main.MainActivity"
         android:label="@string/app_name"
-        android:launchMode="singleTop"
+        android:launchMode="singleTask"
         android:theme="@style/Theme.PowerManager.Light.Splash">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
