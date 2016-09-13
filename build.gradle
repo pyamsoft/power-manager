@@ -99,7 +99,7 @@ dependencies {
 
   // Support
   // Needs to compile support annotations into actual project
-  compile 'com.android.support:support-annotations:24.2.0'
+  compile 'com.android.support:support-annotations:24.2.1'
 
   // Job Scheduling
   compile 'com.birbit:android-priority-jobqueue:2.0.0'
@@ -118,7 +118,7 @@ dependencies {
   apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.4-rc2'
 
   // Dagger2
-  apt "com.google.dagger:dagger-compiler:2.6.1"
+  apt "com.google.dagger:dagger-compiler:2.7"
 
   // Butterknife
   apt 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -127,7 +127,7 @@ dependencies {
   compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
 
   // Android Framework Testing
-  androidTestCompile 'com.android.support:support-annotations:24.2.0'
+  androidTestCompile 'com.android.support:support-annotations:24.2.1'
   androidTestCompile 'com.android.support.test:runner:0.5'
   androidTestCompile 'com.android.support.test:rules:0.5'
   androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
