@@ -35,26 +35,45 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 
-public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
+public abstract class BaseOverviewPagerFragment extends ActionBarFragment
+    implements BaseOverviewPagePresenter.View {
 
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
+  @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @NonNull private final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
   @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
-  @SuppressWarnings("WeakerAccess") BooleanInterestModifier modifier;
+  @SuppressWarnings("WeakerAccess") BaseOverviewPagePresenter presenter;
   private TabLayout tabLayout;
   private Unbinder unbinder;
+  private long loadedKey;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState,
+            new PersistLoader.Callback<BaseOverviewPagePresenter>() {
+              @NonNull @Override public PersistLoader<BaseOverviewPagePresenter> createLoader() {
+                return getPresenterLoader();
+              }
+
+              @Override public void onPersistentLoaded(@NonNull BaseOverviewPagePresenter persist) {
+                presenter = persist;
+              }
+            });
+  }
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -78,7 +97,6 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     observer = getObserver();
-    modifier = getModifier();
     addPreferenceFragments();
     addTabLayoutToAppBar();
     selectCurrentTab(savedInstanceState);
@@ -87,13 +105,13 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
   @Override public void onStart() {
     super.onStart();
-    if (!isFabHidden()) {
-      observer.register(FAB_TAG, this::setFab, this::unsetFab);
-    }
+    presenter.bindView(this);
+    observer.register(FAB_TAG, this::setFab, this::unsetFab);
   }
 
   @Override public void onStop() {
     super.onStop();
+    presenter.unbindView();
     observer.unregister(FAB_TAG);
   }
 
@@ -115,7 +133,15 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     if (tabLayout != null) {
       outState.putInt(CURRENT_TAB_KEY, tabLayout.getSelectedTabPosition());
     }
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.get().unload(loadedKey);
+    }
   }
 
   private void addTabLayout(@NonNull TabLayout tabLayout) {
@@ -159,11 +185,6 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
   }
 
   private void setupFab() {
-    if (isFabHidden()) {
-      fab.hide();
-      return;
-    }
-
     if (observer.is()) {
       setFab();
     } else {
@@ -172,9 +193,9 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
 
     fab.setOnClickListener(view -> {
       if (observer.is()) {
-        modifier.unset();
+        presenter.wrapUnset();
       } else {
-        modifier.set();
+        presenter.wrapSet();
       }
     });
   }
@@ -193,18 +214,12 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment {
     asyncDrawableMap.put("fab", subscription);
   }
 
-  /**
-   * Override to not use the FAB
-   */
-  @CheckResult private boolean isFabHidden() {
-    return false;
-  }
-
   protected abstract void injectObserverModifier();
 
   @CheckResult @NonNull protected abstract BooleanInterestObserver getObserver();
 
-  @CheckResult @NonNull protected abstract BooleanInterestModifier getModifier();
+  @CheckResult @NonNull
+  protected abstract PersistLoader<BaseOverviewPagePresenter> getPresenterLoader();
 
   @CheckResult @DrawableRes protected abstract int getFabSetIcon();
 

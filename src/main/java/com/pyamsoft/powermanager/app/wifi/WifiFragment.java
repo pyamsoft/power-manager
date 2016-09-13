@@ -22,11 +22,13 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.BaseOverviewPagePresenter;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -34,7 +36,6 @@ public class WifiFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Wifi";
   @Inject @Named("obs_wifi_state") BooleanInterestObserver observer;
-  @Inject @Named("mod_wifi_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static WifiFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -52,8 +53,8 @@ public class WifiFragment extends BaseOverviewPagerFragment {
     return observer;
   }
 
-  @NonNull @Override protected BooleanInterestModifier getModifier() {
-    return modifier;
+  @NonNull @Override protected PersistLoader<BaseOverviewPagePresenter> getPresenterLoader() {
+    return new WifiOverviewPresenterLoader(getContext());
   }
 
   @Override protected int getFabSetIcon() {
