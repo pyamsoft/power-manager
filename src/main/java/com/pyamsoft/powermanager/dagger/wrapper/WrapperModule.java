@@ -28,7 +28,8 @@ import javax.inject.Singleton;
     return new WifiManagerWrapperImpl(context);
   }
 
-  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
+  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(
+      @NonNull Context context) {
     return new BluetoothAdapterWrapperImpl(context);
   }
 }

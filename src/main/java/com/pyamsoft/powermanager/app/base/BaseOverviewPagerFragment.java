@@ -69,7 +69,8 @@ public abstract class BaseOverviewPagerFragment extends ActionBarFragment
                 return getPresenterLoader();
               }
 
-              @Override public void onPersistentLoaded(@NonNull BaseOverviewPagerPresenter persist) {
+              @Override
+              public void onPersistentLoaded(@NonNull BaseOverviewPagerPresenter persist) {
                 presenter = persist;
               }
             });

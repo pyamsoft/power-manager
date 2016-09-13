@@ -32,7 +32,10 @@ public class NotificationDialogPresenterLoader extends PersistLoader<Notificatio
   }
 
   @NonNull @Override public NotificationDialogPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusNotificationDialogComponent().inject(this);
+    PowerManager.get(getContext())
+        .provideComponent()
+        .plusNotificationDialogComponent()
+        .inject(this);
     return presenterProvider.get();
   }
 }

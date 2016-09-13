@@ -20,7 +20,8 @@ import com.pyamsoft.powermanager.app.service.notification.NotificationDialogPres
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = NotificationDialogModule.class) public interface NotificationDialogComponent {
+@ActivityScope @Subcomponent(modules = NotificationDialogModule.class)
+public interface NotificationDialogComponent {
 
   void inject(NotificationDialogPresenterLoader loader);
 }

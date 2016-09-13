@@ -21,7 +21,8 @@ import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
 import com.pyamsoft.pydroid.dagger.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class) public interface DozeScreenComponent {
+@ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class)
+public interface DozeScreenComponent {
 
   void inject(DozeManagePreferenceFragment fragment);
 

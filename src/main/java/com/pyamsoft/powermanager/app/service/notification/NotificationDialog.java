@@ -208,7 +208,8 @@ public class NotificationDialog extends DialogFragment implements NotificationDi
   @Override public void setBluetoothManageState(boolean state) {
     bluetoothManage.setOnCheckedChangeListener(null);
     bluetoothManage.setChecked(state);
-    bluetoothManage.setOnCheckedChangeListener((compoundButton, b) -> presenter.bluetoothManageClicked());
+    bluetoothManage.setOnCheckedChangeListener(
+        (compoundButton, b) -> presenter.bluetoothManageClicked());
   }
 
   @Override public void setSyncManageState(boolean state) {
