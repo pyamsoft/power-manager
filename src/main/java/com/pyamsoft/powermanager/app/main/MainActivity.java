@@ -182,14 +182,10 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 = "BUGFIX: Lower battery consumption";
-    final String line2 = "BUGFIX: Fix a crash on manage screens";
-    final String line3 = "BUGFIX: Fix typos";
-    final String line4 = "BUGFIX: Clean up wearable handling";
+    final String line1 = "BUGFIX: More fluid UI in the Manage screen and Notification overlay";
 
     // Turn it into a spannable
-    final Spannable spannable =
-        StringUtil.createLineBreakBuilder(title, line1, line2, line3, line4);
+    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1);
 
     int start = 0;
     int end = title.length();
@@ -207,7 +203,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     StringUtil.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
-    end += 2 + line1.length() + 2 + line2.length() + 2 + line3.length() + 2 + line4.length();
+    end += 2 + line1.length();
 
     StringUtil.sizeSpan(spannable, start, end, smallSize);
     StringUtil.colorSpan(spannable, start, end, smallColor);
