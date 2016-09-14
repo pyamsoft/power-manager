@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
@@ -42,5 +43,13 @@ public class DozeFragment extends BaseOverviewSingleItemFragment {
 
   @NonNull @Override protected String getPreferenceTag() {
     return DozeManagePreferenceFragment.TAG;
+  }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.purple500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.purple700;
   }
 }

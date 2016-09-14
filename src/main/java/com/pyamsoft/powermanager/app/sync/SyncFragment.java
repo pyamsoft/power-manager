@@ -69,4 +69,12 @@ public class SyncFragment extends BaseOverviewPagerFragment {
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
     return new SyncPagerAdapter(getChildFragmentManager());
   }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.yellow500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.yellow700;
+  }
 }

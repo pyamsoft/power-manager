@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.AppBarColoringFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
@@ -40,7 +41,7 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
-public class OverviewFragment extends ActionBarFragment {
+public class OverviewFragment extends AppBarColoringFragment {
 
   @NonNull public static final String TAG = "Overview";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
@@ -58,6 +59,14 @@ public class OverviewFragment extends ActionBarFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
+  }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.amber500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.amber700;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

@@ -44,7 +44,7 @@ import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 
-public abstract class BaseOverviewPagerFragment extends ActionBarFragment
+public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     implements BaseOverviewPagerPresenter.View {
 
   @NonNull private static final String TABS_TAG = "tablayout";

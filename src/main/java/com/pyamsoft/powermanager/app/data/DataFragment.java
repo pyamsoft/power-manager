@@ -69,4 +69,12 @@ public class DataFragment extends BaseOverviewPagerFragment {
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
     return new DataPagerAdapter(getChildFragmentManager());
   }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.orange500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.orange700;
+  }
 }

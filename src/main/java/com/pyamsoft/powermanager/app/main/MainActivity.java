@@ -16,12 +16,19 @@
 
 package com.pyamsoft.powermanager.app.main;
 
+import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
@@ -56,10 +63,28 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @BindView(R.id.main_toolbar) Toolbar toolbar;
   private Unbinder unbinder;
 
+  @ColorInt private int oldAppBarColor;
+  @ColorInt private int oldStatusBarColor;
+  @Nullable private ValueAnimator appBarAnimator;
+  @Nullable private ValueAnimator statusBarAnimator;
+
+  static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
+    final float inverseRatio = 1f - ratio;
+
+    final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
+    final float g = Color.green(to) * ratio + Color.green(from) * inverseRatio;
+    final float b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio;
+
+    return Color.rgb((int) r, (int) g, (int) b);
+  }
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
     unbinder = ButterKnife.bind(this);
+
+    oldAppBarColor = ContextCompat.getColor(this, R.color.amber500);
+    oldStatusBarColor = ContextCompat.getColor(this, R.color.amber700);
 
     setupPreferenceDefaults();
     setupAppBar();
@@ -79,6 +104,13 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
   @Override protected void onDestroy() {
     super.onDestroy();
+    if (statusBarAnimator != null) {
+      statusBarAnimator.cancel();
+    }
+
+    if (appBarAnimator != null) {
+      appBarAnimator.cancel();
+    }
 
     for (final String key : addedViewMap.keySet()) {
       removeViewFromAppBar(key);
@@ -223,5 +255,72 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
   @Override public int getCurrentApplicationVersion() {
     return BuildConfig.VERSION_CODE;
+  }
+
+  /**
+   * Color the app bar using a nice blending animation
+   */
+  public void colorAppBar(@ColorRes int color, long duration) {
+    final int newColor = ContextCompat.getColor(this, color);
+    Timber.d("Blend appbar color");
+    blendAppBar(oldAppBarColor, newColor, duration);
+    oldAppBarColor = newColor;
+  }
+
+  /**
+   * Runs a blending animation on the app bar color
+   */
+  private void blendAppBar(int fromColor, int toColor, long duration) {
+    if (appBarAnimator != null) {
+      appBarAnimator.cancel();
+    }
+
+    appBarAnimator = ValueAnimator.ofFloat(0, 1);
+    appBarAnimator.addUpdateListener(animation -> {
+      // Use animation position to blend colors.
+      final float position = animation.getAnimatedFraction();
+
+      // Apply blended color to the status bar.
+      final int blended = blendColors(fromColor, toColor, position);
+
+      // To color the entire app bar
+      appBarLayout.setBackgroundColor(blended);
+    });
+
+    appBarAnimator.setDuration(duration).start();
+  }
+
+  /**
+   * Colors the status bar using a nice blending animation
+   */
+  public void colorStatusBar(@ColorRes int colorDark, long duration) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      final int newColor = ContextCompat.getColor(this, colorDark);
+      Timber.d("Blend statusbar color");
+      blendStatusBar(oldStatusBarColor, newColor, duration);
+      oldStatusBarColor = newColor;
+    }
+  }
+
+  /**
+   * Runs a blending animation on the status bar color
+   */
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP) private void blendStatusBar(@ColorInt int fromColor,
+      @ColorInt int toColor, long duration) {
+    if (statusBarAnimator != null) {
+      statusBarAnimator.cancel();
+    }
+
+    statusBarAnimator = ValueAnimator.ofFloat(0, 1);
+    statusBarAnimator.addUpdateListener(animation -> {
+      // Use animation position to blend colors.
+      final float position = animation.getAnimatedFraction();
+
+      // Apply blended color to the status bar.
+      final int blended = blendColors(fromColor, toColor, position);
+      getWindow().setStatusBarColor(blended);
+    });
+
+    statusBarAnimator.setDuration(duration).start();
   }
 }

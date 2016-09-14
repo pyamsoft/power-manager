@@ -69,4 +69,12 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
     return new BluetoothPagerAdapter(getChildFragmentManager());
   }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.blue500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.blue700;
+  }
 }

@@ -67,4 +67,12 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
     return new WifiPagerAdapter(getChildFragmentManager());
   }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.green500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.green700;
+  }
 }

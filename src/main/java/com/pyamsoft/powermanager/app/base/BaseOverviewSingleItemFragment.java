@@ -29,7 +29,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
-public abstract class BaseOverviewSingleItemFragment extends ActionBarFragment {
+public abstract class BaseOverviewSingleItemFragment extends AppBarColoringFragment {
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,

@@ -25,10 +25,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.AppBarColoringFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
-public class SettingsFragment extends ActionBarFragment {
+public class SettingsFragment extends AppBarColoringFragment {
 
   @NonNull public static final String TAG = "Settings";
 
@@ -43,6 +44,14 @@ public class SettingsFragment extends ActionBarFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_settings, container, false);
+  }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.pink500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.pink700;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

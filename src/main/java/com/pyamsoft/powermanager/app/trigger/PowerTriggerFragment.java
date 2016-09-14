@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.AppBarColoringFragment;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.app.widget.DividerItemDecoration;
@@ -44,7 +45,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 import timber.log.Timber;
 
-public class PowerTriggerFragment extends ActionBarFragment
+public class PowerTriggerFragment extends AppBarColoringFragment
     implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "Power Triggers";
@@ -118,6 +119,14 @@ public class PowerTriggerFragment extends ActionBarFragment
     drawableMap.clear();
     recyclerView.removeItemDecoration(dividerDecoration);
     unbinder.unbind();
+  }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.red500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.red700;
   }
 
   @Override public void onStart() {
