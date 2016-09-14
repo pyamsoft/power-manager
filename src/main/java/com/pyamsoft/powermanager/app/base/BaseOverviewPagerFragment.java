@@ -164,6 +164,8 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     tabLayout.setTabTextColors(ContextCompat.getColor(getContext(), R.color.grey500),
         ContextCompat.getColor(getContext(), android.R.color.white));
+    tabLayout.setSelectedTabIndicatorColor(
+        ContextCompat.getColor(getContext(), android.R.color.white));
     tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
     addTabLayout(tabLayout);
