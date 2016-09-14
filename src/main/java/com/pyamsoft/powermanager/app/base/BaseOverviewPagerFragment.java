@@ -37,7 +37,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -163,8 +162,8 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     tabLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT));
     tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-    tabLayout.setTabTextColors(ContextCompat.getColor(getContext(), android.R.color.white),
-        ContextCompat.getColor(getContext(), R.color.lightblueA200));
+    tabLayout.setTabTextColors(ContextCompat.getColor(getContext(), R.color.grey500),
+        ContextCompat.getColor(getContext(), android.R.color.white));
     tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
     addTabLayout(tabLayout);
