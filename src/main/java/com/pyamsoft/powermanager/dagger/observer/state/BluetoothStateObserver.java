@@ -19,16 +19,16 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class BluetoothStateObserver extends StateObserver {
 
-  @NonNull private final BluetoothAdapterWrapper wrapper;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject BluetoothStateObserver(@NonNull Context context,
-      @NonNull BluetoothAdapterWrapper wrapper) {
+      @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");

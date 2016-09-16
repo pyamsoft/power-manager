@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.support.annotation.CheckResult;
 
-public interface WifiManagerWrapper {
+public interface DeviceFunctionWrapper {
 
   void enable();
 

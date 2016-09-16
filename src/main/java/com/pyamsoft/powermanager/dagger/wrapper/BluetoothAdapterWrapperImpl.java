@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothAdapterWrapperImpl implements BluetoothAdapterWrapper {
+class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
 
   @Nullable private final BluetoothAdapter adapter;
 

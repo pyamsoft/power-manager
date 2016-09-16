@@ -20,16 +20,23 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Module public class WrapperModule {
 
-  @Singleton @Provides WifiManagerWrapper provideWifiManagerWrapper(@NonNull Context context) {
+  @Singleton @Provides @Named("wrapper_wifi") DeviceFunctionWrapper provideWifiManagerWrapper(
+      @NonNull Context context) {
     return new WifiManagerWrapperImpl(context);
   }
 
-  @Singleton @Provides BluetoothAdapterWrapper provideBluetoothAdapterWrapper(
-      @NonNull Context context) {
+  @Singleton @Provides @Named("wrapper_bluetooth")
+  DeviceFunctionWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
     return new BluetoothAdapterWrapperImpl(context);
+  }
+
+  @Singleton @Provides @Named("wrapper_data") DeviceFunctionWrapper provideDataConnectionWrapper(
+      @NonNull Context context) {
+    return new DataConnectionWrapperImpl(context);
   }
 }

@@ -17,76 +17,26 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.Build;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import java.lang.reflect.Method;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class DataStateModifier extends StateModifier {
 
-  @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
-  @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
-  static {
-    SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
-  }
-
-  @NonNull private final ConnectivityManager connectivityManager;
-
-  @Inject DataStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject DataStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull DeviceFunctionWrapper wrapper) {
     super(context, preferences);
-    connectivityManager = (ConnectivityManager) context.getApplicationContext()
-        .getSystemService(Context.CONNECTIVITY_SERVICE);
-  }
-
-  @CheckResult @Nullable private static Method reflectSetMethod() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Timber.e("Reflection method %s does not exist on Lollipop+", SET_METHOD_NAME);
-      return null;
-    }
-
-    try {
-      final Method method =
-          ConnectivityManager.class.getDeclaredMethod(SET_METHOD_NAME, Boolean.TYPE);
-      method.setAccessible(true);
-      return method;
-    } catch (final Exception e) {
-      Timber.e(e, "ManagerData reflectSetMethod ERROR");
-    }
-
-    return null;
-  }
-
-  private void setMobileDataEnabledReflection(boolean enabled) {
-    if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
-      try {
-        Timber.d("setMobileDataEnabledReflection: %s", enabled);
-        SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
-      } catch (final Exception e) {
-        Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
-      }
-    }
-  }
-
-  private void setMobileDataEnabled(boolean enabled) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      setMobileDataEnabledReflection(enabled);
-    } else {
-      Timber.e("Cannot set mobile data using reflection");
-    }
+    this.wrapper = wrapper;
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    setMobileDataEnabled(true);
+    wrapper.enable();
   }
 
   @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    setMobileDataEnabled(false);
+    wrapper.disable();
   }
 }

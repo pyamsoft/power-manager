@@ -18,92 +18,25 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import java.lang.reflect.Method;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class DataStateObserver extends StateObserver {
 
-  @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
-  @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
-  static {
-    GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
-  }
-
-  @NonNull private final ConnectivityManager connectivityManager;
-
-  @Inject DataStateObserver(@NonNull Context context) {
+  @Inject DataStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
+    this.wrapper = wrapper;
     Timber.d("New StateObserver for Data");
 
     setFilterActions(ConnectivityManager.CONNECTIVITY_ACTION);
-
-    connectivityManager = (ConnectivityManager) context.getApplicationContext()
-        .getSystemService(Context.CONNECTIVITY_SERVICE);
-  }
-
-  @CheckResult @Nullable private static Method reflectGetMethod() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Timber.e("Reflection method %s does not exist on Lollipop+", GET_METHOD_NAME);
-      return null;
-    }
-
-    try {
-      final Method method = ConnectivityManager.class.getDeclaredMethod(GET_METHOD_NAME);
-      method.setAccessible(true);
-      return method;
-    } catch (final Exception e) {
-      Timber.e(e, "ManagerData reflectGetMethod ERROR");
-    }
-
-    return null;
-  }
-
-  @CheckResult private boolean getMobileDataEnabledReflection() {
-    if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
-      try {
-        return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
-      } catch (final Exception e) {
-        Timber.e(e, "ManagerData getMobileDataEnabled ERROR");
-      }
-    }
-
-    return getMobileDataEnabledSettings();
-  }
-
-  @CheckResult private boolean getMobileDataEnabledSettings() {
-    boolean enabled;
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
-              == 1;
-    } else {
-      enabled =
-          Settings.Secure.getInt(getAppContext().getContentResolver(), SETTINGS_MOBILE_DATA, 0)
-              == 1;
-    }
-
-    return enabled;
-  }
-
-  @CheckResult private boolean getMobileDataEnabled() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      return getMobileDataEnabledReflection();
-    } else {
-      Timber.e("Cannot get mobile data using reflection");
-      return getMobileDataEnabledSettings();
-    }
   }
 
   @Override public boolean is() {
-    final boolean enabled = getMobileDataEnabled();
+    final boolean enabled = wrapper.isEnabled();
     Timber.d("Is mobile data enabled?: %s", enabled);
     return enabled;
   }

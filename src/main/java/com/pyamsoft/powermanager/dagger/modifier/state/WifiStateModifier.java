@@ -19,15 +19,15 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 
 class WifiStateModifier extends StateModifier {
 
-  @NonNull private final WifiManagerWrapper wrapper;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject WifiStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull WifiManagerWrapper wrapper) {
+      @NonNull DeviceFunctionWrapper wrapper) {
     super(context, preferences);
     this.wrapper = wrapper;
   }

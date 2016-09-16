@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiManagerWrapperImpl implements WifiManagerWrapper {
+class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
 
   @Nullable private final WifiManager wifiManager;
 

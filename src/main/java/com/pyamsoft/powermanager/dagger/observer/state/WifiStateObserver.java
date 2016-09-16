@@ -19,15 +19,15 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class WifiStateObserver extends StateObserver {
 
-  @NonNull private final WifiManagerWrapper wrapper;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject WifiStateObserver(@NonNull Context context, @NonNull WifiManagerWrapper wrapper) {
+  @Inject WifiStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Wifi");

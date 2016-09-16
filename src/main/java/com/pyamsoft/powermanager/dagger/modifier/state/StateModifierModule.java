@@ -22,8 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
-import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
-import com.pyamsoft.powermanager.dagger.wrapper.WifiManagerWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -33,18 +32,20 @@ import javax.inject.Singleton;
 
   @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull WifiManagerWrapper wrapper) {
+      @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
     return new WifiStateModifier(context, preferences, wrapper);
   }
 
   @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DataStateModifier(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
+    return new DataStateModifier(context, preferences, wrapper);
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides
   BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull BluetoothAdapterWrapper wrapper) {
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
     return new BluetoothStateModifier(context, preferences, wrapper);
   }
 

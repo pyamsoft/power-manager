@@ -19,15 +19,15 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.wrapper.BluetoothAdapterWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 
 class BluetoothStateModifier extends StateModifier {
 
-  @NonNull private final BluetoothAdapterWrapper wrapper;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject BluetoothStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull BluetoothAdapterWrapper wrapper) {
+      @NonNull PowerManagerPreferences preferences, @NonNull DeviceFunctionWrapper wrapper) {
     super(context, preferences);
     this.wrapper = wrapper;
   }
