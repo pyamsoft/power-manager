@@ -20,23 +20,25 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class SyncStateModifier extends StateModifier {
 
-  @Inject SyncStateModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @NonNull private final DeviceFunctionWrapper wrapper;
+
+  @Inject SyncStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull DeviceFunctionWrapper wrapper) {
     super(context, preferences);
+    this.wrapper = wrapper;
   }
 
   @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    Timber.d("Set sync: true");
-    ContentResolver.setMasterSyncAutomatically(true);
+    wrapper.enable();
   }
 
   @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    Timber.d("Set sync: false");
-    ContentResolver.setMasterSyncAutomatically(false);
+    wrapper.disable();
   }
 }

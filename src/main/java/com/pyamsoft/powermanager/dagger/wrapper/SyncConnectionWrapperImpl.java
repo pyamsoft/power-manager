@@ -16,28 +16,19 @@
 
 package com.pyamsoft.powermanager.dagger.wrapper;
 
-import android.content.Context;
-import android.net.wifi.WifiManager;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.ContentResolver;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
+class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {
 
-  @Nullable private final WifiManager wifiManager;
+  @Inject SyncConnectionWrapperImpl() {
 
-  @Inject WifiManagerWrapperImpl(@NonNull Context context) {
-    this.wifiManager =
-        (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
 
   private void toggle(boolean state) {
-    if (wifiManager != null) {
-      Timber.i("Wifi: %s", state ? "enable" : "disable");
-      wifiManager.setWifiEnabled(state);
-    }
+    Timber.i("Sync: %s", state ? "enable" : "disable");
+    ContentResolver.setMasterSyncAutomatically(true);
   }
 
   @Override public void enable() {
@@ -48,7 +39,7 @@ class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
     toggle(false);
   }
 
-  @Override @CheckResult public boolean isEnabled() {
-    return wifiManager != null && wifiManager.isWifiEnabled();
+  @Override public boolean isEnabled() {
+    return ContentResolver.getMasterSyncAutomatically();
   }
 }

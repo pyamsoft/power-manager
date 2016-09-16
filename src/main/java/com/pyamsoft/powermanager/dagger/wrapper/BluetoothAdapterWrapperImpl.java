@@ -46,23 +46,22 @@ class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
     return adapter;
   }
 
-  @Override public void enable() {
+  private void toggle(boolean state) {
     if (adapter != null) {
-      Timber.d("Bluetooth: enable");
+      Timber.i("Bluetooth: %s", state ? "enable" : "disable");
       adapter.enable();
     }
   }
 
+  @Override public void enable() {
+    toggle(true);
+  }
+
   @Override public void disable() {
-    if (adapter != null) {
-      Timber.d("Bluetooth: disable");
-      adapter.disable();
-    }
+    toggle(false);
   }
 
   @Override @CheckResult public boolean isEnabled() {
-    final boolean enabled = adapter != null && adapter.isEnabled();
-    Timber.d("Bluetooth enabled: %s", enabled);
-    return enabled;
+    return adapter != null && adapter.isEnabled();
   }
 }

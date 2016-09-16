@@ -50,8 +50,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new SyncStateModifier(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
+    return new SyncStateModifier(context, preferences, wrapper);
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(

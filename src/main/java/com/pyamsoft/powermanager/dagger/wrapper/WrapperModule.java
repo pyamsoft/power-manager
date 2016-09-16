@@ -39,4 +39,8 @@ import javax.inject.Singleton;
       @NonNull Context context) {
     return new DataConnectionWrapperImpl(context);
   }
+
+  @Singleton @Provides @Named("wrapper_sync") DeviceFunctionWrapper provideSyncConnectionWrapper() {
+    return new SyncConnectionWrapperImpl();
+  }
 }

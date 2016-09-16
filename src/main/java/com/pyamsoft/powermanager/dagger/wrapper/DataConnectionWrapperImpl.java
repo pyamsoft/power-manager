@@ -99,7 +99,6 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   private void setMobileDataEnabledReflection(boolean enabled) {
     if (SET_MOBILE_DATA_ENABLED_METHOD != null) {
       try {
-        Timber.d("setMobileDataEnabledReflection: %s", enabled);
         SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
       } catch (final Exception e) {
         Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
@@ -122,7 +121,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
 
   private void setMobileDataEnabled(boolean enabled) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      Timber.d("Data: %s", enabled ? "enable" : "disable");
+      Timber.i("Data: %s", enabled ? "enable" : "disable");
       setMobileDataEnabledReflection(enabled);
     } else {
       Timber.e("Cannot set mobile data using reflection");
@@ -141,7 +140,6 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       return getMobileDataEnabledReflection();
     } else {
-      Timber.e("Cannot get mobile data using reflection");
       return getMobileDataEnabledSettings();
     }
   }

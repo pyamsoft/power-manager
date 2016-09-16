@@ -43,8 +43,9 @@ import javax.inject.Singleton;
     return new BluetoothStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_sync_state") @Provides BooleanInterestObserver provideSyncObserver() {
-    return new SyncStateObserver();
+  @Singleton @Named("obs_sync_state") @Provides BooleanInterestObserver provideSyncObserver(
+      @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
+    return new SyncStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_doze_state") @Provides BooleanInterestObserver provideDozeObserver(
