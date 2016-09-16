@@ -28,7 +28,7 @@ class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {
 
   private void toggle(boolean state) {
     Timber.i("Sync: %s", state ? "enable" : "disable");
-    ContentResolver.setMasterSyncAutomatically(true);
+    ContentResolver.setMasterSyncAutomatically(state);
   }
 
   @Override public void enable() {

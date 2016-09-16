@@ -49,7 +49,11 @@ class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
   private void toggle(boolean state) {
     if (adapter != null) {
       Timber.i("Bluetooth: %s", state ? "enable" : "disable");
-      adapter.enable();
+      if (state) {
+        adapter.enable();
+      } else {
+        adapter.disable();
+      }
     }
   }
 
