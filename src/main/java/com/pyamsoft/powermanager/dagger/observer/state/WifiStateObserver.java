@@ -32,7 +32,7 @@ class WifiStateObserver extends StateObserver {
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Wifi");
 
-    setFilterActions(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+    setFilterActions(WifiManager.WIFI_STATE_CHANGED_ACTION);
   }
 
   @Override public boolean is() {
