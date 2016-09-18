@@ -37,8 +37,8 @@ android {
     applicationId "com.pyamsoft.powermanager"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 58
-    versionName "6.2.12"
+    versionCode 61
+    versionName "6.2.15"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -137,7 +137,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  // PYDroid 4.1.0
+  // PYDroid 4.1.2
   debugCompile project(path: ":PYDroid", configuration: "debug")
   releaseCompile project(path: ":PYDroid", configuration: "release")
 }
