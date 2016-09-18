@@ -26,9 +26,6 @@
       android:name="android.permission.DUMP"
       tools:ignore="ProtectedPermissions"/>
 
-  <!-- For Billing Service -->
-  <uses-permission android:name="com.android.vending.BILLING"/>
-
   <!-- For WiFi -->
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
@@ -49,7 +46,6 @@
 
   <application
       android:name=".PowerManager"
-      android:allowBackup="false"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:theme="@style/Theme.PowerManager.Light">
