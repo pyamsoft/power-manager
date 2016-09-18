@@ -47,8 +47,8 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.lib.DonationActivity;
 import com.pyamsoft.pydroid.lib.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.lib.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.StringUtil;
 import java.util.HashMap;
@@ -214,9 +214,10 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 = "BUGFIX: More fluid UI in the Manage screen and Notification overlay";
-    final String line2 = "BUGFIX: Fix crash when scrolling in Manage screen";
-    final String line3 = "BUGFIX: Fix crash caused when custom time duration was too large";
+    final String line1 =
+        "CHANGE: Pro Version applications!\nAdvertisements can be disabled from the settings screen once the Pro version of the application is installed";
+    final String line2 = "BUGFIX: Clean up memory management";
+    final String line3 = "BUGFIX: Fix Wifi observer state handling";
 
     // Turn it into a spannable
     final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1, line2, line3);
