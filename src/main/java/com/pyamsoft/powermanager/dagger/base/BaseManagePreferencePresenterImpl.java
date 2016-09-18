@@ -26,8 +26,8 @@ public abstract class BaseManagePreferencePresenterImpl
     extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView>
     implements BaseManagePreferencePresenter {
 
-  @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
-  @NonNull private final InterestObserver manageObserver;
+  @NonNull static final String OBS_TAG = "BaseManagePreferencePresenter";
+  @NonNull final InterestObserver manageObserver;
   @NonNull private final BaseManagePreferenceInteractor interactor;
 
   protected BaseManagePreferencePresenterImpl(
@@ -38,9 +38,11 @@ public abstract class BaseManagePreferencePresenterImpl
     this.manageObserver = manageObserver;
   }
 
-  @Override protected void onBind(@NonNull ManagePreferenceView view) {
-    super.onBind(view);
-    manageObserver.register(OBS_TAG, view::onManageSet, view::onManageUnset);
+  @Override protected void onBind() {
+    super.onBind();
+    getView(
+        managePreferenceView -> manageObserver.register(OBS_TAG, managePreferenceView::onManageSet,
+            managePreferenceView::onManageUnset));
   }
 
   @Override protected void onUnbind() {

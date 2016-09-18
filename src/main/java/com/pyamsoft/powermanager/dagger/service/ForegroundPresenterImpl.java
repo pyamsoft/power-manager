@@ -40,8 +40,8 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     this.interactor = interactor;
   }
 
-  @Override protected void onBind(@NonNull ForegroundProvider view) {
-    super.onBind(view);
+  @Override protected void onBind() {
+    super.onBind();
     interactor.create();
   }
 
@@ -63,7 +63,8 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(notification -> {
-          getView().startNotificationInForeground(notification);
+          getView(
+              foregroundProvider -> foregroundProvider.startNotificationInForeground(notification));
         }, throwable -> {
           Timber.e(throwable, "onError");
           // TODO handle error

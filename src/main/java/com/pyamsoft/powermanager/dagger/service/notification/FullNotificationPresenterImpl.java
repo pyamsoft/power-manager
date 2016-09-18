@@ -39,9 +39,9 @@ class FullNotificationPresenterImpl
     super(observeScheduler, subscribeScheduler);
   }
 
-  @Override protected void onBind(@NonNull FullNotificationView view) {
-    super.onBind(view);
-    registerOnDismissBus(view);
+  @Override protected void onBind() {
+    super.onBind();
+    registerOnDismissBus();
   }
 
   @Override protected void onUnbind() {
@@ -49,15 +49,14 @@ class FullNotificationPresenterImpl
     unregisterFromDismissBus();
   }
 
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnDismissBus(
-      @NonNull FullNotificationView view) {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnDismissBus() {
     unregisterFromDismissBus();
     dismissSubscription = FullNotificationBus.get()
         .register()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(dismissEvent -> {
-          view.onDismissEvent();
+          getView(FullNotificationView::onDismissEvent);
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");

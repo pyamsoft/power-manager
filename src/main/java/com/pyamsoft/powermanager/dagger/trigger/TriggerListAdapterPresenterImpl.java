@@ -66,7 +66,7 @@ class TriggerListAdapterPresenterImpl
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(result -> {
-          getView().updateViewHolder(position);
+          getView(triggerListAdapterView -> triggerListAdapterView.updateViewHolder(position));
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");

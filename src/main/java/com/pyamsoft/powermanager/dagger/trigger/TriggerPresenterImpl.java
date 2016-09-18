@@ -48,8 +48,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     this.interactor = interactor;
   }
 
-  @Override protected void onBind(@NonNull TriggerView view) {
-    super.onBind(view);
+  @Override protected void onBind() {
+    super.onBind();
     registerOnDeleteTriggerBus();
     registerOnCreateTriggerBus();
   }
@@ -87,12 +87,14 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(size -> {
-          Timber.d("Trigger size = %d", size);
-          if (size == 0) {
-            getView().loadEmptyView();
-          } else {
-            getView().loadListView();
-          }
+          getView(triggerView -> {
+            Timber.d("Trigger size = %d", size);
+            if (size == 0) {
+              triggerView.loadEmptyView();
+            } else {
+              triggerView.loadListView();
+            }
+          });
         }, throwable -> {
           // Todo
           Timber.e(throwable, "onError");
@@ -101,7 +103,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   @Override public void showNewTriggerDialog() {
     // TODO is there anything else we have to do?
-    getView().onShowNewTriggerDialog();
+    getView(TriggerView::onShowNewTriggerDialog);
   }
 
   @SuppressWarnings("WeakerAccess") void createPowerTrigger(@NonNull ContentValues values) {
@@ -111,15 +113,15 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(entry1 -> {
-          getView().onNewTriggerAdded(entry1.percent());
+          getView(triggerView -> triggerView.onNewTriggerAdded(entry1.percent()));
         }, throwable -> {
           Timber.e(throwable, "onError");
           if (throwable instanceof SQLiteConstraintException) {
             Timber.e("Error inserting into DB");
-            getView().onNewTriggerInsertError();
+            getView(TriggerView::onNewTriggerInsertError);
           } else {
             Timber.e("Issue creating trigger");
-            getView().onNewTriggerCreateError();
+            getView(TriggerView::onNewTriggerCreateError);
           }
         });
   }
@@ -132,16 +134,20 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         .observeOn(getObserveScheduler())
         .subscribe(deleteTriggerEvent -> {
           // KLUDGE nested subs are ugly
-          unsubDeleteSubscription();
-          deleteSubscription = interactor.delete(deleteTriggerEvent.percent())
-              .subscribeOn(getSubscribeScheduler())
-              .observeOn(getObserveScheduler())
-              .subscribe(position -> {
-                getView().onTriggerDeleted(position);
-              }, throwable -> {
-                // TODO
-                Timber.e(throwable, "onError");
-              });
+          deleteTrigger(deleteTriggerEvent.percent());
+        }, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        });
+  }
+
+  @SuppressWarnings("WeakerAccess") void deleteTrigger(int percent) {
+    unsubDeleteSubscription();
+    deleteSubscription = interactor.delete(percent)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(position -> {
+          getView(triggerView -> triggerView.onTriggerDeleted(position));
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");

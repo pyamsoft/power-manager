@@ -75,15 +75,17 @@ public abstract class CustomTimeInputPreferencePresenterImpl
           .delay(delay, TimeUnit.MILLISECONDS)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
-          .subscribe(customTime -> {
+          .subscribe(customTime -> getView(view -> {
             if (updateView) {
-              getView().onCustomTimeUpdate(customTime);
+              view.onCustomTimeUpdate(customTime);
             }
-          }, throwable -> {
+          }), throwable -> {
             Timber.e(throwable, "onError updateCustomTime");
-            if (updateView) {
-              getView().onCustomTimeError();
-            }
+            getView(view -> {
+              if (updateView) {
+                view.onCustomTimeError();
+              }
+            });
           }, this::unsubCustomTimeUpdate);
     } else {
       Timber.e("NULL interactor");
@@ -96,12 +98,11 @@ public abstract class CustomTimeInputPreferencePresenterImpl
       customTimeSubscription = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
-          .subscribe(customTime -> {
-            getView().onCustomTimeUpdate(customTime);
-          }, throwable -> {
-            Timber.e(throwable, "onError updateCustomTime");
-            getView().onCustomTimeError();
-          }, this::unsubCustomTimeUpdate);
+          .subscribe(customTime -> getView(view -> view.onCustomTimeUpdate(customTime)),
+              throwable -> {
+                Timber.e(throwable, "onError updateCustomTime");
+                getView(View::onCustomTimeError);
+              }, this::unsubCustomTimeUpdate);
     } else {
       Timber.e("NULL interactor");
     }

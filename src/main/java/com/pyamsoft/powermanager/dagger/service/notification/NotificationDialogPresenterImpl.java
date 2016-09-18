@@ -94,36 +94,37 @@ class NotificationDialogPresenterImpl extends SchedulerPresenter<NotificationDia
     this.syncManageModifier = syncManageModifier;
   }
 
-  @Override protected void onBind(@NonNull View view) {
-    super.onBind(view);
+  @Override protected void onBind() {
+    super.onBind();
+    getView(view -> {
+      view.setWifiToggleState(wifiStateObserver.is());
+      view.setDataToggleState(dataStateObserver.is());
+      view.setBluetoothToggleState(bluetoothStateObserver.is());
+      view.setSyncToggleState(syncStateObserver.is());
 
-    view.setWifiToggleState(wifiStateObserver.is());
-    view.setDataToggleState(dataStateObserver.is());
-    view.setBluetoothToggleState(bluetoothStateObserver.is());
-    view.setSyncToggleState(syncStateObserver.is());
+      view.setWifiManageState(wifiManageObserver.is());
+      view.setDataManageState(dataManageObserver.is());
+      view.setBluetoothManageState(bluetoothManageObserver.is());
+      view.setSyncManageState(syncManageObserver.is());
 
-    view.setWifiManageState(wifiManageObserver.is());
-    view.setDataManageState(dataManageObserver.is());
-    view.setBluetoothManageState(bluetoothManageObserver.is());
-    view.setSyncManageState(syncManageObserver.is());
+      wifiStateObserver.register("wifi", () -> view.setWifiToggleState(true),
+          () -> view.setWifiToggleState(false));
+      dataStateObserver.register("data", () -> view.setDataToggleState(true),
+          () -> view.setDataToggleState(false));
+      bluetoothStateObserver.register("bluetooth", () -> view.setBluetoothToggleState(true),
+          () -> view.setBluetoothToggleState(false));
+      syncStateObserver.register("sync", () -> view.setSyncToggleState(true),
+          () -> view.setSyncToggleState(false));
 
-    wifiStateObserver.register("wifi", () -> view.setWifiToggleState(true),
-        () -> view.setWifiToggleState(false));
-    dataStateObserver.register("data", () -> view.setDataToggleState(true),
-        () -> view.setDataToggleState(false));
-    bluetoothStateObserver.register("bluetooth", () -> view.setBluetoothToggleState(true),
-        () -> view.setBluetoothToggleState(false));
-    syncStateObserver.register("sync", () -> view.setSyncToggleState(true),
-        () -> view.setSyncToggleState(false));
-
-    wifiManageObserver.register("wifi", () -> view.setWifiManageState(true),
-        () -> view.setWifiManageState(false));
-    dataManageObserver.register("data", () -> view.setDataManageState(true),
-        () -> view.setDataManageState(false));
-    bluetoothManageObserver.register("bluetooth", () -> view.setBluetoothManageState(true),
-        () -> view.setBluetoothManageState(false));
-    syncManageObserver.register("sync", () -> view.setSyncManageState(true),
-        () -> view.setSyncManageState(false));
+      wifiManageObserver.register("wifi", () -> view.setWifiManageState(true),
+          () -> view.setWifiManageState(false));
+      dataManageObserver.register("data", () -> view.setDataManageState(true),
+          () -> view.setDataManageState(false));
+      bluetoothManageObserver.register("bluetooth", () -> view.setBluetoothManageState(true),
+          () -> view.setBluetoothManageState(false));
+      syncManageObserver.register("sync", () -> view.setSyncManageState(true),
+          () -> view.setSyncManageState(false));
+    });
   }
 
   @Override protected void onUnbind() {
