@@ -17,8 +17,12 @@
 package com.pyamsoft.powermanager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
@@ -44,6 +48,8 @@ public class PowerManager extends PYDroidApplication
     component = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
         .build();
+
+    startService(new Intent(this, ForegroundService.class));
   }
 
   @NonNull @Override public PowerManagerComponent provideComponent() {
@@ -51,5 +57,9 @@ public class PowerManager extends PYDroidApplication
       throw new NullPointerException("PowerManagerComponent is NULL");
     }
     return component;
+  }
+
+  @Nullable @Override public String provideGoogleOpenSourceLicenses() {
+    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this);
   }
 }
