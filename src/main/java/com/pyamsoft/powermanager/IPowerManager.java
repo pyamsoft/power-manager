@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 
-public interface IPowerManager<T extends PowerManagerComponent> {
+@SuppressWarnings("WeakerAccess") public interface IPowerManager<T extends PowerManagerComponent> {
 
   @CheckResult @NonNull T provideComponent();
 }
