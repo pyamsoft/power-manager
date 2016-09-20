@@ -31,6 +31,7 @@ import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import javax.inject.Named;
+import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
@@ -45,6 +46,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
   @Override protected boolean onManagePreferenceChanged(boolean b) {
     if (b) {
       final boolean hasPermission = dozePermissionObserver.is();
+      Timber.d("Has doze permission: %s", hasPermission);
       if (!hasPermission) {
         AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
             "doze_explain");
@@ -65,6 +67,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
         final boolean b = (boolean) newValue;
         if (b) {
           final boolean hasPermission = writePermissionObserver.is();
+          Timber.d("Has sensor permission: %s", hasPermission);
           if (!hasPermission) {
             AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
                 new SensorsExplanationDialog(), "sensors_explain");
