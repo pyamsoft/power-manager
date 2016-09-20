@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_custom_delay")
   CustomTimeInputPreferencePresenter provideBluetoothCustomDelayPresenter(
       @NonNull @Named("bluetooth_custom_delay_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new BluetoothDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -45,7 +45,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_custom_enable")
   CustomTimeInputPreferencePresenter provideBluetoothCustomEnablePresenter(
       @NonNull @Named("bluetooth_custom_enable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new BluetoothEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -59,7 +59,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_custom_disable")
   CustomTimeInputPreferencePresenter provideBluetoothCustomDisablePresenter(
       @NonNull @Named("bluetooth_custom_disable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new BluetoothDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }

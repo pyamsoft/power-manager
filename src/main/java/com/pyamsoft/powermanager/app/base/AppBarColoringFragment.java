@@ -26,11 +26,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
 public abstract class AppBarColoringFragment extends ActionBarFragment {
 
   private static final long ANIMATION_TIME = 400L;
+
+  @CheckResult @NonNull
+  protected static Bundle bundleArguments(@NonNull View from, @NonNull View container) {
+    return CircularRevealFragmentUtil.bundleArguments(from, container, ANIMATION_TIME);
+  }
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);

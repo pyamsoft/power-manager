@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.data;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -40,9 +38,8 @@ public class DataFragment extends BaseOverviewPagerFragment {
 
   @CheckResult @NonNull
   public static DataFragment newInstance(@NonNull View from, @NonNull View container) {
-    final Bundle args = CircularRevealFragmentUtil.bundleArguments(from, container);
     final DataFragment fragment = new DataFragment();
-    fragment.setArguments(args);
+    fragment.setArguments(bundleArguments(from, container));
     return fragment;
   }
 

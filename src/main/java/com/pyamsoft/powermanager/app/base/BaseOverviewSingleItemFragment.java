@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.base.ActionBarFragment;
 
 public abstract class BaseOverviewSingleItemFragment extends AppBarColoringFragment {
 

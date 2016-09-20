@@ -27,8 +27,7 @@ class BluetoothStateObserver extends StateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject BluetoothStateObserver(@NonNull Context context,
-      @NonNull DeviceFunctionWrapper wrapper) {
+  @Inject BluetoothStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");

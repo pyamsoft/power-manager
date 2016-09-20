@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_custom_delay")
   CustomTimeInputPreferencePresenter provideSyncCustomDelayPresenter(
       @NonNull @Named("sync_custom_delay_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new SyncDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -45,7 +45,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_custom_enable")
   CustomTimeInputPreferencePresenter provideSyncCustomEnablePresenter(
       @NonNull @Named("sync_custom_enable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new SyncEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -59,7 +59,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_custom_disable")
   CustomTimeInputPreferencePresenter provideSyncCustomDisablePresenter(
       @NonNull @Named("sync_custom_disable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new SyncDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }

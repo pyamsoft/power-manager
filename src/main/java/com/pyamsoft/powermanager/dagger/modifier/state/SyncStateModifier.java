@@ -16,13 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class SyncStateModifier extends StateModifier {
 

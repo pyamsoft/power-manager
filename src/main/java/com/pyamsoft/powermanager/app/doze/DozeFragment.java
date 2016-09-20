@@ -16,14 +16,12 @@
 
 package com.pyamsoft.powermanager.app.doze;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
-import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
 public class DozeFragment extends BaseOverviewSingleItemFragment {
 
@@ -31,9 +29,8 @@ public class DozeFragment extends BaseOverviewSingleItemFragment {
 
   @CheckResult @NonNull
   public static DozeFragment newInstance(@NonNull View from, @NonNull View container) {
-    final Bundle args = CircularRevealFragmentUtil.bundleArguments(from, container);
     final DozeFragment fragment = new DozeFragment();
-    fragment.setArguments(args);
+    fragment.setArguments(bundleArguments(from, container));
     return fragment;
   }
 

@@ -36,7 +36,6 @@ import com.pyamsoft.powermanager.app.base.AppBarColoringFragment;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.app.widget.DividerItemDecoration;
-import com.pyamsoft.pydroid.base.ActionBarFragment;
 import com.pyamsoft.pydroid.base.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -68,9 +67,8 @@ public class PowerTriggerFragment extends AppBarColoringFragment
 
   @CheckResult @NonNull
   public static PowerTriggerFragment newInstance(@NonNull View view, @NonNull View container) {
-    final Bundle args = CircularRevealFragmentUtil.bundleArguments(view, container);
     final PowerTriggerFragment fragment = new PowerTriggerFragment();
-    fragment.setArguments(args);
+    fragment.setArguments(bundleArguments(view, container));
     return fragment;
   }
 

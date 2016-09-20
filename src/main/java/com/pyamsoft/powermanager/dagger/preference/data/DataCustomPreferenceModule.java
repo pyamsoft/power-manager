@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_delay")
   CustomTimeInputPreferencePresenter provideDataCustomDelayPresenter(
       @NonNull @Named("data_custom_delay_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new DataDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -45,7 +45,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_enable")
   CustomTimeInputPreferencePresenter provideDataCustomEnablePresenter(
       @NonNull @Named("data_custom_enable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new DataEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -59,7 +59,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_disable")
   CustomTimeInputPreferencePresenter provideDataCustomDisablePresenter(
       @NonNull @Named("data_custom_disable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new DataDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }

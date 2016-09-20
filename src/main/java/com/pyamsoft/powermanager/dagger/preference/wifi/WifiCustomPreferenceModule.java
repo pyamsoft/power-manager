@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_delay")
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(
       @NonNull @Named("wifi_custom_delay_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new WifiDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -45,7 +45,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_enable")
   CustomTimeInputPreferencePresenter provideWifiCustomEnablePresenter(
       @NonNull @Named("wifi_custom_enable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new WifiEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
@@ -59,7 +59,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_disable")
   CustomTimeInputPreferencePresenter provideWifiCustomDisablePresenter(
       @NonNull @Named("wifi_custom_disable_interactor")
-      CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
+          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
       @Named("io") Scheduler ioScheduler) {
     return new WifiDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
