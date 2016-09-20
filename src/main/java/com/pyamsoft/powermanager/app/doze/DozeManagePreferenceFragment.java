@@ -96,12 +96,18 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
     return R.string.manage_doze_key;
   }
 
+  /**
+   * Because this module has no Custom time ability, these are reversed so that the logic stays put
+   */
   @Override protected int getPresetTimeKeyResId() {
-    return R.string.preset_delay_doze_key;
+    return R.string.doze_time_key;
   }
 
+  /**
+   * Because this module has no Custom time ability, these are reversed so that the logic stays put
+   */
   @Override protected int getTimeKeyResId() {
-    return R.string.doze_time_key;
+    return R.string.preset_delay_doze_key;
   }
 
   @Override protected int getPreferencesResId() {

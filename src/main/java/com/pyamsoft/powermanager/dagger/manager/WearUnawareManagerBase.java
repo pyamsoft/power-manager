@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
@@ -29,11 +30,7 @@ abstract class WearUnawareManagerBase extends ManagerBase {
     super(interactor, observerScheduler, subscribeScheduler);
   }
 
-  @Override @CheckResult @NonNull Observable<Boolean> baseObservable() {
-    return jobCancellingObservable();
-  }
-
-  @CheckResult @NonNull Observable<Boolean> jobCancellingObservable() {
+  @CallSuper @Override @CheckResult @NonNull Observable<Boolean> baseObservable() {
     return interactor.cancelJobs().flatMap(cancelled -> {
       if (cancelled) {
         Timber.d("Is Managed?");

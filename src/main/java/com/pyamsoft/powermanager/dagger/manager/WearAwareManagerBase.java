@@ -23,7 +23,8 @@ import timber.log.Timber;
 
 abstract class WearAwareManagerBase extends WearUnawareManagerBase {
 
-  @NonNull final WearAwareManagerInteractor wearAwareManagerInteractor;
+  @SuppressWarnings("WeakerAccess") @NonNull final WearAwareManagerInteractor
+      wearAwareManagerInteractor;
 
   WearAwareManagerBase(@NonNull WearAwareManagerInteractor interactor,
       @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -32,7 +33,7 @@ abstract class WearAwareManagerBase extends WearUnawareManagerBase {
   }
 
   @NonNull @Override Observable<Boolean> baseObservable() {
-    return jobCancellingObservable().flatMap(managed -> {
+    return super.baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Normal managed, is wearable managed?");
         return wearAwareManagerInteractor.isWearManaged();

@@ -96,6 +96,9 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String dozeDelayDefault;
   private final boolean manageSensorsDefault;
 
+  @NonNull private final String wearableDelay;
+  @NonNull private final String wearableDelayDefault;
+
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     manageWifi = getResources().getString(R.string.manage_wifi_key);
@@ -169,6 +172,13 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     ignoreChargingDozeDefault = getResources().getBoolean(R.bool.ignore_charging_doze_default);
     dozeDelayDefault = getResources().getString(R.string.doze_time_default);
     manageSensorsDefault = getResources().getBoolean(R.bool.sensors_doze_default);
+
+    wearableDelay = getResources().getString(R.string.wearable_time_key);
+    wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
+  }
+
+  @Override public long getWearableDelay() {
+    return Long.parseLong(get(wearableDelay, wearableDelayDefault));
   }
 
   @Override public boolean isSensorsManaged() {

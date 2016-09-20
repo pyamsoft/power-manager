@@ -26,6 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
@@ -33,17 +34,21 @@ import timber.log.Timber;
 class WearStateObserver extends StateObserver {
 
   @NonNull private final GoogleApiClient googleApiClient;
+  @NonNull private final PowerManagerPreferences preferences;
 
-  WearStateObserver(@NonNull Context context) {
+  WearStateObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     super(context);
+    this.preferences = preferences;
     googleApiClient =
         new GoogleApiClient.Builder(context.getApplicationContext()).addApiIfAvailable(Wearable.API)
             .build();
   }
 
   @WorkerThread @CheckResult private boolean isWearableNodeConnected() {
+    final long waitTime = preferences.getWearableDelay();
+    Timber.d("Wait for connection for %d seconds", waitTime);
     final NodeApi.GetConnectedNodesResult nodesResult =
-        Wearable.NodeApi.getConnectedNodes(googleApiClient).await(4, TimeUnit.SECONDS);
+        Wearable.NodeApi.getConnectedNodes(googleApiClient).await(waitTime, TimeUnit.SECONDS);
     Node wearableNode = null;
     final List<Node> nodes = nodesResult.getNodes();
     Timber.d("Search node list of size : %d", nodes.size());

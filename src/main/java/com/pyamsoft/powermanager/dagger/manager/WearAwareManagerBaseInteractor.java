@@ -26,8 +26,8 @@ import rx.Observable;
 abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
     implements WearAwareManagerInteractor {
 
-  @NonNull final BooleanInterestObserver wearManageObserver;
-  @NonNull final BooleanInterestObserver wearStateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearManageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearStateObserver;
 
   WearAwareManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,

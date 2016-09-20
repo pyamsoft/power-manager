@@ -51,12 +51,18 @@ public class WearManagePreferenceFragment extends BaseManagePreferenceFragment {
     return R.string.manage_wearable_key;
   }
 
+  /**
+   * Because this module has no Custom time ability, these are reversed so that the logic stays put
+   */
   @Override protected int getPresetTimeKeyResId() {
-    return R.string.preset_delay_wearable_key;
+    return R.string.wearable_time_key;
   }
 
+  /**
+   * Because this module has no Custom time ability, these are reversed so that the logic stays put
+   */
   @Override protected int getTimeKeyResId() {
-    return R.string.wearable_time_key;
+    return R.string.preset_delay_wearable_key;
   }
 
   @Override protected int getPreferencesResId() {

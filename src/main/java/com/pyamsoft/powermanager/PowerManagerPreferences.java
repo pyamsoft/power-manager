@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult long getWearableDelay();
+
   @CheckResult boolean isSensorsManaged();
 
   @CheckResult long getDozeDelay();
