@@ -16,19 +16,15 @@
 
 package com.pyamsoft.powermanager.app.settings;
 
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.AppBarColoringFragment;
+import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
 import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
 
-public class SettingsFragment extends AppBarColoringFragment {
+public class SettingsFragment extends BaseOverviewSingleItemFragment {
 
   @NonNull public static final String TAG = "Settings";
 
@@ -39,12 +35,6 @@ public class SettingsFragment extends AppBarColoringFragment {
     return fragment;
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_settings, container, false);
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.pink500;
   }
@@ -53,24 +43,11 @@ public class SettingsFragment extends AppBarColoringFragment {
     return R.color.pink700;
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
+  @NonNull @Override protected Fragment getPreferenceFragment() {
+    return new SettingsPreferenceFragment();
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    setActionBarUpEnabled(true);
-    displayPreferenceFragment();
-  }
-
-  private void displayPreferenceFragment() {
-    // KLUDGE child fragment, not the nicest
-    if (getChildFragmentManager().findFragmentByTag(SettingsPreferenceFragment.TAG) == null) {
-      getChildFragmentManager().beginTransaction()
-          .add(R.id.settings_preferences_container, new SettingsPreferenceFragment(),
-              SettingsPreferenceFragment.TAG)
-          .commit();
-    }
+  @NonNull @Override protected String getPreferenceTag() {
+    return SettingsPreferenceFragment.TAG;
   }
 }

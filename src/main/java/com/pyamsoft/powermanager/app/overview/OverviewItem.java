@@ -138,7 +138,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     fragment = null;
   }
 
-  @NonNull @CheckResult public ItemClickListener getItemClickListener() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ItemClickListener getItemClickListener() {
     return itemClickListener;
   }
 
@@ -158,7 +158,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     return FACTORY;
   }
 
-  public interface ItemClickListener {
+  interface ItemClickListener {
 
     void onItemClicked(@NonNull String title, @NonNull Fragment fragment);
   }
