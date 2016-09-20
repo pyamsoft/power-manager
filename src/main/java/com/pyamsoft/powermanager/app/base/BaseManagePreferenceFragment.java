@@ -197,17 +197,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @CheckResult protected boolean onManagePreferenceChanged(boolean b) {
-    return true;
-  }
+  @CheckResult protected abstract boolean onManagePreferenceChanged(boolean b);
 
   /**
    * Override if you implement any custom conditions for changing preferences
    */
-  @SuppressWarnings("WeakerAccess") @CheckResult protected boolean onPresetTimePreferenceChanged(
-      @NonNull String presetDelay, @Nullable CustomTimeInputPreference customTimePreference) {
-    return true;
-  }
+  @SuppressWarnings("WeakerAccess") @CheckResult
+  protected abstract boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
+      @Nullable CustomTimeInputPreference customTimePreference);
 
   @CheckResult @NonNull
   protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(

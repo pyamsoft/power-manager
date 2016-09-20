@@ -165,31 +165,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
         presetEnableTimePreference.getValue());
   }
 
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetEnableTimePreferenceChanged(
-      String presetDelay, @Nullable CustomTimeInputPreference customEnableTimePreference) {
-    return true;
-  }
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPresetDisableTimePreferenceChanged(
-      @NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customDisableTimePreference) {
-    return true;
-  }
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult boolean onPeriodicPreferenceChanged(
-      boolean periodic) {
-    return true;
-  }
-
   @SuppressWarnings("WeakerAccess") void setCustomEnableTimePreferenceEnabled(boolean periodic,
       @NonNull String presetDelay) {
     if (customEnableTimePreference != null) {
@@ -271,6 +246,26 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @Override public void onPeriodicUnset() {
     periodicPreference.setChecked(false);
   }
+
+  /**
+   * Override if you implement any custom conditions for changing preferences
+   */
+  @SuppressWarnings("WeakerAccess") @CheckResult
+  protected abstract boolean onPresetEnableTimePreferenceChanged(String presetDelay,
+      @Nullable CustomTimeInputPreference customEnableTimePreference);
+
+  /**
+   * Override if you implement any custom conditions for changing preferences
+   */
+  @SuppressWarnings("WeakerAccess") @CheckResult
+  protected abstract boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
+      @Nullable CustomTimeInputPreference customDisableTimePreference);
+
+  /**
+   * Override if you implement any custom conditions for changing preferences
+   */
+  @SuppressWarnings("WeakerAccess") @CheckResult
+  protected abstract boolean onPeriodicPreferenceChanged(boolean periodic);
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
 
