@@ -28,14 +28,6 @@
         android:title="@string/boot_title"
         />
 
-    <CheckBoxPreference
-        android:defaultValue="@bool/manage_wearable_default"
-        android:key="@string/manage_wearable_key"
-        android:summaryOff="@string/manage_wearable_summary_unchecked"
-        android:summaryOn="@string/manage_wearable_summary_checked"
-        android:title="@string/manage_wearable_title"
-        />
-
   </PreferenceCategory>
 
   <PreferenceCategory

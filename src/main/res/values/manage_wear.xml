@@ -23,4 +23,24 @@
   <string name="manage_wearable_summary_checked">Will stop managing power if a wearable device is connected</string>
   <string name="manage_wearable_summary_unchecked">Will continue to manage power even if a wearable device is connected</string>
 
+  <string name="preset_delay_wearable_key">preset_delay_wearable</string>
+  <string-array name="preset_delay_wearable_names">
+    <item name="delay_1">1 Second</item>
+    <item name="delay_3">3 Seconds</item>
+    <item name="delay_5">5 Seconds</item>
+    <item name="delay_10">10 Seconds</item>
+  </string-array>
+
+  <string-array name="preset_delay_wearable_values">
+    <item name="delay_1">1</item>
+    <item name="delay_3">3</item>
+    <item name="delay_5">5</item>
+    <item name="delay_10">10</item>
+  </string-array>
+
+  <string name="wearable_time_default">3</string>
+  <string name="wearable_time_key">wearable_time</string>
+  <string name="wearable_time_title">Wearable Delay</string>
+  <string name="wearable_time_summary">Amount of time to look for wearables before checking connection state</string>
+
 </resources>

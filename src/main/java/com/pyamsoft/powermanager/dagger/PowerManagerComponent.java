@@ -37,6 +37,7 @@ import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
+import com.pyamsoft.powermanager.dagger.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
 import com.pyamsoft.powermanager.dagger.wrapper.WrapperModule;
@@ -71,6 +72,8 @@ import javax.inject.Singleton;
   SyncScreenComponent plusSyncScreenComponent();
 
   DozeScreenComponent plusDozeScreenComponent();
+
+  WearScreenComponent plusWearScreenComponent();
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
 

@@ -40,17 +40,20 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
-  @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
+  @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
   private String manageKey;
   private String presetTimeKey;
-  private String timeKey;
+  @Nullable private String timeKey;
   private long loadedKey;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
     manageKey = getString(getManageKeyResId());
     presetTimeKey = getString(getPresetTimeKeyResId());
-    timeKey = getString(getTimeKeyResId());
+    @StringRes final int timeResId = getTimeKeyResId();
+    if (timeResId != 0) {
+      timeKey = getString(timeResId);
+    }
     injectDependencies();
   }
 
@@ -117,7 +120,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
         final boolean canChange = onPresetTimePreferenceChanged(presetDelay, customTimePreference);
         if (canChange) {
           final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1) {
+          if (delayTime != -1 && customTimePreference != null) {
             // Update the delay time to a preset instantly
             customTimePreference.updatePresetDelay(presetDelay);
           }
