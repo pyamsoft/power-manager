@@ -46,7 +46,7 @@ class WearStateObserver extends StateObserver {
 
   @WorkerThread @CheckResult private boolean isWearableNodeConnected() {
     final long waitTime = preferences.getWearableDelay();
-    Timber.d("Wait for connection for %d seconds", waitTime);
+    Timber.d("Wait for nodes for %d seconds", waitTime);
     final NodeApi.GetConnectedNodesResult nodesResult =
         Wearable.NodeApi.getConnectedNodes(googleApiClient).await(waitTime, TimeUnit.SECONDS);
     Node wearableNode = null;
