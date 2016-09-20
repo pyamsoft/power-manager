@@ -211,12 +211,11 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
     final String line1 =
-        "CHANGE: Pro Version applications!\nAdvertisements can be disabled from the settings screen once the Pro version of the application is installed";
-    final String line2 = "BUGFIX: Clean up memory management";
-    final String line3 = "BUGFIX: Fix Wifi observer state handling";
+        "CHANGE: Removed Advertisements and Analytics tracking";
 
     // Turn it into a spannable
-    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1, line2, line3);
+    final Spannable spannable =
+        StringUtil.createLineBreakBuilder(title, line1);
 
     int start = 0;
     int end = title.length();
@@ -234,7 +233,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
     StringUtil.colorSpan(spannable, start, end, largeColor);
 
     start += end + 2;
-    end += 2 + line1.length() + 2 + line2.length() + 2 + line3.length();
+    end += 2 + line1.length();
 
     StringUtil.sizeSpan(spannable, start, end, smallSize);
     StringUtil.colorSpan(spannable, start, end, smallColor);
