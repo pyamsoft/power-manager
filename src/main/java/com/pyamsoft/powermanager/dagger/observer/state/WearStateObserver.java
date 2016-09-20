@@ -78,7 +78,10 @@ class WearStateObserver extends StateObserver {
    */
   @WorkerThread @Override public boolean is() {
     Timber.d("Check if wearable is connected");
-    final ConnectionResult connectionResult = googleApiClient.blockingConnect(4, TimeUnit.SECONDS);
+    final long waitTime = preferences.getWearableDelay();
+    Timber.d("Wait for connection for %d seconds", waitTime);
+    final ConnectionResult connectionResult =
+        googleApiClient.blockingConnect(waitTime, TimeUnit.SECONDS);
     boolean result;
     if (connectionResult.isSuccess()) {
       Timber.d("Connect Google APIs");
