@@ -80,8 +80,6 @@ public interface PowerManagerPreferences {
 
   void clearAll();
 
-  @CheckResult boolean isFullNotificationEnabled();
-
   @CheckResult boolean isPeriodicWifi();
 
   void setPeriodicWifi(boolean state);

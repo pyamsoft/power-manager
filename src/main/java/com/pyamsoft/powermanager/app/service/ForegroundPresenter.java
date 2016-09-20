@@ -22,19 +22,7 @@ import com.pyamsoft.pydroid.base.Presenter;
 
 public interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
 
-  void onStartNotification(boolean explicit);
-
-  void updateWearableAction();
-
-  void updateWifiAction();
-
-  void updateDataAction();
-
-  void updateBluetoothAction();
-
-  void updateSyncAction();
-
-  void updateDozeAction();
+  void onStartNotification();
 
   interface ForegroundProvider {
 

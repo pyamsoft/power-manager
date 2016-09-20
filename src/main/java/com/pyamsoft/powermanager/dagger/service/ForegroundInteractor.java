@@ -27,17 +27,5 @@ interface ForegroundInteractor {
 
   void destroy();
 
-  @CheckResult @NonNull Observable<Notification> createNotification(boolean explicit);
-
-  void updateWearablePreferenceStatus();
-
-  void updateWifiPreferenceStatus();
-
-  void updateDataPreferenceStatus();
-
-  void updateBluetoothPreferenceStatus();
-
-  void updateSyncPreferenceStatus();
-
-  void updateDozePreferenceStatus();
+  @CheckResult @NonNull Observable<Notification> createNotification();
 }

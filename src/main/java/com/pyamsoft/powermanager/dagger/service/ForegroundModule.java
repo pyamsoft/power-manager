@@ -19,8 +19,6 @@ package com.pyamsoft.powermanager.dagger.service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import dagger.Module;
@@ -38,22 +36,7 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
-      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
-      @Named("obs_wifi_manage") @NonNull BooleanInterestObserver wifiManageObserver,
-      @Named("obs_data_manage") @NonNull BooleanInterestObserver dataManageObserver,
-      @Named("obs_bluetooth_manage") @NonNull BooleanInterestObserver bluetoothManageObserver,
-      @Named("obs_sync_manage") @NonNull BooleanInterestObserver syncManageObserver,
-      @Named("obs_wear_manage") @NonNull BooleanInterestObserver wearManageObserver,
-      @Named("obs_doze_manage") @NonNull BooleanInterestObserver dozeManageObserver,
-      @Named("mod_wifi_manage") @NonNull BooleanInterestModifier wifiManageModifier,
-      @Named("mod_data_manage") @NonNull BooleanInterestModifier dataManageModifier,
-      @Named("mod_bluetooth_manage") @NonNull BooleanInterestModifier bluetoothManageModifier,
-      @Named("mod_sync_manage") @NonNull BooleanInterestModifier syncManageModifier,
-      @Named("mod_wear_manage") @NonNull BooleanInterestModifier wearManageModifier,
-      @Named("mod_doze_manage") @NonNull BooleanInterestModifier dozeManageModifier) {
-    return new ForegroundInteractorImpl(jobManager, context, preferences, wifiManageObserver,
-        dataManageObserver, bluetoothManageObserver, syncManageObserver, wearManageObserver,
-        dozeManageObserver, wifiManageModifier, dataManageModifier, bluetoothManageModifier,
-        syncManageModifier, wearManageModifier, dozeManageModifier);
+      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences) {
+    return new ForegroundInteractorImpl(jobManager, context, preferences);
   }
 }

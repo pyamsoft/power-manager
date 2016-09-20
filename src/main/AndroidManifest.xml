@@ -62,16 +62,10 @@
       </intent-filter>
     </activity>
 
-    <!-- Full Notification -->
-    <activity
-        android:name=".app.service.notification.FullNotificationActivity"
-        android:excludeFromRecents="true"
-        android:launchMode="singleInstance"
-        android:noHistory="true"
-        android:theme="@style/Theme.PowerManager.Light.FullNotification"/>
-
     <!-- Service -->
-    <service android:name=".app.service.ForegroundService"/>
+    <service
+        android:name=".app.service.ForegroundService"
+        android:exported="false"/>
 
     <receiver
         android:name=".app.receiver.BootReceiver"

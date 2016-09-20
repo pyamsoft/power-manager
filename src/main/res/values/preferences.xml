@@ -21,11 +21,6 @@
   <string name="boot_summary">Start Power Manager on boot</string>
   <string name="boot_title">Run on Startup</string>
 
-  <string name="full_notification_key">full_notification</string>
-  <bool name="full_notification_default">true</bool>
-  <string name="full_notification_summary">Enable more robust configuration dialog from the notification</string>
-  <string name="full_notification_title">Full Notification</string>
-
   <string name="battery_settings_key">battery_settings</string>
   <string name="battery_settings_summary">Open the system battery settings screen</string>
   <string name="battery_settings_title">Open Battery Settings</string>

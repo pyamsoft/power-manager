@@ -28,14 +28,6 @@
         android:title="@string/boot_title"
         />
 
-    <!--suppress AndroidElementNotAllowed -->
-    <SwitchPreferenceCompat
-        android:defaultValue="@bool/full_notification_default"
-        android:key="@string/full_notification_key"
-        android:summary="@string/full_notification_summary"
-        android:title="@string/full_notification_title"
-        />
-
     <CheckBoxPreference
         android:defaultValue="@bool/manage_wearable_default"
         android:key="@string/manage_wearable_key"

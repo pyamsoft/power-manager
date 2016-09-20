@@ -33,8 +33,6 @@ import com.pyamsoft.powermanager.dagger.receiver.ReceiverModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
-import com.pyamsoft.powermanager.dagger.service.notification.FullNotificationComponent;
-import com.pyamsoft.powermanager.dagger.service.notification.NotificationDialogComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
@@ -53,10 +51,6 @@ import javax.inject.Singleton;
 }) public interface PowerManagerComponent {
 
   TriggerComponent plusTrigger();
-
-  FullNotificationComponent plusFullNotificationComponent();
-
-  NotificationDialogComponent plusNotificationDialogComponent();
 
   ForegroundServiceComponent plusForegroundServiceComponent();
 

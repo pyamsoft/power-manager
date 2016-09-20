@@ -84,9 +84,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
 
-  @NonNull private final String fullNotification;
-  private final boolean fullNotificationDefault;
-
   @NonNull private final String forceDoze;
   @NonNull private final String exclusiveDoze;
   @NonNull private final String ignoreChargingDoze;
@@ -161,9 +158,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageWearable = getResources().getString(R.string.manage_wearable_key);
     manageWearableDefault = getResources().getBoolean(R.bool.manage_wearable_default);
 
-    fullNotification = getResources().getString(R.string.full_notification_key);
-    fullNotificationDefault = getResources().getBoolean(R.bool.full_notification_default);
-
     forceDoze = getResources().getString(R.string.manage_doze_key);
     exclusiveDoze = getResources().getString(R.string.exclusive_doze_key);
     ignoreChargingDoze = getResources().getString(R.string.ignore_charging_doze_key);
@@ -191,10 +185,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public boolean isIgnoreChargingDoze() {
     return get(ignoreChargingDoze, ignoreChargingDozeDefault);
-  }
-
-  @Override public boolean isFullNotificationEnabled() {
-    return get(fullNotification, fullNotificationDefault);
   }
 
   @Override public boolean isDozeManaged() {

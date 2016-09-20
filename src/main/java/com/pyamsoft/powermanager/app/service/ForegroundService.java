@@ -29,13 +29,6 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
-  @NonNull public static final String EXTRA_DOZE = "doze";
-  @NonNull public static final String EXTRA_WEARABLE = "wearable";
-  @NonNull public static final String EXTRA_WIFI = "wifi";
-  @NonNull public static final String EXTRA_DATA = "data";
-  @NonNull public static final String EXTRA_BLUETOOTH = "bluetooth";
-  @NonNull public static final String EXTRA_SYNC = "sync";
-  @NonNull public static final String EXTRA_NOTIFICATION = "notification";
   private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
@@ -75,46 +68,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    Timber.d("onStartCommand");
-    boolean explicit = false;
-    if (intent != null) {
-      if (intent.getBooleanExtra(EXTRA_WEARABLE, false)) {
-        Timber.d("Update wearable status");
-        presenter.updateWearableAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_WIFI, false)) {
-        Timber.d("Update wifi status");
-        presenter.updateWifiAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_DATA, false)) {
-        Timber.d("Update data status");
-        presenter.updateDataAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_BLUETOOTH, false)) {
-        Timber.d("Update bluetooth status");
-        presenter.updateBluetoothAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_SYNC, false)) {
-        Timber.d("Update sync status");
-        presenter.updateSyncAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_DOZE, false)) {
-        Timber.d("Update doze status");
-        presenter.updateDozeAction();
-      }
-
-      if (intent.getBooleanExtra(EXTRA_NOTIFICATION, false)) {
-        Timber.d("Explicit notification state");
-        explicit = true;
-      }
-    }
-
-    presenter.onStartNotification(explicit);
+    presenter.onStartNotification();
     return START_STICKY;
   }
 

@@ -57,9 +57,9 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     }
   }
 
-  @Override public void onStartNotification(boolean explicit) {
+  @Override public void onStartNotification() {
     unsubNotification();
-    notificationSubscription = interactor.createNotification(explicit)
+    notificationSubscription = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(notification -> {
@@ -69,29 +69,5 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
           Timber.e(throwable, "onError");
           // TODO handle error
         });
-  }
-
-  @Override public void updateWearableAction() {
-    interactor.updateWearablePreferenceStatus();
-  }
-
-  @Override public void updateWifiAction() {
-    interactor.updateWifiPreferenceStatus();
-  }
-
-  @Override public void updateDataAction() {
-    interactor.updateDataPreferenceStatus();
-  }
-
-  @Override public void updateBluetoothAction() {
-    interactor.updateBluetoothPreferenceStatus();
-  }
-
-  @Override public void updateSyncAction() {
-    interactor.updateSyncPreferenceStatus();
-  }
-
-  @Override public void updateDozeAction() {
-    interactor.updateDozePreferenceStatus();
   }
 }

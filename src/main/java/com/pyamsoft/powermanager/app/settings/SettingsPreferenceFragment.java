@@ -116,18 +116,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       return true;
     });
 
-    final Preference notification = findPreference(getString(R.string.full_notification_key));
-    notification.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean state = (boolean) newValue;
-        service.removeExtra(ForegroundService.EXTRA_NOTIFICATION);
-        service.putExtra(ForegroundService.EXTRA_NOTIFICATION, state);
-        getContext().getApplicationContext().startService(service);
-        return true;
-      }
-      return false;
-    });
-
     wearPreference = (CheckBoxPreference) findPreference(getString(R.string.manage_wearable_key));
     wearPreference.setOnPreferenceClickListener(preference -> {
       // Do this just to trigger a notification refresh
