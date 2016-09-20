@@ -29,7 +29,7 @@
       android:layout_height="wrap_content"
       >
 
-    <com.pyamsoft.pydroid.app.widget.NoLeakTextInputEditText
+    <com.pyamsoft.pydroid.widget.NoLeakTextInputEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
@@ -38,7 +38,7 @@
 
   </android.support.design.widget.TextInputLayout>
 
-  <com.pyamsoft.pydroid.app.widget.NoLeakTextView
+  <com.pyamsoft.pydroid.widget.NoLeakTextView
       android:id="@+id/preference_custom_time_summary"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

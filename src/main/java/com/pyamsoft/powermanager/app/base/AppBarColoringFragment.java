@@ -26,7 +26,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.pydroid.app.fragment.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
 public abstract class AppBarColoringFragment extends ActionBarFragment {
