@@ -17,12 +17,10 @@
 package com.pyamsoft.powermanager;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
@@ -43,13 +41,11 @@ public class PowerManager extends PYDroidApplication
     }
   }
 
-  @Override protected void onFirstCreate() {
-    super.onFirstCreate();
+  @Override protected void createApplicationComponents() {
+    super.createApplicationComponents();
     component = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(getApplicationContext()))
         .build();
-
-    startService(new Intent(this, ForegroundService.class));
   }
 
   @NonNull @Override public PowerManagerComponent provideComponent() {
