@@ -39,6 +39,7 @@ import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
@@ -48,14 +49,6 @@ import rx.Subscription;
 class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-
-  private static final int POSITION_WIFI = 0;
-  private static final int POSITION_DATA = 1;
-  private static final int POSITION_BLUETOOTH = 2;
-  private static final int POSITION_SYNC = 3;
-  private static final int POSITION_TRIGGERS = 4;
-  private static final int POSITION_DOZE = 5;
-  private static final int POSITION_SETTINGS = 6;
 
   @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
   @NonNull private final View rootView;
@@ -86,31 +79,33 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     super.bindView(holder, payloads);
     recycleOld(holder);
 
-    final int position = holder.getAdapterPosition();
-    switch (position) {
-      case POSITION_WIFI:
+    switch (title) {
+      case WifiFragment.TAG:
         fragment = WifiFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_DATA:
+      case DataFragment.TAG:
         fragment = DataFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_BLUETOOTH:
+      case BluetoothFragment.TAG:
         fragment = BluetoothFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_SYNC:
+      case SyncFragment.TAG:
         fragment = SyncFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_TRIGGERS:
+      case PowerTriggerFragment.TAG:
         fragment = PowerTriggerFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_DOZE:
+      case DozeFragment.TAG:
         fragment = DozeFragment.newInstance(holder.itemView, rootView);
         break;
-      case POSITION_SETTINGS:
+      case WearFragment.TAG:
+        fragment = WearFragment.newInstance(holder.itemView, rootView);
+        break;
+      case SettingsFragment.TAG:
         fragment = SettingsFragment.newInstance(holder.itemView, rootView);
         break;
       default:
-        throw new IllegalStateException("Position out of range: " + position);
+        throw new IllegalStateException("Invalid tag: " + title);
     }
 
     holder.itemView.setBackgroundColor(

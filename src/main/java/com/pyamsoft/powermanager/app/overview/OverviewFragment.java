@@ -37,6 +37,7 @@ import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.base.ActionBarFragment;
 
@@ -88,6 +89,8 @@ public class OverviewFragment extends ActionBarFragment {
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
             this::loadFragment));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
+        this::loadFragment));
+    adapter.add(new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.red500,
         this::loadFragment));
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
