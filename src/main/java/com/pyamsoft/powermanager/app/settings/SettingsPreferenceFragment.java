@@ -22,16 +22,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.base.PersistLoader;
@@ -40,21 +36,15 @@ import com.pyamsoft.pydroid.lib.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.lib.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import javax.inject.Inject;
-import javax.inject.Named;
 import timber.log.Timber;
 
 public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
     implements SettingsPreferencePresenter.SettingsPreferenceView {
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
-  @NonNull private static final String OBS_TAG = "settings_wear_obs";
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
-  @Inject @Named("obs_wear_manage") BooleanInterestObserver wearObserver;
-  @Inject @Named("mod_wear_manage") BooleanInterestModifier wearModifier;
-  @SuppressWarnings("WeakerAccess") CheckBoxPreference wearPreference;
   private long loadedKey;
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -76,10 +66,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     service = new Intent(getContext().getApplicationContext(), ForegroundService.class);
-    PowerManager.get(getContext())
-        .provideComponent()
-        .plusSettingsPreferenceComponent()
-        .inject(this);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 
@@ -113,17 +99,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     startBoot.setOnPreferenceClickListener(preference -> {
       final boolean currentState = BootReceiver.isBootEnabled(getContext());
       BootReceiver.setBootEnabled(getContext(), !currentState);
-      return true;
-    });
-
-    wearPreference = (CheckBoxPreference) findPreference(getString(R.string.manage_wearable_key));
-    wearPreference.setOnPreferenceClickListener(preference -> {
-      // Do this just to trigger a notification refresh
-      if (wearObserver.is()) {
-        wearModifier.set();
-      } else {
-        wearModifier.unset();
-      }
       return true;
     });
 
@@ -166,21 +141,11 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
-
-    if (wearObserver.is()) {
-      wearPreference.setChecked(true);
-    } else {
-      wearPreference.setChecked(false);
-    }
-
-    wearObserver.register(OBS_TAG, () -> wearPreference.setChecked(true),
-        () -> wearPreference.setChecked(false));
   }
 
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
-    wearObserver.unregister(OBS_TAG);
   }
 
   @Override public void onDestroy() {
