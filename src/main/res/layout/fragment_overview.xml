@@ -15,12 +15,15 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
 
+  <!--
+    These padding are strange so that the Cards look proper
+  -->
   <android.support.v7.widget.RecyclerView
       android:id="@+id/overview_recycler"
       android:layout_width="match_parent"
@@ -31,5 +34,4 @@
       android:paddingTop="0dp"
       />
 
-
-</LinearLayout>
+</FrameLayout>

@@ -68,7 +68,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @Nullable private ValueAnimator appBarAnimator;
   @Nullable private ValueAnimator statusBarAnimator;
 
-  static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
+  @CheckResult @ColorInt static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
     final float inverseRatio = 1f - ratio;
 
     final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
@@ -210,12 +210,10 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @NonNull @Override public Spannable getChangeLogText() {
     // The changelog text
     final String title = "What's New in Version " + BuildConfig.VERSION_NAME;
-    final String line1 =
-        "CHANGE: Removed Advertisements and Analytics tracking";
+    final String line1 = "CHANGE: Removed Advertisements and Analytics tracking";
 
     // Turn it into a spannable
-    final Spannable spannable =
-        StringUtil.createLineBreakBuilder(title, line1);
+    final Spannable spannable = StringUtil.createLineBreakBuilder(title, line1);
 
     int start = 0;
     int end = title.length();
