@@ -25,6 +25,10 @@ import com.pyamsoft.pydroid.base.PersistLoader;
 
 public class SyncManagePreferenceFragment extends BaseManagePreferenceFragment {
 
+  @Override protected void injectDependencies() {
+
+  }
+
   @NonNull @Override
   protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
     return new SyncManagePresenterLoader(context);

@@ -57,9 +57,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   /**
    * Inject anything here is individual fragment instances
    */
-  protected void injectDependencies() {
-
-  }
+  protected abstract void injectDependencies();
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
