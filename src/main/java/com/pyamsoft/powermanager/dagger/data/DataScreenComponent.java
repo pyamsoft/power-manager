@@ -20,7 +20,7 @@ import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.data.DataManagePresenterLoader;
 import com.pyamsoft.powermanager.app.data.DataOverviewPresenterLoader;
 import com.pyamsoft.powermanager.app.data.DataPeriodPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

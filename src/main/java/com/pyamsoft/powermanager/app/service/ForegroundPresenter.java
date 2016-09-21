@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
 

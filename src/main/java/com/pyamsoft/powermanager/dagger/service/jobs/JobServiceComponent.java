@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.service.jobs;
 
 import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
 import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent public interface JobServiceComponent {

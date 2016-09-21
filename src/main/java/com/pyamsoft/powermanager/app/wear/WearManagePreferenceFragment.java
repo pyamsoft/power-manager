@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.PersistLoader;
 
 public class WearManagePreferenceFragment extends BaseManagePreferenceFragment {
 

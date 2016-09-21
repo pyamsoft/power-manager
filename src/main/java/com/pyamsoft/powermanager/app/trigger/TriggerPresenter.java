@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView> {
 

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.base;
 
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface BaseManagePreferencePresenter
     extends Presenter<BaseManagePreferencePresenter.ManagePreferenceView> {

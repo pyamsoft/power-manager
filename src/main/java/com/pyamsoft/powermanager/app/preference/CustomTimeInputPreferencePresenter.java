@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.base.Presenter;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface CustomTimeInputPreferencePresenter
     extends Presenter<CustomTimeInputPreferencePresenter.View> {

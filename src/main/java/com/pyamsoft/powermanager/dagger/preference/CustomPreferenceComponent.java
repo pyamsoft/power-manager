@@ -32,7 +32,7 @@ import com.pyamsoft.powermanager.dagger.preference.bluetooth.BluetoothCustomPref
 import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.sync.SyncCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = {

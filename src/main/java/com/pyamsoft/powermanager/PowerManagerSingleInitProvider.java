@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.base.SingleInitContentProvider;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 
 public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
 

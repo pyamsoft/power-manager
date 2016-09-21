@@ -41,8 +41,7 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import java.util.List;
 import rx.Subscription;
 
@@ -50,7 +49,8 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final AsyncDrawableMap taskMap = new AsyncDrawableMap();
+  @NonNull private final AsyncDrawable.Mapper
+      taskMap = new AsyncDrawable.Mapper();
   @NonNull private final View rootView;
   @NonNull private final String title;
   @DrawableRes private final int image;

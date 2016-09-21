@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.base;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;

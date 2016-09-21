@@ -24,7 +24,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
-import com.pyamsoft.pydroid.lib.PYDroidApplication;
+import com.pyamsoft.pydroid.PYDroidApplication;
 
 public class PowerManager extends PYDroidApplication
     implements IPowerManager<PowerManagerComponent> {

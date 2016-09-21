@@ -33,10 +33,9 @@ import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.widget.DividerItemDecoration;
-import com.pyamsoft.pydroid.base.ActionBarFragment;
-import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.ActionBarFragment;
+import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
@@ -48,7 +47,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @NonNull public static final String TAG = "PowerTriggerListFragment";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
   @NonNull private static final String KEY_ADAPTER = "key_trigger_adapter";
-  @NonNull private final AsyncDrawableMap drawableMap = new AsyncDrawableMap();
+  @NonNull private final AsyncDrawable.Mapper
+      drawableMap = new AsyncDrawable.Mapper();
 
   @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
   @BindView(R.id.power_trigger_empty) FrameLayout emptyView;

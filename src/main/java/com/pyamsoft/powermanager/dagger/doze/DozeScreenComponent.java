@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.doze;
 
 import com.pyamsoft.powermanager.app.doze.DozeManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.doze.DozePresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = DozeManagePreferenceModule.class)

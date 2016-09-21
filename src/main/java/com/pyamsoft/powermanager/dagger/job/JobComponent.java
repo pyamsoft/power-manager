@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent public interface JobComponent {

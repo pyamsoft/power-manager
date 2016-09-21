@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 

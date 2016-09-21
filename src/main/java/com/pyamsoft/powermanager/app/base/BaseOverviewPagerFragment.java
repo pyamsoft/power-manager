@@ -37,9 +37,8 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.base.PersistLoader;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncDrawableMap;
+import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;
 
@@ -50,7 +49,8 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
-  @NonNull private final AsyncDrawableMap asyncDrawableMap = new AsyncDrawableMap();
+  @NonNull private final AsyncDrawable.Mapper
+      asyncDrawableMap = new AsyncDrawable.Mapper();
   @BindView(R.id.preference_container_fab) FloatingActionButton fab;
   @BindView(R.id.preference_container_pager) ViewPager pager;
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;

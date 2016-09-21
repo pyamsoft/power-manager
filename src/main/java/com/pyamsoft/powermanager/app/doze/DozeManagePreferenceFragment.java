@@ -28,7 +28,7 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.base.PersistLoader;
+import com.pyamsoft.pydroid.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import javax.inject.Named;

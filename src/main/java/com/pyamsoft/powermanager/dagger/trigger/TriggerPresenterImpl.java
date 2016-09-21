@@ -23,7 +23,7 @@ import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
 import com.pyamsoft.powermanager.bus.DeleteTriggerBus;
 import com.pyamsoft.powermanager.bus.TriggerBus;
-import com.pyamsoft.pydroid.dagger.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

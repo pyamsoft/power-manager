@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.dagger.wear;
 
 import com.pyamsoft.powermanager.app.wear.WearPresenterLoader;
-import com.pyamsoft.pydroid.dagger.ActivityScope;
+import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
 @ActivityScope @Subcomponent(modules = WearManagePreferenceModule.class)
