@@ -63,10 +63,10 @@ class WearStateObserver extends StateObserver {
     final boolean result;
     if (wearableNode == null) {
       Timber.w("No wearable node was found");
-      result = true;
+      result = false;
     } else {
       Timber.d("Found a wearable node");
-      result = false;
+      result = true;
     }
 
     disconnectGoogleApiClient();
@@ -74,7 +74,7 @@ class WearStateObserver extends StateObserver {
   }
 
   /**
-   * Return true if stream should continue, false otherwise
+   * Return if a wearable is connected
    */
   @WorkerThread @Override public boolean is() {
     Timber.d("Check if wearable is connected");
@@ -88,7 +88,7 @@ class WearStateObserver extends StateObserver {
       result = isWearableNodeConnected();
     } else {
       Timber.e("Could not connect to Google APIs");
-      result = true;
+      result = false;
     }
     return result;
   }

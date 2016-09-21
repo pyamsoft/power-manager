@@ -19,9 +19,10 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.NonNull;
 import rx.Observable;
 import rx.Scheduler;
+import rx.functions.Func1;
 import timber.log.Timber;
 
-abstract class WearAwareManagerBase extends WearUnawareManagerBase {
+abstract class WearAwareManagerBase extends ManagerBase {
 
   @SuppressWarnings("WeakerAccess") @NonNull final WearAwareManagerInteractor
       wearAwareManagerInteractor;
@@ -32,14 +33,17 @@ abstract class WearAwareManagerBase extends WearUnawareManagerBase {
     this.wearAwareManagerInteractor = interactor;
   }
 
-  @NonNull @Override Observable<Boolean> baseObservable() {
-    return super.baseObservable().flatMap(managed -> {
-      if (managed) {
-        Timber.d("Normal managed, is wearable managed?");
-        return wearAwareManagerInteractor.isWearManaged();
-      } else {
-        Timber.d("Wearable not managed, return empty");
-        return Observable.empty();
+  @NonNull @Override
+  protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
+    return ignore -> Observable.just(ignore).flatMap(new Func1<Boolean, Observable<Boolean>>() {
+      @Override public Observable<Boolean> call(Boolean ignore) {
+        if (!ignore) {
+          Timber.d("Do not ignore charging, is wearable managed?");
+          return wearAwareManagerInteractor.isWearManaged();
+        } else {
+          Timber.d("Ignore charging, return empty");
+          return Observable.empty();
+        }
       }
     }).flatMap(wearManaged -> {
       if (wearManaged) {
@@ -47,11 +51,8 @@ abstract class WearAwareManagerBase extends WearUnawareManagerBase {
         return wearAwareManagerInteractor.isWearEnabled();
       } else {
         Timber.d("Wearable is not managed, but radio is managed, continue stream");
-        return Observable.just(true);
+        return Observable.just(false);
       }
-    }).map(shouldContinue -> {
-      Timber.d("Should continue stream? %s", shouldContinue);
-      return shouldContinue;
     });
   }
 

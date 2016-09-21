@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.app.manager.Manager;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -61,7 +62,17 @@ abstract class ManagerBase implements Manager {
     }
   }
 
-  @CheckResult @NonNull abstract Observable<Boolean> baseObservable();
+  @CheckResult @NonNull Observable<Boolean> baseObservable() {
+    return interactor.cancelJobs().flatMap(cancelled -> {
+      if (cancelled) {
+        Timber.d("Is Managed?");
+        return interactor.isManaged();
+      } else {
+        Timber.w("Cancel jobs failed, return empty");
+        return Observable.empty();
+      }
+    });
+  }
 
   @Override public void queueSet() {
     unsubSet();
@@ -92,28 +103,37 @@ abstract class ManagerBase implements Manager {
         Timber.w("Is not managed, return empty");
         return Observable.empty();
       }
-    }).map(enabled -> {
-      Timber.d("Set original state enabled: %s", enabled);
-      interactor.setOriginalStateEnabled(enabled);
-      return enabled;
-    }).flatMap(enabled -> {
-      if (enabled) {
-        Timber.d("Is ignore while charging?");
-        return interactor.isIgnoreWhileCharging();
-      } else {
-        Timber.w("Is not managed, return empty");
-        return Observable.empty();
-      }
-    }).map(ignoreWhileCharging -> {
-      Timber.d("Is device currently charging?");
-      return ignoreWhileCharging && deviceCharging;
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(ignore -> {
-      // Only queue a disable job if the radio is not ignored
-      if (!ignore) {
-        interactor.queueDisableJob();
-      }
-    }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
+    })
+        .map(enabled -> {
+          Timber.d("Set original state enabled: %s", enabled);
+          interactor.setOriginalStateEnabled(enabled);
+          return enabled;
+        })
+        .flatMap(enabled -> {
+          if (enabled) {
+            Timber.d("Is ignore while charging?");
+            return interactor.isIgnoreWhileCharging();
+          } else {
+            Timber.w("Is not managed, return empty");
+            return Observable.empty();
+          }
+        })
+        .map(ignoreWhileCharging -> {
+          Timber.d("Is device currently charging?");
+          return ignoreWhileCharging && deviceCharging;
+        })
+        .flatMap(accountForWearableBeforeDisable())
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observerScheduler)
+        .subscribe(ignore -> {
+          // Only queue a disable job if the radio is not ignored
+          if (!ignore) {
+            interactor.queueDisableJob();
+          }
+        }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
   }
+
+  @CheckResult @NonNull protected abstract Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable();
 
   @CallSuper @Override public void cleanup() {
     interactor.destroy();

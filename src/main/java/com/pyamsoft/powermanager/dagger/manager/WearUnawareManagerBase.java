@@ -16,11 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 import rx.Scheduler;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 abstract class WearUnawareManagerBase extends ManagerBase {
@@ -30,15 +29,11 @@ abstract class WearUnawareManagerBase extends ManagerBase {
     super(interactor, observerScheduler, subscribeScheduler);
   }
 
-  @CallSuper @Override @CheckResult @NonNull Observable<Boolean> baseObservable() {
-    return interactor.cancelJobs().flatMap(cancelled -> {
-      if (cancelled) {
-        Timber.d("Is Managed?");
-        return interactor.isManaged();
-      } else {
-        Timber.w("Cancel jobs failed, return empty");
-        return Observable.empty();
-      }
-    });
+  @NonNull @Override
+  protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
+    return aBoolean -> {
+      Timber.d("Unaware of wearables,just pass through");
+      return Observable.just(aBoolean);
+    };
   }
 }
