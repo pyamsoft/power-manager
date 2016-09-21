@@ -16,17 +16,19 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
+import android.content.res.ColorStateList;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckedTextView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -36,6 +38,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
@@ -49,21 +52,23 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final AsyncDrawable.Mapper
-      taskMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @NonNull private final View rootView;
   @NonNull private final String title;
   @DrawableRes private final int image;
   @ColorRes private final int background;
   @NonNull private final ItemClickListener itemClickListener;
+  @Nullable private final BooleanInterestObserver observer;
   private Fragment fragment;
 
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
-      @ColorRes int background, @NonNull ItemClickListener itemClickListener) {
+      @ColorRes int background, @Nullable BooleanInterestObserver observer,
+      @NonNull ItemClickListener itemClickListener) {
     this.rootView = rootView;
     this.title = title;
     this.image = image;
     this.background = background;
+    this.observer = observer;
     this.itemClickListener = itemClickListener;
   }
 
@@ -112,6 +117,13 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
     holder.title.setText(title);
+    holder.title.setCheckMarkTintList(ColorStateList.valueOf(
+        ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white)));
+    if (observer != null) {
+      holder.title.setChecked(observer.is());
+    } else {
+      holder.title.setCheckMarkDrawable(null);
+    }
 
     holder.root.setOnClickListener(
         view -> getItemClickListener().onItemClicked(getTitle(), getFragment()));
@@ -170,7 +182,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     @NonNull final Unbinder unbinder;
     @BindView(R.id.adapter_item_overview_root) FrameLayout root;
     @BindView(R.id.adapter_item_overview_image) ImageView image;
-    @BindView(R.id.adapter_item_overview_title) TextView title;
+    @BindView(R.id.adapter_item_overview_title) CheckedTextView title;
 
     public ViewHolder(View itemView) {
       super(itemView);

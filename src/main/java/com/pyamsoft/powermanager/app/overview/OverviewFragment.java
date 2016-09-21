@@ -30,21 +30,31 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.ActionBarFragment;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class OverviewFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "Overview";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
+  @Inject @Named("obs_wifi_manage") BooleanInterestObserver wifiManageObserver;
+  @Inject @Named("obs_data_manage") BooleanInterestObserver dataManageObserver;
+  @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver bluetootManageObserver;
+  @Inject @Named("obs_sync_manage") BooleanInterestObserver syncManageObserver;
+  @Inject @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver;
+  @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
   private FastItemAdapter<OverviewItem> adapter;
   private Unbinder unbinder;
 
@@ -52,6 +62,7 @@ public class OverviewFragment extends ActionBarFragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     final View view = inflater.inflate(R.layout.fragment_overview, container, false);
+    PowerManager.get(getContext()).provideComponent().plusOverviewComponent().inject(this);
     unbinder = ButterKnife.bind(this, view);
     return view;
   }
@@ -76,25 +87,25 @@ public class OverviewFragment extends ActionBarFragment {
     adapter = new FastItemAdapter<>();
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
-            this::loadFragment));
+            wifiManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
-            this::loadFragment));
+            dataManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
-            this::loadFragment));
+            bluetootManageObserver, this::loadFragment));
     adapter.add(new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
-        this::loadFragment));
+        syncManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
-            this::loadFragment));
+            null, this::loadFragment));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
-        this::loadFragment));
+        dozeManageObserver, this::loadFragment));
     adapter.add(new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.red500,
-        this::loadFragment));
+        wearManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
-            this::loadFragment));
+            null, this::loadFragment));
 
     // Can't use the normal withOnClickListener on the adapter for some reason
   }

@@ -39,15 +39,16 @@
       android:scaleType="fitXY"
       />
 
-  <com.pyamsoft.pydroid.widget.NoLeakTextView
+  <CheckedTextView
       android:id="@+id/adapter_item_overview_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"
       android:layout_margin="8dp"
+      android:checkMark="?android:attr/listChoiceIndicatorMultiple"
       android:clickable="false"
       android:focusable="false"
-      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:textColor="@android:color/white"
       />
 
