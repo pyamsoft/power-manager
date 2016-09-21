@@ -16,14 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.overview;
 
-import com.pyamsoft.powermanager.app.overview.OverviewFragment;
-import com.pyamsoft.powermanager.app.overview.OverviewPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
-@ActivityScope @Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
+interface OverviewInteractor {
 
-  void inject(OverviewFragment fragment);
+  @CheckResult @NonNull Observable<Boolean> hasShownOnboarding();
 
-  void inject(OverviewPresenterLoader loader);
+  void setShownOnboarding();
 }

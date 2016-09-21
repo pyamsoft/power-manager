@@ -22,6 +22,10 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isOnboardingShown();
+
+  void setOnboardingShown();
+
   @CheckResult long getWearableDelay();
 
   @CheckResult boolean isSensorsManaged();

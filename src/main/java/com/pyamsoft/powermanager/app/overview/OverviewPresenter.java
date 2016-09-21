@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.overview;
+package com.pyamsoft.powermanager.app.overview;
 
-import com.pyamsoft.powermanager.app.overview.OverviewFragment;
-import com.pyamsoft.powermanager.app.overview.OverviewPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
-import dagger.Subcomponent;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-@ActivityScope @Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
+public interface OverviewPresenter extends Presenter<OverviewPresenter.View> {
 
-  void inject(OverviewFragment fragment);
+  void setShownOnBoarding();
 
-  void inject(OverviewPresenterLoader loader);
+  interface View {
+
+    void showOnBoarding();
+  }
 }

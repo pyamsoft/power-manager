@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -42,12 +43,16 @@ import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.pydroid.ActionBarFragment;
+import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
+import timber.log.Timber;
 
-public class OverviewFragment extends ActionBarFragment {
+public class OverviewFragment extends ActionBarFragment implements OverviewPresenter.View {
 
   @NonNull public static final String TAG = "Overview";
+  @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @BindView(R.id.overview_recycler) RecyclerView recyclerView;
   @Inject @Named("obs_wifi_manage") BooleanInterestObserver wifiManageObserver;
   @Inject @Named("obs_data_manage") BooleanInterestObserver dataManageObserver;
@@ -55,14 +60,30 @@ public class OverviewFragment extends ActionBarFragment {
   @Inject @Named("obs_sync_manage") BooleanInterestObserver syncManageObserver;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver;
   @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
+  OverviewPresenter presenter;
   private FastItemAdapter<OverviewItem> adapter;
   private Unbinder unbinder;
+  private long loadedKey;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<OverviewPresenter>() {
+          @NonNull @Override public PersistLoader<OverviewPresenter> createLoader() {
+            return new OverviewPresenterLoader(getContext());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull OverviewPresenter persist) {
+            presenter = persist;
+          }
+        });
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_overview, container, false);
     PowerManager.get(getContext()).provideComponent().plusOverviewComponent().inject(this);
+    final View view = inflater.inflate(R.layout.fragment_overview, container, false);
     unbinder = ButterKnife.bind(this, view);
     return view;
   }
@@ -70,6 +91,16 @@ public class OverviewFragment extends ActionBarFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     unbinder.unbind();
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -81,6 +112,18 @@ public class OverviewFragment extends ActionBarFragment {
   @Override public void onResume() {
     super.onResume();
     setActionBarUpEnabled(false);
+  }
+
+  @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    if (!getActivity().isChangingConfigurations()) {
+      PersistentCache.get().unload(loadedKey);
+    }
   }
 
   private void populateAdapter(@NonNull View view) {
@@ -126,5 +169,33 @@ public class OverviewFragment extends ActionBarFragment {
     recyclerView.setLayoutManager(layoutManager);
     recyclerView.setHasFixedSize(true);
     recyclerView.setAdapter(adapter);
+  }
+
+  @Override public void showOnBoarding() {
+    Timber.d("Show onboarding");
+    recyclerView.postDelayed(() -> {
+      // If we use the first item we get a weird location, try a different item
+      final View tapTargetView = recyclerView.findViewHolderForAdapterPosition(1).itemView;
+      if (tapTargetView != null) {
+        new TapTargetView.Builder(getActivity()).title("Look here")
+            .description("Wow so cool")
+            .tintTarget(false)
+            .drawShadow(true)
+            .listener(new TapTargetView.Listener() {
+              @Override public void onTargetClick(TapTargetView view) {
+                view.dismiss(true);
+                if (presenter != null) {
+                  presenter.setShownOnBoarding();
+                }
+              }
+
+              @Override public void onTargetLongClick(TapTargetView view) {
+
+              }
+            })
+            .cancelable(false)
+            .showFor(tapTargetView);
+      }
+    }, 1000L);
   }
 }

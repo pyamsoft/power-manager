@@ -59,7 +59,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
   @ColorRes private final int background;
   @NonNull private final ItemClickListener itemClickListener;
   @Nullable private final BooleanInterestObserver observer;
-  private Fragment fragment;
 
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
       @ColorRes int background, @Nullable BooleanInterestObserver observer,
@@ -84,6 +83,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     super.bindView(holder, payloads);
     recycleOld(holder);
 
+    final Fragment fragment;
     switch (title) {
       case WifiFragment.TAG:
         fragment = WifiFragment.newInstance(holder.itemView, rootView);
@@ -126,7 +126,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     }
 
     holder.root.setOnClickListener(
-        view -> getItemClickListener().onItemClicked(getTitle(), getFragment()));
+        view -> getItemClickListener().onItemClicked(getTitle(), fragment));
 
     final Subscription task = AsyncDrawable.with(holder.itemView.getContext())
         .load(image)
@@ -142,7 +142,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     holder.image.setOnClickListener(null);
     holder.title.setText(null);
     holder.title.setOnClickListener(null);
-    fragment = null;
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ItemClickListener getItemClickListener() {
@@ -151,14 +150,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull @CheckResult public String getTitle() {
     return title;
-  }
-
-  @CheckResult @NonNull public Fragment getFragment() {
-    if (fragment == null) {
-      throw new RuntimeException("Fragment type has not been bound yet");
-    }
-
-    return fragment;
   }
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {

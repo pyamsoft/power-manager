@@ -99,6 +99,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
 
+  @NonNull private final String onboardingShown = "ONBOARD";
+
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     manageWifi = getResources().getString(R.string.manage_wifi_key);
@@ -175,6 +177,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     wearableDelay = getResources().getString(R.string.wearable_time_key);
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
+  }
+
+  @Override public boolean isOnboardingShown() {
+    return get(onboardingShown, false);
+  }
+
+  @Override public void setOnboardingShown() {
+    put(onboardingShown, true);
   }
 
   @Override public long getWearableDelay() {
