@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
-import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;

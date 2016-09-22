@@ -37,7 +37,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import rx.Subscription;

@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.overview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
 

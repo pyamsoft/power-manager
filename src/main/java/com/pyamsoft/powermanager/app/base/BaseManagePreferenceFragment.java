@@ -29,7 +29,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.PersistLoader;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
