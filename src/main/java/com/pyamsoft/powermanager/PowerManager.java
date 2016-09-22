@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.PYDroidApplication;
+import com.pyamsoft.pydroid.about.Licenses;
 
 public class PowerManager extends PYDroidApplication
     implements IPowerManager<PowerManagerComponent> {
@@ -57,5 +58,12 @@ public class PowerManager extends PYDroidApplication
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses() {
     return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this);
+  }
+
+  @Override public void insertCustomLicensesIntoMap() {
+    Licenses.create("Android Priority Job Queue",
+        "https://github.com/yigit/android-priority-jobqueue", "licenses/androidpriorityjobqueue");
+    Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
+    Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
   }
 }

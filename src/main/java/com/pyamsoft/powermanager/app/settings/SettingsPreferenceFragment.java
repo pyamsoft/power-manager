@@ -30,10 +30,9 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
-import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
@@ -105,12 +104,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
     showAboutLicenses.setOnPreferenceClickListener(
         preference -> showAboutLicensesFragment(R.id.main_container,
-            AboutLibrariesFragment.Styling.LIGHT, Licenses.Id.ANDROID, Licenses.Id.ANDROID_SUPPORT,
-            Licenses.Id.PYDROID, Licenses.Id.GOOGLE_PLAY_SERVICES, Licenses.Id.ANDROID_CHECKOUT,
-            Licenses.Id.AUTO_VALUE, Licenses.Id.BUTTERKNIFE, Licenses.Id.DAGGER,
-            Licenses.Id.FAST_ADAPTER, Licenses.Id.FIREBASE, Licenses.Id.LEAK_CANARY,
-            Licenses.Id.RETROFIT2, Licenses.Id.SQLBRITE, Licenses.Id.SQLDELIGHT,
-            Licenses.Id.ANDROID_PRIORITY_JOBQUEUE, Licenses.Id.RXANDROID, Licenses.Id.RXJAVA));
+            AboutLibrariesFragment.Styling.LIGHT));
 
     final Preference checkVersion = findPreference(getString(R.string.check_version_key));
     checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
