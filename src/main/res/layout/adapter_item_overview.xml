@@ -39,7 +39,7 @@
       android:scaleType="fitXY"
       />
 
-  <CheckedTextView
+  <com.pyamsoft.pydroid.widget.NoLeakCheckedTextView
       android:id="@+id/adapter_item_overview_title"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

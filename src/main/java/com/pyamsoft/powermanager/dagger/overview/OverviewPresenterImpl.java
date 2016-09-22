@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.overview;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.overview.OverviewPresenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -50,6 +51,7 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.View>
   @SuppressWarnings("WeakerAccess") void showOnBoarding() {
     unsubOnboarding();
     onboardingSubscription = interactor.hasShownOnboarding()
+        .delay(1, TimeUnit.SECONDS)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {

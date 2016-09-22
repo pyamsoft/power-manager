@@ -42,8 +42,8 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
-import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -173,29 +173,27 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   @Override public void showOnBoarding() {
     Timber.d("Show onboarding");
-    recyclerView.postDelayed(() -> {
-      // If we use the first item we get a weird location, try a different item
-      final View tapTargetView = recyclerView.findViewHolderForAdapterPosition(1).itemView;
-      if (tapTargetView != null) {
-        new TapTargetView.Builder(getActivity()).title("Look here")
-            .description("Wow so cool")
-            .tintTarget(false)
-            .drawShadow(true)
-            .listener(new TapTargetView.Listener() {
-              @Override public void onTargetClick(TapTargetView view) {
-                view.dismiss(true);
-                if (presenter != null) {
-                  presenter.setShownOnBoarding();
-                }
+    // If we use the first item we get a weird location, try a different item
+    final View tapTargetView = recyclerView.findViewHolderForAdapterPosition(1).itemView;
+    if (tapTargetView != null) {
+      new TapTargetView.Builder(getActivity()).title("Look here")
+          .description("Wow so cool")
+          .tintTarget(false)
+          .drawShadow(true)
+          .listener(new TapTargetView.Listener() {
+            @Override public void onTargetClick(TapTargetView view) {
+              view.dismiss(true);
+              if (presenter != null) {
+                presenter.setShownOnBoarding();
               }
+            }
 
-              @Override public void onTargetLongClick(TapTargetView view) {
+            @Override public void onTargetLongClick(TapTargetView view) {
 
-              }
-            })
-            .cancelable(false)
-            .showFor(tapTargetView);
-      }
-    }, 1000L);
+            }
+          })
+          .cancelable(false)
+          .showFor(tapTargetView);
+    }
   }
 }
