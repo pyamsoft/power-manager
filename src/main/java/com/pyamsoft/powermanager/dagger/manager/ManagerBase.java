@@ -133,7 +133,8 @@ abstract class ManagerBase implements Manager {
         }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
   }
 
-  @CheckResult @NonNull protected abstract Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable();
+  @CheckResult @NonNull
+  protected abstract Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable();
 
   @CallSuper @Override public void cleanup() {
     interactor.destroy();

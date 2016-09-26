@@ -38,8 +38,7 @@ import timber.log.Timber;
 public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
-  @NonNull private final AsyncDrawable.Mapper
-      taskMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @BindView(R.id.new_trigger_back) ImageView backButton;
   @BindView(R.id.new_trigger_close) ImageView closeButton;
   @BindView(R.id.new_trigger_continue) ImageView continueButton;
