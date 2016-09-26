@@ -30,14 +30,14 @@ import rx.Scheduler;
 
   @Singleton @Named("mod_wifi_periodic") @Provides BooleanInterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull @Named("computation") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new WifiPeriodicModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_data_periodic") @Provides BooleanInterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull @Named("computation") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new DataPeriodicModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
@@ -45,7 +45,7 @@ import rx.Scheduler;
   @Singleton @Named("mod_bluetooth_periodic") @Provides
   BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull @Named("computation") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new BluetoothPeriodicModifier(context, preferences, subscribeScheduler,
         observeScheduler);
@@ -53,7 +53,7 @@ import rx.Scheduler;
 
   @Singleton @Named("mod_sync_periodic") @Provides BooleanInterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("io") Scheduler subscribeScheduler,
+      @NonNull @Named("computation") Scheduler subscribeScheduler,
       @NonNull @Named("main") Scheduler observeScheduler) {
     return new SyncPeriodicModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
