@@ -29,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_overview")
   BaseOverviewPagerPresenter provideSyncOverviewPagerPresenter(
       @Named("mod_sync_state") BooleanInterestModifier stateModifier,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler) {
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
     return new SyncOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
   }
 }

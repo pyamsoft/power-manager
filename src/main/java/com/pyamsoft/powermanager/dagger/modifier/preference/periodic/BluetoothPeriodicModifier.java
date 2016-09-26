@@ -31,13 +31,11 @@ class BluetoothPeriodicModifier extends BooleanPreferenceModifier {
     super(context, preferences, subscribeScheduler, observeScheduler);
   }
 
-  @Override
-  protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Override protected void set(@NonNull PowerManagerPreferences preferences) {
     preferences.setPeriodicBluetooth(true);
   }
 
-  @Override
-  protected void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Override protected void unset(@NonNull PowerManagerPreferences preferences) {
     preferences.setPeriodicBluetooth(false);
   }
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.wrapper;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -41,12 +42,12 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   }
 
   @NonNull private final ConnectivityManager connectivityManager;
-  @NonNull private final Context appContext;
+  @NonNull private final ContentResolver contentResolver;
 
   @Inject DataConnectionWrapperImpl(@NonNull Context context) {
-    this.appContext = context.getApplicationContext();
     connectivityManager =
-        (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    contentResolver = context.getContentResolver();
   }
 
   @CheckResult @Nullable private static Method reflectGetMethod() {
@@ -109,11 +110,9 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   @CheckResult private boolean getMobileDataEnabledSettings() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled =
-          Settings.Global.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
+      enabled = Settings.Global.getInt(contentResolver, SETTINGS_MOBILE_DATA, 0) == 1;
     } else {
-      enabled =
-          Settings.Secure.getInt(appContext.getContentResolver(), SETTINGS_MOBILE_DATA, 0) == 1;
+      enabled = Settings.Secure.getInt(contentResolver, SETTINGS_MOBILE_DATA, 0) == 1;
     }
 
     return enabled;

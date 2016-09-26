@@ -32,7 +32,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideDataCustomDelayPresenter(
       @NonNull @Named("data_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new DataDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 
@@ -46,7 +46,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideDataCustomEnablePresenter(
       @NonNull @Named("data_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new DataEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 
@@ -60,7 +60,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideDataCustomDisablePresenter(
       @NonNull @Named("data_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new DataDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 

@@ -20,7 +20,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -30,6 +29,7 @@ import timber.log.Timber;
 
 abstract class StateObserver extends BroadcastReceiver implements BooleanInterestObserver {
 
+  // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
   @NonNull private final IntentFilter filter;
   @NonNull private final Map<String, SetCallback> setMap;
@@ -42,10 +42,6 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
     registered = false;
-  }
-
-  @NonNull @CheckResult final Context getAppContext() {
-    return appContext;
   }
 
   final void setFilterActions(@NonNull String... actions) {

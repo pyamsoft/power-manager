@@ -32,7 +32,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideSyncCustomDelayPresenter(
       @NonNull @Named("sync_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new SyncDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 
@@ -46,7 +46,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideSyncCustomEnablePresenter(
       @NonNull @Named("sync_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new SyncEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 
@@ -60,7 +60,7 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideSyncCustomDisablePresenter(
       @NonNull @Named("sync_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new SyncDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
   }
 

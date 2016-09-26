@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -32,17 +31,15 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
-  @NonNull final JobSchedulerCompat jobManager;
-  @NonNull private final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
-  ManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
+  ManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
     this.jobManager = jobManager;
     this.manageObserver = manageObserver;
     this.stateObserver = stateObserver;
-    this.appContext = context.getApplicationContext();
     originalStateEnabled = false;
     this.preferences = preferences;
   }
@@ -80,10 +77,6 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
     jobManager.addJobInBackground(createDisableJob());
-  }
-
-  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Context getAppContext() {
-    return appContext.getApplicationContext();
   }
 
   @CheckResult @NonNull PowerManagerPreferences getPreferences() {

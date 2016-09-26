@@ -35,7 +35,7 @@ class DozeStateObserver extends StateObserver {
       setFilterActions(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
     }
 
-    androidPowerManager = (android.os.PowerManager) getAppContext().getApplicationContext()
+    androidPowerManager = (android.os.PowerManager) context.getApplicationContext()
         .getSystemService(Context.POWER_SERVICE);
   }
 

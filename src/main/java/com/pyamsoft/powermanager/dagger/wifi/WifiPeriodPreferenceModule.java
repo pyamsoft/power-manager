@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_period_pref")
   BasePeriodPreferencePresenter provideWifiManagePreferencePresenter(
       @Named("wifi_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
       @Named("obs_wifi_periodic") BooleanInterestObserver periodicObserver) {
     return new WifiPeriodPreferencePresenterImpl(interactor, mainScheduler, ioScheduler,
         periodicObserver);

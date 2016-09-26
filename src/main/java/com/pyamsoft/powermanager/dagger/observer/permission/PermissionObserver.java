@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.observer.permission;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,15 +26,25 @@ import timber.log.Timber;
 
 abstract class PermissionObserver implements BooleanInterestObserver {
 
+  // KLUDGE Holds onto App context
   @NonNull private final Context appContext;
+  @NonNull private final String permission;
 
-  PermissionObserver(@NonNull Context context) {
+  PermissionObserver(@NonNull Context context, @NonNull String permission) {
     this.appContext = context.getApplicationContext();
+    this.permission = permission;
   }
 
-  @NonNull @CheckResult Context getAppContext() {
-    return appContext;
+  @CheckResult boolean hasRuntimePermission() {
+    return appContext.getApplicationContext().checkCallingOrSelfPermission(permission)
+        == PackageManager.PERMISSION_GRANTED;
   }
+
+  @Override public final boolean is() {
+    return checkPermission(appContext);
+  }
+
+  @CheckResult protected abstract boolean checkPermission(Context appContext);
 
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {

@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.observer.permission;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
@@ -27,14 +26,12 @@ import timber.log.Timber;
 class DozePermissionObserver extends PermissionObserver {
 
   @Inject DozePermissionObserver(@NonNull Context context) {
-    super(context);
+    super(context, Manifest.permission.DUMP);
   }
 
-  @Override public boolean is() {
-    final boolean hasPermission = Build.VERSION.SDK_INT == Build.VERSION_CODES.M
-        && getAppContext().getApplicationContext()
-        .checkCallingOrSelfPermission(Manifest.permission.DUMP)
-        == PackageManager.PERMISSION_GRANTED;
+  @Override protected boolean checkPermission(@NonNull Context appContext) {
+    final boolean hasPermission =
+        Build.VERSION.SDK_INT == Build.VERSION_CODES.M && hasRuntimePermission();
     Timber.d("Has doze permission? %s", hasPermission);
     return hasPermission;
   }

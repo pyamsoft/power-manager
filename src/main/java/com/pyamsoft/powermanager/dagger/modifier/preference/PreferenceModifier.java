@@ -29,6 +29,7 @@ import timber.log.Timber;
 
 abstract class PreferenceModifier {
 
+  // KLUDGE Holds reference to application context
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final Intent service;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
@@ -56,7 +57,7 @@ abstract class PreferenceModifier {
     unsub();
     subscription = Observable.defer(() -> {
       Timber.d("Run modifier on subscription thread");
-      wrappedSubscription.call(appContext, preferences);
+      wrappedSubscription.call(preferences);
       return Observable.just(true);
     }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
       Timber.d("Modifier success");
@@ -66,7 +67,7 @@ abstract class PreferenceModifier {
 
   interface WrappedSubscription {
 
-    void call(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
+    void call(@NonNull PowerManagerPreferences preferences);
   }
 }
 

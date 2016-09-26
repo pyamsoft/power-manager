@@ -35,14 +35,12 @@ class DozeManageModifier extends BooleanPreferenceModifier {
     this.observer = observer;
   }
 
-  @Override
-  protected void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Override protected void set(@NonNull PowerManagerPreferences preferences) {
     // Don't allow the setting of Doze if we don't have permission
     preferences.setDozeManaged(observer.is());
   }
 
-  @Override
-  protected void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Override protected void unset(@NonNull PowerManagerPreferences preferences) {
     preferences.setDozeManaged(false);
   }
 }

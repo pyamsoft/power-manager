@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_period_pref")
   BasePeriodPreferencePresenter provideSyncManagePreferencePresenter(
       @Named("sync_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
       @Named("obs_sync_periodic") BooleanInterestObserver periodicObserver) {
     return new SyncPeriodPreferencePresenter(interactor, mainScheduler, ioScheduler,
         periodicObserver);

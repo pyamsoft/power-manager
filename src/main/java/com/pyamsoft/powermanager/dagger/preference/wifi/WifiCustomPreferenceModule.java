@@ -1,7 +1,7 @@
 /*
  * Copyright 2016 Peter Kenji Yamanaka
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Verscomputationn 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -10,8 +10,8 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * See the License for the specific language governing permisscomputationns and
+ * limitatcomputationns under the License.
  */
 
 package com.pyamsoft.powermanager.dagger.preference.wifi;
@@ -32,8 +32,8 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(
       @NonNull @Named("wifi_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
-    return new WifiDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
+      @Named("computation") Scheduler computationScheduler) {
+    return new WifiDelayPreferencePresenter(interactor, mainScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_delay_interactor")
@@ -46,8 +46,8 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideWifiCustomEnablePresenter(
       @NonNull @Named("wifi_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
-    return new WifiEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
+      @Named("computation") Scheduler computationScheduler) {
+    return new WifiEnableTimePreferencePresenter(interactor, mainScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_enable_interactor")
@@ -60,8 +60,8 @@ import rx.Scheduler;
   CustomTimeInputPreferencePresenter provideWifiCustomDisablePresenter(
       @NonNull @Named("wifi_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
-    return new WifiDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
+      @Named("computation") Scheduler computationScheduler) {
+    return new WifiDisableTimePreferencePresenter(interactor, mainScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_disable_interactor")

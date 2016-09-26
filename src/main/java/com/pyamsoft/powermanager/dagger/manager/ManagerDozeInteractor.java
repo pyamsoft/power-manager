@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -29,10 +28,10 @@ import rx.Observable;
 
 class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
 
-  @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
+  @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    super(jobManager, context, preferences, manageObserver, stateObserver);
+    super(jobManager, preferences, manageObserver, stateObserver);
   }
 
   @CheckResult private long getDelayTime() {

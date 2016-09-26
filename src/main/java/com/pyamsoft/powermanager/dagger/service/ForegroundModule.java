@@ -31,7 +31,7 @@ import rx.Scheduler;
 
   @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
       @NonNull ForegroundInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new ForegroundPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 

@@ -39,10 +39,8 @@ public abstract class BooleanPreferenceModifier extends PreferenceModifier
     wrapInSubscription(this::unset);
   }
 
-  abstract protected void set(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences);
+  abstract protected void set(@NonNull PowerManagerPreferences preferences);
 
-  abstract protected void unset(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences);
+  abstract protected void unset(@NonNull PowerManagerPreferences preferences);
 }
 

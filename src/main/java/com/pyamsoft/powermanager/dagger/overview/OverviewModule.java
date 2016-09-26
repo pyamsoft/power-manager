@@ -29,7 +29,7 @@ import rx.Scheduler;
 
   @ActivityScope @Provides OverviewPresenter provideOverviewPresenter(
       @NonNull OverviewInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("io") Scheduler ioScheduler) {
+      @Named("computation") Scheduler ioScheduler) {
     return new OverviewPresenterImpl(interactor, mainScheduler, ioScheduler);
   }
 

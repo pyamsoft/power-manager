@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -29,12 +28,12 @@ import rx.Observable;
 
 class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
 
-  @Inject ManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
+  @Inject ManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(jobManager, context, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, preferences, manageObserver, stateObserver, wearManageObserver,
         wearStateObserver);
   }
 

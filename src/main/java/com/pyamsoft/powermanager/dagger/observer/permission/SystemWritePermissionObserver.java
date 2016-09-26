@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.observer.permission;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -28,19 +27,17 @@ import timber.log.Timber;
 class SystemWritePermissionObserver extends PermissionObserver {
 
   @Inject SystemWritePermissionObserver(@NonNull Context context) {
-    super(context);
+    super(context, Manifest.permission.WRITE_SETTINGS);
   }
 
-  @Override public boolean is() {
+  @Override protected boolean checkPermission(@NonNull Context appContext) {
     boolean hasRuntimePermission;
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       Timber.d("Runtime permissions before M are auto granted");
-      hasRuntimePermission =
-          getAppContext().checkCallingOrSelfPermission(Manifest.permission.WRITE_SETTINGS)
-              == PackageManager.PERMISSION_GRANTED;
+      hasRuntimePermission = hasRuntimePermission();
     } else {
       Timber.d("Check if system setting is granted");
-      hasRuntimePermission = Settings.System.canWrite(getAppContext());
+      hasRuntimePermission = Settings.System.canWrite(appContext);
     }
 
     return hasRuntimePermission;

@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_manage_pref")
   BaseManagePreferencePresenter provideBluetoothManagePreferencePresenter(
       @Named("bluetooth_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver) {
     return new BluetoothManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
         manageObserver);

@@ -31,7 +31,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wear_manage_pref")
   BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
       @Named("wear_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("io") Scheduler ioScheduler,
+      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
       @Named("obs_wear_manage") BooleanInterestObserver manageObserver) {
     return new WearManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
         manageObserver);

@@ -38,14 +38,27 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
 
   private static final int PENDING_RC = 1004;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @NonNull private final JobSchedulerCompat jobManager;
 
   @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     this.jobManager = jobManager;
-    this.appContext = context.getApplicationContext();
     this.preferences = preferences;
+
+    final Intent intent =
+        new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    final PendingIntent pendingIntent = PendingIntent.getActivity(context, PENDING_RC, intent, 0);
+    builder = new NotificationCompat.Builder(context).setContentTitle(
+        context.getString(R.string.app_name))
+        .setSmallIcon(R.drawable.ic_notification)
+        .setColor(ContextCompat.getColor(context, R.color.amber500))
+        .setContentText("Managing Power...")
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setNumber(0)
+        .setContentIntent(pendingIntent);
   }
 
   @Override public void create() {
@@ -63,25 +76,6 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {
-    return Observable.defer(() -> {
-      final Intent intent =
-          new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-      return Observable.just(intent);
-    }).map(intent -> {
-      final PendingIntent pendingIntent =
-          PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
-      return new NotificationCompat.Builder(appContext).setContentTitle(
-          appContext.getString(R.string.app_name))
-          .setSmallIcon(R.drawable.ic_notification)
-          .setColor(ContextCompat.getColor(appContext, R.color.amber500))
-          .setContentText("Managing Power...")
-          .setWhen(0)
-          .setOngoing(true)
-          .setAutoCancel(false)
-          .setNumber(0)
-          .setContentIntent(pendingIntent);
-    }).zipWith(getNotificationPriority(), (builder, priority) -> {
-      return builder.setPriority(priority).build();
-    });
+    return getNotificationPriority().map(priority -> builder.setPriority(priority).build());
   }
 }

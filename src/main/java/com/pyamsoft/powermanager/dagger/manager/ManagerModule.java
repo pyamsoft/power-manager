@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
@@ -33,80 +32,77 @@ import rx.Scheduler;
 
   @ActivityScope @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
-      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+      @Named("computation") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerWifi(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_manager_interactor")
-  WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
-      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
+  WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager,
+      @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
       @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
-    return new ManagerWifiInteractor(jobManager, context, preferences, manageObserver,
-        stateObserver, wearManageObserver, wearStateObserver);
+    return new ManagerWifiInteractor(jobManager, preferences, manageObserver, stateObserver,
+        wearManageObserver, wearStateObserver);
   }
 
   @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
-      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+      @Named("computation") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerData(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("data_manager_interactor")
-  ManagerInteractor provideManagerDataInteractor(@NonNull Context context,
-      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
+  ManagerInteractor provideManagerDataInteractor(@NonNull JobSchedulerCompat jobManager,
+      @NonNull PowerManagerPreferences preferences,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("obs_data_state") BooleanInterestObserver stateObserver) {
-    return new ManagerDataInteractor(jobManager, context, preferences, manageObserver,
-        stateObserver);
+    return new ManagerDataInteractor(jobManager, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
-      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+      @Named("computation") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerBluetooth(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("bluetooth_manager_interactor")
-  WearAwareManagerInteractor provideManagerBluetoothInteractor(@NonNull Context context,
+  WearAwareManagerInteractor provideManagerBluetoothInteractor(
       @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver,
       @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
-    return new ManagerBluetoothInteractor(jobManager, context, preferences, manageObserver,
-        stateObserver, wearManageObserver, wearStateObserver);
+    return new ManagerBluetoothInteractor(jobManager, preferences, manageObserver, stateObserver,
+        wearManageObserver, wearStateObserver);
   }
 
   @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
-      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+      @Named("computation") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerSync(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("sync_manager_interactor")
-  ManagerInteractor provideManagerSyncInteractor(@NonNull Context context,
-      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
+  ManagerInteractor provideManagerSyncInteractor(@NonNull JobSchedulerCompat jobManager,
+      @NonNull PowerManagerPreferences preferences,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
       @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
-    return new ManagerSyncInteractor(jobManager, context, preferences, manageObserver,
-        stateObserver);
+    return new ManagerSyncInteractor(jobManager, preferences, manageObserver, stateObserver);
   }
 
   @ActivityScope @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ExclusiveManagerInteractor interactor,
-      @Named("io") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
+      @Named("computation") Scheduler ioScheduler, @Named("main") Scheduler mainScheduler) {
     return new ManagerDoze(interactor, mainScheduler, ioScheduler);
   }
 
   @ActivityScope @Provides @Named("doze_manager_interactor")
-  ExclusiveManagerInteractor provideManagerDozeInteractor(@NonNull Context context,
+  ExclusiveManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobSchedulerCompat jobManager,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_state") BooleanInterestObserver stateObserver) {
-    return new ManagerDozeInteractor(jobManager, context, preferences, manageObserver,
-        stateObserver);
+    return new ManagerDozeInteractor(jobManager, preferences, manageObserver, stateObserver);
   }
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.receiver;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
@@ -54,9 +55,10 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     rotateFixReceiver.unregister();
   }
 
-  static final class BrightnessFixReceiver extends ContentObserver {
+  @SuppressWarnings("WeakerAccess") static final class BrightnessFixReceiver
+      extends ContentObserver {
 
-    @NonNull final Context appContext;
+    @NonNull private final ContentResolver contentResolver;
     @NonNull private final BooleanInterestObserver writePermissionObserver;
     boolean originalAutoBright;
     boolean registered = false;
@@ -64,15 +66,15 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     BrightnessFixReceiver(@NonNull Context context,
         @NonNull BooleanInterestObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
-      this.appContext = context.getApplicationContext();
+      this.contentResolver = context.getApplicationContext().getContentResolver();
       this.writePermissionObserver = writePermissionObserver;
     }
 
     @CheckResult boolean isAutoBrightnessEnabled() {
       try {
-        final boolean autobright = Settings.System.getInt(appContext.getContentResolver(),
-            Settings.System.SCREEN_BRIGHTNESS_MODE)
-            == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
+        final boolean autobright =
+            Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE)
+                == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
         Timber.d("is auto bright: %s", autobright);
         return autobright;
       } catch (Settings.SettingNotFoundException e) {
@@ -84,8 +86,7 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     void setAutoBrightnessEnabled(boolean enabled) {
       if (writePermissionObserver.is()) {
         Timber.d("Set auto brightness: %s", enabled);
-        Settings.System.putInt(appContext.getContentResolver(),
-            Settings.System.SCREEN_BRIGHTNESS_MODE,
+        Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
             enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
                 : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
       } else {
@@ -97,9 +98,8 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
       if (!registered) {
         Timber.d("Register BrightnessFixReceiver");
         originalAutoBright = isAutoBrightnessEnabled();
-        appContext.getContentResolver()
-            .registerContentObserver(
-                Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+        contentResolver.registerContentObserver(
+            Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
         registered = true;
       }
     }
@@ -107,7 +107,7 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     final void unregister() {
       if (registered) {
         Timber.d("Unregister BrightnessFixReceiver");
-        appContext.getContentResolver().unregisterContentObserver(this);
+        contentResolver.unregisterContentObserver(this);
         registered = false;
       }
     }
@@ -133,9 +133,9 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     }
   }
 
-  static final class RotateFixReceiver extends ContentObserver {
+  @SuppressWarnings("WeakerAccess") static final class RotateFixReceiver extends ContentObserver {
 
-    @NonNull final Context appContext;
+    @NonNull private final ContentResolver contentResolver;
     @NonNull private final BooleanInterestObserver writePermissionObserver;
     boolean originalAutoRotate;
     boolean registered = false;
@@ -143,13 +143,13 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     RotateFixReceiver(@NonNull Context context,
         @NonNull BooleanInterestObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
-      this.appContext = context.getApplicationContext();
+      this.contentResolver = context.getApplicationContext().getContentResolver();
       this.writePermissionObserver = writePermissionObserver;
     }
 
     @CheckResult boolean isAutoRotateEnabled() {
-      final boolean autorotate = Settings.System.getInt(appContext.getContentResolver(),
-          Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
+      final boolean autorotate =
+          Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1;
       Timber.d("is auto rotate: %s", autorotate);
       return autorotate;
     }
@@ -157,8 +157,8 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     void setAutoRotateEnabled(boolean enabled) {
       if (writePermissionObserver.is()) {
         Timber.d("Set auto rotate: %s", enabled);
-        Settings.System.putInt(appContext.getContentResolver(),
-            Settings.System.ACCELEROMETER_ROTATION, enabled ? 1 : 0);
+        Settings.System.putInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION,
+            enabled ? 1 : 0);
       } else {
         Timber.e("Missing WRITE_SETTINGS permission");
       }
@@ -168,9 +168,8 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
       if (!registered) {
         Timber.d("Register RotateFixReceiver");
         originalAutoRotate = isAutoRotateEnabled();
-        appContext.getContentResolver()
-            .registerContentObserver(
-                Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), false, this);
+        contentResolver.registerContentObserver(
+            Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), false, this);
         registered = true;
       }
     }
@@ -178,7 +177,7 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     final void unregister() {
       if (registered) {
         Timber.d("Unregister RotateFixReceiver");
-        appContext.getContentResolver().unregisterContentObserver(this);
+        contentResolver.unregisterContentObserver(this);
         registered = false;
       }
     }
