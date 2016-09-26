@@ -34,9 +34,9 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
   @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
-      @NonNull @Named("main") Scheduler mainScheduler,
-      @NonNull @Named("io") Scheduler ioScheduler) {
-    super(mainScheduler, ioScheduler);
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("io") Scheduler subScheduler) {
+    super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
 

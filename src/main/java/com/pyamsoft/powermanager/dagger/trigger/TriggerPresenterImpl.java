@@ -42,7 +42,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
   @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
   @NonNull private Subscription createSubscription = Subscriptions.empty();
 
-  @Inject public TriggerPresenterImpl(@NonNull @Named("main") Scheduler observeScheduler,
+  @Inject public TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

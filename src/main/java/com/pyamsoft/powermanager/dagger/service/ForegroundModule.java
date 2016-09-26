@@ -30,9 +30,9 @@ import rx.Scheduler;
 @Module public class ForegroundModule {
 
   @Singleton @Provides ForegroundPresenter provideForegroundPresenter(
-      @NonNull ForegroundInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new ForegroundPresenterImpl(interactor, mainScheduler, ioScheduler);
+      @NonNull ForegroundInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new ForegroundPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,

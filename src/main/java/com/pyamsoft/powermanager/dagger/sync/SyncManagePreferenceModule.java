@@ -31,9 +31,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("sync_manage_pref")
   BaseManagePreferencePresenter provideSyncManagePreferencePresenter(
       @Named("sync_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver) {
-    return new SyncManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
+    return new SyncManagePreferencePresenter(interactor, obsScheduler, subScheduler,
         manageObserver);
   }
 

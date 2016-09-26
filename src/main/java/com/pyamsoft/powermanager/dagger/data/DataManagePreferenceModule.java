@@ -31,9 +31,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_manage_pref")
   BaseManagePreferencePresenter provideDataManagePreferencePresenter(
       @Named("data_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver) {
-    return new DataManagePreferencePresenter(interactor, mainScheduler, ioScheduler,
+    return new DataManagePreferencePresenter(interactor, obsScheduler, subScheduler,
         manageObserver);
   }
 

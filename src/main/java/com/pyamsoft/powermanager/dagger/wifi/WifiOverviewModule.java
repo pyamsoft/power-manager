@@ -29,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_overview")
   BaseOverviewPagerPresenter provideWifiOverviewPagerPresenter(
       @Named("mod_wifi_state") BooleanInterestModifier stateModifier,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
-    return new WifiOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new WifiOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);
   }
 }

@@ -28,9 +28,9 @@ import rx.Scheduler;
 @Module public class OverviewModule {
 
   @ActivityScope @Provides OverviewPresenter provideOverviewPresenter(
-      @NonNull OverviewInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new OverviewPresenterImpl(interactor, mainScheduler, ioScheduler);
+      @NonNull OverviewInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new OverviewPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides OverviewInteractor provideInteractor(

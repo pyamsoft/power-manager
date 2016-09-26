@@ -31,9 +31,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_manage_pref")
   BaseManagePreferencePresenter provideWifiManagePreferencePresenter(
       @Named("wifi_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver) {
-    return new WifiManagePreferencePresenterImpl(interactor, mainScheduler, ioScheduler,
+    return new WifiManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver);
   }
 

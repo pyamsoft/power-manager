@@ -31,9 +31,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_delay")
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(
       @NonNull @Named("wifi_custom_delay_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler computationScheduler) {
-    return new WifiDelayPreferencePresenter(interactor, mainScheduler, computationScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler computationScheduler) {
+    return new WifiDelayPreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_delay_interactor")
@@ -45,9 +45,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_enable")
   CustomTimeInputPreferencePresenter provideWifiCustomEnablePresenter(
       @NonNull @Named("wifi_custom_enable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler computationScheduler) {
-    return new WifiEnableTimePreferencePresenter(interactor, mainScheduler, computationScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler computationScheduler) {
+    return new WifiEnableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_enable_interactor")
@@ -59,9 +59,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("wifi_custom_disable")
   CustomTimeInputPreferencePresenter provideWifiCustomDisablePresenter(
       @NonNull @Named("wifi_custom_disable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler computationScheduler) {
-    return new WifiDisableTimePreferencePresenter(interactor, mainScheduler, computationScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler computationScheduler) {
+    return new WifiDisableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
   @ActivityScope @Provides @Named("wifi_custom_disable_interactor")

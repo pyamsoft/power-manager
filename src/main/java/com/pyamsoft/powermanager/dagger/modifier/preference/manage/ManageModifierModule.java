@@ -31,44 +31,44 @@ import rx.Scheduler;
 
   @Singleton @Named("mod_wifi_manage") @Provides BooleanInterestModifier provideWifiModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
     return new WifiManageModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_data_manage") @Provides BooleanInterestModifier provideDataModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
     return new DataManageModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_bluetooth_manage") @Provides
   BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
     return new BluetoothManageModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_sync_manage") @Provides BooleanInterestModifier provideSyncModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
     return new SyncManageModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_wear_manage") @Provides BooleanInterestModifier provideWearModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler) {
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
     return new WearableManageModifier(context, preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_doze_manage") @Provides BooleanInterestModifier provideDozModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("computation") Scheduler subscribeScheduler,
-      @NonNull @Named("main") Scheduler observeScheduler,
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler,
       @Named("obs_doze_permission") BooleanInterestObserver observer) {
     return new DozeManageModifier(context, preferences, subscribeScheduler, observeScheduler,
         observer);

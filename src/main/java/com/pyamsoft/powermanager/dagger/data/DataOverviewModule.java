@@ -29,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_overview")
   BaseOverviewPagerPresenter provideDataOverviewPagerPresenter(
       @Named("mod_data_state") BooleanInterestModifier stateModifier,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
-    return new DataOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new DataOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);
   }
 }

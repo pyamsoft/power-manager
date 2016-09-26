@@ -28,9 +28,9 @@ import rx.Scheduler;
 @Module public class TriggerModule {
 
   @ActivityScope @Provides TriggerPresenter provideTriggerPresenter(
-      @NonNull @Named("main") Scheduler mainScheduler,
-      @NonNull @Named("computation") Scheduler ioScheduler, @NonNull TriggerInteractor interactor) {
-    return new TriggerPresenterImpl(mainScheduler, ioScheduler, interactor);
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
+    return new TriggerPresenterImpl(obsScheduler, subScheduler, interactor);
   }
 
   @ActivityScope @Provides TriggerInteractor provideTriggerInteractor(

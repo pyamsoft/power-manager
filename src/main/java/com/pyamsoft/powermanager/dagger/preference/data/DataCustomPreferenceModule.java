@@ -31,9 +31,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_delay")
   CustomTimeInputPreferencePresenter provideDataCustomDelayPresenter(
       @NonNull @Named("data_custom_delay_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new DataDelayPreferencePresenter(interactor, mainScheduler, ioScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new DataDelayPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides @Named("data_custom_delay_interactor")
@@ -45,9 +45,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_enable")
   CustomTimeInputPreferencePresenter provideDataCustomEnablePresenter(
       @NonNull @Named("data_custom_enable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new DataEnableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new DataEnableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides @Named("data_custom_enable_interactor")
@@ -59,9 +59,9 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("data_custom_disable")
   CustomTimeInputPreferencePresenter provideDataCustomDisablePresenter(
       @NonNull @Named("data_custom_disable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("main") Scheduler mainScheduler,
-      @Named("computation") Scheduler ioScheduler) {
-    return new DataDisableTimePreferencePresenter(interactor, mainScheduler, ioScheduler);
+          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new DataDisableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides @Named("data_custom_disable_interactor")

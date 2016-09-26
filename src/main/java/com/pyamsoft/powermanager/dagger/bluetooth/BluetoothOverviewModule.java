@@ -29,7 +29,7 @@ import rx.Scheduler;
   @ActivityScope @Provides @Named("bluetooth_overview")
   BaseOverviewPagerPresenter provideBluetoothOverviewPagerPresenter(
       @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier,
-      @Named("main") Scheduler mainScheduler, @Named("computation") Scheduler ioScheduler) {
-    return new BluetoothOverviewPresenterImpl(mainScheduler, ioScheduler, stateModifier);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new BluetoothOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);
   }
 }

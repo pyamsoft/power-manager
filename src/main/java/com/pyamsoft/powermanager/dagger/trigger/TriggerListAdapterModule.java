@@ -28,10 +28,10 @@ import rx.Scheduler;
 @Module public class TriggerListAdapterModule {
 
   @ActivityScope @Provides TriggerListAdapterPresenter provideTriggerListAdapterPresenter(
-      @NonNull @Named("main") Scheduler mainScheduler,
-      @NonNull @Named("computation") Scheduler ioScheduler,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull TriggerListAdapterInteractor interactor) {
-    return new TriggerListAdapterPresenterImpl(interactor, mainScheduler, ioScheduler);
+    return new TriggerListAdapterPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @ActivityScope @Provides TriggerListAdapterInteractor provideTriggerListAdapterInteractor(
