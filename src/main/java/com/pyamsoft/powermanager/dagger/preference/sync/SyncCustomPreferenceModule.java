@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class SyncCustomPreferenceModule {
 
-  @ActivityScope @Provides @Named("sync_custom_delay")
+  @Provides @Named("sync_custom_delay")
   CustomTimeInputPreferencePresenter provideSyncCustomDelayPresenter(
       @NonNull @Named("sync_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -36,13 +35,13 @@ import rx.Scheduler;
     return new SyncDelayPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("sync_custom_delay_interactor")
+  @Provides @Named("sync_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new SyncDelayPreferenceInteractor(preferences);
   }
 
-  @ActivityScope @Provides @Named("sync_custom_enable")
+  @Provides @Named("sync_custom_enable")
   CustomTimeInputPreferencePresenter provideSyncCustomEnablePresenter(
       @NonNull @Named("sync_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -50,13 +49,13 @@ import rx.Scheduler;
     return new SyncEnableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("sync_custom_enable_interactor")
+  @Provides @Named("sync_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new SyncEnableTimePreferenceInteractor(preferences);
   }
 
-  @ActivityScope @Provides @Named("sync_custom_disable")
+  @Provides @Named("sync_custom_disable")
   CustomTimeInputPreferencePresenter provideSyncCustomDisablePresenter(
       @NonNull @Named("sync_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -64,7 +63,7 @@ import rx.Scheduler;
     return new SyncDisableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("sync_custom_disable_interactor")
+  @Provides @Named("sync_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new SyncDisableTimePreferenceInteractor(preferences);

@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.wifi;
 
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,8 +25,7 @@ import rx.Scheduler;
 
 @Module public class WifiOverviewModule {
 
-  @ActivityScope @Provides @Named("wifi_overview")
-  BaseOverviewPagerPresenter provideWifiOverviewPagerPresenter(
+  @Provides @Named("wifi_overview") BaseOverviewPagerPresenter provideWifiOverviewPagerPresenter(
       @Named("mod_wifi_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new WifiOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);

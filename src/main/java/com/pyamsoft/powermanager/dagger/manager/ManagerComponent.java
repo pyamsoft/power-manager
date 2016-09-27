@@ -17,10 +17,9 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
+@Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);
 }

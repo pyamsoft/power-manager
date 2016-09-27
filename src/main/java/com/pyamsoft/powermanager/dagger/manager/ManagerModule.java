@@ -22,7 +22,6 @@ import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -30,13 +29,13 @@ import rx.Scheduler;
 
 @Module public class ManagerModule {
 
-  @ActivityScope @Provides @Named("wifi_manager") Manager provideManagerWifi(
+  @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerWifi(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("wifi_manager_interactor")
+  @Provides @Named("wifi_manager_interactor")
   WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
@@ -47,27 +46,26 @@ import rx.Scheduler;
         wearManageObserver, wearStateObserver);
   }
 
-  @ActivityScope @Provides @Named("data_manager") Manager provideManagerData(
+  @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerData(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("data_manager_interactor")
-  ManagerInteractor provideManagerDataInteractor(@NonNull JobSchedulerCompat jobManager,
-      @NonNull PowerManagerPreferences preferences,
+  @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
+      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("obs_data_state") BooleanInterestObserver stateObserver) {
     return new ManagerDataInteractor(jobManager, preferences, manageObserver, stateObserver);
   }
 
-  @ActivityScope @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
+  @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerBluetooth(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("bluetooth_manager_interactor")
+  @Provides @Named("bluetooth_manager_interactor")
   WearAwareManagerInteractor provideManagerBluetoothInteractor(
       @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver,
@@ -78,27 +76,26 @@ import rx.Scheduler;
         wearManageObserver, wearStateObserver);
   }
 
-  @ActivityScope @Provides @Named("sync_manager") Manager provideManagerSync(
+  @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerSync(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("sync_manager_interactor")
-  ManagerInteractor provideManagerSyncInteractor(@NonNull JobSchedulerCompat jobManager,
-      @NonNull PowerManagerPreferences preferences,
+  @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
+      @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
       @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
     return new ManagerSyncInteractor(jobManager, preferences, manageObserver, stateObserver);
   }
 
-  @ActivityScope @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
+  @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ExclusiveManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerDoze(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides @Named("doze_manager_interactor")
+  @Provides @Named("doze_manager_interactor")
   ExclusiveManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobSchedulerCompat jobManager,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,

@@ -18,10 +18,9 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenterLoader;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = { TriggerListAdapterModule.class, TriggerModule.class })
+@Subcomponent(modules = { TriggerListAdapterModule.class, TriggerModule.class })
 public interface TriggerComponent {
 
   void inject(TriggerPresenterLoader loader);

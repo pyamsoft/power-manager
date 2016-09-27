@@ -18,10 +18,9 @@ package com.pyamsoft.powermanager.dagger.overview;
 
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
+@Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
 
   void inject(OverviewFragment fragment);
 

@@ -20,10 +20,9 @@ import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothManagePresenterLoader;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothOverviewPresenterLoader;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothPeriodPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     BluetoothOverviewModule.class, BluetoothManagePreferenceModule.class,
     BluetoothPeriodPreferenceModule.class
 }) public interface BluetoothScreenComponent {

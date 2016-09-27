@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class SyncManagePreferenceModule {
 
-  @ActivityScope @Provides @Named("sync_manage_pref")
+  @Provides @Named("sync_manage_pref")
   BaseManagePreferencePresenter provideSyncManagePreferencePresenter(
       @Named("sync_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -37,7 +36,7 @@ import rx.Scheduler;
         manageObserver);
   }
 
-  @ActivityScope @Provides @Named("sync_manage_pref_interactor")
+  @Provides @Named("sync_manage_pref_interactor")
   BaseManagePreferenceInteractor provideSyncManagePreferenceInteractor(
       @Named("mod_sync_manage") BooleanInterestModifier manageModifier) {
     return new SyncManagePreferenceInteractorImpl(manageModifier);

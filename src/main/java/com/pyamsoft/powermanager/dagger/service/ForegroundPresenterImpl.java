@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -34,8 +34,7 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
   @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
-      @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("io") Scheduler subScheduler) {
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }

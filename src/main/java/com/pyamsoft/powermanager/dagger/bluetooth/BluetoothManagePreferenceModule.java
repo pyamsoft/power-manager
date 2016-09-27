@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class BluetoothManagePreferenceModule {
 
-  @ActivityScope @Provides @Named("bluetooth_manage_pref")
+  @Provides @Named("bluetooth_manage_pref")
   BaseManagePreferencePresenter provideBluetoothManagePreferencePresenter(
       @Named("bluetooth_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -37,7 +36,7 @@ import rx.Scheduler;
         manageObserver);
   }
 
-  @ActivityScope @Provides @Named("bluetooth_manage_pref_interactor")
+  @Provides @Named("bluetooth_manage_pref_interactor")
   BaseManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
       @Named("mod_bluetooth_manage") BooleanInterestModifier manageModifier) {
     return new BluetoothManagePreferenceInteractorImpl(manageModifier);

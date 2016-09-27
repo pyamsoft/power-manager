@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.overview;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.overview.OverviewPresenter;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Scheduler;

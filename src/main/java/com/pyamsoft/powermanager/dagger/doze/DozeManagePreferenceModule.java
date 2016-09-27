@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class DozeManagePreferenceModule {
 
-  @ActivityScope @Provides @Named("doze_manage_pref")
+  @Provides @Named("doze_manage_pref")
   BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
       @Named("doze_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -37,7 +36,7 @@ import rx.Scheduler;
         manageObserver);
   }
 
-  @ActivityScope @Provides @Named("doze_manage_pref_interactor")
+  @Provides @Named("doze_manage_pref_interactor")
   BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
       @Named("mod_doze_manage") BooleanInterestModifier manageModifier) {
     return new DozeManagePreferenceInteractorImpl(manageModifier);

@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -27,14 +26,13 @@ import rx.Scheduler;
 
 @Module public class TriggerListAdapterModule {
 
-  @ActivityScope @Provides TriggerListAdapterPresenter provideTriggerListAdapterPresenter(
-      @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides TriggerListAdapterPresenter provideTriggerListAdapterPresenter(
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull TriggerListAdapterInteractor interactor) {
     return new TriggerListAdapterPresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
-  @ActivityScope @Provides TriggerListAdapterInteractor provideTriggerListAdapterInteractor(
+  @Provides TriggerListAdapterInteractor provideTriggerListAdapterInteractor(
       PowerTriggerDB powerTriggerDB) {
     return new TriggerListAdapterInteractorImpl(powerTriggerDB);
   }

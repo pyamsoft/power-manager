@@ -34,11 +34,11 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.widget.DividerItemDecoration;
-import rx.Subscription;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
@@ -152,7 +152,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   }
 
   private void setupFab() {
-    final Subscription subscription = AsyncDrawable.with(getContext())
+    final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
         .into(floatingActionButton);

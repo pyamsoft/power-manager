@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.sync;
 
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,8 +25,7 @@ import rx.Scheduler;
 
 @Module public class SyncOverviewModule {
 
-  @ActivityScope @Provides @Named("sync_overview")
-  BaseOverviewPagerPresenter provideSyncOverviewPagerPresenter(
+  @Provides @Named("sync_overview") BaseOverviewPagerPresenter provideSyncOverviewPagerPresenter(
       @Named("mod_sync_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new SyncOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);

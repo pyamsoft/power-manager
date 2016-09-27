@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanager.dagger.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class WifiCustomPreferenceModule {
 
-  @ActivityScope @Provides @Named("wifi_custom_delay")
+  @Provides @Named("wifi_custom_delay")
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(
       @NonNull @Named("wifi_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -36,13 +35,13 @@ import rx.Scheduler;
     return new WifiDelayPreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
-  @ActivityScope @Provides @Named("wifi_custom_delay_interactor")
+  @Provides @Named("wifi_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new WifiDelayPreferenceInteractor(preferences);
   }
 
-  @ActivityScope @Provides @Named("wifi_custom_enable")
+  @Provides @Named("wifi_custom_enable")
   CustomTimeInputPreferencePresenter provideWifiCustomEnablePresenter(
       @NonNull @Named("wifi_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -50,13 +49,13 @@ import rx.Scheduler;
     return new WifiEnableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
-  @ActivityScope @Provides @Named("wifi_custom_enable_interactor")
+  @Provides @Named("wifi_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new WifiEnableTimePreferenceInteractor(preferences);
   }
 
-  @ActivityScope @Provides @Named("wifi_custom_disable")
+  @Provides @Named("wifi_custom_disable")
   CustomTimeInputPreferencePresenter provideWifiCustomDisablePresenter(
       @NonNull @Named("wifi_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
@@ -64,7 +63,7 @@ import rx.Scheduler;
     return new WifiDisableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
-  @ActivityScope @Provides @Named("wifi_custom_disable_interactor")
+  @Provides @Named("wifi_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new WifiDisableTimePreferenceInteractor(preferences);

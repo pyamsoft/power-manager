@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.data;
 
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,8 +25,7 @@ import rx.Scheduler;
 
 @Module public class DataOverviewModule {
 
-  @ActivityScope @Provides @Named("data_overview")
-  BaseOverviewPagerPresenter provideDataOverviewPagerPresenter(
+  @Provides @Named("data_overview") BaseOverviewPagerPresenter provideDataOverviewPagerPresenter(
       @Named("mod_data_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new DataOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);

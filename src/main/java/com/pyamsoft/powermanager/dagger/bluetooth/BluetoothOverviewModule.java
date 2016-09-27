@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.bluetooth;
 
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -26,7 +25,7 @@ import rx.Scheduler;
 
 @Module public class BluetoothOverviewModule {
 
-  @ActivityScope @Provides @Named("bluetooth_overview")
+  @Provides @Named("bluetooth_overview")
   BaseOverviewPagerPresenter provideBluetoothOverviewPagerPresenter(
       @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {

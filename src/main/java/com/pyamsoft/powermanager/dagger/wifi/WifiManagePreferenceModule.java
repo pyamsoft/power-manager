@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class WifiManagePreferenceModule {
 
-  @ActivityScope @Provides @Named("wifi_manage_pref")
+  @Provides @Named("wifi_manage_pref")
   BaseManagePreferencePresenter provideWifiManagePreferencePresenter(
       @Named("wifi_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -37,7 +36,7 @@ import rx.Scheduler;
         manageObserver);
   }
 
-  @ActivityScope @Provides @Named("wifi_manage_pref_interactor")
+  @Provides @Named("wifi_manage_pref_interactor")
   BaseManagePreferenceInteractor provideWifiManagePreferenceInteractor(
       @Named("mod_wifi_manage") BooleanInterestModifier manageModifier) {
     return new WifiManagePreferenceInteractorImpl(manageModifier);

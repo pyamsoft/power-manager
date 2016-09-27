@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent public interface JobComponent {
+@Subcomponent public interface JobComponent {
 
   void inject(WifiManageJob.EnableJob job);
 

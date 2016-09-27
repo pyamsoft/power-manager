@@ -20,7 +20,6 @@ import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractor;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,7 +27,7 @@ import rx.Scheduler;
 
 @Module public class DataPeriodPreferenceModule {
 
-  @ActivityScope @Provides @Named("data_period_pref")
+  @Provides @Named("data_period_pref")
   BasePeriodPreferencePresenter provideDataManagePreferencePresenter(
       @Named("data_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -37,7 +36,7 @@ import rx.Scheduler;
         periodicObserver);
   }
 
-  @ActivityScope @Provides @Named("data_period_pref_interactor")
+  @Provides @Named("data_period_pref_interactor")
   BasePeriodPreferenceInteractor provideDataManagePreferenceInteractor(
       @Named("mod_data_periodic") BooleanInterestModifier periodicModifier) {
     return new DataPeriodPreferenceInteractorImpl(periodicModifier);

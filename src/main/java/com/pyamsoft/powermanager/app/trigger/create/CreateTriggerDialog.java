@@ -31,8 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
-import rx.Subscription;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
@@ -139,7 +139,7 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final Subscription continueTask = AsyncDrawable.with(getContext())
+    final AsyncMap.Entry continueTask = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_arrow_forward_24dp)
         .into(continueButton);
     taskMap.put("continue", continueTask);
@@ -156,11 +156,11 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final Subscription backTask =
+    final AsyncMap.Entry backTask =
         AsyncDrawable.with(getContext()).load(R.drawable.ic_arrow_back_24dp).into(backButton);
     taskMap.put("back", backTask);
 
-    final Subscription closeTask =
+    final AsyncMap.Entry closeTask =
         AsyncDrawable.with(getContext()).load(R.drawable.ic_close_24dp).into(closeButton);
     taskMap.put("close", closeTask);
   }

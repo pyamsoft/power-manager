@@ -20,10 +20,9 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.sync.SyncManagePresenterLoader;
 import com.pyamsoft.powermanager.app.sync.SyncOverviewPresenterLoader;
 import com.pyamsoft.powermanager.app.sync.SyncPeriodPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     SyncOverviewModule.class, SyncManagePreferenceModule.class, SyncPeriodPreferenceModule.class
 }) public interface SyncScreenComponent {
 

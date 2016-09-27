@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.bus;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.event.DeleteTriggerEvent;
-import com.pyamsoft.pydroid.bus.RxBus;
+import com.pyamsoft.pydroidrx.RxBus;
 
 public class DeleteTriggerBus extends RxBus<DeleteTriggerEvent> {
 

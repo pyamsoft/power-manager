@@ -123,13 +123,14 @@ dependencies {
 
   // Auto value
   provided "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor"com.google.auto.value:auto-value:$autoValue"
+  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
 
   // Dagger2
-  annotationProcessor"com.google.dagger:dagger-compiler:$dagger"
+  compile "com.google.dagger:dagger:$dagger"
+  annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   // Butterknife
-  annotationProcessor"com.jakewharton:butterknife-compiler:$butterknife"
+  annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife"
 
   // Android Framework Testing
   androidTestCompile "com.android.support:support-annotations:$supportLib"
@@ -146,9 +147,9 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  // PYDroid 4.4.2
-  debugCompile project(path: ":PYDroid", configuration: "debug")
-  releaseCompile project(path: ":PYDroid", configuration: "release")
+  // PYDroid 4.5.0
+  debugCompile project(path: ":PYDroidRX", configuration: "debug")
+  releaseCompile project(path: ":PYDroidRX", configuration: "release")
 }
 
 // AdView

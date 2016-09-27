@@ -20,10 +20,9 @@ import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiManagePresenterLoader;
 import com.pyamsoft.powermanager.app.wifi.WifiOverviewPresenterLoader;
 import com.pyamsoft.powermanager.app.wifi.WifiPeriodPresenterLoader;
-import com.pyamsoft.pydroid.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     WifiOverviewModule.class, WifiManagePreferenceModule.class, WifiPeriodPreferenceModule.class
 }) public interface WifiScreenComponent {
 

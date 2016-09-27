@@ -44,9 +44,9 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import java.util.List;
-import rx.Subscription;
 
 class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
@@ -128,7 +128,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     holder.root.setOnClickListener(
         view -> getItemClickListener().onItemClicked(getTitle(), fragment));
 
-    final Subscription task = AsyncDrawable.with(holder.itemView.getContext())
+    final AsyncMap.Entry task = AsyncDrawable.with(holder.itemView.getContext())
         .load(image)
         .tint(android.R.color.white)
         .into(holder.image);

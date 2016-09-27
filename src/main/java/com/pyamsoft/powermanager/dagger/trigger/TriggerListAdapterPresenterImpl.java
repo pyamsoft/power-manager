@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;

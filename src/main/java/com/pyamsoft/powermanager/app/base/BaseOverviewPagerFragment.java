@@ -37,10 +37,10 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import rx.Subscription;
 
 public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     implements BaseOverviewPagerPresenter.View {
@@ -210,7 +210,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   }
 
   private void loadDrawableIntoFab(@DrawableRes int fabIcon) {
-    final Subscription subscription =
+    final AsyncMap.Entry subscription =
         AsyncDrawable.with(getContext()).load(fabIcon).tint(android.R.color.white).into(fab);
     asyncDrawableMap.put("fab", subscription);
   }
