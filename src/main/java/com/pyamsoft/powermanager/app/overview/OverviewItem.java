@@ -168,7 +168,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     }
   }
 
-  protected static class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final Unbinder unbinder;
     @BindView(R.id.adapter_item_overview_root) FrameLayout root;

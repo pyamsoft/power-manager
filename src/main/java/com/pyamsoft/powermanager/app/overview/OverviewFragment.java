@@ -29,7 +29,8 @@ import android.view.ViewGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import com.getkeepsafe.taptargetview.TapTargetView;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
@@ -64,6 +65,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   private FastItemAdapter<OverviewItem> adapter;
   private Unbinder unbinder;
   private long loadedKey;
+  private TapTargetSequence sequence;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -173,27 +175,35 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   @Override public void showOnBoarding() {
     Timber.d("Show onboarding");
+
     // If we use the first item we get a weird location, try a different item
-    final View tapTargetView = recyclerView.findViewHolderForAdapterPosition(1).itemView;
-    if (tapTargetView != null) {
-      new TapTargetView.Builder(getActivity()).title("Look here")
-          .description("Wow so cool")
-          .tintTarget(false)
-          .drawShadow(true)
-          .listener(new TapTargetView.Listener() {
-            @Override public void onTargetClick(TapTargetView view) {
-              view.dismiss(true);
+    final OverviewItem.ViewHolder tapTargetView =
+        (OverviewItem.ViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+    final TapTarget fabTarget = TapTarget.forView(tapTargetView.itemView, "Look here", "How cool")
+        .tintTarget(false)
+        .cancelable(false);
+
+    final TapTarget manageTarget =
+        TapTarget.forView(tapTargetView.title, "Managed state", "Checked means managed")
+            .tintTarget(false)
+            .cancelable(false);
+
+    // Hold a ref to the sequence or Activity will recycle bitmaps and crash
+    if (sequence == null) {
+      sequence = new TapTargetSequence(getActivity()).targets(fabTarget, manageTarget)
+          .listener(new TapTargetSequence.Listener() {
+            @Override public void onSequenceFinish() {
               if (presenter != null) {
                 presenter.setShownOnBoarding();
               }
             }
 
-            @Override public void onTargetLongClick(TapTargetView view) {
+            @Override public void onSequenceCanceled() {
 
             }
-          })
-          .cancelable(false)
-          .showFor(tapTargetView);
+          });
     }
+
+    sequence.start();
   }
 }
