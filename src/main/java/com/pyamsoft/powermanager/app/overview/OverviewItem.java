@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.overview;
 
 import android.content.res.ColorStateList;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -26,12 +27,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckedTextView;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
@@ -44,6 +39,7 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
+import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import java.util.List;
@@ -116,32 +112,32 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     holder.itemView.setBackgroundColor(
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
-    holder.title.setText(title);
-    holder.title.setCheckMarkTintList(ColorStateList.valueOf(
+    holder.binding.adapterItemOverviewTitle.setText(title);
+    holder.binding.adapterItemOverviewTitle.setCheckMarkTintList(ColorStateList.valueOf(
         ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white)));
     if (observer != null) {
-      holder.title.setChecked(observer.is());
+      holder.binding.adapterItemOverviewTitle.setChecked(observer.is());
     } else {
-      holder.title.setCheckMarkDrawable(null);
+      holder.binding.adapterItemOverviewTitle.setCheckMarkDrawable(null);
     }
 
-    holder.root.setOnClickListener(
+    holder.binding.adapterItemOverviewRoot.setOnClickListener(
         view -> getItemClickListener().onItemClicked(getTitle(), fragment));
 
     final AsyncMap.Entry task = AsyncDrawable.with(holder.itemView.getContext())
         .load(image)
         .tint(android.R.color.white)
-        .into(holder.image);
+        .into(holder.binding.adapterItemOverviewImage);
     taskMap.put(title, task);
   }
 
   private void recycleOld(ViewHolder holder) {
     taskMap.clear();
-    holder.root.setOnClickListener(null);
-    holder.image.setImageDrawable(null);
-    holder.image.setOnClickListener(null);
-    holder.title.setText(null);
-    holder.title.setOnClickListener(null);
+    holder.binding.adapterItemOverviewRoot.setOnClickListener(null);
+    holder.binding.adapterItemOverviewImage.setImageDrawable(null);
+    holder.binding.adapterItemOverviewImage.setOnClickListener(null);
+    holder.binding.adapterItemOverviewTitle.setText(null);
+    holder.binding.adapterItemOverviewTitle.setOnClickListener(null);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ItemClickListener getItemClickListener() {
@@ -170,14 +166,11 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final Unbinder unbinder;
-    @BindView(R.id.adapter_item_overview_root) FrameLayout root;
-    @BindView(R.id.adapter_item_overview_image) ImageView image;
-    @BindView(R.id.adapter_item_overview_title) CheckedTextView title;
+    @NonNull final AdapterItemOverviewBinding binding;
 
     public ViewHolder(View itemView) {
       super(itemView);
-      unbinder = ButterKnife.bind(this, itemView);
+      binding = DataBindingUtil.bind(itemView);
     }
   }
 }

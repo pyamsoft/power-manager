@@ -20,50 +20,34 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.util.AppUtil;
+import java.util.List;
 import timber.log.Timber;
 
-class PowerTriggerListAdapter extends RecyclerView.Adapter<PowerTriggerListAdapter.ViewHolder>
-    implements TriggerListAdapterPresenter.TriggerListAdapterView {
+class PowerTriggerListItem
+    extends AbstractItem<PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
 
   @NonNull final TriggerListAdapterPresenter presenter;
   @NonNull final Fragment fragment;
+  @NonNull final PowerTriggerEntry entry;
 
-  PowerTriggerListAdapter(@NonNull Fragment fragment,
-      @NonNull TriggerListAdapterPresenter presenter) {
+  PowerTriggerListItem(@NonNull Fragment fragment, @NonNull TriggerListAdapterPresenter presenter,
+      @NonNull PowerTriggerEntry entry) {
     this.fragment = fragment;
     this.presenter = presenter;
+    this.entry = entry;
   }
 
-  public void onCreate() {
-    presenter.bindView(this);
-  }
-
-  public void onDestroy() {
-    presenter.unbindView();
-  }
-
-  @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    final View view = LayoutInflater.from(parent.getContext())
-        .inflate(R.layout.adapter_item_trigger, parent, false);
-    return new ViewHolder(view);
-  }
-
-  @Override public int getItemCount() {
-    final int size = presenter.size();
-    Timber.d("List size: %d", size);
-    return size;
-  }
-
-  @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    final PowerTriggerEntry entry = presenter.get(position);
+  @Override public void bindView(ViewHolder holder, List payloads) {
+    super.bindView(holder, payloads);
+    holder.binding.triggerName.setText(null);
+    holder.itemView.setOnLongClickListener(null);
     holder.binding.triggerName.setText(entry.name());
 
     // Set up delete onLongClick
@@ -86,35 +70,19 @@ class PowerTriggerListAdapter extends RecyclerView.Adapter<PowerTriggerListAdapt
             compoundButton.setOnCheckedChangeListener(this);
 
             Timber.d("Toggle enabled: %s", b);
-            presenter.toggleEnabledState(holder.getAdapterPosition(),
-                presenter.get(holder.getAdapterPosition()), b);
+            presenter.toggleEnabledState(holder.getAdapterPosition(), entry, b);
           }
         };
 
     holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
   }
 
-  @Override public void onViewRecycled(ViewHolder holder) {
-    super.onViewRecycled(holder);
-    holder.binding.triggerName.setText(null);
-    holder.itemView.setOnLongClickListener(null);
+  @Override public int getType() {
+    return R.id.adapter_trigger_item;
   }
 
-  @Override public void updateViewHolder(int position) {
-    Timber.d("Update view holder at %d", position);
-    notifyItemChanged(position);
-  }
-
-  void onAddTriggerForPercent(int percent) {
-    Timber.d("Insert new item for percent: %d", percent);
-    final int position = presenter.getPositionForPercent(percent);
-    Timber.d("Insert new item at: %d", position);
-    notifyItemInserted(position);
-  }
-
-  void onDeleteTriggerAtPosition(int position) {
-    Timber.d("Delete item at position: %d", position);
-    notifyItemRemoved(position);
+  @Override public int getLayoutRes() {
+    return R.layout.adapter_item_trigger;
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

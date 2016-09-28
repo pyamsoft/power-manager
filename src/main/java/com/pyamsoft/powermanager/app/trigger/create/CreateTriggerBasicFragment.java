@@ -16,49 +16,44 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.databinding.FragmentTriggerBasicBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
 public class CreateTriggerBasicFragment extends Fragment {
 
-  @BindView(R.id.create_trigger_basic_name_layout) TextInputLayout nameLayout;
-  @BindView(R.id.create_trigger_basic_percent_layout) TextInputLayout percentLayout;
-  private Unbinder unbinder;
+  private FragmentTriggerBasicBinding binding;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_trigger_basic, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trigger_basic, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @CheckResult @NonNull public final String getTriggerName() {
     String name;
-    if (nameLayout == null) {
+    if (binding.createTriggerBasicNameLayout == null) {
       Timber.e("Name layout is empty!");
       name = PowerTriggerEntry.EMPTY_NAME;
     } else {
-      final EditText editText = nameLayout.getEditText();
+      final EditText editText = binding.createTriggerBasicNameLayout.getEditText();
       if (editText == null || editText.getText().toString().isEmpty()) {
         Timber.e("Name edit is empty!");
         name = PowerTriggerEntry.EMPTY_NAME;
@@ -72,11 +67,11 @@ public class CreateTriggerBasicFragment extends Fragment {
 
   @CheckResult public final int getTriggerPercent() {
     int percent;
-    if (percentLayout == null) {
+    if (binding.createTriggerBasicPercentLayout == null) {
       Timber.e("Percent layout is empty!");
       percent = PowerTriggerEntry.EMPTY_PERCENT;
     } else {
-      final EditText editText = percentLayout.getEditText();
+      final EditText editText = binding.createTriggerBasicPercentLayout.getEditText();
       if (editText == null) {
         Timber.e("Percent edit is empty!");
         percent = PowerTriggerEntry.EMPTY_PERCENT;

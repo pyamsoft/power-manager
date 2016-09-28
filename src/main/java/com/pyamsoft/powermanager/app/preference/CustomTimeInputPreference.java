@@ -17,32 +17,26 @@
 package com.pyamsoft.powermanager.app.preference;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends Preference
     implements CustomTimeInputPreferencePresenter.View {
 
-  @NonNull final CustomTimeInputPreferencePresenter presenter;
-  @BindView(R.id.preference_custom_time_summary) TextView summary;
-  @BindView(R.id.preference_custom_time_input) TextInputLayout textInputLayout;
+  @SuppressWarnings("WeakerAccess") @NonNull final CustomTimeInputPreferencePresenter presenter;
   private TextWatcher watcher;
   private EditText editText;
-  @Nullable private Unbinder unbinder;
+  private PreferenceCustomTimeInputBinding binding;
 
   public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -92,7 +86,7 @@ public abstract class CustomTimeInputPreference extends Preference
     unbind(false);
 
     holder.itemView.setClickable(false);
-    unbinder = ButterKnife.bind(this, holder.itemView);
+    binding = DataBindingUtil.bind(holder.itemView);
 
     watcher = new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,7 +104,7 @@ public abstract class CustomTimeInputPreference extends Preference
       }
     };
 
-    editText = textInputLayout.getEditText();
+    editText = binding.preferenceCustomTimeInput.getEditText();
     if (editText != null) {
       Timber.d("Add text watcher");
       editText.addTextChangedListener(watcher);
@@ -129,7 +123,7 @@ public abstract class CustomTimeInputPreference extends Preference
   }
 
   private void unbind(boolean finalSave) {
-    if (unbinder == null) {
+    if (binding == null) {
       Timber.w(
           "onBindViewHolder was never called for this preference. Maybe it never came into view?");
     } else {
@@ -145,22 +139,22 @@ public abstract class CustomTimeInputPreference extends Preference
         }
       }
 
-      unbinder.unbind();
+      binding.unbind();
     }
   }
 
   @Override public void onCustomTimeUpdate(long time) {
-    if (unbinder != null) {
+    if (binding != null) {
       Timber.d("Custom time updated to: %d", time);
       if (watcher != null) {
         Timber.d("Remove text watcher");
         editText.removeTextChangedListener(watcher);
       }
 
-      textInputLayout.setErrorEnabled(false);
+      binding.preferenceCustomTimeInput.setErrorEnabled(false);
       editText.setText(String.valueOf(time));
       editText.setSelection(editText.getText().length());
-      summary.setText(formatSummaryStringForTime(time));
+      binding.preferenceCustomTimeSummary.setText(formatSummaryStringForTime(time));
 
       if (watcher != null) {
         Timber.d("Add text watcher");

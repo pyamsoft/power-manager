@@ -17,4 +17,5 @@
 
 <resources>
   <item name="adapter_overview_item" type="id"/>
+  <item name="adapter_trigger_item" type="id"/>
 </resources>

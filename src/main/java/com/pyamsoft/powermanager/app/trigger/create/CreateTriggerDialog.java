@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.trigger.create;
 
 import android.app.Dialog;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,11 +27,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
 import timber.log.Timber;
@@ -39,36 +37,35 @@ public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
   @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
-  @BindView(R.id.new_trigger_back) ImageView backButton;
-  @BindView(R.id.new_trigger_close) ImageView closeButton;
-  @BindView(R.id.new_trigger_continue) ImageView continueButton;
-  @BindView(R.id.new_trigger_pager) ViewPager viewPager;
+  @SuppressWarnings("WeakerAccess") DialogNewTriggerBinding binding;
   private CreateTriggerPagerAdapter adapter;
-  private Unbinder unbinder;
   private ViewPager.OnPageChangeListener pageChangeListener;
 
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    dialog.getWindow()
-        .setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+    final Window window = dialog.getWindow();
+    if (window != null) {
+      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
     return dialog;
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.dialog_new_trigger, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.dialog_new_trigger, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
     taskMap.clear();
 
-    viewPager.removeOnPageChangeListener(pageChangeListener);
-    unbinder.unbind();
+    binding.newTriggerPager.removeOnPageChangeListener(pageChangeListener);
+    binding.unbind();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -89,10 +86,10 @@ public class CreateTriggerDialog extends DialogFragment {
         Timber.d("Page selected: %d", position);
         if (position == 0) {
           Timber.d("Hide back button");
-          backButton.setVisibility(View.GONE);
+          binding.newTriggerBack.setVisibility(View.GONE);
         } else {
           Timber.d("Show back button");
-          backButton.setVisibility(View.VISIBLE);
+          binding.newTriggerBack.setVisibility(View.VISIBLE);
         }
       }
 
@@ -100,14 +97,14 @@ public class CreateTriggerDialog extends DialogFragment {
 
       }
     };
-    viewPager.addOnPageChangeListener(pageChangeListener);
+    binding.newTriggerPager.addOnPageChangeListener(pageChangeListener);
 
     // Hold all the pages in memory so we can retrieve their content
-    viewPager.setOffscreenPageLimit(4);
+    binding.newTriggerPager.setOffscreenPageLimit(4);
 
     // KLUDGE Child fragments are ugly.
     adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
-    viewPager.setAdapter(adapter);
+    binding.newTriggerPager.setAdapter(adapter);
 
     int currentPage;
     if (bundle == null) {
@@ -118,55 +115,57 @@ public class CreateTriggerDialog extends DialogFragment {
     if (currentPage == 0) {
       // Hide the back button at first
       Timber.d("Show first page");
-      backButton.setVisibility(View.GONE);
+      binding.newTriggerBack.setVisibility(View.GONE);
     } else {
       Timber.d("Show saved page: %d", currentPage);
-      backButton.setVisibility(View.VISIBLE);
-      viewPager.setCurrentItem(currentPage);
+      binding.newTriggerBack.setVisibility(View.VISIBLE);
+      binding.newTriggerPager.setCurrentItem(currentPage);
     }
   }
 
   private void setupContinueButton() {
-    continueButton.setOnClickListener(view -> {
-      final int currentItem = viewPager.getCurrentItem();
+    binding.newTriggerContinue.setOnClickListener(view -> {
+      final int currentItem = binding.newTriggerPager.getCurrentItem();
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
         Timber.d("Final item continue clicked, process dialog and close");
         dismiss();
-        adapter.collect(viewPager);
+        adapter.collect(binding.newTriggerPager);
       } else {
         Timber.d("Continue clicked, progress 1 item");
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+        binding.newTriggerPager.setCurrentItem(binding.newTriggerPager.getCurrentItem() + 1);
       }
     });
 
     final AsyncMap.Entry continueTask = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_arrow_forward_24dp)
-        .into(continueButton);
+        .into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
   }
 
   private void setupToolbarButtons() {
-    backButton.setOnClickListener(view -> {
+    binding.newTriggerBack.setOnClickListener(view -> {
       Timber.d("Go back one item");
-      viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+      binding.newTriggerPager.setCurrentItem(binding.newTriggerPager.getCurrentItem() - 1);
     });
 
-    closeButton.setOnClickListener(view -> {
+    binding.newTriggerClose.setOnClickListener(view -> {
       Timber.d("Close clicked, dismiss dialog");
       dismiss();
     });
 
-    final AsyncMap.Entry backTask =
-        AsyncDrawable.with(getContext()).load(R.drawable.ic_arrow_back_24dp).into(backButton);
+    final AsyncMap.Entry backTask = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_arrow_back_24dp)
+        .into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
-    final AsyncMap.Entry closeTask =
-        AsyncDrawable.with(getContext()).load(R.drawable.ic_close_24dp).into(closeButton);
+    final AsyncMap.Entry closeTask = AsyncDrawable.with(getContext())
+        .load(R.drawable.ic_close_24dp)
+        .into(binding.newTriggerClose);
     taskMap.put("close", closeTask);
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    outState.putInt(CURRENT_PAGE, viewPager.getCurrentItem());
+    outState.putInt(CURRENT_PAGE, binding.newTriggerPager.getCurrentItem());
     super.onSaveInstanceState(outState);
   }
 }

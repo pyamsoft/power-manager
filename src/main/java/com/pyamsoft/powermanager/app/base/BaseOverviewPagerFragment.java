@@ -16,26 +16,23 @@
 
 package com.pyamsoft.powermanager.app.base;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AsyncDrawable;
@@ -50,12 +47,10 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   @NonNull private static final String FAB_TAG = "fab_tag";
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @NonNull private final AsyncDrawable.Mapper asyncDrawableMap = new AsyncDrawable.Mapper();
-  @BindView(R.id.preference_container_fab) FloatingActionButton fab;
-  @BindView(R.id.preference_container_pager) ViewPager pager;
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") BaseOverviewPagerPresenter presenter;
   private TabLayout tabLayout;
-  private Unbinder unbinder;
+  private FragmentPreferenceContainerPagerBinding binding;
   private long loadedKey;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,10 +73,10 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     injectObserverModifier();
-    final View view =
-        inflater.inflate(R.layout.fragment_preference_container_pager, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding =
+        DataBindingUtil.inflate(inflater, R.layout.fragment_preference_container_pager, container,
+            false);
+    return binding.getRoot();
   }
 
   @Override public final void onDestroyView() {
@@ -89,7 +84,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     removeTabLayout();
     setActionBarUpEnabled(false);
     asyncDrawableMap.clear();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -153,7 +148,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
 
   private void addPreferenceFragments() {
     final PagerAdapter adapter = getPagerAdapter();
-    pager.setAdapter(adapter);
+    binding.preferenceContainerPager.setAdapter(adapter);
   }
 
   private void addTabLayoutToAppBar() {
@@ -168,7 +163,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     tabLayout.setTabMode(TabLayout.MODE_FIXED);
 
     addTabLayout(tabLayout);
-    tabLayout.setupWithViewPager(pager);
+    tabLayout.setupWithViewPager(binding.preferenceContainerPager);
   }
 
   private void selectCurrentTab(@Nullable Bundle savedInstanceState) {
@@ -192,7 +187,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
       unsetFab();
     }
 
-    fab.setOnClickListener(view -> {
+    binding.preferenceContainerFab.setOnClickListener(view -> {
       if (observer.is()) {
         presenter.wrapUnset();
       } else {
@@ -210,8 +205,10 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   }
 
   private void loadDrawableIntoFab(@DrawableRes int fabIcon) {
-    final AsyncMap.Entry subscription =
-        AsyncDrawable.with(getContext()).load(fabIcon).tint(android.R.color.white).into(fab);
+    final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
+        .load(fabIcon)
+        .tint(android.R.color.white)
+        .into(binding.preferenceContainerFab);
     asyncDrawableMap.put("fab", subscription);
   }
 

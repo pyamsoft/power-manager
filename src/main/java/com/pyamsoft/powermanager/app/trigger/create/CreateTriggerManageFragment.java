@@ -16,20 +16,17 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.databinding.FragmentTriggerManageBinding;
 import timber.log.Timber;
 
 public class CreateTriggerManageFragment extends Fragment {
@@ -38,12 +35,8 @@ public class CreateTriggerManageFragment extends Fragment {
   public static final int TYPE_BLUETOOTH = 2;
   public static final int TYPE_SYNC = 3;
   @NonNull private static final String FRAGMENT_TYPE = "fragment_type";
-  @BindView(R.id.create_trigger_manage_toggle) SwitchCompat switchToggle;
-  @BindView(R.id.create_trigger_manage_enable) SwitchCompat switchEnable;
-  @BindView(R.id.create_trigger_manage_toggle_explanation) TextView toggleExplain;
-  @BindView(R.id.create_trigger_manage_enable_explanation) TextView enableExplain;
   private int type;
-  private Unbinder unbinder;
+  private FragmentTriggerManageBinding binding;
 
   @CheckResult @NonNull public static CreateTriggerManageFragment newInstance(int type) {
     final Bundle args = new Bundle();
@@ -61,9 +54,8 @@ public class CreateTriggerManageFragment extends Fragment {
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View view = inflater.inflate(R.layout.fragment_trigger_manage, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_trigger_manage, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,43 +89,44 @@ public class CreateTriggerManageFragment extends Fragment {
     String enableExplainChecked = radio + " will be turned on";
     String enableExplainUnchecked = radio + " will be turned off";
 
-    toggleExplain.setText(toggleExplainUnchecked);
-    switchToggle.setText(toggle);
-    switchToggle.setOnCheckedChangeListener((compoundButton, b) -> toggleExplain.setText(
-        b ? toggleExplainChecked : toggleExplainUnchecked));
+    binding.createTriggerManageToggleExplanation.setText(toggleExplainUnchecked);
+    binding.createTriggerManageToggle.setText(toggle);
+    binding.createTriggerManageToggle.setOnCheckedChangeListener(
+        (compoundButton, b) -> binding.createTriggerManageToggleExplanation.setText(
+            b ? toggleExplainChecked : toggleExplainUnchecked));
 
-    enableExplain.setText(enableExplainUnchecked);
-    switchEnable.setText(enable);
-    switchEnable.setOnCheckedChangeListener((compoundButton, b) -> enableExplain.setText(
-        b ? enableExplainChecked : enableExplainUnchecked));
+    binding.createTriggerManageEnableExplanation.setText(enableExplainUnchecked);
+    binding.createTriggerManageEnable.setText(enable);
+    binding.createTriggerManageEnable.setOnCheckedChangeListener(
+        (compoundButton, b) -> binding.createTriggerManageEnableExplanation.setText(
+            b ? enableExplainChecked : enableExplainUnchecked));
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @CheckResult public final boolean getTriggerToggle() {
     boolean toggle;
-    if (switchToggle == null) {
+    if (binding.createTriggerManageToggle == null) {
       Timber.e("Toggle is NULL");
       toggle = false;
     } else {
       Timber.d("Get toggle");
-      toggle = switchToggle.isChecked();
+      toggle = binding.createTriggerManageToggle.isChecked();
     }
     return toggle;
   }
 
   @CheckResult public final boolean getTriggerEnable() {
     boolean enable;
-    if (switchEnable == null) {
+    if (binding.createTriggerManageEnable == null) {
       Timber.e("Enable is NULL");
       enable = false;
     } else {
       Timber.d("Get enable");
-      enable = switchEnable.isChecked();
+      enable = binding.createTriggerManageEnable.isChecked();
     }
     return enable;
   }

@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.app.main;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,17 +27,12 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.MenuItem;
 import android.view.View;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
@@ -47,6 +43,7 @@ import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
+import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.support.DonationActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
@@ -59,9 +56,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
 
-  @BindView(R.id.main_appbar) AppBarLayout appBarLayout;
-  @BindView(R.id.main_toolbar) Toolbar toolbar;
-  private Unbinder unbinder;
+  private ActivityMainBinding binding;
 
   @ColorInt private int oldAppBarColor;
   @ColorInt private int oldStatusBarColor;
@@ -81,7 +76,6 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
-    unbinder = ButterKnife.bind(this);
 
     oldAppBarColor = ContextCompat.getColor(this, R.color.amber500);
     oldStatusBarColor = ContextCompat.getColor(this, R.color.amber700);
@@ -94,7 +88,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   }
 
   @Override protected int bindActivityToView() {
-    setContentView(R.layout.activity_main);
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     return R.id.ad_view;
   }
 
@@ -112,7 +106,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
       removeViewFromAppBar(key);
     }
     addedViewMap.clear();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @Override public void onBackPressed() {
@@ -151,8 +145,8 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
   }
 
   private void setupAppBar() {
-    setSupportActionBar(toolbar);
-    toolbar.setTitle(getString(R.string.app_name));
+    setSupportActionBar(binding.mainToolbar);
+    binding.mainToolbar.setTitle(getString(R.string.app_name));
   }
 
   @CheckResult private boolean hasNoActiveFragment() {
@@ -190,7 +184,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
 
     Timber.d("Add view to map with tag: %s", tag);
     addedViewMap.put(tag, view);
-    appBarLayout.addView(view);
+    binding.mainAppbar.addView(view);
   }
 
   public void removeViewFromAppBar(@NonNull String tag) {
@@ -200,7 +194,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
       if (viewToRemove == null) {
         Timber.e("View to remove was NULL for tag: %s", tag);
       } else {
-        appBarLayout.removeView(viewToRemove);
+        binding.mainAppbar.removeView(viewToRemove);
       }
     } else {
       Timber.e("Viewmap does not contain a view for tag: %s", tag);
@@ -278,7 +272,7 @@ public class MainActivity extends DonationActivity implements RatingDialog.Chang
       final int blended = blendColors(fromColor, toColor, position);
 
       // To color the entire app bar
-      appBarLayout.setBackgroundColor(blended);
+      binding.mainAppbar.setBackgroundColor(blended);
     });
 
     appBarAnimator.setDuration(duration).start();

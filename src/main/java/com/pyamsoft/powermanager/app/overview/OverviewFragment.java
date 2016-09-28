@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,9 +27,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
@@ -43,6 +41,7 @@ import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
+import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -54,7 +53,6 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   @NonNull public static final String TAG = "Overview";
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
-  @BindView(R.id.overview_recycler) RecyclerView recyclerView;
   @Inject @Named("obs_wifi_manage") BooleanInterestObserver wifiManageObserver;
   @Inject @Named("obs_data_manage") BooleanInterestObserver dataManageObserver;
   @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver bluetootManageObserver;
@@ -63,7 +61,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
   OverviewPresenter presenter;
   private FastItemAdapter<OverviewItem> adapter;
-  private Unbinder unbinder;
+  private FragmentOverviewBinding binding;
   private long loadedKey;
   private TapTargetSequence sequence;
 
@@ -85,14 +83,13 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     PowerManager.get(getContext()).provideComponent().plusOverviewComponent().inject(this);
-    final View view = inflater.inflate(R.layout.fragment_overview, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    unbinder.unbind();
+    binding.unbind();
   }
 
   @Override public void onStart() {
@@ -168,9 +165,9 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   private void setupRecyclerView() {
     final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
-    recyclerView.setLayoutManager(layoutManager);
-    recyclerView.setHasFixedSize(true);
-    recyclerView.setAdapter(adapter);
+    binding.overviewRecycler.setLayoutManager(layoutManager);
+    binding.overviewRecycler.setHasFixedSize(true);
+    binding.overviewRecycler.setAdapter(adapter);
   }
 
   @Override public void showOnBoarding() {
@@ -178,14 +175,14 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
     // If we use the first item we get a weird location, try a different item
     final OverviewItem.ViewHolder tapTargetView =
-        (OverviewItem.ViewHolder) recyclerView.findViewHolderForAdapterPosition(1);
+        (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
     final TapTarget fabTarget = TapTarget.forView(tapTargetView.itemView, "Look here", "How cool")
         .tintTarget(false)
         .cancelable(false);
 
     final TapTarget manageTarget =
-        TapTarget.forView(tapTargetView.title, "Managed state", "Checked means managed")
-            .cancelable(false);
+        TapTarget.forView(tapTargetView.binding.adapterItemOverviewTitle, "Managed state",
+            "Checked means managed").cancelable(false);
 
     // Hold a ref to the sequence or Activity will recycle bitmaps and crash
     if (sequence == null) {

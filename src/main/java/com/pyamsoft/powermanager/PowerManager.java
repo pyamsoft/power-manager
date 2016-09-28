@@ -24,18 +24,18 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
+import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.PYDroidApplication;
 import com.pyamsoft.pydroid.about.Licenses;
 
-public class PowerManager extends PYDroidApplication
-    implements IPowerManager<PowerManagerComponent> {
+public class PowerManager extends PYDroidApplication implements IPYDroidApp<PowerManagerComponent> {
 
   private PowerManagerComponent component;
 
   @NonNull @CheckResult
-  public static IPowerManager<PowerManagerComponent> get(@NonNull Context context) {
+  public static IPYDroidApp<PowerManagerComponent> get(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
-    if (appContext instanceof IPowerManager) {
+    if (appContext instanceof PowerManager) {
       return PowerManager.class.cast(appContext);
     } else {
       throw new ClassCastException("Cannot cast Application Context to IPowerManager");

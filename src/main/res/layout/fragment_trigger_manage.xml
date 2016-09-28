@@ -15,50 +15,55 @@
   ~ limitations under the License.
   -->
 
-<ScrollView
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/create_trigger_manage_root_scroll"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     >
 
-  <LinearLayout
-      android:id="@+id/create_trigger_manage_root_view"
+  <ScrollView
+      android:id="@+id/create_trigger_manage_root_scroll"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="8dp"
+      android:layout_height="match_parent"
       >
 
-    <com.pyamsoft.pydroid.widget.NoLeakTextView
-        android:id="@+id/create_trigger_manage_toggle_explanation"
+    <LinearLayout
+        android:id="@+id/create_trigger_manage_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+        android:orientation="vertical"
+        android:padding="8dp"
+        >
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/create_trigger_manage_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
+      <com.pyamsoft.pydroid.widget.NoLeakTextView
+          android:id="@+id/create_trigger_manage_toggle_explanation"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
 
-    <com.pyamsoft.pydroid.widget.NoLeakTextView
-        android:id="@+id/create_trigger_manage_enable_explanation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/create_trigger_manage_toggle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/create_trigger_manage_enable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        />
+      <com.pyamsoft.pydroid.widget.NoLeakTextView
+          android:id="@+id/create_trigger_manage_enable_explanation"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:textAppearance="?android:attr/textAppearanceSmall"
+          />
 
-  </LinearLayout>
+      <android.support.v7.widget.SwitchCompat
+          android:id="@+id/create_trigger_manage_enable"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          />
 
-</ScrollView>
+    </LinearLayout>
+
+  </ScrollView>
+
+</layout>

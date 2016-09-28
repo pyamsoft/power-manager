@@ -16,22 +16,19 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
+import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -49,18 +46,14 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @NonNull private static final String KEY_ADAPTER = "key_trigger_adapter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
 
-  @BindView(R.id.power_trigger_list) RecyclerView recyclerView;
-  @BindView(R.id.power_trigger_empty) FrameLayout emptyView;
-  @BindView(R.id.power_trigger_fab) FloatingActionButton floatingActionButton;
-
   TriggerListAdapterPresenter listAdapterPresenter;
   TriggerPresenter presenter;
 
   PowerTriggerListAdapter adapter;
-  Unbinder unbinder;
   RecyclerView.ItemDecoration dividerDecoration;
   private long loadedPresenterKey;
   private long loadedPresenterAdapterKey;
+  private FragmentPowertriggerBinding binding;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -95,9 +88,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
     dividerDecoration =
         new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
 
-    final View view = inflater.inflate(R.layout.fragment_powertrigger, container, false);
-    unbinder = ButterKnife.bind(this, view);
-    return view;
+    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_powertrigger, container, false);
+    return binding.getRoot();
   }
 
   @Override public void onDestroyView() {
@@ -105,8 +97,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
     setActionBarUpEnabled(false);
 
     drawableMap.clear();
-    recyclerView.removeItemDecoration(dividerDecoration);
-    unbinder.unbind();
+    binding.powerTriggerList.removeItemDecoration(dividerDecoration);
+    binding.unbind();
   }
 
   @Override public void onStart() {
@@ -155,37 +147,37 @@ public class PowerTriggerListFragment extends ActionBarFragment
     final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
         .load(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
-        .into(floatingActionButton);
+        .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);
 
-    floatingActionButton.setOnClickListener(
+    binding.powerTriggerFab.setOnClickListener(
         view -> AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
             new CreateTriggerDialog(), "create_trigger"));
   }
 
   void setupRecyclerView() {
-    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setHasFixedSize(true);
-    recyclerView.addItemDecoration(dividerDecoration);
+    binding.powerTriggerList.setLayoutManager(new LinearLayoutManager(getContext()));
+    binding.powerTriggerList.setHasFixedSize(true);
+    binding.powerTriggerList.addItemDecoration(dividerDecoration);
   }
 
   @Override public void loadEmptyView() {
     Timber.d("Load empty view");
-    recyclerView.setVisibility(View.GONE);
-    recyclerView.setAdapter(null);
-    emptyView.setVisibility(View.VISIBLE);
+    binding.powerTriggerList.setVisibility(View.GONE);
+    binding.powerTriggerList.setAdapter(null);
+    binding.powerTriggerEmpty.setVisibility(View.VISIBLE);
   }
 
   @Override public void loadListView() {
     Timber.d("Load list view");
-    emptyView.setVisibility(View.GONE);
-    recyclerView.setAdapter(adapter);
-    recyclerView.setVisibility(View.VISIBLE);
+    binding.powerTriggerEmpty.setVisibility(View.GONE);
+    binding.powerTriggerList.setAdapter(adapter);
+    binding.powerTriggerList.setVisibility(View.VISIBLE);
   }
 
   @Override public void onNewTriggerAdded(int percent) {
     adapter.onAddTriggerForPercent(percent);
-    if (recyclerView.getAdapter() == null) {
+    if (binding.powerTriggerList.getAdapter() == null) {
       Timber.d("First trigger, show list");
       loadListView();
     }
