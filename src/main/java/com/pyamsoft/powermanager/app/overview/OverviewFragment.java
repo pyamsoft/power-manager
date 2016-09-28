@@ -185,8 +185,11 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
     final TapTarget manageTarget =
         TapTarget.forView(tapTargetView.title, "Managed state", "Checked means managed")
-            .tintTarget(false)
-            .cancelable(false);
+            .cancelable(false)
+            .dimColor(android.R.color.white)
+            .outerCircleColor(R.color.amber500)
+            .targetCircleColor(android.R.color.white)
+            .textColor(android.R.color.white);
 
     // Hold a ref to the sequence or Activity will recycle bitmaps and crash
     if (sequence == null) {
