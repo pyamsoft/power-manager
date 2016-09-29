@@ -29,9 +29,11 @@ import static com.pyamsoft.powermanager.TestUtils.expected;
 import static com.pyamsoft.powermanager.TestUtils.log;
 import static org.junit.Assert.assertEquals;
 
-public class ManagerWifiTest {
+public class ManagerTest {
 
-  @Mock WearAwareManagerInteractor interactor;
+  // Even though these are for Wifi, the same code should be running for each of the device components
+  // so testing against just Wifi "should" be fine
+  @Mock ManagerWifiInteractor interactor;
   private ManagerWifi manager;
 
   @Before public void setUp() {
@@ -82,6 +84,9 @@ public class ManagerWifiTest {
     testSubscriber.assertCompleted();
   }
 
+  /**
+   * Test the clean up function of the manager
+   */
   @Test public void testCleanup() {
     final AtomicInteger count = new AtomicInteger(0);
     Mockito.doAnswer(invocation -> {
@@ -98,5 +103,86 @@ public class ManagerWifiTest {
 
     // Destroy should bump count
     assertEquals(1, count.get());
+  }
+
+  @Test public void testQueueSetComplete() {
+    final AtomicInteger count = new AtomicInteger(0);
+    Mockito.doAnswer(invocation -> {
+      log("Queue set success");
+      count.incrementAndGet();
+      return null;
+    }).when(interactor).queueEnableJob();
+
+    Mockito.when(interactor.cancelJobs()).thenAnswer(invocation -> {
+      log("Succeed job cancel");
+      return Observable.just(true);
+    });
+
+    Mockito.when(interactor.isManaged()).thenAnswer(invocation -> Observable.just(true));
+
+    Mockito.when(interactor.isOriginalStateEnabled())
+        .thenAnswer(invocation -> Observable.just(true));
+
+    // Assert that before we destroy, count is 0
+    assertEquals(0, count.get());
+
+    manager.queueSet();
+
+    // Queue should bump count
+    assertEquals(1, count.get());
+  }
+
+  @Test public void testQueueSetNotManaged() {
+    final AtomicInteger count = new AtomicInteger(0);
+    Mockito.doAnswer(invocation -> {
+      log("Queue set success");
+      count.incrementAndGet();
+      return null;
+    }).when(interactor).queueEnableJob();
+
+    Mockito.when(interactor.cancelJobs()).thenAnswer(invocation -> {
+      log("Succeed job cancel");
+      return Observable.just(true);
+    });
+
+    Mockito.when(interactor.isManaged()).thenAnswer(invocation -> Observable.just(false));
+
+    Mockito.when(interactor.isOriginalStateEnabled())
+        .thenAnswer(invocation -> Observable.just(true));
+
+    // Assert that before we destroy, count is 0
+    assertEquals(0, count.get());
+
+    manager.queueSet();
+
+    // Queue should not bump count
+    assertEquals(0, count.get());
+  }
+
+  @Test public void testQueueSetNotOriginalStateEnabled() {
+    final AtomicInteger count = new AtomicInteger(0);
+    Mockito.doAnswer(invocation -> {
+      log("Queue set success");
+      count.incrementAndGet();
+      return null;
+    }).when(interactor).queueEnableJob();
+
+    Mockito.when(interactor.cancelJobs()).thenAnswer(invocation -> {
+      log("Succeed job cancel");
+      return Observable.just(true);
+    });
+
+    Mockito.when(interactor.isManaged()).thenAnswer(invocation -> Observable.just(true));
+
+    Mockito.when(interactor.isOriginalStateEnabled())
+        .thenAnswer(invocation -> Observable.just(false));
+
+    // Assert that before we destroy, count is 0
+    assertEquals(0, count.get());
+
+    manager.queueSet();
+
+    // Queue should not bump count
+    assertEquals(0, count.get());
   }
 }
