@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import rx.Observable;
+import timber.log.Timber;
 
 abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
     implements WearAwareManagerInteractor {
@@ -46,7 +47,9 @@ abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
     return Observable.defer(() -> Observable.just(wearManageObserver.is()));
   }
 
-  @Override public void cleanup() {
+  @Override void destroy(@NonNull String jobTag) {
+    super.destroy(jobTag);
+    Timber.d("Unregsiter wear state observer");
     wearStateObserver.unregister(getClass().getName());
   }
 }

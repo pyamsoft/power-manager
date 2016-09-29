@@ -25,6 +25,4 @@ interface WearAwareManagerInteractor extends ManagerInteractor {
   @CheckResult @NonNull Observable<Boolean> isWearManaged();
 
   @CheckResult @NonNull Observable<Boolean> isWearEnabled();
-
-  void cleanup();
 }

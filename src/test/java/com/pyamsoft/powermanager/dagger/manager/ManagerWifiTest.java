@@ -16,17 +16,18 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
 import static com.pyamsoft.powermanager.TestUtils.expected;
+import static com.pyamsoft.powermanager.TestUtils.log;
+import static org.junit.Assert.assertEquals;
 
 public class ManagerWifiTest {
 
@@ -38,11 +39,14 @@ public class ManagerWifiTest {
     manager = new ManagerWifi(interactor, Schedulers.immediate(), Schedulers.immediate());
   }
 
+  /**
+   * Make sure that the base observable does not continue if the job cancelling fails for any
+   * reason
+   */
   @Test public void testBaseObservableEmptyStream() {
-    Mockito.when(interactor.cancelJobs()).thenAnswer(new Answer<Observable<Boolean>>() {
-      @Override public Observable<Boolean> answer(InvocationOnMock invocation) throws Throwable {
-        return Observable.just(false);
-      }
+    Mockito.when(interactor.cancelJobs()).thenAnswer(invocation -> {
+      log("Fail job cancel");
+      return Observable.just(false);
     });
 
     final TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
@@ -60,25 +64,39 @@ public class ManagerWifiTest {
     }
   }
 
+  /**
+   * Make sure the base observable continues properly if job cancelling succeeds
+   */
   @Test public void testBaseObservable() {
-    Mockito.when(interactor.cancelJobs()).thenAnswer(new Answer<Observable<Boolean>>() {
-      @Override public Observable<Boolean> answer(InvocationOnMock invocation) throws Throwable {
-        // This is where we would cancel jobs, if we had any
-        return Observable.just(true);
-      }
+    Mockito.when(interactor.cancelJobs()).thenAnswer(invocation -> {
+      log("Succeed job cancel");
+      return Observable.just(true);
     });
 
-    Mockito.when(interactor.isManaged()).thenAnswer(new Answer<Observable<Boolean>>() {
-      @Override public Observable<Boolean> answer(InvocationOnMock invocation) throws Throwable {
-        // This is where we would cancel jobs, if we had any
-        return Observable.just(true);
-      }
-    });
+    Mockito.when(interactor.isManaged()).thenAnswer(invocation -> Observable.just(true));
 
     final TestSubscriber<Boolean> testSubscriber = new TestSubscriber<>();
     manager.baseObservable().subscribe(testSubscriber);
 
     testSubscriber.assertValue(true);
     testSubscriber.assertCompleted();
+  }
+
+  @Test public void testCleanup() {
+    final AtomicInteger count = new AtomicInteger(0);
+    Mockito.doAnswer(invocation -> {
+      log("Destroyed");
+      count.incrementAndGet();
+      return null;
+    }).when(interactor).destroy();
+
+    // Assert that before we destroy, count is 0
+    assertEquals(0, count.get());
+
+    // Call cleanup, does the thing
+    manager.cleanup();
+
+    // Destroy should bump count
+    assertEquals(1, count.get());
   }
 }

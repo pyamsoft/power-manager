@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -44,7 +45,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     this.preferences = preferences;
   }
 
-  void destroy(@NonNull String jobTag) {
+  @CallSuper void destroy(@NonNull String jobTag) {
     Timber.d("Cancel jobs in background with tag: %s", jobTag);
     jobManager.cancelJobsInBackground(TagConstraint.ANY, jobTag);
   }
