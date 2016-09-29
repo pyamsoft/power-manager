@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import rx.Observable;
 import rx.Scheduler;
@@ -62,7 +63,8 @@ abstract class ManagerBase implements Manager {
     }
   }
 
-  @CheckResult @NonNull Observable<Boolean> baseObservable() {
+  @VisibleForTesting @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
+  Observable<Boolean> baseObservable() {
     return interactor.cancelJobs().flatMap(cancelled -> {
       if (cancelled) {
         Timber.d("Is Managed?");
