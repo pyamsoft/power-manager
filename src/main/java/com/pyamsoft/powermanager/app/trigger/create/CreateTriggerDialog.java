@@ -30,7 +30,7 @@ import android.view.Window;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {

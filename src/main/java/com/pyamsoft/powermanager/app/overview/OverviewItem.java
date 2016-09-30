@@ -41,7 +41,7 @@ import com.pyamsoft.powermanager.app.wear.WearFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import java.util.List;
 
 class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {

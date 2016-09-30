@@ -35,7 +35,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.util.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 
