@@ -203,7 +203,8 @@ public class MainActivity extends RatingActivity {
     final String line1 = "BUGFIX: Square icons in the overview";
     final String line2 = "BUGFIX: Clean up code for trigger creation";
     final String line3 = "BUGFIX: Reset 'Start on Boot' setting when all settings are cleared";
-    return new String[] { line1, line2, line3 };
+    final String line4 = "BUGFIX: Fix a crash in the Manage screen when scrolling quickly";
+    return new String[] { line1, line2, line3, line4 };
   }
 
   @NonNull @Override protected String getVersionName() {
