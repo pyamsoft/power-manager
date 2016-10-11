@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.app.trigger;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
@@ -40,7 +42,7 @@ import com.pyamsoft.pydroid.widget.DividerItemDecoration;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
-    implements TriggerPresenter.TriggerView {
+    implements TriggerPresenter.TriggerView, TriggerListAdapterPresenter.TriggerListAdapterView {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
@@ -50,7 +52,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   TriggerListAdapterPresenter listAdapterPresenter;
   TriggerPresenter presenter;
 
-  PowerTriggerFastAdapter adapter;
+  FastItemAdapter<PowerTriggerListItem> adapter;
   RecyclerView.ItemDecoration dividerDecoration;
   private long loadedPresenterKey;
   private long loadedPresenterAdapterKey;
@@ -105,10 +107,10 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @Override public void onStart() {
     super.onStart();
     if (adapter == null) {
-      adapter = new PowerTriggerFastAdapter();
+      adapter = new FastItemAdapter<>();
     }
 
-    listAdapterPresenter.bindView(adapter);
+    listAdapterPresenter.bindView(this);
     presenter.bindView(this);
     presenter.loadTriggerView();
   }
@@ -161,7 +163,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   }
 
   @Override public void onTriggerLoaded(@NonNull PowerTriggerEntry entry) {
-    createNewPowerTriggerListItem(entry);
+    adapter.add(createNewPowerTriggerListItem(entry));
   }
 
   @Override public void onTriggerLoadFinished() {
@@ -191,7 +193,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     final int position = listAdapterPresenter.getPositionForPercent(percent);
     final PowerTriggerEntry entry = listAdapterPresenter.get(position);
 
-    createNewPowerTriggerListItem(entry);
+    adapter.add(createNewPowerTriggerListItem(entry));
     adapter.notifyAdapterItemInserted(position);
 
     if (binding.powerTriggerList.getAdapter() == null) {
@@ -200,12 +202,13 @@ public class PowerTriggerListFragment extends ActionBarFragment
     }
   }
 
-  private void createNewPowerTriggerListItem(@NonNull PowerTriggerEntry entry) {
-    adapter.add(new PowerTriggerListItem(entry,
+  @CheckResult @NonNull
+  private PowerTriggerListItem createNewPowerTriggerListItem(@NonNull PowerTriggerEntry entry) {
+    return new PowerTriggerListItem(entry,
         (entry12, position12, isChecked) -> listAdapterPresenter.toggleEnabledState(position12,
             entry12, isChecked),
         (entry1, position1) -> AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-            DeleteTriggerDialog.newInstance(entry1), "delete")));
+            DeleteTriggerDialog.newInstance(entry1), "delete"));
   }
 
   @Override public void onNewTriggerCreateError() {
@@ -231,5 +234,12 @@ public class PowerTriggerListFragment extends ActionBarFragment
       Timber.d("Last trigger, hide list");
       loadEmptyView();
     }
+  }
+
+  @Override public void updateViewHolder(int position) {
+    Timber.d("update view holder at position: %d", position);
+    final PowerTriggerEntry entry = listAdapterPresenter.get(position);
+    adapter.set(position, createNewPowerTriggerListItem(entry));
+    adapter.notifyAdapterItemChanged(position);
   }
 }

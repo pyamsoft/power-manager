@@ -58,6 +58,8 @@ class PowerTriggerListItem
     holder.binding.triggerPercent.setText("Percent: " + entry.percent());
 
     holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+
+    Timber.d("Entry enabled: %s", entry.enabled());
     holder.binding.triggerEnabledSwitch.setChecked(entry.enabled());
     final CompoundButton.OnCheckedChangeListener listener =
         new CompoundButton.OnCheckedChangeListener() {
