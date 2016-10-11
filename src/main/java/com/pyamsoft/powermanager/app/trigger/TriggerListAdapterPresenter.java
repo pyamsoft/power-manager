@@ -24,8 +24,6 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 public interface TriggerListAdapterPresenter
     extends Presenter<TriggerListAdapterPresenter.TriggerListAdapterView> {
 
-  @CheckResult int size();
-
   @CheckResult @NonNull PowerTriggerEntry get(int position);
 
   @CheckResult int getPositionForPercent(int percent);

@@ -121,6 +121,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onClearAll() {
     Timber.d("Everything is cleared, kill self");
+    BootReceiver.setBootEnabled(getContext(), false);
     getActivity().getApplicationContext()
         .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
     final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()

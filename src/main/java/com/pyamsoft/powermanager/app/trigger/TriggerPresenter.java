@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView> {
@@ -35,9 +37,13 @@ public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView
     void onNewTriggerCreateError();
 
     void onNewTriggerInsertError();
+    //
+    //void loadEmptyView();
+    //
+    //void loadListView();
 
-    void loadEmptyView();
+    void onTriggerLoaded(@NonNull PowerTriggerEntry entry);
 
-    void loadListView();
+    void onTriggerLoadFinished();
   }
 }

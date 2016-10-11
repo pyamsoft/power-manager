@@ -31,8 +31,13 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
     super(powerTriggerDB);
   }
 
+  @NonNull @Override public Observable<PowerTriggerEntry> queryAll() {
+    return getPowerTriggerDB().queryAll().first().concatMap(Observable::from);
+  }
+
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
     return getPowerTriggerDB().queryWithPercent(values.getAsInteger(PowerTriggerEntry.PERCENT))
+        .first()
         .flatMap(entry -> {
           if (!PowerTriggerEntry.isEmpty(entry)) {
             Timber.e("Entry already exists, throw");
