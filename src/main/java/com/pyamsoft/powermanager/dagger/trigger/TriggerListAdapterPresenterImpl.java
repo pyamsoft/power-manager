@@ -47,10 +47,6 @@ class TriggerListAdapterPresenterImpl
     unsubUpdateSubscription();
   }
 
-  @Override @CheckResult public int size() {
-    return interactor.size().toBlocking().first();
-  }
-
   @Override @CheckResult @NonNull public PowerTriggerEntry get(int position) {
     return interactor.get(position).toBlocking().first();
   }

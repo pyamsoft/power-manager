@@ -16,22 +16,12 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.presenter.Presenter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-public interface TriggerListAdapterPresenter
-    extends Presenter<TriggerListAdapterPresenter.TriggerListAdapterView> {
 
-  @CheckResult @NonNull PowerTriggerEntry get(int position);
+class PowerTriggerFastAdapter extends FastItemAdapter<PowerTriggerListItem> implements TriggerListAdapterPresenter.TriggerListAdapterView {
 
-  @CheckResult int getPositionForPercent(int percent);
-
-  void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled);
-
-  interface TriggerListAdapterView {
-
-    void updateViewHolder(int position);
+  @Override public void updateViewHolder(int position) {
+    notifyAdapterItemChanged(position);
   }
 }

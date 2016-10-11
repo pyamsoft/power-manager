@@ -22,7 +22,5 @@ import rx.Observable;
 
 interface BaseTriggerInteractor {
 
-  @CheckResult @NonNull Observable<Integer> size();
-
   @CheckResult @NonNull Observable<Integer> getPosition(int percent);
 }

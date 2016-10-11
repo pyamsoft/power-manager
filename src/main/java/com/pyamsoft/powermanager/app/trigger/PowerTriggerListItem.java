@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.app.trigger;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -26,34 +25,33 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;
 import timber.log.Timber;
 
 class PowerTriggerListItem
     extends AbstractItem<PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
 
-  @NonNull final TriggerListAdapterPresenter presenter;
-  @NonNull final Fragment fragment;
-  @NonNull final PowerTriggerEntry entry;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerEntry entry;
+  @SuppressWarnings("WeakerAccess") @NonNull final OnTriggerEnableChangeListener changeListener;
+  @SuppressWarnings("WeakerAccess") @NonNull final OnTriggerLongClickListener longClickListener;
 
-  PowerTriggerListItem(@NonNull Fragment fragment, @NonNull TriggerListAdapterPresenter presenter,
-      @NonNull PowerTriggerEntry entry) {
-    this.fragment = fragment;
-    this.presenter = presenter;
+  PowerTriggerListItem(@NonNull PowerTriggerEntry entry,
+      @NonNull OnTriggerEnableChangeListener changeListener,
+      @NonNull OnTriggerLongClickListener longClickListener) {
     this.entry = entry;
+    this.changeListener = changeListener;
+    this.longClickListener = longClickListener;
   }
 
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    holder.binding.triggerName.setText(null);
-    holder.itemView.setOnLongClickListener(null);
+    recyclerOldHolder(holder);
+
     holder.binding.triggerName.setText(entry.name());
 
     // Set up delete onLongClick
     holder.itemView.setOnLongClickListener(view -> {
-      AppUtil.guaranteeSingleDialogFragment(fragment.getFragmentManager(),
-          DeleteTriggerDialog.newInstance(entry), "delete_trigger");
+      longClickListener.onLongClick(entry, holder.getAdapterPosition());
       return true;
     });
 
@@ -70,11 +68,19 @@ class PowerTriggerListItem
             compoundButton.setOnCheckedChangeListener(this);
 
             Timber.d("Toggle enabled: %s", b);
-            presenter.toggleEnabledState(holder.getAdapterPosition(), entry, b);
+            changeListener.onTriggerEnableChange(entry, holder.getAdapterPosition(), b);
           }
         };
 
     holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
+  }
+
+  private void recyclerOldHolder(ViewHolder holder) {
+    holder.binding.triggerName.setText(null);
+    holder.binding.triggerPercent.setText(null);
+
+    holder.itemView.setOnLongClickListener(null);
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
   }
 
   @Override public int getType() {
@@ -83,6 +89,16 @@ class PowerTriggerListItem
 
   @Override public int getLayoutRes() {
     return R.layout.adapter_item_trigger;
+  }
+
+  interface OnTriggerEnableChangeListener {
+
+    void onTriggerEnableChange(@NonNull PowerTriggerEntry entry, int position, boolean isChecked);
+  }
+
+  interface OnTriggerLongClickListener {
+
+    void onLongClick(@NonNull PowerTriggerEntry entry, int position);
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {

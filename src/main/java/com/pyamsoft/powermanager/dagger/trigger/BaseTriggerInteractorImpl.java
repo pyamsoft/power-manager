@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
-import timber.log.Timber;
 
 abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
 
@@ -33,16 +32,6 @@ abstract class BaseTriggerInteractorImpl implements BaseTriggerInteractor {
 
   @NonNull @CheckResult final PowerTriggerDB getPowerTriggerDB() {
     return powerTriggerDB;
-  }
-
-  @NonNull @Override public Observable<Integer> size() {
-    return powerTriggerDB.queryAll().first().map(powerTriggerEntries -> {
-      // Can't use actual .count operator here as it always returns 1, for 1 List
-      // We actually want to count the number of items in the list
-      final int count = powerTriggerEntries.size();
-      Timber.d("Count of elements: %d", count);
-      return count;
-    });
   }
 
   @NonNull @Override public Observable<Integer> getPosition(int percent) {

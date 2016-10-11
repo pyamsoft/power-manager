@@ -42,7 +42,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
   @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
   @NonNull private Subscription createSubscription = Subscriptions.empty();
 
-  @Inject public TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
+  @Inject TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
@@ -63,7 +63,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     unsubCreateSubscription();
   }
 
-  void unsubViewSubscription() {
+  @SuppressWarnings("WeakerAccess") void unsubViewSubscription() {
     if (!viewSubscription.isUnsubscribed()) {
       viewSubscription.unsubscribe();
     }
@@ -83,22 +83,19 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   @Override public void loadTriggerView() {
     unsubViewSubscription();
-    viewSubscription = interactor.size()
+    viewSubscription = interactor.queryAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(size -> {
-          getView(triggerView -> {
-            Timber.d("Trigger size = %d", size);
-            if (size == 0) {
-              triggerView.loadEmptyView();
-            } else {
-              triggerView.loadListView();
-            }
-          });
-        }, throwable -> {
+        .subscribe(entry -> getView(triggerView -> {
+          Timber.d("Trigger loaded = %s", entry);
+          triggerView.onTriggerLoaded(entry);
+        }), throwable -> {
           // Todo
           Timber.e(throwable, "onError");
-        });
+        }, () -> getView(view -> {
+          view.onTriggerLoadFinished();
+          unsubViewSubscription();
+        }));
   }
 
   @Override public void showNewTriggerDialog() {
