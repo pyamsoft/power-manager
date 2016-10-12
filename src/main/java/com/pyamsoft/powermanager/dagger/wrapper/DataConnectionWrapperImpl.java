@@ -24,7 +24,11 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -107,6 +111,38 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     }
   }
 
+  /**
+   * Requires ROOT to work properly
+   *
+   * Will exit with a failed 137 code or otherwise if ROOT is not allowed
+   */
+  private void setMobileDataEnabledRoot(boolean enabled) {
+    final Process process;
+    try {
+      final String command = "svc data " + (enabled ? "enable" : "disable");
+      process = Runtime.getRuntime().exec(new String[] { "su", "-c", command });
+      try (final BufferedReader bufferedReader = new BufferedReader(
+          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+        Timber.d("Read results of exec: '%s'", command);
+        String line = bufferedReader.readLine();
+        while (line != null && !line.isEmpty()) {
+          Timber.d("%s", line);
+          line = bufferedReader.readLine();
+        }
+      }
+
+      try {
+        process.waitFor();
+        Timber.i("Command %s exited with value: %d", command, process.exitValue());
+      } catch (InterruptedException e) {
+        Timber.e(e, "Interrupted while waiting for exit");
+      }
+      // Will always be 0
+    } catch (IOException e) {
+      Timber.e(e, "Error running shell command");
+    }
+  }
+
   @CheckResult private boolean getMobileDataEnabledSettings() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -123,7 +159,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
       Timber.i("Data: %s", enabled ? "enable" : "disable");
       setMobileDataEnabledReflection(enabled);
     } else {
-      Timber.e("Cannot set mobile data using reflection");
+      setMobileDataEnabledRoot(enabled);
     }
   }
 
