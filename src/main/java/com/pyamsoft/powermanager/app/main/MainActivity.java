@@ -204,7 +204,8 @@ public class MainActivity extends RatingActivity {
     final String line2 = "BUGFIX: Clean up code for trigger creation";
     final String line3 = "BUGFIX: Reset 'Start on Boot' setting when all settings are cleared";
     final String line4 = "BUGFIX: Fix a crash in the Manage screen when scrolling quickly";
-    return new String[] { line1, line2, line3, line4 };
+    final String line5 = "ROOT ONLY: Allows automatic toggling of Mobile Data";
+    return new String[] { line1, line2, line3, line4, line5 };
   }
 
   @NonNull @Override protected String getVersionName() {

@@ -25,10 +25,22 @@
       android:layout_height="wrap_content"
       android:layout_marginStart="8dp"
       android:layout_marginTop="8dp"
-      app:cardCornerRadius="4dp"
-      app:cardElevation="4dp"
+      app:cardCornerRadius="2dp"
+      app:cardElevation="2dp"
       app:cardUseCompatPadding="true"
       >
+
+    <FrameLayout
+        android:id="@+id/adapter_item_overview_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/overview_scrim"
+        />
 
     <ImageView
         android:id="@+id/adapter_item_overview_image"
@@ -59,8 +71,9 @@
         android:id="@+id/adapter_item_overview_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
+        android:background="?android:attr/selectableItemBackground"
         />
+
 
   </com.pyamsoft.pydroid.widget.SquareCardView>
 
