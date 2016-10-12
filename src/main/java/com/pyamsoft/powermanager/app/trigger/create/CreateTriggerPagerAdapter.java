@@ -22,21 +22,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import com.pyamsoft.powermanager.bus.TriggerBus;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerListFragment;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
 class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
 
-  public static final int TOTAL_COUNT = 5;
+  static final int TOTAL_COUNT = 5;
   private static final int POSITION_BASIC = 0;
   private static final int POSITION_WIFI = 1;
   private static final int POSITION_DATA = 2;
   private static final int POSITION_BLUETOOTH = 3;
   private static final int POSITION_SYNC = 4;
+  @NonNull private final FragmentManager fragmentManager;
 
-  CreateTriggerPagerAdapter(FragmentManager fm) {
-    super(fm);
+  CreateTriggerPagerAdapter(@NonNull Fragment fragment) {
+    super(fragment.getChildFragmentManager());
+    fragmentManager = fragment.getFragmentManager();
   }
 
   @Override public Fragment getItem(int position) {
@@ -62,10 +64,10 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   @Override public int getCount() {
-    return 5;
+    return TOTAL_COUNT;
   }
 
-  public void collect(@NonNull ViewPager viewPager) {
+  void collect(@NonNull ViewPager viewPager) {
     final CreateTriggerBasicFragment basicFragment =
         (CreateTriggerBasicFragment) instantiateItem(viewPager, POSITION_BASIC);
     final CreateTriggerManageFragment wifiFragment =
@@ -103,6 +105,17 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
         .enableBluetooth(bluetoothEnable)
         .enableSync(syncEnable)
         .asContentValues();
-    TriggerBus.get().post(values);
+    sendCreateEvent(values);
+  }
+
+  private void sendCreateEvent(@NonNull ContentValues values) {
+    final Fragment powerTriggerListFragment =
+        fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);
+    if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
+      ((PowerTriggerListFragment) powerTriggerListFragment).getPresenter()
+          .createPowerTrigger(values);
+    } else {
+      throw new ClassCastException("Fragment is not PowerTriggerListFragment");
+    }
   }
 }

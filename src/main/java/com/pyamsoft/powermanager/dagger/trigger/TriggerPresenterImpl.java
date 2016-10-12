@@ -19,10 +19,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
-import com.pyamsoft.powermanager.bus.DeleteTriggerBus;
-import com.pyamsoft.powermanager.bus.TriggerBus;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,11 +32,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     implements TriggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription deleteSubscription = Subscriptions.empty();
   @NonNull private Subscription viewSubscription = Subscriptions.empty();
-  @NonNull private Subscription deleteTriggerBusSubscription = Subscriptions.empty();
-  @NonNull private Subscription createTriggerBusSubscription = Subscriptions.empty();
   @NonNull private Subscription createSubscription = Subscriptions.empty();
 
   @Inject TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
@@ -48,16 +42,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     this.interactor = interactor;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    registerOnDeleteTriggerBus();
-    registerOnCreateTriggerBus();
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
-    unregisterFromDeleteTriggerBus();
-    unregisterFromCreateTriggerBus();
     unsubViewSubscription();
     unsubDeleteSubscription();
     unsubCreateSubscription();
@@ -103,7 +89,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     getView(TriggerView::onShowNewTriggerDialog);
   }
 
-  @SuppressWarnings("WeakerAccess") void createPowerTrigger(@NonNull ContentValues values) {
+  @Override public void createPowerTrigger(@NonNull ContentValues values) {
     Timber.d("Create new power trigger");
     unsubCreateSubscription();
     createSubscription = interactor.put(values)
@@ -123,22 +109,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         });
   }
 
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnDeleteTriggerBus() {
-    unregisterFromDeleteTriggerBus();
-    deleteTriggerBusSubscription = DeleteTriggerBus.get()
-        .register()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(deleteTriggerEvent -> {
-          // KLUDGE nested subs are ugly
-          deleteTrigger(deleteTriggerEvent.percent());
-        }, throwable -> {
-          // TODO
-          Timber.e(throwable, "onError");
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void deleteTrigger(int percent) {
+  @Override public void deleteTrigger(int percent) {
     unsubDeleteSubscription();
     deleteSubscription = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
@@ -149,29 +120,5 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
           // TODO
           Timber.e(throwable, "onError");
         });
-  }
-
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") void registerOnCreateTriggerBus() {
-    unregisterFromCreateTriggerBus();
-    createTriggerBusSubscription = TriggerBus.get()
-        .register()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(this::createPowerTrigger, throwable -> {
-          // TODO
-          Timber.e(throwable, "onError");
-        });
-  }
-
-  private void unregisterFromDeleteTriggerBus() {
-    if (!deleteTriggerBusSubscription.isUnsubscribed()) {
-      deleteTriggerBusSubscription.unsubscribe();
-    }
-  }
-
-  private void unregisterFromCreateTriggerBus() {
-    if (!createTriggerBusSubscription.isUnsubscribed()) {
-      createTriggerBusSubscription.unsubscribe();
-    }
   }
 }
