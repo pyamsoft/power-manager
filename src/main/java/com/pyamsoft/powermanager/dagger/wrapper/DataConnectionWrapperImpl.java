@@ -38,7 +38,6 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
   @Nullable private static final Method GET_MOBILE_DATA_ENABLED_METHOD;
   @Nullable private static final Method SET_MOBILE_DATA_ENABLED_METHOD;
-  @NonNull private static final String SETTINGS_MOBILE_DATA = "mobile_data";
 
   static {
     GET_MOBILE_DATA_ENABLED_METHOD = reflectGetMethod();
@@ -146,9 +145,9 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   @CheckResult private boolean getMobileDataEnabledSettings() {
     boolean enabled;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-      enabled = Settings.Global.getInt(contentResolver, SETTINGS_MOBILE_DATA, 0) == 1;
+      enabled = Settings.Global.getInt(contentResolver, SETTINGS_URI_MOBILE_DATA, 0) == 1;
     } else {
-      enabled = Settings.Secure.getInt(contentResolver, SETTINGS_MOBILE_DATA, 0) == 1;
+      enabled = Settings.Secure.getInt(contentResolver, SETTINGS_URI_MOBILE_DATA, 0) == 1;
     }
 
     return enabled;
