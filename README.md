@@ -19,7 +19,9 @@ Android Marshmallow. To enable this functionality, manual action must be
 taken by the user to grant Power Manager the ability to set the current  
 Doze mode state. To learn more, see the Settings page in the application. 
 
-* Power Manager cannot manage Cellular Data on Android Lollipop and upwards.  
+* Power Manager can only manage Cellular Data on Android Lollipop and upwards  
+if you have access to root. Power Manager will make a call to the `su` binary  
+when it attempts to toggle Cellular Data on these newer Android platforms.  
 This is a limitation of the Android operating system, and there is unfortunately  
 nothing that can be done from a third party application to change this.
 
