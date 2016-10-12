@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -36,7 +35,7 @@ class SettingsPreferencePresenterImpl
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
 
   @Inject SettingsPreferencePresenterImpl(@NonNull SettingsPreferenceInteractor interactor,
-      @NonNull @Named("io") Scheduler subScheduler, @NonNull @Named("obs") Scheduler obsScheduler) {
+      @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
