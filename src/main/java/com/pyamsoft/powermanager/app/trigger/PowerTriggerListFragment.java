@@ -85,6 +85,13 @@ public class PowerTriggerListFragment extends ActionBarFragment
             });
   }
 
+  @CheckResult @NonNull public TriggerPresenter getPresenter() {
+    if (presenter == null) {
+      throw new NullPointerException("Presenter is NULL");
+    }
+    return presenter;
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {

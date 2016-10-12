@@ -20,6 +20,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
@@ -45,6 +46,13 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   private long loadedKey;
+
+  @CheckResult @NonNull SettingsPreferencePresenter getPresenter() {
+    if (presenter == null) {
+      throw new NullPointerException("Presenter is NULL");
+    }
+    return presenter;
+  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

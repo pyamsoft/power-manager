@@ -21,6 +21,8 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 public interface SettingsPreferencePresenter
     extends Presenter<SettingsPreferencePresenter.SettingsPreferenceView> {
 
+  void processClearRequest(int type);
+
   void requestClearAll();
 
   void requestClearDatabase();

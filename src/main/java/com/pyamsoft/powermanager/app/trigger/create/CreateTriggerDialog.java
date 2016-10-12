@@ -103,7 +103,7 @@ public class CreateTriggerDialog extends DialogFragment {
     binding.newTriggerPager.setOffscreenPageLimit(4);
 
     // KLUDGE Child fragments are ugly.
-    adapter = new CreateTriggerPagerAdapter(getChildFragmentManager());
+    adapter = new CreateTriggerPagerAdapter(this);
     binding.newTriggerPager.setAdapter(adapter);
 
     int currentPage;

@@ -22,9 +22,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import com.pyamsoft.powermanager.bus.DeleteTriggerBus;
-import com.pyamsoft.powermanager.model.event.DeleteTriggerEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
@@ -63,9 +63,20 @@ public class DeleteTriggerDialog extends DialogFragment {
           dismiss();
         })
         .setPositiveButton("Okay", (dialogInterface, i) -> {
+          sendDeleteEvent(percent);
           dismiss();
-          DeleteTriggerBus.get().post(DeleteTriggerEvent.create(percent));
         })
         .create();
+  }
+
+  void sendDeleteEvent(int percent) {
+    final FragmentManager fragmentManager = getFragmentManager();
+    final Fragment powerTriggerListFragment =
+        fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);
+    if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
+      ((PowerTriggerListFragment) powerTriggerListFragment).getPresenter().deleteTrigger(percent);
+    } else {
+      throw new ClassCastException("Fragment is not PowerTriggerListFragment");
+    }
   }
 }

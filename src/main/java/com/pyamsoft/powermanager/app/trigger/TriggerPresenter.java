@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.presenter.Presenter;
@@ -25,6 +26,10 @@ public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView
   void loadTriggerView();
 
   void showNewTriggerDialog();
+
+  void deleteTrigger(int percent);
+
+  void createPowerTrigger(@NonNull ContentValues values);
 
   interface TriggerView {
 
