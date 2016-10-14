@@ -117,7 +117,7 @@ public class MainActivity extends RatingActivity {
   }
 
   @Override public void onBackPressed() {
-    if (!backButtonEnabled) {
+    if (backButtonEnabled) {
       final FragmentManager fragmentManager = getSupportFragmentManager();
       if (fragmentManager.getBackStackEntryCount() > 0) {
         fragmentManager.popBackStack();
