@@ -18,6 +18,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
   <com.pyamsoft.pydroid.widget.SquareCardView
@@ -54,18 +55,38 @@
         android:scaleType="fitXY"
         />
 
-    <com.pyamsoft.pydroid.widget.NoLeakCheckedTextView
-        android:id="@+id/adapter_item_overview_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="8dp"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:clickable="false"
         android:focusable="false"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@android:color/white"
-        />
+        android:orientation="horizontal"
+        >
+
+      <com.pyamsoft.pydroid.widget.NoLeakTextView
+          android:id="@+id/adapter_item_overview_title"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="1"
+          android:clickable="false"
+          android:focusable="false"
+          android:textAppearance="?android:attr/textAppearanceMedium"
+          android:textColor="@android:color/white"
+          />
+
+      <com.pyamsoft.pydroid.widget.SquareImageView
+          android:id="@+id/adapter_item_overview_check"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:clickable="false"
+          android:contentDescription="@string/blank"
+          android:focusable="false"
+          tools:src="@drawable/ic_check_box_24dp"
+          />
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/adapter_item_overview_root"

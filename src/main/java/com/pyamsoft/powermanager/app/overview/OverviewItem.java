@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.overview;
 
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -42,9 +41,7 @@ import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.util.DrawableUtil;
 import java.util.List;
-import timber.log.Timber;
 
 class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
@@ -113,22 +110,24 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
     // Tint check mark white
     // Avoids a NoMethod crash on API 19
-    Drawable checkMark = holder.binding.adapterItemOverviewTitle.getCheckMarkDrawable();
-    if (checkMark != null) {
-      Timber.d("Tint check mark white");
-      checkMark = DrawableUtil.tintDrawableFromColor(checkMark,
-          ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white));
-      holder.binding.adapterItemOverviewTitle.setCheckMarkDrawable(checkMark);
-    }
-
     holder.binding.adapterItemOverviewColor.setBackgroundColor(
         ContextCompat.getColor(holder.itemView.getContext(), background));
 
     holder.binding.adapterItemOverviewTitle.setText(title);
     if (observer != null) {
-      holder.binding.adapterItemOverviewTitle.setChecked(observer.is());
+      final int check;
+      if (observer.is()) {
+        check = R.drawable.ic_check_box_24dp;
+      } else {
+        check = R.drawable.ic_check_box_outline_24dp;
+      }
+      final AsyncMap.Entry checkTask = AsyncDrawable.with(holder.itemView.getContext())
+          .load(check)
+          .tint(android.R.color.white)
+          .into(holder.binding.adapterItemOverviewCheck);
+      taskMap.put(title + "check", checkTask);
     } else {
-      holder.binding.adapterItemOverviewTitle.setCheckMarkDrawable(null);
+      holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
     }
 
     holder.binding.adapterItemOverviewRoot.setOnClickListener(
