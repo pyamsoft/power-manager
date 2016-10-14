@@ -20,7 +20,11 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 public abstract class BasePeriodPreferencePresenterImpl
     extends SchedulerPresenter<BasePeriodPreferencePresenter.PeriodPreferenceView>
@@ -30,6 +34,7 @@ public abstract class BasePeriodPreferencePresenterImpl
       "BasePeriodPreferencePresenter";
   @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver observer;
   @NonNull private final BasePeriodPreferenceInteractor interactor;
+  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
 
   protected BasePeriodPreferencePresenterImpl(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -43,14 +48,39 @@ public abstract class BasePeriodPreferencePresenterImpl
     super.onBind();
     getView(periodPreferenceView -> observer.register(OBS_TAG, periodPreferenceView::onPeriodicSet,
         periodPreferenceView::onPeriodicUnset));
+    showOnboardingIfNeeded();
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
     observer.unregister(OBS_TAG);
+    unsubOnboarding();
   }
 
   @Override public void updatePeriodic(boolean state) {
     interactor.updatePeriodic(state);
+  }
+
+  @Override public void setShownOnBoarding() {
+    interactor.setOnboarding();
+  }
+
+  @SuppressWarnings("WeakerAccess") void showOnboardingIfNeeded() {
+    unsubOnboarding();
+    onboardingSubscription = interactor.hasShownOnboarding()
+        .delay(1, TimeUnit.SECONDS)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(onboard -> {
+          if (!onboard) {
+            getView(PeriodPreferenceView::showOnBoarding);
+          }
+        }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubOnboarding() {
+    if (!onboardingSubscription.isUnsubscribed()) {
+      onboardingSubscription.unsubscribe();
+    }
   }
 }

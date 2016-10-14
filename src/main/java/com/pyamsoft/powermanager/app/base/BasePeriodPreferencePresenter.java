@@ -23,10 +23,14 @@ public interface BasePeriodPreferencePresenter
 
   void updatePeriodic(boolean state);
 
+  void setShownOnBoarding();
+
   interface PeriodPreferenceView {
 
     void onPeriodicSet();
 
     void onPeriodicUnset();
+
+    void showOnBoarding();
   }
 }

@@ -204,48 +204,51 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public void showOnBoarding() {
     Timber.d("Show manage onboarding");
-
-    TapTarget manageTarget = null;
-    final View manageView = managePreference.getRootView();
-    if (manageView != null) {
-      final View switchView = manageView.findViewById(R.id.switchWidget);
-      if (switchView != null) {
-        manageTarget =
-            TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
-                getString(R.string.onboard_desc_manage_manage)).tintTarget(false).cancelable(false);
-      }
-    }
-
-    TapTarget listTarget = null;
-    final View listView = presetTimePreference.getRootView();
-    if (listView != null) {
-      listTarget = TapTarget.forView(listView, getString(R.string.onboard_title_manage_preset),
-          getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
-    }
-
-    TapTarget customTarget = null;
-    if (customTimePreference != null) {
-      final View customView = customTimePreference.getRootView();
-      if (customView != null) {
-        customTarget =
-            TapTarget.forView(customView, getString(R.string.onboard_title_manage_custom),
-                getString(R.string.onboard_desc_manage_custom)).tintTarget(false).cancelable(false);
-      }
-    }
-
-    TapTarget fabTarget = null;
-    final Fragment parentFragment = getParentFragment();
-    if (parentFragment instanceof BaseOverviewPagerFragment) {
-      final BaseOverviewPagerFragment overviewPagerFragment =
-          (BaseOverviewPagerFragment) parentFragment;
-      fabTarget = TapTarget.forView(overviewPagerFragment.getFabTarget(),
-          getString(R.string.onboard_title_overview_fab),
-          getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
-    }
-
-    // If we have all valid targets for the sequence
     if (sequence == null) {
       sequence = new TapTargetSequence(getActivity());
+
+      TapTarget manageTarget = null;
+      final View manageView = managePreference.getRootView();
+      if (manageView != null) {
+        final View switchView = manageView.findViewById(R.id.switchWidget);
+        if (switchView != null) {
+          manageTarget =
+              TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
+                  getString(R.string.onboard_desc_manage_manage))
+                  .tintTarget(false)
+                  .cancelable(false);
+        }
+      }
+
+      TapTarget listTarget = null;
+      final View listView = presetTimePreference.getRootView();
+      if (listView != null) {
+        listTarget = TapTarget.forView(listView, getString(R.string.onboard_title_manage_preset),
+            getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
+      }
+
+      TapTarget customTarget = null;
+      if (customTimePreference != null) {
+        final View customView = customTimePreference.getRootView();
+        if (customView != null) {
+          customTarget =
+              TapTarget.forView(customView, getString(R.string.onboard_title_manage_custom),
+                  getString(R.string.onboard_desc_manage_custom))
+                  .tintTarget(false)
+                  .cancelable(false);
+        }
+      }
+
+      TapTarget fabTarget = null;
+      final Fragment parentFragment = getParentFragment();
+      if (parentFragment instanceof BaseOverviewPagerFragment) {
+        final BaseOverviewPagerFragment overviewPagerFragment =
+            (BaseOverviewPagerFragment) parentFragment;
+        fabTarget = TapTarget.forView(overviewPagerFragment.getFabTarget(),
+            getString(R.string.onboard_title_overview_fab),
+            getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+      }
+
       if (manageTarget != null) {
         sequence.target(manageTarget);
       }

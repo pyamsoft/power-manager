@@ -37,5 +37,11 @@
   <string name="onboard_desc_manage_custom">When managed, for more fine grained control, a custom time can be specified</string>
   <string name="onboard_title_overview_fab">Toggle Component On/Off</string>
   <string name="onboard_desc_overview_fab">When selected, will toggle the component on or off depending on its current state</string>
+  <string name="onboard_title_period_period">Periodic Automatic Toggle</string>
+  <string name="onboard_desc_period_period">Controls whether Power Manager will periodically toggle this component while the screen is off</string>
+  <string name="onboard_title_period_enable">Time Before Enable</string>
+  <string name="onboard_desc_period_enable">Duration for how long the component should stay disabled before being toggled on</string>
+  <string name="onboard_title_period_disable">Time Before Disable</string>
+  <string name="onboard_desc_period_disable">Duration for how long the component should stay enabled before being toggled off</string>
 </resources>
 

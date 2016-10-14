@@ -23,11 +23,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
+import com.pyamsoft.powermanager.app.preference.ViewListPreference;
+import com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
@@ -37,10 +40,10 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
-  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
-  @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
+  @SuppressWarnings("WeakerAccess") ViewSwitchPreferenceCompat periodicPreference;
+  @SuppressWarnings("WeakerAccess") ViewListPreference presetEnableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
-  @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
+  @SuppressWarnings("WeakerAccess") ViewListPreference presetDisableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
   private String periodicKey;
   private String presetEnableTimeKey;
@@ -48,6 +51,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   private String enableTimeKey;
   private String disableTimeKey;
   private long loadedKey;
+  @Nullable private TapTargetSequence sequence;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -76,9 +80,9 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   }
 
   private void resolvePreferences() {
-    periodicPreference = (SwitchPreferenceCompat) findPreference(periodicKey);
-    presetEnableTimePreference = (ListPreference) findPreference(presetEnableTimeKey);
-    presetDisableTimePreference = (ListPreference) findPreference(presetDisableTimeKey);
+    periodicPreference = (ViewSwitchPreferenceCompat) findPreference(periodicKey);
+    presetEnableTimePreference = (ViewListPreference) findPreference(presetEnableTimeKey);
+    presetDisableTimePreference = (ViewListPreference) findPreference(presetDisableTimeKey);
     customEnableTimePreference = (CustomTimeInputPreference) findPreference(enableTimeKey);
     customDisableTimePreference = (CustomTimeInputPreference) findPreference(disableTimeKey);
 
@@ -245,6 +249,68 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
 
   @Override public void onPeriodicUnset() {
     periodicPreference.setChecked(false);
+  }
+
+  @Override public void showOnBoarding() {
+    Timber.d("Show manage onboarding");
+    if (sequence == null) {
+      sequence = new TapTargetSequence(getActivity());
+
+      TapTarget periodicTarget = null;
+      final View periodicView = periodicPreference.getRootView();
+      if (periodicView != null) {
+        final View switchView = periodicView.findViewById(R.id.switchWidget);
+        if (switchView != null) {
+          periodicTarget =
+              TapTarget.forView(switchView, getString(R.string.onboard_title_period_period),
+                  getString(R.string.onboard_desc_period_period))
+                  .tintTarget(false)
+                  .cancelable(false);
+        }
+      }
+
+      TapTarget periodicEnable = null;
+      final View enableView = presetEnableTimePreference.getRootView();
+      if (enableView != null) {
+        periodicEnable =
+            TapTarget.forView(enableView, getString(R.string.onboard_title_period_enable),
+                getString(R.string.onboard_desc_period_enable)).tintTarget(false).cancelable(false);
+      }
+
+      TapTarget periodicDisable = null;
+      final View disableView = presetDisableTimePreference.getRootView();
+      if (disableView != null) {
+        periodicDisable =
+            TapTarget.forView(disableView, getString(R.string.onboard_title_period_disable),
+                getString(R.string.onboard_desc_period_disable))
+                .tintTarget(false)
+                .cancelable(false);
+      }
+
+      if (periodicTarget != null) {
+        sequence.target(periodicTarget);
+      }
+      if (periodicEnable != null) {
+        sequence.target(periodicEnable);
+      }
+      if (periodicDisable != null) {
+        sequence.target(periodicDisable);
+      }
+
+      sequence.listener(new TapTargetSequence.Listener() {
+        @Override public void onSequenceFinish() {
+          if (presenter != null) {
+            presenter.setShownOnBoarding();
+          }
+        }
+
+        @Override public void onSequenceCanceled() {
+
+        }
+      });
+    }
+
+    sequence.start();
   }
 
   /**

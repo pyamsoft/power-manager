@@ -101,6 +101,7 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @NonNull private final String overviewOnboard = "overview_onboard";
   @NonNull private final String manageOnboard = "manage_onboard";
+  @NonNull private final String periodOnboard = "period_onboard";
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -178,6 +179,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     wearableDelay = getResources().getString(R.string.wearable_time_key);
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
+  }
+
+  @Override public boolean isPeriodicOnboardingShown() {
+    return get(periodOnboard, false);
+  }
+
+  @Override public void setPeriodicOnboardingShown() {
+    put(periodOnboard, true);
   }
 
   @Override public boolean isManageOnboardingShown() {
