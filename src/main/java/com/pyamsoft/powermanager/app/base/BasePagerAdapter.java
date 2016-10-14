@@ -64,7 +64,7 @@ public abstract class BasePagerAdapter extends FragmentStatePagerAdapter {
     return title;
   }
 
-  @CheckResult @NonNull protected abstract Fragment getManageFragment();
+  @CheckResult @NonNull protected abstract BaseManagePreferenceFragment getManageFragment();
 
-  @CheckResult @NonNull protected abstract Fragment getPeriodicFragment();
+  @CheckResult @NonNull protected abstract BasePeriodicPreferenceFragment getPeriodicFragment();
 }

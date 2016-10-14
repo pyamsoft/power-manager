@@ -35,5 +35,7 @@
   <string name="onboard_desc_manage_preset">When managed, the time selected her controls the delay before Power Manager begins controlling this component</string>
   <string name="onboard_title_manage_custom">Custom Delay Time</string>
   <string name="onboard_desc_manage_custom">When managed, for more fine grained control, a custom time can be specified</string>
+  <string name="onboard_title_overview_fab">Toggle Component On/Off</string>
+  <string name="onboard_desc_overview_fab">When selected, will toggle the component on or off depending on its current state</string>
 </resources>
 

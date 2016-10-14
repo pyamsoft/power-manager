@@ -63,7 +63,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   private FastItemAdapter<OverviewItem> adapter;
   private FragmentOverviewBinding binding;
   private long loadedKey;
-  private TapTargetSequence sequence;
+  @Nullable private TapTargetSequence sequence;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -179,7 +179,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
       // If we use the first item we get a weird location, try a different item
       final OverviewItem.ViewHolder tapTargetView =
           (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
-      final TapTarget fabTarget = TapTarget.forView(tapTargetView.binding.adapterItemOverviewImage,
+      final TapTarget overview = TapTarget.forView(tapTargetView.binding.adapterItemOverviewImage,
           getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
           .cancelable(false);
 
@@ -188,7 +188,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
               getString(R.string.onboard_title_module_manage),
               getString(R.string.onboard_desc_module_manage)).cancelable(false);
 
-      sequence = new TapTargetSequence(getActivity()).targets(fabTarget, manageTarget)
+      sequence = new TapTargetSequence(getActivity()).targets(overview, manageTarget)
           .listener(new TapTargetSequence.Listener() {
             @Override public void onSequenceFinish() {
               if (presenter != null) {

@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -232,6 +233,16 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       }
     }
 
+    TapTarget fabTarget = null;
+    final Fragment parentFragment = getParentFragment();
+    if (parentFragment instanceof BaseOverviewPagerFragment) {
+      final BaseOverviewPagerFragment overviewPagerFragment =
+          (BaseOverviewPagerFragment) parentFragment;
+      fabTarget = TapTarget.forView(overviewPagerFragment.getFabTarget(),
+          getString(R.string.onboard_title_overview_fab),
+          getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+    }
+
     // If we have all valid targets for the sequence
     if (sequence == null) {
       sequence = new TapTargetSequence(getActivity());
@@ -243,6 +254,9 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       }
       if (customTarget != null) {
         sequence.target(customTarget);
+      }
+      if (fabTarget != null) {
+        sequence.target(fabTarget);
       }
 
       sequence.listener(new TapTargetSequence.Listener() {

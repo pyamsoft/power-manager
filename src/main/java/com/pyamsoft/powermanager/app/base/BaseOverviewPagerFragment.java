@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -34,8 +35,8 @@ import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
+import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 
@@ -210,6 +211,14 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
         .tint(android.R.color.white)
         .into(binding.preferenceContainerFab);
     asyncDrawableMap.put("fab", subscription);
+  }
+
+  @CheckResult @NonNull FloatingActionButton getFabTarget() {
+    if (binding == null) {
+      throw new NullPointerException("Binding is NULL");
+    }
+
+    return binding.preferenceContainerFab;
   }
 
   protected abstract void injectObserverModifier();

@@ -55,7 +55,6 @@ public abstract class BaseManagePreferencePresenterImpl
   @Override protected void onUnbind() {
     super.onUnbind();
     manageObserver.unregister(OBS_TAG);
-    unsubOnboarding();
   }
 
   @Override public void updateManage(boolean state) {
