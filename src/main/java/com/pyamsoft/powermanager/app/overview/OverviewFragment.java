@@ -143,8 +143,9 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
             null, this::loadFragment));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
         dozeManageObserver, this::loadFragment));
-    adapter.add(new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.red500,
-        wearManageObserver, this::loadFragment));
+    adapter.add(
+        new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
+            wearManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
             null, this::loadFragment));
