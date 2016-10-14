@@ -37,7 +37,8 @@ public class DozeExplanationDialog extends DialogFragment {
   }
 
   @NonNull @CheckResult private Spannable createDozeMessage() {
-    final String message = "In order to allow Power Manager to control Doze on your device, \n"
+    final String message = "ANDROID 6 (MARSHMALLOW) ONLY!\n"
+        + "In order to allow Power Manager to control Doze on your device, \n"
         + "you must enable a special permission. You must connect your device \n"
         + "a computer which has the Android Debug Bridge (adb) program installed \n"
         + "and enter the following command as one line: \n\n"
