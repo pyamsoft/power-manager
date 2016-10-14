@@ -202,6 +202,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
           });
     }
 
+
     sequence.start();
   }
 }

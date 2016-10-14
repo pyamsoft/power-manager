@@ -56,6 +56,10 @@ public class MainActivity extends RatingActivity {
 
   private ActivityMainBinding binding;
 
+  // KLUDGE When the Onboarding TapTargetView is shown, pressing the back button can result in crashing
+  // KLUDGE thus, we disable the back button while target is shown
+  private boolean backButtonEnabled = true;
+
   @ColorInt private int oldAppBarColor;
   @ColorInt private int oldStatusBarColor;
   @Nullable private ValueAnimator appBarAnimator;
@@ -71,6 +75,10 @@ public class MainActivity extends RatingActivity {
     return Color.rgb((int) r, (int) g, (int) b);
   }
 
+  public void setBackButtonEnabled(boolean backButtonEnabled) {
+    this.backButtonEnabled = backButtonEnabled;
+  }
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
@@ -78,6 +86,7 @@ public class MainActivity extends RatingActivity {
     oldAppBarColor = ContextCompat.getColor(this, R.color.amber500);
     oldStatusBarColor = ContextCompat.getColor(this, R.color.amber700);
 
+    setBackButtonEnabled(true);
     setupPreferenceDefaults();
     setupAppBar();
     if (hasNoActiveFragment()) {
@@ -108,11 +117,15 @@ public class MainActivity extends RatingActivity {
   }
 
   @Override public void onBackPressed() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
+    if (!backButtonEnabled) {
+      final FragmentManager fragmentManager = getSupportFragmentManager();
+      if (fragmentManager.getBackStackEntryCount() > 0) {
+        fragmentManager.popBackStack();
+      } else {
+        super.onBackPressed();
+      }
     } else {
-      super.onBackPressed();
+      Timber.w("Back button action is disabled due to onboarding");
     }
   }
 

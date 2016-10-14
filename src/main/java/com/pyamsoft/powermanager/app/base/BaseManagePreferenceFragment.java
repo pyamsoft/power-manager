@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -30,6 +31,7 @@ import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.app.preference.ViewListPreference;
 import com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat;
@@ -51,6 +53,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
   private boolean showOnboardingWhenAvailable;
+
+  void setBackButtonEnabled(boolean enabled) {
+    final Activity activity = getActivity();
+    if (activity instanceof MainActivity) {
+      ((MainActivity) activity).setBackButtonEnabled(enabled);
+    } else {
+      throw new ClassCastException("Activity is not MainActivity");
+    }
+  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -281,14 +292,16 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
           if (presenter != null) {
             presenter.setShownOnBoarding();
           }
+          setBackButtonEnabled(true);
         }
 
         @Override public void onSequenceCanceled() {
-
+          setBackButtonEnabled(true);
         }
       });
     }
 
+    setBackButtonEnabled(false);
     sequence.start();
   }
 
