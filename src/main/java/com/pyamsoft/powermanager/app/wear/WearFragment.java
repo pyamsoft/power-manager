@@ -43,10 +43,10 @@ public class WearFragment extends BaseOverviewSingleItemFragment {
   }
 
   @Override protected int provideAppBarColor() {
-    return R.color.red500;
+    return R.color.lightgreen500;
   }
 
   @Override protected int provideStatusBarColor() {
-    return R.color.red700;
+    return R.color.lightgreen700;
   }
 }
