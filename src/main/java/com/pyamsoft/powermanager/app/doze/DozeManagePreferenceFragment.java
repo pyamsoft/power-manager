@@ -68,22 +68,24 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
     final SwitchPreferenceCompat manageSensors =
         (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
-    manageSensors.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean b = (boolean) newValue;
-        if (b) {
-          final boolean hasPermission = writePermissionObserver.is();
-          Timber.d("Has sensor permission: %s", hasPermission);
-          if (!hasPermission) {
-            AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-                new SensorsExplanationDialog(), "sensors_explain");
-          }
-          return hasPermission;
-        } else {
-          return true;
+    // Attempt to fix #14
+    manageSensors.setOnPreferenceClickListener(preference -> {
+      final boolean b = manageSensors.isChecked();
+      if (b) {
+        // We are attempting to enable sensors
+        final boolean hasPermission = writePermissionObserver.is();
+        Timber.d("Has sensor permission: %s", hasPermission);
+        if (!hasPermission) {
+          // We don't have permission, set back to unchecked
+          manageSensors.setChecked(false);
+
+          AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+              new SensorsExplanationDialog(), "sensors_explain");
         }
       }
-      return false;
+
+      // Always handle click
+      return true;
     });
   }
 
