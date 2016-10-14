@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.bluetooth;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -38,7 +40,8 @@ import rx.Scheduler;
 
   @Provides @Named("bluetooth_manage_pref_interactor")
   BaseManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
-      @Named("mod_bluetooth_manage") BooleanInterestModifier manageModifier) {
-    return new BluetoothManagePreferenceInteractorImpl(manageModifier);
+      @Named("mod_bluetooth_manage") BooleanInterestModifier manageModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    return new BluetoothManagePreferenceInteractorImpl(manageModifier, preferences);
   }
 }

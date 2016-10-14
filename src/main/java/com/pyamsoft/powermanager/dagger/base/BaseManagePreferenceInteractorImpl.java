@@ -17,14 +17,19 @@
 package com.pyamsoft.powermanager.dagger.base;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import rx.Observable;
 
 public abstract class BaseManagePreferenceInteractorImpl implements BaseManagePreferenceInteractor {
 
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @NonNull private final BooleanInterestModifier manageModifier;
 
-  protected BaseManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
+  protected BaseManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier,
+      @NonNull PowerManagerPreferences preferences) {
     this.manageModifier = manageModifier;
+    this.preferences = preferences;
   }
 
   @Override public void updateManage(boolean state) {
@@ -33,5 +38,13 @@ public abstract class BaseManagePreferenceInteractorImpl implements BaseManagePr
     } else {
       manageModifier.unset();
     }
+  }
+
+  @NonNull @Override public Observable<Boolean> hasShownOnboarding() {
+    return Observable.defer(() -> Observable.just(preferences.isManageOnboardingShown()));
+  }
+
+  @Override public void setOnboarding() {
+    preferences.setManageOnboardingShown();
   }
 }

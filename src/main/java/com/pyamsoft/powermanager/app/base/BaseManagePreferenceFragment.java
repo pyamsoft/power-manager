@@ -24,11 +24,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
+import com.pyamsoft.powermanager.app.preference.ViewListPreference;
+import com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
@@ -38,13 +41,14 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
-  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
-  @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
+  @SuppressWarnings("WeakerAccess") ViewSwitchPreferenceCompat managePreference;
+  @SuppressWarnings("WeakerAccess") ViewListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
   private String manageKey;
   private String presetTimeKey;
   @Nullable private String timeKey;
   private long loadedKey;
+  @Nullable private TapTargetSequence sequence;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -80,8 +84,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   private void resolvePreferences() {
-    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
-    presetTimePreference = (ListPreference) findPreference(presetTimeKey);
+    managePreference = (ViewSwitchPreferenceCompat) findPreference(manageKey);
+    presetTimePreference = (ViewListPreference) findPreference(presetTimeKey);
     customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
 
     if (managePreference == null) {
@@ -195,6 +199,66 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public void onManageUnset() {
     managePreference.setChecked(false);
+  }
+
+  @Override public void showOnBoarding() {
+    Timber.d("Show manage onboarding");
+
+    TapTarget manageTarget = null;
+    final View manageView = managePreference.getRootView();
+    if (manageView != null) {
+      final View switchView = manageView.findViewById(R.id.switchWidget);
+      if (switchView != null) {
+        manageTarget =
+            TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
+                getString(R.string.onboard_desc_manage_manage)).tintTarget(false).cancelable(false);
+      }
+    }
+
+    TapTarget listTarget = null;
+    final View listView = presetTimePreference.getRootView();
+    if (listView != null) {
+      listTarget = TapTarget.forView(listView, getString(R.string.onboard_title_manage_preset),
+          getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
+    }
+
+    TapTarget customTarget = null;
+    if (customTimePreference != null) {
+      final View customView = customTimePreference.getRootView();
+      if (customView != null) {
+        customTarget =
+            TapTarget.forView(customView, getString(R.string.onboard_title_manage_custom),
+                getString(R.string.onboard_desc_manage_custom)).tintTarget(false).cancelable(false);
+      }
+    }
+
+    // If we have all valid targets for the sequence
+    if (sequence == null) {
+      sequence = new TapTargetSequence(getActivity());
+      if (manageTarget != null) {
+        sequence.target(manageTarget);
+      }
+      if (listTarget != null) {
+        sequence.target(listTarget);
+      }
+      if (customTarget != null) {
+        sequence.target(customTarget);
+      }
+
+      sequence.listener(new TapTargetSequence.Listener() {
+        @Override public void onSequenceFinish() {
+          if (presenter != null) {
+            presenter.setShownOnBoarding();
+          }
+        }
+
+        @Override public void onSequenceCanceled() {
+
+        }
+      });
+    }
+
+    sequence.start();
   }
 
   /**

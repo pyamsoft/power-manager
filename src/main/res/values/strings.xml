@@ -24,5 +24,16 @@
   <string name="create_trigger_name_explain">Enter the name of the new Power Trigger here. Names are a single line in length, but should be able to handle any character.</string>
   <string name="create_trigger_percent_explain">Enter the percent that the Power Trigger should activate on. Percents are a non zero, positive number, and may not always run exactly depending on your current settings.</string>
   <string name="no_power_triggers_msg">No Power Triggers! Make one down below!</string>
+
+  <string name="onboard_title_module">Power Manager Modules</string>
+  <string name="onboard_desc_module">Each module focuses on a different component of power management.</string>
+  <string name="onboard_title_module_manage">Module Managed State</string>
+  <string name="onboard_desc_module_manage">The mark on the side of each module conveys whether or not the module is currently controlled by Power Manager</string>
+  <string name="onboard_title_manage_manage">Manage Switch</string>
+  <string name="onboard_desc_manage_manage">This switch controls whether or not the module is controlled by Power Manager</string>
+  <string name="onboard_title_manage_preset">Preset Delay Times</string>
+  <string name="onboard_desc_manage_preset">When managed, the time selected her controls the delay before Power Manager begins controlling this component</string>
+  <string name="onboard_title_manage_custom">Custom Delay Time</string>
+  <string name="onboard_desc_manage_custom">When managed, for more fine grained control, a custom time can be specified</string>
 </resources>
 

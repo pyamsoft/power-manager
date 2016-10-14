@@ -17,13 +17,15 @@
 package com.pyamsoft.powermanager.dagger.wear;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class WearManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
-  @Inject WearManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
-    super(manageModifier);
+  @Inject WearManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    super(manageModifier, preferences);
   }
 }

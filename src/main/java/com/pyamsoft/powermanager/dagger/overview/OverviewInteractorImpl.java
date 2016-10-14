@@ -30,10 +30,10 @@ class OverviewInteractorImpl implements OverviewInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> hasShownOnboarding() {
-    return Observable.defer(() -> Observable.just(preferences.isOnboardingShown()));
+    return Observable.defer(() -> Observable.just(preferences.isOverviewOnboardingShown()));
   }
 
   @Override public void setShownOnboarding() {
-    preferences.setOnboardingShown();
+    preferences.setOverviewOnboardingShown();
   }
 }
