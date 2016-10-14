@@ -25,6 +25,8 @@ public interface BaseManagePreferencePresenter
 
   void setShownOnBoarding();
 
+  void showOnboardingIfNeeded();
+
   interface ManagePreferenceView {
 
     void onManageSet();

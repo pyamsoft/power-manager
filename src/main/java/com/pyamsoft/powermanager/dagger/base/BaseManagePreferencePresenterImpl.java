@@ -49,7 +49,6 @@ public abstract class BaseManagePreferencePresenterImpl
     getView(
         managePreferenceView -> manageObserver.register(OBS_TAG, managePreferenceView::onManageSet,
             managePreferenceView::onManageUnset));
-    showOnboardingIfNeeded();
   }
 
   @Override protected void onUnbind() {
@@ -65,7 +64,7 @@ public abstract class BaseManagePreferencePresenterImpl
     interactor.setOnboarding();
   }
 
-  @SuppressWarnings("WeakerAccess") void showOnboardingIfNeeded() {
+  @Override public void showOnboardingIfNeeded() {
     unsubOnboarding();
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)

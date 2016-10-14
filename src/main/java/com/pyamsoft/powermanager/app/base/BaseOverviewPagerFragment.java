@@ -26,7 +26,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +39,7 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import timber.log.Timber;
 
 public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     implements BaseOverviewPagerPresenter.View {
@@ -50,9 +51,10 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   @NonNull private final AsyncDrawable.Mapper asyncDrawableMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") BaseOverviewPagerPresenter presenter;
+  FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
-  private FragmentPreferenceContainerPagerBinding binding;
   private long loadedKey;
+  private ViewPager.OnPageChangeListener pageChangeListener;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -85,6 +87,7 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
     removeTabLayout();
     setActionBarUpEnabled(false);
     asyncDrawableMap.clear();
+    binding.preferenceContainerPager.removeOnPageChangeListener(pageChangeListener);
     binding.unbind();
   }
 
@@ -148,8 +151,28 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   }
 
   private void addPreferenceFragments() {
-    final PagerAdapter adapter = getPagerAdapter();
+    final BasePagerAdapter adapter = getPagerAdapter();
+
+    pageChangeListener = new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override public void onPageSelected(int position) {
+        Timber.d("Selected page: %d", position);
+        adapter.onPageSelected(binding.preferenceContainerPager, position);
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+
+      }
+    };
+    binding.preferenceContainerPager.addOnPageChangeListener(pageChangeListener);
+
     binding.preferenceContainerPager.setAdapter(adapter);
+    binding.preferenceContainerPager.setCurrentItem(0);
+    adapter.onPageSelected(binding.preferenceContainerPager, 0);
   }
 
   private void addTabLayoutToAppBar() {

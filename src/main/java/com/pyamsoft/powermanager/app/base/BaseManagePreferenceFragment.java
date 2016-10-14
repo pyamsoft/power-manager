@@ -50,6 +50,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @Nullable private String timeKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
+  private boolean showOnboardingWhenAvailable;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -60,6 +61,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       timeKey = getString(timeResId);
     }
     injectDependencies();
+  }
+
+  public void onSelected() {
+    if (presenter == null || !presenter.isBound()) {
+      showOnboardingWhenAvailable = true;
+    } else {
+      showOnboardingWhenAvailable = false;
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   /**
@@ -145,6 +155,10 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    if (showOnboardingWhenAvailable) {
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   @Override public void onStop() {

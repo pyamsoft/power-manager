@@ -52,6 +52,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   private String disableTimeKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
+  private boolean showOnboardingWhenAvailable;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -77,6 +78,15 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
                 presenter = persist;
               }
             });
+  }
+
+  public void onSelected() {
+    if (presenter == null || !presenter.isBound()) {
+      showOnboardingWhenAvailable = true;
+    } else {
+      showOnboardingWhenAvailable = false;
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   private void resolvePreferences() {
@@ -192,6 +202,10 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    if (showOnboardingWhenAvailable) {
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   @Override public void onStop() {

@@ -48,7 +48,6 @@ public abstract class BasePeriodPreferencePresenterImpl
     super.onBind();
     getView(periodPreferenceView -> observer.register(OBS_TAG, periodPreferenceView::onPeriodicSet,
         periodPreferenceView::onPeriodicUnset));
-    showOnboardingIfNeeded();
   }
 
   @Override protected void onUnbind() {
@@ -65,7 +64,7 @@ public abstract class BasePeriodPreferencePresenterImpl
     interactor.setOnboarding();
   }
 
-  @SuppressWarnings("WeakerAccess") void showOnboardingIfNeeded() {
+  @Override public void showOnboardingIfNeeded() {
     unsubOnboarding();
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
