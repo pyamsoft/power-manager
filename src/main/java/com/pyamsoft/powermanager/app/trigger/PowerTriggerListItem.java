@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
@@ -30,6 +31,8 @@ import timber.log.Timber;
 
 class PowerTriggerListItem
     extends AbstractItem<PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
+
+  @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerEntry entry;
   @SuppressWarnings("WeakerAccess") @NonNull final OnTriggerEnableChangeListener changeListener;
@@ -101,6 +104,17 @@ class PowerTriggerListItem
   interface OnTriggerLongClickListener {
 
     void onLongClick(@NonNull PowerTriggerEntry entry, int position);
+  }
+
+  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
+    return FACTORY;
+  }
+
+  @SuppressWarnings("WeakerAccess") protected static class ItemFactory
+      implements ViewHolderFactory<ViewHolder> {
+    @Override public ViewHolder create(View v) {
+      return new ViewHolder(v);
+    }
   }
 
   public static final class ViewHolder extends RecyclerView.ViewHolder {
