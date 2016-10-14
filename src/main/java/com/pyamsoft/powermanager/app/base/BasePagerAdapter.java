@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 
 public abstract class BasePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -64,7 +65,19 @@ public abstract class BasePagerAdapter extends FragmentStatePagerAdapter {
     return title;
   }
 
-  @CheckResult @NonNull protected abstract Fragment getManageFragment();
+  @CheckResult @NonNull protected abstract BaseManagePreferenceFragment getManageFragment();
 
-  @CheckResult @NonNull protected abstract Fragment getPeriodicFragment();
+  @CheckResult @NonNull protected abstract BasePeriodicPreferenceFragment getPeriodicFragment();
+
+  void onPageSelected(@NonNull ViewPager viewPager, int position) {
+    final Object fragment = instantiateItem(viewPager, position);
+    switch (position) {
+      case 0:
+        ((BaseManagePreferenceFragment) fragment).onSelected();
+        break;
+      case 1:
+        ((BasePeriodicPreferenceFragment) fragment).onSelected();
+        break;
+    }
+  }
 }

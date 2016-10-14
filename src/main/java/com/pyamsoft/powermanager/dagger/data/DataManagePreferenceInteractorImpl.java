@@ -17,13 +17,15 @@
 package com.pyamsoft.powermanager.dagger.data;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class DataManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
-  @Inject DataManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier) {
-    super(manageModifier);
+  @Inject DataManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    super(manageModifier, preferences);
   }
 }

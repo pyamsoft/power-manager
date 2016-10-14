@@ -25,6 +25,5 @@ public interface BaseOverviewPagerPresenter extends Presenter<BaseOverviewPagerP
   void wrapUnset();
 
   interface View {
-
   }
 }

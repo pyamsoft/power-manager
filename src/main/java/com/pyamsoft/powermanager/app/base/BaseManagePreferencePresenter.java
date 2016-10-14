@@ -23,10 +23,16 @@ public interface BaseManagePreferencePresenter
 
   void updateManage(boolean state);
 
+  void setShownOnBoarding();
+
+  void showOnboardingIfNeeded();
+
   interface ManagePreferenceView {
 
     void onManageSet();
 
     void onManageUnset();
+
+    void showOnBoarding();
   }
 }

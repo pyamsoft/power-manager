@@ -17,12 +17,14 @@
 package com.pyamsoft.powermanager.dagger.bluetooth;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class BluetoothPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
-  @Inject BluetoothPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
-    super(periodModifier);
+  @Inject BluetoothPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    super(periodModifier, preferences);
   }
 }

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -24,11 +25,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v7.preference.ListPreference;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
+import com.pyamsoft.powermanager.app.preference.ViewListPreference;
+import com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
@@ -38,13 +44,24 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
-  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
-  @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
+  @SuppressWarnings("WeakerAccess") ViewSwitchPreferenceCompat managePreference;
+  @SuppressWarnings("WeakerAccess") ViewListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
   private String manageKey;
   private String presetTimeKey;
   @Nullable private String timeKey;
   private long loadedKey;
+  @Nullable private TapTargetSequence sequence;
+  private boolean showOnboardingWhenAvailable;
+
+  void setBackButtonEnabled(boolean enabled) {
+    final Activity activity = getActivity();
+    if (activity instanceof MainActivity) {
+      ((MainActivity) activity).setBackButtonEnabled(enabled);
+    } else {
+      throw new ClassCastException("Activity is not MainActivity");
+    }
+  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -55,6 +72,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       timeKey = getString(timeResId);
     }
     injectDependencies();
+  }
+
+  public void onSelected() {
+    if (presenter == null || !presenter.isBound()) {
+      showOnboardingWhenAvailable = true;
+    } else {
+      showOnboardingWhenAvailable = false;
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   /**
@@ -80,8 +106,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   private void resolvePreferences() {
-    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
-    presetTimePreference = (ListPreference) findPreference(presetTimeKey);
+    managePreference = (ViewSwitchPreferenceCompat) findPreference(manageKey);
+    presetTimePreference = (ViewListPreference) findPreference(presetTimeKey);
     customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
 
     if (managePreference == null) {
@@ -140,6 +166,10 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    if (showOnboardingWhenAvailable) {
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   @Override public void onStop() {
@@ -195,6 +225,84 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
   @Override public void onManageUnset() {
     managePreference.setChecked(false);
+  }
+
+  @Override public void showOnBoarding() {
+    Timber.d("Show manage onboarding");
+    if (sequence == null) {
+      sequence = new TapTargetSequence(getActivity());
+
+      TapTarget manageTarget = null;
+      final View manageView = managePreference.getRootView();
+      if (manageView != null) {
+        final View switchView = manageView.findViewById(R.id.switchWidget);
+        if (switchView != null) {
+          manageTarget =
+              TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
+                  getString(R.string.onboard_desc_manage_manage))
+                  .tintTarget(false)
+                  .cancelable(false);
+        }
+      }
+
+      TapTarget listTarget = null;
+      final View listView = presetTimePreference.getRootView();
+      if (listView != null) {
+        listTarget = TapTarget.forView(listView, getString(R.string.onboard_title_manage_preset),
+            getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
+      }
+
+      TapTarget customTarget = null;
+      if (customTimePreference != null) {
+        final View customView = customTimePreference.getRootView();
+        if (customView != null) {
+          customTarget =
+              TapTarget.forView(customView, getString(R.string.onboard_title_manage_custom),
+                  getString(R.string.onboard_desc_manage_custom))
+                  .tintTarget(false)
+                  .cancelable(false);
+        }
+      }
+
+      TapTarget fabTarget = null;
+      final Fragment parentFragment = getParentFragment();
+      if (parentFragment instanceof BaseOverviewPagerFragment) {
+        final BaseOverviewPagerFragment overviewPagerFragment =
+            (BaseOverviewPagerFragment) parentFragment;
+        fabTarget = TapTarget.forView(overviewPagerFragment.getFabTarget(),
+            getString(R.string.onboard_title_overview_fab),
+            getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+      }
+
+      if (manageTarget != null) {
+        sequence.target(manageTarget);
+      }
+      if (listTarget != null) {
+        sequence.target(listTarget);
+      }
+      if (customTarget != null) {
+        sequence.target(customTarget);
+      }
+      if (fabTarget != null) {
+        sequence.target(fabTarget);
+      }
+
+      sequence.listener(new TapTargetSequence.Listener() {
+        @Override public void onSequenceFinish() {
+          if (presenter != null) {
+            presenter.setShownOnBoarding();
+          }
+          setBackButtonEnabled(true);
+        }
+
+        @Override public void onSequenceCanceled() {
+          setBackButtonEnabled(true);
+        }
+      });
+    }
+
+    setBackButtonEnabled(false);
+    sequence.start();
   }
 
   /**

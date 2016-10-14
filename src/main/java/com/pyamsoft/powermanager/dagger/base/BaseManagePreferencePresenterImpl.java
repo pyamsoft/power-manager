@@ -20,7 +20,11 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 public abstract class BaseManagePreferencePresenterImpl
     extends SchedulerPresenter<BaseManagePreferencePresenter.ManagePreferenceView>
@@ -30,6 +34,7 @@ public abstract class BaseManagePreferencePresenterImpl
       "BaseManagePreferencePresenter";
   @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver manageObserver;
   @NonNull private final BaseManagePreferenceInteractor interactor;
+  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
 
   protected BaseManagePreferencePresenterImpl(
       @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
@@ -53,5 +58,28 @@ public abstract class BaseManagePreferencePresenterImpl
 
   @Override public void updateManage(boolean state) {
     interactor.updateManage(state);
+  }
+
+  @Override public void setShownOnBoarding() {
+    interactor.setOnboarding();
+  }
+
+  @Override public void showOnboardingIfNeeded() {
+    unsubOnboarding();
+    onboardingSubscription = interactor.hasShownOnboarding()
+        .delay(1, TimeUnit.SECONDS)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(onboard -> {
+          if (!onboard) {
+            getView(ManagePreferenceView::showOnBoarding);
+          }
+        }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubOnboarding() {
+    if (!onboardingSubscription.isUnsubscribed()) {
+      onboardingSubscription.unsubscribe();
+    }
   }
 }

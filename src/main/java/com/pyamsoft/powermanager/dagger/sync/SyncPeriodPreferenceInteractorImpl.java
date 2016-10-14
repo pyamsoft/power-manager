@@ -17,12 +17,14 @@
 package com.pyamsoft.powermanager.dagger.sync;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class SyncPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
-  @Inject SyncPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
-    super(periodModifier);
+  @Inject SyncPeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    super(periodModifier, preferences);
   }
 }

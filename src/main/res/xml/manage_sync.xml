@@ -22,7 +22,7 @@
       android:title="Sync Settings">
 
     <!--suppress AndroidElementNotAllowed -->
-    <SwitchPreferenceCompat
+    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
         android:defaultValue="@bool/manage_sync_default"
         android:key="@string/manage_sync_key"
         android:summaryOff="@string/manage_sync_summary_unchecked"
@@ -30,7 +30,8 @@
         android:title="@string/manage_sync_title"
         />
 
-    <CheckBoxPreference
+    <!--suppress AndroidElementNotAllowed -->
+    <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
         android:defaultValue="@bool/ignore_charging_sync_default"
         android:dependency="@string/manage_sync_key"
         android:key="@string/ignore_charging_sync_key"
@@ -44,7 +45,8 @@
   <PreferenceCategory
       android:title="Sync Delay">
 
-    <ListPreference
+    <!--suppress AndroidElementNotAllowed -->
+    <com.pyamsoft.powermanager.app.preference.ViewListPreference
         android:defaultValue="@string/sync_time_default"
         android:dependency="@string/manage_sync_key"
         android:entries="@array/preset_delay_sync_names"

@@ -82,12 +82,12 @@
   <string name="periodic_sync_disable_default">120</string>
   <string name="periodic_sync_disable_key">periodic_sync_disable</string>
   <string name="periodic_sync_disable_title">Periodic Sync Disable</string>
-  <string name="periodic_sync_disable_summary">Periodic Sync Disable</string>
+  <string name="periodic_sync_disable_summary">Duration for how long Sync should stay enabled before being toggled off</string>
 
   <string name="periodic_sync_enable_default">120</string>
   <string name="periodic_sync_enable_key">periodic_sync_enable</string>
   <string name="periodic_sync_enable_title">Periodic Sync Enable</string>
-  <string name="periodic_sync_enable_summary">Periodic Sync Enable</string>
+  <string name="periodic_sync_enable_summary">Duration for how long Sync should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_sync_default">false</bool>
   <string name="ignore_charging_sync_key">ignore_charging_sync</string>

@@ -82,12 +82,12 @@
   <string name="periodic_data_disable_default">120</string>
   <string name="periodic_data_disable_key">periodic_data_disable</string>
   <string name="periodic_data_disable_title">Periodic Data Disable</string>
-  <string name="periodic_data_disable_summary">Periodic Data Disable</string>
+  <string name="periodic_data_disable_summary">Duration for how long Data should stay enabled before being toggled off</string>
 
   <string name="periodic_data_enable_default">120</string>
   <string name="periodic_data_enable_key">periodic_data_enable</string>
   <string name="periodic_data_enable_title">Periodic Data Enable</string>
-  <string name="periodic_data_enable_summary">Periodic Data Enable</string>
+  <string name="periodic_data_enable_summary">Duration for how long Data should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_data_default">false</bool>
   <string name="ignore_charging_data_key">ignore_charging_data</string>

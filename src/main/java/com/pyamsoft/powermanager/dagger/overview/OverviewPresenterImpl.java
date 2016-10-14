@@ -56,7 +56,7 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.View>
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
           if (!onboard) {
-            getView(OverviewPresenter.View::showOnBoarding);
+            getView(View::showOnBoarding);
           }
         }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
   }

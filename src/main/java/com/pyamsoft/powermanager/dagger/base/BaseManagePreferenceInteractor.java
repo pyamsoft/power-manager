@@ -16,7 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.base;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
+
 public interface BaseManagePreferenceInteractor {
+
+  @CheckResult @NonNull Observable<Boolean> hasShownOnboarding();
+
+  void setOnboarding();
 
   void updateManage(boolean state);
 }

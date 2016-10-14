@@ -82,12 +82,12 @@
   <string name="periodic_bluetooth_disable_default">120</string>
   <string name="periodic_bluetooth_disable_key">periodic_bluetooth_disable</string>
   <string name="periodic_bluetooth_disable_title">Periodic Bluetooth Disable</string>
-  <string name="periodic_bluetooth_disable_summary">Periodic Bluetooth Disable</string>
+  <string name="periodic_bluetooth_disable_summary">Duration for how long Bluetooth should stay enabled before being toggled off</string>
 
   <string name="periodic_bluetooth_enable_default">120</string>
   <string name="periodic_bluetooth_enable_key">periodic_bluetooth_enable</string>
   <string name="periodic_bluetooth_enable_title">Periodic Bluetooth Enable</string>
-  <string name="periodic_bluetooth_enable_summary">Periodic Bluetooth Enable</string>
+  <string name="periodic_bluetooth_enable_summary">Duration for how long Bluetooth should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_bluetooth_default">false</bool>
   <string name="ignore_charging_bluetooth_key">ignore_charging_bluetooth</string>

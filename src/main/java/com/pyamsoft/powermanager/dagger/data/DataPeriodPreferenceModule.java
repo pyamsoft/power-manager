@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.data;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -38,7 +40,8 @@ import rx.Scheduler;
 
   @Provides @Named("data_period_pref_interactor")
   BasePeriodPreferenceInteractor provideDataManagePreferenceInteractor(
-      @Named("mod_data_periodic") BooleanInterestModifier periodicModifier) {
-    return new DataPeriodPreferenceInteractorImpl(periodicModifier);
+      @Named("mod_data_periodic") BooleanInterestModifier periodicModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    return new DataPeriodPreferenceInteractorImpl(periodicModifier, preferences);
   }
 }

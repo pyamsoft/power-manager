@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.dagger.wear;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -38,7 +40,8 @@ import rx.Scheduler;
 
   @Provides @Named("wear_manage_pref_interactor")
   BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
-      @Named("mod_wear_manage") BooleanInterestModifier manageModifier) {
-    return new WearManagePreferenceInteractorImpl(manageModifier);
+      @Named("mod_wear_manage") BooleanInterestModifier manageModifier,
+      @NonNull PowerManagerPreferences preferences) {
+    return new WearManagePreferenceInteractorImpl(manageModifier, preferences);
   }
 }

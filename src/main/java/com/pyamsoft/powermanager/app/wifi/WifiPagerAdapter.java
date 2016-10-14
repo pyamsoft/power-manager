@@ -17,9 +17,10 @@
 package com.pyamsoft.powermanager.app.wifi;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
 
 class WifiPagerAdapter extends BasePagerAdapter {
 
@@ -27,11 +28,11 @@ class WifiPagerAdapter extends BasePagerAdapter {
     super(fm);
   }
 
-  @NonNull @Override protected Fragment getManageFragment() {
+  @NonNull @Override protected BaseManagePreferenceFragment getManageFragment() {
     return new WifiManagePreferenceFragment();
   }
 
-  @NonNull @Override protected Fragment getPeriodicFragment() {
+  @NonNull @Override protected BasePeriodicPreferenceFragment getPeriodicFragment() {
     return new WifiPeriodicPreferenceFragment();
   }
 }

@@ -20,23 +20,27 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
+import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends Preference
     implements CustomTimeInputPreferencePresenter.View {
 
   @SuppressWarnings("WeakerAccess") @NonNull final CustomTimeInputPreferencePresenter presenter;
-  private TextWatcher watcher;
-  private EditText editText;
-  private PreferenceCustomTimeInputBinding binding;
+  @Nullable private TextWatcher watcher;
+  @Nullable private EditText editText;
+  @Nullable private PreferenceCustomTimeInputBinding binding;
+  @NonNull private WeakReference<View> rootView = new WeakReference<>(null);
 
   public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -79,14 +83,20 @@ public abstract class CustomTimeInputPreference extends Preference
     presenter.bindView(this);
   }
 
+  @Nullable @CheckResult public View getRootView() {
+    return rootView.get();
+  }
+
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
+    rootView = new WeakReference<>(holder.itemView);
 
     // We call unbind because when a preference is changed it can be re-bound without being properly recycled
     unbind(false);
 
     holder.itemView.setClickable(false);
     binding = DataBindingUtil.bind(holder.itemView);
+    editText = binding.preferenceCustomTimeInput.getEditText();
 
     watcher = new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -104,7 +114,6 @@ public abstract class CustomTimeInputPreference extends Preference
       }
     };
 
-    editText = binding.preferenceCustomTimeInput.getEditText();
     if (editText != null) {
       Timber.d("Add text watcher");
       editText.addTextChangedListener(watcher);
@@ -147,13 +156,17 @@ public abstract class CustomTimeInputPreference extends Preference
     if (binding != null) {
       Timber.d("Custom time updated to: %d", time);
       if (watcher != null) {
-        Timber.d("Remove text watcher");
-        editText.removeTextChangedListener(watcher);
+        if (editText != null) {
+          Timber.d("Remove text watcher");
+          editText.removeTextChangedListener(watcher);
+        }
       }
 
       binding.preferenceCustomTimeInput.setErrorEnabled(false);
-      editText.setText(String.valueOf(time));
-      editText.setSelection(editText.getText().length());
+      if (editText != null) {
+        editText.setText(String.valueOf(time));
+        editText.setSelection(editText.getText().length());
+      }
       binding.preferenceCustomTimeSummary.setText(formatSummaryStringForTime(time));
 
       if (watcher != null) {

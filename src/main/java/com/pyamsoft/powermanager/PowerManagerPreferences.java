@@ -22,9 +22,17 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
-  @CheckResult boolean isOnboardingShown();
+  @CheckResult boolean isPeriodicOnboardingShown();
 
-  void setOnboardingShown();
+  void setPeriodicOnboardingShown();
+
+  @CheckResult boolean isManageOnboardingShown();
+
+  void setManageOnboardingShown();
+
+  @CheckResult boolean isOverviewOnboardingShown();
+
+  void setOverviewOnboardingShown();
 
   @CheckResult long getWearableDelay();
 

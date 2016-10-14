@@ -17,14 +17,19 @@
 package com.pyamsoft.powermanager.dagger.base;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import rx.Observable;
 
 public abstract class BasePeriodPreferenceInteractorImpl implements BasePeriodPreferenceInteractor {
 
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @NonNull private final BooleanInterestModifier periodModifier;
 
-  protected BasePeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier) {
+  protected BasePeriodPreferenceInteractorImpl(@NonNull BooleanInterestModifier periodModifier,
+      @NonNull PowerManagerPreferences preferences) {
     this.periodModifier = periodModifier;
+    this.preferences = preferences;
   }
 
   @Override public void updatePeriodic(boolean state) {
@@ -33,5 +38,13 @@ public abstract class BasePeriodPreferenceInteractorImpl implements BasePeriodPr
     } else {
       periodModifier.unset();
     }
+  }
+
+  @NonNull @Override public Observable<Boolean> hasShownOnboarding() {
+    return Observable.defer(() -> Observable.just(preferences.isPeriodicOnboardingShown()));
+  }
+
+  @Override public void setOnboarding() {
+    preferences.setPeriodicOnboardingShown();
   }
 }

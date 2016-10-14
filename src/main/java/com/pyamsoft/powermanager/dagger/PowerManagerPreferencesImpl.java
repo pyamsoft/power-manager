@@ -99,7 +99,9 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
 
-  @NonNull private final String onboardingShown = "ONBOARD";
+  @NonNull private final String overviewOnboard = "overview_onboard";
+  @NonNull private final String manageOnboard = "manage_onboard";
+  @NonNull private final String periodOnboard = "period_onboard";
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -179,12 +181,28 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
   }
 
-  @Override public boolean isOnboardingShown() {
-    return get(onboardingShown, false);
+  @Override public boolean isPeriodicOnboardingShown() {
+    return get(periodOnboard, false);
   }
 
-  @Override public void setOnboardingShown() {
-    put(onboardingShown, true);
+  @Override public void setPeriodicOnboardingShown() {
+    put(periodOnboard, true);
+  }
+
+  @Override public boolean isManageOnboardingShown() {
+    return get(manageOnboard, false);
+  }
+
+  @Override public void setManageOnboardingShown() {
+    put(manageOnboard, true);
+  }
+
+  @Override public boolean isOverviewOnboardingShown() {
+    return get(overviewOnboard, false);
+  }
+
+  @Override public void setOverviewOnboardingShown() {
+    put(overviewOnboard, true);
   }
 
   @Override public long getWearableDelay() {
