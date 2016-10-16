@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -31,47 +29,45 @@ import rx.Scheduler;
 @Module public class ManageModifierModule {
 
   @Singleton @Named("mod_wifi_manage") @Provides BooleanInterestModifier provideWifiModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("sub") Scheduler subscribeScheduler,
-      @NonNull @Named("obs") Scheduler observeScheduler) {
-    return new WifiManageModifier(context, preferences, subscribeScheduler, observeScheduler);
-  }
-
-  @Singleton @Named("mod_data_manage") @Provides BooleanInterestModifier provideDataModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("sub") Scheduler subscribeScheduler,
-      @NonNull @Named("obs") Scheduler observeScheduler) {
-    return new DataManageModifier(context, preferences, subscribeScheduler, observeScheduler);
-  }
-
-  @Singleton @Named("mod_bluetooth_manage") @Provides
-  BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("sub") Scheduler subscribeScheduler,
       @NonNull @Named("obs") Scheduler observeScheduler) {
-    return new BluetoothManageModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new WifiManageModifier(preferences, subscribeScheduler, observeScheduler);
+  }
+
+  @Singleton @Named("mod_data_manage") @Provides BooleanInterestModifier provideDataModifier(
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
+    return new DataManageModifier(preferences, subscribeScheduler, observeScheduler);
+  }
+
+  @Singleton @Named("mod_bluetooth_manage") @Provides
+  BooleanInterestModifier provideBluetoothModifier(@NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("sub") Scheduler subscribeScheduler,
+      @NonNull @Named("obs") Scheduler observeScheduler) {
+    return new BluetoothManageModifier(preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_sync_manage") @Provides BooleanInterestModifier provideSyncModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("sub") Scheduler subscribeScheduler,
       @NonNull @Named("obs") Scheduler observeScheduler) {
-    return new SyncManageModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new SyncManageModifier(preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_wear_manage") @Provides BooleanInterestModifier provideWearModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("sub") Scheduler subscribeScheduler,
       @NonNull @Named("obs") Scheduler observeScheduler) {
-    return new WearableManageModifier(context, preferences, subscribeScheduler, observeScheduler);
+    return new WearableManageModifier(preferences, subscribeScheduler, observeScheduler);
   }
 
   @Singleton @Named("mod_doze_manage") @Provides BooleanInterestModifier provideDozModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("sub") Scheduler subscribeScheduler,
       @NonNull @Named("obs") Scheduler observeScheduler,
       @Named("obs_doze_permission") PermissionObserver observer) {
-    return new DozeManageModifier(context, preferences, subscribeScheduler, observeScheduler,
-        observer);
+    return new DozeManageModifier(preferences, subscribeScheduler, observeScheduler, observer);
   }
 }

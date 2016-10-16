@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
@@ -25,9 +24,8 @@ import rx.Scheduler;
 
 class BluetoothManageModifier extends BooleanPreferenceModifier {
 
-  @Inject BluetoothManageModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
+  @Inject BluetoothManageModifier(@NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(preferences, subscribeScheduler, observeScheduler);
   }
 

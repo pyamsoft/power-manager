@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
@@ -25,7 +24,7 @@ import rx.Scheduler;
 
 class SyncManageModifier extends BooleanPreferenceModifier {
 
-  @Inject SyncManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject SyncManageModifier(@NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(preferences, subscribeScheduler, observeScheduler);
   }

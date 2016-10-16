@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
@@ -32,10 +31,10 @@ class DozeManageModifier extends BooleanPreferenceModifier {
   @NonNull private final PermissionObserver observer;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
-  @Inject DozeManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject DozeManageModifier(@NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler,
       @NonNull PermissionObserver observer) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+    super(preferences, subscribeScheduler, observeScheduler);
     this.observer = observer;
   }
 
