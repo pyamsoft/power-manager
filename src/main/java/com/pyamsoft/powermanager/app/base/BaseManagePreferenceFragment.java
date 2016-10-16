@@ -88,7 +88,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
    */
   protected abstract void injectDependencies();
 
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState,
@@ -163,7 +163,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
   }
 
-  @Override public void onStart() {
+  @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
 
@@ -172,24 +172,24 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public void onStop() {
+  @CallSuper @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
+  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
-  @Override public void onDestroy() {
+  @CallSuper @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
   }
 
-  @Override public final void onDestroyView() {
+  @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     if (customTimePreference != null) {
       customTimePreference.setOnPreferenceChangeListener(null);
@@ -219,15 +219,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public void onManageSet() {
+  @CallSuper @Override public void onManageSet() {
     managePreference.setChecked(true);
   }
 
-  @Override public void onManageUnset() {
+  @CallSuper @Override public void onManageUnset() {
     managePreference.setChecked(false);
   }
 
-  @Override public void showOnBoarding() {
+  @CallSuper @Override public void showOnBoarding() {
     Timber.d("Show manage onboarding");
     if (sequence == null) {
       sequence = new TapTargetSequence(getActivity());

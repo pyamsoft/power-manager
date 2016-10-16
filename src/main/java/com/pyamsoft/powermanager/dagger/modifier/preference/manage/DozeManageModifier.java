@@ -19,25 +19,41 @@ package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 class DozeManageModifier extends BooleanPreferenceModifier {
 
-  @NonNull private final BooleanInterestObserver observer;
+  @NonNull private final PermissionObserver observer;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
   @Inject DozeManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler,
-      @NonNull BooleanInterestObserver observer) {
-    super(preferences, subscribeScheduler, observeScheduler);
+      @NonNull PermissionObserver observer) {
+    super(context, preferences, subscribeScheduler, observeScheduler);
     this.observer = observer;
   }
 
+  @SuppressWarnings("WeakerAccess") void unsub() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
+    }
+  }
+
   @Override protected void set(@NonNull PowerManagerPreferences preferences) {
-    // Don't allow the setting of Doze if we don't have permission
-    preferences.setDozeManaged(observer.is());
+    unsub();
+    subscription = observer.hasPermission()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(preferences::setDozeManaged, throwable -> {
+          Timber.e(throwable, "onError DozeManageModifier set");
+          unsub();
+        }, this::unsub);
   }
 
   @Override protected void unset(@NonNull PowerManagerPreferences preferences) {

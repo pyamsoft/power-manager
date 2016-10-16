@@ -20,13 +20,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
 import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import rx.Scheduler;
 
 @Module public class StateModifierModule {
 
@@ -57,8 +58,10 @@ import javax.inject.Singleton;
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull SensorFixReceiver sensorFixReceiver,
-      @Named("obs_doze_permission") BooleanInterestObserver dozePermissionObserver) {
-    return new DozeStateModifier(context, preferences, sensorFixReceiver, dozePermissionObserver);
+      @NonNull SensorFixReceiver sensorFixReceiver, @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler,
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
+    return new DozeStateModifier(context, preferences, sensorFixReceiver, obsScheduler,
+        subScheduler, dozePermissionObserver);
   }
 }

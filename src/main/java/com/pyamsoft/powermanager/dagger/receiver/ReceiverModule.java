@@ -18,16 +18,18 @@ package com.pyamsoft.powermanager.dagger.receiver;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import rx.Scheduler;
 
 @Module public class ReceiverModule {
 
   @Singleton @Provides SensorFixReceiver provideSensorFixReceiver(@NonNull Context context,
-      @Named("obs_write_permission") BooleanInterestObserver writePermissionObserver) {
-    return new SensorFixReceiverImpl(context, writePermissionObserver);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
+      @Named("obs_write_permission") PermissionObserver writePermissionObserver) {
+    return new SensorFixReceiverImpl(context, obsScheduler, subScheduler, writePermissionObserver);
   }
 }

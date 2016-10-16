@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.observer.permission;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -27,12 +27,12 @@ import javax.inject.Singleton;
 @Module public class PermissionObserverModule {
 
   @Singleton @Named("obs_doze_permission") @Provides
-  BooleanInterestObserver provideDozePermissionObserver(@NonNull Context context) {
+  PermissionObserver provideDozePermissionObserver(@NonNull Context context) {
     return new DozePermissionObserver(context);
   }
 
   @Singleton @Named("obs_write_permission") @Provides
-  BooleanInterestObserver provideSystemWritePermissionObserver(@NonNull Context context) {
+  PermissionObserver provideSystemWritePermissionObserver(@NonNull Context context) {
     return new SystemWritePermissionObserver(context);
   }
 }

@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozePermissionObserver extends PermissionObserver {
+class DozePermissionObserver extends PermissionObserverImpl {
 
   @Inject DozePermissionObserver(@NonNull Context context) {
     super(context, Manifest.permission.DUMP);

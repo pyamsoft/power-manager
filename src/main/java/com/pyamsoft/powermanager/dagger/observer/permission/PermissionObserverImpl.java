@@ -21,16 +21,17 @@ import android.content.pm.PackageManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
+import rx.Observable;
 import timber.log.Timber;
 
-abstract class PermissionObserver implements BooleanInterestObserver {
+abstract class PermissionObserverImpl implements PermissionObserver {
 
   // KLUDGE Holds onto App context
-  @NonNull private final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final String permission;
 
-  PermissionObserver(@NonNull Context context, @NonNull String permission) {
+  PermissionObserverImpl(@NonNull Context context, @NonNull String permission) {
     this.appContext = context.getApplicationContext();
     this.permission = permission;
   }
@@ -40,8 +41,8 @@ abstract class PermissionObserver implements BooleanInterestObserver {
         == PackageManager.PERMISSION_GRANTED;
   }
 
-  @Override public final boolean is() {
-    return checkPermission(appContext);
+  @NonNull @Override public Observable<Boolean> hasPermission() {
+    return Observable.defer(() -> Observable.just(checkPermission(appContext)));
   }
 
   @CheckResult protected abstract boolean checkPermission(Context appContext);

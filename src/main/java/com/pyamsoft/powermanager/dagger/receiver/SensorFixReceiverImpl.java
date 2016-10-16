@@ -25,8 +25,12 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
+import com.pyamsoft.pydroidrx.SchedulerUtil;
 import javax.inject.Inject;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class SensorFixReceiverImpl implements SensorFixReceiver {
@@ -34,10 +38,16 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
   @NonNull private final BrightnessFixReceiver brightnessFixReceiver;
   @NonNull private final RotateFixReceiver rotateFixReceiver;
 
-  @Inject SensorFixReceiverImpl(@NonNull Context context,
-      @NonNull BooleanInterestObserver writePermissionObserver) {
-    this.brightnessFixReceiver = new BrightnessFixReceiver(context, writePermissionObserver);
-    this.rotateFixReceiver = new RotateFixReceiver(context, writePermissionObserver);
+  @Inject SensorFixReceiverImpl(@NonNull Context context, @NonNull Scheduler obsScheduler,
+      @NonNull Scheduler subScheduler, @NonNull PermissionObserver writePermissionObserver) {
+
+    SchedulerUtil.enforceObserveScheduler(obsScheduler);
+    SchedulerUtil.enforceSubscribeScheduler(subScheduler);
+
+    this.brightnessFixReceiver =
+        new BrightnessFixReceiver(context, obsScheduler, subScheduler, writePermissionObserver);
+    this.rotateFixReceiver =
+        new RotateFixReceiver(context, obsScheduler, subScheduler, writePermissionObserver);
   }
 
   @Override public void register() {
@@ -57,17 +67,21 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
 
   @SuppressWarnings("WeakerAccess") static final class BrightnessFixReceiver
       extends ContentObserver {
-
-    @NonNull private final ContentResolver contentResolver;
-    @NonNull private final BooleanInterestObserver writePermissionObserver;
+    @NonNull final ContentResolver contentResolver;
+    @NonNull private final Scheduler obsScheduler;
+    @NonNull private final Scheduler subScheduler;
+    @NonNull private final PermissionObserver writePermissionObserver;
     boolean originalAutoBright;
     boolean registered = false;
+    @NonNull private Subscription subscription = Subscriptions.empty();
 
-    BrightnessFixReceiver(@NonNull Context context,
-        @NonNull BooleanInterestObserver writePermissionObserver) {
+    BrightnessFixReceiver(@NonNull Context context, @NonNull Scheduler obsScheduler,
+        @NonNull Scheduler subScheduler, @NonNull PermissionObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
       this.contentResolver = context.getApplicationContext().getContentResolver();
       this.writePermissionObserver = writePermissionObserver;
+      this.obsScheduler = obsScheduler;
+      this.subScheduler = subScheduler;
     }
 
     @CheckResult boolean isAutoBrightnessEnabled() {
@@ -84,13 +98,28 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     }
 
     void setAutoBrightnessEnabled(boolean enabled) {
-      if (writePermissionObserver.is()) {
-        Timber.d("Set auto brightness: %s", enabled);
-        Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
-            enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-                : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-      } else {
-        Timber.e("Missing WRITE_SETTINGS permission");
+      unsub();
+      subscription = writePermissionObserver.hasPermission()
+          .subscribeOn(subScheduler)
+          .observeOn(obsScheduler)
+          .subscribe(hasPermission -> {
+            if (hasPermission) {
+              Timber.d("Set auto brightness: %s", enabled);
+              Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
+                  enabled ? Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+                      : Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            } else {
+              Timber.e("Missing WRITE_SETTINGS permission");
+            }
+          }, throwable -> {
+            Timber.e(throwable, "onError setAutoBrightnessEnabled");
+            unsub();
+          }, this::unsub);
+    }
+
+    void unsub() {
+      if (!subscription.isUnsubscribed()) {
+        subscription.unsubscribe();
       }
     }
 
@@ -108,6 +137,7 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
       if (registered) {
         Timber.d("Unregister BrightnessFixReceiver");
         contentResolver.unregisterContentObserver(this);
+        unsub();
         registered = false;
       }
     }
@@ -135,16 +165,21 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
 
   @SuppressWarnings("WeakerAccess") static final class RotateFixReceiver extends ContentObserver {
 
+    @NonNull private final Scheduler obsScheduler;
+    @NonNull private final Scheduler subScheduler;
     @NonNull private final ContentResolver contentResolver;
-    @NonNull private final BooleanInterestObserver writePermissionObserver;
+    @NonNull private final PermissionObserver writePermissionObserver;
     boolean originalAutoRotate;
     boolean registered = false;
+    @NonNull private Subscription subscription = Subscriptions.empty();
 
-    RotateFixReceiver(@NonNull Context context,
-        @NonNull BooleanInterestObserver writePermissionObserver) {
+    RotateFixReceiver(@NonNull Context context, @NonNull Scheduler obsScheduler,
+        @NonNull Scheduler subScheduler, @NonNull PermissionObserver writePermissionObserver) {
       super(new Handler(Looper.getMainLooper()));
       this.contentResolver = context.getApplicationContext().getContentResolver();
       this.writePermissionObserver = writePermissionObserver;
+      this.obsScheduler = obsScheduler;
+      this.subScheduler = subScheduler;
     }
 
     @CheckResult boolean isAutoRotateEnabled() {
@@ -155,12 +190,27 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
     }
 
     void setAutoRotateEnabled(boolean enabled) {
-      if (writePermissionObserver.is()) {
-        Timber.d("Set auto rotate: %s", enabled);
-        Settings.System.putInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION,
-            enabled ? 1 : 0);
-      } else {
-        Timber.e("Missing WRITE_SETTINGS permission");
+      unsub();
+      subscription = writePermissionObserver.hasPermission()
+          .subscribeOn(subScheduler)
+          .observeOn(obsScheduler)
+          .subscribe(hasPermission -> {
+            if (hasPermission) {
+              Timber.d("Set auto rotate: %s", enabled);
+              Settings.System.putInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION,
+                  enabled ? 1 : 0);
+            } else {
+              Timber.e("Missing WRITE_SETTINGS permission");
+            }
+          }, throwable -> {
+            Timber.e(throwable, "onError setAutoBrightnessEnabled");
+            unsub();
+          }, this::unsub);
+    }
+
+    void unsub() {
+      if (!subscription.isUnsubscribed()) {
+        subscription.unsubscribe();
       }
     }
 
@@ -178,6 +228,7 @@ class SensorFixReceiverImpl implements SensorFixReceiver {
       if (registered) {
         Timber.d("Unregister RotateFixReceiver");
         contentResolver.unregisterContentObserver(this);
+        unsub();
         registered = false;
       }
     }
