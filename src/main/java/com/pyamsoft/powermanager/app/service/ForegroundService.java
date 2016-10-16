@@ -95,6 +95,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onDestroy();
     Timber.d("onDestroy");
 
+    setEnabled(false);
     screenOnOffReceiver.unregister();
     presenter.unbindView();
     presenter.destroy();
