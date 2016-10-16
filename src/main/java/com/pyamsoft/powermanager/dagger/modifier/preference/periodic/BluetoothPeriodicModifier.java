@@ -28,7 +28,7 @@ class BluetoothPeriodicModifier extends BooleanPreferenceModifier {
   @Inject BluetoothPeriodicModifier(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
       @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+    super(preferences, subscribeScheduler, observeScheduler);
   }
 
   @Override protected void set(@NonNull PowerManagerPreferences preferences) {

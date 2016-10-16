@@ -28,6 +28,7 @@ import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
@@ -37,25 +38,31 @@ import timber.log.Timber;
 class ForegroundInteractorImpl implements ForegroundInteractor {
 
   private static final int PENDING_RC = 1004;
+  private static final int TOGGLE_RC = 421;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @NonNull private final JobSchedulerCompat jobManager;
 
+  // KLUDGE Holds onto context
+  @NonNull private final Context appContext;
+
   @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
+    appContext = context.getApplicationContext();
     this.jobManager = jobManager;
     this.preferences = preferences;
 
     final Intent intent =
-        new Intent(context, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    final PendingIntent pendingIntent = PendingIntent.getActivity(context, PENDING_RC, intent, 0);
-    builder = new NotificationCompat.Builder(context).setContentTitle(
+        new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    final PendingIntent pendingIntent =
+        PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
+
+    builder = new NotificationCompat.Builder(appContext).setContentTitle(
         context.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(ContextCompat.getColor(context, R.color.amber500))
         .setContentText("Managing Power...")
         .setWhen(0)
-        .setOngoing(true)
         .setAutoCancel(false)
         .setNumber(0)
         .setContentIntent(pendingIntent);
@@ -76,6 +83,14 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {
-    return getNotificationPriority().map(priority -> builder.setPriority(priority).build());
+    final String title = ForegroundService.isEnabled(appContext) ? "Suspend" : "Enable";
+    final Intent toggleService = new Intent(appContext, ActionToggleService.class);
+    final PendingIntent actionToggleService =
+        PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
+            PendingIntent.FLAG_UPDATE_CURRENT);
+
+    return getNotificationPriority().map(priority -> builder.setPriority(priority)
+        .addAction(R.drawable.ic_close_24dp, title, actionToggleService)
+        .build());
   }
 }

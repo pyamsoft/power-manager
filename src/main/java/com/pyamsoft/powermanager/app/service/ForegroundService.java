@@ -18,10 +18,14 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import javax.inject.Inject;
@@ -29,9 +33,58 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
+  // KLUDGE: Raw preference access from service
+  @NonNull public static final String POWER_MANAGER_SERVICE_ENABLED =
+      "POWER_MANAGER_SERVICE_ENABLED";
   private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
+
+  // KLUDGE: Raw preference access from service
+  @CheckResult @NonNull private static SharedPreferences getPreferences(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    return PreferenceManager.getDefaultSharedPreferences(appContext);
+  }
+
+  /**
+   * Get enabled state of the service, true by default
+   */
+  // KLUDGE: Raw preference access from service
+  @CheckResult public static boolean isEnabled(@NonNull Context context) {
+    return getPreferences(context).getBoolean(POWER_MANAGER_SERVICE_ENABLED, true);
+  }
+
+  /**
+   * Force the service into a state
+   */
+  // KLUDGE: Raw preference access from service
+  private static void forceService(@NonNull Context context, boolean state) {
+    final Context appContext = context.getApplicationContext();
+    final Intent service = new Intent(appContext, ForegroundService.class);
+    if (state) {
+      Timber.d("Starting PowerManager service");
+      appContext.startService(service);
+    } else {
+      Timber.w("Stopping PowerManager service");
+      appContext.stopService(service);
+    }
+  }
+
+  /**
+   * Force the service On
+   */
+  public static void start(@NonNull Context context) {
+    if (isEnabled(context)) {
+      forceService(context, true);
+    }
+  }
+
+  /**
+   * Force the service Off
+   */
+  public static void stop(@NonNull Context context) {
+    forceService(context, false);
+  }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;

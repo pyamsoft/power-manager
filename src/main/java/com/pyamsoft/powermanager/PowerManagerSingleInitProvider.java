@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
@@ -26,6 +25,6 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
 
   @Override protected void onFirstCreate(@NonNull Context context) {
     super.onFirstCreate(context);
-    context.startService(new Intent(context, ForegroundService.class));
+    ForegroundService.start(context);
   }
 }
