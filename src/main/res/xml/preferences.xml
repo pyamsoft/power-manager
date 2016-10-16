@@ -29,6 +29,7 @@
         />
 
     <CheckBoxPreference
+        android:defaultValue="@bool/unsuspend_when_open_default"
         android:key="@string/unsuspend_when_open_key"
         android:summary="@string/unsuspend_when_open_summary"
         android:title="@string/unsuspend_when_open_title"

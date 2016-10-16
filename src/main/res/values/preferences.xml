@@ -24,6 +24,7 @@
   <string name="unsuspend_when_open_key">unsuspend_when_open_key</string>
   <string name="unsuspend_when_open_summary">Start Service when Application is open</string>
   <string name="unsuspend_when_open_title">Start When Open</string>
+  <bool name="unsuspend_when_open_default">true</bool>
 
   <string name="battery_settings_key">battery_settings</string>
   <string name="battery_settings_summary">Open the system battery settings screen</string>
