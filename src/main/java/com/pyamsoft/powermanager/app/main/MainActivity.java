@@ -38,32 +38,35 @@ import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;
 import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
+import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.support.RatingActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class MainActivity extends RatingActivity {
+public class MainActivity extends RatingActivity implements MainPresenter.View {
 
+  @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
-
+  MainPresenter presenter;
   private ActivityMainBinding binding;
-
   // KLUDGE When the Onboarding TapTargetView is shown, pressing the back button can result in crashing
   // KLUDGE thus, we disable the back button while target is shown
   private boolean backButtonEnabled = true;
-
   @ColorInt private int oldAppBarColor;
   @ColorInt private int oldStatusBarColor;
   @Nullable private ValueAnimator appBarAnimator;
   @Nullable private ValueAnimator statusBarAnimator;
+  private long loadedKey;
 
   @CheckResult @ColorInt static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
     final float inverseRatio = 1f - ratio;
@@ -92,6 +95,17 @@ public class MainActivity extends RatingActivity {
     if (hasNoActiveFragment()) {
       loadOverviewFragment();
     }
+
+    loadedKey = PersistentCache.get()
+        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<MainPresenter>() {
+          @NonNull @Override public PersistLoader<MainPresenter> createLoader() {
+            return new MainPresenterLoader(getApplicationContext());
+          }
+
+          @Override public void onPersistentLoaded(@NonNull MainPresenter persist) {
+            presenter = persist;
+          }
+        });
   }
 
   @Override protected int bindActivityToView() {
@@ -112,6 +126,11 @@ public class MainActivity extends RatingActivity {
     for (final String key : addedViewMap.keySet()) {
       removeViewFromAppBar(key);
     }
+
+    if (!isChangingConfigurations()) {
+      PersistentCache.get().unload(loadedKey);
+    }
+
     addedViewMap.clear();
     binding.unbind();
   }
@@ -304,5 +323,25 @@ public class MainActivity extends RatingActivity {
     });
 
     statusBarAnimator.setDuration(duration).start();
+  }
+
+  @Override public void onServiceEnabledWhenOpen() {
+    Timber.d("Should refresh service when opened");
+    ForegroundService.start(getApplicationContext());
+  }
+
+  @Override protected void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
+  @Override protected void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
   }
 }

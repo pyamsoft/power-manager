@@ -103,6 +103,9 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String manageOnboard = "manage_onboard";
   @NonNull private final String periodOnboard = "period_onboard";
 
+  @NonNull private final String startWhenOpen;
+  private final boolean startWhenOpenDefault;
+
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
     manageWifi = getResources().getString(R.string.manage_wifi_key);
@@ -179,6 +182,13 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     wearableDelay = getResources().getString(R.string.wearable_time_key);
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
+
+    startWhenOpen = getResources().getString(R.string.unsuspend_when_open_key);
+    startWhenOpenDefault = true;
+  }
+
+  @Override public boolean isStartWhenOpen() {
+    return get(startWhenOpen, startWhenOpenDefault);
   }
 
   @Override public boolean isPeriodicOnboardingShown() {

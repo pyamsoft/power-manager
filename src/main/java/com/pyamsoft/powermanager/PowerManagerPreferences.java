@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isStartWhenOpen();
+
   @CheckResult boolean isPeriodicOnboardingShown();
 
   void setPeriodicOnboardingShown();

@@ -84,7 +84,7 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
 
   @NonNull @Override public Observable<Notification> createNotification() {
     final boolean serviceEnabled = ForegroundService.isEnabled();
-    final String actionName = serviceEnabled ? "Suspend" : "Enable";
+    final String actionName = serviceEnabled ? "Suspend" : "Start";
     final Intent toggleService = new Intent(appContext, ActionToggleService.class);
     final PendingIntent actionToggleService =
         PendingIntent.getService(appContext, TOGGLE_RC, toggleService,

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.trigger;
+package com.pyamsoft.powermanager.app.main;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -23,16 +23,16 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class TriggerListAdapterPresenterLoader extends PersistLoader<TriggerListAdapterPresenter> {
+public class MainPresenterLoader extends PersistLoader<MainPresenter> {
 
-  @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject Provider<MainPresenter> presenterProvider;
 
-  TriggerListAdapterPresenterLoader(@NonNull Context context) {
+  MainPresenterLoader(@NonNull Context context) {
     super(context);
   }
 
-  @NonNull @Override public TriggerListAdapterPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusTriggerComponent().inject(this);
+  @NonNull @Override public MainPresenter loadPersistent() {
+    PowerManager.get(getContext()).provideComponent().plusMainComponent().inject(this);
     return presenterProvider.get();
   }
 }
