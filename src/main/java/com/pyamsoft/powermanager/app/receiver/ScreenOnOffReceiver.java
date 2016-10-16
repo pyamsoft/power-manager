@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
@@ -96,6 +97,8 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
       cleanup();
       appContext.registerReceiver(this, SCREEN_FILTER);
       isRegistered = true;
+
+      Toast.makeText(appContext, "Power Manager started", Toast.LENGTH_LONG).show();
     }
   }
 
@@ -112,6 +115,8 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
       appContext.unregisterReceiver(this);
       cleanup();
       isRegistered = false;
+
+      Toast.makeText(appContext, "Power Manager suspended", Toast.LENGTH_LONG).show();
     }
   }
 }
