@@ -61,8 +61,8 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
         context.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(ContextCompat.getColor(context, R.color.amber500))
-        .setContentText("Managing Power...")
         .setWhen(0)
+        .setOngoing(true)
         .setAutoCancel(false)
         .setNumber(0)
         .setContentIntent(pendingIntent);
@@ -83,17 +83,22 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {
-    final String title = ForegroundService.isEnabled() ? "Suspend" : "Enable";
+    final boolean serviceEnabled = ForegroundService.isEnabled();
+    final String actionName = serviceEnabled ? "Suspend" : "Enable";
     final Intent toggleService = new Intent(appContext, ActionToggleService.class);
     final PendingIntent actionToggleService =
         PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
             PendingIntent.FLAG_UPDATE_CURRENT);
 
+    final String title =
+        serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
+
     return getNotificationPriority().map(priority -> {
       // Clear all of the Actions
       builder.mActions.clear();
       return builder.setPriority(priority)
-          .addAction(R.drawable.ic_close_24dp, title, actionToggleService)
+          .setContentText(title)
+          .addAction(R.drawable.ic_close_24dp, actionName, actionToggleService)
           .build();
     });
   }
