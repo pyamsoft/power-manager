@@ -18,12 +18,14 @@ package com.pyamsoft.powermanager.dagger.modifier.preference;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -40,11 +42,38 @@ abstract class PreferenceModifier {
   PreferenceModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     Timber.d("New PreferenceModifier");
+
+    if (isBackgroundScheduler(observeScheduler)) {
+      throw new RuntimeException("Cannot observe on a background scheduler");
+    }
+
+    if (!isBackgroundScheduler(subscribeScheduler)
+        && subscribeScheduler != Schedulers.immediate()) {
+      throw new RuntimeException("Cannot subscribe on a foreground scheduler");
+    }
+
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.service = new Intent(appContext, ForegroundService.class);
     this.subscribeScheduler = subscribeScheduler;
     this.observeScheduler = observeScheduler;
+  }
+
+  /**
+   * Returns whether the given scheduler is one that runs operations in a background thread
+   */
+  @CheckResult private boolean isBackgroundScheduler(@NonNull Scheduler scheduler) {
+    return scheduler == Schedulers.computation()
+        || scheduler == Schedulers.io()
+        || scheduler == Schedulers.newThread();
+  }
+
+  @NonNull @CheckResult protected Scheduler getObserveScheduler() {
+    return observeScheduler;
+  }
+
+  @NonNull @CheckResult protected Scheduler getSubscribeScheduler() {
+    return subscribeScheduler;
   }
 
   @SuppressWarnings("WeakerAccess") void unsub() {
