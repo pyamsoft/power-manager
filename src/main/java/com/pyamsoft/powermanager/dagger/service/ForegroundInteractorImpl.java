@@ -89,8 +89,12 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
         PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
             PendingIntent.FLAG_UPDATE_CURRENT);
 
-    return getNotificationPriority().map(priority -> builder.setPriority(priority)
-        .addAction(R.drawable.ic_close_24dp, title, actionToggleService)
-        .build());
+    return getNotificationPriority().map(priority -> {
+      // Clear all of the Actions
+      builder.mActions.clear();
+      return builder.setPriority(priority)
+          .addAction(R.drawable.ic_close_24dp, title, actionToggleService)
+          .build();
+    });
   }
 }
