@@ -99,6 +99,8 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
       isRegistered = true;
 
       Toast.makeText(appContext, "Power Manager started", Toast.LENGTH_SHORT).show();
+    } else {
+      Timber.w("Already registered");
     }
   }
 
@@ -117,6 +119,8 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
       isRegistered = false;
 
       Toast.makeText(appContext, "Power Manager suspended", Toast.LENGTH_SHORT).show();
+    } else {
+      Timber.w("Already unregistered");
     }
   }
 }
