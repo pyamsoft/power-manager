@@ -31,7 +31,7 @@ class DozeManageModifier extends BooleanPreferenceModifier {
   @Inject DozeManageModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler,
       @NonNull BooleanInterestObserver observer) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+    super(preferences, subscribeScheduler, observeScheduler);
     this.observer = observer;
   }
 

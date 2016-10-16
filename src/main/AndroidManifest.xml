@@ -91,6 +91,10 @@
       </intent-filter>
     </service>
 
+    <service
+        android:name=".dagger.service.ActionToggleService"
+        android:exported="false"/>
+
     <provider
         android:name=".PowerManagerSingleInitProvider"
         android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"

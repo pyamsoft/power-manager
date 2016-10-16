@@ -18,8 +18,10 @@ package com.pyamsoft.powermanager.app.service;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManager;
@@ -29,9 +31,47 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
+  @NonNull public static final String POWER_MANAGER_SERVICE_ENABLED =
+      "POWER_MANAGER_SERVICE_ENABLED";
   private static final int NOTIFICATION_ID = 1000;
+  private static boolean enabled;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
+
+  @CheckResult public static boolean isEnabled() {
+    return enabled;
+  }
+
+  private static void setEnabled(boolean enabled) {
+    ForegroundService.enabled = enabled;
+  }
+
+  /**
+   * Force the service into a state
+   */
+  // KLUDGE: Raw preference access from service
+  private static void forceService(@NonNull Context context, boolean state) {
+    final Context appContext = context.getApplicationContext();
+    final Intent service = new Intent(appContext, ForegroundService.class);
+    service.putExtra(POWER_MANAGER_SERVICE_ENABLED, state);
+
+    Timber.d("Force service: %s", state);
+    appContext.startService(service);
+  }
+
+  /**
+   * Force the service On
+   */
+  public static void start(@NonNull Context context) {
+    forceService(context, true);
+  }
+
+  /**
+   * Force the service Off
+   */
+  public static void stop(@NonNull Context context) {
+    forceService(context, false);
+  }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -41,18 +81,13 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onCreate();
     Timber.d("onCreate");
 
-    if (presenter == null) {
-      PowerManager.get(getApplicationContext())
-          .provideComponent()
-          .plusForegroundServiceComponent()
-          .inject(this);
-    }
+    PowerManager.get(getApplicationContext())
+        .provideComponent()
+        .plusForegroundServiceComponent()
+        .inject(this);
 
-    if (screenOnOffReceiver == null) {
-      screenOnOffReceiver = new ScreenOnOffReceiver(this);
-    }
-
-    screenOnOffReceiver.register();
+    setEnabled(false);
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
     presenter.bindView(this);
   }
 
@@ -60,6 +95,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onDestroy();
     Timber.d("onDestroy");
 
+    setEnabled(false);
     screenOnOffReceiver.unregister();
     presenter.unbindView();
     presenter.destroy();
@@ -68,6 +104,20 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    if (intent != null) {
+      if (intent.hasExtra(POWER_MANAGER_SERVICE_ENABLED)) {
+        final boolean enable = intent.getBooleanExtra(POWER_MANAGER_SERVICE_ENABLED, true);
+        if (enable) {
+          setEnabled(true);
+          Timber.i("Register SCREEN receiver");
+          screenOnOffReceiver.register();
+        } else {
+          setEnabled(false);
+          Timber.w("Unregister SCREEN receiver");
+          screenOnOffReceiver.unregister();
+        }
+      }
+    }
     presenter.onStartNotification();
     return START_STICKY;
   }

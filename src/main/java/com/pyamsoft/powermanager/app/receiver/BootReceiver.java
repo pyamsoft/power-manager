@@ -21,7 +21,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.widget.Toast;
 import timber.log.Timber;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -50,8 +49,6 @@ public class BootReceiver extends BroadcastReceiver {
       final String action = intent.getAction();
       if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
         Timber.d("Boot completed");
-        Toast.makeText(context.getApplicationContext(), "Power Manager started", Toast.LENGTH_LONG)
-            .show();
       }
     }
   }

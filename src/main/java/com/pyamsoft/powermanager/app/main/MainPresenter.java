@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager;
+package com.pyamsoft.powermanager.app.main;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+public interface MainPresenter extends Presenter<MainPresenter.View> {
 
-  @Override protected void onFirstCreate(@NonNull Context context) {
-    super.onFirstCreate(context);
-    ForegroundService.start(context);
+  interface View {
+
+    void onServiceEnabledWhenOpen();
   }
 }

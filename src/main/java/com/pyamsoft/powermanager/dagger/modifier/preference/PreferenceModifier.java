@@ -16,51 +16,34 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroidrx.SchedulerUtil;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 abstract class PreferenceModifier {
 
   // KLUDGE Holds reference to application context
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @SuppressWarnings("WeakerAccess") @NonNull final Intent service;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @NonNull private final Scheduler subscribeScheduler;
   @NonNull private final Scheduler observeScheduler;
   @NonNull private Subscription subscription = Subscriptions.empty();
 
-  PreferenceModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  PreferenceModifier(@NonNull PowerManagerPreferences preferences,
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     Timber.d("New PreferenceModifier");
 
     SchedulerUtil.enforceObserveScheduler(observeScheduler);
     SchedulerUtil.enforceSubscribeScheduler(subscribeScheduler);
 
-    this.appContext = context.getApplicationContext();
     this.preferences = preferences;
-    this.service = new Intent(appContext, ForegroundService.class);
     this.subscribeScheduler = subscribeScheduler;
     this.observeScheduler = observeScheduler;
-  }
-
-  /**
-   * Returns whether the given scheduler is one that runs operations in a background thread
-   */
-  @CheckResult private boolean isBackgroundScheduler(@NonNull Scheduler scheduler) {
-    return scheduler == Schedulers.computation()
-        || scheduler == Schedulers.io()
-        || scheduler == Schedulers.newThread();
   }
 
   @NonNull @CheckResult protected Scheduler getObserveScheduler() {
@@ -83,10 +66,11 @@ abstract class PreferenceModifier {
       Timber.d("Run modifier on subscription thread");
       wrappedSubscription.call(preferences);
       return Observable.just(true);
-    }).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(aBoolean -> {
-      Timber.d("Modifier success");
-      appContext.startService(service);
-    }, throwable -> Timber.e(throwable, "onError wrapInSubscription"), this::unsub);
+    })
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observeScheduler)
+        .subscribe(aBoolean -> Timber.d("Modifier success"),
+            throwable -> Timber.e(throwable, "onError wrapInSubscription"), this::unsub);
   }
 
   interface WrappedSubscription {

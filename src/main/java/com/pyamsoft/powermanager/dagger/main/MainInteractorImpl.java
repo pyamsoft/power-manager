@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.trigger;
+package com.pyamsoft.powermanager.dagger.main;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import rx.Observable;
 
-public class TriggerPresenterLoader extends PersistLoader<TriggerPresenter> {
+class MainInteractorImpl implements MainInteractor {
 
-  @Inject Provider<TriggerPresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  TriggerPresenterLoader(@NonNull Context context) {
-    super(context);
+  MainInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
   }
 
-  @NonNull @Override public TriggerPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusTriggerComponent().inject(this);
-    return presenterProvider.get();
+  @NonNull @Override public Observable<Boolean> isStartWhenOpen() {
+    return Observable.defer(() -> Observable.just(preferences.isStartWhenOpen()));
   }
 }

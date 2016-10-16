@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.trigger;
+package com.pyamsoft.powermanager.dagger.main;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import javax.inject.Inject;
-import javax.inject.Provider;
+import rx.Observable;
 
-public class TriggerPresenterLoader extends PersistLoader<TriggerPresenter> {
+interface MainInteractor {
 
-  @Inject Provider<TriggerPresenter> presenterProvider;
-
-  TriggerPresenterLoader(@NonNull Context context) {
-    super(context);
-  }
-
-  @NonNull @Override public TriggerPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusTriggerComponent().inject(this);
-    return presenterProvider.get();
-  }
+  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen();
 }

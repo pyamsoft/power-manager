@@ -20,6 +20,7 @@ import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
 import com.pyamsoft.powermanager.dagger.job.JobComponent;
+import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.preference.manage.ManageModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.preference.periodic.PeriodicModifierModule;
@@ -52,7 +53,9 @@ import javax.inject.Singleton;
     WrapperModule.class, ReceiverModule.class, PermissionObserverModule.class
 }) public interface PowerManagerComponent {
 
-  TriggerComponent plusTrigger();
+  MainComponent plusMainComponent();
+
+  TriggerComponent plusTriggerComponent();
 
   ForegroundServiceComponent plusForegroundServiceComponent();
 

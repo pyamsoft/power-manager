@@ -25,10 +25,9 @@ import rx.Scheduler;
 public abstract class BooleanPreferenceModifier extends PreferenceModifier
     implements BooleanInterestModifier {
 
-  protected BooleanPreferenceModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull Scheduler subscribeScheduler,
-      @NonNull Scheduler observeScheduler) {
-    super(context, preferences, subscribeScheduler, observeScheduler);
+  protected BooleanPreferenceModifier(@NonNull PowerManagerPreferences preferences,
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
+    super(preferences, subscribeScheduler, observeScheduler);
   }
 
   @Override public final void set() {

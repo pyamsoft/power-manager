@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager;
+package com.pyamsoft.powermanager.dagger.main;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
+import com.pyamsoft.powermanager.app.main.MainPresenterLoader;
+import dagger.Subcomponent;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+@Subcomponent(modules = MainModule.class) public interface MainComponent {
 
-  @Override protected void onFirstCreate(@NonNull Context context) {
-    super.onFirstCreate(context);
-    ForegroundService.start(context);
-  }
+  void inject(MainPresenterLoader loader);
 }
