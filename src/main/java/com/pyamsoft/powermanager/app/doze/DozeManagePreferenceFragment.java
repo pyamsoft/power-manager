@@ -26,40 +26,20 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
-import javax.inject.Named;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
+    implements DozeOnlyPresenter.View {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
-  @Inject @Named("obs_doze_permission") PermissionObserver dozePermissionObserver;
-  @Inject @Named("obs_write_permission") PermissionObserver writePermissionObserver;
 
-  // KLUDGE Subscriptions in View layer
-  @NonNull Subscription dozePermissionSubscription = Subscriptions.empty();
-  // KLUDGE Subscriptions in View layer
-  @NonNull private Subscription sensorsPermissionSubscription = Subscriptions.empty();
-
-  void unsubDoze() {
-    if (!dozePermissionSubscription.isUnsubscribed()) {
-      dozePermissionSubscription.unsubscribe();
-    }
-  }
-
-  void unsubSensors() {
-    if (!sensorsPermissionSubscription.isUnsubscribed()) {
-      sensorsPermissionSubscription.unsubscribe();
-    }
-  }
+  @Inject DozeOnlyPresenter presenter;
+  private SwitchPreferenceCompat forceDoze;
+  private SwitchPreferenceCompat manageSensors;
 
   @Override protected void injectDependencies() {
     PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
@@ -77,66 +57,26 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final SwitchPreferenceCompat forceDoze =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.manage_doze_key));
+    forceDoze = (SwitchPreferenceCompat) findPreference(getString(R.string.manage_doze_key));
     forceDoze.setOnPreferenceClickListener(preference -> {
       final boolean b = forceDoze.isChecked();
       if (b) {
-        unsubDoze();
-        dozePermissionSubscription = dozePermissionObserver.hasPermission()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(hasPermission -> {
-              Timber.d("Has doze permission: %s", hasPermission);
-              if (!hasPermission) {
-                forceDoze.setChecked(false);
-                AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-                    new DozeExplanationDialog(), "doze_explain");
-              }
-            }, throwable -> {
-              Timber.e(throwable, "onError forceDoze checked");
-              unsubDoze();
-            }, this::unsubDoze);
+        presenter.checkDozePermission();
       }
       return true;
     });
 
-    final SwitchPreferenceCompat manageSensors =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
+    manageSensors = (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
     // Attempt to fix #14
     manageSensors.setOnPreferenceClickListener(preference -> {
       final boolean b = manageSensors.isChecked();
       if (b) {
-        // KLUDGE Move into presenter
-        unsubSensors();
-        sensorsPermissionSubscription = writePermissionObserver.hasPermission()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(hasPermission -> {
-              // We are attempting to enable sensors
-              Timber.d("Has sensor permission: %s", hasPermission);
-              if (!hasPermission) {
-                // We don't have permission, set back to unchecked
-                manageSensors.setChecked(false);
-
-                AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-                    new SensorsExplanationDialog(), "sensors_explain");
-              }
-            }, throwable -> {
-              Timber.e(throwable, "onError sensors_doze checked");
-              unsubSensors();
-            }, this::unsubSensors);
+        presenter.checkSensorWritePermission();
       }
 
       // Always handle click
       return true;
     });
-  }
-
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    unsubDoze();
-    unsubSensors();
   }
 
   @NonNull @Override
@@ -164,5 +104,40 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_doze;
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.destroy();
+  }
+
+  @Override public void onDozePermissionCallback(boolean hasPermission) {
+    Timber.d("Has doze permission: %s", hasPermission);
+    if (!hasPermission) {
+      forceDoze.setChecked(false);
+      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+          "doze_explain");
+    }
+  }
+
+  @Override public void onWritePermissionCallback(boolean hasPermission) {
+    Timber.d("Has sensor permission: %s", hasPermission);
+    if (!hasPermission) {
+      // We don't have permission, set back to unchecked
+      manageSensors.setChecked(false);
+
+      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new SensorsExplanationDialog(),
+          "sensors_explain");
+    }
   }
 }

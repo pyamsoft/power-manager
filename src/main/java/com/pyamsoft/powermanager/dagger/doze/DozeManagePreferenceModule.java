@@ -19,8 +19,10 @@ package com.pyamsoft.powermanager.dagger.doze;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.doze.DozeOnlyPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -28,6 +30,14 @@ import javax.inject.Named;
 import rx.Scheduler;
 
 @Module public class DozeManagePreferenceModule {
+
+  @Provides DozeOnlyPresenter provideDozeOnlyPresenter(@Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler,
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver,
+      @Named("obs_write_permission") PermissionObserver writePermissionObserver) {
+    return new DozeOnlyPresenterImpl(obsScheduler, subScheduler, dozePermissionObserver,
+        writePermissionObserver);
+  }
 
   @Provides @Named("doze_manage_pref")
   BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
