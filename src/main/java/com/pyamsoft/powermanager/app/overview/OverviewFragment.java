@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -165,7 +166,20 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   private void setupRecyclerView() {
-    final RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+    final int currentOrientation = getActivity().getResources().getConfiguration().orientation;
+    final int columnCount;
+    switch (currentOrientation) {
+      case Configuration.ORIENTATION_PORTRAIT:
+        columnCount = 2;
+        break;
+      case Configuration.ORIENTATION_LANDSCAPE:
+        columnCount = 3;
+        break;
+      default:
+        columnCount = 2;
+    }
+    final RecyclerView.LayoutManager layoutManager =
+        new GridLayoutManager(getActivity(), columnCount);
     binding.overviewRecycler.setLayoutManager(layoutManager);
     binding.overviewRecycler.setHasFixedSize(true);
     binding.overviewRecycler.setAdapter(adapter);
@@ -201,7 +215,6 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
             }
           });
     }
-
 
     sequence.start();
   }
