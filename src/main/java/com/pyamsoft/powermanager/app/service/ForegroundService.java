@@ -20,12 +20,10 @@ import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import javax.inject.Inject;
@@ -33,25 +31,19 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
-  // KLUDGE: Raw preference access from service
   @NonNull public static final String POWER_MANAGER_SERVICE_ENABLED =
       "POWER_MANAGER_SERVICE_ENABLED";
   private static final int NOTIFICATION_ID = 1000;
+  private static boolean enabled;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
 
-  // KLUDGE: Raw preference access from service
-  @CheckResult @NonNull private static SharedPreferences getPreferences(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    return PreferenceManager.getDefaultSharedPreferences(appContext);
+  @CheckResult public static boolean isEnabled() {
+    return enabled;
   }
 
-  /**
-   * Get enabled state of the service, true by default
-   */
-  // KLUDGE: Raw preference access from service
-  @CheckResult public static boolean isEnabled(@NonNull Context context) {
-    return getPreferences(context).getBoolean(POWER_MANAGER_SERVICE_ENABLED, true);
+  private static void setEnabled(boolean enabled) {
+    ForegroundService.enabled = enabled;
   }
 
   /**
@@ -61,22 +53,17 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   private static void forceService(@NonNull Context context, boolean state) {
     final Context appContext = context.getApplicationContext();
     final Intent service = new Intent(appContext, ForegroundService.class);
-    if (state) {
-      Timber.d("Starting PowerManager service");
-      appContext.startService(service);
-    } else {
-      Timber.w("Stopping PowerManager service");
-      appContext.stopService(service);
-    }
+    service.putExtra(POWER_MANAGER_SERVICE_ENABLED, state);
+
+    Timber.d("Force service: %s", state);
+    appContext.startService(service);
   }
 
   /**
    * Force the service On
    */
   public static void start(@NonNull Context context) {
-    if (isEnabled(context)) {
-      forceService(context, true);
-    }
+    forceService(context, true);
   }
 
   /**
@@ -94,18 +81,13 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onCreate();
     Timber.d("onCreate");
 
-    if (presenter == null) {
-      PowerManager.get(getApplicationContext())
-          .provideComponent()
-          .plusForegroundServiceComponent()
-          .inject(this);
-    }
+    PowerManager.get(getApplicationContext())
+        .provideComponent()
+        .plusForegroundServiceComponent()
+        .inject(this);
 
-    if (screenOnOffReceiver == null) {
-      screenOnOffReceiver = new ScreenOnOffReceiver(this);
-    }
-
-    screenOnOffReceiver.register();
+    setEnabled(false);
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
     presenter.bindView(this);
   }
 
@@ -121,6 +103,20 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    if (intent != null) {
+      if (intent.hasExtra(POWER_MANAGER_SERVICE_ENABLED)) {
+        final boolean enable = intent.getBooleanExtra(POWER_MANAGER_SERVICE_ENABLED, true);
+        if (enable) {
+          setEnabled(true);
+          Timber.i("Register SCREEN receiver");
+          screenOnOffReceiver.register();
+        } else {
+          setEnabled(false);
+          Timber.w("Unregister SCREEN receiver");
+          screenOnOffReceiver.unregister();
+        }
+      }
+    }
     presenter.onStartNotification();
     return START_STICKY;
   }

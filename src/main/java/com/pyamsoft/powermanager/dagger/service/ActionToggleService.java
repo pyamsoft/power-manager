@@ -43,6 +43,6 @@ public class ActionToggleService extends IntentService {
 
   @Override protected void onHandleIntent(Intent intent) {
     Timber.d("Action: Toggle Service");
-    setForegroundServiceEnabled(!ForegroundService.isEnabled(getApplicationContext()));
+    setForegroundServiceEnabled(!ForegroundService.isEnabled());
   }
 }
