@@ -22,6 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.pydroidrx.SchedulerUtil;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -43,14 +44,8 @@ abstract class PreferenceModifier {
       @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     Timber.d("New PreferenceModifier");
 
-    if (isBackgroundScheduler(observeScheduler)) {
-      throw new RuntimeException("Cannot observe on a background scheduler");
-    }
-
-    if (!isBackgroundScheduler(subscribeScheduler)
-        && subscribeScheduler != Schedulers.immediate()) {
-      throw new RuntimeException("Cannot subscribe on a foreground scheduler");
-    }
+    SchedulerUtil.enforceObserveScheduler(observeScheduler);
+    SchedulerUtil.enforceSubscribeScheduler(subscribeScheduler);
 
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
