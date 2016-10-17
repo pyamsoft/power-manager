@@ -128,11 +128,10 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        presenter.updatePeriodic(b);
         setCustomEnableTimePreferenceEnabled(b, presetEnableTimePreference.getValue());
+        return true;
       }
 
-      // We always return false so the preference is updated by the modifier/observer backend
       return false;
     });
 

@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.doze.DozeOnlyPresenter;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
@@ -50,8 +49,7 @@ import rx.Scheduler;
 
   @Provides @Named("doze_manage_pref_interactor")
   BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
-      @Named("mod_doze_manage") BooleanInterestModifier manageModifier,
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeManagePreferenceInteractorImpl(manageModifier, preferences);
+    return new DozeManagePreferenceInteractorImpl(preferences);
   }
 }

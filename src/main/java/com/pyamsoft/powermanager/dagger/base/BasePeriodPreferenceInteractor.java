@@ -25,6 +25,4 @@ public interface BasePeriodPreferenceInteractor {
   @CheckResult @NonNull Observable<Boolean> hasShownOnboarding();
 
   void setOnboarding();
-
-  void updatePeriodic(boolean state);
 }

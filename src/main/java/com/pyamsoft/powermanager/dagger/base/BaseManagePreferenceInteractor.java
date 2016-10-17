@@ -25,6 +25,4 @@ public interface BaseManagePreferenceInteractor {
   @CheckResult @NonNull Observable<Boolean> hasShownOnboarding();
 
   void setOnboarding();
-
-  void updateManage(boolean state);
 }

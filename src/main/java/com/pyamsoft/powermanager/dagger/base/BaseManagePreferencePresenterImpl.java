@@ -56,10 +56,6 @@ public abstract class BaseManagePreferencePresenterImpl
     manageObserver.unregister(OBS_TAG);
   }
 
-  @Override public void updateManage(boolean state) {
-    interactor.updateManage(state);
-  }
-
   @Override public void setShownOnBoarding() {
     interactor.setOnboarding();
   }

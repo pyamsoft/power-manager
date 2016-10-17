@@ -51,6 +51,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     forceDoze.setOnPreferenceClickListener(preference -> {
       final boolean b = forceDoze.isChecked();
       if (b) {
+        Timber.d("Check doze permission");
         presenter.checkDozePermission();
       }
       return true;
@@ -61,6 +62,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     manageSensors.setOnPreferenceClickListener(preference -> {
       final boolean b = manageSensors.isChecked();
       if (b) {
+        Timber.d("Check sensor permission");
         presenter.checkSensorWritePermission();
       }
 

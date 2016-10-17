@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.wifi;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import dagger.Module;
@@ -40,8 +39,7 @@ import rx.Scheduler;
 
   @Provides @Named("wifi_manage_pref_interactor")
   BaseManagePreferenceInteractor provideWifiManagePreferenceInteractor(
-      @Named("mod_wifi_manage") BooleanInterestModifier manageModifier,
       @NonNull PowerManagerPreferences preferences) {
-    return new WifiManagePreferenceInteractorImpl(manageModifier, preferences);
+    return new WifiManagePreferenceInteractorImpl(preferences);
   }
 }

@@ -22,8 +22,6 @@ import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
 import com.pyamsoft.powermanager.dagger.job.JobComponent;
 import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
-import com.pyamsoft.powermanager.dagger.modifier.preference.manage.ManageModifierModule;
-import com.pyamsoft.powermanager.dagger.modifier.preference.periodic.PeriodicModifierModule;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.dagger.observer.permission.PermissionObserverModule;
 import com.pyamsoft.powermanager.dagger.observer.preference.manage.ManageObserverModule;
@@ -48,9 +46,9 @@ import javax.inject.Singleton;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
-    ManageModifierModule.class, ManageObserverModule.class, PeriodicObserverModule.class,
-    PeriodicModifierModule.class, ForegroundModule.class, JobSchedulerCompatModule.class,
-    WrapperModule.class, ReceiverModule.class, PermissionObserverModule.class
+    ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
+    JobSchedulerCompatModule.class, WrapperModule.class, ReceiverModule.class,
+    PermissionObserverModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();

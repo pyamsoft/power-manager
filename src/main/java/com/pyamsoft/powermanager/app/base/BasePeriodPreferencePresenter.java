@@ -21,8 +21,6 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 public interface BasePeriodPreferencePresenter
     extends Presenter<BasePeriodPreferencePresenter.PeriodPreferenceView> {
 
-  void updatePeriodic(boolean state);
-
   void setShownOnBoarding();
 
   void showOnboardingIfNeeded();
