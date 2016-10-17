@@ -65,11 +65,10 @@ class DozeOnlyPresenterImpl extends SchedulerPresenter<DozeOnlyPresenter.View>
     dozePermissionSubscription = dozePermissionObserver.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(hasPermission -> getView(view -> view.onDozePermissionCallback(hasPermission)),
-            throwable -> {
-              Timber.e(throwable, "onError checkDozePermission");
-              unsubDoze();
-            }, this::unsubDoze);
+        .subscribe(hasPermission -> {
+          Timber.d("Doze permission granted? %s", hasPermission);
+          getView(view -> view.onDozePermissionCallback(hasPermission));
+        }, throwable -> Timber.e(throwable, "onError checkDozePermission"), this::unsubDoze);
   }
 
   @Override public void checkSensorWritePermission() {
