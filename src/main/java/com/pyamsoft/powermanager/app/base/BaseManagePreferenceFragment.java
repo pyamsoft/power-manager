@@ -127,12 +127,8 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange = onManagePreferenceChanged(b);
-        if (canChange) {
-          presenter.updateManage(b);
-
-          setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
-        }
+        presenter.updateManage(b);
+        setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
       }
 
       // We always return false so the preference is updated by the modifier/observer backend
@@ -143,18 +139,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       if (newValue instanceof String) {
         final String presetDelay = (String) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange = onPresetTimePreferenceChanged(presetDelay, customTimePreference);
-        if (canChange) {
-          final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1 && customTimePreference != null) {
-            // Update the delay time to a preset instantly
-            customTimePreference.updatePresetDelay(presetDelay);
-          }
-
-          // Defer updates to the custom view
-          setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
-          return true;
+        final long delayTime = Long.parseLong(presetDelay);
+        if (delayTime != -1 && customTimePreference != null) {
+          // Update the delay time to a preset instantly
+          customTimePreference.updatePresetDelay(presetDelay);
         }
+
+        // Defer updates to the custom view
+        setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
+        return true;
       }
 
       return false;
@@ -304,18 +297,6 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setBackButtonEnabled(false);
     sequence.start();
   }
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @CheckResult protected abstract boolean onManagePreferenceChanged(boolean b);
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  protected abstract boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference);
 
   @CheckResult @NonNull
   protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(

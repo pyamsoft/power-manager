@@ -18,38 +18,19 @@ package com.pyamsoft.powermanager.dagger.modifier.preference.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.modifier.preference.BooleanPreferenceModifier;
 import javax.inject.Inject;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
 class DozeManageModifier extends BooleanPreferenceModifier {
 
-  @NonNull private final PermissionObserver observer;
-  @NonNull private Subscription subscription = Subscriptions.empty();
-
   @Inject DozeManageModifier(@NonNull PowerManagerPreferences preferences,
-      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler,
-      @NonNull PermissionObserver observer) {
+      @NonNull Scheduler subscribeScheduler, @NonNull Scheduler observeScheduler) {
     super(preferences, subscribeScheduler, observeScheduler);
-    this.observer = observer;
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsub() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
   }
 
   @Override protected void set(@NonNull PowerManagerPreferences preferences) {
-    unsub();
-    subscription = observer.hasPermission().subscribe(preferences::setDozeManaged, throwable -> {
-      Timber.e(throwable, "onError DozeManageModifier set");
-      unsub();
-    }, this::unsub);
+    preferences.setDozeManaged(true);
   }
 
   @Override protected void unset(@NonNull PowerManagerPreferences preferences) {

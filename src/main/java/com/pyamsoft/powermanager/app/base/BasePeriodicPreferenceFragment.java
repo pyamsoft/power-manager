@@ -128,12 +128,8 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange = onPeriodicPreferenceChanged(b);
-        if (canChange) {
-          presenter.updatePeriodic(b);
-
-          setCustomEnableTimePreferenceEnabled(b, presetEnableTimePreference.getValue());
-        }
+        presenter.updatePeriodic(b);
+        setCustomEnableTimePreferenceEnabled(b, presetEnableTimePreference.getValue());
       }
 
       // We always return false so the preference is updated by the modifier/observer backend
@@ -144,19 +140,15 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
       if (newValue instanceof String) {
         final String presetDelay = (String) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange =
-            onPresetEnableTimePreferenceChanged(presetDelay, customEnableTimePreference);
-        if (canChange) {
-          final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1) {
-            // Update the delay time to a preset instantly
-            customEnableTimePreference.updatePresetDelay(presetDelay);
-          }
-
-          // Defer updates to the custom view
-          setCustomEnableTimePreferenceEnabled(periodicPreference.isChecked(), presetDelay);
-          return true;
+        final long delayTime = Long.parseLong(presetDelay);
+        if (delayTime != -1) {
+          // Update the delay time to a preset instantly
+          customEnableTimePreference.updatePresetDelay(presetDelay);
         }
+
+        // Defer updates to the custom view
+        setCustomEnableTimePreferenceEnabled(periodicPreference.isChecked(), presetDelay);
+        return true;
       }
 
       return false;
@@ -166,19 +158,15 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
       if (newValue instanceof String) {
         final String presetDelay = (String) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange =
-            onPresetDisableTimePreferenceChanged(presetDelay, customDisableTimePreference);
-        if (canChange) {
-          final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1 && customDisableTimePreference != null) {
-            // Update the delay time to a preset instantly
-            customDisableTimePreference.updatePresetDelay(presetDelay);
-          }
-
-          // Defer updates to the custom view
-          setCustomDisableTimePreferenceEnabled(periodicPreference.isChecked(), presetDelay);
-          return true;
+        final long delayTime = Long.parseLong(presetDelay);
+        if (delayTime != -1 && customDisableTimePreference != null) {
+          // Update the delay time to a preset instantly
+          customDisableTimePreference.updatePresetDelay(presetDelay);
         }
+
+        // Defer updates to the custom view
+        setCustomDisableTimePreferenceEnabled(periodicPreference.isChecked(), presetDelay);
+        return true;
       }
 
       return false;
@@ -339,26 +327,6 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     setBackButtonEnabled(false);
     sequence.start();
   }
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  protected abstract boolean onPresetEnableTimePreferenceChanged(String presetDelay,
-      @Nullable CustomTimeInputPreference customEnableTimePreference);
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  protected abstract boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customDisableTimePreference);
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  protected abstract boolean onPeriodicPreferenceChanged(boolean periodic);
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
 

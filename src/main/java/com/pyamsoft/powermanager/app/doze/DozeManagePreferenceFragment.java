@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
@@ -43,15 +42,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
 
   @Override protected void injectDependencies() {
     PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
-  }
-
-  @Override protected boolean onManagePreferenceChanged(boolean b) {
-    return true;
-  }
-
-  @Override protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference) {
-    return true;
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
