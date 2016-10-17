@@ -46,13 +46,10 @@ class DozeManageModifier extends BooleanPreferenceModifier {
 
   @Override protected void set(@NonNull PowerManagerPreferences preferences) {
     unsub();
-    subscription = observer.hasPermission()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(preferences::setDozeManaged, throwable -> {
-          Timber.e(throwable, "onError DozeManageModifier set");
-          unsub();
-        }, this::unsub);
+    subscription = observer.hasPermission().subscribe(preferences::setDozeManaged, throwable -> {
+      Timber.e(throwable, "onError DozeManageModifier set");
+      unsub();
+    }, this::unsub);
   }
 
   @Override protected void unset(@NonNull PowerManagerPreferences preferences) {

@@ -46,14 +46,6 @@ abstract class PreferenceModifier {
     this.observeScheduler = observeScheduler;
   }
 
-  @NonNull @CheckResult protected Scheduler getObserveScheduler() {
-    return observeScheduler;
-  }
-
-  @NonNull @CheckResult protected Scheduler getSubscribeScheduler() {
-    return subscribeScheduler;
-  }
-
   @SuppressWarnings("WeakerAccess") void unsub() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
