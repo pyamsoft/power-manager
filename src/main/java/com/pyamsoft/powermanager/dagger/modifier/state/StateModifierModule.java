@@ -27,7 +27,6 @@ import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Scheduler;
 
 @Module public class StateModifierModule {
 
@@ -58,10 +57,8 @@ import rx.Scheduler;
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull SensorFixReceiver sensorFixReceiver, @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler,
+      @NonNull SensorFixReceiver sensorFixReceiver,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new DozeStateModifier(context, preferences, sensorFixReceiver, obsScheduler,
-        subScheduler, dozePermissionObserver);
+    return new DozeStateModifier(context, preferences, sensorFixReceiver, dozePermissionObserver);
   }
 }
