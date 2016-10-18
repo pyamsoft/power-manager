@@ -32,4 +32,6 @@ public interface JobSchedulerCompat {
   void addJobInBackground(@NonNull Job job);
 
   void cancelJobs(@NonNull TagConstraint constraint, @NonNull String... tags);
+
+  void addJob(@NonNull Job job);
 }
