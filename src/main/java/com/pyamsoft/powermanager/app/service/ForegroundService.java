@@ -49,7 +49,6 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   /**
    * Force the service into a state
    */
-  // KLUDGE: Raw preference access from service
   private static void forceService(@NonNull Context context, boolean state) {
     final Context appContext = context.getApplicationContext();
     final Intent service = new Intent(appContext, ForegroundService.class);
