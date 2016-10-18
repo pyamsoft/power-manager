@@ -27,6 +27,9 @@ import javax.inject.Inject;
 class PowerManagerPreferencesImpl extends ApplicationPreferences
     implements PowerManagerPreferences {
 
+  @NonNull private static final String overviewOnboard = "overview_onboard";
+  @NonNull private static final String manageOnboard = "manage_onboard";
+  @NonNull private static final String periodOnboard = "period_onboard";
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
   @NonNull private final String manageBluetooth;
@@ -35,7 +38,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean manageDataDefault;
   private final boolean manageBluetoothDefault;
   private final boolean manageSyncDefault;
-
   @NonNull private final String delayWifi;
   @NonNull private final String delayData;
   @NonNull private final String delayBluetooth;
@@ -44,7 +46,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String delayDataDefault;
   @NonNull private final String delayBluetoothDefault;
   @NonNull private final String delaySyncDefault;
-
   @NonNull private final String periodicWifi;
   @NonNull private final String periodicData;
   @NonNull private final String periodicBluetooth;
@@ -53,7 +54,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean periodicDataDefault;
   private final boolean periodicBluetoothDefault;
   private final boolean periodicSyncDefault;
-
   @NonNull private final String periodicDisableWifi;
   @NonNull private final String periodicDisableData;
   @NonNull private final String periodicDisableBluetooth;
@@ -62,7 +62,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String periodicDisableDataDefault;
   @NonNull private final String periodicDisableBluetoothDefault;
   @NonNull private final String periodicDisableSyncDefault;
-
   @NonNull private final String periodicEnableWifi;
   @NonNull private final String periodicEnableData;
   @NonNull private final String periodicEnableBluetooth;
@@ -71,7 +70,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String periodicEnableDataDefault;
   @NonNull private final String periodicEnableBluetoothDefault;
   @NonNull private final String periodicEnableSyncDefault;
-
   @NonNull private final String ignoreChargingWifi;
   @NonNull private final String ignoreChargingData;
   @NonNull private final String ignoreChargingBluetooth;
@@ -80,29 +78,20 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean ignoreChargingDataDefault;
   private final boolean ignoreChargingBluetoothDefault;
   private final boolean ignoreChargingSyncDefault;
-
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
-
   @NonNull private final String forceDoze;
   @NonNull private final String exclusiveDoze;
   @NonNull private final String ignoreChargingDoze;
   @NonNull private final String dozeDelay;
   @NonNull private final String manageSensors;
-
   private final boolean forceDozeDefault;
   private final boolean exclusiveDozeDefault;
   private final boolean ignoreChargingDozeDefault;
   @NonNull private final String dozeDelayDefault;
   private final boolean manageSensorsDefault;
-
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
-
-  @NonNull private final String overviewOnboard = "overview_onboard";
-  @NonNull private final String manageOnboard = "manage_onboard";
-  @NonNull private final String periodOnboard = "period_onboard";
-
   @NonNull private final String startWhenOpen;
   private final boolean startWhenOpenDefault;
 

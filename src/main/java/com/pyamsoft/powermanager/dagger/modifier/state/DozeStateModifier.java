@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;

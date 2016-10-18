@@ -43,7 +43,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
-  @SuppressWarnings("WeakerAccess") Intent service;
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   private long loadedKey;
 
@@ -72,7 +71,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    service = new Intent(getContext().getApplicationContext(), ForegroundService.class);
     return super.onCreateView(inflater, container, savedInstanceState);
   }
 

@@ -53,9 +53,7 @@ public class SensorsExplanationDialog extends DialogFragment {
           dialogInterface.dismiss();
           launchSettingsActivity();
         })
-        .setNegativeButton("No Thanks", (dialogInterface, i) -> {
-          dialogInterface.dismiss();
-        })
+        .setNegativeButton("No Thanks", (dialogInterface, i) -> dialogInterface.dismiss())
         .create();
   }
 

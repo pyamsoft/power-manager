@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.modifier.preference;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;

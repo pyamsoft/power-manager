@@ -59,9 +59,7 @@ public class DeleteTriggerDialog extends DialogFragment {
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     return new AlertDialog.Builder(getActivity()).setTitle("Delete Trigger")
         .setMessage("Really delete trigger for: " + name + " [" + percent + "%] ?")
-        .setNegativeButton("Cancel", (dialogInterface, i) -> {
-          dismiss();
-        })
+        .setNegativeButton("Cancel", (dialogInterface, i) -> dismiss())
         .setPositiveButton("Okay", (dialogInterface, i) -> {
           sendDeleteEvent(percent);
           dismiss();

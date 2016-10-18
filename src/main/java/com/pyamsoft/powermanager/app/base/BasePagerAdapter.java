@@ -78,6 +78,8 @@ public abstract class BasePagerAdapter extends FragmentStatePagerAdapter {
       case 1:
         ((BasePeriodicPreferenceFragment) fragment).onSelected();
         break;
+      default:
+        throw new RuntimeException("Invalid page " + position);
     }
   }
 }

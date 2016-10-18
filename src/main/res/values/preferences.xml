@@ -26,10 +26,6 @@
   <string name="unsuspend_when_open_title">Start When Open</string>
   <bool name="unsuspend_when_open_default">true</bool>
 
-  <string name="battery_settings_key">battery_settings</string>
-  <string name="battery_settings_summary">Open the system battery settings screen</string>
-  <string name="battery_settings_title">Open Battery Settings</string>
-
   <string name="upgrade_info_key">upgrade_info</string>
   <string name="upgrade_info_title">Show Upgrade Information</string>
   <string name="upgrade_info_summary">Show the most recent upgrade change log</string>
