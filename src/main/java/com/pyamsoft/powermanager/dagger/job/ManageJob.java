@@ -23,7 +23,7 @@ import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import timber.log.Timber;
 
-public abstract class ManageJob extends BaseJob implements Runnable {
+abstract class ManageJob extends BaseJob implements Runnable {
 
   private static final long MINIMUM_PERIOD_SECONDS = 60L;
   private static final int JOB_PRIORITY = 1;
@@ -77,7 +77,7 @@ public abstract class ManageJob extends BaseJob implements Runnable {
             periodicEnableInSeconds, periodicDisableInSeconds);
       } else {
         Timber.d("Queue periodic disable job for: %d", periodicDisableInSeconds);
-        jobSchedulerCompat.addJobInBackground(
+        jobSchedulerCompat.addJob(
             createPeriodicDisableJob(periodicEnableInSeconds, periodicDisableInSeconds));
       }
     }
@@ -90,7 +90,7 @@ public abstract class ManageJob extends BaseJob implements Runnable {
             periodicEnableInSeconds, periodicDisableInSeconds);
       } else {
         Timber.d("Queue periodic enable job for: %d", periodicEnableInSeconds);
-        jobSchedulerCompat.addJobInBackground(
+        jobSchedulerCompat.addJob(
             createPeriodicEnableJob(periodicEnableInSeconds, periodicDisableInSeconds));
       }
     }
@@ -103,7 +103,7 @@ public abstract class ManageJob extends BaseJob implements Runnable {
   @CheckResult @NonNull protected abstract Job createPeriodicEnableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds);
 
-  protected enum JobType {
+  enum JobType {
     ENABLE, DISABLE
   }
 }

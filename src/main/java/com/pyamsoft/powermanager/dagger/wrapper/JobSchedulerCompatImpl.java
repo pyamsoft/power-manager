@@ -87,4 +87,8 @@ class JobSchedulerCompatImpl implements JobSchedulerCompat {
   @Override public void cancelJobs(@NonNull TagConstraint constraint, @NonNull String... tags) {
     jobManager.cancelJobs(constraint, tags);
   }
+
+  @Override public void addJob(@NonNull Job job) {
+    jobManager.addJob(job);
+  }
 }
