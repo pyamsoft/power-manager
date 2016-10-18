@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
@@ -101,6 +103,12 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    // If forceDoze is checked, make sure we actually have permission
+    // It is possible to check the switch, and then back out of the fragment before the callback completes.
+    if (forceDoze.isChecked()) {
+      presenter.checkDozePermission();
+    }
   }
 
   @Override public void onStop() {
@@ -117,8 +125,13 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     Timber.d("Has doze permission: %s", hasPermission);
     if (!hasPermission) {
       forceDoze.setChecked(false);
-      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
-          "doze_explain");
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+            "doze_explain");
+      } else {
+        Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
+            Toast.LENGTH_SHORT).show();
+      }
     }
   }
 
