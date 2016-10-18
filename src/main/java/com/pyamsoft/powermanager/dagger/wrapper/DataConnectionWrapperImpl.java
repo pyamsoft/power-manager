@@ -147,8 +147,8 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   }
 
   private void setMobileDataEnabled(boolean enabled) {
+    Timber.i("Data: %s", enabled ? "enable" : "disable");
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      Timber.i("Data: %s", enabled ? "enable" : "disable");
       setMobileDataEnabledReflection(enabled);
     } else {
       setMobileDataEnabledRoot(enabled);
