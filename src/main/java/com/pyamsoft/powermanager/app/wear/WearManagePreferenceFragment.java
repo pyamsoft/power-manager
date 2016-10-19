@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.app.wear;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WearManagePreferenceFragment extends BaseManagePreferenceFragment {
@@ -31,15 +29,6 @@ public class WearManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @Override protected void injectDependencies() {
 
-  }
-
-  @Override protected boolean onManagePreferenceChanged(boolean b) {
-    return true;
-  }
-
-  @Override protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference) {
-    return true;
   }
 
   @NonNull @Override

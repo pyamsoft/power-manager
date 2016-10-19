@@ -102,7 +102,6 @@ public class CreateTriggerDialog extends DialogFragment {
     // Hold all the pages in memory so we can retrieve their content
     binding.newTriggerPager.setOffscreenPageLimit(4);
 
-    // KLUDGE Child fragments are ugly.
     adapter = new CreateTriggerPagerAdapter(this);
     binding.newTriggerPager.setAdapter(adapter);
 

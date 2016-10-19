@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.base;
+package com.pyamsoft.powermanager.app.observer;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
-public interface BasePeriodPreferencePresenter
-    extends Presenter<BasePeriodPreferencePresenter.PeriodPreferenceView> {
+public interface PermissionObserver extends InterestObserver{
 
-  void setShownOnBoarding();
-
-  void showOnboardingIfNeeded();
-
-  interface PeriodPreferenceView {
-
-    void onPeriodicSet();
-
-    void onPeriodicUnset();
-
-    void showOnBoarding();
-  }
+  @CheckResult @NonNull Observable<Boolean> hasPermission();
 }

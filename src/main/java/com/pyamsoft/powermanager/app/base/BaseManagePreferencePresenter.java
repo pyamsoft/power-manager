@@ -21,8 +21,6 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 public interface BaseManagePreferencePresenter
     extends Presenter<BaseManagePreferencePresenter.ManagePreferenceView> {
 
-  void updateManage(boolean state);
-
   void setShownOnBoarding();
 
   void showOnboardingIfNeeded();

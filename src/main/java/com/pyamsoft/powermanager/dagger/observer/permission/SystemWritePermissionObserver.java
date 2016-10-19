@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class SystemWritePermissionObserver extends PermissionObserver {
+class SystemWritePermissionObserver extends PermissionObserverImpl {
 
   @Inject SystemWritePermissionObserver(@NonNull Context context) {
     super(context, Manifest.permission.WRITE_SETTINGS);

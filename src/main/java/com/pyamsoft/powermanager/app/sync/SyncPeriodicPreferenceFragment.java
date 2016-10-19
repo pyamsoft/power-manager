@@ -18,28 +18,12 @@ package com.pyamsoft.powermanager.app.sync;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
-
-  @Override protected boolean onPresetEnableTimePreferenceChanged(String presetDelay,
-      @Nullable CustomTimeInputPreference customEnableTimePreference) {
-    return true;
-  }
-
-  @Override protected boolean onPresetDisableTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customDisableTimePreference) {
-    return true;
-  }
-
-  @Override protected boolean onPeriodicPreferenceChanged(boolean periodic) {
-    return true;
-  }
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_sync;

@@ -17,71 +17,55 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
-import javax.inject.Named;
 import timber.log.Timber;
 
-public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
+    implements DozeOnlyPresenter.View {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
-  @Inject @Named("obs_doze_permission") BooleanInterestObserver dozePermissionObserver;
-  @Inject @Named("obs_write_permission") BooleanInterestObserver writePermissionObserver;
+
+  @Inject DozeOnlyPresenter presenter;
+  private SwitchPreferenceCompat forceDoze;
+  private SwitchPreferenceCompat manageSensors;
 
   @Override protected void injectDependencies() {
     PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
   }
 
-  @Override protected boolean onManagePreferenceChanged(boolean b) {
-    if (b) {
-      final boolean hasPermission = dozePermissionObserver.is();
-      Timber.d("Has doze permission: %s", hasPermission);
-      if (!hasPermission) {
-        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
-            "doze_explain");
-      }
-      return hasPermission;
-    } else {
-      return true;
-    }
-  }
-
-  @Override protected boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference) {
-    return true;
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    final SwitchPreferenceCompat manageSensors =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
+    forceDoze = (SwitchPreferenceCompat) findPreference(getString(R.string.manage_doze_key));
+    forceDoze.setOnPreferenceClickListener(preference -> {
+      final boolean b = forceDoze.isChecked();
+      if (b) {
+        Timber.d("Check doze permission");
+        presenter.checkDozePermission();
+      }
+      return true;
+    });
+
+    manageSensors = (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
     // Attempt to fix #14
     manageSensors.setOnPreferenceClickListener(preference -> {
       final boolean b = manageSensors.isChecked();
       if (b) {
-        // We are attempting to enable sensors
-        final boolean hasPermission = writePermissionObserver.is();
-        Timber.d("Has sensor permission: %s", hasPermission);
-        if (!hasPermission) {
-          // We don't have permission, set back to unchecked
-          manageSensors.setChecked(false);
-
-          AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-              new SensorsExplanationDialog(), "sensors_explain");
-        }
+        Timber.d("Check sensor permission");
+        presenter.checkSensorWritePermission();
       }
 
       // Always handle click
@@ -114,5 +98,55 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_doze;
+  }
+
+  @Override public void onStart() {
+    super.onStart();
+    presenter.bindView(this);
+
+    // If forceDoze is checked, make sure we actually have permission
+    // It is possible to check the switch, and then back out of the fragment before the callback completes.
+    if (forceDoze.isChecked()) {
+      presenter.checkDozePermission();
+    }
+
+    if (manageSensors.isChecked()) {
+      presenter.checkSensorWritePermission();
+    }
+  }
+
+  @Override public void onStop() {
+    super.onStop();
+    presenter.unbindView();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.destroy();
+  }
+
+  @Override public void onDozePermissionCallback(boolean hasPermission) {
+    Timber.d("Has doze permission: %s", hasPermission);
+    if (!hasPermission) {
+      forceDoze.setChecked(false);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+            "doze_explain");
+      } else {
+        Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
+            Toast.LENGTH_SHORT).show();
+      }
+    }
+  }
+
+  @Override public void onWritePermissionCallback(boolean hasPermission) {
+    Timber.d("Has sensor permission: %s", hasPermission);
+    if (!hasPermission) {
+      // We don't have permission, set back to unchecked
+      manageSensors.setChecked(false);
+
+      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new SensorsExplanationDialog(),
+          "sensors_explain");
+    }
   }
 }

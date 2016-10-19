@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.base;
+package com.pyamsoft.powermanager.app.doze;
 
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface BasePeriodPreferencePresenter
-    extends Presenter<BasePeriodPreferencePresenter.PeriodPreferenceView> {
+public interface DozeOnlyPresenter extends Presenter<DozeOnlyPresenter.View> {
 
-  void setShownOnBoarding();
+  void checkDozePermission();
 
-  void showOnboardingIfNeeded();
+  void checkSensorWritePermission();
 
-  interface PeriodPreferenceView {
+  interface View {
 
-    void onPeriodicSet();
+    void onDozePermissionCallback(boolean hasPermission);
 
-    void onPeriodicUnset();
-
-    void showOnBoarding();
+    void onWritePermissionCallback(boolean hasPermission);
   }
 }

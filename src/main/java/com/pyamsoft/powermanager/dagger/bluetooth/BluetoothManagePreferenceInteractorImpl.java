@@ -16,16 +16,13 @@
 
 package com.pyamsoft.powermanager.dagger.bluetooth;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class BluetoothManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
-  @Inject BluetoothManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier, @NonNull
-      PowerManagerPreferences preferences) {
-    super(manageModifier, preferences);
+  @Inject BluetoothManagePreferenceInteractorImpl(PowerManagerPreferences preferences) {
+    super(preferences);
   }
 }

@@ -88,7 +88,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
    */
   protected abstract void injectDependencies();
 
-  @Override public void onCreate(Bundle savedInstanceState) {
+  @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState,
@@ -127,15 +127,10 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange = onManagePreferenceChanged(b);
-        if (canChange) {
-          presenter.updateManage(b);
-
-          setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
-        }
+        setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
+        return true;
       }
 
-      // We always return false so the preference is updated by the modifier/observer backend
       return false;
     });
 
@@ -143,18 +138,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
       if (newValue instanceof String) {
         final String presetDelay = (String) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
-        final boolean canChange = onPresetTimePreferenceChanged(presetDelay, customTimePreference);
-        if (canChange) {
-          final long delayTime = Long.parseLong(presetDelay);
-          if (delayTime != -1 && customTimePreference != null) {
-            // Update the delay time to a preset instantly
-            customTimePreference.updatePresetDelay(presetDelay);
-          }
-
-          // Defer updates to the custom view
-          setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
-          return true;
+        final long delayTime = Long.parseLong(presetDelay);
+        if (delayTime != -1 && customTimePreference != null) {
+          // Update the delay time to a preset instantly
+          customTimePreference.updatePresetDelay(presetDelay);
         }
+
+        // Defer updates to the custom view
+        setCustomTimePreferenceEnabled(managePreference.isChecked(), presetDelay);
+        return true;
       }
 
       return false;
@@ -163,7 +155,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
   }
 
-  @Override public void onStart() {
+  @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
 
@@ -172,24 +164,24 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public void onStop() {
+  @CallSuper @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
+  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
   }
 
-  @Override public void onDestroy() {
+  @CallSuper @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedKey);
     }
   }
 
-  @Override public final void onDestroyView() {
+  @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
     if (customTimePreference != null) {
       customTimePreference.setOnPreferenceChangeListener(null);
@@ -219,15 +211,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  @Override public void onManageSet() {
+  @CallSuper @Override public void onManageSet() {
     managePreference.setChecked(true);
   }
 
-  @Override public void onManageUnset() {
+  @CallSuper @Override public void onManageUnset() {
     managePreference.setChecked(false);
   }
 
-  @Override public void showOnBoarding() {
+  @CallSuper @Override public void showOnBoarding() {
     Timber.d("Show manage onboarding");
     if (sequence == null) {
       sequence = new TapTargetSequence(getActivity());
@@ -304,18 +296,6 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     setBackButtonEnabled(false);
     sequence.start();
   }
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @CheckResult protected abstract boolean onManagePreferenceChanged(boolean b);
-
-  /**
-   * Override if you implement any custom conditions for changing preferences
-   */
-  @SuppressWarnings("WeakerAccess") @CheckResult
-  protected abstract boolean onPresetTimePreferenceChanged(@NonNull String presetDelay,
-      @Nullable CustomTimeInputPreference customTimePreference);
 
   @CheckResult @NonNull
   protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(

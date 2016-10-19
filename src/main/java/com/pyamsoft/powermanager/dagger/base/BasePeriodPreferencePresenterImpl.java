@@ -56,10 +56,6 @@ public abstract class BasePeriodPreferencePresenterImpl
     unsubOnboarding();
   }
 
-  @Override public void updatePeriodic(boolean state) {
-    interactor.updatePeriodic(state);
-  }
-
   @Override public void setShownOnBoarding() {
     interactor.setOnboarding();
   }

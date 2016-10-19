@@ -18,14 +18,12 @@ package com.pyamsoft.powermanager.dagger.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
 class WifiManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
 
-  @Inject WifiManagePreferenceInteractorImpl(@NonNull BooleanInterestModifier manageModifier,
-      @NonNull PowerManagerPreferences preferences) {
-    super(manageModifier, preferences);
+  @Inject WifiManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+    super(preferences);
   }
 }

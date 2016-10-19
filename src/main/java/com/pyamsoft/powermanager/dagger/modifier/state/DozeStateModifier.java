@@ -17,44 +17,63 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class DozeStateModifier extends StateModifier {
 
-  @NonNull private static final String DUMPSYS_DOZE_START = "deviceidle force-idle deep";
-  @NonNull private static final String DUMPSYS_DOZE_END = "deviceidle step";
+  @NonNull private static final String DUMPSYS_DOZE_START_M = "deviceidle force-idle";
+  @NonNull private static final String DUMPSYS_DOZE_START_N = "deviceidle force-idle deep";
+  @NonNull private static final String DUMPSYS_DOZE_END_M = "deviceidle step";
+  @NonNull private static final String DUMPSYS_DOZE_END_N = "deviceidle unforce";
   @NonNull private static final String DUMPSYS_SENSOR_ENABLE = "sensorservice enable";
   @NonNull private static final String DUMPSYS_SENSOR_RESTRICT =
       "sensorservice restrict com.google.android.gms*";
-  @NonNull private final SensorFixReceiver sensorFixReceiver;
-  @NonNull private final BooleanInterestObserver dozePermissionObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final SensorFixReceiver sensorFixReceiver;
+  @NonNull private final PermissionObserver dozePermissionObserver;
+  @Named private Subscription subscription = Subscriptions.empty();
 
   @Inject DozeStateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull SensorFixReceiver sensorFixReceiver,
-      @NonNull BooleanInterestObserver dozePermissionObserver) {
+      @NonNull PermissionObserver dozePermissionObserver) {
     super(context, preferences);
     this.sensorFixReceiver = sensorFixReceiver;
     this.dozePermissionObserver = dozePermissionObserver;
   }
 
-  private static void executeDumpsys(@NonNull String cmd) {
+  @SuppressWarnings("WeakerAccess") static void executeDumpsys(@NonNull String cmd) {
     final Process process;
     boolean caughtPermissionDenial = false;
+    final String[] command;
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+      // API 23 can do this without root
+      command = new String[] { "dumpsys", cmd };
+    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+      // API 24 requires root
+      command = new String[] { "su", "-c", "dumpsys", cmd };
+    } else {
+      throw new RuntimeException("Invalid API level attempting to dumpsys");
+    }
+
     try {
-      final String command = "dumpsys " + cmd;
       process = Runtime.getRuntime().exec(command);
+      final String commandString = Arrays.toString(command);
       try (final BufferedReader bufferedReader = new BufferedReader(
           new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-        Timber.d("Read results of exec: '%s'", command);
+        Timber.d("Read results of exec: '%s'", commandString);
         String line = bufferedReader.readLine();
         while (line != null && !line.isEmpty()) {
           if (line.startsWith("Permission Denial")) {
@@ -68,7 +87,7 @@ class DozeStateModifier extends StateModifier {
       }
 
       if (caughtPermissionDenial) {
-        throw new IllegalStateException("Error running command: " + command);
+        throw new IllegalStateException("Error running command: " + commandString);
       }
 
       // Will always be 0
@@ -77,32 +96,72 @@ class DozeStateModifier extends StateModifier {
     }
   }
 
-  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    sensorFixReceiver.unregister();
-    if (dozePermissionObserver.is()) {
-      Timber.d("Begin Doze");
-      executeDumpsys(DUMPSYS_DOZE_START);
-      if (preferences.isSensorsManaged()) {
-        Timber.d("Restrict device sensors to Google Play Services only");
-        executeDumpsys(DUMPSYS_SENSOR_RESTRICT);
-      }
+  @SuppressWarnings("WeakerAccess") void unsub() {
+    if (!subscription.isUnsubscribed()) {
+      subscription.unsubscribe();
     }
   }
 
-  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    unsub();
     sensorFixReceiver.unregister();
-    if (dozePermissionObserver.is()) {
-      Timber.d("End Doze");
-      executeDumpsys(DUMPSYS_DOZE_END);
 
-      // We always do this to put the device in a 'normal' operation mode
-      Timber.d("Enable device sensors");
-      executeDumpsys(DUMPSYS_SENSOR_ENABLE);
-
-      // If the sensors were managed then we need to do this work around for brightness and rotation
-      if (preferences.isSensorsManaged()) {
-        sensorFixReceiver.register();
+    // We dont explicitly state subscribeOn and observeOn because it is up to the caller to implement
+    // the proper threading
+    subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
+      if (hasPermission) {
+        Timber.d("Begin Doze");
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+          // API 23 can do this without root
+          executeDumpsys(DUMPSYS_DOZE_START_M);
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+          // API 24 requires root
+          executeDumpsys(DUMPSYS_DOZE_START_N);
+        } else {
+          throw new RuntimeException("Invalid API level attempting to dumpsys");
+        }
+        if (preferences.isSensorsManaged()) {
+          Timber.d("Restrict device sensors to Google Play Services only");
+          executeDumpsys(DUMPSYS_SENSOR_RESTRICT);
+        }
       }
-    }
+    }, throwable -> {
+      Timber.e(throwable, "onError set");
+      unsub();
+    }, this::unsub);
+  }
+
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    unsub();
+    sensorFixReceiver.unregister();
+
+    // We dont explicitly state subscribeOn and observeOn because it is up to the caller to implement
+    // the proper threading
+    subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
+      if (hasPermission) {
+        Timber.d("End Doze");
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+          // API 23 can do this without root
+          executeDumpsys(DUMPSYS_DOZE_END_M);
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+          // API 24 requires root
+          executeDumpsys(DUMPSYS_DOZE_END_N);
+        } else {
+          throw new RuntimeException("Invalid API level attempting to dumpsys");
+        }
+
+        // We always do this to put the device in a 'normal' operation mode
+        Timber.d("Enable device sensors");
+        executeDumpsys(DUMPSYS_SENSOR_ENABLE);
+
+        // If the sensors were managed then we need to do this work around for brightness and rotation
+        if (preferences.isSensorsManaged()) {
+          sensorFixReceiver.register();
+        }
+      }
+    }, throwable -> {
+      Timber.e(throwable, "onError unset");
+      unsub();
+    }, this::unsub);
   }
 }
