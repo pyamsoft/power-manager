@@ -109,6 +109,10 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     if (forceDoze.isChecked()) {
       presenter.checkDozePermission();
     }
+
+    if (manageSensors.isChecked()) {
+      presenter.checkSensorWritePermission();
+    }
   }
 
   @Override public void onStop() {
