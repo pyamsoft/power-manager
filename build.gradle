@@ -108,7 +108,7 @@ dependencies {
 
   // Support
   // Needs to compile support annotations into actual project
-  compile "com.android.support:support-annotations:$supportLib"
+  annotationProcessor "com.android.support:support-annotations:$supportLib"
 
   // Job Scheduling
   compile "com.birbit:android-priority-jobqueue:$androidPriorityJobQueue"
