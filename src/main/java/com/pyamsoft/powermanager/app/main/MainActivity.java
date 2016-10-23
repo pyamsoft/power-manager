@@ -232,14 +232,9 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Square icons in the overview";
-    final String line2 = "BUGFIX: Clean up code for trigger creation";
-    final String line3 = "BUGFIX: Reset 'Start on Boot' setting when all settings are cleared";
-    final String line4 = "BUGFIX: Fix a crash in the Manage screen when scrolling quickly";
-    final String line5 = "BUGFIX: Fixes a display bug when enabling Doze settings";
-    final String line6 = "ROOT ONLY: Allows automatic toggling of Mobile Data";
-    final String line7 = "CHANGE: Added some simple onboarding to explain the application";
-    return new String[] { line1, line2, line3, line4, line5, line6, line7 };
+    final String line1 = "BUGFIX: Cleaner onboarding";
+    final String line2 = "BUGFIX: Reduce onboarding delay to show only when relevant";
+    return new String[] { line1, line2 };
   }
 
   @NonNull @Override protected String getVersionName() {
