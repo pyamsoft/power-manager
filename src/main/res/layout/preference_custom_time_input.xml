@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         >
 
-      <com.pyamsoft.pydroid.widget.NoLeakTextInputEditText
+      <com.pyamsoft.pydroiddesign.widget.NoLeakTextInputEditText
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:inputType="number"

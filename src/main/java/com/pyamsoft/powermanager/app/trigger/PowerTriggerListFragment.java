@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +39,6 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.widget.DividerItemDecoration;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
@@ -95,8 +95,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    dividerDecoration =
-        new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+    dividerDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
 
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_powertrigger, container, false);
     return binding.getRoot();
