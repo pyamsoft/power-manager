@@ -98,7 +98,7 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
       builder.mActions.clear();
       return builder.setPriority(priority)
           .setContentText(title)
-          .addAction(R.drawable.ic_close_24dp, actionName, actionToggleService)
+          .addAction(R.drawable.ic_notification, actionName, actionToggleService)
           .build();
     });
   }
