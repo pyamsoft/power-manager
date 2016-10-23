@@ -83,6 +83,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
+  public void onUnselected() {
+    if (presenter == null || !presenter.isBound()) {
+      showOnboardingWhenAvailable = true;
+    } else {
+      showOnboardingWhenAvailable = false;
+      presenter.dismissOnboarding();
+    }
+  }
+
   /**
    * Inject anything here is individual fragment instances
    */

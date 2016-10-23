@@ -100,6 +100,15 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
+  public void onUnselected() {
+    if (presenter == null || !presenter.isBound()) {
+      showOnboardingWhenAvailable = true;
+    } else {
+      showOnboardingWhenAvailable = false;
+      presenter.dismissOnboarding();
+    }
+  }
+
   private void resolvePreferences() {
     periodicPreference = (ViewSwitchPreferenceCompat) findPreference(periodicKey);
     presetEnableTimePreference = (ViewListPreference) findPreference(presetEnableTimeKey);

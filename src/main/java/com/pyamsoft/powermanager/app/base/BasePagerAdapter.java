@@ -70,13 +70,18 @@ public abstract class BasePagerAdapter extends FragmentStatePagerAdapter {
   @CheckResult @NonNull protected abstract BasePeriodicPreferenceFragment getPeriodicFragment();
 
   void onPageSelected(@NonNull ViewPager viewPager, int position) {
-    final Object fragment = instantiateItem(viewPager, position);
+    final BaseManagePreferenceFragment manageFragment =
+        (BaseManagePreferenceFragment) instantiateItem(viewPager, 0);
+    final BasePeriodicPreferenceFragment periodFragment =
+        (BasePeriodicPreferenceFragment) instantiateItem(viewPager, 1);
     switch (position) {
       case 0:
-        ((BaseManagePreferenceFragment) fragment).onSelected();
+        manageFragment.onSelected();
+        periodFragment.onUnselected();
         break;
       case 1:
-        ((BasePeriodicPreferenceFragment) fragment).onSelected();
+        manageFragment.onUnselected();
+        periodFragment.onSelected();
         break;
       default:
         throw new RuntimeException("Invalid page " + position);
