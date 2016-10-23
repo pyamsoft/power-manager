@@ -40,7 +40,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCompat
-    implements BaseManagePreferencePresenter.ManagePreferenceView {
+    implements BaseManagePreferencePresenter.ManagePreferenceView, BasePagerAdapter.Page {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") BaseManagePreferencePresenter presenter;
@@ -74,7 +74,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     injectDependencies();
   }
 
-  public void onSelected() {
+  @Override public void onSelected() {
     if (presenter == null || !presenter.isBound()) {
       showOnboardingWhenAvailable = true;
     } else {
@@ -83,7 +83,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     }
   }
 
-  public void onUnselected() {
+  @Override public void onUnselected() {
     if (presenter == null || !presenter.isBound()) {
       showOnboardingWhenAvailable = true;
     } else {

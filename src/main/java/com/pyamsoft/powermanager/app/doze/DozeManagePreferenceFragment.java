@@ -115,6 +115,16 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     }
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    onSelected();
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    onUnselected();
+  }
+
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();

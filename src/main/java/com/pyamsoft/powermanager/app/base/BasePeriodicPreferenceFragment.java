@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentCompat
-    implements BasePeriodPreferencePresenter.PeriodPreferenceView {
+    implements BasePeriodPreferencePresenter.PeriodPreferenceView, BasePagerAdapter.Page {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") BasePeriodPreferencePresenter presenter;
@@ -91,7 +91,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
             });
   }
 
-  public void onSelected() {
+  @Override public void onSelected() {
     if (presenter == null || !presenter.isBound()) {
       showOnboardingWhenAvailable = true;
     } else {
@@ -100,7 +100,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
     }
   }
 
-  public void onUnselected() {
+  @Override public void onUnselected() {
     if (presenter == null || !presenter.isBound()) {
       showOnboardingWhenAvailable = true;
     } else {
