@@ -158,15 +158,23 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
-
-    if (showOnboardingWhenAvailable) {
-      presenter.showOnboardingIfNeeded();
-    }
   }
 
   @CallSuper @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    if (showOnboardingWhenAvailable) {
+      presenter.showOnboardingIfNeeded();
+    }
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    presenter.dismissOnboarding();
   }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {

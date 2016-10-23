@@ -78,4 +78,8 @@ public abstract class BasePeriodPreferencePresenterImpl
       onboardingSubscription.unsubscribe();
     }
   }
+
+  @Override public void dismissOnboarding() {
+    unsubOnboarding();
+  }
 }

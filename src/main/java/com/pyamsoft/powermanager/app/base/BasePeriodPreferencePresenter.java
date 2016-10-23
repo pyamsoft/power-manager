@@ -25,6 +25,8 @@ public interface BasePeriodPreferencePresenter
 
   void showOnboardingIfNeeded();
 
+  void dismissOnboarding();
+
   interface PeriodPreferenceView {
 
     void onPeriodicSet();

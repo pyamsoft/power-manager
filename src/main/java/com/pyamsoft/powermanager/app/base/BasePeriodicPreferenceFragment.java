@@ -200,15 +200,23 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
-
-    if (showOnboardingWhenAvailable) {
-      presenter.showOnboardingIfNeeded();
-    }
   }
 
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    if (showOnboardingWhenAvailable) {
+      presenter.showOnboardingIfNeeded();
+    }
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    presenter.dismissOnboarding();
   }
 
   @Override public void onDestroy() {

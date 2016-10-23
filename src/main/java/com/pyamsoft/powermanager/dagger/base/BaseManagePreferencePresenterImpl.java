@@ -54,6 +54,7 @@ public abstract class BaseManagePreferencePresenterImpl
   @Override protected void onUnbind() {
     super.onUnbind();
     manageObserver.unregister(OBS_TAG);
+    unsubOnboarding();
   }
 
   @Override public void setShownOnBoarding() {
@@ -77,5 +78,9 @@ public abstract class BaseManagePreferencePresenterImpl
     if (!onboardingSubscription.isUnsubscribed()) {
       onboardingSubscription.unsubscribe();
     }
+  }
+
+  @Override public void dismissOnboarding() {
+    unsubOnboarding();
   }
 }
