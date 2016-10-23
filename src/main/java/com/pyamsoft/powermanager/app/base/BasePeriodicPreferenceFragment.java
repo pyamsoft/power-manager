@@ -101,10 +101,8 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   }
 
   @Override public void onUnselected() {
-    if (presenter == null || !presenter.isBound()) {
-      showOnboardingWhenAvailable = true;
-    } else {
-      showOnboardingWhenAvailable = false;
+    showOnboardingWhenAvailable = false;
+    if (presenter != null && presenter.isBound()) {
       presenter.dismissOnboarding();
     }
   }
