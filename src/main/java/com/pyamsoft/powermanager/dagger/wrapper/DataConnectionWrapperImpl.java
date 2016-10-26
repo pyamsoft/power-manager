@@ -147,6 +147,10 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     return Settings.Global.getInt(contentResolver, SETTINGS_URI_MOBILE_DATA, 0) == 1;
   }
 
+  @CheckResult private boolean isAirplaneMode() {
+    return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+  }
+
   private void setMobileDataEnabled(boolean enabled) {
     Timber.i("Data: %s", enabled ? "enable" : "disable");
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -157,11 +161,19 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   }
 
   @Override public void enable() {
-    setMobileDataEnabled(true);
+    if (isAirplaneMode()) {
+      Timber.e("Cannot enable Data radio in airplane mode");
+    } else {
+      setMobileDataEnabled(true);
+    }
   }
 
   @Override public void disable() {
-    setMobileDataEnabled(false);
+    if (isAirplaneMode()) {
+      Timber.e("Cannot disable Data radio in airplane mode");
+    } else {
+      setMobileDataEnabled(false);
+    }
   }
 
   @Override public boolean isEnabled() {
