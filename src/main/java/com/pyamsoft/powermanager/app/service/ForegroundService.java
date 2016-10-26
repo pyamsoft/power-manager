@@ -24,7 +24,7 @@ import android.os.IBinder;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -80,7 +80,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onCreate();
     Timber.d("onCreate");
 
-    PowerManager.get(getApplicationContext())
+    PowerManagerSingleInitProvider.get()
         .provideComponent()
         .plusForegroundServiceComponent()
         .inject(this);
