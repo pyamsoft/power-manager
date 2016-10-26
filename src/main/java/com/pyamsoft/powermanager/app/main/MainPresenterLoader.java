@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.main;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,7 +32,7 @@ public class MainPresenterLoader extends PersistLoader<MainPresenter> {
   }
 
   @NonNull @Override public MainPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusMainComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusMainComponent().inject(this);
     return presenterProvider.get();
   }
 }
