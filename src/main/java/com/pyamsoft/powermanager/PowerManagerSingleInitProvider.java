@@ -17,14 +17,65 @@
 package com.pyamsoft.powermanager;
 
 import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
+import com.pyamsoft.powermanager.dagger.PowerManagerModule;
+import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
+import com.pyamsoft.pydroid.about.Licenses;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+public class PowerManagerSingleInitProvider extends SingleInitContentProvider
+    implements IPYDroidApp<PowerManagerComponent> {
+
+  @Nullable private static volatile PowerManagerSingleInitProvider instance = null;
+  @Nullable private PowerManagerComponent component;
+
+  @NonNull @CheckResult public static IPYDroidApp<PowerManagerComponent> get() {
+    if (instance == null) {
+      throw new NullPointerException("Instance is NULL");
+    }
+
+    //noinspection ConstantConditions
+    return instance;
+  }
+
+  private static void setInstance(@NonNull PowerManagerSingleInitProvider instance) {
+    PowerManagerSingleInitProvider.instance = instance;
+  }
+
+  @Override protected void onInstanceCreated() {
+    setInstance(this);
+  }
 
   @Override protected void onFirstCreate(@NonNull Context context) {
     super.onFirstCreate(context);
+
+    component = DaggerPowerManagerComponent.builder()
+        .powerManagerModule(new PowerManagerModule(context))
+        .build();
+
     ForegroundService.start(context);
+  }
+
+  @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
+    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(context);
+  }
+
+  @Override public void insertCustomLicensesIntoMap() {
+    Licenses.create("Android Priority Job Queue",
+        "https://github.com/yigit/android-priority-jobqueue", "licenses/androidpriorityjobqueue");
+    Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
+    Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
+  }
+
+  @NonNull @Override public PowerManagerComponent provideComponent() {
+    if (component == null) {
+      throw new NullPointerException("PowerManagerComponent is NULL");
+    }
+    return component;
   }
 }
