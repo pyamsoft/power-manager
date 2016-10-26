@@ -18,21 +18,21 @@ package com.pyamsoft.powermanager.app.trigger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 public class TriggerListAdapterPresenterLoader extends PersistLoader<TriggerListAdapterPresenter> {
 
-  @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
 
   TriggerListAdapterPresenterLoader(@NonNull Context context) {
     super(context);
   }
 
   @NonNull @Override public TriggerListAdapterPresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusTriggerComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusTriggerComponent().inject(this);
     return presenterProvider.get();
   }
 }

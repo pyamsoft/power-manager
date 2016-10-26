@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.app.wear;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class WearPresenterLoader extends PersistLoader<BaseManagePreferencePrese
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusWearScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusWearScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }
