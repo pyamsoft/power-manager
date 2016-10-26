@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerModule;
 import com.pyamsoft.pydroid.IPYDroidApp;
