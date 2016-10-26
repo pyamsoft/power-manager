@@ -48,8 +48,9 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     PowerManagerSingleInitProvider.instance = instance;
   }
 
-  @Override protected void onInstanceCreated() {
+  @Override protected void onInstanceCreated(@NonNull Context context) {
     setInstance(this);
+    ForegroundService.start(context);
   }
 
   @Override protected void onFirstCreate(@NonNull Context context) {
@@ -58,8 +59,6 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     component = DaggerPowerManagerComponent.builder()
         .powerManagerModule(new PowerManagerModule(context))
         .build();
-
-    ForegroundService.start(context);
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
