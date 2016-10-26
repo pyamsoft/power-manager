@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import javax.inject.Inject;
@@ -50,7 +50,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
     this.appContext = context.getApplicationContext();
     isRegistered = false;
 
-    PowerManager.get(appContext).provideComponent().plusManagerComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusManagerComponent().inject(this);
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {
