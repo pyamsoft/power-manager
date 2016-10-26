@@ -21,8 +21,8 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.job.DataManageJob;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.job.DataManageJob;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 

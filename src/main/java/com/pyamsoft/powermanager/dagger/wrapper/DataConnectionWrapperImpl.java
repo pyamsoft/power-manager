@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

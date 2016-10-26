@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.app.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -22,7 +22,7 @@ import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import javax.inject.Named;
 

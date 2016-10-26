@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

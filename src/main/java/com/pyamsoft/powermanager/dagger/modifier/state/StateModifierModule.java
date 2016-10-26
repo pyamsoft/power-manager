@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

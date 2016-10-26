@@ -16,6 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
+import com.pyamsoft.powermanager.app.job.BluetoothManageJob;
+import com.pyamsoft.powermanager.app.job.DataManageJob;
+import com.pyamsoft.powermanager.app.job.DozeManageJob;
+import com.pyamsoft.powermanager.app.job.SyncManageJob;
+import com.pyamsoft.powermanager.app.job.WifiManageJob;
 import dagger.Subcomponent;
 
 @Subcomponent public interface JobComponent {
