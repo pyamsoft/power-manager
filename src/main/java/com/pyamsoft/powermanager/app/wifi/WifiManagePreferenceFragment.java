@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.wifi;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;

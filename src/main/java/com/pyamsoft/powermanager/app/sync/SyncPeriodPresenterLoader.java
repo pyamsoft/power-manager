@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.wifi;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -25,8 +24,8 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WifiPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
-  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
-) {
+  @NonNull @Override
+  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
     return new WifiPeriodPresenterLoader();
   }
 
