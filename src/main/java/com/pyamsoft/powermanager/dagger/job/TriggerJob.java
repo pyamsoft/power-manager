@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
@@ -72,10 +72,7 @@ public class TriggerJob extends BaseJob {
 
   @Override public void onAdded() {
     super.onAdded();
-    PowerManager.get(getApplicationContext())
-        .provideComponent()
-        .plusTriggerJobComponent()
-        .inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusTriggerJobComponent().inject(this);
   }
 
   @Override public void onRun() throws Throwable {
