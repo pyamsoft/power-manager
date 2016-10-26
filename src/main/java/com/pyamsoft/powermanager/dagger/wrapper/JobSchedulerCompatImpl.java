@@ -31,6 +31,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
 import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import timber.log.Timber;
 

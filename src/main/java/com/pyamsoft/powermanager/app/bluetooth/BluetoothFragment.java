@@ -19,12 +19,11 @@ package com.pyamsoft.powermanager.app.bluetooth;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -34,7 +33,6 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Bluetooth";
   @Inject @Named("obs_bluetooth_state") BooleanInterestObserver observer;
-  @Inject @Named("mod_bluetooth_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static BluetoothFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -44,7 +42,10 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManager.get(getContext()).provideComponent().plusBluetoothScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get()
+        .provideComponent()
+        .plusBluetoothScreenComponent()
+        .inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {
@@ -52,7 +53,7 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new BluetoothOverviewPresenterLoader(getContext());
+    return new BluetoothOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

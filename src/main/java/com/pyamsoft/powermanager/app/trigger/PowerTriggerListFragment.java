@@ -63,7 +63,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     loadedPresenterKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<TriggerPresenter>() {
           @NonNull @Override public PersistLoader<TriggerPresenter> createLoader() {
-            return new TriggerPresenterLoader(getContext());
+            return new TriggerPresenterLoader();
           }
 
           @Override public void onPersistentLoaded(@NonNull TriggerPresenter persist) {
@@ -75,7 +75,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
         .load(KEY_ADAPTER, savedInstanceState,
             new PersistLoader.Callback<TriggerListAdapterPresenter>() {
               @NonNull @Override public PersistLoader<TriggerListAdapterPresenter> createLoader() {
-                return new TriggerListAdapterPresenterLoader(getContext());
+                return new TriggerListAdapterPresenterLoader();
               }
 
               @Override

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.app.job;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;

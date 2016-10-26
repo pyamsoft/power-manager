@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.app.job;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -25,11 +25,11 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -72,10 +72,7 @@ public class TriggerJob extends BaseJob {
 
   @Override public void onAdded() {
     super.onAdded();
-    PowerManager.get(getApplicationContext())
-        .provideComponent()
-        .plusTriggerJobComponent()
-        .inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusTriggerJobComponent().inject(this);
   }
 
   @Override public void onRun() throws Throwable {

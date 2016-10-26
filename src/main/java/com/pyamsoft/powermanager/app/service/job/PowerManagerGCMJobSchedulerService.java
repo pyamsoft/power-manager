@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.app.service.job;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 
 public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
@@ -33,9 +33,6 @@ public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
   @Override public void onCreate() {
     super.onCreate();
-    PowerManager.get(getApplicationContext())
-        .provideComponent()
-        .plusJobServiceComponent()
-        .inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusJobServiceComponent().inject(this);
   }
 }

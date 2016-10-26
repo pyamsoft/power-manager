@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.app.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public abstract class WifiManageJob extends ManageJob {
+public abstract class DozeManageJob extends ManageJob {
 
-  @NonNull public static final String JOB_TAG = "wifi_job";
+  @NonNull public static final String JOB_TAG = "doze_job";
 
-  WifiManageJob(@NonNull JobSchedulerCompat jobManager, @NonNull JobType jobType,
-      long delayInSeconds, boolean periodic, long periodicEnableInSeconds,
+  @SuppressWarnings("WeakerAccess") DozeManageJob(@NonNull JobSchedulerCompat jobManager,
+      @NonNull JobType jobType, long delayInSeconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
     super(jobManager, JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds);
@@ -49,10 +48,9 @@ public abstract class WifiManageJob extends ManageJob {
         periodicEnableInSeconds, periodicDisableInSeconds);
   }
 
-  public static final class EnableJob extends WifiManageJob {
+  public static final class EnableJob extends DozeManageJob {
 
-    @Inject @Named("mod_wifi_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_wifi_state") BooleanInterestObserver interestObserver;
+    @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
 
     EnableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis, boolean periodic,
         long periodicEnableInSeconds, long periodicDisableInSeconds) {
@@ -67,20 +65,19 @@ public abstract class WifiManageJob extends ManageJob {
 
     @Override public void onAdded() {
       super.onAdded();
-      PowerManager.get(getApplicationContext()).provideComponent().plusJobComponent().inject(this);
+      PowerManagerSingleInitProvider.get().provideComponent().plusJobComponent().inject(this);
     }
 
     @Override public void run() {
-      if (!interestObserver.is()) {
-        interestModifier.set();
-      }
+      // Doze job is a bit backwards since Doze is thought of differently
+      // Doze being 'enabled' actually means to turn it off
+      interestModifier.unset();
     }
   }
 
-  public static final class DisableJob extends WifiManageJob {
+  public static final class DisableJob extends DozeManageJob {
 
-    @Inject @Named("mod_wifi_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_wifi_state") BooleanInterestObserver interestObserver;
+    @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
 
     DisableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis, boolean periodic,
         long periodicEnableInSeconds, long periodicDisableInSeconds) {
@@ -98,13 +95,13 @@ public abstract class WifiManageJob extends ManageJob {
 
     @Override public void onAdded() {
       super.onAdded();
-      PowerManager.get(getApplicationContext()).provideComponent().plusJobComponent().inject(this);
+      PowerManagerSingleInitProvider.get().provideComponent().plusJobComponent().inject(this);
     }
 
     @Override public void run() {
-      if (interestObserver.is()) {
-        interestModifier.unset();
-      }
+      // Doze job is a bit backwards since Doze is thought of differently
+      // Doze being 'disabled' actually means to turn it on
+      interestModifier.set();
     }
   }
 }

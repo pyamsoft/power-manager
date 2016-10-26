@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.doze;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
@@ -43,7 +42,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
   private SwitchPreferenceCompat manageSensors;
 
   @Override protected void injectDependencies() {
-    PowerManager.get(getContext()).provideComponent().plusDozeScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -74,8 +73,8 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
-    return new DozePresenterLoader(context);
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+    return new DozePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {

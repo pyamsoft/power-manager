@@ -16,54 +16,10 @@
 
 package com.pyamsoft.powermanager;
 
-import android.content.Context;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.PowerManagerModule;
-import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.PYDroidApplication;
-import com.pyamsoft.pydroid.about.Licenses;
 
-public class PowerManager extends PYDroidApplication implements IPYDroidApp<PowerManagerComponent> {
+public class PowerManager extends PYDroidApplication {
 
   private PowerManagerComponent component;
-
-  @NonNull @CheckResult
-  public static IPYDroidApp<PowerManagerComponent> get(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    if (appContext instanceof PowerManager) {
-      return PowerManager.class.cast(appContext);
-    } else {
-      throw new ClassCastException("Cannot cast Application Context to IPowerManager");
-    }
-  }
-
-  @Override protected void createApplicationComponents() {
-    super.createApplicationComponents();
-    component = DaggerPowerManagerComponent.builder()
-        .powerManagerModule(new PowerManagerModule(getApplicationContext()))
-        .build();
-  }
-
-  @NonNull @Override public PowerManagerComponent provideComponent() {
-    if (component == null) {
-      throw new NullPointerException("PowerManagerComponent is NULL");
-    }
-    return component;
-  }
-
-  @Nullable @Override public String provideGoogleOpenSourceLicenses() {
-    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this);
-  }
-
-  @Override public void insertCustomLicensesIntoMap() {
-    Licenses.create("Android Priority Job Queue",
-        "https://github.com/yigit/android-priority-jobqueue", "licenses/androidpriorityjobqueue");
-    Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
-    Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
-  }
 }

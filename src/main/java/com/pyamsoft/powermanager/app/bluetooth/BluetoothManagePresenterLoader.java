@@ -16,9 +16,8 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -27,14 +26,17 @@ import javax.inject.Provider;
 
 public class BluetoothManagePresenterLoader extends PersistLoader<BaseManagePreferencePresenter> {
 
-  @Inject @Named("bluetooth_manage_pref") Provider<BaseManagePreferencePresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_manage_pref")
+  Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  BluetoothManagePresenterLoader(@NonNull Context context) {
-    super(context);
+  BluetoothManagePresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusBluetoothScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get()
+        .provideComponent()
+        .plusBluetoothScreenComponent()
+        .inject(this);
     return presenterProvider.get();
   }
 }

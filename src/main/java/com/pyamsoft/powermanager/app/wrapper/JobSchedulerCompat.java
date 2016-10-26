@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.wrapper;
+package com.pyamsoft.powermanager.app.wrapper;
 
+import android.app.Service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.Job;
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.TagConstraint;
 
-public interface DeviceFunctionWrapper {
+public interface JobSchedulerCompat {
 
-  @NonNull String SETTINGS_URI_MOBILE_DATA = "mobile_data";
+  @CheckResult @NonNull JobManager provideManagerToService(@NonNull Service service);
 
-  void enable();
+  void cancelJobsInBackground(@NonNull TagConstraint constraint, @NonNull String... tags);
 
-  void disable();
+  void addJobInBackground(@NonNull Job job);
 
-  @CheckResult boolean isEnabled();
+  void cancelJobs(@NonNull TagConstraint constraint, @NonNull String... tags);
+
+  void addJob(@NonNull Job job);
 }

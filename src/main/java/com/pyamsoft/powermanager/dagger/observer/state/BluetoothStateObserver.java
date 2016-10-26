@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.observer.state;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 

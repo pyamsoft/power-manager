@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
@@ -30,8 +29,8 @@ public class BluetoothManagePreferenceFragment extends BaseManagePreferenceFragm
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
-    return new BluetoothManagePresenterLoader(context);
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+    return new BluetoothManagePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {

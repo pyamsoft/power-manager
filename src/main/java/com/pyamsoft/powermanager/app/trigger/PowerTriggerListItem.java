@@ -96,6 +96,10 @@ class PowerTriggerListItem
     return R.layout.adapter_item_trigger;
   }
 
+  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
+    return FACTORY;
+  }
+
   interface OnTriggerEnableChangeListener {
 
     void onTriggerEnableChange(@NonNull PowerTriggerEntry entry, int position, boolean isChecked);
@@ -104,10 +108,6 @@ class PowerTriggerListItem
   interface OnTriggerLongClickListener {
 
     void onLongClick(@NonNull PowerTriggerEntry entry, int position);
-  }
-
-  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
-    return FACTORY;
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory

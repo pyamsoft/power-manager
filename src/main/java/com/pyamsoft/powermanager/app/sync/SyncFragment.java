@@ -19,12 +19,11 @@ package com.pyamsoft.powermanager.app.sync;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -34,7 +33,6 @@ public class SyncFragment extends BaseOverviewPagerFragment {
 
   @NonNull public static final String TAG = "Sync";
   @Inject @Named("obs_sync_state") BooleanInterestObserver observer;
-  @Inject @Named("mod_sync_state") BooleanInterestModifier modifier;
 
   @CheckResult @NonNull
   public static SyncFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -44,7 +42,7 @@ public class SyncFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManager.get(getContext()).provideComponent().plusSyncScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusSyncScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {
@@ -52,7 +50,7 @@ public class SyncFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new SyncOverviewPresenterLoader(getContext());
+    return new SyncOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

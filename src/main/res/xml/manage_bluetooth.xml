@@ -45,7 +45,7 @@
   <PreferenceCategory
       android:title="Bluetooth Delay">
 
-   <!--suppress AndroidElementNotAllowed -->
+    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.preference.ViewListPreference
         android:defaultValue="@string/bluetooth_time_default"
         android:dependency="@string/manage_bluetooth_key"

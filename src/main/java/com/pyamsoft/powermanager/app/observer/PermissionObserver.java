@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-public interface PermissionObserver extends InterestObserver{
+public interface PermissionObserver extends InterestObserver {
 
   @CheckResult @NonNull Observable<Boolean> hasPermission();
 }

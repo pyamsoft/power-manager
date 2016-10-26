@@ -16,9 +16,8 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -27,14 +26,17 @@ import javax.inject.Provider;
 
 public class BluetoothPeriodPresenterLoader extends PersistLoader<BasePeriodPreferencePresenter> {
 
-  @Inject @Named("bluetooth_period_pref") Provider<BasePeriodPreferencePresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_period_pref")
+  Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  BluetoothPeriodPresenterLoader(@NonNull Context context) {
-    super(context);
+  BluetoothPeriodPresenterLoader() {
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
-    PowerManager.get(getContext()).provideComponent().plusBluetoothScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get()
+        .provideComponent()
+        .plusBluetoothScreenComponent()
+        .inject(this);
     return presenterProvider.get();
   }
 }

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -49,8 +48,8 @@ public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
     return R.string.periodic_sync_disable_key;
   }
 
-  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
-      @NonNull Context context) {
-    return new SyncPeriodPresenterLoader(context);
+  @NonNull @Override
+  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
+    return new SyncPeriodPresenterLoader();
   }
 }

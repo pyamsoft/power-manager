@@ -25,7 +25,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;

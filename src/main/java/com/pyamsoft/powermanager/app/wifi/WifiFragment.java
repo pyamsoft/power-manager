@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.wifi;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
@@ -42,7 +42,7 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManager.get(getContext()).provideComponent().plusWifiScreenComponent().inject(this);
+    PowerManagerSingleInitProvider.get().provideComponent().plusWifiScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {
@@ -50,7 +50,7 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new WifiOverviewPresenterLoader(getContext());
+    return new WifiOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

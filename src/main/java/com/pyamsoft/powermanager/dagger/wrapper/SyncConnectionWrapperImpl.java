@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.content.ContentResolver;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
