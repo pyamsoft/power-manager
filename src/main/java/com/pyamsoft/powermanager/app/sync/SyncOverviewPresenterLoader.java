@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
@@ -30,8 +29,7 @@ public class SyncOverviewPresenterLoader extends PersistLoader<BaseOverviewPager
   @SuppressWarnings("WeakerAccess") @Inject @Named("sync_overview")
   Provider<BaseOverviewPagerPresenter> presenterProvider;
 
-  SyncOverviewPresenterLoader(@NonNull Context context) {
-    super(context);
+  SyncOverviewPresenterLoader() {
   }
 
   @NonNull @Override public BaseOverviewPagerPresenter loadPersistent() {

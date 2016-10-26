@@ -50,7 +50,7 @@ public class WifiFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new WifiOverviewPresenterLoader(getContext());
+    return new WifiOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

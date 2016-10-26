@@ -50,7 +50,7 @@ public class SyncFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new SyncOverviewPresenterLoader(getContext());
+    return new SyncOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

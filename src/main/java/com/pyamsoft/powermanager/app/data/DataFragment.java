@@ -50,7 +50,7 @@ public class DataFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new DataOverviewPresenterLoader(getContext());
+    return new DataOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

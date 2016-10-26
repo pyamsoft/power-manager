@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
@@ -30,8 +29,7 @@ public class DataManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("data_manage_pref")
   Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  DataManagePresenterLoader(@NonNull Context context) {
-    super(context);
+  DataManagePresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -25,9 +24,9 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class BluetoothPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
 
-  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
-      @NonNull Context context) {
-    return new BluetoothPeriodPresenterLoader(context);
+  @NonNull @Override
+  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
+    return new BluetoothPeriodPresenterLoader();
   }
 
   @Override protected int getPreferencesResId() {

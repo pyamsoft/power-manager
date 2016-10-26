@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.settings;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -27,8 +26,7 @@ public class SettingsPreferencePresenterLoader extends PersistLoader<SettingsPre
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<SettingsPreferencePresenter> presenterProvider;
 
-  SettingsPreferencePresenterLoader(@NonNull Context context) {
-    super(context);
+  SettingsPreferencePresenterLoader() {
   }
 
   @NonNull @Override public SettingsPreferencePresenter loadPersistent() {

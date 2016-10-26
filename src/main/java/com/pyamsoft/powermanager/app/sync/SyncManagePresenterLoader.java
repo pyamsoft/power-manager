@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.sync;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
@@ -30,8 +29,7 @@ public class SyncManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("sync_manage_pref")
   Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  SyncManagePresenterLoader(@NonNull Context context) {
-    super(context);
+  SyncManagePresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {

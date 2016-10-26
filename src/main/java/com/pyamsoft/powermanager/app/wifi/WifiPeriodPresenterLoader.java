@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.wifi;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -30,8 +29,7 @@ public class WifiPeriodPresenterLoader extends PersistLoader<BasePeriodPreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_period_pref")
   Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  WifiPeriodPresenterLoader(@NonNull Context context) {
-    super(context);
+  WifiPeriodPresenterLoader() {
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {

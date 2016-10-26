@@ -30,8 +30,7 @@ public class WifiOverviewPresenterLoader extends PersistLoader<BaseOverviewPager
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_overview")
   Provider<BaseOverviewPagerPresenter> presenterProvider;
 
-  WifiOverviewPresenterLoader(@NonNull Context context) {
-    super(context);
+  WifiOverviewPresenterLoader() {
   }
 
   @NonNull @Override public BaseOverviewPagerPresenter loadPersistent() {

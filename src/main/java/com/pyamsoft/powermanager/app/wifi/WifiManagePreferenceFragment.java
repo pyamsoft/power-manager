@@ -30,8 +30,8 @@ public class WifiManagePreferenceFragment extends BaseManagePreferenceFragment {
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
-    return new WifiManagePresenterLoader(context);
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+    return new WifiManagePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {

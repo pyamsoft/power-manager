@@ -71,7 +71,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<OverviewPresenter>() {
           @NonNull @Override public PersistLoader<OverviewPresenter> createLoader() {
-            return new OverviewPresenterLoader(getContext());
+            return new OverviewPresenterLoader();
           }
 
           @Override public void onPersistentLoaded(@NonNull OverviewPresenter persist) {

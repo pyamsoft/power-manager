@@ -30,8 +30,7 @@ public class WifiManagePresenterLoader extends PersistLoader<BaseManagePreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_manage_pref")
   Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  WifiManagePresenterLoader(@NonNull Context context) {
-    super(context);
+  WifiManagePresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.wear;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
@@ -30,8 +29,7 @@ public class WearPresenterLoader extends PersistLoader<BaseManagePreferencePrese
   @SuppressWarnings("WeakerAccess") @Inject @Named("wear_manage_pref")
   Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  WearPresenterLoader(@NonNull Context context) {
-    super(context);
+  WearPresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {

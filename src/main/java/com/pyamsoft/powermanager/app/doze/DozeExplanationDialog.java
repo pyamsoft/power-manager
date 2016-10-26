@@ -64,7 +64,7 @@ public class DozeExplanationDialog extends DialogFragment {
     }
     final Spannable spannable = StringUtil.createBuilder(message);
     final int textSize =
-        StringUtil.getTextSizeFromAppearance(getContext(), android.R.style.TextAppearance_Small);
+        StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceSmall);
     if (textSize != 0) {
       StringUtil.sizeSpan(spannable, 0, spannable.length(), textSize);
     }

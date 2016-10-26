@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -30,8 +29,7 @@ public class BluetoothPeriodPresenterLoader extends PersistLoader<BasePeriodPref
   @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_period_pref")
   Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  BluetoothPeriodPresenterLoader(@NonNull Context context) {
-    super(context);
+  BluetoothPeriodPresenterLoader() {
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {

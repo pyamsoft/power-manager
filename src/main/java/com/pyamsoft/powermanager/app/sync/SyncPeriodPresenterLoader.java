@@ -30,8 +30,7 @@ public class SyncPeriodPresenterLoader extends PersistLoader<BasePeriodPreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("sync_period_pref")
   Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  SyncPeriodPresenterLoader(@NonNull Context context) {
-    super(context);
+  SyncPeriodPresenterLoader() {
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {

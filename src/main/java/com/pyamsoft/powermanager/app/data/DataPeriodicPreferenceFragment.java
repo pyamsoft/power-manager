@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -49,8 +48,8 @@ public class DataPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
     return R.string.periodic_data_disable_key;
   }
 
-  @NonNull @Override protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
-      @NonNull Context context) {
-    return new DataPeriodPresenterLoader(context);
+  @NonNull @Override
+  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
+    return new DataPeriodPresenterLoader();
   }
 }

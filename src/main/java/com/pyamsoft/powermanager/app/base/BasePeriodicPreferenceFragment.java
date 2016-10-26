@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -81,7 +80,7 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
             new PersistLoader.Callback<BasePeriodPreferencePresenter>() {
               @NonNull @Override
               public PersistLoader<BasePeriodPreferencePresenter> createLoader() {
-                return createPresenterLoader(getContext());
+                return createPresenterLoader();
               }
 
               @Override
@@ -355,6 +354,5 @@ public abstract class BasePeriodicPreferenceFragment extends PreferenceFragmentC
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
 
   @CheckResult @NonNull
-  protected abstract PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader(
-      @NonNull Context context);
+  protected abstract PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader();
 }

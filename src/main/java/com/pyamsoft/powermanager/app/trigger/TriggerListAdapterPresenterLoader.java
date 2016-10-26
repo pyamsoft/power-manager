@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -27,8 +26,7 @@ public class TriggerListAdapterPresenterLoader extends PersistLoader<TriggerList
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<TriggerListAdapterPresenter> presenterProvider;
 
-  TriggerListAdapterPresenterLoader(@NonNull Context context) {
-    super(context);
+  TriggerListAdapterPresenterLoader() {
   }
 
   @NonNull @Override public TriggerListAdapterPresenter loadPersistent() {

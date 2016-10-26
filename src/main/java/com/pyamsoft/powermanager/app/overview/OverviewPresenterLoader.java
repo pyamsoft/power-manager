@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -27,8 +26,7 @@ public class OverviewPresenterLoader extends PersistLoader<OverviewPresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<OverviewPresenter> presenterProvider;
 
-  OverviewPresenterLoader(@NonNull Context context) {
-    super(context);
+  OverviewPresenterLoader() {
   }
 
   @NonNull @Override public OverviewPresenter loadPersistent() {

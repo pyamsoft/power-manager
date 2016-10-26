@@ -53,7 +53,7 @@ public class BluetoothFragment extends BaseOverviewPagerFragment {
   }
 
   @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
-    return new BluetoothOverviewPresenterLoader(getContext());
+    return new BluetoothOverviewPresenterLoader();
   }
 
   @Override protected int getFabSetIcon() {

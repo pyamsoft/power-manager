@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.app.base;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
@@ -102,7 +101,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
             new PersistLoader.Callback<BaseManagePreferencePresenter>() {
               @NonNull @Override
               public PersistLoader<BaseManagePreferencePresenter> createLoader() {
-                return createPresenterLoader(getContext());
+                return createPresenterLoader();
               }
 
               @Override
@@ -313,8 +312,7 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   }
 
   @CheckResult @NonNull
-  protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(
-      Context context);
+  protected abstract PersistLoader<BaseManagePreferencePresenter> createPresenterLoader();
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
 

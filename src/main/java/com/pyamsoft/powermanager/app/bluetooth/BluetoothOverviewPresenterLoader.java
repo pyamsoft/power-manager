@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.bluetooth;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
@@ -30,8 +29,7 @@ public class BluetoothOverviewPresenterLoader extends PersistLoader<BaseOverview
   @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_overview")
   Provider<BaseOverviewPagerPresenter> presenterProvider;
 
-  BluetoothOverviewPresenterLoader(@NonNull Context context) {
-    super(context);
+  BluetoothOverviewPresenterLoader() {
   }
 
   @NonNull @Override public BaseOverviewPagerPresenter loadPersistent() {

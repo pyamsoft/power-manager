@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.wear;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
@@ -32,8 +31,8 @@ public class WearManagePreferenceFragment extends BaseManagePreferenceFragment {
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
-    return new WearPresenterLoader(context);
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+    return new WearPresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {

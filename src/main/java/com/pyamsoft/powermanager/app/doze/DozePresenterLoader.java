@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.doze;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
@@ -30,8 +29,7 @@ public class DozePresenterLoader extends PersistLoader<BaseManagePreferencePrese
   @SuppressWarnings("WeakerAccess") @Inject @Named("doze_manage_pref")
   Provider<BaseManagePreferencePresenter> presenterProvider;
 
-  DozePresenterLoader(@NonNull Context context) {
-    super(context);
+  DozePresenterLoader() {
   }
 
   @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {

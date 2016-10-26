@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.doze;
 
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -74,8 +73,8 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader(Context context) {
-    return new DozePresenterLoader(context);
+  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+    return new DozePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {

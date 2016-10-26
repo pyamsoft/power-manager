@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
@@ -30,8 +29,7 @@ public class DataOverviewPresenterLoader extends PersistLoader<BaseOverviewPager
   @SuppressWarnings("WeakerAccess") @Inject @Named("data_overview")
   Provider<BaseOverviewPagerPresenter> presenterProvider;
 
-  DataOverviewPresenterLoader(@NonNull Context context) {
-    super(context);
+  DataOverviewPresenterLoader() {
   }
 
   @NonNull @Override public BaseOverviewPagerPresenter loadPersistent() {

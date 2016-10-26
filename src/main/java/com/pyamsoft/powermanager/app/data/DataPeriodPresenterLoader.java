@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.data;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
@@ -30,8 +29,7 @@ public class DataPeriodPresenterLoader extends PersistLoader<BasePeriodPreferenc
   @SuppressWarnings("WeakerAccess") @Inject @Named("data_period_pref")
   Provider<BasePeriodPreferencePresenter> presenterProvider;
 
-  DataPeriodPresenterLoader(@NonNull Context context) {
-    super(context);
+  DataPeriodPresenterLoader() {
   }
 
   @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
