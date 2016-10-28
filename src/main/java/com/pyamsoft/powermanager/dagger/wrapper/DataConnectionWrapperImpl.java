@@ -115,7 +115,8 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
    */
   private void setMobileDataEnabledRoot(boolean enabled) {
     final String command = "svc data " + (enabled ? "enable" : "disable");
-    ShellCommandHelper.runRootShellCommand(command);
+    final boolean result = ShellCommandHelper.runRootShellCommand(command);
+    Timber.d("Result: %s", result);
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {

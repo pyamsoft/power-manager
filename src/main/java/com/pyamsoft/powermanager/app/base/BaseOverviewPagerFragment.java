@@ -224,12 +224,12 @@ public abstract class BaseOverviewPagerFragment extends AppBarColoringFragment
   }
 
   /**
-   * Override if the toggle should still work even while Airplane mode is active
+   * Override if the toggle should not work while Airplane mode is active
    *
-   * By default, this is only Sync
+   * By default, Wifi, Bluetooth, and Sync should still work
    */
   @CheckResult protected boolean respectAirplaneMode() {
-    return true;
+    return false;
   }
 
   private void setFab() {

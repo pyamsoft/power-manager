@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
 
@@ -34,15 +35,22 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
   }
 
   private void setDozeEnabled(boolean enabled) {
+    final String command;
+    final boolean result;
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
       // API 23 can do this without root
-      final String command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");
-      ShellCommandHelper.runShellCommand(command);
+      command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");
+      result = ShellCommandHelper.runShellCommand(command);
     } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
       // API 24 requires root
-      final String command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");
-      ShellCommandHelper.runRootShellCommand(command);
+      command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");
+      result = ShellCommandHelper.runRootShellCommand(command);
+    } else {
+      Timber.w("This API level cannot run Doze");
+      result = false;
     }
+
+    Timber.d("Result: %s", result);
   }
 
   @Override public void enable() {
