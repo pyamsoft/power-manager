@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.job.BluetoothManageJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
@@ -31,43 +30,31 @@ class ManagerBluetoothInteractor extends WearAwareManagerBaseInteractor {
   @Inject ManagerBluetoothInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
         wearStateObserver);
   }
 
-  @CheckResult private long getDelayTime() {
+  @Override @CheckResult protected long getDelayTime() {
     return getPreferences().getBluetoothDelay();
   }
 
-  @CheckResult private boolean isPeriodic() {
+  @Override @CheckResult protected boolean isPeriodic() {
     return getPreferences().isPeriodicBluetooth();
   }
 
-  @CheckResult private long getPeriodicEnableTime() {
+  @Override @CheckResult protected long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeBluetooth();
   }
 
-  @CheckResult private long getPeriodicDisableTime() {
+  @Override @CheckResult protected long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeBluetooth();
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    return BluetoothManageJob.EnableJob.createManagerEnableJob(getJobManager());
-  }
-
-  @NonNull @Override protected Job createDisableJob() {
-    return BluetoothManageJob.DisableJob.createManagerDisableJob(getJobManager(),
-        getDelayTime() * 1000L, isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
-  }
-
-  @Override public void destroy() {
-    destroy(BluetoothManageJob.JOB_TAG);
-  }
-
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(BluetoothManageJob.JOB_TAG);
+  @NonNull @Override protected String getJobTag() {
+    return "bluetooth_jobs";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

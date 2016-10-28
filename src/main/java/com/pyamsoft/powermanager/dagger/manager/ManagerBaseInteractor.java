@@ -22,6 +22,9 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.job.DisableJob;
+import com.pyamsoft.powermanager.dagger.job.EnableJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import rx.Observable;
@@ -32,26 +35,31 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
   @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver stateObserver) {
     this.jobManager = jobManager;
     this.manageObserver = manageObserver;
+    this.stateModifier = stateModifier;
     this.stateObserver = stateObserver;
     originalStateEnabled = false;
     this.preferences = preferences;
   }
 
-  @CallSuper void destroy(@NonNull String jobTag) {
+  @Override public void destroy() {
+    final String jobTag = getJobTag();
     Timber.d("Cancel jobs in background with tag: %s", jobTag);
     jobManager.cancelJobsInBackground(TagConstraint.ANY, jobTag);
   }
 
-  @CallSuper @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
+  @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.defer(() -> {
+      final String jobTag = getJobTag();
       Timber.d("Cancel jobs in with tag: %s", jobTag);
       jobManager.cancelJobs(TagConstraint.ANY, jobTag);
       return Observable.just(true);
@@ -72,12 +80,12 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
-    jobManager.addJobInBackground(createEnableJob());
+    jobManager.addJobInBackground(createEnableJob(jobManager, stateObserver, stateModifier));
   }
 
   @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
-    jobManager.addJobInBackground(createDisableJob());
+    jobManager.addJobInBackground(createDisableJob(jobManager, stateObserver, stateModifier));
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {
@@ -96,7 +104,24 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     return Observable.defer(() -> Observable.just(stateObserver.is()));
   }
 
-  @CheckResult @NonNull protected abstract Job createEnableJob();
+  @CheckResult @NonNull private Job createEnableJob(@NonNull JobSchedulerCompat jobManager,
+      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
+    return EnableJob.createManagerEnableJob(jobManager, getJobTag(), observer, modifier);
+  }
 
-  @CheckResult @NonNull protected abstract Job createDisableJob();
+  @CheckResult @NonNull private Job createDisableJob(@NonNull JobSchedulerCompat jobManager,
+      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
+    return DisableJob.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
+        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), observer, modifier);
+  }
+
+  @CheckResult protected abstract long getDelayTime();
+
+  @CheckResult protected abstract boolean isPeriodic();
+
+  @CheckResult protected abstract long getPeriodicEnableTime();
+
+  @CheckResult protected abstract long getPeriodicDisableTime();
+
+  @CheckResult @NonNull protected abstract String getJobTag();
 }

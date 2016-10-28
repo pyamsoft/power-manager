@@ -41,6 +41,7 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
   private void setDozeEnabled(boolean enabled) {
     final String command;
     final boolean result;
+    Timber.i("Doze mode: %s", enabled ? "enable" : "disable");
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
       // API 23 can do this without root
       command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");

@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.job.DataManageJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -34,8 +33,9 @@ class ManagerDataInteractor extends ManagerBaseInteractor {
   @Inject ManagerDataInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull PermissionObserver rootPermissionObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver);
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 
@@ -45,37 +45,24 @@ class ManagerDataInteractor extends ManagerBaseInteractor {
             (managed, hasPermission) -> managed && hasPermission);
   }
 
-  @CheckResult private long getDelayTime() {
+  @Override @CheckResult protected long getDelayTime() {
     return getPreferences().getDataDelay();
   }
 
-  @CheckResult private boolean isPeriodic() {
+  @Override @CheckResult protected boolean isPeriodic() {
     return getPreferences().isPeriodicData();
   }
 
-  @CheckResult private long getPeriodicEnableTime() {
+  @Override @CheckResult protected long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeData();
   }
 
-  @CheckResult private long getPeriodicDisableTime() {
+  @Override @CheckResult protected long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeData();
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    return DataManageJob.EnableJob.createManagerEnableJob(getJobManager());
-  }
-
-  @NonNull @Override protected Job createDisableJob() {
-    return DataManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
-        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
-  }
-
-  @Override public void destroy() {
-    destroy(DataManageJob.JOB_TAG);
-  }
-
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(DataManageJob.JOB_TAG);
+  @NonNull @Override protected String getJobTag() {
+    return "data_jobs";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

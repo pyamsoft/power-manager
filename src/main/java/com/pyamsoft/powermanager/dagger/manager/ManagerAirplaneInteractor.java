@@ -17,8 +17,8 @@
 package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -32,10 +32,11 @@ class ManagerAirplaneInteractor extends WearAwareManagerBaseInteractor {
   @Inject ManagerAirplaneInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver,
       @NonNull PermissionObserver rootPermissionObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
         wearStateObserver);
     this.rootPermissionObserver = rootPermissionObserver;
   }
@@ -46,23 +47,24 @@ class ManagerAirplaneInteractor extends WearAwareManagerBaseInteractor {
             (managed, hasPermission) -> managed && hasPermission);
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    // TODO
-    return null;
+  @Override protected long getDelayTime() {
+    return 0;
   }
 
-  @NonNull @Override protected Job createDisableJob() {
-    // TODO
-    return null;
+  @Override protected boolean isPeriodic() {
+    return false;
   }
 
-  @Override public void destroy() {
-    // TODO
+  @Override protected long getPeriodicEnableTime() {
+    return 0;
   }
 
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    // TODO
-    return Observable.just(true);
+  @Override protected long getPeriodicDisableTime() {
+    return 0;
+  }
+
+  @NonNull @Override protected String getJobTag() {
+    return "airplane_job";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

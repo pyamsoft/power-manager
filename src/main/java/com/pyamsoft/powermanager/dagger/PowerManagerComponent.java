@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger;
 import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
-import com.pyamsoft.powermanager.dagger.job.JobComponent;
 import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
@@ -58,8 +57,6 @@ import javax.inject.Singleton;
   TriggerJobComponent plusTriggerJobComponent();
 
   ManagerComponent plusManagerComponent();
-
-  JobComponent plusJobComponent();
 
   CustomPreferenceComponent plusCustomPreferenceComponent();
 

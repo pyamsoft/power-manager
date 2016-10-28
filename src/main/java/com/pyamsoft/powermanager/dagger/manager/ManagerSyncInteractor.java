@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.job.SyncManageJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
@@ -30,41 +29,29 @@ class ManagerSyncInteractor extends ManagerBaseInteractor {
 
   @Inject ManagerSyncInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier) {
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver);
   }
 
-  @CheckResult private long getDelayTime() {
+  @Override @CheckResult protected long getDelayTime() {
     return getPreferences().getMasterSyncDelay();
   }
 
-  @CheckResult private boolean isPeriodic() {
+  @Override @CheckResult protected boolean isPeriodic() {
     return getPreferences().isPeriodicSync();
   }
 
-  @CheckResult private long getPeriodicEnableTime() {
+  @Override @CheckResult protected long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeSync();
   }
 
-  @CheckResult private long getPeriodicDisableTime() {
+  @Override @CheckResult protected long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeSync();
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    return SyncManageJob.EnableJob.createManagerEnableJob(getJobManager());
-  }
-
-  @NonNull @Override protected Job createDisableJob() {
-    return SyncManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
-        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
-  }
-
-  @Override public void destroy() {
-    destroy(SyncManageJob.JOB_TAG);
-  }
-
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(SyncManageJob.JOB_TAG);
+  @NonNull @Override protected String getJobTag() {
+    return "sync_jobs";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

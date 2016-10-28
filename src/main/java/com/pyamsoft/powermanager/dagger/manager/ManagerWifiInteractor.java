@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.job.WifiManageJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
@@ -31,43 +30,31 @@ class ManagerWifiInteractor extends WearAwareManagerBaseInteractor {
   @Inject ManagerWifiInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
         wearStateObserver);
   }
 
-  @CheckResult private long getDelayTime() {
+  @Override @CheckResult protected long getDelayTime() {
     return getPreferences().getWifiDelay();
   }
 
-  @CheckResult private boolean isPeriodic() {
+  @Override @CheckResult protected boolean isPeriodic() {
     return getPreferences().isPeriodicWifi();
   }
 
-  @CheckResult private long getPeriodicEnableTime() {
+  @Override @CheckResult protected long getPeriodicEnableTime() {
     return getPreferences().getPeriodicEnableTimeWifi();
   }
 
-  @CheckResult private long getPeriodicDisableTime() {
+  @Override @CheckResult protected long getPeriodicDisableTime() {
     return getPreferences().getPeriodicDisableTimeWifi();
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    return WifiManageJob.EnableJob.createManagerEnableJob(getJobManager());
-  }
-
-  @NonNull @Override protected Job createDisableJob() {
-    return WifiManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
-        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
-  }
-
-  @Override public void destroy() {
-    destroy(WifiManageJob.JOB_TAG);
-  }
-
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(WifiManageJob.JOB_TAG);
+  @NonNull @Override protected String getJobTag() {
+    return "wifi_jobs";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
