@@ -47,22 +47,26 @@ class ManagerAirplaneInteractor extends WearAwareManagerBaseInteractor {
   }
 
   @NonNull @Override protected Job createEnableJob() {
+    // TODO
     return null;
   }
 
   @NonNull @Override protected Job createDisableJob() {
+    // TODO
     return null;
   }
 
   @Override public void destroy() {
-
+    // TODO
   }
 
   @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return null;
+    // TODO
+    return Observable.just(true);
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return null;
+    // TODO
+    return Observable.just(true);
   }
 }
