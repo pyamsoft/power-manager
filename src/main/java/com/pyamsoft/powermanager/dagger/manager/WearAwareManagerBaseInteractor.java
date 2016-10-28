@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import rx.Observable;
@@ -32,9 +33,10 @@ abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
   WearAwareManagerBaseInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver);
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
   }
@@ -47,8 +49,8 @@ abstract class WearAwareManagerBaseInteractor extends ManagerBaseInteractor
     return Observable.defer(() -> Observable.just(wearManageObserver.is()));
   }
 
-  @Override void destroy(@NonNull String jobTag) {
-    super.destroy(jobTag);
+  @Override public void destroy() {
+    super.destroy();
     Timber.d("Unregsiter wear state observer");
     wearStateObserver.unregister(getClass().getName());
   }

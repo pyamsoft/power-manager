@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.job;
+package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import timber.log.Timber;
 
-abstract class ManageJob extends BaseJob implements Runnable {
+abstract class ManageJobImpl extends BaseJob {
 
   private static final long MINIMUM_PERIOD_SECONDS = 60L;
   private static final int JOB_PRIORITY = 1;
@@ -33,16 +35,24 @@ abstract class ManageJob extends BaseJob implements Runnable {
   private final boolean periodic;
   private final long periodicEnableInSeconds;
   private final long periodicDisableInSeconds;
+  @NonNull private final BooleanInterestObserver interestObserver;
+  @NonNull private final BooleanInterestModifier interestModifier;
+  @NonNull private final String jobTag;
 
-  ManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+  ManageJobImpl(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       @NonNull JobType jobType, long delayInMilliseconds, boolean periodic,
-      long periodicEnableInSeconds, long periodicDisableInSeconds) {
+      long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver interestObserver,
+      @NonNull BooleanInterestModifier interestModifier) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.jobType = jobType;
     this.periodic = periodic;
     this.periodicEnableInSeconds = periodicEnableInSeconds;
     this.periodicDisableInSeconds = periodicDisableInSeconds;
+    this.interestObserver = interestObserver;
+    this.interestModifier = interestModifier;
+    this.jobTag = tag;
   }
 
   @CheckResult @NonNull final JobSchedulerCompat getJobSchedulerCompat() {
@@ -51,8 +61,6 @@ abstract class ManageJob extends BaseJob implements Runnable {
 
   @Override public final void onRun() throws Throwable {
     Timber.d("Run job type: %s", jobType.name());
-    run();
-
     switch (jobType) {
       case ENABLE:
         internalEnable();
@@ -71,6 +79,10 @@ abstract class ManageJob extends BaseJob implements Runnable {
   }
 
   private void internalEnable() {
+    if (!interestObserver.is()) {
+      interestModifier.set();
+    }
+
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute (%s, %s)",
@@ -83,7 +95,17 @@ abstract class ManageJob extends BaseJob implements Runnable {
     }
   }
 
+  @CheckResult @NonNull private Job createPeriodicDisableJob(long periodicEnableInSeconds,
+      long periodicDisableInSeconds) {
+    return new DisableJob(getJobSchedulerCompat(), jobTag, periodicDisableInSeconds * 1000L, true,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+  }
+
   private void internalDisable() {
+    if (interestObserver.is()) {
+      interestModifier.unset();
+    }
+
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute (%s, %s)",
@@ -97,11 +119,10 @@ abstract class ManageJob extends BaseJob implements Runnable {
   }
 
   @CheckResult @NonNull
-  protected abstract Job createPeriodicDisableJob(long periodicEnableInSeconds,
-      long periodicDisableInSeconds);
-
-  @CheckResult @NonNull protected abstract Job createPeriodicEnableJob(long periodicEnableInSeconds,
-      long periodicDisableInSeconds);
+  private Job createPeriodicEnableJob(long periodicEnableInSeconds, long periodicDisableInSeconds) {
+    return new EnableJob(getJobSchedulerCompat(), jobTag, periodicEnableInSeconds * 1000L, true,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+  }
 
   enum JobType {
     ENABLE, DISABLE

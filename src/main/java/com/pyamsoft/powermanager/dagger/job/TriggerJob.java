@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.job;
+package com.pyamsoft.powermanager.dagger.job;
 
 import android.content.ContentValues;
 import android.content.Intent;
