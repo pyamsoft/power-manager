@@ -22,11 +22,10 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.job.DisableJob;
-import com.pyamsoft.powermanager.dagger.job.EnableJob;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.dagger.job.JobHelper;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -106,12 +105,12 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CheckResult @NonNull private Job createEnableJob(@NonNull JobSchedulerCompat jobManager,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return EnableJob.createManagerEnableJob(jobManager, getJobTag(), observer, modifier);
+    return JobHelper.createManagerEnableJob(jobManager, getJobTag(), observer, modifier);
   }
 
   @CheckResult @NonNull private Job createDisableJob(@NonNull JobSchedulerCompat jobManager,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return DisableJob.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
+    return JobHelper.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
         isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), observer, modifier);
   }
 
