@@ -18,7 +18,7 @@
 <resources>
 
   <bool name="doze_default">false</bool>
-  <string name="manage_doze_key">force_doze</string>
+  <string name="manage_doze_key">force_doze_root</string>
   <string name="manage_doze_title">Force Doze</string>
   <string name="manage_doze_summary_checked">Force the device into Doze mode after the screen turns off (Marshmallow only)</string>
   <string name="manage_doze_summary_unchecked">The device will enter Doze after about 30 minutes of inactivity</string>
