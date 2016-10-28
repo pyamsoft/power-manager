@@ -55,6 +55,10 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
           Timber.d("Check doze permission");
           presenter.checkDozePermission();
         }
+
+        // If our new value is true (if we are turning on) return false and check permission
+        // If our new value is false (if we are turning off) return true to allow
+        return !b;
       }
 
       // Always return false, we will set the actual state in the callback
