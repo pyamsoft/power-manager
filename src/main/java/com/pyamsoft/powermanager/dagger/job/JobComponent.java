@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
+import com.pyamsoft.powermanager.app.job.AirplaneManageJob;
 import com.pyamsoft.powermanager.app.job.BluetoothManageJob;
 import com.pyamsoft.powermanager.app.job.DataManageJob;
 import com.pyamsoft.powermanager.app.job.DozeManageJob;
@@ -44,4 +45,8 @@ import dagger.Subcomponent;
   void inject(DozeManageJob.EnableJob job);
 
   void inject(DozeManageJob.DisableJob job);
+
+  void inject(AirplaneManageJob.EnableJob job);
+
+  void inject(AirplaneManageJob.DisableJob job);
 }

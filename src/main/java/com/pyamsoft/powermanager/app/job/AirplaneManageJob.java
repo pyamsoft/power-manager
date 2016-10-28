@@ -26,11 +26,11 @@ import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public abstract class DozeManageJob extends ManageJob {
+public abstract class AirplaneManageJob extends ManageJob {
 
-  @NonNull public static final String JOB_TAG = "doze_job";
+  @NonNull public static final String JOB_TAG = "airplane_job";
 
-  @SuppressWarnings("WeakerAccess") DozeManageJob(@NonNull JobSchedulerCompat jobManager,
+  @SuppressWarnings("WeakerAccess") AirplaneManageJob(@NonNull JobSchedulerCompat jobManager,
       @NonNull JobType jobType, long delayInSeconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
     super(jobManager, JOB_TAG, jobType, delayInSeconds, periodic, periodicEnableInSeconds,
@@ -49,10 +49,10 @@ public abstract class DozeManageJob extends ManageJob {
         periodicEnableInSeconds, periodicDisableInSeconds);
   }
 
-  public static final class EnableJob extends DozeManageJob {
+  public static final class EnableJob extends AirplaneManageJob {
 
-    @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
+    @Inject @Named("mod_airplane_state") BooleanInterestModifier interestModifier;
+    @Inject @Named("obs_airplane_state") BooleanInterestObserver interestObserver;
 
     EnableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis, boolean periodic,
         long periodicEnableInSeconds, long periodicDisableInSeconds) {
@@ -77,10 +77,10 @@ public abstract class DozeManageJob extends ManageJob {
     }
   }
 
-  public static final class DisableJob extends DozeManageJob {
+  public static final class DisableJob extends AirplaneManageJob {
 
-    @Inject @Named("mod_doze_state") BooleanInterestModifier interestModifier;
-    @Inject @Named("obs_doze_state") BooleanInterestObserver interestObserver;
+    @Inject @Named("mod_airplane_state") BooleanInterestModifier interestModifier;
+    @Inject @Named("obs_airplane_state") BooleanInterestObserver interestObserver;
 
     DisableJob(@NonNull JobSchedulerCompat jobManager, long delayTimeInMillis, boolean periodic,
         long periodicEnableInSeconds, long periodicDisableInSeconds) {
