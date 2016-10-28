@@ -16,13 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 
-public class EnableJob extends ManageJobImpl {
+class EnableJob extends ManageJobImpl {
 
   EnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
@@ -30,12 +29,5 @@ public class EnableJob extends ManageJobImpl {
       @NonNull BooleanInterestModifier interestModifier) {
     super(jobSchedulerCompat, tag, JobType.ENABLE, delayInMilliseconds, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
-  }
-
-  @CheckResult @NonNull
-  public static EnableJob createManagerEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
-      @NonNull String tag, @NonNull BooleanInterestObserver observer,
-      @NonNull BooleanInterestModifier modifier) {
-    return new EnableJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer, modifier);
   }
 }
