@@ -50,8 +50,8 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_doze_state") @Provides BooleanInterestObserver provideDozeObserver(
-      @NonNull Context context) {
-    return new DozeStateObserver(context);
+      @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
+    return new DozeStateObserver(context, wrapper);
   }
 
   @Singleton @Named("obs_wear_state") @Provides BooleanInterestObserver provideWearObserver(

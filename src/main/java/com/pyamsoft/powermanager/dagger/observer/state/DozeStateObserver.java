@@ -22,21 +22,21 @@ import android.os.PowerManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class DozeStateObserver extends BroadcastStateObserver {
 
-  @NonNull private final PowerManager androidPowerManager;
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject DozeStateObserver(@NonNull Context context) {
+  @Inject DozeStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
     if (isDozeAvailable()) {
       setFilterActions(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
     }
 
-    androidPowerManager = (android.os.PowerManager) context.getApplicationContext()
-        .getSystemService(Context.POWER_SERVICE);
+    this.wrapper = wrapper;
   }
 
   @CheckResult private static boolean isDozeAvailable() {
@@ -57,17 +57,8 @@ class DozeStateObserver extends BroadcastStateObserver {
   }
 
   @Override public boolean is() {
-    boolean doze;
-    if (isDozeAvailable()) {
-      // We invert this because the device will want to be waiting for Doze not already Dozing
-      Timber.d("Fetch doze state from system");
-      doze = !androidPowerManager.isDeviceIdleMode();
-    } else {
-      Timber.e("Doze unavailable, default to False");
-      doze = false;
-    }
-
-    Timber.d("Is waiting to doze?: %s", doze);
-    return doze;
+    final boolean enabled = wrapper.isEnabled();
+    Timber.d("Is doze enabled?: %s", enabled);
+    return enabled;
   }
 }

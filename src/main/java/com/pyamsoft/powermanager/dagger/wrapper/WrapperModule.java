@@ -49,4 +49,9 @@ import javax.inject.Singleton;
       @NonNull Context context) {
     return new AirplaneModeWrapperImpl(context);
   }
+
+  @Singleton @Provides @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper(
+      @NonNull Context context) {
+    return new DozeDeviceWrapperImpl(context);
+  }
 }

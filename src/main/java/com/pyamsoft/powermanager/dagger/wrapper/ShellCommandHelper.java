@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger;
+package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.support.annotation.NonNull;
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import timber.log.Timber;
 
-public final class ShellCommandHelper {
+final class ShellCommandHelper {
 
   private ShellCommandHelper() {
     throw new RuntimeException("No instances");

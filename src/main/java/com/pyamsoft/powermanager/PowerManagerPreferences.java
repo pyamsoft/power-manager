@@ -72,41 +72,23 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isWifiManaged();
 
-  void setWifiManaged(boolean enable);
-
   @CheckResult boolean isDataManaged();
-
-  void setDataManaged(boolean enable);
 
   @CheckResult boolean isBluetoothManaged();
 
-  void setBluetoothManaged(boolean enable);
-
   @CheckResult boolean isSyncManaged();
 
-  void setSyncManaged(boolean enable);
-
   @CheckResult boolean isWearableManaged();
-
-  void setWearableManaged(boolean enable);
 
   void clearAll();
 
   @CheckResult boolean isPeriodicWifi();
 
-  void setPeriodicWifi(boolean state);
-
   @CheckResult boolean isPeriodicData();
-
-  void setPeriodicData(boolean state);
 
   @CheckResult boolean isPeriodicBluetooth();
 
-  void setPeriodicBluetooth(boolean state);
-
   @CheckResult boolean isPeriodicSync();
-
-  void setPeriodicSync(boolean state);
 
   @CheckResult long getPeriodicDisableTimeWifi();
 

@@ -17,10 +17,9 @@
 package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;
@@ -29,17 +28,15 @@ import timber.log.Timber;
 
 class DozeStateModifier extends StateModifier {
 
-  @NonNull private static final String DUMPSYS_DOZE_START_M = "deviceidle force-idle";
-  @NonNull private static final String DUMPSYS_DOZE_START_N = "deviceidle force-idle deep";
-  @NonNull private static final String DUMPSYS_DOZE_END_M = "deviceidle step";
-  @NonNull private static final String DUMPSYS_DOZE_END_N = "deviceidle unforce";
+  @NonNull final DeviceFunctionWrapper wrapper;
   @NonNull private final PermissionObserver dozePermissionObserver;
   @Named private Subscription subscription = Subscriptions.empty();
 
   @Inject DozeStateModifier(@NonNull Context context,
-      @NonNull PermissionObserver dozePermissionObserver) {
+      @NonNull PermissionObserver dozePermissionObserver, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
     this.dozePermissionObserver = dozePermissionObserver;
+    this.wrapper = wrapper;
   }
 
   @SuppressWarnings("WeakerAccess") void unsub() {
@@ -55,15 +52,7 @@ class DozeStateModifier extends StateModifier {
     subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
       if (hasPermission) {
         Timber.d("Begin Doze");
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-          // API 23 can do this without root
-          ShellCommandHelper.runShellCommand(DUMPSYS_DOZE_START_M);
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
-          // API 24 requires root
-          ShellCommandHelper.runRootShellCommand(DUMPSYS_DOZE_START_N);
-        } else {
-          throw new RuntimeException("Invalid API level attempting to dumpsys");
-        }
+        wrapper.enable();
       }
     }, throwable -> {
       Timber.e(throwable, "onError set");
@@ -78,15 +67,7 @@ class DozeStateModifier extends StateModifier {
     subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
       if (hasPermission) {
         Timber.d("End Doze");
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-          // API 23 can do this without root
-          ShellCommandHelper.runShellCommand(DUMPSYS_DOZE_END_M);
-        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
-          // API 24 requires root
-          ShellCommandHelper.runRootShellCommand(DUMPSYS_DOZE_END_N);
-        } else {
-          throw new RuntimeException("Invalid API level attempting to dumpsys");
-        }
+        wrapper.disable();
       }
     }, throwable -> {
       Timber.e(throwable, "onError unset");

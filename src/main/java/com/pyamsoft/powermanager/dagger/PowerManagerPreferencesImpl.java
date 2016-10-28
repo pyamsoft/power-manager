@@ -276,40 +276,20 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(manageBluetooth, manageBluetoothDefault);
   }
 
-  @Override public void setBluetoothManaged(boolean enable) {
-    put(manageBluetooth, enable);
-  }
-
   @Override public boolean isDataManaged() {
     return get(manageData, manageDataDefault);
-  }
-
-  @Override public void setDataManaged(boolean enable) {
-    put(manageData, enable);
   }
 
   @Override public boolean isSyncManaged() {
     return get(manageSync, manageSyncDefault);
   }
 
-  @Override public void setSyncManaged(boolean enable) {
-    put(manageSync, enable);
-  }
-
   @Override public boolean isWifiManaged() {
     return get(manageWifi, manageWifiDefault);
   }
 
-  @Override public void setWifiManaged(boolean enable) {
-    put(manageWifi, enable);
-  }
-
   @Override public boolean isWearableManaged() {
     return get(manageWearable, manageWearableDefault);
-  }
-
-  @Override public void setWearableManaged(boolean enable) {
-    put(manageWearable, enable);
   }
 
   @Override public void clearAll() {
@@ -320,32 +300,16 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(periodicWifi, periodicWifiDefault);
   }
 
-  @Override public void setPeriodicWifi(boolean state) {
-    put(periodicWifi, state);
-  }
-
   @Override public boolean isPeriodicData() {
     return get(periodicData, periodicDataDefault);
-  }
-
-  @Override public void setPeriodicData(boolean state) {
-    put(periodicData, state);
   }
 
   @Override public boolean isPeriodicBluetooth() {
     return get(periodicBluetooth, periodicBluetoothDefault);
   }
 
-  @Override public void setPeriodicBluetooth(boolean state) {
-    put(periodicBluetooth, state);
-  }
-
   @Override public boolean isPeriodicSync() {
     return get(periodicSync, periodicSyncDefault);
-  }
-
-  @Override public void setPeriodicSync(boolean state) {
-    put(periodicSync, state);
   }
 
   @Override public long getPeriodicDisableTimeWifi() {
