@@ -92,6 +92,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
   private final boolean startWhenOpenDefault;
+  @NonNull private final String useRoot;
+  private final boolean useRootDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -169,11 +171,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
 
     startWhenOpen = getResources().getString(R.string.unsuspend_when_open_key);
-    startWhenOpenDefault = true;
+    startWhenOpenDefault = getResources().getBoolean(R.bool.unsuspend_when_open_default);
+
+    useRoot = getResources().getString(R.string.use_root_key);
+    useRootDefault = getResources().getBoolean(R.bool.use_root_default);
   }
 
   @Override public boolean isRootEnabled() {
-    return false;
+    return get(useRoot, useRootDefault);
   }
 
   @Override public boolean isAirplaneManaged() {
