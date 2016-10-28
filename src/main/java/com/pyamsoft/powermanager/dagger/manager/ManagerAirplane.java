@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-public interface ExclusiveManager extends Manager {
+class ManagerAirplane extends WearAwareManagerBase {
 
-  void queueExclusiveSet(@Nullable NonExclusiveCallback callback);
-
-  void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback);
-
-  interface NonExclusiveCallback {
-
-    void call();
+  @Inject ManagerAirplane(@NonNull WearAwareManagerInteractor interactor,
+      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observerScheduler, subscribeScheduler);
   }
 }

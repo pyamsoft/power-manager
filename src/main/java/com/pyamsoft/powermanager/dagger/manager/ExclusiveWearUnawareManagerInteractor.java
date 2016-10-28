@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.manager;
+package com.pyamsoft.powermanager.dagger.manager;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import rx.Observable;
 
-public interface ExclusiveManager extends Manager {
+interface ExclusiveWearUnawareManagerInteractor extends ManagerInteractor {
 
-  void queueExclusiveSet(@Nullable NonExclusiveCallback callback);
-
-  void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback);
-
-  interface NonExclusiveCallback {
-
-    void call();
-  }
+  @CheckResult @NonNull Observable<Boolean> isExclusive();
 }

@@ -21,13 +21,13 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.job.DozeManageJob;
-import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
+class ManagerDozeInteractor extends ManagerBaseInteractor
+    implements ExclusiveWearUnawareManagerInteractor {
 
   @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
@@ -75,12 +75,10 @@ class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveMa
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 
-  @NonNull @Override
-  public Observable<Boolean> isExclusive(@NonNull ExclusiveManager.ForceExclusive force) {
+  @NonNull @Override public Observable<Boolean> isExclusive() {
     return Observable.defer(() -> {
-      final boolean forced = (force == ExclusiveManager.ForceExclusive.FORCE);
-      final boolean preference = getPreferences().isExclusiveDoze();
-      return Observable.just(forced || preference);
+      final boolean preference = getPreferences().isExclusiveDoze() && preferences.isDozeManaged();
+      return Observable.just(preference);
     });
   }
 }

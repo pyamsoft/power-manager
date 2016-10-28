@@ -21,15 +21,15 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
+class WifiManagerWrapperImpl extends AirplaneRespectingDeviceWrapper {
 
   @Nullable private final WifiManager wifiManager;
 
   @Inject WifiManagerWrapperImpl(@NonNull Context context) {
+    super(context, "WiFi");
     this.wifiManager =
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
   }
@@ -41,12 +41,12 @@ class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
     }
   }
 
-  @Override public void enable() {
-    toggle(true);
+  @Override void internalEnable() {
+    toggle(false);
   }
 
-  @Override public void disable() {
-    toggle(false);
+  @Override void internalDisable() {
+    toggle(true);
   }
 
   @Override @CheckResult public boolean isEnabled() {

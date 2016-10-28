@@ -90,16 +90,33 @@ import rx.Scheduler;
   }
 
   @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
-      @Named("doze_manager_interactor") @NonNull ExclusiveManagerInteractor interactor,
+      @Named("doze_manager_interactor") @NonNull ExclusiveWearUnawareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
     return new ManagerDoze(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_manager_interactor")
-  ExclusiveManagerInteractor provideManagerDozeInteractor(
+  ExclusiveWearUnawareManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobSchedulerCompat jobManager,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_state") BooleanInterestObserver stateObserver) {
     return new ManagerDozeInteractor(jobManager, preferences, manageObserver, stateObserver);
+  }
+
+  @Provides @Named("airplane_manager") Manager provideManagerAirplane(
+      @Named("airplane_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
+      @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
+    return new ManagerAirplane(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("airplane_manager_interactor")
+  WearAwareManagerInteractor provideManagerAirplaneInteractor(
+      @NonNull PowerManagerPreferences preferences, @NonNull JobSchedulerCompat jobManager,
+      @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
+      @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
+      @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
+    return new ManagerAirplaneInteractor(jobManager, preferences, manageObserver, stateObserver,
+        wearManageObserver, wearStateObserver);
   }
 }

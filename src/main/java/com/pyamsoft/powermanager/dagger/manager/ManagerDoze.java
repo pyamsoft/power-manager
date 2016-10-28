@@ -27,22 +27,21 @@ import timber.log.Timber;
 
 class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
 
-  @NonNull private final ExclusiveManagerInteractor interactor;
+  @NonNull private final ExclusiveWearUnawareManagerInteractor interactor;
   @NonNull private Subscription dozeSetSubscription = Subscriptions.empty();
   @NonNull private Subscription dozeUnsetSubscription = Subscriptions.empty();
 
-  @Inject ManagerDoze(@NonNull ExclusiveManagerInteractor interactor,
+  @Inject ManagerDoze(@NonNull ExclusiveWearUnawareManagerInteractor interactor,
       @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observerScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
-  @Override public void queueExclusiveSet(@NonNull ForceExclusive force,
-      @Nullable NonExclusiveCallback callback) {
+  @Override public void queueExclusiveSet(@Nullable NonExclusiveCallback callback) {
     queueSet();
 
     unsubDozeSet();
-    dozeSetSubscription = interactor.isExclusive(force)
+    dozeSetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
@@ -65,12 +64,12 @@ class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
     }
   }
 
-  @Override public void queueExclusiveUnset(@NonNull ForceExclusive force, boolean deviceCharging,
-      @Nullable NonExclusiveCallback callback) {
+  @Override
+  public void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback) {
     queueUnset(deviceCharging);
 
     unsubDozeUnset();
-    dozeUnsetSubscription = interactor.isExclusive(force)
+    dozeUnsetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {

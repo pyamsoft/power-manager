@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.wrapper;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
-import rx.Observable;
 
-interface ExclusiveManagerInteractor extends ManagerInteractor {
+abstract class AirplaneAwareDeviceWrapper extends BaseDeviceWrapper {
 
-  @CheckResult @NonNull Observable<Boolean> isExclusive(
-      @NonNull ExclusiveManager.ForceExclusive force);
+  @NonNull private final ContentResolver contentResolver;
+
+  AirplaneAwareDeviceWrapper(@NonNull Context context) {
+    this.contentResolver = context.getApplicationContext().getContentResolver();
+  }
+
+  @CheckResult boolean isAirplaneMode() {
+    return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+  }
 }

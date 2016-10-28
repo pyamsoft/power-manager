@@ -23,15 +23,15 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
+class BluetoothAdapterWrapperImpl extends AirplaneRespectingDeviceWrapper {
 
   @Nullable private final BluetoothAdapter adapter;
 
   @Inject BluetoothAdapterWrapperImpl(@NonNull Context context) {
+    super(context, "Bluetooth");
     this.adapter = getBluetoothAdapter(context);
   }
 
@@ -58,11 +58,11 @@ class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
     }
   }
 
-  @Override public void enable() {
+  @Override void internalEnable() {
     toggle(true);
   }
 
-  @Override public void disable() {
+  @Override void internalDisable() {
     toggle(false);
   }
 
