@@ -20,11 +20,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Subscription;
@@ -46,48 +42,6 @@ class DozeStateModifier extends StateModifier {
     this.dozePermissionObserver = dozePermissionObserver;
   }
 
-  @SuppressWarnings("WeakerAccess") static void executeDumpsys(@NonNull String cmd) {
-    final Process process;
-    boolean caughtPermissionDenial = false;
-    final String[] command;
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-      // API 23 can do this without root
-      command = new String[] { "dumpsys", cmd };
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
-      // API 24 requires root
-      command = new String[] { "su", "-c", "dumpsys", cmd };
-    } else {
-      throw new RuntimeException("Invalid API level attempting to dumpsys");
-    }
-
-    try {
-      process = Runtime.getRuntime().exec(command);
-      final String commandString = Arrays.toString(command);
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-        Timber.d("Read results of exec: '%s'", commandString);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          if (line.startsWith("Permission Denial")) {
-            Timber.e("Command resulted in permission denial");
-            caughtPermissionDenial = true;
-            break;
-          }
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
-
-      if (caughtPermissionDenial) {
-        throw new IllegalStateException("Error running command: " + commandString);
-      }
-
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
-    }
-  }
-
   @SuppressWarnings("WeakerAccess") void unsub() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
@@ -103,10 +57,10 @@ class DozeStateModifier extends StateModifier {
         Timber.d("Begin Doze");
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
           // API 23 can do this without root
-          executeDumpsys(DUMPSYS_DOZE_START_M);
+          ShellCommandHelper.runShellCommand(DUMPSYS_DOZE_START_M);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
           // API 24 requires root
-          executeDumpsys(DUMPSYS_DOZE_START_N);
+          ShellCommandHelper.runRootShellCommand(DUMPSYS_DOZE_START_N);
         } else {
           throw new RuntimeException("Invalid API level attempting to dumpsys");
         }
@@ -126,10 +80,10 @@ class DozeStateModifier extends StateModifier {
         Timber.d("End Doze");
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
           // API 23 can do this without root
-          executeDumpsys(DUMPSYS_DOZE_END_M);
+          ShellCommandHelper.runShellCommand(DUMPSYS_DOZE_END_M);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
           // API 24 requires root
-          executeDumpsys(DUMPSYS_DOZE_END_N);
+          ShellCommandHelper.runRootShellCommand(DUMPSYS_DOZE_END_N);
         } else {
           throw new RuntimeException("Invalid API level attempting to dumpsys");
         }
