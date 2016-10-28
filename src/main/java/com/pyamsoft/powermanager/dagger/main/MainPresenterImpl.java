@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.main.MainPresenter;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
@@ -28,17 +29,26 @@ import timber.log.Timber;
 class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implements MainPresenter {
 
   @NonNull private final MainInteractor interactor;
+  @NonNull private final PermissionObserver rootPermissionObserver;
   @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Subscription rootSubscription = Subscriptions.empty();
 
   @Inject MainPresenterImpl(@NonNull MainInteractor interactor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+      @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver rootPermissionObserver) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
+    this.rootPermissionObserver = rootPermissionObserver;
   }
 
   @SuppressWarnings("WeakerAccess") void unsub() {
     if (!subscription.isUnsubscribed()) {
       subscription.unsubscribe();
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubRoot() {
+    if (!rootSubscription.isUnsubscribed()) {
+      rootSubscription.unsubscribe();
     }
   }
 
@@ -53,10 +63,21 @@ class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implement
             getView(View::onServiceEnabledWhenOpen);
           }
         }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"), this::unsub);
+
+    unsubRoot();
+    rootSubscription = rootPermissionObserver.hasPermission()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+          if (!hasPermission) {
+            getView(View::explainRootRequirement);
+          }
+        }, throwable -> Timber.e(throwable, "onError checking root permission"), this::unsubRoot);
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
     unsub();
+    unsubRoot();
   }
 }

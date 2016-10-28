@@ -32,6 +32,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
@@ -323,6 +324,13 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   @Override public void onServiceEnabledWhenOpen() {
     Timber.d("Should refresh service when opened");
     ForegroundService.start(getApplicationContext());
+  }
+
+  @Override public void explainRootRequirement() {
+    // TODO explain with dialog
+    Toast.makeText(getApplicationContext(),
+        "Root is required for certain functions like Data and Airplane mode", Toast.LENGTH_SHORT)
+        .show();
   }
 
   @Override protected void onStart() {

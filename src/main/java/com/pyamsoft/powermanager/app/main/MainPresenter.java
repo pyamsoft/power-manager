@@ -23,5 +23,7 @@ public interface MainPresenter extends Presenter<MainPresenter.View> {
   interface View {
 
     void onServiceEnabledWhenOpen();
+
+    void explainRootRequirement();
   }
 }
