@@ -39,7 +39,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
 
   @Inject DozeOnlyPresenter presenter;
   private SwitchPreferenceCompat forceDoze;
-  private SwitchPreferenceCompat manageSensors;
 
   @Override protected void injectDependencies() {
     PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
@@ -55,19 +54,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
         Timber.d("Check doze permission");
         presenter.checkDozePermission();
       }
-      return true;
-    });
-
-    manageSensors = (SwitchPreferenceCompat) findPreference(getString(R.string.sensors_doze_key));
-    // Attempt to fix #14
-    manageSensors.setOnPreferenceClickListener(preference -> {
-      final boolean b = manageSensors.isChecked();
-      if (b) {
-        Timber.d("Check sensor permission");
-        presenter.checkSensorWritePermission();
-      }
-
-      // Always handle click
       return true;
     });
   }
@@ -108,10 +94,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     if (forceDoze.isChecked()) {
       presenter.checkDozePermission();
     }
-
-    if (manageSensors.isChecked()) {
-      presenter.checkSensorWritePermission();
-    }
   }
 
   @Override public void onResume() {
@@ -145,17 +127,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
         Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
             Toast.LENGTH_SHORT).show();
       }
-    }
-  }
-
-  @Override public void onWritePermissionCallback(boolean hasPermission) {
-    Timber.d("Has sensor permission: %s", hasPermission);
-    if (!hasPermission) {
-      // We don't have permission, set back to unchecked
-      manageSensors.setChecked(false);
-
-      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new SensorsExplanationDialog(),
-          "sensors_explain");
     }
   }
 }

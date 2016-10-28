@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.dagger.receiver.SensorFixReceiver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -31,34 +29,29 @@ import javax.inject.Singleton;
 @Module public class StateModifierModule {
 
   @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
-    return new WifiStateModifier(context, preferences, wrapper);
+      @NonNull Context context, @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
+    return new WifiStateModifier(context, wrapper);
   }
 
   @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
-    return new DataStateModifier(context, preferences, wrapper);
+      @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
+    return new DataStateModifier(context, wrapper);
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides
   BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
-    return new BluetoothStateModifier(context, preferences, wrapper);
+    return new BluetoothStateModifier(context, wrapper);
   }
 
   @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
-    return new SyncStateModifier(context, preferences, wrapper);
+      @NonNull Context context, @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
+    return new SyncStateModifier(context, wrapper);
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull SensorFixReceiver sensorFixReceiver,
+      @NonNull Context context,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new DozeStateModifier(context, preferences, sensorFixReceiver, dozePermissionObserver);
+    return new DozeStateModifier(context, dozePermissionObserver);
   }
 }

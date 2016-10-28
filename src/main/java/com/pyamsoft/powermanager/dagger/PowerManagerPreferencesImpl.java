@@ -84,12 +84,10 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String exclusiveDoze;
   @NonNull private final String ignoreChargingDoze;
   @NonNull private final String dozeDelay;
-  @NonNull private final String manageSensors;
   private final boolean forceDozeDefault;
   private final boolean exclusiveDozeDefault;
   private final boolean ignoreChargingDozeDefault;
   @NonNull private final String dozeDelayDefault;
-  private final boolean manageSensorsDefault;
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
@@ -161,13 +159,11 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     exclusiveDoze = getResources().getString(R.string.exclusive_doze_key);
     ignoreChargingDoze = getResources().getString(R.string.ignore_charging_doze_key);
     dozeDelay = getResources().getString(R.string.doze_time_key);
-    manageSensors = getResources().getString(R.string.sensors_doze_key);
 
     forceDozeDefault = getResources().getBoolean(R.bool.doze_default);
     exclusiveDozeDefault = getResources().getBoolean(R.bool.exclusive_doze_default);
     ignoreChargingDozeDefault = getResources().getBoolean(R.bool.ignore_charging_doze_default);
     dozeDelayDefault = getResources().getString(R.string.doze_time_default);
-    manageSensorsDefault = getResources().getBoolean(R.bool.sensors_doze_default);
 
     wearableDelay = getResources().getString(R.string.wearable_time_key);
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
@@ -208,10 +204,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return Long.parseLong(get(wearableDelay, wearableDelayDefault));
   }
 
-  @Override public boolean isSensorsManaged() {
-    return get(manageSensors, manageSensorsDefault);
-  }
-
   @Override public long getDozeDelay() {
     return Long.parseLong(get(dozeDelay, dozeDelayDefault));
   }
@@ -226,10 +218,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public boolean isDozeManaged() {
     return get(forceDoze, forceDozeDefault);
-  }
-
-  @Override public void setDozeManaged(boolean enable) {
-    put(forceDoze, enable);
   }
 
   @Override public boolean isIgnoreChargingWifi() {

@@ -30,16 +30,12 @@ class DozeOnlyPresenterImpl extends SchedulerPresenter<DozeOnlyPresenter.View>
     implements DozeOnlyPresenter {
 
   @NonNull private final PermissionObserver dozePermissionObserver;
-  @NonNull private final PermissionObserver writePermissionObserver;
   @NonNull private Subscription dozePermissionSubscription = Subscriptions.empty();
-  @NonNull private Subscription sensorsPermissionSubscription = Subscriptions.empty();
 
   @Inject DozeOnlyPresenterImpl(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver dozePermissionObserver,
-      @NonNull PermissionObserver writePermissionObserver) {
+      @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver dozePermissionObserver) {
     super(observeScheduler, subscribeScheduler);
     this.dozePermissionObserver = dozePermissionObserver;
-    this.writePermissionObserver = writePermissionObserver;
   }
 
   @SuppressWarnings("WeakerAccess") void unsubDoze() {
@@ -48,16 +44,9 @@ class DozeOnlyPresenterImpl extends SchedulerPresenter<DozeOnlyPresenter.View>
     }
   }
 
-  @SuppressWarnings("WeakerAccess") void unsubSensors() {
-    if (!sensorsPermissionSubscription.isUnsubscribed()) {
-      sensorsPermissionSubscription.unsubscribe();
-    }
-  }
-
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubDoze();
-    unsubSensors();
   }
 
   @Override public void checkDozePermission() {
@@ -69,17 +58,5 @@ class DozeOnlyPresenterImpl extends SchedulerPresenter<DozeOnlyPresenter.View>
           Timber.d("Doze permission granted? %s", hasPermission);
           getView(view -> view.onDozePermissionCallback(hasPermission));
         }, throwable -> Timber.e(throwable, "onError checkDozePermission"), this::unsubDoze);
-  }
-
-  @Override public void checkSensorWritePermission() {
-    unsubSensors();
-    sensorsPermissionSubscription = writePermissionObserver.hasPermission()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(hasPermission -> getView(view -> view.onWritePermissionCallback(hasPermission)),
-            throwable -> {
-              Timber.e(throwable, "onError checkSensorWritePermission");
-              unsubSensors();
-            }, this::unsubSensors);
   }
 }

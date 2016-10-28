@@ -32,10 +32,8 @@ import rx.Scheduler;
 
   @Provides DozeOnlyPresenter provideDozeOnlyPresenter(@Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler,
-      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver,
-      @Named("obs_write_permission") PermissionObserver writePermissionObserver) {
-    return new DozeOnlyPresenterImpl(obsScheduler, subScheduler, dozePermissionObserver,
-        writePermissionObserver);
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
+    return new DozeOnlyPresenterImpl(obsScheduler, subScheduler, dozePermissionObserver);
   }
 
   @Provides @Named("doze_manage_pref")

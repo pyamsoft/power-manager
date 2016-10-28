@@ -41,16 +41,6 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
-        android:defaultValue="@bool/sensors_doze_default"
-        android:dependency="@string/manage_doze_key"
-        android:key="@string/sensors_doze_key"
-        android:summaryOff="@string/sensors_doze_summary_unchecked"
-        android:summaryOn="@string/sensors_doze_summary_checked"
-        android:title="@string/sensors_doze_title"
-        />
-
-    <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
         android:defaultValue="@bool/ignore_charging_doze_default"
         android:dependency="@string/manage_doze_key"
