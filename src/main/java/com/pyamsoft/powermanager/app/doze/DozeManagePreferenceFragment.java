@@ -17,11 +17,7 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.preference.SwitchPreferenceCompat;
-import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
@@ -29,42 +25,14 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
-import javax.inject.Inject;
 import timber.log.Timber;
 
-public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
-    implements DozeOnlyPresenter.View {
+public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
 
-  @Inject DozeOnlyPresenter presenter;
-  private SwitchPreferenceCompat forceDoze;
-
   @Override protected void injectDependencies() {
     PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
-  }
-
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-    super.onViewCreated(view, savedInstanceState);
-
-    forceDoze = (SwitchPreferenceCompat) findPreference(getString(R.string.manage_doze_key));
-    forceDoze.setOnPreferenceChangeListener((preference, newValue) -> {
-      if (newValue instanceof Boolean) {
-        final boolean b = (boolean) newValue;
-        if (b) {
-          Timber.d("Check doze permission");
-          presenter.checkDozePermission();
-        }
-
-        // If our new value is true (if we are turning on) return false and check permission
-        // If our new value is false (if we are turning off) return true to allow
-        return !b;
-      }
-
-      // Always return false, we will set the actual state in the callback
-      // Returning false means the toggle does not change
-      return false;
-    });
   }
 
   @NonNull @Override
@@ -94,17 +62,6 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     return R.xml.manage_doze;
   }
 
-  @Override public void onStart() {
-    super.onStart();
-    presenter.bindView(this);
-
-    // If forceDoze is checked, make sure we actually have permission
-    // It is possible to check the switch, and then back out of the fragment before the callback completes.
-    if (forceDoze.isChecked()) {
-      presenter.checkDozePermission();
-    }
-  }
-
   @Override public void onResume() {
     super.onResume();
     onSelected();
@@ -115,29 +72,18 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     onUnselected();
   }
 
-  @Override public void onStop() {
-    super.onStop();
-    presenter.unbindView();
+  @Override protected boolean checkManagePermission() {
+    Timber.d("Doze checks manage permission");
+    return true;
   }
 
-  @Override public void onDestroy() {
-    super.onDestroy();
-    presenter.destroy();
-  }
-
-  @Override public void onDozePermissionCallback(boolean hasPermission) {
-    Timber.d("Has doze permission: %s", hasPermission);
-    // Set based on permission state
-    forceDoze.setChecked(hasPermission);
-
-    if (!hasPermission) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
-            "doze_explain");
-      } else {
-        Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
-            Toast.LENGTH_SHORT).show();
-      }
+  @Override protected void onShowManagePermissionNeededMessage() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+          "doze_explain");
+    } else {
+      Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
+          Toast.LENGTH_SHORT).show();
     }
   }
 }

@@ -132,6 +132,15 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
+        if (b) {
+          final boolean checkPermission = checkManagePermission();
+          if (checkPermission) {
+            Timber.d("We need to check manage permission, do not toggle preference just yet");
+            presenter.checkManagePermission();
+            return false;
+          }
+        }
+
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
         setCustomTimePreferenceEnabled(b, presetTimePreference.getValue());
         return true;
@@ -159,6 +168,13 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
     });
 
     setCustomTimePreferenceEnabled(managePreference.isChecked(), presetTimePreference.getValue());
+  }
+
+  /**
+   * Override if you need to implement a permission based check
+   */
+  @CheckResult protected boolean checkManagePermission() {
+    return false;
   }
 
   @CallSuper @Override public void onStart() {
@@ -309,6 +325,23 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
 
     setBackButtonEnabled(false);
     sequence.start();
+  }
+
+  @Override public void onManagePermissionCallback(boolean hasPermission) {
+    Timber.d("Has manage permission: %s", hasPermission);
+    // Set based on permission state
+    managePreference.setChecked(hasPermission);
+
+    if (!hasPermission) {
+      onShowManagePermissionNeededMessage();
+    }
+  }
+
+  /**
+   * Override to show a permission needed prompt
+   */
+  protected void onShowManagePermissionNeededMessage() {
+
   }
 
   @CheckResult @NonNull

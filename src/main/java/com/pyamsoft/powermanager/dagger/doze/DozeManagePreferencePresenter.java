@@ -18,16 +18,49 @@ package com.pyamsoft.powermanager.dagger.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
+  @NonNull private final PermissionObserver dozePermissionObserver;
+  @NonNull private Subscription dozePermissionSubscription = Subscriptions.empty();
+
   @Inject DozeManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
+      @NonNull InterestObserver manageObserver,
+      @NonNull PermissionObserver dozePermissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
+    this.dozePermissionObserver = dozePermissionObserver;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    unsubDoze();
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubDoze() {
+    if (!dozePermissionSubscription.isUnsubscribed()) {
+      dozePermissionSubscription.unsubscribe();
+    }
+  }
+
+  @Override public void checkManagePermission() {
+    dozePermissionSubscription = dozePermissionObserver.hasPermission()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+          Timber.d("Doze permission granted? %s", hasPermission);
+          getView(view -> view.onManagePermissionCallback(hasPermission));
+        }, throwable -> {
+          Timber.e(throwable, "onError checkDozePermission");
+          getView(view -> view.onManagePermissionCallback(false));
+        }, this::unsubDoze);
   }
 }

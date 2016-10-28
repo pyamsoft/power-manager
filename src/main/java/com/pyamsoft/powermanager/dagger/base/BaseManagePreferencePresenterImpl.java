@@ -83,4 +83,11 @@ public abstract class BaseManagePreferencePresenterImpl
   @Override public void dismissOnboarding() {
     unsubOnboarding();
   }
+
+  /**
+   * Override if you need to check permission
+   */
+  @Override public void checkManagePermission() {
+    // Do nothing
+  }
 }
