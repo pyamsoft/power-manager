@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 
 class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {

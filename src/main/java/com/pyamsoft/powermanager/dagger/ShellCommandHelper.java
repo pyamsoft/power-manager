@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.wrapper;
+package com.pyamsoft.powermanager.dagger;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import timber.log.Timber;
 
-final class ShellCommandHelper {
+public final class ShellCommandHelper {
 
   private ShellCommandHelper() {
     throw new RuntimeException("No instances");
@@ -32,12 +34,12 @@ final class ShellCommandHelper {
   /**
    * Requires ROOT for su binary
    */
-  public static void runRootShellCommand(@NonNull String command) {
+  @WorkerThread @CheckResult public static boolean runRootShellCommand(@NonNull String command) {
     final String rootCommand = "su -c " + command;
-    runShellCommand(rootCommand);
+    return runShellCommand(rootCommand);
   }
 
-  public static void runShellCommand(@NonNull String command) {
+  @WorkerThread @CheckResult public static boolean runShellCommand(@NonNull String command) {
     final Process process;
     boolean caughtPermissionDenial = false;
     try {
@@ -63,7 +65,9 @@ final class ShellCommandHelper {
 
       try {
         process.waitFor();
-        Timber.i("Command %s exited with value: %d", command, process.exitValue());
+        final int exitValue = process.exitValue();
+        Timber.i("Command %s exited with value: %d", command, exitValue);
+        return exitValue == 0;
       } catch (InterruptedException e) {
         Timber.e(e, "Interrupted while waiting for exit");
       }
@@ -71,5 +75,6 @@ final class ShellCommandHelper {
     } catch (IOException e) {
       Timber.e(e, "Error running shell command");
     }
+    return false;
   }
 }

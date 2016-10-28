@@ -26,6 +26,11 @@ import javax.inject.Singleton;
 
 @Module public class PermissionObserverModule {
 
+  @Singleton @Named("obs_root_permission") @Provides
+  PermissionObserver provideRootPermissionObserver(@NonNull Context context) {
+    return new RootPermissionObserver(context);
+  }
+
   @Singleton @Named("obs_doze_permission") @Provides
   PermissionObserver provideDozePermissionObserver(@NonNull Context context) {
     return new DozePermissionObserver(context);

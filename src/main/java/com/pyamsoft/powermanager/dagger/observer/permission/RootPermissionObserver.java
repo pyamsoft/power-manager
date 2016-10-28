@@ -16,35 +16,26 @@
 
 package com.pyamsoft.powermanager.dagger.observer.permission;
 
-import android.Manifest;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozePermissionObserver extends RootPermissionObserver {
+class RootPermissionObserver extends PermissionObserverImpl {
 
-  @Inject DozePermissionObserver(@NonNull Context context) {
-    super(context, Manifest.permission.DUMP);
+  @Inject RootPermissionObserver(@NonNull Context context) {
+    this(context, null);
+  }
+
+  RootPermissionObserver(@NonNull Context context, @Nullable String permission) {
+    super(context, permission);
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
-    final boolean hasPermission;
-    switch (Build.VERSION.SDK_INT) {
-      case Build.VERSION_CODES.M:
-        // Doze can run without root on M
-        hasPermission = hasRuntimePermission();
-        break;
-      case Build.VERSION_CODES.N:
-        // Doze needs root on N
-        hasPermission = hasRuntimePermission() && super.checkPermission(appContext);
-        break;
-      default:
-        hasPermission = false;
-    }
-
-    Timber.d("Has doze permission? %s", hasPermission);
+    final boolean hasPermission = ShellCommandHelper.runRootShellCommand("true");
+    Timber.d("Has root permission? %s", hasPermission);
     return hasPermission;
   }
 }

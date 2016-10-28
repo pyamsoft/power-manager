@@ -57,6 +57,9 @@ class DozeOnlyPresenterImpl extends SchedulerPresenter<DozeOnlyPresenter.View>
         .subscribe(hasPermission -> {
           Timber.d("Doze permission granted? %s", hasPermission);
           getView(view -> view.onDozePermissionCallback(hasPermission));
-        }, throwable -> Timber.e(throwable, "onError checkDozePermission"), this::unsubDoze);
+        }, throwable -> {
+          Timber.e(throwable, "onError checkDozePermission");
+          getView(view -> view.onDozePermissionCallback(false));
+        }, this::unsubDoze);
   }
 }
