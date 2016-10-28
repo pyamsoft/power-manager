@@ -18,9 +18,11 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import rx.Observable;
 
 interface ExclusiveManagerInteractor extends ManagerInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> isExclusive();
+  @CheckResult @NonNull Observable<Boolean> isExclusive(
+      @NonNull ExclusiveManager.ForceExclusive force);
 }

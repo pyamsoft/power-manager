@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.job.DozeManageJob;
+import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
@@ -74,7 +75,12 @@ class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveMa
     return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
   }
 
-  @NonNull @Override public Observable<Boolean> isExclusive() {
-    return Observable.defer(() -> Observable.just(getPreferences().isExclusiveDoze()));
+  @NonNull @Override
+  public Observable<Boolean> isExclusive(@NonNull ExclusiveManager.ForceExclusive force) {
+    return Observable.defer(() -> {
+      final boolean forced = (force == ExclusiveManager.ForceExclusive.FORCE);
+      final boolean preference = getPreferences().isExclusiveDoze();
+      return Observable.just(forced || preference);
+    });
   }
 }

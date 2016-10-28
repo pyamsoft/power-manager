@@ -16,13 +16,20 @@
 
 package com.pyamsoft.powermanager.app.manager;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 public interface ExclusiveManager extends Manager {
 
-  void queueExclusiveSet(@Nullable NonExclusiveCallback callback);
+  void queueExclusiveSet(@NonNull ForceExclusive force, @Nullable NonExclusiveCallback callback);
 
-  void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback);
+  void queueExclusiveUnset(@NonNull ForceExclusive force, boolean deviceCharging,
+      @Nullable NonExclusiveCallback callback);
+
+  enum ForceExclusive {
+    FORCE,
+    NO_FORCE
+  }
 
   interface NonExclusiveCallback {
 

@@ -37,11 +37,12 @@ class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
     this.interactor = interactor;
   }
 
-  @Override public void queueExclusiveSet(@Nullable NonExclusiveCallback callback) {
+  @Override public void queueExclusiveSet(@NonNull ForceExclusive force,
+      @Nullable NonExclusiveCallback callback) {
     queueSet();
 
     unsubDozeSet();
-    dozeSetSubscription = interactor.isExclusive()
+    dozeSetSubscription = interactor.isExclusive(force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
@@ -64,12 +65,12 @@ class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
     }
   }
 
-  @Override
-  public void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback) {
+  @Override public void queueExclusiveUnset(@NonNull ForceExclusive force, boolean deviceCharging,
+      @Nullable NonExclusiveCallback callback) {
     queueUnset(deviceCharging);
 
     unsubDozeUnset();
-    dozeUnsetSubscription = interactor.isExclusive()
+    dozeUnsetSubscription = interactor.isExclusive(force)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
