@@ -20,13 +20,15 @@ import android.Manifest;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class DozePermissionObserver extends RootPermissionObserver {
 
-  @Inject DozePermissionObserver(@NonNull Context context) {
-    super(context, Manifest.permission.DUMP);
+  @Inject DozePermissionObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences, Manifest.permission.DUMP);
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {

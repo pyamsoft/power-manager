@@ -172,6 +172,10 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     startWhenOpenDefault = true;
   }
 
+  @Override public boolean isRootEnabled() {
+    return false;
+  }
+
   @Override public boolean isAirplaneManaged() {
     // TODO
     return false;

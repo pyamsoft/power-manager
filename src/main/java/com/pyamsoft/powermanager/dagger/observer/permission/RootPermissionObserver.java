@@ -19,23 +19,34 @@ package com.pyamsoft.powermanager.dagger.observer.permission;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class RootPermissionObserver extends PermissionObserverImpl {
 
-  @Inject RootPermissionObserver(@NonNull Context context) {
-    this(context, null);
+  @NonNull private final PowerManagerPreferences preferences;
+
+  @Inject RootPermissionObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    this(context, preferences, null);
   }
 
-  RootPermissionObserver(@NonNull Context context, @Nullable String permission) {
+  RootPermissionObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Nullable String permission) {
     super(context, permission);
+    this.preferences = preferences;
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
-    final boolean hasPermission = ShellCommandHelper.runRootShellCommand("true");
-    Timber.d("Has root permission? %s", hasPermission);
-    return hasPermission;
+    if (preferences.isRootEnabled()) {
+      final boolean hasPermission = ShellCommandHelper.runRootShellCommand("true");
+      Timber.d("Has root permission? %s", hasPermission);
+      return hasPermission;
+    } else {
+      Timber.w("Root is not enabled");
+      return false;
+    }
   }
 }
