@@ -180,6 +180,10 @@ public abstract class BaseManagePreferenceFragment extends PreferenceFragmentCom
   @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    if (checkManagePermission() && managePreference.isChecked()) {
+      presenter.checkManagePermission();
+    }
   }
 
   @CallSuper @Override public void onStop() {
