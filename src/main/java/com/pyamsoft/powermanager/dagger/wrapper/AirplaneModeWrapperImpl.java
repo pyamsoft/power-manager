@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -29,18 +30,24 @@ class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapper {
   @NonNull private static final String AIRPLANE_BROADCAST_COMMAND =
       "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state ";
 
-  @Inject AirplaneModeWrapperImpl(@NonNull Context context) {
+  @NonNull private final PowerManagerPreferences preferences;
+
+  @Inject AirplaneModeWrapperImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
     super(context);
+    this.preferences = preferences;
   }
 
   private void setAirplaneModeEnabled(boolean enabled) {
-    Timber.i("Airplane Mode: %s", enabled ? "enable" : "disable");
-    final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
-    final String airplaneBroadcastCommand =
-        AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
-    final boolean result1 = ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
-    final boolean result2 = ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
-    Timber.d("Results: %s %s", result1, result2);
+    if (preferences.isRootEnabled()) {
+      Timber.i("Airplane Mode: %s", enabled ? "enable" : "disable");
+      final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
+      final String airplaneBroadcastCommand =
+          AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
+      final boolean result1 = ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
+      final boolean result2 = ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
+      Timber.d("Results: %s %s", result1, result2);
+    }
   }
 
   @Override public void enable() {

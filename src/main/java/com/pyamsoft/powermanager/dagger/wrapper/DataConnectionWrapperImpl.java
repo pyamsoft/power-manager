@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
@@ -43,9 +44,12 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
 
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
+  @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject DataConnectionWrapperImpl(@NonNull Context context) {
+  @Inject DataConnectionWrapperImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
     super(context, "Data");
+    this.preferences = preferences;
     connectivityManager =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     contentResolver = context.getApplicationContext().getContentResolver();
@@ -114,9 +118,13 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
    * Will exit with a failed 137 code or otherwise if ROOT is not allowed
    */
   private void setMobileDataEnabledRoot(boolean enabled) {
-    final String command = "svc data " + (enabled ? "enable" : "disable");
-    final boolean result = ShellCommandHelper.runRootShellCommand(command);
-    Timber.d("Result: %s", result);
+    if (preferences.isRootEnabled()) {
+      final String command = "svc data " + (enabled ? "enable" : "disable");
+      final boolean result = ShellCommandHelper.runRootShellCommand(command);
+      Timber.d("Result: %s", result);
+    } else {
+      Timber.w("Root not enabled, cannot toggle Data");
+    }
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {

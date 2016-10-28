@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
@@ -28,8 +29,11 @@ import timber.log.Timber;
 class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
 
   @NonNull private final android.os.PowerManager androidPowerManager;
+  @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject DozeDeviceWrapperImpl(@NonNull Context context) {
+  @Inject DozeDeviceWrapperImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
     androidPowerManager =
         (PowerManager) context.getApplicationContext().getSystemService(Context.POWER_SERVICE);
   }
@@ -42,9 +46,14 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
       command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");
       result = ShellCommandHelper.runShellCommand(command);
     } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
-      // API 24 requires root
-      command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");
-      result = ShellCommandHelper.runRootShellCommand(command);
+      if (preferences.isRootEnabled()) {
+        // API 24 requires root
+        command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");
+        result = ShellCommandHelper.runRootShellCommand(command);
+      } else {
+        Timber.w("Root not enabled, cannot toggle Doze");
+        result = false;
+      }
     } else {
       Timber.w("This API level cannot run Doze");
       result = false;
