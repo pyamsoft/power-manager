@@ -48,13 +48,18 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
     super.onViewCreated(view, savedInstanceState);
 
     forceDoze = (SwitchPreferenceCompat) findPreference(getString(R.string.manage_doze_key));
-    forceDoze.setOnPreferenceClickListener(preference -> {
-      final boolean b = forceDoze.isChecked();
-      if (b) {
-        Timber.d("Check doze permission");
-        presenter.checkDozePermission();
+    forceDoze.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean b = (boolean) newValue;
+        if (b) {
+          Timber.d("Check doze permission");
+          presenter.checkDozePermission();
+        }
       }
-      return true;
+
+      // Always return false, we will set the actual state in the callback
+      // Returning false means the toggle does not change
+      return false;
     });
   }
 
@@ -118,8 +123,10 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment
 
   @Override public void onDozePermissionCallback(boolean hasPermission) {
     Timber.d("Has doze permission: %s", hasPermission);
+    // Set based on permission state
+    forceDoze.setChecked(hasPermission);
+
     if (!hasPermission) {
-      forceDoze.setChecked(false);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
             "doze_explain");
