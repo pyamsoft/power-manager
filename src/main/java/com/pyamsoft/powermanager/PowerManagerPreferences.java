@@ -70,6 +70,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult int getNotificationPriority();
 
+  @CheckResult boolean isAirplaneManaged();
+
   @CheckResult boolean isWifiManaged();
 
   @CheckResult boolean isDataManaged();
