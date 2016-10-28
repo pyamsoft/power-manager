@@ -41,6 +41,10 @@ public class SyncFragment extends BaseOverviewPagerFragment {
     return fragment;
   }
 
+  @Override protected boolean respectAirplaneMode() {
+    return false;
+  }
+
   @Override protected void injectObserverModifier() {
     PowerManagerSingleInitProvider.get().provideComponent().plusSyncScreenComponent().inject(this);
   }
