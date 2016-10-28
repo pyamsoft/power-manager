@@ -28,6 +28,7 @@ import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
@@ -45,6 +46,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @NonNull private static final String KEY_PRESENTER = "key_settings_presenter";
   @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
   private long loadedKey;
+  private SwitchPreferenceCompat useRoot;
 
   @CheckResult @NonNull SettingsPreferencePresenter getPresenter() {
     if (presenter == null) {
@@ -114,6 +116,22 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
     final Preference checkVersion = findPreference(getString(R.string.check_version_key));
     checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
+
+    useRoot = (SwitchPreferenceCompat) findPreference(getString(R.string.use_root_key));
+    useRoot.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+        if (newValue instanceof Boolean) {
+          final boolean b = (boolean) newValue;
+          if (b) {
+            presenter.checkRoot();
+            return false;
+          } else {
+            return true;
+          }
+        }
+        return false;
+      }
+    });
   }
 
   @Override public void onCreatePreferences(@Nullable Bundle bundle, @Nullable String s) {
@@ -159,5 +177,12 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onRootCallback(boolean hasPermission) {
+    useRoot.setChecked(hasPermission);
+    if (!hasPermission) {
+      Toast.makeText(getContext(), "Must grant root permission", Toast.LENGTH_SHORT).show();
+    }
   }
 }

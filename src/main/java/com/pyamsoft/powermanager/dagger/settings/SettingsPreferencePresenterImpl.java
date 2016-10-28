@@ -33,6 +33,7 @@ class SettingsPreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsPreferenceInteractor interactor;
   @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
+  @NonNull private Subscription rootSubscription = Subscriptions.empty();
 
   @Inject SettingsPreferencePresenterImpl(@NonNull SettingsPreferenceInteractor interactor,
       @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
@@ -43,6 +44,7 @@ class SettingsPreferencePresenterImpl
   @Override protected void onUnbind() {
     super.onUnbind();
     unsubscribeConfirm();
+    unsubRoot();
   }
 
   @Override public void requestClearAll() {
@@ -51,6 +53,24 @@ class SettingsPreferencePresenterImpl
 
   @Override public void requestClearDatabase() {
     getView(settingsPreferenceView -> settingsPreferenceView.showConfirmDialog(CONFIRM_DATABASE));
+  }
+
+  @Override public void checkRoot() {
+    unsubRoot();
+    rootSubscription = interactor.checkRoot()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> getView(view -> view.onRootCallback(hasPermission)),
+            throwable -> {
+              Timber.e(throwable, "onError checking root");
+              getView(view -> view.onRootCallback(false));
+            }, this::unsubRoot);
+  }
+
+  @SuppressWarnings("WeakerAccess") void unsubRoot() {
+    if (!rootSubscription.isUnsubscribed()) {
+      rootSubscription.unsubscribe();
+    }
   }
 
   @SuppressWarnings("WeakerAccess") void unsubscribeConfirm() {
