@@ -44,4 +44,9 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("wrapper_sync") DeviceFunctionWrapper provideSyncConnectionWrapper() {
     return new SyncConnectionWrapperImpl();
   }
+
+  @Singleton @Provides @Named("wrapper_airplane") DeviceFunctionWrapper provideAirplaneModeWrapper(
+      @NonNull Context context) {
+    return new AirplaneModeWrapperImpl(context);
+  }
 }

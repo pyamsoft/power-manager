@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -114,7 +115,7 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
    */
   private void setMobileDataEnabledRoot(boolean enabled) {
     final String command = "svc data " + (enabled ? "enable" : "disable");
-    runRootShellCommand(command);
+    ShellCommandHelper.runRootShellCommand(command);
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {

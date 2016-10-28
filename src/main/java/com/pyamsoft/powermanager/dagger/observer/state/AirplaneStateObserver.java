@@ -17,25 +17,25 @@
 package com.pyamsoft.powermanager.dagger.observer.state;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiStateObserver extends BroadcastStateObserver {
+class AirplaneStateObserver extends ContentObserverStateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject WifiStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
+  @Inject AirplaneStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
+    super(context, Settings.Global.AIRPLANE_MODE_ON);
     this.wrapper = wrapper;
-    Timber.d("New StateObserver for Wifi");
-
-    setFilterActions(WifiManager.WIFI_STATE_CHANGED_ACTION);
+    Timber.d("New StateObserver for Airplane Mode");
   }
 
   @Override public boolean is() {
-    return wrapper.isEnabled();
+    final boolean enabled = wrapper.isEnabled();
+    Timber.d("Is airplane mode enabled?: %s", enabled);
+    return enabled;
   }
 }

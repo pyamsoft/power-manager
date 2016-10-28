@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.observer.state;
+package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
-import timber.log.Timber;
 
-class WifiStateObserver extends BroadcastStateObserver {
+class AirplaneStateModifier extends StateModifier {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject WifiStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
+  @Inject AirplaneStateModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull DeviceFunctionWrapper wrapper) {
+    super(context, preferences);
     this.wrapper = wrapper;
-    Timber.d("New StateObserver for Wifi");
-
-    setFilterActions(WifiManager.WIFI_STATE_CHANGED_ACTION);
   }
 
-  @Override public boolean is() {
-    return wrapper.isEnabled();
+  @Override void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    wrapper.enable();
+  }
+
+  @Override void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    wrapper.disable();
   }
 }

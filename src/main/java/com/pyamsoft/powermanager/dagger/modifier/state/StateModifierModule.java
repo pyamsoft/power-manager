@@ -49,6 +49,13 @@ import javax.inject.Singleton;
     return new SyncStateModifier(context, wrapper);
   }
 
+  @Singleton @Named("mod_airplane_state") @Provides
+  BooleanInterestModifier provideAirplaneModeModifier(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
+    return new AirplaneStateModifier(context, preferences, wrapper);
+  }
+
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
       @NonNull Context context,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {

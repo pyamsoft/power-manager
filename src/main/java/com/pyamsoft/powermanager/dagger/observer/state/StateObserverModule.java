@@ -58,4 +58,9 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearStateObserver(context, preferences);
   }
+
+  @Singleton @Named("obs_airplane_state") @Provides BooleanInterestObserver provideAirplaneObserver(
+      @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
+    return new AirplaneStateObserver(context, wrapper);
+  }
 }

@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozeStateObserver extends StateObserver {
+class DozeStateObserver extends BroadcastStateObserver {
 
   @NonNull private final PowerManager androidPowerManager;
 

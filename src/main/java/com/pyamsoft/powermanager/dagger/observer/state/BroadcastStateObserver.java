@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class StateObserver extends BroadcastReceiver implements BooleanInterestObserver {
+abstract class BroadcastStateObserver extends BroadcastReceiver implements BooleanInterestObserver {
 
   // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
@@ -36,7 +36,7 @@ abstract class StateObserver extends BroadcastReceiver implements BooleanInteres
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
-  StateObserver(@NonNull Context context) {
+  BroadcastStateObserver(@NonNull Context context) {
     appContext = context.getApplicationContext();
     filter = new IntentFilter();
     setMap = new HashMap<>();
