@@ -24,6 +24,9 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
 
+/**
+ * Currently unused. Keep for later for things like Brightness / Rotation
+ */
 class SystemWritePermissionObserver extends PermissionObserverImpl {
 
   @Inject SystemWritePermissionObserver(@NonNull Context context) {

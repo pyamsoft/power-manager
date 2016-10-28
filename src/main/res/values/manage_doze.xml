@@ -59,12 +59,6 @@
   <string name="ignore_charging_doze_summary_checked">Ignore Doze while device is charging (Marshmallow only)</string>
   <string name="ignore_charging_doze_summary_unchecked">Run Doze even while device is charging</string>
 
-  <bool name="sensors_doze_default">false</bool>
-  <string name="sensors_doze_key">sensors_doze</string>
-  <string name="sensors_doze_title">Doze Device Sensors</string>
-  <string name="sensors_doze_summary_checked">Prevent device from waking out of Doze due to movement. EXPERIMENTAL (Marshmallow only)</string>
-  <string name="sensors_doze_summary_unchecked">Device will Doze normally, and be awoken with movement</string>
-
   <bool name="exclusive_doze_default">false</bool>
   <string name="exclusive_doze_key">exclusive_doze</string>
   <string name="exclusive_doze_title">Exclusive Doze</string>

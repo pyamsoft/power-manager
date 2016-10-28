@@ -22,12 +22,8 @@ public interface DozeOnlyPresenter extends Presenter<DozeOnlyPresenter.View> {
 
   void checkDozePermission();
 
-  void checkSensorWritePermission();
-
   interface View {
 
     void onDozePermissionCallback(boolean hasPermission);
-
-    void onWritePermissionCallback(boolean hasPermission);
   }
 }

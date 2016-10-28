@@ -38,13 +38,9 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getWearableDelay();
 
-  @CheckResult boolean isSensorsManaged();
-
   @CheckResult long getDozeDelay();
 
   @CheckResult boolean isDozeManaged();
-
-  void setDozeManaged(boolean enable);
 
   @CheckResult boolean isIgnoreChargingDoze();
 

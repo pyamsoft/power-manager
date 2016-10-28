@@ -25,23 +25,21 @@ import timber.log.Timber;
 abstract class StateModifier implements BooleanInterestModifier {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  StateModifier(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  StateModifier(@NonNull Context context) {
     Timber.d("New StateModifier");
     this.appContext = context.getApplicationContext();
-    this.preferences = preferences;
   }
 
   @Override public final void set() {
-    set(appContext, preferences);
+    set(appContext);
   }
 
   @Override public final void unset() {
-    unset(appContext, preferences);
+    unset(appContext);
   }
 
-  abstract void set(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
+  abstract void set(@NonNull Context context);
 
-  abstract void unset(@NonNull Context context, @NonNull PowerManagerPreferences preferences);
+  abstract void unset(@NonNull Context context);
 }
