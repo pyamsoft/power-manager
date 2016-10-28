@@ -21,8 +21,9 @@ import android.content.Context;
 import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 
-abstract class AirplaneAwareDeviceWrapper extends BaseDeviceWrapper {
+abstract class AirplaneAwareDeviceWrapper implements DeviceFunctionWrapper {
 
   @NonNull private final ContentResolver contentResolver;
 

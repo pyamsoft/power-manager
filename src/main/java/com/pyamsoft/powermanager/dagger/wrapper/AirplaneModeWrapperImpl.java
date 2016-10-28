@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.wrapper;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -37,8 +38,8 @@ class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapper {
     final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
     final String airplaneBroadcastCommand =
         AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
-    runRootShellCommand(airplaneSettingsCommand);
-    runRootShellCommand(airplaneBroadcastCommand);
+    ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
+    ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
   }
 
   @Override public void enable() {

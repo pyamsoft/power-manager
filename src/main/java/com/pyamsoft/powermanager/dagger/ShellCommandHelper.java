@@ -14,27 +14,30 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.wrapper;
+package com.pyamsoft.powermanager.dagger;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import timber.log.Timber;
 
-abstract class BaseDeviceWrapper implements DeviceFunctionWrapper {
+public final class ShellCommandHelper {
+
+  private ShellCommandHelper() {
+    throw new RuntimeException("No instances");
+  }
 
   /**
    * Requires ROOT for su binary
    */
-  void runRootShellCommand(@NonNull String command) {
+  public static void runRootShellCommand(@NonNull String command) {
     final String rootCommand = "su -c " + command;
     runShellCommand(rootCommand);
   }
 
-  private void runShellCommand(@NonNull String command) {
+  public static void runShellCommand(@NonNull String command) {
     final Process process;
     boolean caughtPermissionDenial = false;
     try {
