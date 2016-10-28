@@ -20,19 +20,30 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerAirplaneInteractor extends WearAwareManagerBaseInteractor {
 
+  @NonNull private final PermissionObserver rootPermissionObserver;
+
   @Inject ManagerAirplaneInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
+      @NonNull BooleanInterestObserver wearStateObserver,
+      @NonNull PermissionObserver rootPermissionObserver) {
     super(jobManager, preferences, manageObserver, stateObserver, wearManageObserver,
         wearStateObserver);
+    this.rootPermissionObserver = rootPermissionObserver;
+  }
+
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return super.isManaged()
+        .zipWith(rootPermissionObserver.hasPermission(),
+            (managed, hasPermission) -> managed && hasPermission);
   }
 
   @NonNull @Override protected Job createEnableJob() {

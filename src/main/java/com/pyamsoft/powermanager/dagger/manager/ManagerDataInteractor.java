@@ -22,16 +22,27 @@ import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.job.DataManageJob;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerDataInteractor extends ManagerBaseInteractor {
 
+  @NonNull private final PermissionObserver rootPermissionObserver;
+
   @Inject ManagerDataInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull PermissionObserver rootPermissionObserver) {
     super(jobManager, preferences, manageObserver, stateObserver);
+    this.rootPermissionObserver = rootPermissionObserver;
+  }
+
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return super.isManaged()
+        .zipWith(rootPermissionObserver.hasPermission(),
+            (managed, hasPermission) -> managed && hasPermission);
   }
 
   @CheckResult private long getDelayTime() {

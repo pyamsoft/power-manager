@@ -22,6 +22,7 @@ import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.job.DozeManageJob;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
@@ -29,10 +30,20 @@ import rx.Observable;
 class ManagerDozeInteractor extends ManagerBaseInteractor
     implements ExclusiveWearUnawareManagerInteractor {
 
+  @NonNull private final PermissionObserver dozePermissionObserver;
+
   @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull PermissionObserver dozePermissionObserver) {
     super(jobManager, preferences, manageObserver, stateObserver);
+    this.dozePermissionObserver = dozePermissionObserver;
+  }
+
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return super.isManaged()
+        .zipWith(dozePermissionObserver.hasPermission(),
+            (managed, hasPermission) -> managed && hasPermission);
   }
 
   @CheckResult private long getDelayTime() {

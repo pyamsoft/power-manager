@@ -50,7 +50,7 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     jobManager.cancelJobsInBackground(TagConstraint.ANY, jobTag);
   }
 
-  @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
+  @CallSuper @NonNull @CheckResult Observable<Boolean> cancelJobs(@NonNull String jobTag) {
     return Observable.defer(() -> {
       Timber.d("Cancel jobs in with tag: %s", jobTag);
       jobManager.cancelJobs(TagConstraint.ANY, jobTag);
@@ -58,41 +58,41 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
     });
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+  @CallSuper @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
     return Observable.defer(() -> {
       Timber.d("Original state: %s", originalStateEnabled);
       return Observable.just(originalStateEnabled);
     });
   }
 
-  @Override public void setOriginalStateEnabled(boolean enabled) {
+  @CallSuper @Override public void setOriginalStateEnabled(boolean enabled) {
     Timber.d("Set original state: %s", enabled);
     originalStateEnabled = enabled;
   }
 
-  @Override public void queueEnableJob() {
+  @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
     jobManager.addJobInBackground(createEnableJob());
   }
 
-  @Override public void queueDisableJob() {
+  @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
     jobManager.addJobInBackground(createDisableJob());
   }
 
-  @CheckResult @NonNull PowerManagerPreferences getPreferences() {
+  @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {
     return preferences;
   }
 
-  @NonNull @CheckResult JobSchedulerCompat getJobManager() {
+  @CallSuper @NonNull @CheckResult JobSchedulerCompat getJobManager() {
     return jobManager;
   }
 
-  @NonNull @Override public Observable<Boolean> isManaged() {
+  @CallSuper @NonNull @Override public Observable<Boolean> isManaged() {
     return Observable.defer(() -> Observable.just(manageObserver.is()));
   }
 
-  @NonNull @Override public Observable<Boolean> isEnabled() {
+  @CallSuper @NonNull @Override public Observable<Boolean> isEnabled() {
     return Observable.defer(() -> Observable.just(stateObserver.is()));
   }
 
