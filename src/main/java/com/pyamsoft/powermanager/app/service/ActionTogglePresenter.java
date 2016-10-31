@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.app.service;
 
-import android.app.Notification;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+public interface ActionTogglePresenter
+    extends Presenter<ActionTogglePresenter.ActionToggleProvider>, BaseServicePresenter {
 
-  void create();
+  void toggleForegroundState();
 
-  void destroy();
+  interface ActionToggleProvider {
 
-  @CheckResult @NonNull Observable<Notification> createNotification();
+    void onForegroundStateToggled(boolean state);
+  }
 }

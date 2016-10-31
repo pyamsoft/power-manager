@@ -16,16 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.Notification;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.app.service.ActionToggleService;
+import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+@Singleton @Subcomponent public interface ActionToggleServiceComponent {
 
-  void create();
-
-  void destroy();
-
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  void inject(ActionToggleService service);
 }

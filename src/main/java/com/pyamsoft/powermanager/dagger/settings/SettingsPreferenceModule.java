@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenter;
-import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

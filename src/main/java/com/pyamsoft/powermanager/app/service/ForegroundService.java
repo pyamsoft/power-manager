@@ -21,7 +21,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
@@ -34,17 +33,8 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @NonNull public static final String POWER_MANAGER_SERVICE_ENABLED =
       "POWER_MANAGER_SERVICE_ENABLED";
   private static final int NOTIFICATION_ID = 1000;
-  private static boolean enabled;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
-
-  @CheckResult public static boolean isEnabled() {
-    return enabled;
-  }
-
-  private static void setEnabled(boolean enabled) {
-    ForegroundService.enabled = enabled;
-  }
 
   /**
    * Force the service into a state
@@ -85,7 +75,6 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
         .plusForegroundServiceComponent()
         .inject(this);
 
-    setEnabled(false);
     screenOnOffReceiver = new ScreenOnOffReceiver(this);
     presenter.bindView(this);
   }
@@ -94,7 +83,6 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     super.onDestroy();
     Timber.d("onDestroy");
 
-    setEnabled(false);
     screenOnOffReceiver.unregister();
     presenter.unbindView();
     presenter.destroy();
@@ -106,12 +94,11 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
     if (intent != null) {
       if (intent.hasExtra(POWER_MANAGER_SERVICE_ENABLED)) {
         final boolean enable = intent.getBooleanExtra(POWER_MANAGER_SERVICE_ENABLED, true);
+        presenter.setForegroundState(enable);
         if (enable) {
-          setEnabled(true);
           Timber.i("Register SCREEN receiver");
           screenOnOffReceiver.register();
         } else {
-          setEnabled(false);
           Timber.w("Unregister SCREEN receiver");
           screenOnOffReceiver.unregister();
         }

@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.app.service;
 
-import android.app.Notification;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+public interface BaseServicePresenter {
 
-interface ForegroundInteractor extends BaseServiceInteractor {
-
-  void create();
-
-  void destroy();
-
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  void setForegroundState(boolean state);
 }

@@ -14,24 +14,27 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.trigger;
+package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
-import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.service.ActionTogglePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import rx.Scheduler;
 
-@Module public class TriggerModule {
+@Module public class ActionToggleModule {
 
-  @Provides TriggerPresenter provideTriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
-    return new TriggerPresenterImpl(obsScheduler, subScheduler, interactor);
+  @Singleton @Provides ActionTogglePresenter provideActionTogglePresenter(
+      @NonNull ActionToggleInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new ActionTogglePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
-  @Provides TriggerInteractor provideTriggerInteractor(PowerTriggerDB powerTriggerDB) {
-    return new TriggerInteractorImpl(powerTriggerDB);
+  @Singleton @Provides ActionToggleInteractor provideActionToggleInteractor(
+      @NonNull PowerManagerPreferences preferences) {
+    return new ActionToggleInteractorImpl(preferences);
   }
 }

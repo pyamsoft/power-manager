@@ -26,16 +26,15 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
+class ForegroundPresenterImpl extends BaseServicePresenterImpl<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
   @NonNull private final ForegroundInteractor interactor;
-
   @NonNull private Subscription notificationSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
-    super(obsScheduler, subScheduler);
+    super(interactor, obsScheduler, subScheduler);
     this.interactor = interactor;
   }
 

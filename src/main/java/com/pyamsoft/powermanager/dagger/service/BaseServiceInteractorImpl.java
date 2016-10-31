@@ -16,16 +16,23 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+abstract class BaseServiceInteractorImpl implements BaseServiceInteractor {
 
-  void create();
+  @NonNull private final PowerManagerPreferences preferences;
 
-  void destroy();
+  BaseServiceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
+  }
 
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  @Override public void setServiceEnabled(boolean state) {
+    preferences.setForegroundServiceEnabled(state);
+  }
+
+  @NonNull @CheckResult PowerManagerPreferences getPreferences() {
+    return preferences;
+  }
 }

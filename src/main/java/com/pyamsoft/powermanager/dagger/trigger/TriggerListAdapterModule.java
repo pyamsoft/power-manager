@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
-import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

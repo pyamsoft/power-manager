@@ -29,7 +29,7 @@ import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
-import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Locale;
 import javax.inject.Inject;

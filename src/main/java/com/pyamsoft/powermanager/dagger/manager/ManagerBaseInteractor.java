@@ -79,12 +79,18 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
-    jobManager.addJobInBackground(createEnableJob(jobManager, stateObserver, stateModifier));
+    final Job job =
+        JobHelper.createManagerEnableJob(jobManager, getJobTag(), stateObserver, stateModifier);
+    jobManager.addJobInBackground(job);
   }
 
   @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
-    jobManager.addJobInBackground(createDisableJob(jobManager, stateObserver, stateModifier));
+    final Job job =
+        JobHelper.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
+            isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
+            stateModifier);
+    jobManager.addJobInBackground(job);
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {
@@ -101,17 +107,6 @@ abstract class ManagerBaseInteractor implements ManagerInteractor {
 
   @CallSuper @NonNull @Override public Observable<Boolean> isEnabled() {
     return Observable.defer(() -> Observable.just(stateObserver.is()));
-  }
-
-  @CheckResult @NonNull private Job createEnableJob(@NonNull JobSchedulerCompat jobManager,
-      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return JobHelper.createManagerEnableJob(jobManager, getJobTag(), observer, modifier);
-  }
-
-  @CheckResult @NonNull private Job createDisableJob(@NonNull JobSchedulerCompat jobManager,
-      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return JobHelper.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
-        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), observer, modifier);
   }
 
   @CheckResult protected abstract long getDelayTime();

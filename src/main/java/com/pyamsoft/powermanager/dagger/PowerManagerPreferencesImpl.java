@@ -30,6 +30,7 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private static final String overviewOnboard = "overview_onboard";
   @NonNull private static final String manageOnboard = "manage_onboard";
   @NonNull private static final String periodOnboard = "period_onboard";
+  @NonNull private static final String foregroundServiceEnabled = "foregroundServiceEnabled";
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
   @NonNull private final String manageBluetooth;
@@ -175,6 +176,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     useRoot = getResources().getString(R.string.use_root_key);
     useRootDefault = getResources().getBoolean(R.bool.use_root_default);
+  }
+
+  @Override public boolean isForegroundServiceEnabled() {
+    return get(foregroundServiceEnabled, true);
+  }
+
+  @Override public void setForegroundServiceEnabled(boolean state) {
+    put(foregroundServiceEnabled, state);
   }
 
   @Override public boolean isRootEnabled() {

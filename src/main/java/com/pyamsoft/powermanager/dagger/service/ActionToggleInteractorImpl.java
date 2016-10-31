@@ -16,16 +16,19 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.Notification;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import javax.inject.Inject;
 import rx.Observable;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+class ActionToggleInteractorImpl extends BaseServiceInteractorImpl
+    implements ActionToggleInteractor {
 
-  void create();
+  @Inject ActionToggleInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+    super(preferences);
+  }
 
-  void destroy();
-
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  @NonNull @Override public Observable<Boolean> isServiceEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isForegroundServiceEnabled()));
+  }
 }

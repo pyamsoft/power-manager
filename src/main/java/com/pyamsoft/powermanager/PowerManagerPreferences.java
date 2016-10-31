@@ -22,6 +22,10 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isForegroundServiceEnabled();
+
+  void setForegroundServiceEnabled(boolean state);
+
   @CheckResult boolean isRootEnabled();
 
   @CheckResult boolean isStartWhenOpen();

@@ -20,7 +20,8 @@ import android.app.Notification;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
+public interface ForegroundPresenter
+    extends Presenter<ForegroundPresenter.ForegroundProvider>, BaseServicePresenter {
 
   void onStartNotification();
 

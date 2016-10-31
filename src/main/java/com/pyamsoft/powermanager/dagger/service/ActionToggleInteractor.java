@@ -16,16 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.Notification;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+interface ActionToggleInteractor extends BaseServiceInteractor {
 
-  void create();
-
-  void destroy();
-
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  @CheckResult @NonNull Observable<Boolean> isServiceEnabled();
 }
