@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
@@ -56,9 +55,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
-      @NonNull Context context,
-      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver,
-      @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
-    return new DozeStateModifier(context, dozePermissionObserver, wrapper);
+      @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
+    return new DozeStateModifier(context, wrapper);
   }
 }
