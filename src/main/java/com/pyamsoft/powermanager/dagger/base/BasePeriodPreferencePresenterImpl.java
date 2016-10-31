@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
 import rx.Subscription;
@@ -34,7 +35,8 @@ public abstract class BasePeriodPreferencePresenterImpl
       "BasePeriodPreferencePresenter";
   @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver observer;
   @NonNull private final BasePeriodPreferenceInteractor interactor;
-  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
 
   protected BasePeriodPreferencePresenterImpl(@NonNull BasePeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -53,7 +55,7 @@ public abstract class BasePeriodPreferencePresenterImpl
   @Override protected void onUnbind() {
     super.onUnbind();
     observer.unregister(OBS_TAG);
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
   @Override public void setShownOnBoarding() {
@@ -61,25 +63,20 @@ public abstract class BasePeriodPreferencePresenterImpl
   }
 
   @Override public void showOnboardingIfNeeded() {
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
-          if (!onboard) {
-            getView(PeriodPreferenceView::showOnBoarding);
-          }
-        }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubOnboarding() {
-    if (!onboardingSubscription.isUnsubscribed()) {
-      onboardingSubscription.unsubscribe();
-    }
+              if (!onboard) {
+                getView(PeriodPreferenceView::showOnBoarding);
+              }
+            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
   @Override public void dismissOnboarding() {
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 }

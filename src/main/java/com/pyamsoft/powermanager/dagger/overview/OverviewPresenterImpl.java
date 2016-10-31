@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.overview;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.overview.OverviewPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Scheduler;
@@ -30,7 +31,8 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.View>
     implements OverviewPresenter {
 
   @NonNull private final OverviewInteractor interactor;
-  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
 
   @Inject OverviewPresenterImpl(@NonNull OverviewInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -40,7 +42,7 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.View>
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
   @Override protected void onBind() {
@@ -49,22 +51,17 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.View>
   }
 
   @SuppressWarnings("WeakerAccess") void showOnBoarding() {
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
-          if (!onboard) {
-            getView(View::showOnBoarding);
-          }
-        }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubOnboarding() {
-    if (!onboardingSubscription.isUnsubscribed()) {
-      onboardingSubscription.unsubscribe();
-    }
+              if (!onboard) {
+                getView(View::showOnBoarding);
+              }
+            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
   @Override public void setShownOnBoarding() {

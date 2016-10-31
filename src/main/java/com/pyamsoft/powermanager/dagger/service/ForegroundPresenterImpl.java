@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
-import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -26,11 +26,13 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ForegroundPresenterImpl extends BaseServicePresenterImpl<ForegroundPresenter.ForegroundProvider>
+class ForegroundPresenterImpl
+    extends BaseServicePresenterImpl<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
   @NonNull private final ForegroundInteractor interactor;
-  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription notificationSubscription =
+      Subscriptions.empty();
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
@@ -46,17 +48,11 @@ class ForegroundPresenterImpl extends BaseServicePresenterImpl<ForegroundPresent
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    unsubNotification();
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubNotification() {
-    if (!notificationSubscription.isUnsubscribed()) {
-      notificationSubscription.unsubscribe();
-    }
+    SubscriptionHelper.unsubscribe(notificationSubscription);
   }
 
   @Override public void onStartNotification() {
-    unsubNotification();
+    SubscriptionHelper.unsubscribe(notificationSubscription);
     notificationSubscription = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -66,6 +62,6 @@ class ForegroundPresenterImpl extends BaseServicePresenterImpl<ForegroundPresent
         }, throwable -> {
           Timber.e(throwable, "onError");
           // TODO handle error
-        });
+        }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
   }
 }

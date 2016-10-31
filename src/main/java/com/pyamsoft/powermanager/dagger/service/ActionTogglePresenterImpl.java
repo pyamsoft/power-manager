@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ActionTogglePresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -29,7 +30,7 @@ class ActionTogglePresenterImpl
     implements ActionTogglePresenter {
 
   @NonNull private final ActionToggleInteractor interactor;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
   @Inject ActionTogglePresenterImpl(@NonNull ActionToggleInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -39,11 +40,11 @@ class ActionTogglePresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsub();
+    SubscriptionHelper.unsubscribe(subscription);
   }
 
   @Override public void toggleForegroundState() {
-    unsub();
+    SubscriptionHelper.unsubscribe(subscription);
     subscription = interactor.isServiceEnabled()
         .map(enabled -> {
           final boolean newState = !enabled;
@@ -53,12 +54,7 @@ class ActionTogglePresenterImpl
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(newState -> getView(view -> view.onForegroundStateToggled(newState)),
-            throwable -> Timber.e(throwable, "onError toggleForegroundState"), this::unsub);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsub() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+            throwable -> Timber.e(throwable, "onError toggleForegroundState"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
   }
 }

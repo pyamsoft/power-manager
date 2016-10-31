@@ -31,6 +31,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -56,7 +57,7 @@ public class TriggerJob extends BaseJob {
   @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
   @Inject JobSchedulerCompat jobSchedulerCompat;
   @Inject PowerTriggerDB powerTriggerDB;
-  @NonNull private Subscription runSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
   public TriggerJob(long delay) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
@@ -100,7 +101,7 @@ public class TriggerJob extends BaseJob {
   }
 
   private void runTriggerForPercent(int percent, boolean charging) {
-    unsubRun();
+    SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = powerTriggerDB.queryAll().first().flatMap(powerTriggerEntries -> {
       Timber.d("Flatten and filter");
       return Observable.from(powerTriggerEntries);
@@ -197,7 +198,7 @@ public class TriggerJob extends BaseJob {
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
-        });
+        }, () -> SubscriptionHelper.unsubscribe(runSubscription));
   }
 
   private void onTriggerRun(PowerTriggerEntry entry) {
@@ -268,14 +269,8 @@ public class TriggerJob extends BaseJob {
     }
   }
 
-  private void unsubRun() {
-    if (!runSubscription.isUnsubscribed()) {
-      runSubscription.unsubscribe();
-    }
-  }
-
   @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
     super.onCancel(cancelReason, throwable);
-    unsubRun();
+    SubscriptionHelper.unsubscribe(runSubscription);
   }
 }

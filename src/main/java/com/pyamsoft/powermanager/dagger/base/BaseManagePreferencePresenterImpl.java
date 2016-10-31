@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
 import rx.Subscription;
@@ -34,7 +35,8 @@ public abstract class BaseManagePreferencePresenterImpl
       "BaseManagePreferencePresenter";
   @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver manageObserver;
   @NonNull private final BaseManagePreferenceInteractor interactor;
-  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
 
   protected BaseManagePreferencePresenterImpl(
       @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
@@ -54,7 +56,7 @@ public abstract class BaseManagePreferencePresenterImpl
   @Override protected void onUnbind() {
     super.onUnbind();
     manageObserver.unregister(OBS_TAG);
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
   @Override public void setShownOnBoarding() {
@@ -62,32 +64,20 @@ public abstract class BaseManagePreferencePresenterImpl
   }
 
   @Override public void showOnboardingIfNeeded() {
-    unsubOnboarding();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
-          if (!onboard) {
-            getView(ManagePreferenceView::showOnBoarding);
-          }
-        }, throwable -> Timber.e(throwable, "onError showOnBoarding"), this::unsubOnboarding);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubOnboarding() {
-    if (!onboardingSubscription.isUnsubscribed()) {
-      onboardingSubscription.unsubscribe();
-    }
+              if (!onboard) {
+                getView(ManagePreferenceView::showOnBoarding);
+              }
+            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
   @Override public void dismissOnboarding() {
-    unsubOnboarding();
-  }
-
-  /**
-   * Override if you need to check permission
-   */
-  @Override public void checkManagePermission() {
-    // Do nothing
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 }

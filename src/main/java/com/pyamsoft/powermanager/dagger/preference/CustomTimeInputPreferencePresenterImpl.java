@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import rx.Scheduler;
 import rx.Subscription;
@@ -33,7 +34,8 @@ public abstract class CustomTimeInputPreferencePresenterImpl
   private static final int MAX_CUSTOM_LENGTH = 10;
 
   @Nullable private final CustomTimeInputPreferenceInteractor interactor;
-  @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription customTimeSubscription =
+      Subscriptions.empty();
 
   protected CustomTimeInputPreferencePresenterImpl(
       @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
@@ -44,7 +46,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubCustomTimeUpdate();
+    SubscriptionHelper.unsubscribe(customTimeSubscription);
   }
 
   @Override public void updateCustomTime(@NonNull String time) {
@@ -70,7 +72,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
         longTime = Long.parseLong(time);
       }
 
-      unsubCustomTimeUpdate();
+      SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.saveTime(longTime)
           .delay(delay, TimeUnit.MILLISECONDS)
           .subscribeOn(getSubscribeScheduler())
@@ -86,7 +88,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
                 view.onCustomTimeError();
               }
             });
-          }, this::unsubCustomTimeUpdate);
+          }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
     } else {
       Timber.e("NULL interactor");
     }
@@ -94,7 +96,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
 
   @Override public void initializeCustomTime() {
     if (interactor != null) {
-      unsubCustomTimeUpdate();
+      SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
@@ -102,15 +104,9 @@ public abstract class CustomTimeInputPreferencePresenterImpl
               throwable -> {
                 Timber.e(throwable, "onError updateCustomTime");
                 getView(View::onCustomTimeError);
-              }, this::unsubCustomTimeUpdate);
+              }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
     } else {
       Timber.e("NULL interactor");
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubCustomTimeUpdate() {
-    if (!customTimeSubscription.isUnsubscribed()) {
-      customTimeSubscription.unsubscribe();
     }
   }
 }

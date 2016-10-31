@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -30,7 +31,8 @@ import timber.log.Timber;
 class DataManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
-  @NonNull private Subscription rootPermissionSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootPermissionSubscription =
+      Subscriptions.empty();
 
   @Inject DataManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -42,16 +44,11 @@ class DataManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubRoot();
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubRoot() {
-    if (!rootPermissionSubscription.isUnsubscribed()) {
-      rootPermissionSubscription.unsubscribe();
-    }
+    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
   }
 
   @Override public void checkManagePermission() {
+    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
     rootPermissionSubscription = rootPermissionObserver.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -61,6 +58,6 @@ class DataManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
         }, throwable -> {
           Timber.e(throwable, "onError checkRootPermission");
           getView(view -> view.onManagePermissionCallback(false));
-        }, this::unsubRoot);
+        }, () -> SubscriptionHelper.unsubscribe(rootPermissionSubscription));
   }
 }

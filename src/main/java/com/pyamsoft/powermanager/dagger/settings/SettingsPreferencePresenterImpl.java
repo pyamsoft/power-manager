@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.settings.SettingsPreferencePresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -32,8 +33,9 @@ class SettingsPreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") static final int CONFIRM_DATABASE = 0;
   @SuppressWarnings("WeakerAccess") static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsPreferenceInteractor interactor;
-  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
-  @NonNull private Subscription rootSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription confirmedSubscription =
+      Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
 
   @Inject SettingsPreferencePresenterImpl(@NonNull SettingsPreferenceInteractor interactor,
       @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
@@ -43,8 +45,7 @@ class SettingsPreferencePresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubscribeConfirm();
-    unsubRoot();
+    SubscriptionHelper.unsubscribe(confirmedSubscription, rootSubscription);
   }
 
   @Override public void requestClearAll() {
@@ -56,7 +57,7 @@ class SettingsPreferencePresenterImpl
   }
 
   @Override public void checkRoot() {
-    unsubRoot();
+    SubscriptionHelper.unsubscribe(rootSubscription);
     rootSubscription = interactor.checkRoot()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -64,19 +65,7 @@ class SettingsPreferencePresenterImpl
             throwable -> {
               Timber.e(throwable, "onError checking root");
               getView(view -> view.onRootCallback(false));
-            }, this::unsubRoot);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubRoot() {
-    if (!rootSubscription.isUnsubscribed()) {
-      rootSubscription.unsubscribe();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubscribeConfirm() {
-    if (!confirmedSubscription.isUnsubscribed()) {
-      confirmedSubscription.unsubscribe();
-    }
+            }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
   }
 
   @Override public void processClearRequest(int type) {
@@ -93,20 +82,22 @@ class SettingsPreferencePresenterImpl
   }
 
   @SuppressWarnings("WeakerAccess") void clearAll() {
-    unsubscribeConfirm();
+    SubscriptionHelper.unsubscribe(confirmedSubscription);
     confirmedSubscription = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> getView(SettingsPreferenceView::onClearAll),
-            throwable -> Timber.e(throwable, "onError"), this::unsubscribeConfirm);
+            throwable -> Timber.e(throwable, "onError"),
+            () -> SubscriptionHelper.unsubscribe(confirmedSubscription));
   }
 
   @SuppressWarnings("WeakerAccess") void clearDatabase() {
-    unsubscribeConfirm();
+    SubscriptionHelper.unsubscribe(confirmedSubscription);
     confirmedSubscription = interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> getView(SettingsPreferenceView::onClearDatabase),
-            throwable -> Timber.e(throwable, "onError"), this::unsubscribeConfirm);
+            throwable -> Timber.e(throwable, "onError"),
+            () -> SubscriptionHelper.unsubscribe(confirmedSubscription));
   }
 }

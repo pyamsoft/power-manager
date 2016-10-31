@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -30,7 +31,8 @@ import timber.log.Timber;
 class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @NonNull private final PermissionObserver dozePermissionObserver;
-  @NonNull private Subscription dozePermissionSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozePermissionSubscription =
+      Subscriptions.empty();
 
   @Inject DozeManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -42,16 +44,11 @@ class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubDoze();
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubDoze() {
-    if (!dozePermissionSubscription.isUnsubscribed()) {
-      dozePermissionSubscription.unsubscribe();
-    }
+    SubscriptionHelper.unsubscribe(dozePermissionSubscription);
   }
 
   @Override public void checkManagePermission() {
+    SubscriptionHelper.unsubscribe(dozePermissionSubscription);
     dozePermissionSubscription = dozePermissionObserver.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -61,6 +58,6 @@ class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
         }, throwable -> {
           Timber.e(throwable, "onError checkDozePermission");
           getView(view -> view.onManagePermissionCallback(false));
-        }, this::unsubDoze);
+        }, () -> SubscriptionHelper.unsubscribe(dozePermissionSubscription));
   }
 }

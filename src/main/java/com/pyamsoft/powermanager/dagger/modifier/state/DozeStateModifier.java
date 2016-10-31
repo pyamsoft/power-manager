@@ -18,60 +18,23 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
-import javax.inject.Named;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
 class DozeStateModifier extends StateModifier {
 
-  @NonNull final DeviceFunctionWrapper wrapper;
-  @NonNull private final PermissionObserver dozePermissionObserver;
-  @Named private Subscription subscription = Subscriptions.empty();
+  @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject DozeStateModifier(@NonNull Context context,
-      @NonNull PermissionObserver dozePermissionObserver, @NonNull DeviceFunctionWrapper wrapper) {
+  @Inject DozeStateModifier(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
     super(context);
-    this.dozePermissionObserver = dozePermissionObserver;
     this.wrapper = wrapper;
   }
 
-  @SuppressWarnings("WeakerAccess") void unsub() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
-  }
-
   @Override void set(@NonNull Context context) {
-    unsub();
-    // We dont explicitly state subscribeOn and observeOn because it is up to the caller to implement
-    // the proper threading
-    subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
-      if (hasPermission) {
-        Timber.d("Begin Doze");
-        wrapper.enable();
-      }
-    }, throwable -> {
-      Timber.e(throwable, "onError set");
-      unsub();
-    }, this::unsub);
+    wrapper.enable();
   }
 
   @Override void unset(@NonNull Context context) {
-    unsub();
-    // We dont explicitly state subscribeOn and observeOn because it is up to the caller to implement
-    // the proper threading
-    subscription = dozePermissionObserver.hasPermission().subscribe(hasPermission -> {
-      if (hasPermission) {
-        Timber.d("End Doze");
-        wrapper.disable();
-      }
-    }, throwable -> {
-      Timber.e(throwable, "onError unset");
-      unsub();
-    }, this::unsub);
+    wrapper.disable();
   }
 }

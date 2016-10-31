@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -28,8 +29,10 @@ import timber.log.Timber;
 class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
 
   @NonNull private final ExclusiveWearUnawareManagerInteractor interactor;
-  @NonNull private Subscription dozeSetSubscription = Subscriptions.empty();
-  @NonNull private Subscription dozeUnsetSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozeSetSubscription =
+      Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozeUnsetSubscription =
+      Subscriptions.empty();
 
   @Inject ManagerDoze(@NonNull ExclusiveWearUnawareManagerInteractor interactor,
       @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -40,61 +43,50 @@ class ManagerDoze extends WearUnawareManagerBase implements ExclusiveManager {
   @Override public void queueExclusiveSet(@Nullable NonExclusiveCallback callback) {
     queueSet();
 
-    unsubDozeSet();
+    SubscriptionHelper.unsubscribe(dozeSetSubscription);
     dozeSetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
-          if (exclusive) {
-            Timber.d("ManagerDoze is exclusive");
-          } else {
-            Timber.d("ManagerDoze is not exclusive");
-            if (callback == null) {
-              Timber.e("Callback is null but ManagerDoze is not exclusive");
-            } else {
-              callback.call();
-            }
-          }
-        }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"), this::unsubDozeSet);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubDozeSet() {
-    if (!dozeSetSubscription.isUnsubscribed()) {
-      dozeSetSubscription.unsubscribe();
-    }
+              if (exclusive) {
+                Timber.d("ManagerDoze is exclusive");
+              } else {
+                Timber.d("ManagerDoze is not exclusive");
+                if (callback == null) {
+                  Timber.e("Callback is null but ManagerDoze is not exclusive");
+                } else {
+                  callback.call();
+                }
+              }
+            }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"),
+            () -> SubscriptionHelper.unsubscribe(dozeSetSubscription));
   }
 
   @Override
   public void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback) {
     queueUnset(deviceCharging);
 
-    unsubDozeUnset();
+    SubscriptionHelper.unsubscribe(dozeUnsetSubscription);
     dozeUnsetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
-          if (exclusive) {
-            Timber.d("ManagerDoze is exclusive");
-          } else {
-            Timber.d("ManagerDoze is not exclusive");
-            if (callback == null) {
-              Timber.e("Callback is null but ManagerDoze is not exclusive");
-            } else {
-              callback.call();
-            }
-          }
-        }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"), this::unsubDozeUnset);
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubDozeUnset() {
-    if (!dozeUnsetSubscription.isUnsubscribed()) {
-      dozeUnsetSubscription.unsubscribe();
-    }
+              if (exclusive) {
+                Timber.d("ManagerDoze is exclusive");
+              } else {
+                Timber.d("ManagerDoze is not exclusive");
+                if (callback == null) {
+                  Timber.e("Callback is null but ManagerDoze is not exclusive");
+                } else {
+                  callback.call();
+                }
+              }
+            }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"),
+            () -> SubscriptionHelper.unsubscribe(dozeUnsetSubscription));
   }
 
   @Override public void cleanup() {
     super.cleanup();
-    unsubDozeSet();
-    unsubDozeUnset();
+    SubscriptionHelper.unsubscribe(dozeSetSubscription, dozeUnsetSubscription);
   }
 }
