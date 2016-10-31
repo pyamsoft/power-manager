@@ -43,9 +43,14 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
     final boolean result;
     Timber.i("Doze mode: %s", enabled ? "enable" : "disable");
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-      // API 23 can do this without root
       command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");
-      result = ShellCommandHelper.runShellCommand(command);
+      if (preferences.isRootEnabled()) {
+        // If root is enabled, we attempt with root
+        result = ShellCommandHelper.runRootShellCommand(command);
+      } else {
+        // API 23 can do this without root
+        result = ShellCommandHelper.runShellCommand(command);
+      }
     } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
       if (preferences.isRootEnabled()) {
         // API 24 requires root
