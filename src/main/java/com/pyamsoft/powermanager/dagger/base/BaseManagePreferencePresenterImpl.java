@@ -80,4 +80,8 @@ public abstract class BaseManagePreferencePresenterImpl
   @Override public void dismissOnboarding() {
     SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
+
+  @Override public void checkManagePermission() {
+    // Override if you need to check permissions
+  }
 }
