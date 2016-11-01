@@ -41,7 +41,7 @@ class RootPermissionObserver extends PermissionObserverImpl {
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
     if (preferences.isRootEnabled()) {
-      final boolean hasPermission = ShellCommandHelper.runRootShellCommand("true");
+      final boolean hasPermission = ShellCommandHelper.isSUAvailable();
       Timber.d("Has root permission? %s", hasPermission);
       return hasPermission;
     } else {

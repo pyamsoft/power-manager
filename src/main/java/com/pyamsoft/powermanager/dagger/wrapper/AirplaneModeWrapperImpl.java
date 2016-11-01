@@ -44,9 +44,8 @@ class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapperImpl {
       final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
       final String airplaneBroadcastCommand =
           AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
-      final boolean result1 = ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
-      final boolean result2 = ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
-      Timber.d("Results: %s %s", result1, result2);
+      ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
+      ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
     }
   }
 

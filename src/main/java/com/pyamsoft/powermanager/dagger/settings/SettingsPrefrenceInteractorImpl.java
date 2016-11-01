@@ -36,7 +36,7 @@ class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> checkRoot() {
-    return Observable.defer(() -> Observable.just(ShellCommandHelper.runRootShellCommand("true")));
+    return Observable.defer(() -> Observable.just(ShellCommandHelper.isSUAvailable()));
   }
 
   @NonNull @Override public Observable<Boolean> clearDatabase() {
