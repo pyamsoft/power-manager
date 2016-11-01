@@ -19,62 +19,51 @@ package com.pyamsoft.powermanager.dagger;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import eu.chainfire.libsuperuser.Shell;
 import timber.log.Timber;
 
-public final class ShellCommandHelper {
+public class ShellCommandHelper {
+
+  @NonNull private static final ShellCommandHelper INSTANCE = new ShellCommandHelper();
+  @NonNull private final Shell.Interactive shellSession;
+  @NonNull private final Shell.Interactive rootSession;
 
   private ShellCommandHelper() {
-    throw new RuntimeException("No instances");
+    shellSession = new Shell.Builder().useSH()
+        .setWantSTDERR(false)
+        .setWatchdogTimeout(5)
+        .setMinimalLogging(true)
+        .open();
+
+    rootSession = new Shell.Builder().useSU()
+        .setWantSTDERR(false)
+        .setWatchdogTimeout(5)
+        .setMinimalLogging(true)
+        .open();
+  }
+
+  @WorkerThread @CheckResult public static boolean isSUAvailable() {
+    return Shell.SU.available();
   }
 
   /**
    * Requires ROOT for su binary
    */
-  @WorkerThread @CheckResult public static boolean runRootShellCommand(@NonNull String command) {
-    final String rootCommand = "su -c " + command;
-    return runShellCommand(rootCommand);
+  @WorkerThread public static void runRootShellCommand(@NonNull String command) {
+    INSTANCE.runSUCommand(command);
   }
 
-  @WorkerThread @CheckResult public static boolean runShellCommand(@NonNull String command) {
-    final Process process;
-    boolean caughtPermissionDenial = false;
-    try {
-      process = Runtime.getRuntime().exec(command);
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-        Timber.d("Read results of exec: '%s'", command);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          if (line.startsWith("Permission Denial")) {
-            Timber.e("Command resulted in permission denial");
-            caughtPermissionDenial = true;
-            break;
-          }
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
+  @WorkerThread public static void runShellCommand(@NonNull String command) {
+    INSTANCE.runSHCommand(command);
+  }
 
-      if (caughtPermissionDenial) {
-        throw new RuntimeException("Permission denied running: " + command);
-      }
+  @WorkerThread private void runSUCommand(@NonNull String command) {
+    Timber.d("Run command '%s' in SU session", command);
+    rootSession.addCommand(command);
+  }
 
-      try {
-        process.waitFor();
-        final int exitValue = process.exitValue();
-        Timber.i("Command %s exited with value: %d", command, exitValue);
-        return exitValue == 0;
-      } catch (InterruptedException e) {
-        Timber.e(e, "Interrupted while waiting for exit");
-      }
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
-    }
-    return false;
+  @WorkerThread private void runSHCommand(@NonNull String command) {
+    Timber.d("Run command '%s' in Shell session", command);
+    shellSession.addCommand(command);
   }
 }

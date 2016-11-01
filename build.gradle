@@ -100,6 +100,9 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
+  // Super User support
+  compile "eu.chainfire:libsuperuser:$libsuperuser"
+
   // Error-Prone compiler
   errorprone "com.google.errorprone:error_prone_core:$errorProne"
 
