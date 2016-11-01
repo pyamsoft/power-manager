@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import timber.log.Timber;
 
 public final class JobHelper {
 
@@ -33,13 +34,17 @@ public final class JobHelper {
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
     switch (jobType) {
       case ENABLE:
+      case DISABLE:
+        Timber.d("Create Enable Manage Job");
         return createEnableManageJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer,
             modifier);
       case TOGGLE_ENABLE:
+      case TOGGLE_DISABLE:
+        Timber.d("Create Enable Toggle Job");
         return createEnableToggleJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer,
             modifier);
       default:
-        throw new RuntimeException("Invalid enable job type");
+        throw new RuntimeException("Invalid enable job type: " + jobType);
     }
   }
 
@@ -49,13 +54,17 @@ public final class JobHelper {
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
     switch (jobType) {
       case ENABLE:
+      case DISABLE:
+        Timber.d("Create periodic Enable Manage Job");
         return createEnableManageJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
       case TOGGLE_ENABLE:
+      case TOGGLE_DISABLE:
+        Timber.d("Create periodic Enable Toggle Job");
         return createEnableToggleJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
       default:
-        throw new RuntimeException("Invalid enable job type");
+        throw new RuntimeException("Invalid enable job type: " + jobType);
     }
   }
 
@@ -80,14 +89,18 @@ public final class JobHelper {
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
     switch (jobType) {
+      case ENABLE:
       case DISABLE:
+        Timber.d("Create Disable Manage Job");
         return createDisableManageJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+      case TOGGLE_ENABLE:
       case TOGGLE_DISABLE:
+        Timber.d("Create Disable Toggle Job");
         return createDisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
       default:
-        throw new RuntimeException("Invalid disable job type");
+        throw new RuntimeException("Invalid disable job type: " + jobType);
     }
   }
 
@@ -95,8 +108,20 @@ public final class JobHelper {
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return createDisableJob(jobType, jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L,
-        true, periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+    switch (jobType) {
+      case ENABLE:
+      case DISABLE:
+        Timber.d("Create periodic Disable Manage Job");
+        return createDisableManageJob(jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L, true,
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+      case TOGGLE_ENABLE:
+      case TOGGLE_DISABLE:
+        Timber.d("Create periodic Disable Toggle Job");
+        return createDisableToggleJob(jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L, true,
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+      default:
+        throw new RuntimeException("Invalid disable job type: " + jobType);
+    }
   }
 
   @CheckResult @NonNull private static DisableManageJob createDisableManageJob(
