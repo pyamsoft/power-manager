@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import com.pyamsoft.powermanager.dagger.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
@@ -70,6 +71,8 @@ import javax.inject.Singleton;
   DataScreenComponent plusDataScreenComponent();
 
   BluetoothScreenComponent plusBluetoothScreenComponent();
+
+  AirplaneScreenComponent plusAirplaneScreenComponent();
 
   SyncScreenComponent plusSyncScreenComponent();
 

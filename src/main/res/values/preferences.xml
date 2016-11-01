@@ -43,7 +43,4 @@
   <string name="clear_all_title">Reset All Settings</string>
   <string name="clear_all_summary">Reset all application settings to default</string>
 
-  <!-- TODO Move into own preferences -->
-  <string name="manage_airplane_key">manage_airplane</string>
-
 </resources>

@@ -33,6 +33,7 @@ import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
@@ -56,8 +57,9 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @Inject @Named("obs_wifi_manage") BooleanInterestObserver wifiManageObserver;
   @Inject @Named("obs_data_manage") BooleanInterestObserver dataManageObserver;
-  @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver bluetootManageObserver;
+  @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver bluetoothManageObserver;
   @Inject @Named("obs_sync_manage") BooleanInterestObserver syncManageObserver;
+  @Inject @Named("obs_airplane_manage") BooleanInterestObserver airplaneManageObserver;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver;
   @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
   OverviewPresenter presenter;
@@ -136,12 +138,14 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
             dataManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
-            bluetootManageObserver, this::loadFragment));
+            bluetoothManageObserver, this::loadFragment));
     adapter.add(new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
         syncManageObserver, this::loadFragment));
     adapter.add(
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
             null, this::loadFragment));
+    adapter.add(new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
+        R.color.orange500, airplaneManageObserver, this::loadFragment));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
         dozeManageObserver, this::loadFragment));
     adapter.add(

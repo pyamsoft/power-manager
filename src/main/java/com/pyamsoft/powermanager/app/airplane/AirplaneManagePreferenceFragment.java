@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.data;
+package com.pyamsoft.powermanager.app.airplane;
 
 import android.support.annotation.NonNull;
 import android.widget.Toast;
@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import timber.log.Timber;
 
-public class DataManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class AirplaneManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @Override protected void injectDependencies() {
 
@@ -32,31 +32,31 @@ public class DataManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @NonNull @Override
   protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
-    return new DataManagePresenterLoader();
+    return new AirplaneManagePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {
-    return R.string.manage_data_key;
+    return R.string.manage_airplane_key;
   }
 
   @Override protected int getPresetTimeKeyResId() {
-    return R.string.preset_delay_data_key;
+    return R.string.preset_delay_airplane_key;
   }
 
   @Override protected int getTimeKeyResId() {
-    return R.string.data_time_key;
+    return R.string.airplane_time_key;
   }
 
   @Override protected int getPreferencesResId() {
-    return R.xml.manage_data;
+    return R.xml.manage_airplane;
   }
 
   @Override protected boolean checkManagePermission() {
-    Timber.d("Data checks manage permission");
+    Timber.d("Airplane checks manage permission");
     return true;
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
-    Toast.makeText(getContext(), "Needs root to manage Mobile Data", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), "Needs root to manage Airplane Mode", Toast.LENGTH_SHORT).show();
   }
 }

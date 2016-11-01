@@ -48,6 +48,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isDozeManaged();
 
+  @CheckResult boolean isIgnoreChargingAirplane();
+
   @CheckResult boolean isIgnoreChargingDoze();
 
   @CheckResult boolean isIgnoreChargingWifi();
@@ -61,6 +63,10 @@ public interface PowerManagerPreferences {
   @CheckResult long getWifiDelay();
 
   void setWifiDelay(long time);
+
+  @CheckResult long getAirplaneDelay();
+
+  void setAirplaneDelay(long time);
 
   @CheckResult long getDataDelay();
 
@@ -98,6 +104,12 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isPeriodicSync();
 
+  @CheckResult boolean isPeriodicAirplane();
+
+  @CheckResult long getPeriodicDisableTimeAirplane();
+
+  void setPeriodicDisableTimeAirplane(long time);
+
   @CheckResult long getPeriodicDisableTimeWifi();
 
   void setPeriodicDisableTimeWifi(long time);
@@ -113,6 +125,10 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicDisableTimeSync();
 
   void setPeriodicDisableTimeSync(long time);
+
+  @CheckResult long getPeriodicEnableTimeAirplane();
+
+  void setPeriodicEnableTimeAirplane(long time);
 
   @CheckResult long getPeriodicEnableTimeWifi();
 
