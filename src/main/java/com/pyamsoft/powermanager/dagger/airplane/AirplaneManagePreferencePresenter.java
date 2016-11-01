@@ -18,16 +18,46 @@ package com.pyamsoft.powermanager.dagger.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 class AirplaneManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
 
-  @Inject AirplaneManagePreferencePresenter(
-      @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
+  @NonNull private final PermissionObserver rootPermissionObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootPermissionSubscription =
+      Subscriptions.empty();
+
+  @Inject AirplaneManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver manageObserver,
+      @NonNull PermissionObserver rootPermissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
+    this.rootPermissionObserver = rootPermissionObserver;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
+  }
+
+  @Override public void checkManagePermission() {
+    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
+    rootPermissionSubscription = rootPermissionObserver.hasPermission()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+          Timber.d("Root permission granted? %s", hasPermission);
+          getView(view -> view.onManagePermissionCallback(hasPermission));
+        }, throwable -> {
+          Timber.e(throwable, "onError checkRootPermission");
+          getView(view -> view.onManagePermissionCallback(false));
+        }, () -> SubscriptionHelper.unsubscribe(rootPermissionSubscription));
   }
 }

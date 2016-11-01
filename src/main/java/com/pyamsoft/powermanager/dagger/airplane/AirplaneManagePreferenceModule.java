@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -32,9 +33,10 @@ import rx.Scheduler;
   BaseManagePreferencePresenter provideAirplaneManagePreferencePresenter(
       @Named("airplane_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_airplane_manage") BooleanInterestObserver manageObserver) {
+      @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new AirplaneManagePreferencePresenter(interactor, obsScheduler, subScheduler,
-        manageObserver);
+        manageObserver, rootPermissionObserver);
   }
 
   @Provides @Named("airplane_manage_pref_interactor")
