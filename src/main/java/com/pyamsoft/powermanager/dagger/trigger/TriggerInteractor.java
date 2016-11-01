@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 
-public interface TriggerInteractor extends BaseTriggerInteractor {
+interface TriggerInteractor extends BaseTriggerInteractor {
 
   @CheckResult @NonNull Observable<PowerTriggerEntry> queryAll();
 

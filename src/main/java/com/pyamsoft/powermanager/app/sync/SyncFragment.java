@@ -21,15 +21,15 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
-import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class SyncFragment extends BaseOverviewPagerFragment {
+public class SyncFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Sync";
   @Inject @Named("obs_sync_state") BooleanInterestObserver observer;
@@ -49,7 +49,7 @@ public class SyncFragment extends BaseOverviewPagerFragment {
     return observer;
   }
 
-  @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
+  @NonNull @Override protected PersistLoader<OverviewPagerPresenter> getPresenterLoader() {
     return new SyncOverviewPresenterLoader();
   }
 
@@ -61,7 +61,7 @@ public class SyncFragment extends BaseOverviewPagerFragment {
     return R.drawable.ic_sync_disabled_24dp;
   }
 
-  @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
+  @NonNull @Override protected ModulePagerAdapter getPagerAdapter() {
     return new SyncPagerAdapter(getChildFragmentManager());
   }
 

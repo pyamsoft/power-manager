@@ -32,13 +32,13 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataDelayPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new DataDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideDataCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DataDelayPreferenceInteractor(preferences);
+    return new DataDelayPreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("data_custom_enable")
@@ -46,13 +46,13 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataEnableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new DataEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideDataCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DataEnableTimePreferenceInteractor(preferences);
+    return new DataEnableTimePreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("data_custom_disable")
@@ -60,12 +60,12 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataDisableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new DataDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideDataCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DataDisableTimePreferenceInteractor(preferences);
+    return new DataDisableTimePreferenceInteractorImpl(preferences);
   }
 }

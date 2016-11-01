@@ -21,15 +21,15 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerFragment;
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
-import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class AirplaneFragment extends BaseOverviewPagerFragment {
+public class AirplaneFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Airplane Mode";
   @Inject @Named("obs_airplane_state") BooleanInterestObserver observer;
@@ -49,7 +49,7 @@ public class AirplaneFragment extends BaseOverviewPagerFragment {
     return observer;
   }
 
-  @NonNull @Override protected PersistLoader<BaseOverviewPagerPresenter> getPresenterLoader() {
+  @NonNull @Override protected PersistLoader<OverviewPagerPresenter> getPresenterLoader() {
     return new AirplaneOverviewPresenterLoader();
   }
 
@@ -61,7 +61,7 @@ public class AirplaneFragment extends BaseOverviewPagerFragment {
     return R.drawable.ic_airplanemode_off_24dp;
   }
 
-  @NonNull @Override protected BasePagerAdapter getPagerAdapter() {
+  @NonNull @Override protected ModulePagerAdapter getPagerAdapter() {
     return new AirplanePagerAdapter(getChildFragmentManager());
   }
 

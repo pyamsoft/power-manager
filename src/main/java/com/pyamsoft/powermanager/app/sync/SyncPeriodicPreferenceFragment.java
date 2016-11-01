@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.app.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
-import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
+public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_sync;
@@ -49,7 +49,7 @@ public class SyncPeriodicPreferenceFragment extends BasePeriodicPreferenceFragme
   }
 
   @NonNull @Override
-  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
+  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new SyncPeriodPresenterLoader();
   }
 }

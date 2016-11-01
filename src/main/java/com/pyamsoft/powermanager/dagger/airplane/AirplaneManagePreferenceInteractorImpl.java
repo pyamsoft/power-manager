@@ -17,10 +17,10 @@
 package com.pyamsoft.powermanager.dagger.airplane;
 
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class AirplaneManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class AirplaneManagePreferenceInteractorImpl extends ManagePreferenceInteractorImpl {
 
   @Inject AirplaneManagePreferenceInteractorImpl(PowerManagerPreferences preferences) {
     super(preferences);

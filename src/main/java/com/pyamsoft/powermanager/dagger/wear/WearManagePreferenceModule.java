@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.wear;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,16 +29,16 @@ import rx.Scheduler;
 @Module public class WearManagePreferenceModule {
 
   @Provides @Named("wear_manage_pref")
-  BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
-      @Named("wear_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
+  ManagePreferencePresenter provideDozeManagePreferencePresenter(
+      @Named("wear_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_wear_manage") BooleanInterestObserver manageObserver) {
-    return new WearManagePreferencePresenter(interactor, obsScheduler, subScheduler,
+    return new WearManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver);
   }
 
   @Provides @Named("wear_manage_pref_interactor")
-  BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
+  ManagePreferenceInteractor provideDozeManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new WearManagePreferenceInteractorImpl(preferences);
   }

@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class WifiManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class WifiManagePreferenceInteractorImpl extends ManagePreferenceInteractorImpl {
 
   @Inject WifiManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

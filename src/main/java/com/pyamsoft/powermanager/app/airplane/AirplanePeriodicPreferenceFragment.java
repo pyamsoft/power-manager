@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.app.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
-import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class AirplanePeriodicPreferenceFragment extends BasePeriodicPreferenceFragment {
+public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_airplane;
@@ -49,7 +49,7 @@ public class AirplanePeriodicPreferenceFragment extends BasePeriodicPreferenceFr
   }
 
   @NonNull @Override
-  protected PersistLoader<BasePeriodPreferencePresenter> createPresenterLoader() {
+  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new AirplanePeriodPresenterLoader();
   }
 }

@@ -18,21 +18,21 @@ package com.pyamsoft.powermanager.app.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class AirplaneManagePresenterLoader extends PersistLoader<BaseManagePreferencePresenter> {
+public class AirplaneManagePresenterLoader extends PersistLoader<ManagePreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("airplane_manage_pref")
-  Provider<BaseManagePreferencePresenter> presenterProvider;
+  Provider<ManagePreferencePresenter> presenterProvider;
 
   AirplaneManagePresenterLoader() {
   }
 
-  @NonNull @Override public BaseManagePreferencePresenter loadPersistent() {
+  @NonNull @Override public ManagePreferencePresenter loadPersistent() {
     PowerManagerSingleInitProvider.get()
         .provideComponent()
         .plusAirplaneScreenComponent()

@@ -21,13 +21,13 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
-public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull static final String TAG = "DozeManagePreferenceFragment";
 
@@ -36,7 +36,7 @@ public class DozeManagePreferenceFragment extends BaseManagePreferenceFragment {
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new DozePresenterLoader();
   }
 

@@ -18,18 +18,18 @@ package com.pyamsoft.powermanager.app.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
-public class WifiManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void injectDependencies() {
 
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new WifiManagePresenterLoader();
   }
 

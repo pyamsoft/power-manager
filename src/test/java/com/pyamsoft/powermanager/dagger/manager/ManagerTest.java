@@ -33,12 +33,12 @@ public class ManagerTest {
 
   // Even though these are for Wifi, the same code should be running for each of the device components
   // so testing against just Wifi "should" be fine
-  @Mock ManagerWifiInteractor interactor;
-  private ManagerWifi manager;
+  @Mock ManagerWifiInteractorImpl interactor;
+  private ManagerWifiImpl manager;
 
   @Before public void setUp() {
-    interactor = Mockito.mock(ManagerWifiInteractor.class);
-    manager = new ManagerWifi(interactor, Schedulers.immediate(), Schedulers.immediate());
+    interactor = Mockito.mock(ManagerWifiInteractorImpl.class);
+    manager = new ManagerWifiImpl(interactor, Schedulers.immediate(), Schedulers.immediate());
   }
 
   /**

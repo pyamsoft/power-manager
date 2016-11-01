@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class DataManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class DataManagePreferenceInteractorImpl extends ManagePreferenceInteractorImpl {
 
   @Inject DataManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

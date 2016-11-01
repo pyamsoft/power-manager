@@ -19,19 +19,19 @@ package com.pyamsoft.powermanager.app.airplane;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import timber.log.Timber;
 
-public class AirplaneManagePreferenceFragment extends BaseManagePreferenceFragment {
+public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void injectDependencies() {
 
   }
 
   @NonNull @Override
-  protected PersistLoader<BaseManagePreferencePresenter> createPresenterLoader() {
+  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new AirplaneManagePresenterLoader();
   }
 

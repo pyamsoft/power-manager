@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
+class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapperImpl {
 
   @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";

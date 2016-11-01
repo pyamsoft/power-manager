@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,16 +29,16 @@ import rx.Scheduler;
 @Module public class AirplanePeriodPreferenceModule {
 
   @Provides @Named("airplane_period_pref")
-  BasePeriodPreferencePresenter provideAirplaneManagePreferencePresenter(
-      @Named("airplane_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
+  PeriodPreferencePresenter provideAirplaneManagePreferencePresenter(
+      @Named("airplane_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_airplane_periodic") BooleanInterestObserver periodicObserver) {
-    return new AirplanePeriodPreferencePresenter(interactor, obsScheduler, subScheduler,
+    return new AirplanePeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         periodicObserver);
   }
 
   @Provides @Named("airplane_period_pref_interactor")
-  BasePeriodPreferenceInteractor provideAirplaneManagePreferenceInteractor(
+  PeriodPreferenceInteractor provideAirplaneManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new AirplanePeriodPreferenceInteractorImpl(preferences);
   }

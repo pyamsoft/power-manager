@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,8 +29,8 @@ import rx.Scheduler;
 @Module public class WifiPeriodPreferenceModule {
 
   @Provides @Named("wifi_period_pref")
-  BasePeriodPreferencePresenter provideWifiManagePreferencePresenter(
-      @Named("wifi_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
+  PeriodPreferencePresenter provideWifiManagePreferencePresenter(
+      @Named("wifi_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_wifi_periodic") BooleanInterestObserver periodicObserver) {
     return new WifiPeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
@@ -38,7 +38,7 @@ import rx.Scheduler;
   }
 
   @Provides @Named("wifi_period_pref_interactor")
-  BasePeriodPreferenceInteractor provideWifiManagePreferenceInteractor(
+  PeriodPreferenceInteractor provideWifiManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new WifiPeriodPreferenceInteractorImpl(preferences);
   }

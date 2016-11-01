@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.dagger.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.dagger.base.BaseOverviewPagerPresenterImpl;
+import com.pyamsoft.powermanager.dagger.base.OverviewPagerPresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class AirplaneOverviewPresenterImpl extends BaseOverviewPagerPresenterImpl {
+class AirplaneOverviewPresenterImpl extends OverviewPagerPresenterImpl {
 
   @Inject AirplaneOverviewPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {

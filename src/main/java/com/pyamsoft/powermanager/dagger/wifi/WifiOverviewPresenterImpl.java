@@ -18,11 +18,11 @@ package com.pyamsoft.powermanager.dagger.wifi;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.dagger.base.BaseOverviewPagerPresenterImpl;
+import com.pyamsoft.powermanager.dagger.base.OverviewPagerPresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class WifiOverviewPresenterImpl extends BaseOverviewPagerPresenterImpl {
+class WifiOverviewPresenterImpl extends OverviewPagerPresenterImpl {
 
   @Inject WifiOverviewPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
