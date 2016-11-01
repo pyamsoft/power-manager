@@ -25,36 +25,37 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class BaseRootManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+public abstract class BasePermissionManagePreferencePresenter
+    extends BaseManagePreferencePresenterImpl {
 
-  @NonNull private final PermissionObserver rootPermissionObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootPermissionSubscription =
+  @NonNull private final PermissionObserver permissionObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription permissionSubscription =
       Subscriptions.empty();
 
-  protected BaseRootManagePreferencePresenter(
+  protected BasePermissionManagePreferencePresenter(
       @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver,
-      @NonNull PermissionObserver rootPermissionObserver) {
+      @NonNull PermissionObserver permissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
-    this.rootPermissionObserver = rootPermissionObserver;
+    this.permissionObserver = permissionObserver;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
+    SubscriptionHelper.unsubscribe(permissionSubscription);
   }
 
   @Override public void checkManagePermission() {
-    SubscriptionHelper.unsubscribe(rootPermissionSubscription);
-    rootPermissionSubscription = rootPermissionObserver.hasPermission()
+    SubscriptionHelper.unsubscribe(permissionSubscription);
+    permissionSubscription = permissionObserver.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {
-          Timber.d("Root permission granted? %s", hasPermission);
+          Timber.d("Permission granted? %s", hasPermission);
           getView(view -> view.onManagePermissionCallback(hasPermission));
         }, throwable -> {
-          Timber.e(throwable, "onError checkRootPermission");
+          Timber.e(throwable, "onError checkManagePermission");
           getView(view -> view.onManagePermissionCallback(false));
-        }, () -> SubscriptionHelper.unsubscribe(rootPermissionSubscription));
+        }, () -> SubscriptionHelper.unsubscribe(permissionSubscription));
   }
 }

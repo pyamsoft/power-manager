@@ -20,44 +20,17 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.powermanager.dagger.base.BasePermissionManagePreferencePresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
-import timber.log.Timber;
 
-class DozeManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
-
-  @NonNull private final PermissionObserver dozePermissionObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozePermissionSubscription =
-      Subscriptions.empty();
+class DozeManagePreferencePresenter extends BasePermissionManagePreferencePresenter {
 
   @Inject DozeManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver,
       @NonNull PermissionObserver dozePermissionObserver) {
-    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
-    this.dozePermissionObserver = dozePermissionObserver;
-  }
-
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    SubscriptionHelper.unsubscribe(dozePermissionSubscription);
-  }
-
-  @Override public void checkManagePermission() {
-    SubscriptionHelper.unsubscribe(dozePermissionSubscription);
-    dozePermissionSubscription = dozePermissionObserver.hasPermission()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(hasPermission -> {
-          Timber.d("Doze permission granted? %s", hasPermission);
-          getView(view -> view.onManagePermissionCallback(hasPermission));
-        }, throwable -> {
-          Timber.e(throwable, "onError checkDozePermission");
-          getView(view -> view.onManagePermissionCallback(false));
-        }, () -> SubscriptionHelper.unsubscribe(dozePermissionSubscription));
+    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver,
+        dozePermissionObserver);
   }
 }

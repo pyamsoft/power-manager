@@ -20,11 +20,11 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.base.BaseRootManagePreferencePresenter;
+import com.pyamsoft.powermanager.dagger.base.BasePermissionManagePreferencePresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class AirplaneManagePreferencePresenter extends BaseRootManagePreferencePresenter {
+class AirplaneManagePreferencePresenter extends BasePermissionManagePreferencePresenter {
 
   @Inject AirplaneManagePreferencePresenter(
       @NonNull BaseManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
