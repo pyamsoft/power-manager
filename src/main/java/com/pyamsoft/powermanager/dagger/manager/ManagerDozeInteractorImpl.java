@@ -50,19 +50,16 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     return getPreferences().getDozeDelay();
   }
 
-  // KLUDGE Should Doze be periodic too? The system already makes it so
   @Override @CheckResult protected boolean isPeriodic() {
-    return false;
+    return getPreferences().isPeriodicDoze();
   }
 
-  // KLUDGE Should Doze be periodic too? The system already makes it so
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return 0;
+    return getPreferences().getPeriodicEnableTimeDoze();
   }
 
-  // KLUDGE Should Doze be periodic too? The system already makes it so
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return 0;
+    return getPreferences().getPeriodicDisableTimeDoze();
   }
 
   @NonNull @Override protected String getJobTag() {

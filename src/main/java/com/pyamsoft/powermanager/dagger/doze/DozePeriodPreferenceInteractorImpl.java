@@ -16,21 +16,14 @@
 
 package com.pyamsoft.powermanager.dagger.doze;
 
-import com.pyamsoft.powermanager.app.doze.DozeFragment;
-import com.pyamsoft.powermanager.app.doze.DozeManagePresenterLoader;
-import com.pyamsoft.powermanager.app.doze.DozeOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.doze.DozePeriodPresenterLoader;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractorImpl;
+import javax.inject.Inject;
 
-@Subcomponent(modules = {
-    DozeOverviewModule.class, DozeManagePreferenceModule.class, DozePeriodPreferenceModule.class
-}) public interface DozeScreenComponent {
+class DozePeriodPreferenceInteractorImpl extends PeriodPreferenceInteractorImpl {
 
-  void inject(DozeFragment fragment);
-
-  void inject(DozeOverviewPresenterLoader loader);
-
-  void inject(DozeManagePresenterLoader loader);
-
-  void inject(DozePeriodPresenterLoader loader);
+  @Inject DozePeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+    super(preferences);
+  }
 }

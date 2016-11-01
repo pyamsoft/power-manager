@@ -18,30 +18,28 @@ package com.pyamsoft.powermanager.dagger.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class DozeManagePreferenceModule {
+@Module public class DozePeriodPreferenceModule {
 
-  @Provides @Named("doze_manage_pref")
-  ManagePreferencePresenter provideDozeManagePreferencePresenter(
-      @Named("doze_manage_pref_interactor") ManagePreferenceInteractor interactor,
+  @Provides @Named("doze_period_pref")
+  PeriodPreferencePresenter provideDozeManagePreferencePresenter(
+      @Named("doze_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new DozeManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
-        manageObserver, rootPermissionObserver);
+      @Named("obs_doze_periodic") BooleanInterestObserver periodicObserver) {
+    return new DozePeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+        periodicObserver);
   }
 
-  @Provides @Named("doze_manage_pref_interactor")
-  ManagePreferenceInteractor provideDozeManagePreferenceInteractor(
+  @Provides @Named("doze_period_pref_interactor")
+  PeriodPreferenceInteractor provideDozeManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeManagePreferenceInteractorImpl(preferences);
+    return new DozePeriodPreferenceInteractorImpl(preferences);
   }
 }

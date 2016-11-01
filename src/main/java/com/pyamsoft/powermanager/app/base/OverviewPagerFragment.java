@@ -68,8 +68,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
                 return getPresenterLoader();
               }
 
-              @Override
-              public void onPersistentLoaded(@NonNull OverviewPagerPresenter persist) {
+              @Override public void onPersistentLoaded(@NonNull OverviewPagerPresenter persist) {
                 presenter = persist;
               }
             });
@@ -253,11 +252,16 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   }
 
   private void loadDrawableIntoFab(@DrawableRes int fabIcon) {
-    final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
-        .load(fabIcon)
-        .tint(android.R.color.white)
-        .into(binding.preferenceContainerFab);
-    asyncDrawableMap.put("fab", subscription);
+    if (fabIcon == 0) {
+      Timber.w("Icon is 0, hiding FAB");
+      binding.preferenceContainerFab.setVisibility(View.GONE);
+    } else {
+      final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
+          .load(fabIcon)
+          .tint(android.R.color.white)
+          .into(binding.preferenceContainerFab);
+      asyncDrawableMap.put("fab", subscription);
+    }
   }
 
   @CheckResult @NonNull FloatingActionButton getFabTarget() {

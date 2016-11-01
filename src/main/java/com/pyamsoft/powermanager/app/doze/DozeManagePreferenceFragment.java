@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.app.doze;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
@@ -29,47 +28,28 @@ import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull static final String TAG = "DozeManagePreferenceFragment";
-
   @Override protected void injectDependencies() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
+
   }
 
-  @NonNull @Override
-  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
-    return new DozePresenterLoader();
+  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+    return new DozeManagePresenterLoader();
   }
 
   @Override protected int getManageKeyResId() {
     return R.string.manage_doze_key;
   }
 
-  /**
-   * Because this module has no Custom time ability, these are reversed so that the logic stays put
-   */
   @Override protected int getPresetTimeKeyResId() {
-    return R.string.doze_time_key;
+    return R.string.preset_delay_doze_key;
   }
 
-  /**
-   * Because this module has no Custom time ability, these are reversed so that the logic stays put
-   */
   @Override protected int getTimeKeyResId() {
-    return R.string.preset_delay_doze_key;
+    return R.string.doze_time_key;
   }
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_doze;
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    onSelected();
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    onUnselected();
   }
 
   @Override protected boolean checkManagePermission() {

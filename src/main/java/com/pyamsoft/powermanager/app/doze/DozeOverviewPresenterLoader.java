@@ -18,21 +18,21 @@ package com.pyamsoft.powermanager.app.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
-import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class DozePresenterLoader extends PersistLoader<ManagePreferencePresenter> {
+public class DozeOverviewPresenterLoader extends PersistLoader<OverviewPagerPresenter> {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("doze_manage_pref")
-  Provider<ManagePreferencePresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("doze_overview") Provider<OverviewPagerPresenter>
+      presenterProvider;
 
-  DozePresenterLoader() {
+  DozeOverviewPresenterLoader() {
   }
 
-  @NonNull @Override public ManagePreferencePresenter loadPersistent() {
+  @NonNull @Override public OverviewPagerPresenter loadPersistent() {
     PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
     return presenterProvider.get();
   }

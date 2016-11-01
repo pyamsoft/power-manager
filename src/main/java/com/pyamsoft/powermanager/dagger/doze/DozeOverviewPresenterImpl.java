@@ -16,21 +16,16 @@
 
 package com.pyamsoft.powermanager.dagger.doze;
 
-import com.pyamsoft.powermanager.app.doze.DozeFragment;
-import com.pyamsoft.powermanager.app.doze.DozeManagePresenterLoader;
-import com.pyamsoft.powermanager.app.doze.DozeOverviewPresenterLoader;
-import com.pyamsoft.powermanager.app.doze.DozePeriodPresenterLoader;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.dagger.base.OverviewPagerPresenterImpl;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-@Subcomponent(modules = {
-    DozeOverviewModule.class, DozeManagePreferenceModule.class, DozePeriodPreferenceModule.class
-}) public interface DozeScreenComponent {
+class DozeOverviewPresenterImpl extends OverviewPagerPresenterImpl {
 
-  void inject(DozeFragment fragment);
-
-  void inject(DozeOverviewPresenterLoader loader);
-
-  void inject(DozeManagePresenterLoader loader);
-
-  void inject(DozePeriodPresenterLoader loader);
+  @Inject DozeOverviewPresenterImpl(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
+    super(observeScheduler, subscribeScheduler, modifier);
+  }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.preference.airplane;
+package com.pyamsoft.powermanager.app.preference.doze;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -26,30 +26,30 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class AirplaneDelayPreference extends CustomTimeInputPreference {
+public class DozeEnableTimePreference extends CustomTimeInputPreference {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("airplane_custom_delay")
+  @SuppressWarnings("WeakerAccess") @Inject @Named("doze_custom_enable")
   CustomTimeInputPreferencePresenter presenter;
 
-  public AirplaneDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public DozeEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public AirplaneDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public DozeEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public AirplaneDelayPreference(Context context, AttributeSet attrs) {
+  public DozeEnableTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public AirplaneDelayPreference(Context context) {
+  public DozeEnableTimePreference(Context context) {
     super(context);
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Airplane Mode off delay time: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current Doze enable time period: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
