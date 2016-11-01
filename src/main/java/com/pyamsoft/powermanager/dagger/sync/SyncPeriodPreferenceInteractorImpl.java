@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class SyncPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+class SyncPeriodPreferenceInteractorImpl extends PeriodPreferenceInteractorImpl {
 
   @Inject SyncPeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

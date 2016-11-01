@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,16 +29,16 @@ import rx.Scheduler;
 @Module public class SyncPeriodPreferenceModule {
 
   @Provides @Named("sync_period_pref")
-  BasePeriodPreferencePresenter provideSyncManagePreferencePresenter(
-      @Named("sync_period_pref_interactor") BasePeriodPreferenceInteractor interactor,
+  PeriodPreferencePresenter provideSyncManagePreferencePresenter(
+      @Named("sync_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_sync_periodic") BooleanInterestObserver periodicObserver) {
-    return new SyncPeriodPreferencePresenter(interactor, obsScheduler, subScheduler,
+    return new SyncPeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         periodicObserver);
   }
 
   @Provides @Named("sync_period_pref_interactor")
-  BasePeriodPreferenceInteractor provideSyncManagePreferenceInteractor(
+  PeriodPreferenceInteractor provideSyncManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new SyncPeriodPreferenceInteractorImpl(preferences);
   }

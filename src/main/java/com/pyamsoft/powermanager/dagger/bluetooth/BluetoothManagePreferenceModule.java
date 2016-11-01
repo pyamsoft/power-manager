@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.dagger.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,16 +29,16 @@ import rx.Scheduler;
 @Module public class BluetoothManagePreferenceModule {
 
   @Provides @Named("bluetooth_manage_pref")
-  BaseManagePreferencePresenter provideBluetoothManagePreferencePresenter(
-      @Named("bluetooth_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
+  ManagePreferencePresenter provideBluetoothManagePreferencePresenter(
+      @Named("bluetooth_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver) {
-    return new BluetoothManagePreferencePresenter(interactor, obsScheduler, subScheduler,
+    return new BluetoothManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver);
   }
 
   @Provides @Named("bluetooth_manage_pref_interactor")
-  BaseManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
+  ManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManagePreferenceInteractorImpl(preferences);
   }

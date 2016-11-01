@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.airplane;
 
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import dagger.Module;
 import dagger.Provides;
@@ -25,8 +25,7 @@ import rx.Scheduler;
 
 @Module public class AirplaneOverviewModule {
 
-  @Provides @Named("airplane_overview")
-  BaseOverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
+  @Provides @Named("airplane_overview") OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
       @Named("mod_airplane_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new AirplaneOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);

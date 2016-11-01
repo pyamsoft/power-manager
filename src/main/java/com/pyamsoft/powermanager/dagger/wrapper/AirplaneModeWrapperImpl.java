@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapper {
+class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapperImpl {
 
   @NonNull private static final String AIRPLANE_SETTINGS_COMMAND =
       "settings put global airplane_mode_on ";

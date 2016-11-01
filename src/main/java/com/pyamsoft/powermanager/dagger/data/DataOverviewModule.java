@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.data;
 
-import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import dagger.Module;
 import dagger.Provides;
@@ -25,7 +25,7 @@ import rx.Scheduler;
 
 @Module public class DataOverviewModule {
 
-  @Provides @Named("data_overview") BaseOverviewPagerPresenter provideDataOverviewPagerPresenter(
+  @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
       @Named("mod_data_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new DataOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);

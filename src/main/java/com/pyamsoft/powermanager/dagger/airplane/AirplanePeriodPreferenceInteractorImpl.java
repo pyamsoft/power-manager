@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class AirplanePeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+class AirplanePeriodPreferenceInteractorImpl extends PeriodPreferenceInteractorImpl {
 
   @Inject AirplanePeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

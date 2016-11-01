@@ -18,21 +18,21 @@ package com.pyamsoft.powermanager.app.airplane;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
-import com.pyamsoft.powermanager.app.base.BasePagerAdapter;
-import com.pyamsoft.powermanager.app.base.BasePeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.app.base.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
+import com.pyamsoft.powermanager.app.base.PeriodicPreferenceFragment;
 
-class AirplanePagerAdapter extends BasePagerAdapter {
+class AirplanePagerAdapter extends ModulePagerAdapter {
 
   AirplanePagerAdapter(FragmentManager fm) {
     super(fm);
   }
 
-  @NonNull @Override protected BaseManagePreferenceFragment getManageFragment() {
+  @NonNull @Override protected ManagePreferenceFragment getManageFragment() {
     return new AirplaneManagePreferenceFragment();
   }
 
-  @NonNull @Override protected BasePeriodicPreferenceFragment getPeriodicFragment() {
+  @NonNull @Override protected PeriodicPreferenceFragment getPeriodicFragment() {
     return new AirplanePeriodicPreferenceFragment();
   }
 }

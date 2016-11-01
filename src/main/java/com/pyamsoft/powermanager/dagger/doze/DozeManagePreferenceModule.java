@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
+import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -30,17 +30,17 @@ import rx.Scheduler;
 @Module public class DozeManagePreferenceModule {
 
   @Provides @Named("doze_manage_pref")
-  BaseManagePreferencePresenter provideDozeManagePreferencePresenter(
-      @Named("doze_manage_pref_interactor") BaseManagePreferenceInteractor interactor,
+  ManagePreferencePresenter provideDozeManagePreferencePresenter(
+      @Named("doze_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new DozeManagePreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver,
+    return new DozeManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler, manageObserver,
         dozePermissionObserver);
   }
 
   @Provides @Named("doze_manage_pref_interactor")
-  BaseManagePreferenceInteractor provideDozeManagePreferenceInteractor(
+  ManagePreferenceInteractor provideDozeManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new DozeManagePreferenceInteractorImpl(preferences);
   }

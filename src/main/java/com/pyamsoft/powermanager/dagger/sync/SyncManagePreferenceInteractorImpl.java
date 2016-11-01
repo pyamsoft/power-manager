@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class SyncManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class SyncManagePreferenceInteractorImpl extends ManagePreferenceInteractorImpl {
 
   @Inject SyncManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

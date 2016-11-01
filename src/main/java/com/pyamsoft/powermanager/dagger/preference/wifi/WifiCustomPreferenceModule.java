@@ -32,13 +32,13 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiDelayPreferencePresenter(interactor, obsScheduler, computationScheduler);
+    return new WifiDelayPreferencePresenterImpl(interactor, obsScheduler, computationScheduler);
   }
 
   @Provides @Named("wifi_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new WifiDelayPreferenceInteractor(preferences);
+    return new WifiDelayPreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("wifi_custom_enable")
@@ -46,13 +46,13 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiEnableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
+    return new WifiEnableTimePreferencePresenterImpl(interactor, obsScheduler, computationScheduler);
   }
 
   @Provides @Named("wifi_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new WifiEnableTimePreferenceInteractor(preferences);
+    return new WifiEnableTimePreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("wifi_custom_disable")
@@ -60,12 +60,12 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiDisableTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
+    return new WifiDisableTimePreferencePresenterImpl(interactor, obsScheduler, computationScheduler);
   }
 
   @Provides @Named("wifi_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideWifiCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new WifiDisableTimePreferenceInteractor(preferences);
+    return new WifiDisableTimePreferenceInteractorImpl(preferences);
   }
 }

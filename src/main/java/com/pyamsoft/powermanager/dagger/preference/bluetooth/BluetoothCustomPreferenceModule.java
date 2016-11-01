@@ -32,13 +32,13 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothDelayPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new BluetoothDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideBluetoothCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothDelayPreferenceInteractor(preferences);
+    return new BluetoothDelayPreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("bluetooth_custom_enable")
@@ -46,13 +46,13 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothEnableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new BluetoothEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideBluetoothCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothEnableTimePreferenceInteractor(preferences);
+    return new BluetoothEnableTimePreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("bluetooth_custom_disable")
@@ -60,12 +60,12 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothDisableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new BluetoothDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideBluetoothCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothDisableTimePreferenceInteractor(preferences);
+    return new BluetoothDisableTimePreferenceInteractorImpl(preferences);
   }
 }

@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.dagger.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BasePeriodPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class BluetoothPeriodPreferenceInteractorImpl extends BasePeriodPreferenceInteractorImpl {
+class BluetoothPeriodPreferenceInteractorImpl extends PeriodPreferenceInteractorImpl {
 
   @Inject BluetoothPeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

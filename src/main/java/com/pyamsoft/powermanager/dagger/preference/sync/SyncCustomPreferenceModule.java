@@ -32,13 +32,13 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncDelayPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new SyncDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_delay_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncDelayPreferenceInteractor(preferences);
+    return new SyncDelayPreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("sync_custom_enable")
@@ -46,13 +46,13 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncEnableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new SyncEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_enable_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncEnableTimePreferenceInteractor(preferences);
+    return new SyncEnableTimePreferenceInteractorImpl(preferences);
   }
 
   @Provides @Named("sync_custom_disable")
@@ -60,12 +60,12 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncDisableTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new SyncDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_disable_interactor")
   CustomTimeInputPreferenceInteractor provideSyncCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncDisableTimePreferenceInteractor(preferences);
+    return new SyncDisableTimePreferenceInteractorImpl(preferences);
   }
 }

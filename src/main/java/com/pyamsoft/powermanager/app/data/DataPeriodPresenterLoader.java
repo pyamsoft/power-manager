@@ -18,21 +18,21 @@ package com.pyamsoft.powermanager.app.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
-import com.pyamsoft.powermanager.app.base.BasePeriodPreferencePresenter;
+import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class DataPeriodPresenterLoader extends PersistLoader<BasePeriodPreferencePresenter> {
+public class DataPeriodPresenterLoader extends PersistLoader<PeriodPreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("data_period_pref")
-  Provider<BasePeriodPreferencePresenter> presenterProvider;
+  Provider<PeriodPreferencePresenter> presenterProvider;
 
   DataPeriodPresenterLoader() {
   }
 
-  @NonNull @Override public BasePeriodPreferencePresenter loadPersistent() {
+  @NonNull @Override public PeriodPreferencePresenter loadPersistent() {
     PowerManagerSingleInitProvider.get().provideComponent().plusDataScreenComponent().inject(this);
     return presenterProvider.get();
   }

@@ -17,10 +17,10 @@
 package com.pyamsoft.powermanager.dagger.bluetooth;
 
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractorImpl;
+import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractorImpl;
 import javax.inject.Inject;
 
-class BluetoothManagePreferenceInteractorImpl extends BaseManagePreferenceInteractorImpl {
+class BluetoothManagePreferenceInteractorImpl extends ManagePreferenceInteractorImpl {
 
   @Inject BluetoothManagePreferenceInteractorImpl(PowerManagerPreferences preferences) {
     super(preferences);

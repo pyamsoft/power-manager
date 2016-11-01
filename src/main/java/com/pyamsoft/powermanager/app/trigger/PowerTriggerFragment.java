@@ -21,9 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
+import com.pyamsoft.powermanager.app.base.OverviewSingleItemFragment;
 
-public class PowerTriggerFragment extends BaseOverviewSingleItemFragment {
+public class PowerTriggerFragment extends OverviewSingleItemFragment {
 
   @NonNull public static final String TAG = "Power Triggers";
 

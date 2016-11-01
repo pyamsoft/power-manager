@@ -21,10 +21,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.BaseOverviewSingleItemFragment;
+import com.pyamsoft.powermanager.app.base.OverviewSingleItemFragment;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 
-public class SettingsFragment extends BaseOverviewSingleItemFragment {
+public class SettingsFragment extends OverviewSingleItemFragment {
 
   @NonNull public static final String TAG = "Settings";
 
