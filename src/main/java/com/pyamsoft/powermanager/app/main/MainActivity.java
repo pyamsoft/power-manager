@@ -35,8 +35,10 @@ import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
@@ -188,6 +190,7 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
         && fragmentManager.findFragmentByTag(SyncFragment.TAG) == null
         && fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null
         && fragmentManager.findFragmentByTag(DozeFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(AirplaneFragment.TAG) == null
         && fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null
         && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null;
   }

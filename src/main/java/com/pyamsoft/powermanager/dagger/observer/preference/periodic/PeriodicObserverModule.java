@@ -53,4 +53,9 @@ import javax.inject.Singleton;
       @NonNull PowerManagerPreferences preferences) {
     return new AirplanePeriodicObserver(context, preferences);
   }
+
+  @Singleton @Named("obs_doze_periodic") @Provides BooleanInterestObserver provideDozeObserver(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    return new DozePeriodicObserver(context, preferences);
+  }
 }

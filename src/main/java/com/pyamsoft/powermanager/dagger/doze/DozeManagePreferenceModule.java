@@ -29,17 +29,17 @@ import rx.Scheduler;
 
 @Module public class DozeManagePreferenceModule {
 
-  @Provides @Named("data_manage_pref")
+  @Provides @Named("doze_manage_pref")
   ManagePreferencePresenter provideDozeManagePreferencePresenter(
-      @Named("data_manage_pref_interactor") ManagePreferenceInteractor interactor,
+      @Named("doze_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_data_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new DozeManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver, rootPermissionObserver);
   }
 
-  @Provides @Named("data_manage_pref_interactor")
+  @Provides @Named("doze_manage_pref_interactor")
   ManagePreferenceInteractor provideDozeManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new DozeManagePreferenceInteractorImpl(preferences);
