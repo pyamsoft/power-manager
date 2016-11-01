@@ -128,7 +128,7 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageBluetoothDefault = getResources().getBoolean(R.bool.manage_bluetooth_default);
     manageSyncDefault = getResources().getBoolean(R.bool.manage_sync_default);
     manageAirplaneDefault = getResources().getBoolean(R.bool.manage_airplane_default);
-    manageDozeDefault = getResources().getBoolean(R.bool.doze_default);
+    manageDozeDefault = getResources().getBoolean(R.bool.manage_doze_default);
 
     delayDoze = getResources().getString(R.string.doze_time_key);
     delayAirplane = getResources().getString(R.string.airplane_time_key);

@@ -95,4 +95,10 @@
   <string name="ignore_charging_doze_summary_checked">Ignore Doze even while the device is charging</string>
   <string name="ignore_charging_doze_summary_unchecked">Manage Doze while device is charging</string>
 
+  <bool name="exclusive_doze_default">false</bool>
+  <string name="exclusive_doze_key">exclusive_doze</string>
+  <string name="exclusive_doze_title">Exclusive Doze</string>
+  <string name="exclusive_doze_summary_checked">All radios will be managed by Doze state instead of individually (Marshmallow only)</string>
+  <string name="exclusive_doze_summary_unchecked">All radios will be managed individually as normal instead of by Doze state</string>
+
 </resources>
