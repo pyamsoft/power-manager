@@ -50,11 +50,6 @@ If you know a few things about Android programming and are wanting to help
 out with development you can do so by creating issue tickets to squash bugs,  
 and propose feature requests for future inclusion.
 
-Power Manager has a publicly view able Trello board available at:  
-```
-https://trello.com/b/44nuGT7D
-```
-
 # Issues or Questions
 
 Please post any issues with the code in the Issues section on GitHub. Pull  
