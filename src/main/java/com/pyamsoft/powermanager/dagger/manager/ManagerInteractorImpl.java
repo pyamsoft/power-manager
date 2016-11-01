@@ -82,10 +82,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     Timber.d("Queue new enable job");
     final JobType jobType;
     switch (getJobTag()) {
-      case ManagerAirplaneInteractorImpl.JOB_TAG:
+      case ManagerInteractor.AIRPLANE_JOB_TAG:
         jobType = JobType.TOGGLE_ENABLE;
         break;
-      case ManagerDozeInteractorImpl.JOB_TAG:
+      case ManagerInteractor.DOZE_JOB_TAG:
         jobType = JobType.TOGGLE_ENABLE;
         break;
       default:
@@ -101,10 +101,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     Timber.d("Queue new disable job");
     final JobType jobType;
     switch (getJobTag()) {
-      case ManagerAirplaneInteractorImpl.JOB_TAG:
+      case ManagerInteractor.AIRPLANE_JOB_TAG:
         jobType = JobType.TOGGLE_DISABLE;
         break;
-      case ManagerDozeInteractorImpl.JOB_TAG:
+      case ManagerInteractor.DOZE_JOB_TAG:
         jobType = JobType.TOGGLE_DISABLE;
         break;
       default:

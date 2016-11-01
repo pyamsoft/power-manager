@@ -28,34 +28,54 @@ public final class JobHelper {
     throw new RuntimeException("No instances");
   }
 
-  @CheckResult @NonNull
-  public static BaseJob createEnableJob(@NonNull JobType jobType,
+  @CheckResult @NonNull public static BaseJob createEnableJob(@NonNull JobType jobType,
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
     switch (jobType) {
       case ENABLE:
-        return createEnableManageJob(jobSchedulerCompat, tag, observer, modifier);
+        return createEnableManageJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer,
+            modifier);
       case TOGGLE_ENABLE:
-        return createEnableToggleJob(jobSchedulerCompat, tag, observer, modifier);
+        return createEnableToggleJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer,
+            modifier);
+      default:
+        throw new RuntimeException("Invalid enable job type");
+    }
+  }
+
+  static BaseJob createPeriodicEnableJob(@NonNull JobType jobType,
+      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+      long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
+    switch (jobType) {
+      case ENABLE:
+        return createEnableManageJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+      case TOGGLE_ENABLE:
+        return createEnableToggleJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
       default:
         throw new RuntimeException("Invalid enable job type");
     }
   }
 
   @CheckResult @NonNull private static EnableManageJob createEnableManageJob(
-      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeMillis,
+      boolean periodic, long periodicEnableSeconds, long periodicDisableSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return new EnableManageJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer, modifier);
+    return new EnableManageJob(jobSchedulerCompat, tag, delayTimeMillis, periodic,
+        periodicEnableSeconds, periodicDisableSeconds, observer, modifier);
   }
 
   @CheckResult @NonNull private static EnableToggleJob createEnableToggleJob(
-      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeMillis,
+      boolean periodic, long periodicEnableSeconds, long periodicDisableSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    return new EnableToggleJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer, modifier);
+    return new EnableToggleJob(jobSchedulerCompat, tag, delayTimeMillis, periodic,
+        periodicEnableSeconds, periodicDisableSeconds, observer, modifier);
   }
 
-  @CheckResult @NonNull
-  public static BaseJob createDisableJob(@NonNull JobType jobType,
+  @CheckResult @NonNull public static BaseJob createDisableJob(@NonNull JobType jobType,
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
@@ -69,6 +89,14 @@ public final class JobHelper {
       default:
         throw new RuntimeException("Invalid disable job type");
     }
+  }
+
+  @CheckResult @NonNull static BaseJob createPeriodicDisableJob(@NonNull JobType jobType,
+      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+      long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
+    return createDisableJob(jobType, jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L,
+        true, periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
   }
 
   @CheckResult @NonNull private static DisableManageJob createDisableManageJob(

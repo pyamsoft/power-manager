@@ -106,9 +106,8 @@ abstract class ManageJobImpl extends BaseJob {
 
   @CheckResult @NonNull private Job createPeriodicDisableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new DisableManageJob(getJobSchedulerCompat(), jobTag, periodicDisableInSeconds * 1000L,
-        true, periodicEnableInSeconds, periodicDisableInSeconds, interestObserver,
-        interestModifier);
+    return JobHelper.createPeriodicDisableJob(jobType, getJobSchedulerCompat(), jobTag,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 
   void internalDisable() {
@@ -133,8 +132,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   @CheckResult @NonNull
   private Job createPeriodicEnableJob(long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    return new EnableManageJob(getJobSchedulerCompat(), jobTag, periodicEnableInSeconds * 1000L,
-        true, periodicEnableInSeconds, periodicDisableInSeconds, interestObserver,
-        interestModifier);
+    return JobHelper.createPeriodicEnableJob(jobType, getJobSchedulerCompat(), jobTag,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 }
