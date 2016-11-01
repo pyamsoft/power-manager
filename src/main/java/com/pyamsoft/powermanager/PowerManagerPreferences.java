@@ -44,10 +44,6 @@ public interface PowerManagerPreferences {
 
   @CheckResult long getWearableDelay();
 
-  @CheckResult long getDozeDelay();
-
-  @CheckResult boolean isDozeManaged();
-
   @CheckResult boolean isIgnoreChargingAirplane();
 
   @CheckResult boolean isIgnoreChargingDoze();
@@ -59,6 +55,10 @@ public interface PowerManagerPreferences {
   @CheckResult boolean isIgnoreChargingBluetooth();
 
   @CheckResult boolean isIgnoreChargingSync();
+
+  @CheckResult long getDozeDelay();
+
+  void setDozeDelay(long time);
 
   @CheckResult long getWifiDelay();
 
@@ -82,6 +82,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult int getNotificationPriority();
 
+  @CheckResult boolean isDozeManaged();
+
   @CheckResult boolean isAirplaneManaged();
 
   @CheckResult boolean isWifiManaged();
@@ -96,6 +98,8 @@ public interface PowerManagerPreferences {
 
   void clearAll();
 
+  @CheckResult boolean isPeriodicDoze();
+
   @CheckResult boolean isPeriodicWifi();
 
   @CheckResult boolean isPeriodicData();
@@ -105,6 +109,10 @@ public interface PowerManagerPreferences {
   @CheckResult boolean isPeriodicSync();
 
   @CheckResult boolean isPeriodicAirplane();
+
+  @CheckResult long getPeriodicDisableTimeDoze();
+
+  void setPeriodicDisableTimeDoze(long time);
 
   @CheckResult long getPeriodicDisableTimeAirplane();
 
@@ -125,6 +133,10 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicDisableTimeSync();
 
   void setPeriodicDisableTimeSync(long time);
+
+  @CheckResult long getPeriodicEnableTimeDoze();
+
+  void setPeriodicEnableTimeDoze(long time);
 
   @CheckResult long getPeriodicEnableTimeAirplane();
 

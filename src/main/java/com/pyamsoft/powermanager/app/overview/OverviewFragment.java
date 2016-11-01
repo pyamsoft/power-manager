@@ -36,7 +36,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
-import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
 import com.pyamsoft.powermanager.app.sync.SyncFragment;

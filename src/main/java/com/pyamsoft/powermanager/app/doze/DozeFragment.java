@@ -18,14 +18,21 @@ package com.pyamsoft.powermanager.app.doze;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.View;
+import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.base.OverviewSingleItemFragment;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
+import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
+import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.pydroid.app.PersistLoader;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-public class DozeFragment extends OverviewSingleItemFragment {
+public class DozeFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Doze";
+  @Inject @Named("obs_doze_state") BooleanInterestObserver observer;
 
   @CheckResult @NonNull
   public static DozeFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -34,12 +41,28 @@ public class DozeFragment extends OverviewSingleItemFragment {
     return fragment;
   }
 
-  @NonNull @Override protected Fragment getPreferenceFragment() {
-    return new DozeManagePreferenceFragment();
+  @Override protected void injectObserverModifier() {
+    PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
   }
 
-  @NonNull @Override protected String getPreferenceTag() {
-    return DozeManagePreferenceFragment.TAG;
+  @NonNull @Override protected BooleanInterestObserver getObserver() {
+    return observer;
+  }
+
+  @NonNull @Override protected PersistLoader<OverviewPagerPresenter> getPresenterLoader() {
+    return new DozeOverviewPresenterLoader();
+  }
+
+  @Override protected int getFabSetIcon() {
+    return 0;
+  }
+
+  @Override protected int getFabUnsetIcon() {
+    return 0;
+  }
+
+  @NonNull @Override protected ModulePagerAdapter getPagerAdapter() {
+    return new DozePagerAdapter(getChildFragmentManager());
   }
 
   @Override protected int provideAppBarColor() {

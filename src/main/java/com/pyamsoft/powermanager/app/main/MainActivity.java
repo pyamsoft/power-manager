@@ -37,7 +37,6 @@ import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
-import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;

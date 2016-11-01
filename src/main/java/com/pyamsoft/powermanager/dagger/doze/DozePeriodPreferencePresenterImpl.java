@@ -18,19 +18,16 @@ package com.pyamsoft.powermanager.dagger.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.base.PermissionManagePreferencePresenterImpl;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.dagger.base.PeriodPreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class DozeManagePreferencePresenterImpl extends PermissionManagePreferencePresenterImpl {
+class DozePeriodPreferencePresenterImpl extends PeriodPreferencePresenterImpl {
 
-  @Inject DozeManagePreferencePresenterImpl(@NonNull ManagePreferenceInteractor manageInteractor,
+  @Inject DozePeriodPreferencePresenterImpl(@NonNull PeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver,
-      @NonNull PermissionObserver rootPermissionObserver) {
-    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver,
-        rootPermissionObserver);
+      @NonNull InterestObserver periodObserver) {
+    super(interactor, observeScheduler, subscribeScheduler, periodObserver);
   }
 }

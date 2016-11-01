@@ -15,29 +15,19 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
   <PreferenceCategory
       android:title="Doze Settings">
 
     <!--suppress AndroidElementNotAllowed -->
     <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
-        android:defaultValue="@bool/doze_default"
+        android:defaultValue="@bool/manage_doze_default"
         android:key="@string/manage_doze_key"
         android:summaryOff="@string/manage_doze_summary_unchecked"
         android:summaryOn="@string/manage_doze_summary_checked"
         android:title="@string/manage_doze_title"
-        />
-
-    <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
-        android:defaultValue="@string/doze_time_default"
-        android:dependency="@string/manage_doze_key"
-        android:entries="@array/preset_delay_doze_names"
-        android:entryValues="@array/preset_delay_doze_values"
-        android:key="@string/doze_time_key"
-        android:summary="@string/doze_time_summary"
-        android:title="@string/doze_time_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -50,15 +40,25 @@
         android:title="@string/ignore_charging_doze_title"
         />
 
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:title="Doze Delay">
+
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
-        android:defaultValue="@bool/exclusive_doze_default"
+    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+        android:defaultValue="@string/doze_time_default"
         android:dependency="@string/manage_doze_key"
-        android:key="@string/exclusive_doze_key"
-        android:summaryOff="@string/exclusive_doze_summary_unchecked"
-        android:summaryOn="@string/exclusive_doze_summary_checked"
-        android:title="@string/exclusive_doze_title"
+        android:entries="@array/preset_delay_doze_names"
+        android:entryValues="@array/preset_delay_doze_values"
+        android:key="@string/preset_delay_doze_key"
+        android:summary="@string/doze_time_summary"
+        android:title="@string/doze_time_title"
         />
+
+    <!--suppress AndroidElementNotAllowed -->
+    <com.pyamsoft.powermanager.app.preference.doze.DozeDelayPreference
+        android:key="@string/doze_time_key"/>
 
   </PreferenceCategory>
 

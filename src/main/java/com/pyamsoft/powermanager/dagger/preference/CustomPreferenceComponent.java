@@ -25,6 +25,9 @@ import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothEnableTimePre
 import com.pyamsoft.powermanager.app.preference.data.DataDelayPreference;
 import com.pyamsoft.powermanager.app.preference.data.DataDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.data.DataEnableTimePreference;
+import com.pyamsoft.powermanager.app.preference.doze.DozeDelayPreference;
+import com.pyamsoft.powermanager.app.preference.doze.DozeDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.doze.DozeEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.sync.SyncDelayPreference;
 import com.pyamsoft.powermanager.app.preference.sync.SyncDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.sync.SyncEnableTimePreference;
@@ -34,6 +37,7 @@ import com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference;
 import com.pyamsoft.powermanager.dagger.preference.airplane.AirplaneCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.bluetooth.BluetoothCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
+import com.pyamsoft.powermanager.dagger.preference.doze.DozeCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.sync.SyncCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.wifi.WifiCustomPreferenceModule;
 import dagger.Subcomponent;
@@ -41,7 +45,7 @@ import dagger.Subcomponent;
 @Subcomponent(modules = {
     WifiCustomPreferenceModule.class, DataCustomPreferenceModule.class,
     BluetoothCustomPreferenceModule.class, SyncCustomPreferenceModule.class,
-    AirplaneCustomPreferenceModule.class
+    AirplaneCustomPreferenceModule.class, DozeCustomPreferenceModule.class
 }) public interface CustomPreferenceComponent {
 
   void inject(WifiDelayPreference preference);
@@ -73,4 +77,10 @@ import dagger.Subcomponent;
   void inject(AirplaneEnableTimePreference preference);
 
   void inject(AirplaneDisableTimePreference preference);
+
+  void inject(DozeDelayPreference preference);
+
+  void inject(DozeEnableTimePreference preference);
+
+  void inject(DozeDisableTimePreference preference);
 }
