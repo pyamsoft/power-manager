@@ -22,6 +22,13 @@ import rx.Observable;
 
 interface ManagerInteractor {
 
+  @NonNull String DOZE_JOB_TAG = "doze_job";
+  @NonNull String AIRPLANE_JOB_TAG = "airplane_job";
+  @NonNull String WIFI_JOB_TAG = "wifi_job";
+  @NonNull String DATA_JOB_TAG = "data_job";
+  @NonNull String BLUETOOTH_JOB_TAG = "bluetooth_job";
+  @NonNull String SYNC_JOB_TAG = "sync_job";
+
   void destroy();
 
   @NonNull @CheckResult Observable<Boolean> cancelJobs();

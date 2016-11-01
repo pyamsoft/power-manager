@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     implements ExclusiveWearUnawareManagerInteractor {
@@ -63,7 +64,12 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "doze_jobs";
+    return DOZE_JOB_TAG;
+  }
+
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    Timber.d("Invert isEnabled for Doze");
+    return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

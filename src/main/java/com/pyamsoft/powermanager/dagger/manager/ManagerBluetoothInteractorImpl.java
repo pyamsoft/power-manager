@@ -54,7 +54,7 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "bluetooth_jobs";
+    return BLUETOOTH_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

@@ -51,7 +51,7 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "sync_jobs";
+    return SYNC_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

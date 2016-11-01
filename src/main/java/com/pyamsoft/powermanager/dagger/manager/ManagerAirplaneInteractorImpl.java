@@ -24,6 +24,7 @@ import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
 
@@ -64,7 +65,12 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "airplane_job";
+    return AIRPLANE_JOB_TAG;
+  }
+
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    Timber.d("Invert isEnabled for Airplane");
+    return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

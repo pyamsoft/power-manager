@@ -21,13 +21,13 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 
-class DisableJob extends ManageJobImpl {
+class EnableManageJob extends ManageJobImpl {
 
-  DisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
+  EnableManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds, @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier) {
-    super(jobSchedulerCompat, tag, JobType.DISABLE, delayInMilliseconds, periodic,
+    super(jobSchedulerCompat, tag, JobType.ENABLE, delayInMilliseconds, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 }

@@ -54,7 +54,7 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "wifi_jobs";
+    return WIFI_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {

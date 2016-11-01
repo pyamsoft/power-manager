@@ -63,10 +63,16 @@ abstract class ManageJobImpl extends BaseJob {
     Timber.d("Run job type: %s", jobType.name());
     switch (jobType) {
       case ENABLE:
-        internalEnable();
+        enable();
+        break;
+      case TOGGLE_ENABLE:
+        enable();
         break;
       case DISABLE:
-        internalDisable();
+        disable();
+        break;
+      case TOGGLE_DISABLE:
+        disable();
         break;
       default:
         throw new RuntimeException("Invalid job type: " + jobType.name());
@@ -78,11 +84,14 @@ abstract class ManageJobImpl extends BaseJob {
         && periodicEnableInSeconds >= MINIMUM_PERIOD_SECONDS;
   }
 
-  private void internalEnable() {
+  void internalEnable() {
     if (!interestObserver.is()) {
       interestModifier.set();
     }
+  }
 
+  private void enable() {
+    internalEnable();
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute (%s, %s)",
@@ -97,15 +106,19 @@ abstract class ManageJobImpl extends BaseJob {
 
   @CheckResult @NonNull private Job createPeriodicDisableJob(long periodicEnableInSeconds,
       long periodicDisableInSeconds) {
-    return new DisableJob(getJobSchedulerCompat(), jobTag, periodicDisableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+    return new DisableManageJob(getJobSchedulerCompat(), jobTag, periodicDisableInSeconds * 1000L,
+        true, periodicEnableInSeconds, periodicDisableInSeconds, interestObserver,
+        interestModifier);
   }
 
-  private void internalDisable() {
+  void internalDisable() {
     if (interestObserver.is()) {
       interestModifier.unset();
     }
+  }
 
+  private void disable() {
+    internalDisable();
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute (%s, %s)",
@@ -120,11 +133,8 @@ abstract class ManageJobImpl extends BaseJob {
 
   @CheckResult @NonNull
   private Job createPeriodicEnableJob(long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    return new EnableJob(getJobSchedulerCompat(), jobTag, periodicEnableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
-  }
-
-  enum JobType {
-    ENABLE, DISABLE
+    return new EnableManageJob(getJobSchedulerCompat(), jobTag, periodicEnableInSeconds * 1000L,
+        true, periodicEnableInSeconds, periodicDisableInSeconds, interestObserver,
+        interestModifier);
   }
 }

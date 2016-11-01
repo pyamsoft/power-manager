@@ -26,6 +26,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.dagger.job.JobHelper;
+import com.pyamsoft.powermanager.dagger.job.JobType;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -79,15 +80,39 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
+    final JobType jobType;
+    switch (getJobTag()) {
+      case ManagerAirplaneInteractorImpl.JOB_TAG:
+        jobType = JobType.TOGGLE_ENABLE;
+        break;
+      case ManagerDozeInteractorImpl.JOB_TAG:
+        jobType = JobType.TOGGLE_ENABLE;
+        break;
+      default:
+        jobType = JobType.ENABLE;
+    }
+
     final Job job =
-        JobHelper.createManagerEnableJob(jobManager, getJobTag(), stateObserver, stateModifier);
+        JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier);
     jobManager.addJobInBackground(job);
   }
 
   @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
+    final JobType jobType;
+    switch (getJobTag()) {
+      case ManagerAirplaneInteractorImpl.JOB_TAG:
+        jobType = JobType.TOGGLE_DISABLE;
+        break;
+      case ManagerDozeInteractorImpl.JOB_TAG:
+        jobType = JobType.TOGGLE_DISABLE;
+        break;
+      default:
+        jobType = JobType.DISABLE;
+    }
+
     final Job job =
-        JobHelper.createManagerDisableJob(jobManager, getJobTag(), getDelayTime() * 1000L,
+        JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
             stateModifier);
     jobManager.addJobInBackground(job);

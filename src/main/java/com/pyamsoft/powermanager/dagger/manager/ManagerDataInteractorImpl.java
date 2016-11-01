@@ -62,7 +62,7 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
   }
 
   @NonNull @Override protected String getJobTag() {
-    return "data_jobs";
+    return DATA_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
