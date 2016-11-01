@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import eu.chainfire.libsuperuser.Shell;
 import timber.log.Timber;
@@ -25,25 +26,23 @@ import timber.log.Timber;
 public class ShellCommandHelper {
 
   @NonNull private static final ShellCommandHelper INSTANCE = new ShellCommandHelper();
-  @NonNull private final Shell.Interactive shellSession;
-  @NonNull private final Shell.Interactive rootSession;
+  @Nullable private Shell.Interactive shellSession;
+  @Nullable private Shell.Interactive rootSession;
+  @Nullable private SuAvailability suAvailable;
 
   private ShellCommandHelper() {
-    shellSession = new Shell.Builder().useSH()
-        .setWantSTDERR(false)
-        .setWatchdogTimeout(5)
-        .setMinimalLogging(true)
-        .open();
-
-    rootSession = new Shell.Builder().useSU()
-        .setWantSTDERR(false)
-        .setWatchdogTimeout(5)
-        .setMinimalLogging(true)
-        .open();
+    shellSession = null;
+    rootSession = null;
+    suAvailable = null;
   }
 
   @WorkerThread @CheckResult public static boolean isSUAvailable() {
-    return Shell.SU.available();
+    if (INSTANCE.getSuAvailable() == null) {
+      final boolean available = Shell.SU.available();
+      INSTANCE.setSuAvailable(available);
+    }
+
+    return INSTANCE.getSuAvailable() == SuAvailability.AVAILABILE;
   }
 
   /**
@@ -57,13 +56,51 @@ public class ShellCommandHelper {
     INSTANCE.runSHCommand(command);
   }
 
+  @Nullable @CheckResult private SuAvailability getSuAvailable() {
+    return suAvailable;
+  }
+
+  private void setSuAvailable(boolean available) {
+    suAvailable = (available ? SuAvailability.AVAILABILE : SuAvailability.NOT_AVAILABLE);
+  }
+
+  @CheckResult @NonNull private Shell.Interactive openShellSession(boolean useRoot) {
+    final Shell.Builder builder =
+        new Shell.Builder().setWantSTDERR(false).setWatchdogTimeout(5).setMinimalLogging(true);
+    if (useRoot) {
+      builder.useSU();
+    } else {
+      builder.useSH();
+    }
+
+    Timber.d("Open new %s session", (useRoot ? "SU" : "Shell"));
+    return builder.open();
+  }
+
   @WorkerThread private void runSUCommand(@NonNull String command) {
+    if (!isSUAvailable()) {
+      Timber.e("No superuser is available. Needed for this command.");
+      return;
+    }
+
+    if (rootSession == null) {
+      rootSession = openShellSession(true);
+    }
+
     Timber.d("Run command '%s' in SU session", command);
     rootSession.addCommand(command);
   }
 
   @WorkerThread private void runSHCommand(@NonNull String command) {
+    if (shellSession == null) {
+      shellSession = openShellSession(false);
+    }
+
     Timber.d("Run command '%s' in Shell session", command);
     shellSession.addCommand(command);
+  }
+
+  private enum SuAvailability {
+    AVAILABILE, NOT_AVAILABLE
   }
 }
