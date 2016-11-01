@@ -70,6 +70,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
         "https://github.com/yigit/android-priority-jobqueue", "licenses/androidpriorityjobqueue");
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
+    Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
   }
 
   @NonNull @Override public PowerManagerComponent provideComponent() {
