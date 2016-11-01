@@ -31,7 +31,9 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
     implements CustomTimeInputPreferencePresenter {
 
-  private static final int MAX_CUSTOM_LENGTH = 10;
+  // Max time 30 minutes
+  private static final long MAX_TIME_SECONDS = 30 * 60;
+  private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimeInputPreferenceInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription customTimeSubscription =
@@ -63,7 +65,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
 
   @Override public void updateCustomTime(@NonNull String time, long delay, boolean updateView) {
     if (interactor != null) {
-      final long longTime;
+      long longTime;
       if (time.isEmpty()) {
         longTime = 0;
       } else if (time.length() > MAX_CUSTOM_LENGTH) {
@@ -71,6 +73,9 @@ public abstract class CustomTimeInputPreferencePresenterImpl
       } else {
         longTime = Long.parseLong(time);
       }
+
+      // Set the time to a max of 30 minutes
+      longTime = Math.min(MAX_TIME_SECONDS, longTime);
 
       SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.saveTime(longTime)
