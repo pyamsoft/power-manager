@@ -120,8 +120,7 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapperImpl {
   private void setMobileDataEnabledRoot(boolean enabled) {
     if (preferences.isRootEnabled()) {
       final String command = "svc data " + (enabled ? "enable" : "disable");
-      final boolean result = ShellCommandHelper.runRootShellCommand(command);
-      Timber.d("Result: %s", result);
+      ShellCommandHelper.runRootShellCommand(command);
     } else {
       Timber.w("Root not enabled, cannot toggle Data");
     }
