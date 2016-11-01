@@ -27,6 +27,8 @@ public interface BaseManagePreferencePresenter
 
   void dismissOnboarding();
 
+  void checkManagePermission();
+
   interface ManagePreferenceView {
 
     void onManageSet();
@@ -34,5 +36,7 @@ public interface BaseManagePreferencePresenter
     void onManageUnset();
 
     void showOnBoarding();
+
+    void onManagePermissionCallback(boolean hasPermission);
   }
 }

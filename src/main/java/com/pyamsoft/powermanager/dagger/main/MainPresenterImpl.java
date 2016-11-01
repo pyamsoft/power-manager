@@ -18,7 +18,9 @@ package com.pyamsoft.powermanager.dagger.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.main.MainPresenter;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
@@ -28,35 +30,44 @@ import timber.log.Timber;
 class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implements MainPresenter {
 
   @NonNull private final MainInteractor interactor;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private final PermissionObserver rootPermissionObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
 
   @Inject MainPresenterImpl(@NonNull MainInteractor interactor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+      @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver rootPermissionObserver) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsub() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+    this.rootPermissionObserver = rootPermissionObserver;
   }
 
   @Override protected void onBind() {
     super.onBind();
-    unsub();
+    SubscriptionHelper.unsubscribe(subscription);
     subscription = interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(start -> {
-          if (start) {
-            getView(View::onServiceEnabledWhenOpen);
-          }
-        }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"), this::unsub);
+              if (start) {
+                getView(View::onServiceEnabledWhenOpen);
+              }
+            }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
+
+    SubscriptionHelper.unsubscribe(rootSubscription);
+    rootSubscription = rootPermissionObserver.hasPermission()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+              if (!hasPermission) {
+                getView(View::explainRootRequirement);
+              }
+            }, throwable -> Timber.e(throwable, "onError checking root permission"),
+            () -> SubscriptionHelper.unsubscribe(rootSubscription));
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsub();
+    SubscriptionHelper.unsubscribe(subscription, rootSubscription);
   }
 }

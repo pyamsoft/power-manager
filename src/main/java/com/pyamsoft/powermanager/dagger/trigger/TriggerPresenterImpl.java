@@ -21,6 +21,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -32,9 +33,11 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     implements TriggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
-  @NonNull private Subscription deleteSubscription = Subscriptions.empty();
-  @NonNull private Subscription viewSubscription = Subscriptions.empty();
-  @NonNull private Subscription createSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
+      Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription viewSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription createSubscription =
+      Subscriptions.empty();
 
   @Inject TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
       @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -44,31 +47,11 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubViewSubscription();
-    unsubDeleteSubscription();
-    unsubCreateSubscription();
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubViewSubscription() {
-    if (!viewSubscription.isUnsubscribed()) {
-      viewSubscription.unsubscribe();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubDeleteSubscription() {
-    if (!deleteSubscription.isUnsubscribed()) {
-      deleteSubscription.unsubscribe();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubCreateSubscription() {
-    if (!createSubscription.isUnsubscribed()) {
-      createSubscription.unsubscribe();
-    }
+    SubscriptionHelper.unsubscribe(viewSubscription, deleteSubscription, createSubscription);
   }
 
   @Override public void loadTriggerView() {
-    unsubViewSubscription();
+    SubscriptionHelper.unsubscribe(viewSubscription);
     viewSubscription = interactor.queryAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -80,7 +63,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
           Timber.e(throwable, "onError");
         }, () -> getView(view -> {
           view.onTriggerLoadFinished();
-          unsubViewSubscription();
+          SubscriptionHelper.unsubscribe(viewSubscription);
         }));
   }
 
@@ -91,7 +74,7 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   @Override public void createPowerTrigger(@NonNull ContentValues values) {
     Timber.d("Create new power trigger");
-    unsubCreateSubscription();
+    SubscriptionHelper.unsubscribe(createSubscription);
     createSubscription = interactor.put(values)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -106,11 +89,11 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
             Timber.e("Issue creating trigger");
             getView(TriggerView::onNewTriggerCreateError);
           }
-        });
+        }, () -> SubscriptionHelper.unsubscribe(createSubscription));
   }
 
   @Override public void deleteTrigger(int percent) {
-    unsubDeleteSubscription();
+    SubscriptionHelper.unsubscribe(deleteSubscription);
     deleteSubscription = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -119,6 +102,6 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
-        });
+        }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
   }
 }

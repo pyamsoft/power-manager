@@ -16,6 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.preference;
 
+import com.pyamsoft.powermanager.app.preference.airplane.AirplaneDelayPreference;
+import com.pyamsoft.powermanager.app.preference.airplane.AirplaneDisableTimePreference;
+import com.pyamsoft.powermanager.app.preference.airplane.AirplaneEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDelayPreference;
 import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothEnableTimePreference;
@@ -28,6 +31,7 @@ import com.pyamsoft.powermanager.app.preference.sync.SyncEnableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDelayPreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference;
 import com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference;
+import com.pyamsoft.powermanager.dagger.preference.airplane.AirplaneCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.bluetooth.BluetoothCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.data.DataCustomPreferenceModule;
 import com.pyamsoft.powermanager.dagger.preference.sync.SyncCustomPreferenceModule;
@@ -36,7 +40,8 @@ import dagger.Subcomponent;
 
 @Subcomponent(modules = {
     WifiCustomPreferenceModule.class, DataCustomPreferenceModule.class,
-    BluetoothCustomPreferenceModule.class, SyncCustomPreferenceModule.class
+    BluetoothCustomPreferenceModule.class, SyncCustomPreferenceModule.class,
+    AirplaneCustomPreferenceModule.class
 }) public interface CustomPreferenceComponent {
 
   void inject(WifiDelayPreference preference);
@@ -62,4 +67,10 @@ import dagger.Subcomponent;
   void inject(SyncEnableTimePreference preference);
 
   void inject(SyncDisableTimePreference preference);
+
+  void inject(AirplaneDelayPreference preference);
+
+  void inject(AirplaneEnableTimePreference preference);
+
+  void inject(AirplaneDisableTimePreference preference);
 }

@@ -22,6 +22,12 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isForegroundServiceEnabled();
+
+  void setForegroundServiceEnabled(boolean state);
+
+  @CheckResult boolean isRootEnabled();
+
   @CheckResult boolean isStartWhenOpen();
 
   @CheckResult boolean isPeriodicOnboardingShown();
@@ -42,6 +48,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isDozeManaged();
 
+  @CheckResult boolean isIgnoreChargingAirplane();
+
   @CheckResult boolean isIgnoreChargingDoze();
 
   @CheckResult boolean isIgnoreChargingWifi();
@@ -55,6 +63,10 @@ public interface PowerManagerPreferences {
   @CheckResult long getWifiDelay();
 
   void setWifiDelay(long time);
+
+  @CheckResult long getAirplaneDelay();
+
+  void setAirplaneDelay(long time);
 
   @CheckResult long getDataDelay();
 
@@ -70,43 +82,33 @@ public interface PowerManagerPreferences {
 
   @CheckResult int getNotificationPriority();
 
-  @CheckResult boolean isWifiManaged();
+  @CheckResult boolean isAirplaneManaged();
 
-  void setWifiManaged(boolean enable);
+  @CheckResult boolean isWifiManaged();
 
   @CheckResult boolean isDataManaged();
 
-  void setDataManaged(boolean enable);
-
   @CheckResult boolean isBluetoothManaged();
-
-  void setBluetoothManaged(boolean enable);
 
   @CheckResult boolean isSyncManaged();
 
-  void setSyncManaged(boolean enable);
-
   @CheckResult boolean isWearableManaged();
-
-  void setWearableManaged(boolean enable);
 
   void clearAll();
 
   @CheckResult boolean isPeriodicWifi();
 
-  void setPeriodicWifi(boolean state);
-
   @CheckResult boolean isPeriodicData();
-
-  void setPeriodicData(boolean state);
 
   @CheckResult boolean isPeriodicBluetooth();
 
-  void setPeriodicBluetooth(boolean state);
-
   @CheckResult boolean isPeriodicSync();
 
-  void setPeriodicSync(boolean state);
+  @CheckResult boolean isPeriodicAirplane();
+
+  @CheckResult long getPeriodicDisableTimeAirplane();
+
+  void setPeriodicDisableTimeAirplane(long time);
 
   @CheckResult long getPeriodicDisableTimeWifi();
 
@@ -123,6 +125,10 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicDisableTimeSync();
 
   void setPeriodicDisableTimeSync(long time);
+
+  @CheckResult long getPeriodicEnableTimeAirplane();
+
+  void setPeriodicEnableTimeAirplane(long time);
 
   @CheckResult long getPeriodicEnableTimeWifi();
 

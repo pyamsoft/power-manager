@@ -16,10 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import com.pyamsoft.powermanager.dagger.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
-import com.pyamsoft.powermanager.dagger.job.JobComponent;
 import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
@@ -29,6 +29,8 @@ import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObs
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.overview.OverviewComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.service.ActionToggleModule;
+import com.pyamsoft.powermanager.dagger.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
@@ -46,7 +48,8 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
-    JobSchedulerCompatModule.class, WrapperModule.class, PermissionObserverModule.class
+    ActionToggleModule.class, JobSchedulerCompatModule.class, WrapperModule.class,
+    PermissionObserverModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();
@@ -55,11 +58,11 @@ import javax.inject.Singleton;
 
   ForegroundServiceComponent plusForegroundServiceComponent();
 
+  ActionToggleServiceComponent plusActionToggleServiceComponent();
+
   TriggerJobComponent plusTriggerJobComponent();
 
   ManagerComponent plusManagerComponent();
-
-  JobComponent plusJobComponent();
 
   CustomPreferenceComponent plusCustomPreferenceComponent();
 
@@ -68,6 +71,8 @@ import javax.inject.Singleton;
   DataScreenComponent plusDataScreenComponent();
 
   BluetoothScreenComponent plusBluetoothScreenComponent();
+
+  AirplaneScreenComponent plusAirplaneScreenComponent();
 
   SyncScreenComponent plusSyncScreenComponent();
 

@@ -18,7 +18,8 @@ package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.PowerTriggerDB;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -32,6 +33,10 @@ class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
       @NonNull PowerManagerPreferences preferences) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
+  }
+
+  @NonNull @Override public Observable<Boolean> checkRoot() {
+    return Observable.defer(() -> Observable.just(ShellCommandHelper.runRootShellCommand("true")));
   }
 
   @NonNull @Override public Observable<Boolean> clearDatabase() {

@@ -41,6 +41,10 @@ public class DataFragment extends BaseOverviewPagerFragment {
     return fragment;
   }
 
+  @Override protected boolean respectAirplaneMode() {
+    return true;
+  }
+
   @Override protected void injectObserverModifier() {
     PowerManagerSingleInitProvider.get().provideComponent().plusDataScreenComponent().inject(this);
   }

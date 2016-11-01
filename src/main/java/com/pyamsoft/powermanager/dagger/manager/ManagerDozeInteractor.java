@@ -18,56 +18,55 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.job.DozeManageJob;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveManagerInteractor {
+class ManagerDozeInteractor extends ManagerBaseInteractor
+    implements ExclusiveWearUnawareManagerInteractor {
+
+  @NonNull private final PermissionObserver dozePermissionObserver;
 
   @Inject ManagerDozeInteractor(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(jobManager, preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull PermissionObserver dozePermissionObserver) {
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver);
+    this.dozePermissionObserver = dozePermissionObserver;
   }
 
-  @CheckResult private long getDelayTime() {
+  @NonNull @Override public Observable<Boolean> isManaged() {
+    return super.isManaged()
+        .zipWith(dozePermissionObserver.hasPermission(),
+            (managed, hasPermission) -> managed && hasPermission);
+  }
+
+  @Override @CheckResult protected long getDelayTime() {
     return getPreferences().getDozeDelay();
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult private boolean isPeriodic() {
+  @Override @CheckResult protected boolean isPeriodic() {
     return false;
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult private long getPeriodicEnableTime() {
+  @Override @CheckResult protected long getPeriodicEnableTime() {
     return 0;
   }
 
   // KLUDGE Should Doze be periodic too? The system already makes it so
-  @CheckResult private long getPeriodicDisableTime() {
+  @Override @CheckResult protected long getPeriodicDisableTime() {
     return 0;
   }
 
-  @NonNull @Override protected Job createEnableJob() {
-    return DozeManageJob.EnableJob.createManagerEnableJob(getJobManager());
-  }
-
-  @NonNull @Override protected Job createDisableJob() {
-    return DozeManageJob.DisableJob.createManagerDisableJob(getJobManager(), getDelayTime() * 1000L,
-        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime());
-  }
-
-  @Override public void destroy() {
-    destroy(DozeManageJob.JOB_TAG);
-  }
-
-  @NonNull @Override public Observable<Boolean> cancelJobs() {
-    return cancelJobs(DozeManageJob.JOB_TAG);
+  @NonNull @Override protected String getJobTag() {
+    return "doze_jobs";
   }
 
   @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
@@ -75,6 +74,9 @@ class ManagerDozeInteractor extends ManagerBaseInteractor implements ExclusiveMa
   }
 
   @NonNull @Override public Observable<Boolean> isExclusive() {
-    return Observable.defer(() -> Observable.just(getPreferences().isExclusiveDoze()));
+    return Observable.defer(() -> {
+      final boolean preference = getPreferences().isExclusiveDoze() && preferences.isDozeManaged();
+      return Observable.just(preference);
+    });
   }
 }

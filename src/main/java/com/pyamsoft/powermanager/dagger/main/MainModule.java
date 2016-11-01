@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.main.MainPresenter;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,8 +29,9 @@ import rx.Scheduler;
 
   @Provides MainPresenter provideMainPresenter(@NonNull MainInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler) {
-    return new MainPresenterImpl(interactor, obsScheduler, subScheduler);
+      @NonNull @Named("sub") Scheduler subScheduler,
+      @Named("obs_root_permission")PermissionObserver rootPermissionObserver) {
+    return new MainPresenterImpl(interactor, obsScheduler, subScheduler, rootPermissionObserver);
   }
 
   @Provides MainInteractor provideMainInteractor(@NonNull PowerManagerPreferences preferences) {

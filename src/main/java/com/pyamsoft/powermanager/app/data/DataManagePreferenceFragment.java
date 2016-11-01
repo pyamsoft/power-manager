@@ -17,10 +17,12 @@
 package com.pyamsoft.powermanager.app.data;
 
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferenceFragment;
 import com.pyamsoft.powermanager.app.base.BaseManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import timber.log.Timber;
 
 public class DataManagePreferenceFragment extends BaseManagePreferenceFragment {
 
@@ -47,5 +49,14 @@ public class DataManagePreferenceFragment extends BaseManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_data;
+  }
+
+  @Override protected boolean checkManagePermission() {
+    Timber.d("Data checks manage permission");
+    return true;
+  }
+
+  @Override protected void onShowManagePermissionNeededMessage() {
+    Toast.makeText(getContext(), "Needs root to manage Mobile Data", Toast.LENGTH_SHORT).show();
   }
 }

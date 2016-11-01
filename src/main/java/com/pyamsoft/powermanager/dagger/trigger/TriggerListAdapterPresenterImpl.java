@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenter;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Scheduler;
@@ -33,7 +34,8 @@ class TriggerListAdapterPresenterImpl
     implements TriggerListAdapterPresenter {
 
   @NonNull private final TriggerListAdapterInteractor interactor;
-  @NonNull private Subscription updateSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription updateSubscription =
+      Subscriptions.empty();
 
   @Inject TriggerListAdapterPresenterImpl(@NonNull TriggerListAdapterInteractor adapterInteractor,
       @NonNull @Named("obs") Scheduler observeScheduler,
@@ -44,7 +46,6 @@ class TriggerListAdapterPresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubUpdateSubscription();
   }
 
   @Override @CheckResult @NonNull public PowerTriggerEntry get(int position) {
@@ -57,7 +58,7 @@ class TriggerListAdapterPresenterImpl
 
   @Override
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled) {
-    unsubUpdateSubscription();
+    SubscriptionHelper.unsubscribe(updateSubscription);
     updateSubscription = interactor.update(entry, enabled)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -66,12 +67,6 @@ class TriggerListAdapterPresenterImpl
         }, throwable -> {
           // TODO
           Timber.e(throwable, "onError");
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubUpdateSubscription() {
-    if (!updateSubscription.isUnsubscribed()) {
-      updateSubscription.unsubscribe();
-    }
+        }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
   }
 }

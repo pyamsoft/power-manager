@@ -21,6 +21,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.pydroidrx.SchedulerHelper;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -33,14 +35,17 @@ abstract class ManagerBase implements Manager {
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
   @NonNull private final Scheduler subscribeScheduler;
   @NonNull private final Scheduler observerScheduler;
-  @NonNull private Subscription setSubscription = Subscriptions.empty();
-  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription setSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription unsetSubscription = Subscriptions.empty();
 
   ManagerBase(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
       @NonNull Scheduler subscribeScheduler) {
     this.interactor = interactor;
     this.observerScheduler = observerScheduler;
     this.subscribeScheduler = subscribeScheduler;
+
+    SchedulerHelper.enforceObserveScheduler(observerScheduler);
+    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler);
   }
 
   @NonNull @CheckResult Scheduler getSubscribeScheduler() {
@@ -49,18 +54,6 @@ abstract class ManagerBase implements Manager {
 
   @NonNull @CheckResult Scheduler getObserverScheduler() {
     return observerScheduler;
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubSet() {
-    if (!setSubscription.isUnsubscribed()) {
-      setSubscription.unsubscribe();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubUnset() {
-    if (!unsetSubscription.isUnsubscribed()) {
-      unsetSubscription.unsubscribe();
-    }
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
@@ -77,7 +70,7 @@ abstract class ManagerBase implements Manager {
   }
 
   @Override public void queueSet() {
-    unsubSet();
+    SubscriptionHelper.unsubscribe(setSubscription);
     setSubscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
@@ -87,16 +80,17 @@ abstract class ManagerBase implements Manager {
         return Observable.empty();
       }
     }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
-      // Technically can ignore this as if we are here we are non-empty
-      // If we are non empty it means we pass the test
-      if (originalState) {
-        interactor.queueEnableJob();
-      }
-    }, throwable -> Timber.e(throwable, "onError queueSet"), this::unsubSet);
+          // Technically can ignore this as if we are here we are non-empty
+          // If we are non empty it means we pass the test
+          if (originalState) {
+            interactor.queueEnableJob();
+          }
+        }, throwable -> Timber.e(throwable, "onError queueSet"),
+        () -> SubscriptionHelper.unsubscribe(setSubscription));
   }
 
   @Override public void queueUnset(boolean deviceCharging) {
-    unsubUnset();
+    SubscriptionHelper.unsubscribe(unsetSubscription);
     unsetSubscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
@@ -128,11 +122,12 @@ abstract class ManagerBase implements Manager {
         .subscribeOn(subscribeScheduler)
         .observeOn(observerScheduler)
         .subscribe(ignore -> {
-          // Only queue a disable job if the radio is not ignored
-          if (!ignore) {
-            interactor.queueDisableJob();
-          }
-        }, throwable -> Timber.e(throwable, "onError queueUnset"), this::unsubUnset);
+              // Only queue a disable job if the radio is not ignored
+              if (!ignore) {
+                interactor.queueDisableJob();
+              }
+            }, throwable -> Timber.e(throwable, "onError queueUnset"),
+            () -> SubscriptionHelper.unsubscribe(unsetSubscription));
   }
 
   @CheckResult @NonNull
@@ -140,7 +135,6 @@ abstract class ManagerBase implements Manager {
 
   @CallSuper @Override public void cleanup() {
     interactor.destroy();
-    unsubSet();
-    unsubUnset();
+    SubscriptionHelper.unsubscribe(setSubscription, unsetSubscription);
   }
 }

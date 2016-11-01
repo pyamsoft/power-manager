@@ -18,16 +18,19 @@ package com.pyamsoft.powermanager.dagger.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.base.BaseManagePreferenceInteractor;
-import com.pyamsoft.powermanager.dagger.base.BaseManagePreferencePresenterImpl;
+import com.pyamsoft.powermanager.dagger.base.BasePermissionManagePreferencePresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class DataManagePreferencePresenter extends BaseManagePreferencePresenterImpl {
+class DataManagePreferencePresenter extends BasePermissionManagePreferencePresenter {
 
   @Inject DataManagePreferencePresenter(@NonNull BaseManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
-    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
+      @NonNull InterestObserver manageObserver,
+      @NonNull PermissionObserver rootPermissionObserver) {
+    super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver,
+        rootPermissionObserver);
   }
 }

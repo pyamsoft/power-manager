@@ -29,16 +29,21 @@ abstract class PermissionObserverImpl implements PermissionObserver {
 
   // KLUDGE Holds onto App context
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @NonNull private final String permission;
+  @Nullable private final String permission;
 
-  PermissionObserverImpl(@NonNull Context context, @NonNull String permission) {
+  PermissionObserverImpl(@NonNull Context context, @Nullable String permission) {
     this.appContext = context.getApplicationContext();
     this.permission = permission;
   }
 
   @CheckResult boolean hasRuntimePermission() {
-    return appContext.getApplicationContext().checkCallingOrSelfPermission(permission)
-        == PackageManager.PERMISSION_GRANTED;
+    if (permission == null) {
+      Timber.w("No permission watched");
+      return false;
+    } else {
+      return appContext.getApplicationContext().checkCallingOrSelfPermission(permission)
+          == PackageManager.PERMISSION_GRANTED;
+    }
   }
 
   @NonNull @Override public Observable<Boolean> hasPermission() {

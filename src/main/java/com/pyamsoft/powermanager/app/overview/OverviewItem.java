@@ -29,6 +29,7 @@ import android.view.View;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
@@ -103,6 +104,9 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
         break;
       case SettingsFragment.TAG:
         fragment = SettingsFragment.newInstance(holder.itemView, rootView);
+        break;
+      case AirplaneFragment.TAG:
+        fragment = AirplaneFragment.newInstance(holder.itemView, rootView);
         break;
       default:
         throw new IllegalStateException("Invalid tag: " + title);

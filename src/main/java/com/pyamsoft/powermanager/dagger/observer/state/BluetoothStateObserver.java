@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothStateObserver extends StateObserver {
+class BluetoothStateObserver extends BroadcastStateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 

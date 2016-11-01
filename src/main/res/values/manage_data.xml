@@ -18,7 +18,7 @@
 <resources>
 
   <bool name="manage_data_default">false</bool>
-  <string name="manage_data_key">manage_data</string>
+  <string name="manage_data_key">manage_data_root</string>
   <string name="manage_data_title">Manage Data</string>
   <string name="manage_data_summary_checked">Will control Data state</string>
   <string name="manage_data_summary_unchecked">Will ignore Data state</string>

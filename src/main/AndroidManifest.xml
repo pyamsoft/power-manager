@@ -92,7 +92,7 @@
     </service>
 
     <service
-        android:name=".dagger.service.ActionToggleService"
+        android:name=".app.service.ActionToggleService"
         android:exported="false"/>
 
     <provider

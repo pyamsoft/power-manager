@@ -30,50 +30,63 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private static final String overviewOnboard = "overview_onboard";
   @NonNull private static final String manageOnboard = "manage_onboard";
   @NonNull private static final String periodOnboard = "period_onboard";
+  @NonNull private static final String foregroundServiceEnabled = "foregroundServiceEnabled";
+  @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
   @NonNull private final String manageBluetooth;
   @NonNull private final String manageSync;
+  private final boolean manageAirplaneDefault;
   private final boolean manageWifiDefault;
   private final boolean manageDataDefault;
   private final boolean manageBluetoothDefault;
   private final boolean manageSyncDefault;
+  @NonNull private final String delayAirplane;
   @NonNull private final String delayWifi;
   @NonNull private final String delayData;
   @NonNull private final String delayBluetooth;
   @NonNull private final String delaySync;
+  @NonNull private final String delayAirplaneDefault;
   @NonNull private final String delayWifiDefault;
   @NonNull private final String delayDataDefault;
   @NonNull private final String delayBluetoothDefault;
   @NonNull private final String delaySyncDefault;
+  @NonNull private final String periodicAirplane;
   @NonNull private final String periodicWifi;
   @NonNull private final String periodicData;
   @NonNull private final String periodicBluetooth;
   @NonNull private final String periodicSync;
+  private final boolean periodicAirplaneDefault;
   private final boolean periodicWifiDefault;
   private final boolean periodicDataDefault;
   private final boolean periodicBluetoothDefault;
   private final boolean periodicSyncDefault;
+  @NonNull private final String periodicDisableAirplane;
   @NonNull private final String periodicDisableWifi;
   @NonNull private final String periodicDisableData;
   @NonNull private final String periodicDisableBluetooth;
   @NonNull private final String periodicDisableSync;
+  @NonNull private final String periodicDisableAirplaneDefault;
   @NonNull private final String periodicDisableWifiDefault;
   @NonNull private final String periodicDisableDataDefault;
   @NonNull private final String periodicDisableBluetoothDefault;
   @NonNull private final String periodicDisableSyncDefault;
+  @NonNull private final String periodicEnableAirplane;
   @NonNull private final String periodicEnableWifi;
   @NonNull private final String periodicEnableData;
   @NonNull private final String periodicEnableBluetooth;
   @NonNull private final String periodicEnableSync;
+  @NonNull private final String periodicEnableAirplaneDefault;
   @NonNull private final String periodicEnableWifiDefault;
   @NonNull private final String periodicEnableDataDefault;
   @NonNull private final String periodicEnableBluetoothDefault;
   @NonNull private final String periodicEnableSyncDefault;
+  @NonNull private final String ignoreChargingAirplane;
   @NonNull private final String ignoreChargingWifi;
   @NonNull private final String ignoreChargingData;
   @NonNull private final String ignoreChargingBluetooth;
   @NonNull private final String ignoreChargingSync;
+  private final boolean ignoreChargingAirplaneDefault;
   private final boolean ignoreChargingWifiDefault;
   private final boolean ignoreChargingDataDefault;
   private final boolean ignoreChargingBluetoothDefault;
@@ -92,6 +105,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
   private final boolean startWhenOpenDefault;
+  @NonNull private final String useRoot;
+  private final boolean useRootDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -99,53 +114,68 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     manageData = getResources().getString(R.string.manage_data_key);
     manageBluetooth = getResources().getString(R.string.manage_bluetooth_key);
     manageSync = getResources().getString(R.string.manage_sync_key);
+    manageAirplane = getResources().getString(R.string.manage_airplane_key);
     manageWifiDefault = getResources().getBoolean(R.bool.manage_wifi_default);
     manageDataDefault = getResources().getBoolean(R.bool.manage_data_default);
     manageBluetoothDefault = getResources().getBoolean(R.bool.manage_bluetooth_default);
     manageSyncDefault = getResources().getBoolean(R.bool.manage_sync_default);
+    manageAirplaneDefault = getResources().getBoolean(R.bool.manage_airplane_default);
 
+    delayAirplane = getResources().getString(R.string.airplane_time_key);
     delayWifi = getResources().getString(R.string.wifi_time_key);
     delayData = getResources().getString(R.string.data_time_key);
     delayBluetooth = getResources().getString(R.string.bluetooth_time_key);
     delaySync = getResources().getString(R.string.sync_time_key);
+    delayAirplaneDefault = getResources().getString(R.string.airplane_time_default);
     delayWifiDefault = getResources().getString(R.string.wifi_time_default);
     delayDataDefault = getResources().getString(R.string.data_time_default);
     delayBluetoothDefault = getResources().getString(R.string.bluetooth_time_default);
     delaySyncDefault = getResources().getString(R.string.sync_time_default);
 
+    periodicAirplane = getResources().getString(R.string.periodic_airplane_key);
     periodicWifi = getResources().getString(R.string.periodic_wifi_key);
     periodicData = getResources().getString(R.string.periodic_data_key);
     periodicBluetooth = getResources().getString(R.string.periodic_bluetooth_key);
     periodicSync = getResources().getString(R.string.periodic_sync_key);
+    periodicAirplaneDefault = getResources().getBoolean(R.bool.periodic_airplane_default);
     periodicWifiDefault = getResources().getBoolean(R.bool.periodic_wifi_default);
     periodicDataDefault = getResources().getBoolean(R.bool.periodic_data_default);
     periodicBluetoothDefault = getResources().getBoolean(R.bool.periodic_bluetooth_default);
     periodicSyncDefault = getResources().getBoolean(R.bool.periodic_sync_default);
 
+    periodicDisableAirplane = getResources().getString(R.string.periodic_airplane_disable_key);
     periodicDisableWifi = getResources().getString(R.string.periodic_wifi_disable_key);
     periodicDisableData = getResources().getString(R.string.periodic_data_disable_key);
     periodicDisableBluetooth = getResources().getString(R.string.periodic_bluetooth_disable_key);
     periodicDisableSync = getResources().getString(R.string.periodic_sync_disable_key);
+    periodicDisableAirplaneDefault =
+        getResources().getString(R.string.periodic_airplane_disable_default);
     periodicDisableWifiDefault = getResources().getString(R.string.periodic_wifi_disable_default);
     periodicDisableDataDefault = getResources().getString(R.string.periodic_data_disable_default);
     periodicDisableBluetoothDefault =
         getResources().getString(R.string.periodic_bluetooth_disable_default);
     periodicDisableSyncDefault = getResources().getString(R.string.periodic_sync_disable_default);
 
+    periodicEnableAirplane = getResources().getString(R.string.periodic_airplane_enable_key);
     periodicEnableWifi = getResources().getString(R.string.periodic_wifi_enable_key);
     periodicEnableData = getResources().getString(R.string.periodic_data_enable_key);
     periodicEnableBluetooth = getResources().getString(R.string.periodic_bluetooth_enable_key);
     periodicEnableSync = getResources().getString(R.string.periodic_sync_enable_key);
+    periodicEnableAirplaneDefault =
+        getResources().getString(R.string.periodic_airplane_enable_default);
     periodicEnableWifiDefault = getResources().getString(R.string.periodic_wifi_enable_default);
     periodicEnableDataDefault = getResources().getString(R.string.periodic_data_enable_default);
     periodicEnableBluetoothDefault =
         getResources().getString(R.string.periodic_bluetooth_enable_default);
     periodicEnableSyncDefault = getResources().getString(R.string.periodic_sync_enable_default);
 
+    ignoreChargingAirplane = getResources().getString(R.string.ignore_charging_airplane_key);
     ignoreChargingWifi = getResources().getString(R.string.ignore_charging_wifi_key);
     ignoreChargingData = getResources().getString(R.string.ignore_charging_data_key);
     ignoreChargingBluetooth = getResources().getString(R.string.ignore_charging_bluetooth_key);
     ignoreChargingSync = getResources().getString(R.string.ignore_charging_sync_key);
+    ignoreChargingAirplaneDefault =
+        getResources().getBoolean(R.bool.ignore_charging_airplane_default);
     ignoreChargingWifiDefault = getResources().getBoolean(R.bool.ignore_charging_wifi_default);
     ignoreChargingDataDefault = getResources().getBoolean(R.bool.ignore_charging_data_default);
     ignoreChargingBluetoothDefault =
@@ -169,7 +199,22 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     wearableDelayDefault = getResources().getString(R.string.wearable_time_default);
 
     startWhenOpen = getResources().getString(R.string.unsuspend_when_open_key);
-    startWhenOpenDefault = true;
+    startWhenOpenDefault = getResources().getBoolean(R.bool.unsuspend_when_open_default);
+
+    useRoot = getResources().getString(R.string.use_root_key);
+    useRootDefault = getResources().getBoolean(R.bool.use_root_default);
+  }
+
+  @Override public boolean isForegroundServiceEnabled() {
+    return get(foregroundServiceEnabled, true);
+  }
+
+  @Override public void setForegroundServiceEnabled(boolean state) {
+    put(foregroundServiceEnabled, state);
+  }
+
+  @Override public boolean isRootEnabled() {
+    return get(useRoot, useRootDefault);
   }
 
   @Override public boolean isStartWhenOpen() {
@@ -220,6 +265,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(forceDoze, forceDozeDefault);
   }
 
+  @Override public boolean isAirplaneManaged() {
+    return get(manageAirplane, manageAirplaneDefault);
+  }
+
+  @Override public boolean isIgnoreChargingAirplane() {
+    return get(ignoreChargingAirplane, ignoreChargingAirplaneDefault);
+  }
+
   @Override public boolean isIgnoreChargingWifi() {
     return get(ignoreChargingWifi, ignoreChargingWifiDefault);
   }
@@ -242,6 +295,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public void setWifiDelay(long time) {
     put(delayWifi, Long.toString(time));
+  }
+
+  @Override public long getAirplaneDelay() {
+    return Long.parseLong(get(delayAirplane, delayAirplaneDefault));
+  }
+
+  @Override public void setAirplaneDelay(long time) {
+    put(delayAirplane, Long.toString(time));
   }
 
   @Override public long getDataDelay() {
@@ -276,40 +337,20 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(manageBluetooth, manageBluetoothDefault);
   }
 
-  @Override public void setBluetoothManaged(boolean enable) {
-    put(manageBluetooth, enable);
-  }
-
   @Override public boolean isDataManaged() {
     return get(manageData, manageDataDefault);
-  }
-
-  @Override public void setDataManaged(boolean enable) {
-    put(manageData, enable);
   }
 
   @Override public boolean isSyncManaged() {
     return get(manageSync, manageSyncDefault);
   }
 
-  @Override public void setSyncManaged(boolean enable) {
-    put(manageSync, enable);
-  }
-
   @Override public boolean isWifiManaged() {
     return get(manageWifi, manageWifiDefault);
   }
 
-  @Override public void setWifiManaged(boolean enable) {
-    put(manageWifi, enable);
-  }
-
   @Override public boolean isWearableManaged() {
     return get(manageWearable, manageWearableDefault);
-  }
-
-  @Override public void setWearableManaged(boolean enable) {
-    put(manageWearable, enable);
   }
 
   @Override public void clearAll() {
@@ -320,32 +361,28 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(periodicWifi, periodicWifiDefault);
   }
 
-  @Override public void setPeriodicWifi(boolean state) {
-    put(periodicWifi, state);
-  }
-
   @Override public boolean isPeriodicData() {
     return get(periodicData, periodicDataDefault);
-  }
-
-  @Override public void setPeriodicData(boolean state) {
-    put(periodicData, state);
   }
 
   @Override public boolean isPeriodicBluetooth() {
     return get(periodicBluetooth, periodicBluetoothDefault);
   }
 
-  @Override public void setPeriodicBluetooth(boolean state) {
-    put(periodicBluetooth, state);
-  }
-
   @Override public boolean isPeriodicSync() {
     return get(periodicSync, periodicSyncDefault);
   }
 
-  @Override public void setPeriodicSync(boolean state) {
-    put(periodicSync, state);
+  @Override public boolean isPeriodicAirplane() {
+    return get(periodicAirplane, periodicAirplaneDefault);
+  }
+
+  @Override public long getPeriodicDisableTimeAirplane() {
+    return Long.parseLong(get(periodicDisableAirplane, periodicDisableAirplaneDefault));
+  }
+
+  @Override public void setPeriodicDisableTimeAirplane(long time) {
+    put(periodicDisableAirplane, String.valueOf(time));
   }
 
   @Override public long getPeriodicDisableTimeWifi() {
@@ -378,6 +415,14 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public void setPeriodicDisableTimeSync(long time) {
     put(periodicDisableSync, String.valueOf(time));
+  }
+
+  @Override public long getPeriodicEnableTimeAirplane() {
+    return Long.parseLong(get(periodicEnableAirplane, periodicEnableAirplaneDefault));
+  }
+
+  @Override public void setPeriodicEnableTimeAirplane(long time) {
+    put(periodicEnableAirplane, String.valueOf(time));
   }
 
   @Override public long getPeriodicEnableTimeWifi() {

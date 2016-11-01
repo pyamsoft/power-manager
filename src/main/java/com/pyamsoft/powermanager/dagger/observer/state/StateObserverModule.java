@@ -50,12 +50,17 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_doze_state") @Provides BooleanInterestObserver provideDozeObserver(
-      @NonNull Context context) {
-    return new DozeStateObserver(context);
+      @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
+    return new DozeStateObserver(context, wrapper);
   }
 
   @Singleton @Named("obs_wear_state") @Provides BooleanInterestObserver provideWearObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearStateObserver(context, preferences);
+  }
+
+  @Singleton @Named("obs_airplane_state") @Provides BooleanInterestObserver provideAirplaneObserver(
+      @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
+    return new AirplaneStateObserver(context, wrapper);
   }
 }

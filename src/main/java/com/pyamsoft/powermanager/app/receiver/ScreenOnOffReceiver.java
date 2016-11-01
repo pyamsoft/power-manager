@@ -44,6 +44,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
   @Inject @Named("sync_manager") Manager managerSync;
   @Inject @Named("doze_manager") ExclusiveManager managerDoze;
+  @Inject @Named("airplane_manager") Manager managerAirplane;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
@@ -74,6 +75,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
+    managerAirplane.queueSet();
     managerDoze.queueExclusiveSet(() -> {
       managerWifi.queueSet();
       managerData.queueSet();
@@ -84,6 +86,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
+    managerAirplane.queueUnset(charging);
     managerDoze.queueExclusiveUnset(charging, () -> {
       managerWifi.queueUnset(charging);
       managerData.queueUnset(charging);
@@ -110,6 +113,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
     managerBluetooth.cleanup();
     managerSync.cleanup();
     managerDoze.cleanup();
+    managerAirplane.cleanup();
   }
 
   public final void unregister() {

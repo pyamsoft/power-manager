@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import com.pyamsoft.powermanager.app.job.TriggerJob;
+import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import dagger.Subcomponent;
 import javax.inject.Singleton;
 

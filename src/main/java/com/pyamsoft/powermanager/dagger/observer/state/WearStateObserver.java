@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
 
-class WearStateObserver extends StateObserver {
+class WearStateObserver extends BroadcastStateObserver {
 
   @NonNull private final GoogleApiClient googleApiClient;
   @NonNull private final PowerManagerPreferences preferences;

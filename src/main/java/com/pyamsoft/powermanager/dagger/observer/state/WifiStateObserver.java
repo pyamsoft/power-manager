@@ -23,7 +23,7 @@ import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiStateObserver extends StateObserver {
+class WifiStateObserver extends BroadcastStateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 

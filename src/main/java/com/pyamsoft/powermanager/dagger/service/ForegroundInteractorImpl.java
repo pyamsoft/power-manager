@@ -27,30 +27,28 @@ import android.support.v4.content.ContextCompat;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.job.TriggerJob;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
+import com.pyamsoft.powermanager.app.service.ActionToggleService;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.functions.Func1;
 import timber.log.Timber;
 
-class ForegroundInteractorImpl implements ForegroundInteractor {
+class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements ForegroundInteractor {
 
   private static final int PENDING_RC = 1004;
   private static final int TOGGLE_RC = 421;
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final JobSchedulerCompat jobManager;
-
-  // KLUDGE Holds onto context
-  @NonNull private final Context appContext;
 
   @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
+    super(preferences);
     appContext = context.getApplicationContext();
     this.jobManager = jobManager;
-    this.preferences = preferences;
 
     final Intent intent =
         new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -78,28 +76,33 @@ class ForegroundInteractorImpl implements ForegroundInteractor {
     jobManager.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
-  @NonNull @CheckResult private Observable<Integer> getNotificationPriority() {
-    return Observable.defer(() -> Observable.just(preferences.getNotificationPriority()));
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  Observable<Integer> getNotificationPriority() {
+    return Observable.defer(() -> Observable.just(getPreferences().getNotificationPriority()));
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {
-    final boolean serviceEnabled = ForegroundService.isEnabled();
-    final String actionName = serviceEnabled ? "Suspend" : "Start";
-    final Intent toggleService = new Intent(appContext, ActionToggleService.class);
-    final PendingIntent actionToggleService =
-        PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+    return Observable.defer(() -> Observable.just(getPreferences().isForegroundServiceEnabled()))
+        .flatMap(new Func1<Boolean, Observable<Notification>>() {
+          @Override public Observable<Notification> call(Boolean serviceEnabled) {
+            final String actionName = serviceEnabled ? "Suspend" : "Start";
+            final Intent toggleService = new Intent(appContext, ActionToggleService.class);
+            final PendingIntent actionToggleService =
+                PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
-    final String title =
-        serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
+            final String title =
+                serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
 
-    return getNotificationPriority().map(priority -> {
-      // Clear all of the Actions
-      builder.mActions.clear();
-      return builder.setPriority(priority)
-          .setContentText(title)
-          .addAction(R.drawable.ic_notification, actionName, actionToggleService)
-          .build();
-    });
+            return getNotificationPriority().map(priority -> {
+              // Clear all of the Actions
+              builder.mActions.clear();
+              return builder.setPriority(priority)
+                  .setContentText(title)
+                  .addAction(R.drawable.ic_notification, actionName, actionToggleService)
+                  .build();
+            });
+          }
+        });
   }
 }

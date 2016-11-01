@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.base.BaseOverviewPagerPresenter;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -31,7 +32,7 @@ public abstract class BaseOverviewPagerPresenterImpl
     implements BaseOverviewPagerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
   protected BaseOverviewPagerPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
@@ -41,17 +42,11 @@ public abstract class BaseOverviewPagerPresenterImpl
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    unsubscribe();
-  }
-
-  @SuppressWarnings("WeakerAccess") void unsubscribe() {
-    if (!subscription.isUnsubscribed()) {
-      subscription.unsubscribe();
-    }
+    SubscriptionHelper.unsubscribe(subscription);
   }
 
   @Override public void wrapSet() {
-    unsubscribe();
+    SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.defer(() -> {
       modifier.set();
       return Observable.just(true);
@@ -59,11 +54,12 @@ public abstract class BaseOverviewPagerPresenterImpl
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> Timber.d("Finished wrapped set call"),
-            throwable -> Timber.e(throwable, "onError wrapSet"), this::unsubscribe);
+            throwable -> Timber.e(throwable, "onError wrapSet"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @Override public void wrapUnset() {
-    unsubscribe();
+    SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.defer(() -> {
       modifier.unset();
       return Observable.just(true);
@@ -71,6 +67,7 @@ public abstract class BaseOverviewPagerPresenterImpl
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> Timber.d("Finished wrapped unset call"),
-            throwable -> Timber.e(throwable, "onError wrapUnset"), this::unsubscribe);
+            throwable -> Timber.e(throwable, "onError wrapUnset"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
   }
 }

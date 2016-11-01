@@ -19,29 +19,28 @@ package com.pyamsoft.powermanager.dagger.observer.permission;
 import android.Manifest;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozePermissionObserver extends PermissionObserverImpl {
+class DozePermissionObserver extends RootPermissionObserver {
 
-  @Inject DozePermissionObserver(@NonNull Context context) {
-    super(context, Manifest.permission.DUMP);
+  @Inject DozePermissionObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences, Manifest.permission.DUMP);
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
     final boolean hasPermission;
     switch (Build.VERSION.SDK_INT) {
       case Build.VERSION_CODES.M:
+        // Doze can run without root on M
         hasPermission = hasRuntimePermission();
         break;
       case Build.VERSION_CODES.N:
-        hasPermission = checkRootAvailable();
+        // Doze needs root on N
+        hasPermission = hasRuntimePermission() && super.checkPermission(appContext);
         break;
       default:
         hasPermission = false;
@@ -49,41 +48,5 @@ class DozePermissionObserver extends PermissionObserverImpl {
 
     Timber.d("Has doze permission? %s", hasPermission);
     return hasPermission;
-  }
-
-  /**
-   * Requires ROOT to work properly
-   *
-   * Will exit with a failed 137 code or otherwise if ROOT is not allowed
-   */
-  @CheckResult private boolean checkRootAvailable() {
-    final Process process;
-    try {
-      final String command = "true";
-      process = Runtime.getRuntime().exec(new String[] { "su", "-c", command });
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-        Timber.d("Read results of exec: '%s'", command);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
-
-      try {
-        process.waitFor();
-        final int exitValue = process.exitValue();
-        Timber.i("Command %s exited with value: %d", command, exitValue);
-        return exitValue == 0;
-      } catch (InterruptedException e) {
-        Timber.e(e, "Interrupted while waiting for exit");
-        return false;
-      }
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
-      return false;
-    }
   }
 }

@@ -24,16 +24,13 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import java.lang.reflect.Method;
-import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
+class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapper {
 
   @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
@@ -47,11 +44,15 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
 
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
+  @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject DataConnectionWrapperImpl(@NonNull Context context) {
+  @Inject DataConnectionWrapperImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, "Data");
+    this.preferences = preferences;
     connectivityManager =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    contentResolver = context.getContentResolver();
+    contentResolver = context.getApplicationContext().getContentResolver();
   }
 
   @CheckResult @Nullable private static Method reflectGetMethod() {
@@ -117,38 +118,17 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
    * Will exit with a failed 137 code or otherwise if ROOT is not allowed
    */
   private void setMobileDataEnabledRoot(boolean enabled) {
-    final Process process;
-    try {
+    if (preferences.isRootEnabled()) {
       final String command = "svc data " + (enabled ? "enable" : "disable");
-      process = Runtime.getRuntime().exec(new String[] { "su", "-c", command });
-      try (final BufferedReader bufferedReader = new BufferedReader(
-          new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-        Timber.d("Read results of exec: '%s'", command);
-        String line = bufferedReader.readLine();
-        while (line != null && !line.isEmpty()) {
-          Timber.d("%s", line);
-          line = bufferedReader.readLine();
-        }
-      }
-
-      try {
-        process.waitFor();
-        Timber.i("Command %s exited with value: %d", command, process.exitValue());
-      } catch (InterruptedException e) {
-        Timber.e(e, "Interrupted while waiting for exit");
-      }
-      // Will always be 0
-    } catch (IOException e) {
-      Timber.e(e, "Error running shell command");
+      final boolean result = ShellCommandHelper.runRootShellCommand(command);
+      Timber.d("Result: %s", result);
+    } else {
+      Timber.w("Root not enabled, cannot toggle Data");
     }
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {
     return Settings.Global.getInt(contentResolver, SETTINGS_URI_MOBILE_DATA, 0) == 1;
-  }
-
-  @CheckResult private boolean isAirplaneMode() {
-    return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
   }
 
   private void setMobileDataEnabled(boolean enabled) {
@@ -160,20 +140,12 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     }
   }
 
-  @Override public void enable() {
-    if (isAirplaneMode()) {
-      Timber.e("Cannot enable Data radio in airplane mode");
-    } else {
-      setMobileDataEnabled(true);
-    }
+  @Override void internalEnable() {
+    setMobileDataEnabled(true);
   }
 
-  @Override public void disable() {
-    if (isAirplaneMode()) {
-      Timber.e("Cannot disable Data radio in airplane mode");
-    } else {
-      setMobileDataEnabled(false);
-    }
+  @Override void internalDisable() {
+    setMobileDataEnabled(false);
   }
 
   @Override public boolean isEnabled() {

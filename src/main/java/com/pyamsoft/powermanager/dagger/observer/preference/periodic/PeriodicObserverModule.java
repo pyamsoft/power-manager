@@ -47,4 +47,10 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncPeriodicObserver(context, preferences);
   }
+
+  @Singleton @Named("obs_airplane_periodic") @Provides
+  BooleanInterestObserver provideAirplaneObserver(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    return new AirplanePeriodicObserver(context, preferences);
+  }
 }

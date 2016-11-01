@@ -27,6 +27,8 @@ public interface SettingsPreferencePresenter
 
   void requestClearDatabase();
 
+  void checkRoot();
+
   interface SettingsPreferenceView {
 
     void showConfirmDialog(int type);
@@ -34,5 +36,7 @@ public interface SettingsPreferencePresenter
     void onClearAll();
 
     void onClearDatabase();
+
+    void onRootCallback(boolean hasPermission);
   }
 }

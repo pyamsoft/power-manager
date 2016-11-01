@@ -21,7 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import rx.Observable;
 
-public interface SettingsPreferenceInteractor {
+interface SettingsPreferenceInteractor {
+
+  @CheckResult @WorkerThread @NonNull Observable<Boolean> checkRoot();
 
   @CheckResult @WorkerThread @NonNull Observable<Boolean> clearDatabase();
 
