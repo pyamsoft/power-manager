@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.data;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
@@ -52,8 +53,8 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected boolean checkManagePermission() {
-    Timber.d("Data checks manage permission");
-    return true;
+    Timber.d("Data checks manage permission on API > 19");
+    return Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
