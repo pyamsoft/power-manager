@@ -99,13 +99,11 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState,
             new PersistLoader.Callback<ManagePreferencePresenter>() {
-              @NonNull @Override
-              public PersistLoader<ManagePreferencePresenter> createLoader() {
+              @NonNull @Override public PersistLoader<ManagePreferencePresenter> createLoader() {
                 return createPresenterLoader();
               }
 
-              @Override
-              public void onPersistentLoaded(@NonNull ManagePreferencePresenter persist) {
+              @Override public void onPersistentLoaded(@NonNull ManagePreferencePresenter persist) {
                 presenter = persist;
               }
             });
@@ -293,11 +291,12 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
       TapTarget fabTarget = null;
       final Fragment parentFragment = getParentFragment();
       if (parentFragment instanceof OverviewPagerFragment) {
-        final OverviewPagerFragment overviewPagerFragment =
-            (OverviewPagerFragment) parentFragment;
-        fabTarget = TapTarget.forView(overviewPagerFragment.getFabTarget(),
-            getString(R.string.onboard_title_overview_fab),
-            getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+        final OverviewPagerFragment overviewPagerFragment = (OverviewPagerFragment) parentFragment;
+        final View fab = overviewPagerFragment.getFabTarget();
+        if (fab != null) {
+          fabTarget = TapTarget.forView(fab, getString(R.string.onboard_title_overview_fab),
+              getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+        }
       }
 
       if (manageTarget != null) {

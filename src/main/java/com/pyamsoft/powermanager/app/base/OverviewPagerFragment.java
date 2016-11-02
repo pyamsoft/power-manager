@@ -264,12 +264,17 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     }
   }
 
-  @CheckResult @NonNull FloatingActionButton getFabTarget() {
+  @CheckResult @Nullable FloatingActionButton getFabTarget() {
     if (binding == null) {
       throw new NullPointerException("Binding is NULL");
     }
 
-    return binding.preferenceContainerFab;
+    if (binding.preferenceContainerFab.getVisibility() == View.GONE) {
+      Timber.d("FAB is hidden, no target");
+      return null;
+    } else {
+      return binding.preferenceContainerFab;
+    }
   }
 
   protected abstract void injectObserverModifier();
