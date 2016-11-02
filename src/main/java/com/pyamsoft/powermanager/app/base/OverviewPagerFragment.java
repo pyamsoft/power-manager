@@ -39,8 +39,6 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import javax.inject.Inject;
-import javax.inject.Named;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment
@@ -52,7 +50,6 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @NonNull private final AsyncDrawable.Mapper asyncDrawableMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
-  @Inject @Named("obs_airplane_state") BooleanInterestObserver airplaneObserver;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
@@ -222,33 +219,12 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     });
   }
 
-  /**
-   * Override if the toggle should not work while Airplane mode is active
-   *
-   * By default, Wifi, Bluetooth, and Sync should still work
-   */
-  @CheckResult protected boolean respectAirplaneMode() {
-    return false;
-  }
-
   private void setFab() {
-    int icon = getFabSetIcon();
-    if (respectAirplaneMode()) {
-      if (airplaneObserver.is()) {
-        icon = R.drawable.ic_airplanemode_24dp;
-      }
-    }
-    loadDrawableIntoFab(icon);
+    loadDrawableIntoFab(getFabSetIcon());
   }
 
   private void unsetFab() {
-    int icon = getFabUnsetIcon();
-    if (respectAirplaneMode()) {
-      if (airplaneObserver.is()) {
-        icon = R.drawable.ic_airplanemode_24dp;
-      }
-    }
-    loadDrawableIntoFab(icon);
+    loadDrawableIntoFab(getFabUnsetIcon());
   }
 
   private void loadDrawableIntoFab(@DrawableRes int fabIcon) {

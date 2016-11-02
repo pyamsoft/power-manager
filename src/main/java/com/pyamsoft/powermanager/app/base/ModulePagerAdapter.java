@@ -86,7 +86,7 @@ public abstract class ModulePagerAdapter extends FragmentStatePagerAdapter {
     }
   }
 
-  public interface Page {
+  interface Page {
 
     void onSelected();
 
