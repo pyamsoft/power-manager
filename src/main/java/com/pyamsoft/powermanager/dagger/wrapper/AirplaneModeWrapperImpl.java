@@ -16,25 +16,29 @@
 
 package com.pyamsoft.powermanager.dagger.wrapper;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapperImpl {
+class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
 
   @NonNull private static final String AIRPLANE_SETTINGS_COMMAND =
       "settings put global airplane_mode_on ";
   @NonNull private static final String AIRPLANE_BROADCAST_COMMAND =
       "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state ";
 
+  @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
 
   @Inject AirplaneModeWrapperImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context);
+    this.contentResolver = context.getApplicationContext().getContentResolver();
     this.preferences = preferences;
   }
 
@@ -58,6 +62,6 @@ class AirplaneModeWrapperImpl extends AirplaneAwareDeviceWrapperImpl {
   }
 
   @Override public boolean isEnabled() {
-    return isAirplaneMode();
+    return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
   }
 }

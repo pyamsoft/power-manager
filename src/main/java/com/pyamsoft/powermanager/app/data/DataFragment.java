@@ -21,9 +21,9 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -39,10 +39,6 @@ public class DataFragment extends OverviewPagerFragment {
     final DataFragment fragment = new DataFragment();
     fragment.setArguments(bundleArguments(from, container));
     return fragment;
-  }
-
-  @Override protected boolean respectAirplaneMode() {
-    return true;
   }
 
   @Override protected void injectObserverModifier() {

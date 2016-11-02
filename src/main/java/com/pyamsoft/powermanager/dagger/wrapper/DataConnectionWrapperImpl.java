@@ -25,12 +25,13 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapperImpl {
+class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
 
   @NonNull private static final String GET_METHOD_NAME = "getMobileDataEnabled";
   @NonNull private static final String SET_METHOD_NAME = "setMobileDataEnabled";
@@ -48,7 +49,6 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapperImpl {
 
   @Inject DataConnectionWrapperImpl(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(context, "Data");
     this.preferences = preferences;
     connectivityManager =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -139,11 +139,11 @@ class DataConnectionWrapperImpl extends AirplaneRespectingDeviceWrapperImpl {
     }
   }
 
-  @Override void internalEnable() {
+  @Override public void enable() {
     setMobileDataEnabled(true);
   }
 
-  @Override void internalDisable() {
+  @Override public void disable() {
     setMobileDataEnabled(false);
   }
 
