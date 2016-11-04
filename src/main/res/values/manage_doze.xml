@@ -19,9 +19,6 @@
 
   <bool name="manage_doze_default">false</bool>
   <string name="manage_doze_key">manage_doze_root</string>
-  <string name="manage_doze_title">Manage Doze</string>
-  <string name="manage_doze_summary_checked">Will control Doze state</string>
-  <string name="manage_doze_summary_unchecked">Will ignore Doze state</string>
 
   <string name="preset_delay_doze_key">preset_delay_doze</string>
   <string-array name="preset_delay_doze_names">
@@ -50,14 +47,9 @@
 
   <string name="doze_time_default">30</string>
   <string name="doze_time_key">doze_time</string>
-  <string name="doze_time_title">Doze Off Delay</string>
-  <string name="doze_time_summary">Amount of time to wait after screen turns off before turning off Doze</string>
 
   <bool name="periodic_doze_default">true</bool>
   <string name="periodic_doze_key">doze_periodic</string>
-  <string name="periodic_doze_title">Toggle Doze Periodically</string>
-  <string name="periodic_doze_summary_checked">Doze will be toggled periodically after the delay time has elapsed</string>
-  <string name="periodic_doze_summary_unchecked">Doze will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_doze_disable_key">preset_periodic_doze_disable_key</string>
   <string name="preset_periodic_doze_enable_key">preset_periodic_doze_enable_key</string>
@@ -81,24 +73,17 @@
 
   <string name="periodic_doze_disable_default">120</string>
   <string name="periodic_doze_disable_key">periodic_doze_disable</string>
-  <string name="periodic_doze_disable_title">Periodic Doze Disable</string>
-  <string name="periodic_doze_disable_summary">Duration for how long Doze should stay enabled before being toggled off</string>
 
   <string name="periodic_doze_enable_default">120</string>
   <string name="periodic_doze_enable_key">periodic_doze_enable</string>
-  <string name="periodic_doze_enable_title">Periodic Doze Enable</string>
-  <string name="periodic_doze_enable_summary">Duration for how long Doze should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_doze_default">false</bool>
   <string name="ignore_charging_doze_key">ignore_charging_doze</string>
-  <string name="ignore_charging_doze_title">Ignore When Charging</string>
-  <string name="ignore_charging_doze_summary_checked">Ignore Doze even while the device is charging</string>
-  <string name="ignore_charging_doze_summary_unchecked">Manage Doze while device is charging</string>
 
   <bool name="exclusive_doze_default">false</bool>
   <string name="exclusive_doze_key">exclusive_doze</string>
   <string name="exclusive_doze_title">Exclusive Doze</string>
-  <string name="exclusive_doze_summary_checked">All radios will be managed by Doze state instead of individually (Marshmallow only)</string>
+  <string name="exclusive_doze_summary_checked">All radios will be managed by Doze state instead of individually</string>
   <string name="exclusive_doze_summary_unchecked">All radios will be managed individually as normal instead of by Doze state</string>
 
 </resources>

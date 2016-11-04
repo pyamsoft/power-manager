@@ -19,9 +19,6 @@
 
   <bool name="manage_airplane_default">false</bool>
   <string name="manage_airplane_key">manage_airplane</string>
-  <string name="manage_airplane_title">Manage Airplane Mode</string>
-  <string name="manage_airplane_summary_checked">Will control Airplane Mode state</string>
-  <string name="manage_airplane_summary_unchecked">Will ignore Airplane Mode state</string>
 
   <string name="preset_delay_airplane_key">preset_delay_airplane</string>
   <string-array name="preset_delay_airplane_names">
@@ -50,14 +47,9 @@
 
   <string name="airplane_time_default">30</string>
   <string name="airplane_time_key">airplane_time</string>
-  <string name="airplane_time_title">Airplane Mode Off Delay</string>
-  <string name="airplane_time_summary">Amount of time to wait after screen turns off before turning off Airplane Mode</string>
 
   <bool name="periodic_airplane_default">true</bool>
   <string name="periodic_airplane_key">airplane_periodic</string>
-  <string name="periodic_airplane_title">Toggle Airplane Mode Periodically</string>
-  <string name="periodic_airplane_summary_checked">Airplane Mode will be toggled periodically after the delay time has elapsed</string>
-  <string name="periodic_airplane_summary_unchecked">Airplane Mode will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_airplane_disable_key">preset_periodic_airplane_disable_key</string>
   <string name="preset_periodic_airplane_enable_key">preset_periodic_airplane_enable_key</string>
@@ -81,18 +73,11 @@
 
   <string name="periodic_airplane_disable_default">120</string>
   <string name="periodic_airplane_disable_key">periodic_airplane_disable</string>
-  <string name="periodic_airplane_disable_title">Periodic Airplane Mode Disable</string>
-  <string name="periodic_airplane_disable_summary">Duration for how long WiFi should stay enabled before being toggled off</string>
 
   <string name="periodic_airplane_enable_default">120</string>
   <string name="periodic_airplane_enable_key">periodic_airplane_enable</string>
-  <string name="periodic_airplane_enable_title">Periodic Airplane Mode Enable</string>
-  <string name="periodic_airplane_enable_summary">Duration for how long WiFi should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_airplane_default">false</bool>
   <string name="ignore_charging_airplane_key">ignore_charging_airplane</string>
-  <string name="ignore_charging_airplane_title">Ignore When Charging</string>
-  <string name="ignore_charging_airplane_summary_checked">Ignore Airplane Mode while device is charging</string>
-  <string name="ignore_charging_airplane_summary_unchecked">Manage Airplane Mode even while device is charging</string>
 
 </resources>

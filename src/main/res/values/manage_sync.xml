@@ -19,9 +19,6 @@
 
   <bool name="manage_sync_default">true</bool>
   <string name="manage_sync_key">manage_sync</string>
-  <string name="manage_sync_title">Manage Sync</string>
-  <string name="manage_sync_summary_checked">Will control Sync state</string>
-  <string name="manage_sync_summary_unchecked">Will ignore Sync state</string>
 
   <string name="preset_delay_sync_key">preset_delay_sync</string>
   <string-array name="preset_delay_sync_names">
@@ -50,14 +47,9 @@
 
   <string name="sync_time_default">30</string>
   <string name="sync_time_key">sync_time</string>
-  <string name="sync_time_title">Sync Off Delay</string>
-  <string name="sync_time_summary">Amount of time to wait after screen turns off before turning off Sync</string>
 
   <bool name="periodic_sync_default">true</bool>
   <string name="periodic_sync_key">sync_periodic</string>
-  <string name="periodic_sync_title">Toggle Sync Periodically</string>
-  <string name="periodic_sync_summary_checked">Sync will be toggled periodically after the delay time has elapsed</string>
-  <string name="periodic_sync_summary_unchecked">Sync will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_sync_disable_key">preset_periodic_sync_disable_key</string>
   <string name="preset_periodic_sync_enable_key">preset_periodic_sync_enable_key</string>
@@ -81,18 +73,11 @@
 
   <string name="periodic_sync_disable_default">120</string>
   <string name="periodic_sync_disable_key">periodic_sync_disable</string>
-  <string name="periodic_sync_disable_title">Periodic Sync Disable</string>
-  <string name="periodic_sync_disable_summary">Duration for how long Sync should stay enabled before being toggled off</string>
 
   <string name="periodic_sync_enable_default">120</string>
   <string name="periodic_sync_enable_key">periodic_sync_enable</string>
-  <string name="periodic_sync_enable_title">Periodic Sync Enable</string>
-  <string name="periodic_sync_enable_summary">Duration for how long Sync should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_sync_default">false</bool>
   <string name="ignore_charging_sync_key">ignore_charging_sync</string>
-  <string name="ignore_charging_sync_title">Ignore When Charging</string>
-  <string name="ignore_charging_sync_summary_checked">Ignore Sync while device is charging</string>
-  <string name="ignore_charging_sync_summary_unchecked">Manage Sync even while device is charging</string>
 
 </resources>

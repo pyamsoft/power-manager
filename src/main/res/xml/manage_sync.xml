@@ -25,9 +25,9 @@
     <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
         android:defaultValue="@bool/manage_sync_default"
         android:key="@string/manage_sync_key"
-        android:summaryOff="@string/manage_sync_summary_unchecked"
-        android:summaryOn="@string/manage_sync_summary_checked"
-        android:title="@string/manage_sync_title"
+        android:summaryOff="@string/manage_pref_summary_unchecked"
+        android:summaryOn="@string/manage_pref_summary_checked"
+        android:title="@string/manage_pref_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -35,9 +35,9 @@
         android:defaultValue="@bool/ignore_charging_sync_default"
         android:dependency="@string/manage_sync_key"
         android:key="@string/ignore_charging_sync_key"
-        android:summaryOff="@string/ignore_charging_sync_summary_unchecked"
-        android:summaryOn="@string/ignore_charging_sync_summary_checked"
-        android:title="@string/ignore_charging_sync_title"
+        android:summaryOff="@string/ignore_charging_pref_summary_unchecked"
+        android:summaryOn="@string/ignore_charging_pref_summary_checked"
+        android:title="@string/ignore_charging_pref_title"
         />
 
   </PreferenceCategory>
@@ -52,8 +52,8 @@
         android:entries="@array/preset_delay_sync_names"
         android:entryValues="@array/preset_delay_sync_values"
         android:key="@string/preset_delay_sync_key"
-        android:summary="@string/sync_time_summary"
-        android:title="@string/sync_time_title"
+        android:summary="@string/pref_time_summary"
+        android:title="@string/pref_time_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->

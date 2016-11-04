@@ -19,9 +19,6 @@
 
   <bool name="manage_wifi_default">true</bool>
   <string name="manage_wifi_key">manage_wifi</string>
-  <string name="manage_wifi_title">Manage Wifi</string>
-  <string name="manage_wifi_summary_checked">Will control Wifi state</string>
-  <string name="manage_wifi_summary_unchecked">Will ignore Wifi state</string>
 
   <string name="preset_delay_wifi_key">preset_delay_wifi</string>
   <string-array name="preset_delay_wifi_names">
@@ -50,14 +47,9 @@
 
   <string name="wifi_time_default">30</string>
   <string name="wifi_time_key">wifi_time</string>
-  <string name="wifi_time_title">Wifi Off Delay</string>
-  <string name="wifi_time_summary">Amount of time to wait after screen turns off before turning off Wifi</string>
 
   <bool name="periodic_wifi_default">true</bool>
   <string name="periodic_wifi_key">wifi_periodic</string>
-  <string name="periodic_wifi_title">Toggle Wifi Periodically</string>
-  <string name="periodic_wifi_summary_checked">Wifi will be toggled periodically after the delay time has elapsed</string>
-  <string name="periodic_wifi_summary_unchecked">Wifi will be left off after the delay time has elapsed</string>
 
   <string name="preset_periodic_wifi_disable_key">preset_periodic_wifi_disable_key</string>
   <string name="preset_periodic_wifi_enable_key">preset_periodic_wifi_enable_key</string>
@@ -81,18 +73,11 @@
 
   <string name="periodic_wifi_disable_default">120</string>
   <string name="periodic_wifi_disable_key">periodic_wifi_disable</string>
-  <string name="periodic_wifi_disable_title">Periodic Wifi Disable</string>
-  <string name="periodic_wifi_disable_summary">Duration for how long WiFi should stay enabled before being toggled off</string>
 
   <string name="periodic_wifi_enable_default">120</string>
   <string name="periodic_wifi_enable_key">periodic_wifi_enable</string>
-  <string name="periodic_wifi_enable_title">Periodic Wifi Enable</string>
-  <string name="periodic_wifi_enable_summary">Duration for how long WiFi should stay disabled before being toggled on</string>
 
   <bool name="ignore_charging_wifi_default">false</bool>
   <string name="ignore_charging_wifi_key">ignore_charging_wifi</string>
-  <string name="ignore_charging_wifi_title">Ignore When Charging</string>
-  <string name="ignore_charging_wifi_summary_checked">Ignore Wifi while device is charging</string>
-  <string name="ignore_charging_wifi_summary_unchecked">Manage Wifi even while device is charging</string>
 
 </resources>
