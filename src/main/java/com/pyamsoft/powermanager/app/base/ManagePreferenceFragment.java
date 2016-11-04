@@ -50,10 +50,10 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   private String manageKey;
   private String presetTimeKey;
   @Nullable private String timeKey;
+  @Nullable private String ignoreChargingKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
   private boolean showOnboardingWhenAvailable;
-  private String ignoreChargingKey;
 
   void setBackButtonEnabled(boolean enabled) {
     final Activity activity = getActivity();
@@ -72,10 +72,14 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     @StringRes final int ignoreKeyRes = getIgnoreChargingKey();
     if (ignoreKeyRes != 0) {
       ignoreChargingKey = getString(ignoreKeyRes);
+    } else {
+      ignoreChargingKey = null;
     }
     @StringRes final int timeResId = getTimeKeyResId();
     if (timeResId != 0) {
       timeKey = getString(timeResId);
+    } else {
+      timeKey = null;
     }
     injectDependencies();
   }
@@ -119,8 +123,14 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Override void resolvePreferences() {
     managePreference = (ViewSwitchPreferenceCompat) findPreference(manageKey);
     presetTimePreference = (ViewListPreference) findPreference(presetTimeKey);
-    customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
-    ignoreChargingPreference = (CheckBoxPreference) findPreference(ignoreChargingKey);
+
+    if (timeKey != null) {
+      customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
+    }
+
+    if (ignoreChargingKey != null) {
+      ignoreChargingPreference = (CheckBoxPreference) findPreference(ignoreChargingKey);
+    }
 
     if (managePreference == null) {
       throw new NullPointerException("Manage Preference is NULL");
