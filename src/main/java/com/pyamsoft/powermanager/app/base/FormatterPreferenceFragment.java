@@ -20,31 +20,37 @@ import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.TwoStatePreference;
 import android.view.View;
-import java.util.Locale;
 
 abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
 
   final void applyFormattedStrings(@NonNull Preference preference, @NonNull String name) {
+    final String replaceString = "REPLACE_ME";
     String title = preference.getTitle().toString();
-    title = String.format(Locale.getDefault(), title, name);
+    title = title.replace(replaceString, name);
     preference.setTitle(title);
+
+    if (preference instanceof DialogPreference) {
+      final DialogPreference dialogPreference = (DialogPreference) preference;
+      dialogPreference.setDialogTitle(title);
+    }
 
     if (preference instanceof TwoStatePreference) {
       final TwoStatePreference twoStatePreference = (TwoStatePreference) preference;
       String summaryOn = twoStatePreference.getSummaryOn().toString();
-      summaryOn = String.format(Locale.getDefault(), summaryOn, name);
+      summaryOn = summaryOn.replace(replaceString, name);
       twoStatePreference.setSummaryOn(summaryOn);
 
       String summaryOff = twoStatePreference.getSummaryOff().toString();
-      summaryOff = String.format(Locale.getDefault(), summaryOff, name);
+      summaryOff = summaryOff.replace(replaceString, name);
       twoStatePreference.setSummaryOff(summaryOff);
     } else {
       String summary = preference.getSummary().toString();
-      summary = String.format(Locale.getDefault(), summary, name);
+      summary = summary.replace(replaceString, name);
       preference.setSummary(summary);
     }
   }

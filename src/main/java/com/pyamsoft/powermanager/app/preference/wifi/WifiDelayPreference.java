@@ -49,7 +49,7 @@ public class WifiDelayPreference extends CustomTimeInputPreference {
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Wifi off delay time: %d seconds", time);
+    return String.format(Locale.getDefault(), "WiFi off delay time: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
