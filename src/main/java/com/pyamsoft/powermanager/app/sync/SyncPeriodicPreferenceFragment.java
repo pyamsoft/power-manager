@@ -52,4 +52,8 @@ public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new SyncPeriodPresenterLoader();
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Sync";
+  }
 }

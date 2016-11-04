@@ -45,7 +45,15 @@ public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment 
     return R.string.bluetooth_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_bluetooth_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_bluetooth;
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Bluetooth";
   }
 }

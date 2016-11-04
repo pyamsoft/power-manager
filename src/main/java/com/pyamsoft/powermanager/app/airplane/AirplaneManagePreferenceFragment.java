@@ -47,6 +47,10 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.airplane_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_airplane_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_airplane;
   }
@@ -58,5 +62,9 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void onShowManagePermissionNeededMessage() {
     Toast.makeText(getContext(), "Needs root to manage Airplane Mode", Toast.LENGTH_SHORT).show();
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Airplane Mode";
   }
 }

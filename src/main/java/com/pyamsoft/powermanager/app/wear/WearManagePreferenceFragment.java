@@ -53,7 +53,15 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.preset_delay_wearable_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return 0;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_wear;
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Wearable";
   }
 }

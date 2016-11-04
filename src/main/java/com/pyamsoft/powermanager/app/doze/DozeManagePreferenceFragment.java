@@ -48,6 +48,10 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.doze_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_doze_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_doze;
   }
@@ -65,5 +69,9 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
       Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
           Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Doze";
   }
 }

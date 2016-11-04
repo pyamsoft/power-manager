@@ -48,6 +48,10 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.data_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_data_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_data;
   }
@@ -59,5 +63,9 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void onShowManagePermissionNeededMessage() {
     Toast.makeText(getContext(), "Needs root to manage Mobile Data", Toast.LENGTH_SHORT).show();
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Data";
   }
 }

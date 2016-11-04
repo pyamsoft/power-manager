@@ -52,4 +52,8 @@ public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   @Override protected int getDisableTimeKeyResId() {
     return R.string.periodic_wifi_disable_key;
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "WiFi";
+  }
 }
