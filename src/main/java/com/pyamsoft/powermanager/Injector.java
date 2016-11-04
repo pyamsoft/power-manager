@@ -31,7 +31,10 @@ public class Injector implements IPYDroidApp<PowerManagerComponent> {
     this.component = component;
   }
 
-  static void set(@NonNull PowerManagerComponent component) {
+  static void set(@Nullable PowerManagerComponent component) {
+    if (component == null) {
+      throw new NullPointerException("Cannot set a NULL component");
+    }
     instance = new Injector(component);
   }
 
