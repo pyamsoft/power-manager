@@ -48,35 +48,6 @@
   <string name="doze_time_default">30</string>
   <string name="doze_time_key">doze_time</string>
 
-  <bool name="periodic_doze_default">true</bool>
-  <string name="periodic_doze_key">doze_periodic</string>
-
-  <string name="preset_periodic_doze_disable_key">preset_periodic_doze_disable_key</string>
-  <string name="preset_periodic_doze_enable_key">preset_periodic_doze_enable_key</string>
-  <string-array name="preset_periodic_doze_names">
-    <item name="delay_60">1 Minute</item>
-    <item name="delay_120">2 Minutes</item>
-    <item name="delay_300">5 Minutes</item>
-    <item name="delay_600">10 Minutes</item>
-    <item name="delay_1800">30 Minutes</item>
-    <item name="delay_custom">Custom</item>
-  </string-array>
-
-  <string-array name="preset_periodic_doze_values">
-    <item name="delay_60">60</item>
-    <item name="delay_120">120</item>
-    <item name="delay_300">300</item>
-    <item name="delay_600">600</item>
-    <item name="delay_1800">1800</item>
-    <item name="delay_custom">-1</item>
-  </string-array>
-
-  <string name="periodic_doze_disable_default">120</string>
-  <string name="periodic_doze_disable_key">periodic_doze_disable</string>
-
-  <string name="periodic_doze_enable_default">120</string>
-  <string name="periodic_doze_enable_key">periodic_doze_enable</string>
-
   <bool name="ignore_charging_doze_default">false</bool>
   <string name="ignore_charging_doze_key">ignore_charging_doze</string>
 

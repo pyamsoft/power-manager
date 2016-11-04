@@ -24,16 +24,6 @@
   <string name="pref_time_title">%s Off Delay</string>
   <string name="pref_time_summary">Amount of time to wait after screen turns off before turning off %s</string>
 
-  <string name="periodic_pref_title">Toggle %s Periodically</string>
-  <string name="periodic_pref_summary_checked">%s will be toggled periodically after the delay time has elapsed</string>
-  <string name="periodic_pref_summary_unchecked">%s will be left off after the delay time has elapsed</string>
-
-  <string name="periodic_pref_disable_title">Periodic %s Disable</string>
-  <string name="periodic_pref_disable_summary">Duration for how long %s should stay enabled before being toggled on</string>
-
-  <string name="periodic_pref_enable_title">Periodic %s Enable</string>
-  <string name="periodic_pref_enable_summary">Duration for how long %s should stay disabled before being toggled off</string>
-
   <string name="ignore_charging_pref_title">Ignore When Charging</string>
   <string name="ignore_charging_pref_summary_checked">Ignore %s while device is charging</string>
   <string name="ignore_charging_pref_summary_unchecked">Manage %s even while device is charging</string>
