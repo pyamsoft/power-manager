@@ -49,7 +49,7 @@ public class WifiDisableTimePreference extends CustomTimeInputPreference {
   }
 
   @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current Wifi disable time period: %d seconds", time);
+    return String.format(Locale.getDefault(), "Current WiFi disable time period: %d seconds", time);
   }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {

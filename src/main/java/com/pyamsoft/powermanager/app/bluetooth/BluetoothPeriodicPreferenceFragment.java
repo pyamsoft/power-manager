@@ -52,4 +52,8 @@ public class BluetoothPeriodicPreferenceFragment extends PeriodicPreferenceFragm
   @Override protected int getDisableTimeKeyResId() {
     return R.string.periodic_bluetooth_disable_key;
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Bluetooth";
+  }
 }

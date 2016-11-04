@@ -25,9 +25,9 @@
     <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
         android:defaultValue="@bool/periodic_doze_default"
         android:key="@string/periodic_doze_key"
-        android:summaryOff="@string/periodic_doze_summary_unchecked"
-        android:summaryOn="@string/periodic_doze_summary_checked"
-        android:title="@string/periodic_doze_title"
+        android:summaryOff="@string/periodic_pref_summary_unchecked"
+        android:summaryOn="@string/periodic_pref_summary_checked"
+        android:title="@string/periodic_pref_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -37,8 +37,8 @@
         android:entries="@array/preset_periodic_doze_names"
         android:entryValues="@array/preset_periodic_doze_values"
         android:key="@string/preset_periodic_doze_disable_key"
-        android:summary="@string/periodic_doze_disable_summary"
-        android:title="@string/periodic_doze_disable_title"
+        android:summary="@string/periodic_pref_disable_summary"
+        android:title="@string/periodic_pref_disable_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -52,8 +52,8 @@
         android:entries="@array/preset_periodic_doze_names"
         android:entryValues="@array/preset_periodic_doze_values"
         android:key="@string/preset_periodic_doze_enable_key"
-        android:summary="@string/periodic_doze_enable_summary"
-        android:title="@string/periodic_doze_enable_title"
+        android:summary="@string/periodic_pref_enable_summary"
+        android:title="@string/periodic_pref_enable_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->

@@ -52,4 +52,8 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new DataPeriodPresenterLoader();
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Data";
+  }
 }

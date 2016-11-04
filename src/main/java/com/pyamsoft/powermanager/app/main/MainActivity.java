@@ -235,9 +235,12 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Cleaner onboarding";
-    final String line2 = "BUGFIX: Reduce onboarding delay to show only when relevant";
-    return new String[] { line1, line2 };
+    final String line1 = "FEATURE: Add module for Airplane mode";
+    final String line2 = "FEATURE: Better performance for calls to SuperUser";
+    final String line3 = "FEATURE: Add options to enable or disable SuperUser based options";
+    final String line4 = "FEATURE: Add more options for Doze mode";
+    final String line5 = "BUGFIX: More reliable manager queueing";
+    return new String[] { line1, line2, line3, line4, line5 };
   }
 
   @NonNull @Override protected String getVersionName() {

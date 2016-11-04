@@ -45,7 +45,15 @@ public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.sync_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_sync_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_sync;
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Sync";
   }
 }

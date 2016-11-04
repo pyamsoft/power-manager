@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -36,7 +35,7 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
-public abstract class PeriodicPreferenceFragment extends PreferenceFragmentCompat
+public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
     implements PeriodPreferencePresenter.PeriodPreferenceView, ModulePagerAdapter.Page {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
@@ -78,13 +77,11 @@ public abstract class PeriodicPreferenceFragment extends PreferenceFragmentCompa
     loadedKey = PersistentCache.get()
         .load(KEY_PRESENTER, savedInstanceState,
             new PersistLoader.Callback<PeriodPreferencePresenter>() {
-              @NonNull @Override
-              public PersistLoader<PeriodPreferencePresenter> createLoader() {
+              @NonNull @Override public PersistLoader<PeriodPreferencePresenter> createLoader() {
                 return createPresenterLoader();
               }
 
-              @Override
-              public void onPersistentLoaded(@NonNull PeriodPreferencePresenter persist) {
+              @Override public void onPersistentLoaded(@NonNull PeriodPreferencePresenter persist) {
                 presenter = persist;
               }
             });
@@ -106,7 +103,7 @@ public abstract class PeriodicPreferenceFragment extends PreferenceFragmentCompa
     }
   }
 
-  private void resolvePreferences() {
+  @Override void resolvePreferences() {
     periodicPreference = (ViewSwitchPreferenceCompat) findPreference(periodicKey);
     presetEnableTimePreference = (ViewListPreference) findPreference(presetEnableTimeKey);
     presetDisableTimePreference = (ViewListPreference) findPreference(presetDisableTimeKey);
@@ -126,9 +123,14 @@ public abstract class PeriodicPreferenceFragment extends PreferenceFragmentCompa
     }
   }
 
+  @Override void applyFormattedStrings(@NonNull String name) {
+    applyFormattedStrings(periodicPreference, name);
+    applyFormattedStrings(presetEnableTimePreference, name);
+    applyFormattedStrings(presetDisableTimePreference, name);
+  }
+
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    resolvePreferences();
 
     periodicPreference.setOnPreferenceChangeListener((preference, newValue) -> {
       if (newValue instanceof Boolean) {

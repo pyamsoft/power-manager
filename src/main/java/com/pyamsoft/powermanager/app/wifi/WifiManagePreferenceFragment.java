@@ -45,7 +45,15 @@ public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.wifi_time_key;
   }
 
+  @Override protected int getIgnoreChargingKey() {
+    return R.string.ignore_charging_wifi_key;
+  }
+
   @Override protected int getPreferencesResId() {
     return R.xml.manage_wifi;
+  }
+
+  @NonNull @Override protected String getModuleName() {
+    return "WiFi";
   }
 }

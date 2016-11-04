@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v4.app.Fragment;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.CheckBoxPreference;
 import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
@@ -38,7 +38,7 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
-public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
+public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
     implements ManagePreferencePresenter.ManagePreferenceView, ModulePagerAdapter.Page {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
@@ -46,9 +46,11 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
   @SuppressWarnings("WeakerAccess") ViewSwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ViewListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
+  @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   private String presetTimeKey;
   @Nullable private String timeKey;
+  @Nullable private String ignoreChargingKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
   private boolean showOnboardingWhenAvailable;
@@ -66,9 +68,18 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
     addPreferencesFromResource(getPreferencesResId());
     manageKey = getString(getManageKeyResId());
     presetTimeKey = getString(getPresetTimeKeyResId());
+
+    @StringRes final int ignoreKeyRes = getIgnoreChargingKey();
+    if (ignoreKeyRes != 0) {
+      ignoreChargingKey = getString(ignoreKeyRes);
+    } else {
+      ignoreChargingKey = null;
+    }
     @StringRes final int timeResId = getTimeKeyResId();
     if (timeResId != 0) {
       timeKey = getString(timeResId);
+    } else {
+      timeKey = null;
     }
     injectDependencies();
   }
@@ -109,10 +120,17 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
             });
   }
 
-  private void resolvePreferences() {
+  @Override void resolvePreferences() {
     managePreference = (ViewSwitchPreferenceCompat) findPreference(manageKey);
     presetTimePreference = (ViewListPreference) findPreference(presetTimeKey);
-    customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
+
+    if (timeKey != null) {
+      customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
+    }
+
+    if (ignoreChargingKey != null) {
+      ignoreChargingPreference = (CheckBoxPreference) findPreference(ignoreChargingKey);
+    }
 
     if (managePreference == null) {
       throw new NullPointerException("Manage Preference is NULL");
@@ -123,9 +141,16 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
     }
   }
 
+  @Override void applyFormattedStrings(@NonNull String name) {
+    applyFormattedStrings(managePreference, name);
+    applyFormattedStrings(presetTimePreference, name);
+    if (ignoreChargingPreference != null) {
+      applyFormattedStrings(ignoreChargingPreference, name);
+    }
+  }
+
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    resolvePreferences();
 
     managePreference.setOnPreferenceChangeListener((preference, newValue) -> {
       if (newValue instanceof Boolean) {
@@ -355,6 +380,8 @@ public abstract class ManagePreferenceFragment extends PreferenceFragmentCompat
   @StringRes @CheckResult protected abstract int getPresetTimeKeyResId();
 
   @StringRes @CheckResult protected abstract int getTimeKeyResId();
+
+  @StringRes @CheckResult protected abstract int getIgnoreChargingKey();
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
 }

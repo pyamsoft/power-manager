@@ -25,9 +25,9 @@
     <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
         android:defaultValue="@bool/periodic_bluetooth_default"
         android:key="@string/periodic_bluetooth_key"
-        android:summaryOff="@string/periodic_bluetooth_summary_unchecked"
-        android:summaryOn="@string/periodic_bluetooth_summary_checked"
-        android:title="@string/periodic_bluetooth_title"
+        android:summaryOff="@string/periodic_pref_summary_unchecked"
+        android:summaryOn="@string/periodic_pref_summary_checked"
+        android:title="@string/periodic_pref_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -37,8 +37,8 @@
         android:entries="@array/preset_periodic_bluetooth_names"
         android:entryValues="@array/preset_periodic_bluetooth_values"
         android:key="@string/preset_periodic_bluetooth_disable_key"
-        android:summary="@string/periodic_bluetooth_disable_summary"
-        android:title="@string/periodic_bluetooth_disable_title"
+        android:summary="@string/periodic_pref_disable_summary"
+        android:title="@string/periodic_pref_disable_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->
@@ -52,8 +52,8 @@
         android:entries="@array/preset_periodic_bluetooth_names"
         android:entryValues="@array/preset_periodic_bluetooth_values"
         android:key="@string/preset_periodic_bluetooth_enable_key"
-        android:summary="@string/periodic_bluetooth_enable_summary"
-        android:title="@string/periodic_bluetooth_enable_title"
+        android:summary="@string/periodic_pref_enable_summary"
+        android:title="@string/periodic_pref_enable_title"
         />
 
     <!--suppress AndroidElementNotAllowed -->

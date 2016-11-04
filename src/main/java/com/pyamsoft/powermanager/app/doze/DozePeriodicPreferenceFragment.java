@@ -51,4 +51,8 @@ public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new DozePeriodPresenterLoader();
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Doze";
+  }
 }

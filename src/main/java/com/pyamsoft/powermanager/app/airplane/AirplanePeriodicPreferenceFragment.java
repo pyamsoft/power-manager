@@ -52,4 +52,8 @@ public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragme
   protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new AirplanePeriodPresenterLoader();
   }
+
+  @NonNull @Override protected String getModuleName() {
+    return "Airplane Mode";
+  }
 }
