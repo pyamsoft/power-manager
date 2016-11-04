@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.wifi;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -26,14 +26,14 @@ import javax.inject.Provider;
 
 public class WifiOverviewPresenterLoader extends PersistLoader<OverviewPagerPresenter> {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_overview")
-  Provider<OverviewPagerPresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_overview") Provider<OverviewPagerPresenter>
+      presenterProvider;
 
   WifiOverviewPresenterLoader() {
   }
 
   @NonNull @Override public OverviewPagerPresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusWifiScreenComponent().inject(this);
+    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

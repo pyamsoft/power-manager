@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.doze;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
@@ -42,7 +42,7 @@ public class DozeFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.doze;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.base.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class DozeManagePresenterLoader extends PersistLoader<ManagePreferencePre
   }
 
   @NonNull @Override public ManagePreferencePresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusDozeScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

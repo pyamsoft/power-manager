@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.overview;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,7 +30,7 @@ public class OverviewPresenterLoader extends PersistLoader<OverviewPresenter> {
   }
 
   @NonNull @Override public OverviewPresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusOverviewComponent().inject(this);
+    Injector.get().provideComponent().plusOverviewComponent().inject(this);
     return presenterProvider.get();
   }
 }

@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.preference.sync;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreferencePresenter;
 import java.util.Locale;
@@ -57,9 +57,6 @@ public class SyncEnableTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectPresenter(@NonNull Context context) {
-    PowerManagerSingleInitProvider.get()
-        .provideComponent()
-        .plusCustomPreferenceComponent()
-        .inject(this);
+    Injector.get().provideComponent().plusCustomPreferenceComponent().inject(this);
   }
 }
