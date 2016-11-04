@@ -20,7 +20,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -35,10 +35,7 @@ public class ActionToggleService extends Service
 
   @Override public void onCreate() {
     super.onCreate();
-    PowerManagerSingleInitProvider.get()
-        .provideComponent()
-        .plusActionToggleServiceComponent()
-        .inject(this);
+    Injector.get().provideComponent().plusActionToggleServiceComponent().inject(this);
     presenter.bindView(this);
   }
 

@@ -33,6 +33,6 @@ public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {
 
   @Override public void onCreate() {
     super.onCreate();
-    PowerManagerSingleInitProvider.get().provideComponent().plusJobServiceComponent().inject(this);
+    Injector.get().provideComponent().plusJobServiceComponent().inject(this);
   }
 }

@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.app.sync;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
 import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -42,7 +42,7 @@ public class SyncFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

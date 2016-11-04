@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.sync;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.base.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -26,14 +26,14 @@ import javax.inject.Provider;
 
 public class SyncOverviewPresenterLoader extends PersistLoader<OverviewPagerPresenter> {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("sync_overview")
-  Provider<OverviewPagerPresenter> presenterProvider;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("sync_overview") Provider<OverviewPagerPresenter>
+      presenterProvider;
 
   SyncOverviewPresenterLoader() {
   }
 
   @NonNull @Override public OverviewPagerPresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

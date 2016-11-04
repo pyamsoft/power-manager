@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.sync;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class SyncPeriodPresenterLoader extends PersistLoader<PeriodPreferencePre
   }
 
   @NonNull @Override public PeriodPreferencePresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

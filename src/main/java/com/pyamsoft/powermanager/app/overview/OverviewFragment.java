@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
@@ -85,7 +85,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    PowerManagerSingleInitProvider.get().provideComponent().plusOverviewComponent().inject(this);
+    Injector.get().provideComponent().plusOverviewComponent().inject(this);
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false);
     return binding.getRoot();
   }

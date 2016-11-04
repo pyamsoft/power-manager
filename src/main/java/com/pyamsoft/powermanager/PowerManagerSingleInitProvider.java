@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager;
 
 import android.content.Context;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,24 +31,10 @@ import com.pyamsoft.pydroid.about.Licenses;
 public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     implements IPYDroidApp<PowerManagerComponent> {
 
-  @Nullable private static volatile PowerManagerSingleInitProvider instance = null;
   @Nullable private PowerManagerComponent component;
 
-  @NonNull @CheckResult public static IPYDroidApp<PowerManagerComponent> get() {
-    if (instance == null) {
-      throw new NullPointerException("Instance is NULL");
-    }
-
-    //noinspection ConstantConditions
-    return instance;
-  }
-
-  private static void setInstance(@NonNull PowerManagerSingleInitProvider instance) {
-    PowerManagerSingleInitProvider.instance = instance;
-  }
-
   @Override protected void onInstanceCreated(@NonNull Context context) {
-    setInstance(this);
+    Injector.set(component);
     ForegroundService.start(context);
   }
 

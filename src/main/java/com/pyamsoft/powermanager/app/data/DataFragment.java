@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.data;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.app.base.OverviewPagerFragment;
@@ -42,7 +42,7 @@ public class DataFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusDataScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDataScreenComponent().inject(this);
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {

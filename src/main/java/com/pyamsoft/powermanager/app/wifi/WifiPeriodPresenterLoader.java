@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.wifi;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.base.PeriodPreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
@@ -33,7 +33,7 @@ public class WifiPeriodPresenterLoader extends PersistLoader<PeriodPreferencePre
   }
 
   @NonNull @Override public PeriodPreferencePresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusWifiScreenComponent().inject(this);
+    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
     return presenterProvider.get();
   }
 }

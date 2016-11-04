@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.app.trigger;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerSingleInitProvider;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -30,7 +30,7 @@ public class TriggerPresenterLoader extends PersistLoader<TriggerPresenter> {
   }
 
   @NonNull @Override public TriggerPresenter loadPersistent() {
-    PowerManagerSingleInitProvider.get().provideComponent().plusTriggerComponent().inject(this);
+    Injector.get().provideComponent().plusTriggerComponent().inject(this);
     return presenterProvider.get();
   }
 }
