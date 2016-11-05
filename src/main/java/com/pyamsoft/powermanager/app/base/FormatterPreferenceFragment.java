@@ -23,10 +23,26 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceGroup;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.TwoStatePreference;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import timber.log.Timber;
 
 abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
+
+  final void dismissOnboarding(@Nullable TapTargetView targetView) {
+    if (targetView == null) {
+      Timber.w("NULL TargetView");
+      return;
+    }
+
+    if (targetView.isVisible()) {
+      targetView.dismiss(false);
+    }
+  }
 
   final void applyFormattedStrings(@NonNull Preference preference, @NonNull String name) {
     final String replaceString = "REPLACE_ME";
@@ -55,11 +71,36 @@ abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
     }
   }
 
+  @CheckResult @Nullable
+  final PreferenceViewHolder findViewForPreference(@Nullable String preferenceKey) {
+    if (preferenceKey == null) {
+      Timber.w("NULL Preference Key");
+      return null;
+    }
+
+    final PreferenceGroup.PreferencePositionCallback callback =
+        (PreferenceGroup.PreferencePositionCallback) getListView().getAdapter();
+    final int position = callback.getPreferenceAdapterPosition(preferenceKey);
+    if (position == RecyclerView.NO_POSITION) {
+      Timber.w("No position for key: %s", preferenceKey);
+      return null;
+    }
+
+    return (PreferenceViewHolder) getListView().findViewHolderForAdapterPosition(position);
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     resolvePreferences();
     applyFormattedStrings(getModuleName());
   }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    dismissOnboarding();
+  }
+
+  abstract void dismissOnboarding();
 
   abstract void resolvePreferences();
 

@@ -23,10 +23,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -40,10 +45,14 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
+  @Nullable TapTargetView manageTapTarget;
+  @Nullable TapTargetView presetTapTarget;
+  @Nullable TapTargetView customTimeTapTarget;
+  @Nullable TapTargetView fabTapTarget;
+  String presetTimeKey;
+  @Nullable String customTimeKey;
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
-  private String presetTimeKey;
-  @Nullable private String timeKey;
   @Nullable private String ignoreChargingKey;
   private long loadedKey;
   private boolean showOnboardingOnBind = false;
@@ -77,9 +86,9 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     }
     @StringRes final int timeResId = getTimeKeyResId();
     if (timeResId != 0) {
-      timeKey = getString(timeResId);
+      customTimeKey = getString(timeResId);
     } else {
-      timeKey = null;
+      customTimeKey = null;
     }
     injectDependencies();
   }
@@ -108,8 +117,8 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
     presetTimePreference = (ListPreference) findPreference(presetTimeKey);
 
-    if (timeKey != null) {
-      customTimePreference = (CustomTimeInputPreference) findPreference(timeKey);
+    if (customTimeKey != null) {
+      customTimePreference = (CustomTimeInputPreference) findPreference(customTimeKey);
     }
 
     if (ignoreChargingKey != null) {
@@ -234,6 +243,17 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     }
   }
 
+  @Override void dismissOnboarding() {
+    dismissOnboarding(manageTapTarget);
+    manageTapTarget = null;
+    dismissOnboarding(presetTapTarget);
+    presetTapTarget = null;
+    dismissOnboarding(customTimeTapTarget);
+    customTimeTapTarget = null;
+    dismissOnboarding(fabTapTarget);
+    fabTapTarget = null;
+  }
+
   @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed,
       @NonNull String presetDelay) {
     if (customTimePreference != null) {
@@ -253,80 +273,121 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @CallSuper @Override public void showOnBoarding() {
-    //Timber.d("Show manage onboarding");
-    //if (sequence == null) {
-    //  sequence = new TapTargetSequence(getActivity());
-    //
-    //  TapTarget manageTarget = null;
-    //  final View manageView = managePreference.getRootView();
-    //  if (manageView != null) {
-    //    final View switchView = manageView.findViewById(R.id.switchWidget);
-    //    if (switchView != null) {
-    //      manageTarget =
-    //          TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
-    //              getString(R.string.onboard_desc_manage_manage))
-    //              .tintTarget(false)
-    //              .cancelable(false);
-    //    }
-    //  }
-    //
-    //  TapTarget listTarget = null;
-    //  final View listView = presetTimePreference.getRootView();
-    //  if (listView != null) {
-    //    listTarget = TapTarget.forView(listView, getString(R.string.onboard_title_manage_preset),
-    //        getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
-    //  }
-    //
-    //  TapTarget customTarget = null;
-    //  if (customTimePreference != null) {
-    //    final View customView = customTimePreference.getRootView();
-    //    if (customView != null) {
-    //      customTarget =
-    //          TapTarget.forView(customView, getString(R.string.onboard_title_manage_custom),
-    //              getString(R.string.onboard_desc_manage_custom))
-    //              .tintTarget(false)
-    //              .cancelable(false);
-    //    }
-    //  }
-    //
-    //  TapTarget fabTarget = null;
-    //  final Fragment parentFragment = getParentFragment();
-    //  if (parentFragment instanceof OverviewPagerFragment) {
-    //    final OverviewPagerFragment overviewPagerFragment = (OverviewPagerFragment) parentFragment;
-    //    final View fab = overviewPagerFragment.getFabTarget();
-    //    if (fab != null) {
-    //      fabTarget = TapTarget.forView(fab, getString(R.string.onboard_title_overview_fab),
-    //          getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
-    //    }
-    //  }
-    //
-    //  if (manageTarget != null) {
-    //    sequence.target(manageTarget);
-    //  }
-    //  if (listTarget != null) {
-    //    sequence.target(listTarget);
-    //  }
-    //  if (customTarget != null) {
-    //    sequence.target(customTarget);
-    //  }
-    //  if (fabTarget != null) {
-    //    sequence.target(fabTarget);
-    //  }
-    //
-    //  sequence.listener(new TapTargetSequence.Listener() {
-    //    @Override public void onSequenceFinish() {
-    //      if (presenter != null) {
-    //        presenter.setShownOnBoarding();
-    //      }
-    //    }
-    //
-    //    @Override public void onSequenceCanceled(TapTarget lastTarget) {
-    //
-    //    }
-    //  });
-    //}
-    //
-    ////sequence.start();
+    Timber.d("Show manage onboarding");
+    if (manageTapTarget == null) {
+      Timber.d("Create Manage TapTarget");
+      final PreferenceViewHolder manageViewHolder = findViewForPreference(manageKey);
+      if (manageViewHolder != null) {
+        Timber.d("Find switch view in view holder");
+        final View switchView = manageViewHolder.findViewById(R.id.switchWidget);
+        if (switchView != null) {
+          Timber.d("Create tap target on switch view");
+          createManageTapTarget(switchView);
+        }
+      }
+    }
+  }
+
+  private void createManageTapTarget(@NonNull View switchView) {
+    final TapTarget manageTarget =
+        TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
+            getString(R.string.onboard_desc_manage_manage)).tintTarget(false).cancelable(false);
+    manageTapTarget =
+        TapTargetView.showFor(getActivity(), manageTarget, new TapTargetView.Listener() {
+
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Manage clicked");
+            presetTapTarget = null;
+
+            Timber.d("Attempt to find list view holder");
+            final PreferenceViewHolder listViewHolder = findViewForPreference(presetTimeKey);
+            if (listViewHolder != null) {
+              createPresetTimeTapTarget(listViewHolder.itemView);
+            } else {
+              Timber.w("Cannot find Preset TapTarget.");
+              endOnboarding();
+            }
+          }
+        });
+  }
+
+  void createPresetTimeTapTarget(@NonNull View presetView) {
+    final TapTarget presetListTarget =
+        TapTarget.forView(presetView, getString(R.string.onboard_title_manage_preset),
+            getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
+    presetTapTarget =
+        TapTargetView.showFor(getActivity(), presetListTarget, new TapTargetView.Listener() {
+
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Preset clicked");
+            customTimeTapTarget = null;
+
+            Timber.d("Attempt to find custom view holder");
+            final PreferenceViewHolder customViewHolder = findViewForPreference(customTimeKey);
+            if (customViewHolder != null) {
+              createCustomTimeTapTarget(customViewHolder.itemView);
+            } else {
+              Timber.w("Cannot find Custom TapTarget.");
+              endOnboarding();
+            }
+          }
+        });
+  }
+
+  void createCustomTimeTapTarget(@NonNull View customTimeView) {
+    final TapTarget customTimeTarget =
+        TapTarget.forView(customTimeView, getString(R.string.onboard_title_manage_custom),
+            getString(R.string.onboard_desc_manage_custom)).tintTarget(false).cancelable(false);
+
+    customTimeTapTarget =
+        TapTargetView.showFor(getActivity(), customTimeTarget, new TapTargetView.Listener() {
+
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Custom clicked");
+            fabTapTarget = null;
+
+            Timber.d("Attempt to find fab");
+            final Fragment parentFragment = getParentFragment();
+            if (parentFragment instanceof OverviewPagerFragment) {
+              final OverviewPagerFragment overviewPagerFragment =
+                  (OverviewPagerFragment) parentFragment;
+              final View fab = overviewPagerFragment.getFabTarget();
+              if (fab != null) {
+                createFabTapTarget(fab);
+              } else {
+                Timber.w("Cannot find Custom TapTarget.");
+                endOnboarding();
+              }
+            } else {
+              throw new IllegalStateException("Parent fragment is not OverviewPagerFragment");
+            }
+          }
+        });
+  }
+
+  void createFabTapTarget(@NonNull View fab) {
+    final TapTarget fabTarget =
+        TapTarget.forView(fab, getString(R.string.onboard_title_overview_fab),
+            getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
+    fabTapTarget = TapTargetView.showFor(getActivity(), fabTarget, new TapTargetView.Listener() {
+
+      @Override public void onTargetClick(TapTargetView view) {
+        super.onTargetClick(view);
+        Timber.d("FAB clicked");
+
+        endOnboarding();
+      }
+    });
+  }
+
+  void endOnboarding() {
+    if (presenter != null) {
+      Timber.d("End manage onboarding");
+      presenter.setShownOnBoarding();
+    }
   }
 
   @Override public void onManagePermissionCallback(boolean hasPermission) {

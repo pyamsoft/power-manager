@@ -25,6 +25,7 @@ import android.support.annotation.XmlRes;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -246,6 +247,10 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
       presetDisableTimePreference.setOnPreferenceChangeListener(null);
       presetDisableTimePreference.setOnPreferenceClickListener(null);
     }
+  }
+
+  @Override void dismissOnboarding() {
+
   }
 
   @Override public void onPeriodicSet() {
