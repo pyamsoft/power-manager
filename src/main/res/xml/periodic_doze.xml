@@ -22,7 +22,7 @@
       android:title="Periodic Doze Settings">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/periodic_doze_default"
         android:key="@string/periodic_doze_key"
         android:summaryOff="@string/periodic_pref_summary_unchecked"
@@ -31,7 +31,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+    <ListPreference
         android:defaultValue="@string/periodic_doze_disable_default"
         android:dependency="@string/periodic_doze_key"
         android:entries="@array/preset_periodic_doze_names"
@@ -46,7 +46,7 @@
         android:key="@string/periodic_doze_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+    <ListPreference
         android:defaultValue="@string/periodic_doze_enable_default"
         android:dependency="@string/periodic_doze_key"
         android:entries="@array/preset_periodic_doze_names"

@@ -21,7 +21,7 @@
       android:title="Doze Settings">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_wearable_default"
         android:key="@string/manage_wearable_key"
         android:summaryOff="@string/manage_wearable_summary_unchecked"
@@ -30,7 +30,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+    <ListPreference
         android:defaultValue="@string/wearable_time_default"
         android:dependency="@string/manage_wearable_key"
         android:entries="@array/preset_delay_wearable_names"

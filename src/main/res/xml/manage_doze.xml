@@ -22,7 +22,7 @@
       android:title="Doze Settings">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_doze_default"
         android:key="@string/manage_doze_key"
         android:summaryOff="@string/manage_pref_summary_unchecked"
@@ -31,7 +31,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
+    <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_doze_default"
         android:dependency="@string/manage_doze_key"
         android:key="@string/ignore_charging_doze_key"
@@ -42,7 +42,7 @@
 
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
+    <CheckBoxPreference
         android:defaultValue="@bool/exclusive_doze_default"
         android:dependency="@string/manage_doze_key"
         android:key="@string/exclusive_doze_key"
@@ -57,7 +57,7 @@
       android:title="Doze Delay">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+    <ListPreference
         android:defaultValue="@string/doze_time_default"
         android:dependency="@string/manage_doze_key"
         android:entries="@array/preset_delay_doze_names"

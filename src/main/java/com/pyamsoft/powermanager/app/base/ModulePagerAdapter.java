@@ -18,15 +18,35 @@ package com.pyamsoft.powermanager.app.base;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
+import timber.log.Timber;
 
 public abstract class ModulePagerAdapter extends FragmentStatePagerAdapter {
 
-  protected ModulePagerAdapter(FragmentManager fm) {
+  @Nullable private PagerItem currentItem;
+
+  protected ModulePagerAdapter(@NonNull FragmentManager fm) {
     super(fm);
+  }
+
+  @Override public void setPrimaryItem(ViewGroup container, int position, Object object) {
+    super.setPrimaryItem(container, position, object);
+    Timber.d("Set primary item: %d", position);
+    if (currentItem != null) {
+      Timber.d("Unselect old item: %s", currentItem);
+      currentItem.onUnselected();
+    }
+
+    if (object instanceof PagerItem) {
+      final PagerItem pagerItem = (PagerItem) object;
+      Timber.d("Set current item: %s", pagerItem);
+      pagerItem.onSelected();
+      currentItem = pagerItem;
+    }
   }
 
   @Override public final Fragment getItem(int position) {
@@ -68,28 +88,4 @@ public abstract class ModulePagerAdapter extends FragmentStatePagerAdapter {
   @CheckResult @NonNull protected abstract ManagePreferenceFragment getManageFragment();
 
   @CheckResult @NonNull protected abstract PeriodicPreferenceFragment getPeriodicFragment();
-
-  void onPageSelected(@NonNull ViewPager viewPager, int position) {
-    final Page manageFragment = (Page) instantiateItem(viewPager, 0);
-    final Page periodFragment = (Page) instantiateItem(viewPager, 1);
-    switch (position) {
-      case 0:
-        manageFragment.onSelected();
-        periodFragment.onUnselected();
-        break;
-      case 1:
-        manageFragment.onUnselected();
-        periodFragment.onSelected();
-        break;
-      default:
-        throw new RuntimeException("Invalid page " + position);
-    }
-  }
-
-  interface Page {
-
-    void onSelected();
-
-    void onUnselected();
-  }
 }
