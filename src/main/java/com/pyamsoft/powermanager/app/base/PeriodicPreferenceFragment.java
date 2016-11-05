@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
-    implements PeriodPreferencePresenter.PeriodPreferenceView {
+    implements PeriodPreferencePresenter.PeriodPreferenceView, PagerItem {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
@@ -50,6 +50,23 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   private String disableTimeKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
+  private boolean showOnboardingOnBind = false;
+
+  @Override public void onSelected() {
+    Timber.d("Select PeriodicPreferenceFragment");
+    showOnboardingOnBind = (presenter == null);
+    if (presenter != null) {
+      presenter.showOnboardingIfNeeded();
+    }
+  }
+
+  @Override public void onUnselected() {
+    Timber.d("Unselect PeriodicPreferenceFragment");
+    showOnboardingOnBind = false;
+    if (presenter != null) {
+      presenter.dismissOnboarding();
+    }
+  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -180,23 +197,15 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(this);
+
+    if (showOnboardingOnBind) {
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    Timber.d("onResume");
-    presenter.showOnboardingIfNeeded();
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    Timber.d("onPause");
-    presenter.dismissOnboarding();
   }
 
   @Override public void onDestroy() {
@@ -310,7 +319,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
       });
     }
 
-    sequence.start();
+    //sequence.start();
   }
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();

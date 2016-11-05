@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
-    implements ManagePreferencePresenter.ManagePreferenceView {
+    implements ManagePreferencePresenter.ManagePreferenceView, PagerItem {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
@@ -51,6 +51,23 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Nullable private String ignoreChargingKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
+  private boolean showOnboardingOnBind = false;
+
+  @Override public void onSelected() {
+    Timber.d("Select ManagePreferenceFragment");
+    showOnboardingOnBind = (presenter == null);
+    if (presenter != null) {
+      presenter.showOnboardingIfNeeded();
+    }
+  }
+
+  @Override public void onUnselected() {
+    Timber.d("Unselect ManagePreferenceFragment");
+    showOnboardingOnBind = false;
+    if (presenter != null) {
+      presenter.dismissOnboarding();
+    }
+  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -179,6 +196,10 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     if (checkManagePermission() && managePreference.isChecked()) {
       presenter.checkManagePermission();
     }
+
+    if (showOnboardingOnBind) {
+      presenter.showOnboardingIfNeeded();
+    }
   }
 
   @CallSuper @Override public void onStop() {
@@ -186,17 +207,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     presenter.unbindView();
   }
 
-  @Override public void onResume() {
-    super.onResume();
-    Timber.d("onResume");
-    presenter.showOnboardingIfNeeded();
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    Timber.d("onPause");
-    presenter.dismissOnboarding();
-  }
 
   @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
@@ -322,7 +332,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       });
     }
 
-    sequence.start();
+    //sequence.start();
   }
 
   @Override public void onManagePermissionCallback(boolean hasPermission) {
