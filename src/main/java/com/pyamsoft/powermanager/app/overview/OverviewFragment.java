@@ -214,7 +214,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
               }
             }
 
-            @Override public void onSequenceCanceled() {
+            @Override public void onSequenceCanceled(TapTarget lastTarget) {
 
             }
           });
