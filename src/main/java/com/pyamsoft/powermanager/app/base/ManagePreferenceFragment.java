@@ -37,7 +37,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
-    implements ManagePreferencePresenter.ManagePreferenceView, ModulePagerAdapter.Page {
+    implements ManagePreferencePresenter.ManagePreferenceView {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
@@ -51,7 +51,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Nullable private String ignoreChargingKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
-  private boolean showOnboardingWhenAvailable;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -71,22 +70,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       timeKey = null;
     }
     injectDependencies();
-  }
-
-  @Override public void onSelected() {
-    if (presenter == null || !presenter.isBound()) {
-      showOnboardingWhenAvailable = true;
-    } else {
-      showOnboardingWhenAvailable = false;
-      presenter.showOnboardingIfNeeded();
-    }
-  }
-
-  @Override public void onUnselected() {
-    showOnboardingWhenAvailable = false;
-    if (presenter != null && presenter.isBound()) {
-      presenter.dismissOnboarding();
-    }
   }
 
   /**
@@ -205,13 +188,13 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @Override public void onResume() {
     super.onResume();
-    if (showOnboardingWhenAvailable) {
-      presenter.showOnboardingIfNeeded();
-    }
+    Timber.d("onResume");
+    presenter.showOnboardingIfNeeded();
   }
 
   @Override public void onPause() {
     super.onPause();
+    Timber.d("onPause");
     presenter.dismissOnboarding();
   }
 

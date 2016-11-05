@@ -34,7 +34,7 @@ import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
-    implements PeriodPreferencePresenter.PeriodPreferenceView, ModulePagerAdapter.Page {
+    implements PeriodPreferencePresenter.PeriodPreferenceView {
 
   @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
@@ -50,7 +50,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   private String disableTimeKey;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
-  private boolean showOnboardingWhenAvailable;
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
@@ -74,22 +73,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
                 presenter = persist;
               }
             });
-  }
-
-  @Override public void onSelected() {
-    if (presenter == null || !presenter.isBound()) {
-      showOnboardingWhenAvailable = true;
-    } else {
-      showOnboardingWhenAvailable = false;
-      presenter.showOnboardingIfNeeded();
-    }
-  }
-
-  @Override public void onUnselected() {
-    showOnboardingWhenAvailable = false;
-    if (presenter != null && presenter.isBound()) {
-      presenter.dismissOnboarding();
-    }
   }
 
   @Override void resolvePreferences() {
@@ -206,13 +189,13 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onResume() {
     super.onResume();
-    if (showOnboardingWhenAvailable) {
-      presenter.showOnboardingIfNeeded();
-    }
+    Timber.d("onResume");
+    presenter.showOnboardingIfNeeded();
   }
 
   @Override public void onPause() {
     super.onPause();
+    Timber.d("onPause");
     presenter.dismissOnboarding();
   }
 

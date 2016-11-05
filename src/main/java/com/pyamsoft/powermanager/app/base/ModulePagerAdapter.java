@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 
 public abstract class ModulePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -68,28 +67,4 @@ public abstract class ModulePagerAdapter extends FragmentStatePagerAdapter {
   @CheckResult @NonNull protected abstract ManagePreferenceFragment getManageFragment();
 
   @CheckResult @NonNull protected abstract PeriodicPreferenceFragment getPeriodicFragment();
-
-  void onPageSelected(@NonNull ViewPager viewPager, int position) {
-    final Page manageFragment = (Page) instantiateItem(viewPager, 0);
-    final Page periodFragment = (Page) instantiateItem(viewPager, 1);
-    switch (position) {
-      case 0:
-        manageFragment.onSelected();
-        periodFragment.onUnselected();
-        break;
-      case 1:
-        manageFragment.onUnselected();
-        periodFragment.onSelected();
-        break;
-      default:
-        throw new RuntimeException("Invalid page " + position);
-    }
-  }
-
-  interface Page {
-
-    void onSelected();
-
-    void onUnselected();
-  }
 }
