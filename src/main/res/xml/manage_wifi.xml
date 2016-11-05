@@ -22,7 +22,7 @@
       android:title="Wifi Settings">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewSwitchPreferenceCompat
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/manage_wifi_default"
         android:key="@string/manage_wifi_key"
         android:summaryOff="@string/manage_pref_summary_unchecked"
@@ -31,7 +31,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewCheckBoxPreference
+    <CheckBoxPreference
         android:defaultValue="@bool/ignore_charging_wifi_default"
         android:dependency="@string/manage_wifi_key"
         android:key="@string/ignore_charging_wifi_key"
@@ -46,7 +46,7 @@
       android:title="Wifi Delay">
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.ViewListPreference
+    <ListPreference
         android:defaultValue="@string/wifi_time_default"
         android:dependency="@string/manage_wifi_key"
         android:entries="@array/preset_delay_wifi_names"
