@@ -23,9 +23,12 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
+import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -41,13 +44,16 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
+  String presetDisableTimeKey;
+  @Nullable TapTargetView periodicDisableTapTarget;
+  @Nullable TapTargetView periodicEnableTapTarget;
+  String presetEnableTimeKey;
   private String periodicKey;
-  private String presetEnableTimeKey;
-  private String presetDisableTimeKey;
   private String enableTimeKey;
   private String disableTimeKey;
   private long loadedKey;
   private boolean showOnboardingOnBind = false;
+  @Nullable private TapTargetView periodicTapTarget;
 
   @Override public void onSelected() {
     Timber.d("Select PeriodicPreferenceFragment");
@@ -250,7 +256,14 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   }
 
   @Override void dismissOnboarding() {
+    dismissOnboarding(periodicTapTarget);
+    periodicTapTarget = null;
 
+    dismissOnboarding(periodicDisableTapTarget);
+    periodicDisableTapTarget = null;
+
+    dismissOnboarding(periodicEnableTapTarget);
+    periodicEnableTapTarget = null;
   }
 
   @Override public void onPeriodicSet() {
@@ -262,65 +275,89 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   }
 
   @Override public void showOnBoarding() {
-    //Timber.d("Show manage onboarding");
-    //if (sequence == null) {
-    //  sequence = new TapTargetSequence(getActivity());
-    //
-    //  TapTarget periodicTarget = null;
-    //  final View periodicView = periodicPreference.getRootView();
-    //  if (periodicView != null) {
-    //    final View switchView = periodicView.findViewById(R.id.switchWidget);
-    //    if (switchView != null) {
-    //      periodicTarget =
-    //          TapTarget.forView(switchView, getString(R.string.onboard_title_period_period),
-    //              getString(R.string.onboard_desc_period_period))
-    //              .tintTarget(false)
-    //              .cancelable(false);
-    //    }
-    //  }
-    //
-    //  TapTarget periodicEnable = null;
-    //  final View enableView = presetEnableTimePreference.getRootView();
-    //  if (enableView != null) {
-    //    periodicEnable =
-    //        TapTarget.forView(enableView, getString(R.string.onboard_title_period_enable),
-    //            getString(R.string.onboard_desc_period_enable)).tintTarget(false).cancelable(false);
-    //  }
-    //
-    //  TapTarget periodicDisable = null;
-    //  final View disableView = presetDisableTimePreference.getRootView();
-    //  if (disableView != null) {
-    //    periodicDisable =
-    //        TapTarget.forView(disableView, getString(R.string.onboard_title_period_disable),
-    //            getString(R.string.onboard_desc_period_disable))
-    //            .tintTarget(false)
-    //            .cancelable(false);
-    //  }
-    //
-    //  if (periodicTarget != null) {
-    //    sequence.target(periodicTarget);
-    //  }
-    //  if (periodicEnable != null) {
-    //    sequence.target(periodicEnable);
-    //  }
-    //  if (periodicDisable != null) {
-    //    sequence.target(periodicDisable);
-    //  }
-    //
-    //  sequence.listener(new TapTargetSequence.Listener() {
-    //    @Override public void onSequenceFinish() {
-    //      if (presenter != null) {
-    //        presenter.setShownOnBoarding();
-    //      }
-    //    }
-    //
-    //    @Override public void onSequenceCanceled(TapTarget lastTarget) {
-    //
-    //    }
-    //  });
-    //}
-    //
-    ////sequence.start();
+    Timber.d("Show periodic onboarding");
+    if (periodicTapTarget == null) {
+      Timber.d("Create Periodic TapTarget");
+      final PreferenceViewHolder manageViewHolder = findViewForPreference(periodicKey);
+      if (manageViewHolder != null) {
+        Timber.d("Find switch view in view holder");
+        final View switchView = manageViewHolder.findViewById(R.id.switchWidget);
+        if (switchView != null) {
+          Timber.d("Create tap target on switch view");
+          createPeriodicTarget(switchView);
+        }
+      }
+    }
+  }
+
+  private void createPeriodicTarget(@NonNull View switchView) {
+    final TapTarget periodicTarget =
+        TapTarget.forView(switchView, getString(R.string.onboard_title_period_period),
+            getString(R.string.onboard_desc_period_period)).tintTarget(false).cancelable(false);
+    periodicTapTarget =
+        TapTargetView.showFor(getActivity(), periodicTarget, new TapTargetView.Listener() {
+
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Periodic clicked");
+            periodicDisableTapTarget = null;
+
+            Timber.d("Attempt to find preset disable view holder");
+            final PreferenceViewHolder listViewHolder = findViewForPreference(presetDisableTimeKey);
+            if (listViewHolder != null) {
+              createPresetDisableTapTarget(listViewHolder.itemView);
+            } else {
+              Timber.w("Cannot find Preset Disable TapTarget.");
+              endOnboarding();
+            }
+          }
+        });
+  }
+
+  void endOnboarding() {
+    if (presenter != null) {
+      Timber.d("End manage onboarding");
+      presenter.setShownOnBoarding();
+    }
+  }
+
+  void createPresetDisableTapTarget(@NonNull View itemView) {
+    final TapTarget periodicDisable =
+        TapTarget.forView(itemView, getString(R.string.onboard_title_period_disable),
+            getString(R.string.onboard_desc_period_disable)).tintTarget(false).cancelable(false);
+    periodicDisableTapTarget =
+        TapTargetView.showFor(getActivity(), periodicDisable, new TapTargetView.Listener() {
+
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Periodic Disable clicked");
+            periodicEnableTapTarget = null;
+
+            Timber.d("Attempt to find preset enable view holder");
+            final PreferenceViewHolder listViewHolder = findViewForPreference(presetEnableTimeKey);
+            if (listViewHolder != null) {
+              createPresetEnableTapTarget(listViewHolder.itemView);
+            } else {
+              Timber.w("Cannot find Preset Enable TapTarget.");
+              endOnboarding();
+            }
+          }
+        });
+  }
+
+  void createPresetEnableTapTarget(@NonNull View itemView) {
+    final TapTarget periodicEnable =
+        TapTarget.forView(itemView, getString(R.string.onboard_title_period_enable),
+            getString(R.string.onboard_desc_period_enable)).tintTarget(false).cancelable(false);
+
+    periodicEnableTapTarget =
+        TapTargetView.showFor(getActivity(), periodicEnable, new TapTargetView.Listener() {
+          @Override public void onTargetClick(TapTargetView view) {
+            super.onTargetClick(view);
+            Timber.d("Periodic Enable clicked");
+            endOnboarding();
+          }
+        });
   }
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
