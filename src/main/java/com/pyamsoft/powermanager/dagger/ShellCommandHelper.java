@@ -18,15 +18,19 @@ package com.pyamsoft.powermanager.dagger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import eu.chainfire.libsuperuser.Shell;
+import java.util.List;
 import timber.log.Timber;
 
 public class ShellCommandHelper {
 
+  private static final int SHELL_TYPE_ROOT = 0;
+  private static final int SHELL_TYPE_NORMAL = 1;
   @NonNull private static final ShellCommandHelper INSTANCE = new ShellCommandHelper();
-  @NonNull private final Shell.Interactive shellSession;
-  @NonNull private final Shell.Interactive rootSession;
+  @NonNull private Shell.Interactive shellSession;
+  @NonNull private Shell.Interactive rootSession;
 
   private ShellCommandHelper() {
     shellSession = openShellSession(false);
@@ -63,13 +67,54 @@ public class ShellCommandHelper {
     return builder.open();
   }
 
+  @WorkerThread private void recreateShell(boolean useRoot) {
+    if (useRoot) {
+      rootSession.close();
+      rootSession = openShellSession(true);
+    } else {
+      shellSession.close();
+      shellSession = openShellSession(false);
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(int exitCode,
+      @Nullable List<String> output, boolean rootShell) {
+    final boolean recreate;
+    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED
+        || exitCode == Shell.OnCommandResultListener.SHELL_EXEC_FAILED) {
+      Timber.e("Shell failed command: %s",
+          exitCode == Shell.OnCommandResultListener.SHELL_DIED ? "DEAD SHELL" : "EXEC FAILED");
+      recreate = true;
+    } else {
+      recreate = false;
+    }
+
+    if (output != null) {
+      Timber.d("Command output");
+      for (final String line : output) {
+        if (line != null) {
+          Timber.d("%s", line);
+        }
+      }
+    }
+
+    if (recreate) {
+      Timber.w("Recreating %s shell", (rootShell) ? "SU" : "SH");
+      recreateShell(rootShell);
+    }
+  }
+
   @WorkerThread private void runSUCommand(@NonNull String command) {
     Timber.d("Run command '%s' in SU session", command);
-    rootSession.addCommand(command);
+    rootSession.addCommand(command, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT);
+    });
   }
 
   @WorkerThread private void runSHCommand(@NonNull String command) {
     Timber.d("Run command '%s' in Shell session", command);
-    shellSession.addCommand(command);
+    shellSession.addCommand(command, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT);
+    });
   }
 }
