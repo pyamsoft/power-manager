@@ -67,8 +67,11 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   }
 
   @Override public void create() {
+    // TODO
     // For now, trigger every 5 minutes
-    TriggerJob.queue(jobManager, new TriggerJob(5 * 60 * 1000));
+    //TriggerJob.queue(jobManager, new TriggerJob(5 * 60 * 1000, wifiObserver, dataObserver,
+    //    bluetoothObserver, syncObserver, wifiModifier, dataModifier, bluetoothModifier,
+    //    syncModifier, jobSchedulerCompat, powerTriggerDB));
   }
 
   @Override public void destroy() {

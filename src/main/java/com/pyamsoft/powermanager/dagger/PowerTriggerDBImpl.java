@@ -41,7 +41,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @Inject PowerTriggerDBImpl(final @NonNull Context context, final @NonNull Scheduler scheduler) {
     openHelper = new PowerTriggerOpenHelper(context);
-    briteDatabase = SqlBrite.create().wrapDatabaseHelper(openHelper, scheduler);
+    briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler);
     openCount = new AtomicInteger(0);
   }
 
@@ -145,7 +145,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     openHelper.deleteDatabase();
   }
 
-  static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
+  @SuppressWarnings("WeakerAccess") static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
     @NonNull private static final String DB_NAME = "power_trigger_db";
     private static final int DATABASE_VERSION = 1;

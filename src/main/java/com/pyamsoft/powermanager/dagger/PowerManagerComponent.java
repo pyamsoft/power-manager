@@ -37,7 +37,6 @@ import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerJobComponent;
 import com.pyamsoft.powermanager.dagger.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
@@ -59,8 +58,6 @@ import javax.inject.Singleton;
   ForegroundServiceComponent plusForegroundServiceComponent();
 
   ActionToggleServiceComponent plusActionToggleServiceComponent();
-
-  TriggerJobComponent plusTriggerJobComponent();
 
   ManagerComponent plusManagerComponent();
 
