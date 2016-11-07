@@ -88,10 +88,12 @@ public class ShellCommandHelper {
     }
 
     if (output != null) {
-      Timber.d("Command output");
-      for (final String line : output) {
-        if (line != null) {
-          Timber.d("%s", line);
+      if (!output.isEmpty()) {
+        Timber.d("Command output");
+        for (final String line : output) {
+          if (line != null) {
+            Timber.d("%s", line);
+          }
         }
       }
     }
