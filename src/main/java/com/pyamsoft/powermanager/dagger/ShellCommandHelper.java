@@ -77,13 +77,11 @@ public class ShellCommandHelper {
     }
   }
 
-  @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(int exitCode,
-      @Nullable List<String> output, boolean rootShell) {
+  @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(@NonNull String command,
+      int exitCode, @Nullable List<String> output, boolean rootShell) {
     final boolean recreate;
-    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED
-        || exitCode == Shell.OnCommandResultListener.SHELL_EXEC_FAILED) {
-      Timber.e("Shell failed command: %s",
-          exitCode == Shell.OnCommandResultListener.SHELL_DIED ? "DEAD SHELL" : "EXEC FAILED");
+    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
+      Timber.e("Shell died, command failed. '%s'", command);
       recreate = true;
     } else {
       recreate = false;
@@ -101,20 +99,28 @@ public class ShellCommandHelper {
     if (recreate) {
       Timber.w("Recreating %s shell", (rootShell) ? "SU" : "SH");
       recreateShell(rootShell);
+
+      // Attempt to run the command again
+      Timber.w("Re-run command");
+      if (rootShell) {
+        runSUCommand(command);
+      } else {
+        runSHCommand(command);
+      }
     }
   }
 
   @WorkerThread private void runSUCommand(@NonNull String command) {
     Timber.d("Run command '%s' in SU session", command);
     rootSession.addCommand(command, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
-      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT);
+      parseCommandResult(command, exitCode, output, commandCode == SHELL_TYPE_ROOT);
     });
   }
 
   @WorkerThread private void runSHCommand(@NonNull String command) {
     Timber.d("Run command '%s' in Shell session", command);
     shellSession.addCommand(command, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
-      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT);
+      parseCommandResult(command, exitCode, output, commandCode == SHELL_TYPE_ROOT);
     });
   }
 }
