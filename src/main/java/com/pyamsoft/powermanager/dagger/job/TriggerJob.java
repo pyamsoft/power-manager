@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
@@ -40,25 +42,26 @@ public class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
   private static final int PRIORITY = 2;
-  private final BooleanInterestObserver wifiObserver;
-  private final BooleanInterestObserver dataObserver;
-  private final BooleanInterestObserver bluetoothObserver;
-  private final BooleanInterestObserver syncObserver;
-
-  private final BooleanInterestModifier wifiModifier;
-  private final BooleanInterestModifier dataModifier;
-  private final BooleanInterestModifier bluetoothModifier;
-  private final BooleanInterestModifier syncModifier;
-  private final JobSchedulerCompat jobSchedulerCompat;
-  private final PowerTriggerDB powerTriggerDB;
+  @NonNull final PowerTriggerDB powerTriggerDB;
+  @NonNull private final BooleanInterestObserver wifiObserver;
+  @NonNull private final BooleanInterestObserver dataObserver;
+  @NonNull private final BooleanInterestObserver bluetoothObserver;
+  @NonNull private final BooleanInterestObserver syncObserver;
+  @NonNull private final BooleanInterestModifier wifiModifier;
+  @NonNull private final BooleanInterestModifier dataModifier;
+  @NonNull private final BooleanInterestModifier bluetoothModifier;
+  @NonNull private final BooleanInterestModifier syncModifier;
+  @NonNull private final JobSchedulerCompat jobSchedulerCompat;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
-  public TriggerJob(long delay, BooleanInterestObserver wifiObserver,
-      BooleanInterestObserver dataObserver, BooleanInterestObserver bluetoothObserver,
-      BooleanInterestObserver syncObserver, BooleanInterestModifier wifiModifier,
-      BooleanInterestModifier dataModifier, BooleanInterestModifier bluetoothModifier,
-      BooleanInterestModifier syncModifier, JobSchedulerCompat jobSchedulerCompat,
-      PowerTriggerDB powerTriggerDB) {
+  public TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
+      @NonNull BooleanInterestObserver dataObserver,
+      @NonNull BooleanInterestObserver bluetoothObserver,
+      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
+      @NonNull BooleanInterestModifier dataModifier,
+      @NonNull BooleanInterestModifier bluetoothModifier,
+      @NonNull BooleanInterestModifier syncModifier, @NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull PowerTriggerDB powerTriggerDB) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;
@@ -119,29 +122,51 @@ public class TriggerJob extends BaseJob {
           }
         });
 
+    final Observable<PowerTriggerEntry> powerTriggerEntryObservable;
     if (charging) {
-      Timber.d("We are charging, mark any available triggers");
+      powerTriggerEntryObservable =
+          triggerQuery.flatMap(new Func1<List<PowerTriggerEntry>, Observable<Integer>>() {
+            @Override public Observable<Integer> call(List<PowerTriggerEntry> powerTriggerEntries) {
+              // Not final so we can call merges on it
+              Observable<Integer> updateTriggerResult = Observable.empty();
+
+              Timber.i("We are charging, mark any available triggers");
+              for (final PowerTriggerEntry entry : powerTriggerEntries) {
+                Timber.d("Current entry: %s %d", entry.name(), entry.percent());
+                if (entry.percent() <= percent && !entry.available()) {
+                  Timber.d("Mark entry available for percent: %d", entry.percent());
+                  final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
+                  final ContentValues values = PowerTriggerEntry.asContentValues(updated);
+                  updateTriggerResult = updateTriggerResult.mergeWith(
+                      powerTriggerDB.update(values, updated.percent()));
+                }
+              }
+
+              return updateTriggerResult;
+            }
+            // Convert to list so that we interate over all the triggers we have found instead of just first
+          }).toList().first().map(integers -> {
+            Timber.d("Number of values marked available: %d", integers.size());
+            Timber.d("Return an empty trigger");
+            return PowerTriggerEntry.empty();
+          });
     } else {
-      Timber.d("Not charging, select best available trigger");
+      Timber.i("Not charging, select best available trigger");
+      powerTriggerEntryObservable = Observable.empty();
     }
-    //}).flatMap(powerTriggerEntries -> {
-    //  // KLUDGE this is really bad. Is there another way to update in the background?
-    //  Observable<Integer> updatedAvailability = Observable.just(-1);
-    //  PowerTriggerEntry trigger = PowerTriggerEntry.empty();
-    //
-    //  if (charging) {
-    //    Timber.d("Mark any available triggers");
-    //    for (final PowerTriggerEntry entry : powerTriggerEntries) {
-    //      Timber.d("Current entry: %s %d", entry.name(), entry.percent());
-    //      if (entry.percent() <= percent && !entry.available()) {
-    //        Timber.d("Mark entry available for percent: %d", entry.percent());
-    //        final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
-    //        final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-    //        updatedAvailability =
-    //            updatedAvailability.mergeWith(powerTriggerDB.update(values, updated.percent()));
-    //      }
-    //    }
-    //  } else {
+
+    runSubscription = powerTriggerEntryObservable.subscribe(entry -> {
+          if (charging) {
+            Timber.w("Do not run Trigger because device is charging");
+          } else if (PowerTriggerEntry.isEmpty(entry)) {
+            Timber.w("Do not run Trigger because entry specified is EMPTY");
+          } else {
+            onTriggerRun(entry);
+          }
+
+          // TODO Re-queue job at periodic interval
+        }, throwable -> Timber.e(throwable, "onError"),
+        () -> SubscriptionHelper.unsubscribe(runSubscription));
     //    Timber.d("Select best trigger from available");
     //    PowerTriggerEntry best = PowerTriggerEntry.empty();
     //    for (final PowerTriggerEntry entry : powerTriggerEntries) {
@@ -184,29 +209,9 @@ public class TriggerJob extends BaseJob {
     //    Timber.d("Do terrible kludge");
     //    return passOn;
     //  });
-    //})
-    //    // KLUDGE hardcoded schedulers
-    //    // KLUDGE need to subscribe even if we are noop so that the other operations run
-    //    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(entry -> {
-    //      if (!charging && !PowerTriggerEntry.isEmpty(entry)) {
-    //        onTriggerRun(entry);
-    //      } else {
-    //        Timber.e("Can't run trigger. Either device is charging or no valid trigger");
-    //      }
-    //
-    //      // KLUDGE the show must go on
-    //      Timber.d("Requeue the job");
-    //      queue(jobSchedulerCompat,
-    //          new TriggerJob(getDelayInMs(), wifiObserver, dataObserver, bluetoothObserver,
-    //              syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier,
-    //              jobSchedulerCompat, powerTriggerDB));
-    //    }, throwable -> {
-    //      // TODO
-    //      Timber.e(throwable, "onError");
-    //    }, () -> SubscriptionHelper.unsubscribe(runSubscription));
   }
 
-  private void onTriggerRun(PowerTriggerEntry entry) {
+  @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
     Timber.d("Run trigger for entry name: %s", entry.name());
     Timber.d("Run trigger for entry percent: %d", entry.percent());
     final String formatted =
