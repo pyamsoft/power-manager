@@ -54,7 +54,7 @@ public class TriggerJob extends BaseJob {
   @NonNull private final JobSchedulerCompat jobSchedulerCompat;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
-  public TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
+  TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
       @NonNull BooleanInterestObserver dataObserver,
       @NonNull BooleanInterestObserver bluetoothObserver,
       @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,

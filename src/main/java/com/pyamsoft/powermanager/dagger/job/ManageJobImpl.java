@@ -55,10 +55,6 @@ abstract class ManageJobImpl extends BaseJob {
     this.jobTag = tag;
   }
 
-  @CheckResult @NonNull final JobSchedulerCompat getJobSchedulerCompat() {
-    return jobSchedulerCompat;
-  }
-
   @Override public final void onRun() throws Throwable {
     Timber.d("Run job type: %s", jobType.name());
     switch (jobType) {
@@ -99,14 +95,17 @@ abstract class ManageJobImpl extends BaseJob {
       } else {
         Timber.d("Queue periodic disable job for: %d", periodicDisableInSeconds);
         jobSchedulerCompat.addJob(
-            createPeriodicDisableJob(periodicEnableInSeconds, periodicDisableInSeconds));
+            createPeriodicDisableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
+                periodicDisableInSeconds, interestObserver, interestModifier));
       }
     }
   }
 
-  @CheckResult @NonNull private Job createPeriodicDisableJob(long periodicEnableInSeconds,
-      long periodicDisableInSeconds) {
-    return JobHelper.createPeriodicDisableJob(jobType, getJobSchedulerCompat(), jobTag,
+  @CheckResult @NonNull Job createPeriodicDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver interestObserver,
+      @NonNull BooleanInterestModifier interestModifier) {
+    return new DisableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 
@@ -125,14 +124,17 @@ abstract class ManageJobImpl extends BaseJob {
       } else {
         Timber.d("Queue periodic enable job for: %d", periodicEnableInSeconds);
         jobSchedulerCompat.addJob(
-            createPeriodicEnableJob(periodicEnableInSeconds, periodicDisableInSeconds));
+            createPeriodicEnableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
+                periodicDisableInSeconds, interestObserver, interestModifier));
       }
     }
   }
 
-  @CheckResult @NonNull
-  private Job createPeriodicEnableJob(long periodicEnableInSeconds, long periodicDisableInSeconds) {
-    return JobHelper.createPeriodicEnableJob(jobType, getJobSchedulerCompat(), jobTag,
+  @CheckResult @NonNull Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver interestObserver,
+      @NonNull BooleanInterestModifier interestModifier) {
+    return new EnableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 }

@@ -48,26 +48,6 @@ public final class JobHelper {
     }
   }
 
-  static BaseJob createPeriodicEnableJob(@NonNull JobType jobType,
-      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
-      long periodicEnableInSeconds, long periodicDisableInSeconds,
-      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    switch (jobType) {
-      case ENABLE:
-      case DISABLE:
-        Timber.d("Create periodic Enable Manage Job");
-        return createEnableManageJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
-      case TOGGLE_ENABLE:
-      case TOGGLE_DISABLE:
-        Timber.d("Create periodic Enable Toggle Job");
-        return createEnableToggleJob(jobSchedulerCompat, tag, periodicEnableInSeconds * 1000L, true,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
-      default:
-        throw new RuntimeException("Invalid enable job type: " + jobType);
-    }
-  }
-
   @CheckResult @NonNull private static EnableManageJob createEnableManageJob(
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeMillis,
       boolean periodic, long periodicEnableSeconds, long periodicDisableSeconds,
@@ -98,26 +78,6 @@ public final class JobHelper {
       case TOGGLE_DISABLE:
         Timber.d("Create Disable Toggle Job");
         return createDisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
-      default:
-        throw new RuntimeException("Invalid disable job type: " + jobType);
-    }
-  }
-
-  @CheckResult @NonNull static BaseJob createPeriodicDisableJob(@NonNull JobType jobType,
-      @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
-      long periodicEnableInSeconds, long periodicDisableInSeconds,
-      @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
-    switch (jobType) {
-      case ENABLE:
-      case DISABLE:
-        Timber.d("Create periodic Disable Manage Job");
-        return createDisableManageJob(jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L, true,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
-      case TOGGLE_ENABLE:
-      case TOGGLE_DISABLE:
-        Timber.d("Create periodic Disable Toggle Job");
-        return createDisableToggleJob(jobSchedulerCompat, tag, periodicDisableInSeconds * 1000L, true,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
       default:
         throw new RuntimeException("Invalid disable job type: " + jobType);
