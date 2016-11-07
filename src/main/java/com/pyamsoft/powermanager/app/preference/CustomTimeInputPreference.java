@@ -36,45 +36,33 @@ import timber.log.Timber;
 public abstract class CustomTimeInputPreference extends Preference
     implements CustomTimeInputPreferencePresenter.View {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final CustomTimeInputPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
-  @NonNull private WeakReference<View> rootView = new WeakReference<>(null);
 
   public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    setLayoutResource(R.layout.preference_custom_time_input);
-    injectPresenter(context);
-    presenter = getPresenter();
-
-    Timber.d("onBindViewHolder");
-    presenter.bindView(this);
+    init(context);
   }
 
   public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    setLayoutResource(R.layout.preference_custom_time_input);
-    injectPresenter(context);
-    presenter = getPresenter();
-
-    Timber.d("onBindViewHolder");
-    presenter.bindView(this);
+    init(context);
   }
 
   public CustomTimeInputPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
-    setLayoutResource(R.layout.preference_custom_time_input);
-    injectPresenter(context);
-    presenter = getPresenter();
-
-    Timber.d("onBindViewHolder");
-    presenter.bindView(this);
+    init(context);
   }
 
   public CustomTimeInputPreference(Context context) {
     super(context);
+    init(context);
+  }
+
+  private void init(@NonNull Context context) {
     setLayoutResource(R.layout.preference_custom_time_input);
     injectPresenter(context);
     presenter = getPresenter();
@@ -83,14 +71,8 @@ public abstract class CustomTimeInputPreference extends Preference
     presenter.bindView(this);
   }
 
-  @Nullable @CheckResult public View getRootView() {
-    return rootView.get();
-  }
-
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
-    rootView = new WeakReference<>(holder.itemView);
-
     // We call unbind because when a preference is changed it can be re-bound without being properly recycled
     unbind(false);
 
