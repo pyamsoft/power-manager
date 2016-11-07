@@ -100,7 +100,6 @@ public class TriggerJob extends BaseJob {
   }
 
   private void runTriggerForPercent(int percent, boolean charging) {
-    SubscriptionHelper.unsubscribe(runSubscription);
     final Observable<List<PowerTriggerEntry>> triggerQuery =
         powerTriggerDB.queryAll().first().flatMap(powerTriggerEntries -> {
           Timber.d("Flatten power triggers");
@@ -151,10 +150,56 @@ public class TriggerJob extends BaseJob {
             return PowerTriggerEntry.empty();
           });
     } else {
-      Timber.i("Not charging, select best available trigger");
-      powerTriggerEntryObservable = Observable.empty();
+      powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
+        Timber.i("Not charging, select best available trigger");
+        PowerTriggerEntry best = PowerTriggerEntry.empty();
+
+        for (final PowerTriggerEntry entry : powerTriggerEntries) {
+          Timber.d("Current entry: %s %d", entry.name(), entry.percent());
+          if (entry.available()
+              && entry.enabled()
+              && entry.percent() >= percent
+              && entry.percent() <= percent + 5) {
+            if (PowerTriggerEntry.isEmpty(best)) {
+              Timber.d("Mark first valid entry as best");
+              best = entry;
+            }
+
+            if (entry.percent() < best.percent()) {
+              Timber.d("Mark current entry as new best");
+              best = entry;
+            }
+
+            if (best.percent() == percent) {
+              Timber.d("Found exact");
+              break;
+            }
+          }
+        }
+
+        return best;
+      }).flatMap(new Func1<PowerTriggerEntry, Observable<PowerTriggerEntry>>() {
+        @Override public Observable<PowerTriggerEntry> call(PowerTriggerEntry entry) {
+          final Observable<PowerTriggerEntry> updateTriggerResult;
+          if (!PowerTriggerEntry.isEmpty(entry)) {
+            Timber.d("Mark trigger as unavailable: %s %d", entry.name(), entry.percent());
+            final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, false);
+            final ContentValues values = PowerTriggerEntry.asContentValues(updated);
+            updateTriggerResult = powerTriggerDB.update(values, updated.percent()).map(integer -> {
+              Timber.d("Updated trigger: (%d) %s", integer, updated);
+              return updated;
+            });
+          } else {
+            Timber.w("No trigger marked, EMPTY result");
+            updateTriggerResult = Observable.empty();
+          }
+
+          return updateTriggerResult;
+        }
+      });
     }
 
+    SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = powerTriggerEntryObservable.subscribe(entry -> {
           if (charging) {
             Timber.w("Do not run Trigger because device is charging");
@@ -167,48 +212,6 @@ public class TriggerJob extends BaseJob {
           // TODO Re-queue job at periodic interval
         }, throwable -> Timber.e(throwable, "onError"),
         () -> SubscriptionHelper.unsubscribe(runSubscription));
-    //    Timber.d("Select best trigger from available");
-    //    PowerTriggerEntry best = PowerTriggerEntry.empty();
-    //    for (final PowerTriggerEntry entry : powerTriggerEntries) {
-    //      Timber.d("Current entry: %s %d", entry.name(), entry.percent());
-    //      if (entry.available()
-    //          && entry.enabled()
-    //          && entry.percent() >= percent
-    //          && entry.percent() <= percent + 5) {
-    //        if (PowerTriggerEntry.isEmpty(best)) {
-    //          Timber.d("Mark first valid entry as best");
-    //          best = entry;
-    //        }
-    //
-    //        if (entry.percent() < best.percent()) {
-    //          Timber.d("Mark current entry as new best");
-    //          best = entry;
-    //        }
-    //
-    //        if (best.percent() == percent) {
-    //          Timber.d("Found exact");
-    //          break;
-    //        }
-    //      }
-    //    }
-    //
-    //    if (!PowerTriggerEntry.isEmpty(best)) {
-    //      Timber.d("Mark trigger as unavailable: %s %d", best.name(), best.percent());
-    //      final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(best, false);
-    //      final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-    //      updatedAvailability = powerTriggerDB.update(values, updated.percent());
-    //      trigger = updated;
-    //    }
-    //  }
-    //
-    //  // KLUDGE just java things
-    //  Timber.d("Finalize trigger so we can kludge");
-    //  final PowerTriggerEntry passOn = trigger;
-    //  return updatedAvailability.toSortedList().first().map(list -> {
-    //    // KLUDGE this is terrible
-    //    Timber.d("Do terrible kludge");
-    //    return passOn;
-    //  });
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
