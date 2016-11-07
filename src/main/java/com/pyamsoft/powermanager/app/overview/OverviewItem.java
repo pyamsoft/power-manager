@@ -75,10 +75,18 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     return R.layout.adapter_item_overview;
   }
 
+  @Override public void unbindView(ViewHolder holder) {
+    super.unbindView(holder);
+    taskMap.clear();
+    holder.binding.adapterItemOverviewRoot.setOnClickListener(null);
+    holder.binding.adapterItemOverviewImage.setImageDrawable(null);
+    holder.binding.adapterItemOverviewImage.setOnClickListener(null);
+    holder.binding.adapterItemOverviewTitle.setText(null);
+    holder.binding.adapterItemOverviewTitle.setOnClickListener(null);
+  }
+
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    recycleOld(holder);
-
     final Fragment fragment;
     switch (title) {
       case WifiFragment.TAG:
@@ -142,15 +150,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
         .tint(android.R.color.white)
         .into(holder.binding.adapterItemOverviewImage);
     taskMap.put(title, task);
-  }
-
-  private void recycleOld(ViewHolder holder) {
-    taskMap.clear();
-    holder.binding.adapterItemOverviewRoot.setOnClickListener(null);
-    holder.binding.adapterItemOverviewImage.setImageDrawable(null);
-    holder.binding.adapterItemOverviewImage.setOnClickListener(null);
-    holder.binding.adapterItemOverviewTitle.setText(null);
-    holder.binding.adapterItemOverviewTitle.setOnClickListener(null);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ItemClickListener getItemClickListener() {

@@ -46,9 +46,17 @@ class PowerTriggerListItem
     this.longClickListener = longClickListener;
   }
 
+  @Override public void unbindView(ViewHolder holder) {
+    super.unbindView(holder);
+    holder.binding.triggerName.setText(null);
+    holder.binding.triggerPercent.setText(null);
+
+    holder.itemView.setOnLongClickListener(null);
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+  }
+
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    recyclerOldHolder(holder);
 
     holder.binding.triggerName.setText(entry.name());
 
@@ -78,14 +86,6 @@ class PowerTriggerListItem
         };
 
     holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
-  }
-
-  private void recyclerOldHolder(ViewHolder holder) {
-    holder.binding.triggerName.setText(null);
-    holder.binding.triggerPercent.setText(null);
-
-    holder.itemView.setOnLongClickListener(null);
-    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
   }
 
   @Override public int getType() {
