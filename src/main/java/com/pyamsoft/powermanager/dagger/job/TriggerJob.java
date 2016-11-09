@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -42,7 +43,7 @@ public class TriggerJob extends BaseJob {
 
   @NonNull public static final String TRIGGER_TAG = "trigger";
   private static final int PRIORITY = 2;
-  @NonNull final PowerTriggerDB powerTriggerDB;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @NonNull private final BooleanInterestObserver wifiObserver;
   @NonNull private final BooleanInterestObserver dataObserver;
   @NonNull private final BooleanInterestObserver bluetoothObserver;
@@ -52,6 +53,7 @@ public class TriggerJob extends BaseJob {
   @NonNull private final BooleanInterestModifier bluetoothModifier;
   @NonNull private final BooleanInterestModifier syncModifier;
   @NonNull private final JobSchedulerCompat jobSchedulerCompat;
+  @NonNull private final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
   TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
@@ -61,7 +63,7 @@ public class TriggerJob extends BaseJob {
       @NonNull BooleanInterestModifier dataModifier,
       @NonNull BooleanInterestModifier bluetoothModifier,
       @NonNull BooleanInterestModifier syncModifier, @NonNull JobSchedulerCompat jobSchedulerCompat,
-      @NonNull PowerTriggerDB powerTriggerDB) {
+      @NonNull PowerTriggerDB powerTriggerDB, @NonNull PowerManagerPreferences preferences) {
     super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;
@@ -73,6 +75,7 @@ public class TriggerJob extends BaseJob {
     this.syncModifier = syncModifier;
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.powerTriggerDB = powerTriggerDB;
+    this.preferences = preferences;
   }
 
   @Override public void onRun() throws Throwable {
@@ -209,9 +212,16 @@ public class TriggerJob extends BaseJob {
             onTriggerRun(entry);
           }
 
-          // TODO Re-queue job at periodic interval
+          requeueJob();
         }, throwable -> Timber.e(throwable, "onError"),
         () -> SubscriptionHelper.unsubscribe(runSubscription));
+  }
+
+  @SuppressWarnings("WeakerAccess") void requeueJob() {
+    Timber.d("Requeue the trigger job");
+    JobHelper.queueTriggerJob(jobSchedulerCompat, wifiObserver, dataObserver, bluetoothObserver,
+        syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
+        preferences);
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {

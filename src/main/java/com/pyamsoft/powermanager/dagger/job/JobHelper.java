@@ -18,9 +18,12 @@ package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.TagConstraint;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import timber.log.Timber;
 
 public final class JobHelper {
@@ -98,5 +101,28 @@ public final class JobHelper {
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier) {
     return new DisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier);
+  }
+
+  public static void queueTriggerJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
+      @NonNull BooleanInterestObserver bluetoothObserver,
+      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
+      @NonNull BooleanInterestModifier dataModifier,
+      @NonNull BooleanInterestModifier bluetoothModifier,
+      @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull PowerManagerPreferences preferences) {
+    Timber.d("Cancel any old trigger jobs");
+    jobSchedulerCompat.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+
+    // TODO Get delay from preferences
+    final long delayTime = 5 * 60 * 1000;
+
+    final TriggerJob triggerJob =
+        new TriggerJob(delayTime, wifiObserver, dataObserver, bluetoothObserver, syncObserver,
+            wifiModifier, dataModifier, bluetoothModifier, syncModifier, jobSchedulerCompat,
+            powerTriggerDB, preferences);
+
+    Timber.d("Add new trigger job");
+    jobSchedulerCompat.addJobInBackground(triggerJob);
   }
 }
