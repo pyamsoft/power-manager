@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference
+    <com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference
         android:key="@string/periodic_wifi_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.wifi.WifiDisableTimePreference
+    <com.pyamsoft.powermanager.app.preference.wifi.WifiEnableTimePreference
         android:key="@string/periodic_wifi_enable_key"/>
 
   </PreferenceCategory>
