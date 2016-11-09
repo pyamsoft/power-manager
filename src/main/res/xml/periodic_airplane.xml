@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.airplane.AirplaneEnableTimePreference
+    <com.pyamsoft.powermanager.app.preference.airplane.AirplaneDisableTimePreference
         android:key="@string/periodic_airplane_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.airplane.AirplaneDisableTimePreference
+    <com.pyamsoft.powermanager.app.preference.airplane.AirplaneEnableTimePreference
         android:key="@string/periodic_airplane_enable_key"/>
 
   </PreferenceCategory>
