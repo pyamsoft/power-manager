@@ -26,6 +26,8 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -53,7 +55,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     this.preferences = preferences;
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult String getLogPath() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult File getLogLocation() {
     final String type = getLogType();
 
     if (logPath == null) {
@@ -70,7 +72,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     }
 
     Timber.d("%s Log location: %s", type, logPath);
-    return logPath;
+    return new File(logPath);
   }
 
   @NonNull @Override public Observable<Boolean> isLoggingEnabled() {
@@ -82,11 +84,11 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @Override public Observable<String> getLogContents() {
-    return Observable.defer(() -> Observable.just(getLogPath())).flatMap(logLocation -> {
+    return Observable.defer(() -> Observable.just(getLogLocation())).flatMap(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
       try (
-          final BufferedInputStream bufferedInputStream = new BufferedInputStream(
-              appContext.openFileInput(logLocation));
+          final FileInputStream fileInputStream = new FileInputStream(logLocation);
+          final BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
           final InputStreamReader inputStreamReader = new InputStreamReader(bufferedInputStream,
               StandardCharsets.UTF_8);
           final BufferedReader reader = new BufferedReader(inputStreamReader)) {
@@ -104,10 +106,11 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> appendToLog(@NonNull String message) {
-    return Observable.defer(() -> Observable.just(getLogPath())).map(logLocation -> {
+    return Observable.defer(() -> Observable.just(getLogLocation())).map(logLocation -> {
       try (
+          final FileOutputStream fileOutputStream = new FileOutputStream(logLocation);
           final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-              appContext.openFileOutput(logLocation, Context.MODE_APPEND));
+              fileOutputStream);
           final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(bufferedOutputStream,
               StandardCharsets.UTF_8);
           final BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
