@@ -46,17 +46,17 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   @NonNull private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance();
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
-  @Nullable private String logPath;
+  @Nullable private File logPath;
 
   LoggerInteractorImpl(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult String getLogLocation() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult File getLogLocation() {
     final String type = getLogType();
 
-    if (logPath == null) {
+    if (logPath == null || !logPath.exists()) {
       final String filesDirPath = appContext.getFilesDir().getAbsolutePath();
 
       final File logDir = new File(filesDirPath, "logger");
@@ -68,10 +68,10 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
       }
 
       final String logDirPath = logDir.getAbsolutePath();
-      logPath = new File(logDirPath, type).getAbsolutePath();
+      logPath = new File(logDirPath, type);
     }
 
-    Timber.d("%s Log location: %s", type, logPath);
+    Timber.d("%s Log location: %s", type, logPath.getAbsolutePath());
     return logPath;
   }
 
