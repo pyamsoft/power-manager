@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.StringTokenizer;
 import rx.Observable;
 import rx.exceptions.Exceptions;
 import timber.log.Timber;
@@ -126,30 +125,8 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     });
   }
 
-  @NonNull @CheckResult private String formatMessage(String message) {
+  @NonNull @CheckResult private String formatMessage(@NonNull String message) {
     final String datePrefix = DATE_FORMAT.format(Calendar.getInstance().getTime());
-    return String.format(Locale.getDefault(), "[%s] - %s", datePrefix, addLinebreaks(message));
-  }
-
-  // Bug: if a word in the input is longer than maxLineLength it will be appended to the current
-  // line instead of on a too-long line of its own. I assume line length is something like
-  // 80 or 120 characters, in which case this is unlikely to be a problem.
-  @NonNull @CheckResult private String addLinebreaks(@NonNull String input) {
-    final StringTokenizer tok = new StringTokenizer(input, " ");
-    final StringBuilder output = new StringBuilder(input.length());
-    int lineLen = 0;
-    while (tok.hasMoreTokens()) {
-      final String word = tok.nextToken();
-
-      if (lineLen + word.length() > MAX_LINE_LENGTH) {
-        output.append("\n");
-        lineLen = 0;
-      }
-
-      output.append(word);
-      lineLen += word.length();
-    }
-
-    return output.toString();
+    return String.format(Locale.getDefault(), "[%s] - %s", datePrefix, message);
   }
 }
