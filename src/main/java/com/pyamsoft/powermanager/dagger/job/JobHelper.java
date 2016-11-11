@@ -43,12 +43,12 @@ public final class JobHelper {
       case ENABLE:
       case DISABLE:
         Timber.d("Create Enable Manage Job");
-        return createEnableManageJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer, modifier,
+        return createEnableManageJob(jobSchedulerCompat, tag, 0, false, 0, 0, observer, modifier,
             logger);
       case TOGGLE_ENABLE:
       case TOGGLE_DISABLE:
         Timber.d("Create Enable Toggle Job");
-        return createEnableToggleJob(jobSchedulerCompat, tag, 100L, false, 0, 0, observer, modifier,
+        return createEnableToggleJob(jobSchedulerCompat, tag, 0, false, 0, 0, observer, modifier,
             logger);
       default:
         throw new RuntimeException("Invalid enable job type: " + jobType);
