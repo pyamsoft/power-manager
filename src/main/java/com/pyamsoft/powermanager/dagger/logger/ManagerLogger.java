@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.logger;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import javax.inject.Inject;
@@ -30,7 +31,7 @@ class ManagerLogger implements Logger {
   }
 
   // Does not have to be bound
-  @Override public void log(@NonNull String message) {
-    presenter.log(message);
+  @Override public void log(@NonNull String fmt, @Nullable Object... args) {
+    presenter.log(fmt, args);
   }
 }
