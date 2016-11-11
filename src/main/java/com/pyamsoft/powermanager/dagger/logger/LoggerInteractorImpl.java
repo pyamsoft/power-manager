@@ -44,7 +44,6 @@ import timber.log.Timber;
 abstract class LoggerInteractorImpl implements LoggerInteractor {
 
   @NonNull private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance();
-  private static final int MAX_LINE_LENGTH = 80;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @Nullable private String logPath;
@@ -54,7 +53,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     this.preferences = preferences;
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult File getLogLocation() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult String getLogLocation() {
     final String type = getLogType();
 
     if (logPath == null) {
@@ -73,7 +72,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     }
 
     Timber.d("%s Log location: %s", type, logPath);
-    return new File(logPath);
+    return logPath;
   }
 
   @NonNull @Override public Observable<Boolean> isLoggingEnabled() {
@@ -109,7 +108,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   @NonNull @Override public Observable<Boolean> appendToLog(@NonNull String message) {
     return Observable.defer(() -> Observable.just(getLogLocation())).map(logLocation -> {
       try (
-          final FileOutputStream fileOutputStream = new FileOutputStream(logLocation);
+          final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);
           final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
               fileOutputStream);
           final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(bufferedOutputStream,
