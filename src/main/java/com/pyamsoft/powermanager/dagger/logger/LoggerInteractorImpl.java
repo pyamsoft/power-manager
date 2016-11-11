@@ -116,6 +116,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
           final BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
         final String formattedMessage = formatMessage(message);
         bufferedWriter.write(formattedMessage);
+        bufferedWriter.newLine();
         bufferedWriter.flush();
       } catch (IOException e) {
         throw Exceptions.propagate(e);
