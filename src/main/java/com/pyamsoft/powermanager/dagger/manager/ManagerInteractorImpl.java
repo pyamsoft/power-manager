@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -37,16 +38,18 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
   @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
+  @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerInteractorImpl(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver stateObserver, @NonNull Logger logger) {
     this.jobManager = jobManager;
     this.manageObserver = manageObserver;
     this.stateModifier = stateModifier;
     this.stateObserver = stateObserver;
+    this.logger = logger;
     originalStateEnabled = false;
     this.preferences = preferences;
   }
@@ -93,7 +96,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     final Job job =
-        JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier);
+        JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
+            logger);
     jobManager.addJobInBackground(job);
   }
 
@@ -114,7 +118,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final Job job =
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
-            stateModifier);
+            stateModifier, logger);
     jobManager.addJobInBackground(job);
   }
 

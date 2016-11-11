@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -26,7 +27,7 @@ class DisableManageJob extends ManageJobImpl {
   DisableManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds, @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, JobType.DISABLE, delayInMilliseconds, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
         logger);

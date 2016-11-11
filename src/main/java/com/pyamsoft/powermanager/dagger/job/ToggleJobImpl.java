@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -28,7 +29,7 @@ abstract class ToggleJobImpl extends ManageJobImpl {
       @NonNull JobType jobType, long delayInMilliseconds, boolean periodic,
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, jobType, delayInMilliseconds, periodic, periodicEnableInSeconds,
         periodicDisableInSeconds, interestObserver, interestModifier, logger);
   }
@@ -46,16 +47,18 @@ abstract class ToggleJobImpl extends ManageJobImpl {
   @NonNull @Override Job createPeriodicDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     return new DisableToggleJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        logger);
   }
 
   @NonNull @Override Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     return new EnableToggleJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        logger);
   }
 }

@@ -58,6 +58,11 @@ abstract class ManageJobImpl extends BaseJob {
     this.logger = logger;
   }
 
+  @Override public void onAdded() {
+    super.onAdded();
+    logger.log("Add %s job: %s, run in %dms", jobType, jobTag, getDelayInMs());
+  }
+
   @Override public final void onRun() throws Throwable {
     Timber.d("Run job type: %s", jobType.name());
     switch (jobType) {
@@ -85,6 +90,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   void internalEnable() {
     if (!interestObserver.is()) {
+      logger.log("Enable %s", jobTag);
       interestModifier.set();
     }
   }
@@ -99,7 +105,7 @@ abstract class ManageJobImpl extends BaseJob {
         Timber.d("Queue periodic disable job for: %d", periodicDisableInSeconds);
         jobSchedulerCompat.addJob(
             createPeriodicDisableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
-                periodicDisableInSeconds, interestObserver, interestModifier));
+                periodicDisableInSeconds, interestObserver, interestModifier, logger));
       }
     }
   }
@@ -107,14 +113,15 @@ abstract class ManageJobImpl extends BaseJob {
   @CheckResult @NonNull Job createPeriodicDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     return new DisableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        logger);
   }
 
   void internalDisable() {
     if (interestObserver.is()) {
-
+      logger.log("Disable %s", jobTag);
       interestModifier.unset();
     }
   }
@@ -129,7 +136,7 @@ abstract class ManageJobImpl extends BaseJob {
         Timber.d("Queue periodic enable job for: %d", periodicEnableInSeconds);
         jobSchedulerCompat.addJob(
             createPeriodicEnableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
-                periodicDisableInSeconds, interestObserver, interestModifier));
+                periodicDisableInSeconds, interestObserver, interestModifier, logger));
       }
     }
   }
@@ -137,8 +144,9 @@ abstract class ManageJobImpl extends BaseJob {
   @CheckResult @NonNull Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     return new EnableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        logger);
   }
 }

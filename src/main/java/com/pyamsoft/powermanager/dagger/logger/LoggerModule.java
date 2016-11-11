@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.logger;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -28,7 +29,13 @@ import rx.Scheduler;
 
 @Module public class LoggerModule {
 
-  @Singleton @Provides @Named("logger_manager") LoggerPresenter provideManagerLogger(
+  @Singleton @Provides @Named("logger_manager") Logger provideManagerLogger(
+      @NonNull @Named("logger_presenter_manager") LoggerPresenter loggerPresenter) {
+    return new ManagerLogger(loggerPresenter);
+  }
+
+  @Singleton @Provides @Named("logger_presenter_manager")
+  LoggerPresenter provideManagerLoggerPresenter(
       @NonNull @Named("logger_interactor_manager") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);

@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
@@ -40,7 +41,7 @@ import rx.Scheduler;
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
       @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
-      @NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull PowerTriggerDB powerTriggerDB, @Named("logger_manager") @NonNull Logger logger,
       @NonNull @Named("obs_wifi_state") BooleanInterestObserver wifiObserver,
       @NonNull @Named("obs_data_state") BooleanInterestObserver dataObserver,
       @NonNull @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver,
@@ -51,6 +52,6 @@ import rx.Scheduler;
       @NonNull @Named("mod_sync_state") BooleanInterestModifier syncModifier) {
     return new ForegroundInteractorImpl(jobManager, context, preferences, wifiObserver,
         dataObserver, bluetoothObserver, syncObserver, wifiModifier, dataModifier,
-        bluetoothModifier, syncModifier, powerTriggerDB);
+        bluetoothModifier, syncModifier, powerTriggerDB, logger);
   }
 }
