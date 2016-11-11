@@ -20,6 +20,7 @@ import com.pyamsoft.powermanager.dagger.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
+import com.pyamsoft.powermanager.dagger.logger.LoggerModule;
 import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
 import com.pyamsoft.powermanager.dagger.modifier.state.StateModifierModule;
@@ -48,7 +49,7 @@ import javax.inject.Singleton;
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
     ActionToggleModule.class, JobSchedulerCompatModule.class, WrapperModule.class,
-    PermissionObserverModule.class
+    PermissionObserverModule.class, LoggerModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();
