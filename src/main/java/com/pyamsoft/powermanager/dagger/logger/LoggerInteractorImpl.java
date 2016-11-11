@@ -62,9 +62,11 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
       final String filesDirPath = appContext.getFilesDir().getAbsolutePath();
 
       final File logDir = new File(filesDirPath, "logger");
-      if (!logDir.mkdirs()) {
-        Timber.e("Failed to make log dir: %s", logDir.getAbsolutePath());
-        Timber.e("Will be unable to log to file");
+      if (!logDir.exists()) {
+        if (!logDir.mkdirs()) {
+          Timber.e("Failed to make log dir: %s", logDir.getAbsolutePath());
+          Timber.e("Will be unable to log to file");
+        }
       }
 
       final String logDirPath = logDir.getAbsolutePath();
