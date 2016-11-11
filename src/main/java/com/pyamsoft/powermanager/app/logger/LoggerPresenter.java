@@ -17,11 +17,12 @@
 package com.pyamsoft.powermanager.app.logger;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
 
-  void log(@NonNull String message);
+  void log(@NonNull String fmt, @Nullable Object... args);
 
   void deleteLog();
 

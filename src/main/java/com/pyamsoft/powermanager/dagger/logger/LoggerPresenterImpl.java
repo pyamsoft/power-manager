@@ -17,9 +17,11 @@
 package com.pyamsoft.powermanager.dagger.logger;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import java.util.Locale;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
@@ -68,7 +70,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     SubscriptionHelper.unsubscribe(logContenSubscription);
   }
 
-  @Override public void log(@NonNull String message) {
+  @Override public void log(@NonNull String fmt, @Nullable Object... args) {
     final Subscription logSubscription = interactor.isLoggingEnabled().filter(enabled -> {
       Timber.d("Filter out logging not enabled ");
       return !enabled;
@@ -76,6 +78,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
       @Override public Observable<Boolean> call(Boolean loggingEnabled) {
         final Observable<Boolean> writeAppendResult;
         if (loggingEnabled) {
+          Timber.d("Format message");
+          final String message = String.format(Locale.getDefault(), fmt, args);
           Timber.d("Attempt to append to log");
           writeAppendResult = interactor.appendToLog(message);
         } else {
@@ -85,7 +89,6 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
         return writeAppendResult;
       }
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(success -> {
-      Timber.d("Logging complete for message: %s", message);
       Timber.d("Successfully logged message to log file: %s", success);
       // TODO anything else?
     }, throwable -> {

@@ -17,8 +17,9 @@
 package com.pyamsoft.powermanager.app.logger;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface Logger {
 
-  void log(@NonNull String message);
+  void log(@NonNull String fmt, @Nullable Object... args);
 }

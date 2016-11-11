@@ -30,7 +30,7 @@ abstract class ToggleJobImpl extends ManageJobImpl {
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier) {
     super(jobSchedulerCompat, tag, jobType, delayInMilliseconds, periodic, periodicEnableInSeconds,
-        periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicDisableInSeconds, interestObserver, interestModifier, logger);
   }
 
   // For toggle jobs, the action is switched

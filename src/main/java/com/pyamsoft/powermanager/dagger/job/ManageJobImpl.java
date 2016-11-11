@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -38,12 +39,13 @@ abstract class ManageJobImpl extends BaseJob {
   @NonNull private final BooleanInterestObserver interestObserver;
   @NonNull private final BooleanInterestModifier interestModifier;
   @NonNull private final String jobTag;
+  @NonNull private final Logger logger;
 
   ManageJobImpl(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       @NonNull JobType jobType, long delayInMilliseconds, boolean periodic,
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.jobType = jobType;
@@ -53,6 +55,7 @@ abstract class ManageJobImpl extends BaseJob {
     this.interestObserver = interestObserver;
     this.interestModifier = interestModifier;
     this.jobTag = tag;
+    this.logger = logger;
   }
 
   @Override public final void onRun() throws Throwable {
@@ -111,6 +114,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   void internalDisable() {
     if (interestObserver.is()) {
+
       interestModifier.unset();
     }
   }
