@@ -77,7 +77,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   @Override public void log(@NonNull String fmt, @Nullable Object... args) {
     final Subscription logSubscription = interactor.isLoggingEnabled().filter(enabled -> {
       Timber.d("Filter out logging not enabled ");
-      return !enabled;
+      return enabled;
     }).flatMap(new Func1<Boolean, Observable<Boolean>>() {
       @Override public Observable<Boolean> call(Boolean loggingEnabled) {
         final Observable<Boolean> writeAppendResult;
