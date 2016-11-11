@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.logger;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -45,17 +46,31 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   private static final int MAX_LINE_LENGTH = 80;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
-  @SuppressWarnings("WeakerAccess") @NonNull final String logPath;
+  @Nullable private String logPath;
 
   LoggerInteractorImpl(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
+  }
 
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult String getLogPath() {
     final String type = getLogType();
-    final String filesDirPath = appContext.getFilesDir().getAbsolutePath();
-    final String logDirPath = new File(filesDirPath, "logger").getAbsolutePath();
-    logPath = new File(logDirPath, type).getAbsolutePath();
+
+    if (logPath == null) {
+      final String filesDirPath = appContext.getFilesDir().getAbsolutePath();
+
+      final File logDir = new File(filesDirPath, "logger");
+      if (!logDir.mkdirs()) {
+        Timber.e("Failed to make log dir: %s", logDir.getAbsolutePath());
+        Timber.e("Will be unable to log to file");
+      }
+
+      final String logDirPath = logDir.getAbsolutePath();
+      logPath = new File(logDirPath, type).getAbsolutePath();
+    }
+
     Timber.d("%s Log location: %s", type, logPath);
+    return logPath;
   }
 
   @NonNull @Override public Observable<Boolean> isLoggingEnabled() {
@@ -67,7 +82,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @Override public Observable<String> getLogContents() {
-    return Observable.defer(() -> Observable.just(logPath)).flatMap(logLocation -> {
+    return Observable.defer(() -> Observable.just(getLogPath())).flatMap(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
       try (
           final BufferedInputStream bufferedInputStream = new BufferedInputStream(
@@ -89,7 +104,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> appendToLog(@NonNull String message) {
-    return Observable.defer(() -> Observable.just(logPath)).map(logLocation -> {
+    return Observable.defer(() -> Observable.just(getLogPath())).map(logLocation -> {
       try (
           final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
               appContext.openFileOutput(logLocation, Context.MODE_APPEND));
