@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
@@ -35,9 +36,12 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     implements LoggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final CompositeSubscription logSubscriptions =
+      new CompositeSubscription();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription logContenSubscription =
       Subscriptions.empty();
-  @NonNull private CompositeSubscription logSubscriptions = new CompositeSubscription();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription clearLogSubscription =
+      Subscriptions.empty();
 
   @Inject LoggerPresenterImpl(@NonNull LoggerInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -67,7 +71,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   @Override protected void onUnbind() {
     super.onUnbind();
     logSubscriptions.clear();
-    SubscriptionHelper.unsubscribe(logContenSubscription);
+    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription);
   }
 
   @Override public void log(@NonNull String fmt, @Nullable Object... args) {
@@ -96,10 +100,26 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
       // TODO Any other error handling?
     });
 
+    queueClearLogSubscription();
     logSubscriptions.add(logSubscription);
   }
 
-  @Override public void deleteLog() {
+  private void queueClearLogSubscription() {
+    Timber.d("Queue to clear the Log CompositeSubscription in 1 minute");
+    SubscriptionHelper.unsubscribe(clearLogSubscription);
+    clearLogSubscription = Observable.just(true)
+        .delay(1, TimeUnit.MINUTES)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(aBoolean -> {
+              Timber.d("Clear composite Log subscriptions");
+              logSubscriptions.clear();
+            }, throwable -> Timber.e(throwable, "onError clearing composite subscription"),
+            () -> SubscriptionHelper.unsubscribe(clearLogSubscription));
+  }
 
+  @Override public void deleteLog() {
+    Timber.d("Delete log file for %s", interactor.getLogType());
+    Timber.w("TODO");
   }
 }
