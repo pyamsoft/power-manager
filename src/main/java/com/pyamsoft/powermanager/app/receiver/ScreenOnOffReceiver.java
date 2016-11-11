@@ -22,6 +22,7 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import javax.inject.Inject;
@@ -45,6 +46,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   @Inject @Named("sync_manager") Manager managerSync;
   @Inject @Named("doze_manager") ExclusiveManager managerDoze;
   @Inject @Named("airplane_manager") Manager managerAirplane;
+  @Inject @Named("logger_manager") Logger logger;
   private boolean isRegistered;
 
   public ScreenOnOffReceiver(@NonNull Context context) {
@@ -75,6 +77,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
+    logger.log("Screen is OFF, enable Managers");
     managerAirplane.queueSet();
     managerDoze.queueExclusiveSet(() -> {
       managerWifi.queueSet();
@@ -86,6 +89,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
+    logger.log("Screen is ON, disable Managers");
     managerAirplane.queueUnset(charging);
     managerDoze.queueExclusiveUnset(charging, () -> {
       managerWifi.queueUnset(charging);
