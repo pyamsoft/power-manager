@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -81,7 +82,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     originalStateEnabled = enabled;
   }
 
-  @CallSuper @Override public void queueEnableJob() {
+  @WorkerThread @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
     final JobType jobType;
     switch (getJobTag()) {
@@ -98,10 +99,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final Job job =
         JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
             logger);
-    jobManager.addJobInBackground(job);
+    jobManager.addJob(job);
   }
 
-  @CallSuper @Override public void queueDisableJob() {
+  @WorkerThread @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
     final JobType jobType;
     switch (getJobTag()) {
@@ -119,7 +120,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
             stateModifier, logger);
-    jobManager.addJobInBackground(job);
+    jobManager.addJob(job);
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {

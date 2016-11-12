@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import java.util.Arrays;
 import java.util.Set;
 import timber.log.Timber;
@@ -29,9 +31,15 @@ import timber.log.Timber;
 abstract class BaseJob extends Job {
 
   @NonNull private static final String ALL_TAG = "ALL";
+  @NonNull private final Logger logger;
 
-  BaseJob(Params params) {
+  BaseJob(@NonNull Params params, @NonNull Logger logger) {
     super(params.setRequiresNetwork(false).addTags(ALL_TAG));
+    this.logger = logger;
+  }
+
+  @NonNull @CheckResult Logger getLogger() {
+    return logger;
   }
 
   @CallSuper @Override public void onAdded() {
@@ -43,9 +51,10 @@ abstract class BaseJob extends Job {
       tagString = "<NO TAGS>";
     }
     Timber.w("Job is added %s %s (%d)", getId(), tagString, getDelayInMs());
+    logger.log("Job is added %s %s (%d)", getId(), tagString, getDelayInMs());
   }
 
-  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
+  @CallSuper @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
     final Set<String> tags = getTags();
     String tagString;
     if (tags != null) {
@@ -54,6 +63,7 @@ abstract class BaseJob extends Job {
       tagString = "<NO TAGS>";
     }
     Timber.w("Job is cancelled %s %s (%d)", getId(), tagString, getDelayInMs());
+    logger.log("Job is cancelled %s %s (%d)", getId(), tagString, getDelayInMs());
 
     if (throwable != null) {
       Timber.e(throwable, "JOB CANCELLED");

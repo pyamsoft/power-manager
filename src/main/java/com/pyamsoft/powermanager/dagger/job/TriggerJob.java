@@ -55,7 +55,6 @@ public class TriggerJob extends BaseJob {
   @NonNull private final BooleanInterestModifier syncModifier;
   @NonNull private final JobSchedulerCompat jobSchedulerCompat;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
   TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
@@ -67,7 +66,7 @@ public class TriggerJob extends BaseJob {
       @NonNull BooleanInterestModifier syncModifier, @NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull PowerTriggerDB powerTriggerDB, @NonNull PowerManagerPreferences preferences,
       @NonNull Logger logger) {
-    super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
+    super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG), logger);
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;
     this.bluetoothObserver = bluetoothObserver;
@@ -79,7 +78,6 @@ public class TriggerJob extends BaseJob {
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
-    this.logger = logger;
   }
 
   @Override public void onRun() throws Throwable {
@@ -103,6 +101,7 @@ public class TriggerJob extends BaseJob {
     }
 
     Timber.d("Run trigger job for percent: %d", percent);
+    getLogger().log("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent, charging);
   }
 
@@ -225,11 +224,11 @@ public class TriggerJob extends BaseJob {
     Timber.d("Requeue the trigger job");
     JobHelper.queueTriggerJob(jobSchedulerCompat, wifiObserver, dataObserver, bluetoothObserver,
         syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-        preferences, logger);
+        preferences, getLogger());
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
-    logger.log("Run trigger job: %s", entry.name());
+    getLogger().log("Run trigger job: %s", entry.name());
     Timber.d("Run trigger for entry name: %s", entry.name());
     Timber.d("Run trigger for entry percent: %d", entry.percent());
     final String formatted =
@@ -241,13 +240,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableWifi()) {
         Timber.d("Wifi should enable");
         if (!wifiObserver.is()) {
-          logger.log("Trigger job: %s set wifi", entry.name());
+          getLogger().log("Trigger job: %s set wifi", entry.name());
           wifiModifier.set();
         }
       } else {
         Timber.d("Wifi should disable");
         if (wifiObserver.is()) {
-          logger.log("Trigger job: %s unset wifi", entry.name());
+          getLogger().log("Trigger job: %s unset wifi", entry.name());
           wifiModifier.unset();
         }
       }
@@ -258,13 +257,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableData()) {
         Timber.d("Data should enable");
         if (!dataObserver.is()) {
-          logger.log("Trigger job: %s set data", entry.name());
+          getLogger().log("Trigger job: %s set data", entry.name());
           dataModifier.set();
         }
       } else {
         Timber.d("Data should disable");
         if (dataObserver.is()) {
-          logger.log("Trigger job: %s unset data", entry.name());
+          getLogger().log("Trigger job: %s unset data", entry.name());
           dataModifier.unset();
         }
       }
@@ -275,13 +274,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableBluetooth()) {
         Timber.d("Bluetooth should enable");
         if (!bluetoothObserver.is()) {
-          logger.log("Trigger job: %s set bluetooth", entry.name());
+          getLogger().log("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.set();
         }
       } else {
         Timber.d("Bluetooth should disable");
         if (bluetoothObserver.is()) {
-          logger.log("Trigger job: %s set bluetooth", entry.name());
+          getLogger().log("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.unset();
         }
       }
@@ -292,13 +291,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableSync()) {
         Timber.d("Sync should enable");
         if (!syncObserver.is()) {
-          logger.log("Trigger job: %s set sync", entry.name());
+          getLogger().log("Trigger job: %s set sync", entry.name());
           syncModifier.set();
         }
       } else {
         Timber.d("Sync should disable");
         if (syncObserver.is()) {
-          logger.log("Trigger job: %s unset sync", entry.name());
+          getLogger().log("Trigger job: %s unset sync", entry.name());
           syncModifier.unset();
         }
       }
