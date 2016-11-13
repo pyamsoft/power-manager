@@ -63,4 +63,9 @@ import javax.inject.Singleton;
       @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
     return new AirplaneStateObserver(context, wrapper);
   }
+
+  @Singleton @Named("obs_charging_state") @Provides BooleanInterestObserver provideChargingObserver(
+      @NonNull Context context) {
+    return new ChargingStateObserver(context);
+  }
 }

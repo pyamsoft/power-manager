@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -42,6 +43,14 @@ abstract class BroadcastStateObserver extends BroadcastReceiver implements Boole
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
     registered = false;
+  }
+
+  @NonNull @CheckResult Context getAppContext() {
+    return appContext;
+  }
+
+  @NonNull @CheckResult IntentFilter getFilter() {
+    return filter;
   }
 
   final void setFilterActions(@NonNull String... actions) {
