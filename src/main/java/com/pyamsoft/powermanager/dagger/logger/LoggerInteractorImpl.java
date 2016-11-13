@@ -54,7 +54,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult File getLogLocation() {
-    final String type = getLogType();
+    final String type = getLogId();
 
     if (logPath == null || !logPath.exists()) {
       final String filesDirPath = appContext.getFilesDir().getAbsolutePath();

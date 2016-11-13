@@ -83,7 +83,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   void internalEnable() {
     if (!interestObserver.is()) {
-      getLogger().log("Enable %s", jobTag);
+      getLogger().i("Enable %s", jobTag);
       interestModifier.set();
     }
   }
@@ -114,7 +114,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   void internalDisable() {
     if (interestObserver.is()) {
-      getLogger().log("Disable %s", jobTag);
+      getLogger().i("Disable %s", jobTag);
       interestModifier.unset();
     }
   }

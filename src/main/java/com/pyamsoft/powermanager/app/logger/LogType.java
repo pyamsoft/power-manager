@@ -16,18 +16,9 @@
 
 package com.pyamsoft.powermanager.app.logger;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-public interface Logger {
-
-  void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
-
-  void d(@NonNull String fmt, @Nullable Object... args);
-
-  void i(@NonNull String fmt, @Nullable Object... args);
-
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+public enum LogType {
+  DEBUG,
+  INFO,
+  WARNING,
+  ERROR
 }

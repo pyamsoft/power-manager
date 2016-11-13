@@ -22,7 +22,15 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
 
-  void log(@NonNull String fmt, @Nullable Object... args);
+  void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
+
+  void d(@NonNull String fmt, @Nullable Object... args);
+
+  void i(@NonNull String fmt, @Nullable Object... args);
+
+  void w(@NonNull String fmt, @Nullable Object... args);
+
+  void e(@NonNull String fmt, @Nullable Object... args);
 
   void deleteLog();
 

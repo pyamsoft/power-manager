@@ -77,7 +77,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void enableManagers() {
     Timber.d("Enable all managed managers");
-    logger.log("Screen is ON, enable Managers");
+    logger.i("Screen is ON, enable Managers");
     managerAirplane.queueSet();
     managerDoze.queueExclusiveSet(() -> {
       managerWifi.queueSet();
@@ -89,7 +89,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   private void disableManagers(boolean charging) {
     Timber.d("Disable all managed managers");
-    logger.log("Screen is OFF, disable Managers");
+    logger.i("Screen is OFF, disable Managers");
     managerAirplane.queueUnset(charging);
     managerDoze.queueExclusiveUnset(charging, () -> {
       managerWifi.queueUnset(charging);

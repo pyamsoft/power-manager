@@ -104,12 +104,12 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     // Instead of using a job with no delay, we just directly call the modifier
     if (jobType == JobType.ENABLE) {
       if (!stateObserver.is()) {
-        logger.log("Re-enable %s for %s job", getJobTag(), jobType);
+        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
         stateModifier.set();
       }
     } else {
       if (stateObserver.is()) {
-        logger.log("Re-enable %s for %s job", getJobTag(), jobType);
+        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
         stateModifier.unset();
       }
     }

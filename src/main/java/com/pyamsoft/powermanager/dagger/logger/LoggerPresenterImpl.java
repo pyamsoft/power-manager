@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.logger;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.logger.LogType;
 import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
@@ -62,7 +63,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
         .observeOn(getObserveScheduler())
         .subscribe(logLine -> getView(view -> view.onLogContentRetrieved(logLine)),
             throwable -> Timber.e(throwable, "onError: Failed to retrieve log contents: %s",
-                interactor.getLogType()), () -> {
+                interactor.getLogId()), () -> {
               getView(Provider::onAllLogContentsRetrieved);
               SubscriptionHelper.unsubscribe(logContenSubscription);
             });
@@ -74,7 +75,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription);
   }
 
-  @Override public void log(@NonNull String fmt, @Nullable Object... args) {
+  @Override
+  public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
     final Subscription logSubscription = interactor.isLoggingEnabled().filter(enabled -> {
       Timber.d("Filter out logging not enabled ");
       return enabled;
@@ -84,11 +86,12 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
         if (loggingEnabled) {
           Timber.d("Format message");
           final String message = String.format(Locale.getDefault(), fmt, args);
-          Timber.d("Attempt to append to log");
-          writeAppendResult = interactor.appendToLog(message);
+          final String logMessage =
+              String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
 
-          // Also logcat the message
-          Timber.i(message);
+          Timber.d("Attempt to append to log");
+          writeAppendResult = interactor.appendToLog(logMessage);
+          logWithTimber(logType, message);
         } else {
           Timber.w("Logging disabled, return false");
           writeAppendResult = Observable.just(false);
@@ -107,6 +110,42 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     logSubscriptions.add(logSubscription);
   }
 
+  @SuppressWarnings("WeakerAccess") void logWithTimber(@NonNull LogType logType,
+      @NonNull String message) {
+    switch (logType) {
+      case DEBUG:
+        Timber.d(message);
+        break;
+      case INFO:
+        Timber.i(message);
+        break;
+      case WARNING:
+        Timber.w(message);
+        break;
+      case ERROR:
+        Timber.e(message);
+        break;
+      default:
+        throw new IllegalStateException("Invalid LogType: " + logType.name());
+    }
+  }
+
+  @Override public void d(@NonNull String fmt, @Nullable Object... args) {
+    log(LogType.DEBUG, fmt, args);
+  }
+
+  @Override public void i(@NonNull String fmt, @Nullable Object... args) {
+    log(LogType.INFO, fmt, args);
+  }
+
+  @Override public void w(@NonNull String fmt, @Nullable Object... args) {
+    log(LogType.WARNING, fmt, args);
+  }
+
+  @Override public void e(@NonNull String fmt, @Nullable Object... args) {
+    log(LogType.ERROR, fmt, args);
+  }
+
   private void queueClearLogSubscription() {
     Timber.d("Queue to clear the Log CompositeSubscription in 1 minute");
     SubscriptionHelper.unsubscribe(clearLogSubscription);
@@ -122,7 +161,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   }
 
   @Override public void deleteLog() {
-    Timber.d("Delete log file for %s", interactor.getLogType());
+    Timber.d("Delete log file for %s", interactor.getLogId());
     Timber.w("TODO");
   }
 }

@@ -28,5 +28,5 @@ interface LoggerInteractor {
 
   @NonNull @CheckResult Observable<Boolean> appendToLog(@NonNull String message);
 
-  @NonNull @CheckResult String getLogType();
+  @NonNull @CheckResult String getLogId();
 }

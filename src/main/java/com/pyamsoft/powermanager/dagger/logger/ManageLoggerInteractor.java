@@ -23,14 +23,14 @@ import javax.inject.Inject;
 
 class ManageLoggerInteractor extends LoggerInteractorImpl {
 
-  @NonNull private static final String LOG_TYPE = "MANAGER";
+  @NonNull private static final String LOG_ID = "MANAGER";
 
   @Inject ManageLoggerInteractor(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
     super(context, preferences);
   }
 
-  @NonNull @Override public String getLogType() {
-    return LOG_TYPE;
+  @NonNull @Override public String getLogId() {
+    return LOG_ID;
   }
 }
