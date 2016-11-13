@@ -37,9 +37,10 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver,
-      @NonNull PermissionObserver rootPermissionObserver, @NonNull Logger logger) {
+      @NonNull PermissionObserver rootPermissionObserver,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
-        wearStateObserver, logger);
+        wearStateObserver, chargingObserver, logger);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 

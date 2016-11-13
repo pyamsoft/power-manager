@@ -31,8 +31,11 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
   @Inject ManagerSyncInteractorImpl(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, logger);
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull Logger logger) {
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
+        logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {

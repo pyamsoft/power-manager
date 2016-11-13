@@ -37,8 +37,11 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull PermissionObserver dozePermissionObserver, @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, logger);
+      @NonNull PermissionObserver dozePermissionObserver,
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull Logger logger) {
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
+        logger);
     this.dozePermissionObserver = dozePermissionObserver;
   }
 

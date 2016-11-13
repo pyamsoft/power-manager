@@ -36,20 +36,18 @@ public final class JobHelper {
   @CheckResult @NonNull public static BaseJob createEnableJob(@NonNull JobType jobType,
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull Logger logger
-
-  ) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     switch (jobType) {
       case ENABLE:
       case DISABLE:
         Timber.d("Create Enable Manage Job");
         return createEnableManageJob(jobSchedulerCompat, tag, 0, false, 0, 0, observer, modifier,
-            logger);
+            chargingObserver, logger);
       case TOGGLE_ENABLE:
       case TOGGLE_DISABLE:
         Timber.d("Create Enable Toggle Job");
         return createEnableToggleJob(jobSchedulerCompat, tag, 0, false, 0, 0, observer, modifier,
-            logger);
+            chargingObserver, logger);
       default:
         throw new RuntimeException("Invalid enable job type: " + jobType);
     }
@@ -59,38 +57,40 @@ public final class JobHelper {
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeMillis,
       boolean periodic, long periodicEnableSeconds, long periodicDisableSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new EnableManageJob(jobSchedulerCompat, tag, delayTimeMillis, periodic,
-        periodicEnableSeconds, periodicDisableSeconds, observer, modifier, logger);
+        periodicEnableSeconds, periodicDisableSeconds, observer, modifier, chargingObserver,
+        logger);
   }
 
   @CheckResult @NonNull private static EnableToggleJob createEnableToggleJob(
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeMillis,
       boolean periodic, long periodicEnableSeconds, long periodicDisableSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new EnableToggleJob(jobSchedulerCompat, tag, delayTimeMillis, periodic,
-        periodicEnableSeconds, periodicDisableSeconds, observer, modifier, logger);
+        periodicEnableSeconds, periodicDisableSeconds, observer, modifier, chargingObserver,
+        logger);
   }
 
   @CheckResult @NonNull public static BaseJob createDisableJob(@NonNull JobType jobType,
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     switch (jobType) {
       case ENABLE:
       case DISABLE:
         Timber.d("Create Disable Manage Job");
         return createDisableManageJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, logger);
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
+            logger);
       case TOGGLE_ENABLE:
       case TOGGLE_DISABLE:
         Timber.d("Create Disable Toggle Job");
         return createDisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
-            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, logger);
+            periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
+            logger);
       default:
         throw new RuntimeException("Invalid disable job type: " + jobType);
     }
@@ -100,19 +100,20 @@ public final class JobHelper {
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new DisableManageJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
-        periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, logger);
+        periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
+        logger);
   }
 
   @CheckResult @NonNull private static DisableToggleJob createDisableToggleJob(
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new DisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
-        periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, logger);
+        periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
+        logger);
   }
 
   public static void queueTriggerJob(@NonNull JobSchedulerCompat jobSchedulerCompat,

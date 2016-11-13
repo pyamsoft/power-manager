@@ -27,8 +27,10 @@ class DisableToggleJob extends ToggleJobImpl {
   DisableToggleJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds, @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
+      @NonNull BooleanInterestModifier interestModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, JobType.TOGGLE_DISABLE, delayInMilliseconds, periodic,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier, logger);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        chargingObserver, logger);
   }
 }

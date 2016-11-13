@@ -35,8 +35,11 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull PermissionObserver rootPermissionObserver, @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, logger);
+      @NonNull PermissionObserver rootPermissionObserver,
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull Logger logger) {
+    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
+        logger);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 

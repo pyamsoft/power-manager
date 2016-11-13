@@ -39,17 +39,20 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
   @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
+  @NonNull private final BooleanInterestObserver chargingObserver;
   @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerInteractorImpl(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     this.jobManager = jobManager;
     this.manageObserver = manageObserver;
     this.stateModifier = stateModifier;
     this.stateObserver = stateObserver;
+    this.chargingObserver = chargingObserver;
     this.logger = logger;
     originalStateEnabled = false;
     this.preferences = preferences;
@@ -132,7 +135,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final Job job =
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
-            stateModifier, logger);
+            stateModifier, chargingObserver, logger);
     jobManager.addJob(job);
   }
 

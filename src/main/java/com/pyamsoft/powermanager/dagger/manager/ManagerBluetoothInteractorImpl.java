@@ -33,9 +33,11 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver wearStateObserver,
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull Logger logger) {
     super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
-        wearStateObserver, logger);
+        wearStateObserver, chargingObserver, logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {

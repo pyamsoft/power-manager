@@ -34,9 +34,10 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver,
+      @NonNull BooleanInterestObserver chargingObserver,
       @NonNull Logger logger) {
     super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
-        wearStateObserver, logger);
+        wearStateObserver, chargingObserver, logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {

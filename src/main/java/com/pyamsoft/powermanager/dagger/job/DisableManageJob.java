@@ -27,9 +27,10 @@ class DisableManageJob extends ManageJobImpl {
   DisableManageJob(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds, @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier, @NonNull Logger logger) {
+      @NonNull BooleanInterestModifier interestModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, JobType.DISABLE, delayInMilliseconds, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        logger);
+        chargingObserver, logger);
   }
 }
