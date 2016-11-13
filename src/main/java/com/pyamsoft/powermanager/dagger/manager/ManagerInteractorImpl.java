@@ -96,10 +96,23 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         jobType = JobType.ENABLE;
     }
 
-    final Job job =
-        JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
-            logger);
-    jobManager.addJob(job);
+    //final Job job =
+    //    JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
+    //        logger);
+    //jobManager.addJob(job);
+
+    // Instead of using a job with no delay, we just directly call the modifier
+    if (jobType == JobType.ENABLE) {
+      if (!stateObserver.is()) {
+        logger.log("Re-enable %s for %s job", getJobTag(), jobType);
+        stateModifier.set();
+      }
+    } else {
+      if (stateObserver.is()) {
+        logger.log("Re-enable %s for %s job", getJobTag(), jobType);
+        stateModifier.unset();
+      }
+    }
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
