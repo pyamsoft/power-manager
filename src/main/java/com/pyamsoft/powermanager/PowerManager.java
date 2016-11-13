@@ -16,10 +16,7 @@
 
 package com.pyamsoft.powermanager;
 
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
 import com.pyamsoft.pydroid.PYDroidApplication;
 
 public class PowerManager extends PYDroidApplication {
-
-  private PowerManagerComponent component;
 }
