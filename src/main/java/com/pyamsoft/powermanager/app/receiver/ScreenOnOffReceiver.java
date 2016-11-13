@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.receiver;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -25,11 +26,12 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
+public class ScreenOnOffReceiver extends BroadcastReceiver {
 
   @NonNull private final static IntentFilter SCREEN_FILTER;
 
@@ -40,6 +42,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
 
   @NonNull private final Context appContext;
 
+  @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
   @Inject @Named("wifi_manager") Manager managerWifi;
   @Inject @Named("data_manager") Manager managerData;
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
@@ -59,7 +62,7 @@ public class ScreenOnOffReceiver extends ChargingStateAwareReceiver {
   @Override public final void onReceive(final Context context, final Intent intent) {
     if (null != intent) {
       final String action = intent.getAction();
-      final boolean charging = getCurrentChargingState(context);
+      final boolean charging = chargingObserver.is();
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
           Timber.d("Screen off event");
