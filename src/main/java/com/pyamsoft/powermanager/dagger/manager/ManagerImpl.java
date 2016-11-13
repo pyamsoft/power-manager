@@ -35,8 +35,7 @@ abstract class ManagerImpl implements Manager {
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
   @NonNull private final Scheduler subscribeScheduler;
   @NonNull private final Scheduler observerScheduler;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription setSubscription = Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription unsetSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
   ManagerImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -70,8 +69,8 @@ abstract class ManagerImpl implements Manager {
   }
 
   @Override public void queueSet() {
-    SubscriptionHelper.unsubscribe(setSubscription);
-    setSubscription = baseObservable().flatMap(managed -> {
+    SubscriptionHelper.unsubscribe(subscription);
+    subscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
         return interactor.isOriginalStateEnabled();
@@ -79,19 +78,24 @@ abstract class ManagerImpl implements Manager {
         Timber.w("Is not managed, return empty");
         return Observable.empty();
       }
+    }).map(originalState -> {
+      if (originalState) {
+        interactor.queueEnableJob();
+      }
+      return originalState;
     }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
           // Technically can ignore this as if we are here we are non-empty
           // If we are non empty it means we pass the test
           if (originalState) {
-            interactor.queueEnableJob();
+            Timber.d("Queued up a new enable job");
           }
         }, throwable -> Timber.e(throwable, "onError queueSet"),
-        () -> SubscriptionHelper.unsubscribe(setSubscription));
+        () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @Override public void queueUnset(boolean deviceCharging) {
-    SubscriptionHelper.unsubscribe(unsetSubscription);
-    unsetSubscription = baseObservable().flatMap(managed -> {
+    SubscriptionHelper.unsubscribe(subscription);
+    subscription = baseObservable().flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
         return interactor.isEnabled();
@@ -99,35 +103,33 @@ abstract class ManagerImpl implements Manager {
         Timber.w("Is not managed, return empty");
         return Observable.empty();
       }
-    })
-        .map(enabled -> {
-          Timber.d("Set original state enabled: %s", enabled);
-          interactor.setOriginalStateEnabled(enabled);
-          return enabled;
-        })
-        .flatMap(enabled -> {
-          if (enabled) {
-            Timber.d("Is ignore while charging?");
-            return interactor.isIgnoreWhileCharging();
-          } else {
-            Timber.w("Is not managed, return empty");
-            return Observable.empty();
+    }).map(enabled -> {
+      Timber.d("Set original state enabled: %s", enabled);
+      interactor.setOriginalStateEnabled(enabled);
+      return enabled;
+    }).flatMap(enabled -> {
+      if (enabled) {
+        Timber.d("Is ignore while charging?");
+        return interactor.isIgnoreWhileCharging();
+      } else {
+        Timber.w("Is not managed, return empty");
+        return Observable.empty();
+      }
+    }).map(ignoreWhileCharging -> {
+      Timber.d("Is device currently charging?");
+      return ignoreWhileCharging && deviceCharging;
+    }).flatMap(accountForWearableBeforeDisable()).map(ignore -> {
+      if (!ignore) {
+        interactor.queueDisableJob();
+      }
+      return ignore;
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(ignore -> {
+          // Only queue a disable job if the radio is not ignored
+          if (!ignore) {
+            Timber.d("Queued up a new disable job");
           }
-        })
-        .map(ignoreWhileCharging -> {
-          Timber.d("Is device currently charging?");
-          return ignoreWhileCharging && deviceCharging;
-        })
-        .flatMap(accountForWearableBeforeDisable())
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observerScheduler)
-        .subscribe(ignore -> {
-              // Only queue a disable job if the radio is not ignored
-              if (!ignore) {
-                interactor.queueDisableJob();
-              }
-            }, throwable -> Timber.e(throwable, "onError queueUnset"),
-            () -> SubscriptionHelper.unsubscribe(unsetSubscription));
+        }, throwable -> Timber.e(throwable, "onError queueUnset"),
+        () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @CheckResult @NonNull
@@ -135,6 +137,6 @@ abstract class ManagerImpl implements Manager {
 
   @CallSuper @Override public void cleanup() {
     interactor.destroy();
-    SubscriptionHelper.unsubscribe(setSubscription, unsetSubscription);
+    SubscriptionHelper.unsubscribe(subscription);
   }
 }

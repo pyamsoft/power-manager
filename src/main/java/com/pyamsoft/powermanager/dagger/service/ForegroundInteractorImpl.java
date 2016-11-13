@@ -27,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -56,6 +57,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @NonNull private final BooleanInterestModifier bluetoothModifier;
   @NonNull private final BooleanInterestModifier syncModifier;
   @NonNull private final PowerTriggerDB powerTriggerDB;
+  @NonNull private final Logger logger;
 
   @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver wifiObserver,
@@ -64,7 +66,8 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
       @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
       @NonNull BooleanInterestModifier dataModifier,
       @NonNull BooleanInterestModifier bluetoothModifier,
-      @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB) {
+      @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull Logger logger) {
     super(preferences);
     appContext = context.getApplicationContext();
     this.jobManager = jobManager;
@@ -77,6 +80,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
     this.bluetoothModifier = bluetoothModifier;
     this.syncModifier = syncModifier;
     this.powerTriggerDB = powerTriggerDB;
+    this.logger = logger;
 
     final Intent intent =
         new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -97,7 +101,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @Override public void create() {
     JobHelper.queueTriggerJob(jobManager, wifiObserver, dataObserver, bluetoothObserver,
         syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-        getPreferences());
+        getPreferences(), logger);
   }
 
   @Override public void destroy() {

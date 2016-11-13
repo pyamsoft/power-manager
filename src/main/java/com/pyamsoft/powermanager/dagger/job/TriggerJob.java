@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.birbit.android.jobqueue.Params;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -63,8 +64,9 @@ public class TriggerJob extends BaseJob {
       @NonNull BooleanInterestModifier dataModifier,
       @NonNull BooleanInterestModifier bluetoothModifier,
       @NonNull BooleanInterestModifier syncModifier, @NonNull JobSchedulerCompat jobSchedulerCompat,
-      @NonNull PowerTriggerDB powerTriggerDB, @NonNull PowerManagerPreferences preferences) {
-    super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG));
+      @NonNull PowerTriggerDB powerTriggerDB, @NonNull PowerManagerPreferences preferences,
+      @NonNull Logger logger) {
+    super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG), logger);
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;
     this.bluetoothObserver = bluetoothObserver;
@@ -221,12 +223,12 @@ public class TriggerJob extends BaseJob {
     Timber.d("Requeue the trigger job");
     JobHelper.queueTriggerJob(jobSchedulerCompat, wifiObserver, dataObserver, bluetoothObserver,
         syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-        preferences);
+        preferences, getLogger());
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
-    Timber.d("Run trigger for entry name: %s", entry.name());
-    Timber.d("Run trigger for entry percent: %d", entry.percent());
+    getLogger().d("Run trigger for entry name: %s", entry.name());
+    getLogger().d("Run trigger for entry percent: %d", entry.percent());
     final String formatted =
         String.format(Locale.getDefault(), "Run trigger: %s [%d]", entry.name(), entry.percent());
     Toast.makeText(getApplicationContext(), formatted, Toast.LENGTH_SHORT).show();
@@ -236,11 +238,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableWifi()) {
         Timber.d("Wifi should enable");
         if (!wifiObserver.is()) {
+          getLogger().i("Trigger job: %s set wifi", entry.name());
           wifiModifier.set();
         }
       } else {
         Timber.d("Wifi should disable");
         if (wifiObserver.is()) {
+          getLogger().i("Trigger job: %s unset wifi", entry.name());
           wifiModifier.unset();
         }
       }
@@ -251,11 +255,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableData()) {
         Timber.d("Data should enable");
         if (!dataObserver.is()) {
+          getLogger().i("Trigger job: %s set data", entry.name());
           dataModifier.set();
         }
       } else {
         Timber.d("Data should disable");
         if (dataObserver.is()) {
+          getLogger().i("Trigger job: %s unset data", entry.name());
           dataModifier.unset();
         }
       }
@@ -266,11 +272,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableBluetooth()) {
         Timber.d("Bluetooth should enable");
         if (!bluetoothObserver.is()) {
+          getLogger().i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.set();
         }
       } else {
         Timber.d("Bluetooth should disable");
         if (bluetoothObserver.is()) {
+          getLogger().i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.unset();
         }
       }
@@ -281,11 +289,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableSync()) {
         Timber.d("Sync should enable");
         if (!syncObserver.is()) {
+          getLogger().i("Trigger job: %s set sync", entry.name());
           syncModifier.set();
         }
       } else {
         Timber.d("Sync should disable");
         if (syncObserver.is()) {
+          getLogger().i("Trigger job: %s unset sync", entry.name());
           syncModifier.unset();
         }
       }

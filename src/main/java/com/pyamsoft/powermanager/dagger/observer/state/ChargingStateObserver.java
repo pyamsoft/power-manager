@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.receiver;
+package com.pyamsoft.powermanager.dagger.observer.state;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-abstract class ChargingStateAwareReceiver extends BroadcastReceiver {
+class ChargingStateObserver extends BroadcastStateObserver {
 
-  @NonNull private static final IntentFilter BATTERY_FILTER;
-
-  static {
-    BATTERY_FILTER = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+  @Inject ChargingStateObserver(@NonNull Context context) {
+    super(context);
+    Timber.d("new ChargingStateObserver instance");
+    setFilterActions(Intent.ACTION_BATTERY_CHANGED);
   }
 
-  @CheckResult static boolean getCurrentChargingState(@NonNull Context context) {
-    final Intent batteryStatus = context.registerReceiver(null, BATTERY_FILTER);
+  @Override public boolean is() {
+    final Intent batteryStatus = getAppContext().registerReceiver(null, getFilter());
     int status;
     if (batteryStatus == null) {
       Timber.e("NULL BatteryStatus Intent, return Unknown");

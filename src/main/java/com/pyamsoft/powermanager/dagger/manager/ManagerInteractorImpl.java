@@ -19,9 +19,11 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -37,16 +39,21 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
   @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
+  @NonNull private final BooleanInterestObserver chargingObserver;
+  @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerInteractorImpl(@NonNull JobSchedulerCompat jobManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     this.jobManager = jobManager;
     this.manageObserver = manageObserver;
     this.stateModifier = stateModifier;
     this.stateObserver = stateObserver;
+    this.chargingObserver = chargingObserver;
+    this.logger = logger;
     originalStateEnabled = false;
     this.preferences = preferences;
   }
@@ -78,7 +85,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     originalStateEnabled = enabled;
   }
 
-  @CallSuper @Override public void queueEnableJob() {
+  @WorkerThread @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
     final JobType jobType;
     switch (getJobTag()) {
@@ -92,12 +99,26 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         jobType = JobType.ENABLE;
     }
 
-    final Job job =
-        JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier);
-    jobManager.addJobInBackground(job);
+    //final Job job =
+    //    JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
+    //        logger);
+    //jobManager.addJob(job);
+
+    // Instead of using a job with no delay, we just directly call the modifier
+    if (jobType == JobType.ENABLE) {
+      if (!stateObserver.is()) {
+        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
+        stateModifier.set();
+      }
+    } else {
+      if (stateObserver.is()) {
+        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
+        stateModifier.unset();
+      }
+    }
   }
 
-  @CallSuper @Override public void queueDisableJob() {
+  @WorkerThread @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
     final JobType jobType;
     switch (getJobTag()) {
@@ -114,8 +135,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final Job job =
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
-            stateModifier);
-    jobManager.addJobInBackground(job);
+            stateModifier, chargingObserver, logger);
+    jobManager.addJob(job);
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {

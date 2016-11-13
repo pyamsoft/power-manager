@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import rx.Observable;
 
 interface ManagerInteractor {
@@ -43,7 +44,7 @@ interface ManagerInteractor {
 
   void setOriginalStateEnabled(boolean enabled);
 
-  void queueEnableJob();
+  @WorkerThread void queueEnableJob();
 
-  void queueDisableJob();
+  @WorkerThread void queueDisableJob();
 }

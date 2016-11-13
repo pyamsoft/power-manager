@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -37,14 +38,16 @@ abstract class ManageJobImpl extends BaseJob {
   private final long periodicDisableInSeconds;
   @NonNull private final BooleanInterestObserver interestObserver;
   @NonNull private final BooleanInterestModifier interestModifier;
+  @NonNull private final BooleanInterestObserver chargingObserver;
   @NonNull private final String jobTag;
 
   ManageJobImpl(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
       @NonNull JobType jobType, long delayInMilliseconds, boolean periodic,
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
-    super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds));
+      @NonNull BooleanInterestModifier interestModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+    super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds), logger);
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.jobType = jobType;
     this.periodic = periodic;
@@ -52,6 +55,7 @@ abstract class ManageJobImpl extends BaseJob {
     this.periodicDisableInSeconds = periodicDisableInSeconds;
     this.interestObserver = interestObserver;
     this.interestModifier = interestModifier;
+    this.chargingObserver = chargingObserver;
     this.jobTag = tag;
   }
 
@@ -82,6 +86,7 @@ abstract class ManageJobImpl extends BaseJob {
 
   void internalEnable() {
     if (!interestObserver.is()) {
+      getLogger().i("Enable %s", jobTag);
       interestModifier.set();
     }
   }
@@ -96,7 +101,8 @@ abstract class ManageJobImpl extends BaseJob {
         Timber.d("Queue periodic disable job for: %d", periodicDisableInSeconds);
         jobSchedulerCompat.addJob(
             createPeriodicDisableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
-                periodicDisableInSeconds, interestObserver, interestModifier));
+                periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver,
+                getLogger()));
       }
     }
   }
@@ -104,18 +110,27 @@ abstract class ManageJobImpl extends BaseJob {
   @CheckResult @NonNull Job createPeriodicDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new DisableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        chargingObserver, logger);
   }
 
   void internalDisable() {
     if (interestObserver.is()) {
+      getLogger().i("Disable %s", jobTag);
       interestModifier.unset();
     }
   }
 
   private void disable() {
+    if (chargingObserver.is()) {
+      getLogger().w("Not running disable job for %s because device is charging", jobTag);
+      getLogger().w("Not continuing with power loop because device is charging");
+      return;
+    }
+
     internalDisable();
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
@@ -125,7 +140,8 @@ abstract class ManageJobImpl extends BaseJob {
         Timber.d("Queue periodic enable job for: %d", periodicEnableInSeconds);
         jobSchedulerCompat.addJob(
             createPeriodicEnableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
-                periodicDisableInSeconds, interestObserver, interestModifier));
+                periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver,
+                getLogger()));
       }
     }
   }
@@ -133,8 +149,10 @@ abstract class ManageJobImpl extends BaseJob {
   @CheckResult @NonNull Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
-      @NonNull BooleanInterestModifier interestModifier) {
+      @NonNull BooleanInterestModifier interestModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     return new EnableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
-        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
+        chargingObserver, logger);
   }
 }

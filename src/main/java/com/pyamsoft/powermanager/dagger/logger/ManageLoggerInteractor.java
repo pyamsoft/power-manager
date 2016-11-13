@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.main;
+package com.pyamsoft.powermanager.dagger.logger;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
+import javax.inject.Inject;
 
-interface MainInteractor {
+class ManageLoggerInteractor extends LoggerInteractorImpl {
 
-  void missingRootPermission();
+  @NonNull private static final String LOG_ID = "MANAGER";
 
-  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen();
+  @Inject ManageLoggerInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    super(context, preferences);
+  }
+
+  @NonNull @Override public String getLogId() {
+    return LOG_ID;
+  }
 }

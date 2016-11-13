@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.main;
+package com.pyamsoft.powermanager.app.logger;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
-
-interface MainInteractor {
-
-  void missingRootPermission();
-
-  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen();
+public enum LogType {
+  DEBUG,
+  INFO,
+  WARNING,
+  ERROR
 }

@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implements MainPresenter {
 
-  @NonNull private final MainInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
   @NonNull private final PermissionObserver rootPermissionObserver;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
@@ -60,6 +60,7 @@ class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implement
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {
               if (!hasPermission) {
+                interactor.missingRootPermission();
                 getView(View::explainRootRequirement);
               }
             }, throwable -> Timber.e(throwable, "onError checking root permission"),
