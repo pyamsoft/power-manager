@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.base;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
@@ -40,12 +41,12 @@ public abstract class PermissionManagePreferencePresenterImpl
     this.permissionObserver = permissionObserver;
   }
 
-  @Override protected void onUnbind() {
+  @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
     SubscriptionHelper.unsubscribe(permissionSubscription);
   }
 
-  @Override public void checkManagePermission() {
+  @CallSuper @Override public void checkManagePermission() {
     SubscriptionHelper.unsubscribe(permissionSubscription);
     permissionSubscription = permissionObserver.hasPermission()
         .subscribeOn(getSubscribeScheduler())

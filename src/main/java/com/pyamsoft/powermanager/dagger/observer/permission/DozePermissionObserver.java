@@ -36,7 +36,8 @@ class DozePermissionObserver extends RootPermissionObserver {
     switch (Build.VERSION.SDK_INT) {
       case Build.VERSION_CODES.M:
         // Doze can run without root on M
-        hasPermission = hasRuntimePermission();
+        // Doze can also run with root
+        hasPermission = hasRuntimePermission() || super.checkPermission(appContext);
         break;
       case Build.VERSION_CODES.N:
         // Doze needs root on N

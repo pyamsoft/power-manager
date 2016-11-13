@@ -29,8 +29,8 @@ class DozeManagePreferencePresenterImpl extends PermissionManagePreferencePresen
   @Inject DozeManagePreferencePresenterImpl(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver,
-      @NonNull PermissionObserver rootPermissionObserver) {
+      @NonNull PermissionObserver dozePermissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver,
-        rootPermissionObserver);
+        dozePermissionObserver);
   }
 }

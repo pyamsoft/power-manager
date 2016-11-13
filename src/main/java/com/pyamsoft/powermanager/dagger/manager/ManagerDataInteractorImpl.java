@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -26,6 +27,7 @@ import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
 class ManagerDataInteractorImpl extends ManagerInteractorImpl {
 
@@ -36,17 +38,21 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull PermissionObserver rootPermissionObserver,
-      @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
         logger);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 
   @NonNull @Override public Observable<Boolean> isManaged() {
-    return super.isManaged()
-        .zipWith(rootPermissionObserver.hasPermission(),
-            (managed, hasPermission) -> managed && hasPermission);
+    final Observable<Boolean> superManaged = super.isManaged();
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      Timber.d("isManaged: check for root on API > 19");
+      return superManaged.zipWith(rootPermissionObserver.hasPermission(),
+          (managed, hasPermission) -> managed && hasPermission);
+    } else {
+      return superManaged;
+    }
   }
 
   @Override @CheckResult protected long getDelayTime() {

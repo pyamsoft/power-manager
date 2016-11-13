@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.data;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.observer.InterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
@@ -23,6 +24,7 @@ import com.pyamsoft.powermanager.dagger.base.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.dagger.base.PermissionManagePreferencePresenterImpl;
 import javax.inject.Inject;
 import rx.Scheduler;
+import timber.log.Timber;
 
 class DataManagePreferencePresenterImpl extends PermissionManagePreferencePresenterImpl {
 
@@ -32,5 +34,13 @@ class DataManagePreferencePresenterImpl extends PermissionManagePreferencePresen
       @NonNull PermissionObserver rootPermissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver,
         rootPermissionObserver);
+  }
+
+  @Override public void checkManagePermission() {
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      super.checkManagePermission();
+    } else {
+      Timber.d("Do not need root for Data on KitKat");
+    }
   }
 }

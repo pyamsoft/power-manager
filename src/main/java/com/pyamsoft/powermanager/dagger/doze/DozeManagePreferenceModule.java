@@ -34,9 +34,9 @@ import rx.Scheduler;
       @Named("doze_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
     return new DozeManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
-        manageObserver, rootPermissionObserver);
+        manageObserver, dozePermissionObserver);
   }
 
   @Provides @Named("doze_manage_pref_interactor")
