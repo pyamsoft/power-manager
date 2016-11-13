@@ -86,6 +86,9 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
           final String message = String.format(Locale.getDefault(), fmt, args);
           Timber.d("Attempt to append to log");
           writeAppendResult = interactor.appendToLog(message);
+
+          // Also logcat the message
+          Timber.i(message);
         } else {
           Timber.w("Logging disabled, return false");
           writeAppendResult = Observable.just(false);
