@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.job;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Job;
@@ -34,7 +33,7 @@ abstract class BaseJob extends Job {
     super(params.setRequiresNetwork(false).addTags(ALL_TAG));
   }
 
-  @CallSuper @Override public void onAdded() {
+  @Override public final void onAdded() {
     final Set<String> tags = getTags();
     String tagString;
     if (tags != null) {
@@ -45,7 +44,7 @@ abstract class BaseJob extends Job {
     Timber.w("Job is added %s %s (%d)", getId(), tagString, getDelayInMs());
   }
 
-  @CallSuper @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
+  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
     final Set<String> tags = getTags();
     String tagString;
     if (tags != null) {

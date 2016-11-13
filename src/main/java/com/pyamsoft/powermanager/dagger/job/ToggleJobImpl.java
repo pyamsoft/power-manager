@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.job;
 
 import android.support.annotation.NonNull;
+import com.birbit.android.jobqueue.Job;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
@@ -40,5 +41,21 @@ abstract class ToggleJobImpl extends ManageJobImpl {
   // For toggle jobs, the action is switched
   @Override void internalDisable() {
     super.internalEnable();
+  }
+
+  @NonNull @Override Job createPeriodicDisableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver interestObserver,
+      @NonNull BooleanInterestModifier interestModifier) {
+    return new DisableToggleJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
+  }
+
+  @NonNull @Override Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
+      @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
+      @NonNull BooleanInterestObserver interestObserver,
+      @NonNull BooleanInterestModifier interestModifier) {
+    return new EnableToggleJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
+        periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier);
   }
 }

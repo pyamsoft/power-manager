@@ -28,8 +28,12 @@ import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.job.JobHelper;
 import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import javax.inject.Inject;
 import rx.Observable;
@@ -43,12 +47,36 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final JobSchedulerCompat jobManager;
+  @NonNull private final BooleanInterestObserver wifiObserver;
+  @NonNull private final BooleanInterestObserver dataObserver;
+  @NonNull private final BooleanInterestObserver bluetoothObserver;
+  @NonNull private final BooleanInterestObserver syncObserver;
+  @NonNull private final BooleanInterestModifier wifiModifier;
+  @NonNull private final BooleanInterestModifier dataModifier;
+  @NonNull private final BooleanInterestModifier bluetoothModifier;
+  @NonNull private final BooleanInterestModifier syncModifier;
+  @NonNull private final PowerTriggerDB powerTriggerDB;
 
   @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver wifiObserver,
+      @NonNull BooleanInterestObserver dataObserver,
+      @NonNull BooleanInterestObserver bluetoothObserver,
+      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
+      @NonNull BooleanInterestModifier dataModifier,
+      @NonNull BooleanInterestModifier bluetoothModifier,
+      @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB) {
     super(preferences);
     appContext = context.getApplicationContext();
     this.jobManager = jobManager;
+    this.wifiObserver = wifiObserver;
+    this.dataObserver = dataObserver;
+    this.bluetoothObserver = bluetoothObserver;
+    this.syncObserver = syncObserver;
+    this.wifiModifier = wifiModifier;
+    this.dataModifier = dataModifier;
+    this.bluetoothModifier = bluetoothModifier;
+    this.syncModifier = syncModifier;
+    this.powerTriggerDB = powerTriggerDB;
 
     final Intent intent =
         new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -67,8 +95,9 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   }
 
   @Override public void create() {
-    // For now, trigger every 5 minutes
-    TriggerJob.queue(jobManager, new TriggerJob(5 * 60 * 1000));
+    JobHelper.queueTriggerJob(jobManager, wifiObserver, dataObserver, bluetoothObserver,
+        syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
+        getPreferences());
   }
 
   @Override public void destroy() {
