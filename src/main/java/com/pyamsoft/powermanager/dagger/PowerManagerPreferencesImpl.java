@@ -229,6 +229,10 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(useRoot, useRootDefault);
   }
 
+  @Override public void resetRootEnabled() {
+    put(useRoot, useRootDefault);
+  }
+
   @Override public boolean isStartWhenOpen() {
     return get(startWhenOpen, startWhenOpenDefault);
   }

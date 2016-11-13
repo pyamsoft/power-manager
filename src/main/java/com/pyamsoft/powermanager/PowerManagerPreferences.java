@@ -28,6 +28,8 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isRootEnabled();
 
+  void resetRootEnabled();
+
   @CheckResult boolean isStartWhenOpen();
 
   @CheckResult boolean isPeriodicOnboardingShown();

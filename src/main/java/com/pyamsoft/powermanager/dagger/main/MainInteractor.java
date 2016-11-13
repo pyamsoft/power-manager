@@ -22,5 +22,7 @@ import rx.Observable;
 
 interface MainInteractor {
 
+  void missingRootPermission();
+
   @NonNull @CheckResult Observable<Boolean> isStartWhenOpen();
 }

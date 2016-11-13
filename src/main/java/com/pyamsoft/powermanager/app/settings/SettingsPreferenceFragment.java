@@ -118,19 +118,17 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
 
     useRoot = (SwitchPreferenceCompat) findPreference(getString(R.string.use_root_key));
-    useRoot.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-      @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue instanceof Boolean) {
-          final boolean b = (boolean) newValue;
-          if (b) {
-            presenter.checkRoot();
-            return false;
-          } else {
-            return true;
-          }
+    useRoot.setOnPreferenceChangeListener((preference, newValue) -> {
+      if (newValue instanceof Boolean) {
+        final boolean b = (boolean) newValue;
+        if (b) {
+          presenter.checkRoot();
+          return false;
+        } else {
+          return true;
         }
-        return false;
       }
+      return false;
     });
   }
 

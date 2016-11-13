@@ -43,6 +43,11 @@ class SettingsPreferencePresenterImpl
     this.interactor = interactor;
   }
 
+  @Override protected void onBind() {
+    super.onBind();
+    checkRoot();
+  }
+
   @Override protected void onUnbind() {
     super.onUnbind();
     SubscriptionHelper.unsubscribe(confirmedSubscription, rootSubscription);

@@ -28,6 +28,10 @@ class MainInteractorImpl implements MainInteractor {
     this.preferences = preferences;
   }
 
+  @Override public void missingRootPermission() {
+    preferences.resetRootEnabled();
+  }
+
   @NonNull @Override public Observable<Boolean> isStartWhenOpen() {
     return Observable.defer(() -> Observable.just(preferences.isStartWhenOpen()));
   }
