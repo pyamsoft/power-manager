@@ -81,8 +81,14 @@ public class ShellCommandHelper {
       int exitCode, @Nullable List<String> output, boolean rootShell) {
     final boolean recreate;
     if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
-      Timber.e("Shell died, command failed. '%s'", command);
-      recreate = true;
+      Timber.e("Command failed. '%s'", command);
+      if (isSUAvailable()) {
+        Timber.d("SU is available, re-create the shell");
+        recreate = true;
+      } else {
+        Timber.d("SU is not available, stay dead");
+        recreate = false;
+      }
     } else {
       recreate = false;
     }
