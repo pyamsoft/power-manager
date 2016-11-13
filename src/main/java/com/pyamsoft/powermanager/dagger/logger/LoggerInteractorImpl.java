@@ -83,7 +83,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     });
   }
 
-  @NonNull @Override public Observable<String> getLogContents() {
+  @NonNull @Override public synchronized Observable<String> getLogContents() {
     return Observable.defer(() -> Observable.just(getLogLocation())).flatMap(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
       try (
@@ -105,7 +105,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     });
   }
 
-  @NonNull @Override public Observable<Boolean> appendToLog(@NonNull String message) {
+  @NonNull @Override public synchronized Observable<Boolean> appendToLog(@NonNull String message) {
     return Observable.defer(() -> Observable.just(getLogLocation())).map(logLocation -> {
       try (
           final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);

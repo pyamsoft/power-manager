@@ -127,7 +127,6 @@ abstract class ManageJobImpl extends BaseJob {
   private void disable() {
     if (chargingObserver.is()) {
       getLogger().w("Not running disable job for %s because device is charging", jobTag);
-      getLogger().w("Not continuing with power loop because device is charging");
       return;
     }
 
