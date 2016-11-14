@@ -35,22 +35,22 @@ abstract class WearAwareManagerImpl extends ManagerImpl {
 
   @NonNull @Override
   protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
-    return ignore -> Observable.just(ignore).flatMap(new Func1<Boolean, Observable<Boolean>>() {
-      @Override public Observable<Boolean> call(Boolean ignore) {
-        if (!ignore) {
-          Timber.d("Do not ignore charging, is wearable managed?");
+    return originalStateEnabled -> Observable.just(originalStateEnabled).flatMap(new Func1<Boolean, Observable<Boolean>>() {
+      @Override public Observable<Boolean> call(Boolean originalStateEnabled) {
+        if (originalStateEnabled) {
+          Timber.d("%s: Original state is enabled, is wearable managed?", getJobTag());
           return wearAwareManagerInteractor.isWearManaged();
         } else {
-          Timber.d("Ignore charging, return empty");
+          Timber.w("%s: Original state not enabled, return empty", getJobTag());
           return Observable.empty();
         }
       }
     }).flatMap(wearManaged -> {
       if (wearManaged) {
-        Timber.d("Is wearable enabled?");
+        Timber.d("%s: Is wearable enabled?", getJobTag());
         return wearAwareManagerInteractor.isWearEnabled();
       } else {
-        Timber.d("Wearable is not managed, but radio is managed, continue stream");
+        Timber.d("%s: Wearable is not managed, but radio is managed, continue stream", getJobTag());
         return Observable.just(false);
       }
     });

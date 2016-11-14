@@ -72,7 +72,7 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
     return getPreferences().getPeriodicDisableTimeData();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return DATA_JOB_TAG;
   }
 

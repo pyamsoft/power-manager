@@ -67,7 +67,7 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
     return preferences.getPeriodicDisableTimeAirplane();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return AIRPLANE_JOB_TAG;
   }
 

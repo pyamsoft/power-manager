@@ -55,7 +55,7 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
     return getPreferences().getPeriodicDisableTimeSync();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return SYNC_JOB_TAG;
   }
 

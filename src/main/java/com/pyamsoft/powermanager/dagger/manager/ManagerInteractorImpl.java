@@ -162,6 +162,4 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @CheckResult protected abstract long getPeriodicEnableTime();
 
   @CheckResult protected abstract long getPeriodicDisableTime();
-
-  @CheckResult @NonNull protected abstract String getJobTag();
 }

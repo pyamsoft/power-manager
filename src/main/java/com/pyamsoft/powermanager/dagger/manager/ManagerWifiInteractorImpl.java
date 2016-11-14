@@ -58,7 +58,7 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
     return getPreferences().getPeriodicDisableTimeWifi();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return WIFI_JOB_TAG;
   }
 

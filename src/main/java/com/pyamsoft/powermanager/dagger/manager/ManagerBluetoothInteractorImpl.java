@@ -57,7 +57,7 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
     return getPreferences().getPeriodicDisableTimeBluetooth();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return BLUETOOTH_JOB_TAG;
   }
 

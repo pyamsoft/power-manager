@@ -31,9 +31,9 @@ abstract class WearUnawareManagerImpl extends ManagerImpl {
 
   @NonNull @Override
   protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
-    return aBoolean -> {
-      Timber.d("Unaware of wearables,just pass through");
-      return Observable.just(aBoolean);
+    return originalStateEnabled -> {
+      Timber.d("%s: Unaware of wearables,just pass through", getJobTag());
+      return Observable.just(originalStateEnabled);
     };
   }
 }

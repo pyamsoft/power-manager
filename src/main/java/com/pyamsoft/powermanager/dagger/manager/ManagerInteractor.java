@@ -48,4 +48,6 @@ interface ManagerInteractor {
   @WorkerThread void queueEnableJob();
 
   @WorkerThread void queueDisableJob();
+
+  @CheckResult @NonNull String getJobTag();
 }

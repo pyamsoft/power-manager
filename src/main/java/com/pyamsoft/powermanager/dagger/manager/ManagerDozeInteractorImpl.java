@@ -68,7 +68,7 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     return getPreferences().getPeriodicDisableTimeDoze();
   }
 
-  @NonNull @Override protected String getJobTag() {
+  @NonNull @Override public String getJobTag() {
     return DOZE_JOB_TAG;
   }
 
