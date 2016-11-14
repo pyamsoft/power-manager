@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -75,7 +76,7 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
     return DATA_JOB_TAG;
   }
 
-  @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingData()));
+  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
+    return () -> getPreferences().isIgnoreChargingData();
   }
 }

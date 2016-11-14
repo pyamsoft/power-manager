@@ -23,8 +23,10 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.functions.FuncN;
 
 class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
 
@@ -60,7 +62,7 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
     return WIFI_JOB_TAG;
   }
 
-  @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingWifi()));
+  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
+    return () -> getPreferences().isIgnoreChargingWifi();
   }
 }

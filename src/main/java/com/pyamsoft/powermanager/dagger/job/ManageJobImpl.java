@@ -24,6 +24,7 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 import timber.log.Timber;
 
 abstract class ManageJobImpl extends BaseJob {
@@ -39,6 +40,7 @@ abstract class ManageJobImpl extends BaseJob {
   @NonNull private final BooleanInterestObserver interestObserver;
   @NonNull private final BooleanInterestModifier interestModifier;
   @NonNull private final BooleanInterestObserver chargingObserver;
+  @NonNull private final FuncNone<Boolean> preferenceIgnoreCharging;
   @NonNull private final String jobTag;
 
   ManageJobImpl(@NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag,
@@ -46,7 +48,8 @@ abstract class ManageJobImpl extends BaseJob {
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     super(new Params(JOB_PRIORITY).addTags(tag).setDelayMs(delayInMilliseconds), logger);
     this.jobSchedulerCompat = jobSchedulerCompat;
     this.jobType = jobType;
@@ -57,6 +60,7 @@ abstract class ManageJobImpl extends BaseJob {
     this.interestModifier = interestModifier;
     this.chargingObserver = chargingObserver;
     this.jobTag = tag;
+    this.preferenceIgnoreCharging = preferenceIgnoreCharging;
   }
 
   @Override public final void onRun() throws Throwable {
@@ -85,8 +89,9 @@ abstract class ManageJobImpl extends BaseJob {
   }
 
   void internalEnable() {
+    getLogger().i("Enable %s", jobTag);
     if (!interestObserver.is()) {
-      getLogger().i("Enable %s", jobTag);
+      getLogger().w("REAL: Enable %s", jobTag);
       interestModifier.set();
     }
   }
@@ -118,19 +123,21 @@ abstract class ManageJobImpl extends BaseJob {
   }
 
   void internalDisable() {
+    getLogger().i("Disable %s", jobTag);
     if (interestObserver.is()) {
-      getLogger().i("Disable %s", jobTag);
+      getLogger().w("REAL: Disable %s", jobTag);
       interestModifier.unset();
     }
   }
 
   private void disable() {
-    if (chargingObserver.is()) {
+    // Device is charging and preference states to ignore charging
+    if (chargingObserver.is() && preferenceIgnoreCharging.call()) {
       getLogger().w("Not running disable job for %s because device is charging", jobTag);
-      return;
+    } else {
+      internalDisable();
     }
 
-    internalDisable();
     if (periodic) {
       if (!hasValidPeriodicInterval()) {
         Timber.e("Not queuing period disable job with interval less than 1 minute (%s, %s)",

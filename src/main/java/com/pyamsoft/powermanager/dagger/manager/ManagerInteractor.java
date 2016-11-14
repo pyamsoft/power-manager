@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import com.pyamsoft.pydroid.FuncNone;
 import rx.Observable;
 
 interface ManagerInteractor {
@@ -36,7 +37,7 @@ interface ManagerInteractor {
 
   @NonNull @CheckResult Observable<Boolean> isManaged();
 
-  @NonNull @CheckResult Observable<Boolean> isIgnoreWhileCharging();
+  @NonNull @CheckResult FuncNone<Boolean> isIgnoreWhileCharging();
 
   @NonNull @CheckResult Observable<Boolean> isOriginalStateEnabled();
 

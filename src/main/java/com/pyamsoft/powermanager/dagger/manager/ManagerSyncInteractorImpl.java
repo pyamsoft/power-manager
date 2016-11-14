@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -58,7 +59,7 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
     return SYNC_JOB_TAG;
   }
 
-  @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingSync()));
+  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
+    return () -> getPreferences().isIgnoreChargingSync();
   }
 }

@@ -24,6 +24,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -76,8 +77,8 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
-  @NonNull @Override public Observable<Boolean> isIgnoreWhileCharging() {
-    return Observable.defer(() -> Observable.just(getPreferences().isIgnoreChargingDoze()));
+  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
+    return () -> getPreferences().isIgnoreChargingDoze();
   }
 
   @NonNull @Override public Observable<Boolean> isExclusive() {
