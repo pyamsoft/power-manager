@@ -66,7 +66,7 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
       AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
           "doze_explain");
     } else {
-      Toast.makeText(getContext(), "Doze is only available on Android M (23) and hider",
+      Toast.makeText(getContext(), "Doze is only available on Android M (23) and higher",
           Toast.LENGTH_SHORT).show();
     }
   }
