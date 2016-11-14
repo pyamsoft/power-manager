@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.dagger;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
 import eu.chainfire.libsuperuser.Shell;
 import java.util.List;
@@ -28,13 +29,18 @@ public class ShellCommandHelper {
 
   private static final int SHELL_TYPE_ROOT = 0;
   private static final int SHELL_TYPE_NORMAL = 1;
-  @NonNull private static final ShellCommandHelper INSTANCE = new ShellCommandHelper();
+  @NonNull private static final ShellCommandHelper INSTANCE = createInstance();
   @NonNull private Shell.Interactive shellSession;
   @NonNull private Shell.Interactive rootSession;
 
   private ShellCommandHelper() {
     shellSession = openShellSession(false);
     rootSession = openShellSession(true);
+  }
+
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult @NonNull
+  static ShellCommandHelper createInstance() {
+    return new ShellCommandHelper();
   }
 
   @WorkerThread @CheckResult public static boolean isSUAvailable() {
