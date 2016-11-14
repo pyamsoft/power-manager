@@ -47,11 +47,12 @@ abstract class WearAwareManagerImpl extends ManagerImpl {
       }
     }).flatMap(wearManaged -> {
       if (wearManaged) {
-        Timber.d("%s: Is wearable enabled?", getJobTag());
-        return wearAwareManagerInteractor.isWearEnabled();
+        Timber.d("%s: Is wearable not enabled?", getJobTag());
+        // Invert the result
+        return wearAwareManagerInteractor.isWearEnabled().map(wearEnabled -> !wearEnabled);
       } else {
         Timber.d("%s: Wearable is not managed, but radio is managed, continue stream", getJobTag());
-        return Observable.just(false);
+        return Observable.just(true);
       }
     });
   }

@@ -115,14 +115,14 @@ abstract class ManagerImpl implements Manager {
       Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
       interactor.setOriginalStateEnabled(enabled);
       return enabled;
-    }).flatMap(accountForWearableBeforeDisable()).map(ignore -> {
-      if (!ignore) {
+    }).flatMap(accountForWearableBeforeDisable()).map(shouldQueue -> {
+      if (shouldQueue) {
         interactor.queueDisableJob();
       }
-      return ignore;
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(ignore -> {
+      return shouldQueue;
+    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(shouldQueue -> {
           // Only queue a disable job if the radio is not ignored
-          if (!ignore) {
+          if (shouldQueue) {
             Timber.d("%s: Queued up a new disable job", getJobTag());
           }
         }, throwable -> Timber.e(throwable, "%s: onError queueUnset", getJobTag()),
