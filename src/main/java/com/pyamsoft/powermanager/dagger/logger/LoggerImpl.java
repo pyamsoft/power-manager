@@ -23,11 +23,11 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.logger.LoggerPresenter;
 import javax.inject.Inject;
 
-class ManagerLogger implements Logger {
+class LoggerImpl implements Logger {
 
   @NonNull private final LoggerPresenter presenter;
 
-  @Inject ManagerLogger(@NonNull LoggerPresenter presenter) {
+  @Inject LoggerImpl(@NonNull LoggerPresenter presenter) {
     this.presenter = presenter;
   }
 
