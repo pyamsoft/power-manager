@@ -22,7 +22,7 @@ public interface ExclusiveManager extends Manager {
 
   void queueExclusiveSet(@Nullable NonExclusiveCallback callback);
 
-  void queueExclusiveUnset(boolean deviceCharging, @Nullable NonExclusiveCallback callback);
+  void queueExclusiveUnset(@Nullable NonExclusiveCallback callback);
 
   interface NonExclusiveCallback {
 

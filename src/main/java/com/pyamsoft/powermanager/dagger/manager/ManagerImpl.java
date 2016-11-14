@@ -93,9 +93,13 @@ abstract class ManagerImpl implements Manager {
         () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
-  @Override public void queueUnset(boolean deviceCharging) {
+  @Override public void queueUnset() {
     SubscriptionHelper.unsubscribe(subscription);
-    subscription = baseObservable().flatMap(managed -> {
+    subscription = baseObservable().map(baseResult -> {
+      Timber.d("Unset original state");
+      interactor.setOriginalStateEnabled(false);
+      return baseResult;
+    }).flatMap(managed -> {
       if (managed) {
         Timber.d("Is original state enabled?");
         return interactor.isEnabled();
@@ -107,17 +111,6 @@ abstract class ManagerImpl implements Manager {
       Timber.d("Set original state enabled: %s", enabled);
       interactor.setOriginalStateEnabled(enabled);
       return enabled;
-    }).flatMap(enabled -> {
-      if (enabled) {
-        Timber.d("Is ignore while charging?");
-        return interactor.isIgnoreWhileCharging();
-      } else {
-        Timber.w("Is not managed, return empty");
-        return Observable.empty();
-      }
-    }).map(ignoreWhileCharging -> {
-      Timber.d("Is device currently charging?");
-      return ignoreWhileCharging && deviceCharging;
     }).flatMap(accountForWearableBeforeDisable()).map(ignore -> {
       if (!ignore) {
         interactor.queueDisableJob();
@@ -132,11 +125,11 @@ abstract class ManagerImpl implements Manager {
         () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
-  @CheckResult @NonNull
-  protected abstract Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable();
-
   @CallSuper @Override public void cleanup() {
     interactor.destroy();
     SubscriptionHelper.unsubscribe(subscription);
   }
+
+  @CheckResult @NonNull
+  abstract Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable();
 }

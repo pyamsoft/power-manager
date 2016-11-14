@@ -20,7 +20,7 @@ public interface Manager {
 
   void queueSet();
 
-  void queueUnset(boolean deviceCharging);
+  void queueUnset();
 
   void cleanup();
 }

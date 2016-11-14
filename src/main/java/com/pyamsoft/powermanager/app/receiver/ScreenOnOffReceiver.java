@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -42,7 +41,6 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
 
   @NonNull private final Context appContext;
 
-  @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
   @Inject @Named("wifi_manager") Manager managerWifi;
   @Inject @Named("data_manager") Manager managerData;
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
@@ -62,11 +60,10 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   @Override public final void onReceive(final Context context, final Intent intent) {
     if (null != intent) {
       final String action = intent.getAction();
-      final boolean charging = chargingObserver.is();
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
           Timber.d("Screen off event");
-          disableManagers(charging);
+          disableManagers();
           break;
         case Intent.ACTION_SCREEN_ON:
           Timber.d("Screen on event");
@@ -79,7 +76,6 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableManagers() {
-    Timber.d("Enable all managed managers");
     logger.i("Screen is ON, enable Managers");
     managerAirplane.queueSet();
     managerDoze.queueExclusiveSet(() -> {
@@ -90,15 +86,14 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
     });
   }
 
-  private void disableManagers(boolean charging) {
-    Timber.d("Disable all managed managers");
+  private void disableManagers() {
     logger.i("Screen is OFF, disable Managers");
-    managerAirplane.queueUnset(charging);
-    managerDoze.queueExclusiveUnset(charging, () -> {
-      managerWifi.queueUnset(charging);
-      managerData.queueUnset(charging);
-      managerBluetooth.queueUnset(charging);
-      managerSync.queueUnset(charging);
+    managerAirplane.queueUnset();
+    managerDoze.queueExclusiveUnset(() -> {
+      managerWifi.queueUnset();
+      managerData.queueUnset();
+      managerBluetooth.queueUnset();
+      managerSync.queueUnset();
     });
   }
 
