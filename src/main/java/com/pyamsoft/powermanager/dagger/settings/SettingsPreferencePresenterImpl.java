@@ -45,7 +45,7 @@ class SettingsPreferencePresenterImpl
 
   @Override protected void onBind() {
     super.onBind();
-    checkRoot();
+    checkRoot(false);
   }
 
   @Override protected void onUnbind() {
@@ -61,15 +61,16 @@ class SettingsPreferencePresenterImpl
     getView(settingsPreferenceView -> settingsPreferenceView.showConfirmDialog(CONFIRM_DATABASE));
   }
 
-  @Override public void checkRoot() {
+  @Override public void checkRoot(boolean causedByUser) {
     SubscriptionHelper.unsubscribe(rootSubscription);
     rootSubscription = interactor.checkRoot()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(hasPermission -> getView(view -> view.onRootCallback(hasPermission)),
+        .subscribe(
+            hasPermission -> getView(view -> view.onRootCallback(causedByUser, hasPermission)),
             throwable -> {
               Timber.e(throwable, "onError checking root");
-              getView(view -> view.onRootCallback(false));
+              getView(view -> view.onRootCallback(causedByUser, false));
             }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
   }
 
