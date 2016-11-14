@@ -135,7 +135,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final Job job =
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
-            stateModifier, chargingObserver, logger);
+            stateModifier, chargingObserver, isIgnoreWhileCharging(), logger);
     jobManager.addJob(job);
   }
 

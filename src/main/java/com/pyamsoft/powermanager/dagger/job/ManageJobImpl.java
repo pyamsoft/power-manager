@@ -107,7 +107,7 @@ abstract class ManageJobImpl extends BaseJob {
         jobSchedulerCompat.addJob(
             createPeriodicDisableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
                 periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver,
-                getLogger()));
+                preferenceIgnoreCharging, getLogger()));
       }
     }
   }
@@ -116,10 +116,11 @@ abstract class ManageJobImpl extends BaseJob {
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new DisableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        chargingObserver, logger);
+        chargingObserver, preferenceIgnoreCharging, logger);
   }
 
   void internalDisable() {
@@ -147,7 +148,7 @@ abstract class ManageJobImpl extends BaseJob {
         jobSchedulerCompat.addJob(
             createPeriodicEnableJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds,
                 periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver,
-                getLogger()));
+                preferenceIgnoreCharging, getLogger()));
       }
     }
   }
@@ -156,9 +157,10 @@ abstract class ManageJobImpl extends BaseJob {
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new EnableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        chargingObserver, logger);
+        chargingObserver, preferenceIgnoreCharging, logger);
   }
 }

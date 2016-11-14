@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.pydroid.FuncNone;
 import timber.log.Timber;
 
 public final class JobHelper {
@@ -79,20 +80,21 @@ public final class JobHelper {
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     switch (jobType) {
       case ENABLE:
       case DISABLE:
         Timber.d("Create Disable Manage Job");
         return createDisableManageJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
-            logger);
+            preferenceIgnoreCharging, logger);
       case TOGGLE_ENABLE:
       case TOGGLE_DISABLE:
         Timber.d("Create Disable Toggle Job");
         return createDisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
             periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
-            logger);
+            preferenceIgnoreCharging, logger);
       default:
         throw new RuntimeException("Invalid disable job type: " + jobType);
     }
@@ -102,20 +104,22 @@ public final class JobHelper {
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new DisableManageJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
-        logger);
+        preferenceIgnoreCharging, logger);
   }
 
   @CheckResult @NonNull private static DisableToggleJob createDisableToggleJob(
       @NonNull JobSchedulerCompat jobSchedulerCompat, @NonNull String tag, long delayTimeInMillis,
       boolean periodic, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver observer, @NonNull BooleanInterestModifier modifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new DisableToggleJob(jobSchedulerCompat, tag, delayTimeInMillis, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, observer, modifier, chargingObserver,
-        logger);
+        preferenceIgnoreCharging, logger);
   }
 
   public static void queueTriggerJob(@NonNull JobSchedulerCompat jobSchedulerCompat,

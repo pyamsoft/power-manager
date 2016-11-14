@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 
 class EnableToggleJob extends ToggleJobImpl {
 
@@ -28,9 +29,10 @@ class EnableToggleJob extends ToggleJobImpl {
       long delayInMilliseconds, boolean periodic, long periodicEnableInSeconds,
       long periodicDisableInSeconds, @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, JobType.TOGGLE_ENABLE, delayInMilliseconds, periodic,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        chargingObserver, logger);
+        chargingObserver, preferenceIgnoreCharging, logger);
   }
 }

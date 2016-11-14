@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.pydroid.FuncNone;
 
 abstract class ToggleJobImpl extends ManageJobImpl {
 
@@ -30,9 +31,11 @@ abstract class ToggleJobImpl extends ManageJobImpl {
       long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     super(jobSchedulerCompat, tag, jobType, delayInMilliseconds, periodic, periodicEnableInSeconds,
-        periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver, logger);
+        periodicDisableInSeconds, interestObserver, interestModifier, chargingObserver,
+        preferenceIgnoreCharging, logger);
   }
 
   // For toggle jobs, the action is switched
@@ -49,19 +52,21 @@ abstract class ToggleJobImpl extends ManageJobImpl {
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new DisableToggleJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        chargingObserver, logger);
+        chargingObserver, preferenceIgnoreCharging, logger);
   }
 
   @NonNull @Override Job createPeriodicEnableJob(@NonNull JobSchedulerCompat jobSchedulerCompat,
       @NonNull String jobTag, long periodicEnableInSeconds, long periodicDisableInSeconds,
       @NonNull BooleanInterestObserver interestObserver,
       @NonNull BooleanInterestModifier interestModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
     return new EnableToggleJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
-        chargingObserver, logger);
+        chargingObserver, preferenceIgnoreCharging, logger);
   }
 }
