@@ -73,15 +73,15 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     });
   }
 
-  @CallSuper @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+  @CallSuper @NonNull @Override public synchronized Observable<Boolean> isOriginalStateEnabled() {
     return Observable.defer(() -> {
-      Timber.d("Original state: %s", originalStateEnabled);
+      logger.d("Original state: %s", originalStateEnabled);
       return Observable.just(originalStateEnabled);
     });
   }
 
-  @CallSuper @Override public void setOriginalStateEnabled(boolean enabled) {
-    Timber.d("Set original state: %s", enabled);
+  @CallSuper @Override public synchronized void setOriginalStateEnabled(boolean enabled) {
+    logger.d("Set original state: %s", enabled);
     originalStateEnabled = enabled;
   }
 
