@@ -41,7 +41,7 @@ import rx.Scheduler;
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
       @NonNull JobSchedulerCompat jobManager, @NonNull PowerManagerPreferences preferences,
-      @NonNull PowerTriggerDB powerTriggerDB, @Named("logger_manager") @NonNull Logger logger,
+      @NonNull PowerTriggerDB powerTriggerDB, @Named("logger_trigger") @NonNull Logger logger,
       @NonNull @Named("obs_wifi_state") BooleanInterestObserver wifiObserver,
       @NonNull @Named("obs_data_state") BooleanInterestObserver dataObserver,
       @NonNull @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver,

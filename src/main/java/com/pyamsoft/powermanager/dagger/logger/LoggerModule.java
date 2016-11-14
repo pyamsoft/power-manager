@@ -150,4 +150,21 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences) {
     return new DozeLoggerInteractor(context, preferences);
   }
+
+  @Singleton @Provides @Named("logger_trigger") Logger provideLoggerTrigger(
+      @NonNull @Named("logger_presenter_trigger") LoggerPresenter loggerPresenter) {
+    return new LoggerImpl(loggerPresenter);
+  }
+
+  @Singleton @Provides @Named("logger_presenter_trigger") LoggerPresenter provideLoggerPresenterTrigger(
+      @NonNull @Named("logger_interactor_trigger") LoggerInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+  }
+
+  @Singleton @Provides @Named("logger_interactor_trigger")
+  LoggerInteractor provideLoggerInteractorTrigger(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    return new TriggerLoggerInteractor(context, preferences);
+  }
 }
