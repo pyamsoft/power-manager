@@ -228,7 +228,9 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
     final String line3 = "FEATURE: Add options to enable or disable SuperUser based options";
     final String line4 = "FEATURE: Add more options for Doze mode";
     final String line5 = "BUGFIX: More reliable manager queueing";
-    return new String[] { line1, line2, line3, line4, line5 };
+    final String line6 = "BUGFIX: More reliable Power Triggers";
+    final String line7 = "BUGFIX: General bugfixes and optimizations of the automatic power management";
+    return new String[] { line1, line2, line3, line4, line5, line6, line7 };
   }
 
   @NonNull @Override protected String getVersionName() {
