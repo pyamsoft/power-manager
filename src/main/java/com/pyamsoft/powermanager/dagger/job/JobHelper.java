@@ -133,9 +133,7 @@ public final class JobHelper {
     Timber.d("Cancel any old trigger jobs");
     jobSchedulerCompat.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
 
-    // TODO Get delay from preferences
-    final long delayTime = 5 * 60 * 1000;
-
+    final long delayTime = preferences.getTriggerPeriodTime() * 60 * 1000L;
     final TriggerJob triggerJob =
         new TriggerJob(delayTime, wifiObserver, dataObserver, bluetoothObserver, syncObserver,
             wifiModifier, dataModifier, bluetoothModifier, syncModifier, jobSchedulerCompat,

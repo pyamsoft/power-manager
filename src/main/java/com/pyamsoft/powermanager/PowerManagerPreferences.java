@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult long getTriggerPeriodTime();
+
   @CheckResult boolean isLoggerEnabled();
 
   @CheckResult boolean isForegroundServiceEnabled();

@@ -116,6 +116,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean useRootDefault;
   @NonNull private final String loggerEnabled;
   private final boolean loggerEnabledDefault;
+  @NonNull private final String triggerPeriodKey;
+  @NonNull private final String triggerPeriodDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -220,6 +222,13 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     loggerEnabled = getResources().getString(R.string.logger_enabled);
     loggerEnabledDefault = getResources().getBoolean(R.bool.logger_enabled_default);
+
+    triggerPeriodKey = getResources().getString(R.string.trigger_period_key);
+    triggerPeriodDefault = getResources().getString(R.string.trigger_period_default);
+  }
+
+  @Override public long getTriggerPeriodTime() {
+    return Long.parseLong(get(triggerPeriodKey, triggerPeriodDefault));
   }
 
   @Override public boolean isLoggerEnabled() {
