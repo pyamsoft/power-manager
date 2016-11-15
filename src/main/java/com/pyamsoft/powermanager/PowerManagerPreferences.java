@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isLoggerEnabled();
+
   @CheckResult boolean isForegroundServiceEnabled();
 
   void setForegroundServiceEnabled(boolean state);

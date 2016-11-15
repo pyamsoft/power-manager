@@ -76,11 +76,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> isLoggingEnabled() {
-    return Observable.defer(() -> {
-      // TODO get from preferences
-      Timber.d("isLoggingEnabled: return hardcoded TRUE");
-      return Observable.just(true);
-    });
+    return Observable.defer(() -> Observable.just(preferences.isLoggerEnabled()));
   }
 
   @NonNull @Override public synchronized Observable<String> getLogContents() {

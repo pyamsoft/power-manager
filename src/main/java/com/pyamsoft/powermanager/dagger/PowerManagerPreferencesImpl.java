@@ -114,6 +114,8 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   private final boolean startWhenOpenDefault;
   @NonNull private final String useRoot;
   private final boolean useRootDefault;
+  @NonNull private final String loggerEnabled;
+  private final boolean loggerEnabledDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     super(context);
@@ -215,6 +217,13 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
     useRoot = getResources().getString(R.string.use_root_key);
     useRootDefault = getResources().getBoolean(R.bool.use_root_default);
+
+    loggerEnabled = getResources().getString(R.string.logger_enabled);
+    loggerEnabledDefault = getResources().getBoolean(R.bool.logger_enabled_default);
+  }
+
+  @Override public boolean isLoggerEnabled() {
+    return get(loggerEnabled, loggerEnabledDefault);
   }
 
   @Override public boolean isForegroundServiceEnabled() {
