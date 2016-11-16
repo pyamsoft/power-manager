@@ -16,9 +16,12 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
+import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.base.OverviewSingleItemFragment;
@@ -48,5 +51,20 @@ public class PowerTriggerFragment extends OverviewSingleItemFragment {
 
   @Override protected int provideStatusBarColor() {
     return R.color.red700;
+  }
+
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    addTriggerOptionsFragment();
+  }
+
+  private void addTriggerOptionsFragment() {
+    final FragmentManager fragmentManager = getChildFragmentManager();
+    if (fragmentManager.findFragmentByTag(getPreferenceTag()) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.power_trigger_preference_container, new PowerTriggerPreferenceFragment(),
+              PowerTriggerPreferenceFragment.TAG)
+          .commit();
+    }
   }
 }

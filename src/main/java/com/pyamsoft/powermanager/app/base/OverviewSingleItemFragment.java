@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.base;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -41,7 +42,7 @@ public abstract class OverviewSingleItemFragment extends AppBarColoringFragment 
     setActionBarUpEnabled(false);
   }
 
-  @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     addPreferenceFragment();

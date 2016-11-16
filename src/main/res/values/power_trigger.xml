@@ -17,9 +17,12 @@
 
 <resources>
 
+  <string name="trigger_period_title">Power Trigger Interval</string>
+  <string name="trigger_period_summary">The interval at which Power Triggers should be ran</string>
+
   <string name="trigger_period_key">trigger_period_key</string>
   <string name="trigger_period_default">15</string>
-  <string-array name="trigger_period_time_names">
+  <string-array name="trigger_period_names">
     <item name="delay_5">5 Minutes</item>
     <item name="delay_10">10 Minutes</item>
     <item name="delay_15">15 Minutes</item>
@@ -27,7 +30,7 @@
     <item name="delay_60">60 Minutes</item>
   </string-array>
 
-  <string-array name="trigger_period_time_values">
+  <string-array name="trigger_period_values">
     <item name="delay_5">5</item>
     <item name="delay_10">10</item>
     <item name="delay_15">15</item>
