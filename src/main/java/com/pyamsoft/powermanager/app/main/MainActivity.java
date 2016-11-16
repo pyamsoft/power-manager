@@ -22,6 +22,8 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -62,6 +64,10 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
 
   @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
+  @Nullable private final Runnable longPressBackRunnable =
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : this::handleBackLongPress;
+  @Nullable private final Handler mainHandler =
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : new Handler(Looper.getMainLooper());
   MainPresenter presenter;
   private ActivityMainBinding binding;
   @ColorInt private int oldAppBarColor;
@@ -347,25 +353,48 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
   }
 
-  // https://stackoverflow.com/questions/4681743/how-to-prevent-the-soft-keyboard-from-ever-appearing-in-my-activity/4681762#4681762
+  // https://github.com/mozilla/gecko-dev/blob/master/mobile/android/base/java/org/mozilla/gecko/BrowserApp.java
   @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-      event.startTracking();
-      Toast.makeText(getApplication(), "Release for Debug screen", Toast.LENGTH_SHORT).show();
-      return true;
-    } else {
-      return super.onKeyDown(keyCode, event);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && keyCode == KeyEvent.KEYCODE_BACK) {
+      if (mainHandler != null && longPressBackRunnable != null) {
+        mainHandler.removeCallbacksAndMessages(null);
+        mainHandler.postDelayed(longPressBackRunnable, 1400L);
+      }
     }
+
+    return super.onKeyDown(keyCode, event);
   }
 
-  // https://stackoverflow.com/questions/4681743/how-to-prevent-the-soft-keyboard-from-ever-appearing-in-my-activity/4681762#4681762
+  @Override public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N && keyCode == KeyEvent.KEYCODE_BACK) {
+      if (handleBackLongPress()) {
+        return true;
+      }
+    }
+
+    return super.onKeyLongPress(keyCode, event);
+  }
+
   @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
-    if (keyCode == KeyEvent.KEYCODE_BACK) {
-      AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new LoggerDialog(),
-          "logger_dialog");
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && keyCode == KeyEvent.KEYCODE_BACK) {
+      if (mainHandler != null) {
+        mainHandler.removeCallbacksAndMessages(null);
+      }
+    }
+
+    return super.onKeyUp(keyCode, event);
+  }
+
+  boolean handleBackLongPress() {
+    final String tag = "logger_dialog";
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    if (fragmentManager.findFragmentByTag(tag) == null) {
+      Timber.d("Show logger dialog");
+      AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new LoggerDialog(), tag);
       return true;
     } else {
-      return super.onKeyUp(keyCode, event);
+      Timber.w("Logger dialog is already shown");
+      return false;
     }
   }
 }
