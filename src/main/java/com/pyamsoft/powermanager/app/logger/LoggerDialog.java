@@ -47,7 +47,7 @@ public class LoggerDialog extends DialogFragment {
     final FragmentManager fragmentManager = getChildFragmentManager();
     if (fragmentManager.findFragmentByTag(LoggerPreferenceFragment.TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(R.id.power_trigger_preference_container, new LoggerPreferenceFragment(),
+          .replace(R.id.dialog_logger_options_container, new LoggerPreferenceFragment(),
               LoggerPreferenceFragment.TAG)
           .commit();
     }
