@@ -30,6 +30,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.app.data.DataFragment;
 import com.pyamsoft.powermanager.app.doze.DozeFragment;
+import com.pyamsoft.powermanager.app.logger.LoggerDialog;
 import com.pyamsoft.powermanager.app.overview.OverviewFragment;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.app.settings.SettingsFragment;
@@ -50,6 +52,7 @@ import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.support.RatingActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
+import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.HashMap;
 import java.util.Map;
@@ -229,7 +232,8 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
     final String line4 = "FEATURE: Add more options for Doze mode";
     final String line5 = "BUGFIX: More reliable manager queueing";
     final String line6 = "BUGFIX: More reliable Power Triggers";
-    final String line7 = "BUGFIX: General bugfixes and optimizations of the automatic power management";
+    final String line7 =
+        "BUGFIX: General bugfixes and optimizations of the automatic power management";
     return new String[] { line1, line2, line3, line4, line5, line6, line7 };
   }
 
@@ -341,5 +345,26 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+  }
+
+  // https://stackoverflow.com/questions/4681743/how-to-prevent-the-soft-keyboard-from-ever-appearing-in-my-activity/4681762#4681762
+  @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK) {
+      event.startTracking();
+      return true;
+    } else {
+      return super.onKeyDown(keyCode, event);
+    }
+  }
+
+  // https://stackoverflow.com/questions/4681743/how-to-prevent-the-soft-keyboard-from-ever-appearing-in-my-activity/4681762#4681762
+  @Override public boolean onKeyUp(int keyCode, KeyEvent event) {
+    if (keyCode == KeyEvent.KEYCODE_BACK) {
+      AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new LoggerDialog(),
+          "logger_dialog");
+      return true;
+    } else {
+      return super.onKeyUp(keyCode, event);
+    }
   }
 }
