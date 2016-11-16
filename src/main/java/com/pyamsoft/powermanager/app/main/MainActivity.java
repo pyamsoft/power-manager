@@ -351,6 +351,7 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
     if (keyCode == KeyEvent.KEYCODE_BACK) {
       event.startTracking();
+      Toast.makeText(getApplication(), "Release for Debug screen", Toast.LENGTH_SHORT).show();
       return true;
     } else {
       return super.onKeyDown(keyCode, event);
