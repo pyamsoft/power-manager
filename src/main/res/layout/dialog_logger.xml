@@ -15,12 +15,21 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <string name="logger_summary_on">Logging is Enabled</string>
-  <string name="logger_summary_off">Logging is Disabled</string>
-  <string name="logger_title">Debug Logging</string>
-  <string name="logger_enabled">logger_enabled</string>
-  <bool name="logger_enabled_default">false</bool>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      >
 
-</resources>
+    <FrameLayout
+        android:id="@+id/dialog_logger_options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+  </LinearLayout>
+
+</layout>

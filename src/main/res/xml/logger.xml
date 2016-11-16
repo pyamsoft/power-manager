@@ -15,12 +15,21 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <string name="logger_summary_on">Logging is Enabled</string>
-  <string name="logger_summary_off">Logging is Disabled</string>
-  <string name="logger_title">Debug Logging</string>
-  <string name="logger_enabled">logger_enabled</string>
-  <bool name="logger_enabled_default">false</bool>
+  <PreferenceCategory
+      android:title="Debug Options">
 
-</resources>
+    <!--suppress AndroidElementNotAllowed -->
+    <SwitchPreferenceCompat
+        android:key="@string/logger_enabled"
+        android:defaultValue="@bool/logger_enabled_default"
+        android:summaryOff="@string/logger_summary_off"
+        android:summaryOn="@string/logger_summary_on"
+        android:title="@string/logger_title"
+        />
+
+  </PreferenceCategory>
+
+</PreferenceScreen>
