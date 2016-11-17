@@ -334,7 +334,7 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   @Override public void explainRootRequirement() {
     // TODO explain with dialog
     Toast.makeText(getApplicationContext(),
-        "Root is required for certain functions like Data and Airplane mode", Toast.LENGTH_SHORT)
+        "Root is required for certain functions like Doze and Airplane mode", Toast.LENGTH_SHORT)
         .show();
   }
 
