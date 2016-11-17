@@ -145,7 +145,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
             null, this::loadFragment));
     adapter.add(new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
-        R.color.orange500, airplaneManageObserver, this::loadFragment));
+        R.color.cyan500, airplaneManageObserver, this::loadFragment));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
         dozeManageObserver, this::loadFragment));
     adapter.add(

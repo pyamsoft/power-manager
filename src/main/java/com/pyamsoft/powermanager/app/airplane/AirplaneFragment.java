@@ -66,10 +66,10 @@ public class AirplaneFragment extends OverviewPagerFragment {
   }
 
   @Override protected int provideAppBarColor() {
-    return R.color.orange500;
+    return R.color.cyan500;
   }
 
   @Override protected int provideStatusBarColor() {
-    return R.color.orange700;
+    return R.color.cyan700;
   }
 }
