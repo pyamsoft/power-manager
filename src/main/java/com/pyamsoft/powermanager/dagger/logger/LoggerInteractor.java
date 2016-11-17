@@ -24,6 +24,8 @@ interface LoggerInteractor {
 
   @NonNull @CheckResult Observable<Boolean> isLoggingEnabled();
 
+  @NonNull @CheckResult Observable<Boolean> deleteLog();
+
   @NonNull @CheckResult Observable<String> getLogContents();
 
   @NonNull @CheckResult Observable<Boolean> appendToLog(@NonNull String message);

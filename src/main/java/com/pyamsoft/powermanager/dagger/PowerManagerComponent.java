@@ -20,6 +20,7 @@ import com.pyamsoft.powermanager.dagger.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.dagger.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.dagger.data.DataScreenComponent;
 import com.pyamsoft.powermanager.dagger.doze.DozeScreenComponent;
+import com.pyamsoft.powermanager.dagger.logger.LoggerComponent;
 import com.pyamsoft.powermanager.dagger.logger.LoggerModule;
 import com.pyamsoft.powermanager.dagger.main.MainComponent;
 import com.pyamsoft.powermanager.dagger.manager.ManagerComponent;
@@ -83,4 +84,6 @@ import javax.inject.Singleton;
   JobServiceComponent plusJobServiceComponent();
 
   OverviewComponent plusOverviewComponent();
+
+  LoggerComponent plusLoggerComponent();
 }

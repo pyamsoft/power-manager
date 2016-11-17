@@ -32,8 +32,7 @@ class LoggerImpl implements Logger {
   }
 
   // Does not have to be bound
-  @Override public void log(@NonNull LogType logType, @NonNull String fmt,
-      @Nullable Object... args) {
+  private void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
     presenter.log(logType, fmt, args);
   }
 

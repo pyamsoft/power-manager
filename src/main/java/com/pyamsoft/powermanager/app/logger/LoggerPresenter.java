@@ -24,14 +24,6 @@ public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
 
   void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
 
-  void d(@NonNull String fmt, @Nullable Object... args);
-
-  void i(@NonNull String fmt, @Nullable Object... args);
-
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
-
   void deleteLog();
 
   interface Provider {
@@ -42,6 +34,6 @@ public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
 
     void onAllLogContentsRetrieved();
 
-    void onLogDeleted();
+    void onLogDeleted(@NonNull String logId);
   }
 }

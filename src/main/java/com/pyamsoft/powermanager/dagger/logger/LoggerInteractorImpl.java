@@ -101,6 +101,13 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
     });
   }
 
+  @NonNull @Override public Observable<Boolean> deleteLog() {
+    return Observable.defer(() -> Observable.just(getLogLocation())).map(file -> {
+      Timber.w("Delete log file: %s", file.getAbsolutePath());
+      return file.delete();
+    });
+  }
+
   @NonNull @Override public synchronized Observable<Boolean> appendToLog(@NonNull String message) {
     return Observable.defer(() -> Observable.just(getLogLocation())).map(logLocation -> {
       try (

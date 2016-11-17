@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.logger;
+package com.pyamsoft.powermanager.dagger.logger;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.logger.LoggerPreferenceFragment;
+import dagger.Subcomponent;
+import javax.inject.Singleton;
 
-public interface Logger {
+@Singleton @Subcomponent() public interface LoggerComponent {
 
-  //void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
-
-  void d(@NonNull String fmt, @Nullable Object... args);
-
-  void i(@NonNull String fmt, @Nullable Object... args);
-
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+  void inject(LoggerPreferenceFragment fragment);
 }

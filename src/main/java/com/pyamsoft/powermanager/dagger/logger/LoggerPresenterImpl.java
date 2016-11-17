@@ -43,6 +43,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
       Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription clearLogSubscription =
       Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteLogSubscription =
+      Subscriptions.empty();
 
   @Inject LoggerPresenterImpl(@NonNull LoggerInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -56,8 +58,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   }
 
   private void retrieveLogContents() {
-    SubscriptionHelper.unsubscribe(logContenSubscription);
     getView(Provider::onPrepareLogContentRetrieval);
+    SubscriptionHelper.unsubscribe(logContenSubscription);
     logContenSubscription = interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -72,7 +74,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   @Override protected void onUnbind() {
     super.onUnbind();
     logSubscriptions.clear();
-    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription);
+    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,
+        deleteLogSubscription);
   }
 
   @Override
@@ -130,22 +133,6 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     }
   }
 
-  @Override public void d(@NonNull String fmt, @Nullable Object... args) {
-    log(LogType.DEBUG, fmt, args);
-  }
-
-  @Override public void i(@NonNull String fmt, @Nullable Object... args) {
-    log(LogType.INFO, fmt, args);
-  }
-
-  @Override public void w(@NonNull String fmt, @Nullable Object... args) {
-    log(LogType.WARNING, fmt, args);
-  }
-
-  @Override public void e(@NonNull String fmt, @Nullable Object... args) {
-    log(LogType.ERROR, fmt, args);
-  }
-
   private void queueClearLogSubscription() {
     Timber.d("Queue to clear the Log CompositeSubscription in 1 minute");
     SubscriptionHelper.unsubscribe(clearLogSubscription);
@@ -162,6 +149,20 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
 
   @Override public void deleteLog() {
     Timber.d("Delete log file for %s", interactor.getLogId());
-    Timber.w("TODO");
+
+    // Stop everything before we delete the log
+    logSubscriptions.clear();
+    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,
+        deleteLogSubscription);
+
+    deleteLogSubscription = interactor.deleteLog()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(deleted -> {
+              if (deleted) {
+                getView(view -> view.onLogDeleted(interactor.getLogId()));
+              }
+            }, throwable -> Timber.e(throwable, "onError deleteLog"),
+            () -> SubscriptionHelper.unsubscribe(deleteLogSubscription));
   }
 }
