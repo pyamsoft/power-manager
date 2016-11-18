@@ -62,7 +62,7 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
-    Toast.makeText(getContext(), "Needs root to manage Mobile Data", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Mobile Data", Toast.LENGTH_SHORT).show();
   }
 
   @NonNull @Override protected String getModuleName() {
