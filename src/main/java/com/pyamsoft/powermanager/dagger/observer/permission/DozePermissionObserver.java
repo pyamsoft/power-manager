@@ -41,7 +41,7 @@ class DozePermissionObserver extends RootPermissionObserver {
         break;
       case Build.VERSION_CODES.N:
         // Doze needs root on N
-        hasPermission = hasRuntimePermission() && super.checkPermission(appContext);
+        hasPermission = super.checkPermission(appContext);
         break;
       default:
         hasPermission = false;
