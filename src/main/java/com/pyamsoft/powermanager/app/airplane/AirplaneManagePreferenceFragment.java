@@ -61,7 +61,7 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
-    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Mobile Data", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Airplane Mode", Toast.LENGTH_SHORT).show();
   }
 
   @NonNull @Override protected String getModuleName() {
