@@ -27,7 +27,7 @@ public interface SettingsPreferencePresenter
 
   void requestClearDatabase();
 
-  void checkRoot(boolean causedByUser);
+  void checkRoot(boolean causedByUser, boolean rootEnable);
 
   interface SettingsPreferenceView {
 
@@ -37,6 +37,6 @@ public interface SettingsPreferencePresenter
 
     void onClearDatabase();
 
-    void onRootCallback(boolean causedByUser, boolean hasPermission);
+    void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable);
   }
 }

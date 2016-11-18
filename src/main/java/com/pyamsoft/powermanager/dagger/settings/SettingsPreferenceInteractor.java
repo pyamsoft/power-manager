@@ -18,14 +18,15 @@ package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 import rx.Observable;
 
 interface SettingsPreferenceInteractor {
 
-  @CheckResult @WorkerThread @NonNull Observable<Boolean> checkRoot();
+  @CheckResult @NonNull Observable<Boolean> isRootEnabled();
 
-  @CheckResult @WorkerThread @NonNull Observable<Boolean> clearDatabase();
+  @CheckResult @NonNull Observable<Boolean> checkRoot(boolean rootEnable);
 
-  @CheckResult @WorkerThread @NonNull Observable<Boolean> clearAll();
+  @CheckResult @NonNull Observable<Boolean> clearDatabase();
+
+  @CheckResult @NonNull Observable<Boolean> clearAll();
 }

@@ -122,7 +122,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         if (b) {
-          presenter.checkRoot(true);
+          presenter.checkRoot(true, true);
           return false;
         } else {
           return true;
@@ -177,10 +177,17 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     super.onSaveInstanceState(outState);
   }
 
-  @Override public void onRootCallback(boolean causedByUser, boolean hasPermission) {
-    useRoot.setChecked(hasPermission);
-    if (causedByUser && !hasPermission) {
-      Toast.makeText(getContext(), "Must grant root permission via SuperUser application", Toast.LENGTH_SHORT).show();
+  @Override
+  public void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable) {
+    if (rootEnable) {
+      useRoot.setChecked(hasPermission);
+
+      if (causedByUser && !hasPermission) {
+        Toast.makeText(getContext(), "Must grant root permission via SuperUser application",
+            Toast.LENGTH_SHORT).show();
+      }
+    } else {
+      useRoot.setChecked(false);
     }
   }
 }

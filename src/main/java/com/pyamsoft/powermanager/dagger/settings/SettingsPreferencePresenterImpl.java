@@ -36,6 +36,8 @@ class SettingsPreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") @NonNull Subscription confirmedSubscription =
       Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription bindCheckRootSubscription =
+      Subscriptions.empty();
 
   @Inject SettingsPreferencePresenterImpl(@NonNull SettingsPreferenceInteractor interactor,
       @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
@@ -45,12 +47,20 @@ class SettingsPreferencePresenterImpl
 
   @Override protected void onBind() {
     super.onBind();
-    checkRoot(false);
+
+    SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
+    bindCheckRootSubscription = interactor.isRootEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(rootEnabled -> checkRoot(false, rootEnabled),
+            throwable -> Timber.e(throwable, "onError bindCheckRoot"),
+            () -> SubscriptionHelper.unsubscribe(bindCheckRootSubscription));
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(confirmedSubscription, rootSubscription);
+    SubscriptionHelper.unsubscribe(confirmedSubscription, rootSubscription,
+        bindCheckRootSubscription);
   }
 
   @Override public void requestClearAll() {
@@ -61,16 +71,16 @@ class SettingsPreferencePresenterImpl
     getView(settingsPreferenceView -> settingsPreferenceView.showConfirmDialog(CONFIRM_DATABASE));
   }
 
-  @Override public void checkRoot(boolean causedByUser) {
+  @Override public void checkRoot(boolean causedByUser, boolean rootEnable) {
     SubscriptionHelper.unsubscribe(rootSubscription);
-    rootSubscription = interactor.checkRoot()
+    rootSubscription = interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(
-            hasPermission -> getView(view -> view.onRootCallback(causedByUser, hasPermission)),
+            hasPermission -> getView(view -> view.onRootCallback(causedByUser, hasPermission, rootEnable)),
             throwable -> {
               Timber.e(throwable, "onError checking root");
-              getView(view -> view.onRootCallback(causedByUser, false));
+              getView(view -> view.onRootCallback(causedByUser, false, rootEnable));
             }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
   }
 

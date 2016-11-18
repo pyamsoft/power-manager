@@ -35,9 +35,17 @@ class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @Override public Observable<Boolean> checkRoot() {
-    return Observable.defer(() -> Observable.just(ShellCommandHelper.isSUAvailable()))
-        .map(suAvailable -> suAvailable && preferences.isRootEnabled());
+  @NonNull @Override public Observable<Boolean> isRootEnabled() {
+    return Observable.defer(() -> Observable.just(preferences.isRootEnabled()));
+  }
+
+  @NonNull @Override public Observable<Boolean> checkRoot(boolean rootEnable) {
+    return Observable.defer(() -> {
+      // If we are enabling root, check SU available
+      // If we are not enabling root, then everything is ok
+      final boolean result = !rootEnable || ShellCommandHelper.isSUAvailable();
+      return Observable.just(result);
+    });
   }
 
   @NonNull @Override public Observable<Boolean> clearDatabase() {
