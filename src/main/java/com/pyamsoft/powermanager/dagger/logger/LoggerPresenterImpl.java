@@ -85,16 +85,16 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
       return enabled;
     }).flatMap(new Func1<Boolean, Observable<Boolean>>() {
       @Override public Observable<Boolean> call(Boolean loggingEnabled) {
+        Timber.d("Format message");
+        final String message = String.format(Locale.getDefault(), fmt, args);
+        final String logMessage =
+            String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
+        logWithTimber(logType, message);
+
         final Observable<Boolean> writeAppendResult;
         if (loggingEnabled) {
-          Timber.d("Format message");
-          final String message = String.format(Locale.getDefault(), fmt, args);
-          final String logMessage =
-              String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
-
           Timber.d("Attempt to append to log");
           writeAppendResult = interactor.appendToLog(logMessage);
-          logWithTimber(logType, message);
         } else {
           Timber.w("Logging disabled, return false");
           writeAppendResult = Observable.just(false);
