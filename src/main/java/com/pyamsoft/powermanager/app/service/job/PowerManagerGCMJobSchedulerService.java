@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.JobManager;
 import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import javax.inject.Inject;
 
 public class PowerManagerGCMJobSchedulerService extends GcmJobSchedulerService {

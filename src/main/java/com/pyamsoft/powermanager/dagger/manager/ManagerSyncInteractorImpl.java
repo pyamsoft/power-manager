@@ -16,26 +16,24 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.app.AlarmManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
-import rx.Observable;
 
 class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
 
-  @Inject ManagerSyncInteractorImpl(@NonNull JobSchedulerCompat jobManager,
+  @Inject ManagerSyncInteractorImpl(@NonNull AlarmManager alarmManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+    super(alarmManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
         logger);
   }
 

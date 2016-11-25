@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,7 +25,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.logger.Logger;
@@ -32,10 +32,7 @@ import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
 import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
-import com.pyamsoft.powermanager.dagger.job.JobHelper;
-import com.pyamsoft.powermanager.dagger.job.TriggerJob;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;
@@ -47,7 +44,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   private static final int TOGGLE_RC = 421;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @NonNull private final JobSchedulerCompat jobManager;
+  @NonNull private final AlarmManager alarmManager;
   @NonNull private final BooleanInterestObserver wifiObserver;
   @NonNull private final BooleanInterestObserver dataObserver;
   @NonNull private final BooleanInterestObserver bluetoothObserver;
@@ -59,7 +56,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @NonNull private final PowerTriggerDB powerTriggerDB;
   @NonNull private final Logger logger;
 
-  @Inject ForegroundInteractorImpl(@NonNull JobSchedulerCompat jobManager, @NonNull Context context,
+  @Inject ForegroundInteractorImpl(@NonNull AlarmManager alarmManager, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver wifiObserver,
       @NonNull BooleanInterestObserver dataObserver,
       @NonNull BooleanInterestObserver bluetoothObserver,
@@ -69,8 +66,8 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
       @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB,
       @NonNull Logger logger) {
     super(preferences);
+    this.alarmManager = alarmManager;
     appContext = context.getApplicationContext();
-    this.jobManager = jobManager;
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;
     this.bluetoothObserver = bluetoothObserver;
@@ -99,14 +96,16 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   }
 
   @Override public void create() {
-    JobHelper.queueTriggerJob(jobManager, wifiObserver, dataObserver, bluetoothObserver,
-        syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-        getPreferences(), logger);
+    // TODO Queue triggers
+    //JobHelper.queueTriggerJob(jobManager, wifiObserver, dataObserver, bluetoothObserver,
+    //    syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
+    //    getPreferences(), logger);
   }
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobManager.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+    // TODO Cancel triggers
+    //jobManager.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

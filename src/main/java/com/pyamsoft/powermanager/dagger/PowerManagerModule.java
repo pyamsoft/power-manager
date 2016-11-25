@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -33,11 +34,13 @@ import rx.schedulers.Schedulers;
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final PowerTriggerDB powerTriggerDB;
+  @NonNull private final AlarmManager alarmManager;
 
   public PowerManagerModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
     preferences = new PowerManagerPreferencesImpl(appContext);
     powerTriggerDB = new PowerTriggerDBImpl(appContext, Schedulers.io());
+    alarmManager = appContext.getSystemService(AlarmManager.class);
   }
 
   @Singleton @Provides Context provideContext() {
@@ -50,6 +53,10 @@ import rx.schedulers.Schedulers;
 
   @Singleton @Provides PowerManagerPreferences providePreferences() {
     return preferences;
+  }
+
+  @Singleton @Provides AlarmManager provideAlarmManager() {
+    return alarmManager;
   }
 
   @Singleton @Provides @Named("sub") Scheduler provideIOScheduler() {

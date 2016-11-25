@@ -16,19 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
+import android.app.AlarmManager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import com.birbit.android.jobqueue.Job;
-import com.birbit.android.jobqueue.TagConstraint;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
-import com.pyamsoft.powermanager.dagger.job.JobHelper;
-import com.pyamsoft.powermanager.dagger.job.JobType;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -38,17 +34,17 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
-  @SuppressWarnings("WeakerAccess") @NonNull final JobSchedulerCompat jobManager;
+  @SuppressWarnings("WeakerAccess") @NonNull final AlarmManager alarmManager;
   @NonNull private final BooleanInterestObserver chargingObserver;
   @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
-  ManagerInteractorImpl(@NonNull JobSchedulerCompat jobManager,
+  ManagerInteractorImpl(@NonNull AlarmManager alarmManager,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    this.jobManager = jobManager;
+    this.alarmManager = alarmManager;
     this.manageObserver = manageObserver;
     this.stateModifier = stateModifier;
     this.stateObserver = stateObserver;
@@ -61,14 +57,14 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @Override public void destroy() {
     final String jobTag = getJobTag();
     Timber.d("Cancel jobs in background with tag: %s", jobTag);
-    jobManager.cancelJobsInBackground(TagConstraint.ANY, jobTag);
+    // TODO Cancel
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.defer(() -> {
       final String jobTag = getJobTag();
       Timber.d("Cancel jobs in with tag: %s", jobTag);
-      jobManager.cancelJobs(TagConstraint.ANY, jobTag);
+      // TODO Cancel
       return Observable.just(true);
     });
   }
@@ -87,17 +83,17 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
-    final JobType jobType;
-    switch (getJobTag()) {
-      case ManagerInteractor.AIRPLANE_JOB_TAG:
-        jobType = JobType.TOGGLE_ENABLE;
-        break;
-      case ManagerInteractor.DOZE_JOB_TAG:
-        jobType = JobType.TOGGLE_ENABLE;
-        break;
-      default:
-        jobType = JobType.ENABLE;
-    }
+    //final JobType jobType;
+    //switch (getJobTag()) {
+    //  case ManagerInteractor.AIRPLANE_JOB_TAG:
+    //    jobType = JobType.TOGGLE_ENABLE;
+    //    break;
+    //  case ManagerInteractor.DOZE_JOB_TAG:
+    //    jobType = JobType.TOGGLE_ENABLE;
+    //    break;
+    //  default:
+    //    jobType = JobType.ENABLE;
+    //}
 
     //final Job job =
     //    JobHelper.createEnableJob(jobType, jobManager, getJobTag(), stateObserver, stateModifier,
@@ -105,48 +101,44 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     //jobManager.addJob(job);
 
     // Instead of using a job with no delay, we just directly call the modifier
-    if (jobType == JobType.ENABLE) {
-      if (!stateObserver.is()) {
-        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
-        stateModifier.set();
-      }
-    } else {
-      if (stateObserver.is()) {
-        logger.i("Re-enable %s for %s job", getJobTag(), jobType);
-        stateModifier.unset();
-      }
-    }
+    //if (jobType == JobType.ENABLE) {
+    //  if (!stateObserver.is()) {
+    //    logger.i("Re-enable %s for %s job", getJobTag(), jobType);
+    //    stateModifier.set();
+    //  }
+    //} else {
+    //  if (stateObserver.is()) {
+    //    logger.i("Re-enable %s for %s job", getJobTag(), jobType);
+    //    stateModifier.unset();
+    //  }
+    //}
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
-    final JobType jobType;
-    switch (getJobTag()) {
-      case ManagerInteractor.AIRPLANE_JOB_TAG:
-        jobType = JobType.TOGGLE_DISABLE;
-        break;
-      case ManagerInteractor.DOZE_JOB_TAG:
-        jobType = JobType.TOGGLE_DISABLE;
-        break;
-      default:
-        jobType = JobType.DISABLE;
-    }
-
-    Timber.d("Periodic Times: ENABLE: %d DISABLE %d", getPeriodicEnableTime(), getPeriodicDisableTime());
-
-    final Job job =
-        JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
-            isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
-            stateModifier, chargingObserver, isIgnoreWhileCharging(), logger);
-    jobManager.addJob(job);
+    //final JobType jobType;
+    //switch (getJobTag()) {
+    //  case ManagerInteractor.AIRPLANE_JOB_TAG:
+    //    jobType = JobType.TOGGLE_DISABLE;
+    //    break;
+    //  case ManagerInteractor.DOZE_JOB_TAG:
+    //    jobType = JobType.TOGGLE_DISABLE;
+    //    break;
+    //  default:
+    //    jobType = JobType.DISABLE;
+    //}
+    //
+    //Timber.d("Periodic Times: ENABLE: %d DISABLE %d", getPeriodicEnableTime(), getPeriodicDisableTime());
+    //
+    //final Job job =
+    //    JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
+    //        isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,
+    //        stateModifier, chargingObserver, isIgnoreWhileCharging(), logger);
+    //jobManager.addJob(job);
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {
     return preferences;
-  }
-
-  @CallSuper @NonNull @CheckResult JobSchedulerCompat getJobManager() {
-    return jobManager;
   }
 
   @CallSuper @NonNull @Override public Observable<Boolean> isManaged() {
