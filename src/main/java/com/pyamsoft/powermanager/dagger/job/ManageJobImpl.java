@@ -118,7 +118,7 @@ abstract class ManageJobImpl extends BaseJob {
       @NonNull BooleanInterestModifier interestModifier,
       @NonNull BooleanInterestObserver chargingObserver,
       @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
-    return new DisableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
+    return new DisableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
         chargingObserver, preferenceIgnoreCharging, logger);
   }
@@ -159,7 +159,7 @@ abstract class ManageJobImpl extends BaseJob {
       @NonNull BooleanInterestModifier interestModifier,
       @NonNull BooleanInterestObserver chargingObserver,
       @NonNull FuncNone<Boolean> preferenceIgnoreCharging, @NonNull Logger logger) {
-    return new EnableManageJob(jobSchedulerCompat, jobTag, periodicEnableInSeconds * 1000L, true,
+    return new EnableManageJob(jobSchedulerCompat, jobTag, periodicDisableInSeconds * 1000L, true,
         periodicEnableInSeconds, periodicDisableInSeconds, interestObserver, interestModifier,
         chargingObserver, preferenceIgnoreCharging, logger);
   }

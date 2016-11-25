@@ -132,6 +132,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         jobType = JobType.DISABLE;
     }
 
+    Timber.d("Periodic Times: ENABLE: %d DISABLE %d", getPeriodicEnableTime(), getPeriodicDisableTime());
+
     final Job job =
         JobHelper.createDisableJob(jobType, jobManager, getJobTag(), getDelayTime() * 1000L,
             isPeriodic(), getPeriodicEnableTime(), getPeriodicDisableTime(), stateObserver,

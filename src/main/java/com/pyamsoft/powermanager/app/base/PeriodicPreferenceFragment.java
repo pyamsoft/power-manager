@@ -129,6 +129,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
         final boolean b = (boolean) newValue;
         Timber.d("onPreferenceChange for key: %s", preference.getKey());
         setCustomEnableTimePreferenceEnabled(b, presetEnableTimePreference.getValue());
+        setCustomDisableTimePreferenceEnabled(b, presetDisableTimePreference.getValue());
         return true;
       }
 
