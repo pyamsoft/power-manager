@@ -16,44 +16,187 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
+import android.app.AlarmManager;
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
+import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import java.util.concurrent.TimeUnit;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import timber.log.Timber;
 
-class QueuerImpl implements Queuer {
+abstract class QueuerImpl implements Queuer {
 
-  @Inject QueuerImpl() {
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
+  @NonNull private final AlarmManager alarmManager;
+  @NonNull private final Scheduler handlerScheduler;
+  @NonNull private final String jobTag;
+  @SuppressWarnings("WeakerAccess") long delayTime;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
+  @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
+  private long periodicEnableTime;
+  private long periodicDisableTime;
+  private int periodic;
+  private int ignoreCharging;
+  private boolean set;
+  private boolean cancelRunning;
 
+  QueuerImpl(@NonNull String jobTag, @NonNull AlarmManager alarmManager,
+      @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier) {
+    this.jobTag = jobTag;
+    this.alarmManager = alarmManager;
+    this.handlerScheduler = handlerScheduler;
+    this.stateObserver = stateObserver;
+    this.stateModifier = stateModifier;
+    reset();
   }
 
-  @NonNull @Override public Queuer cancel(@NonNull String tag) {
+  private void reset() {
+    set = false;
+    type = null;
+    delayTime = -1L;
+    periodicDisableTime = -1L;
+    periodicEnableTime = -1L;
+    periodic = -1;
+    ignoreCharging = -1;
+    cancelRunning = false;
+  }
+
+  private void checkAll() {
+    if (type == null) {
+      throw new IllegalStateException("Type is NULL1");
+    }
+
+    if (delayTime < 0) {
+      throw new IllegalStateException("Delay time is less than 0");
+    }
+
+    if (periodicDisableTime < 0) {
+      throw new IllegalStateException("Periodic Disable time is less than 0");
+    }
+
+    if (periodicEnableTime < 0) {
+      throw new IllegalStateException("Periodic Enable time is less than 0");
+    }
+
+    if (periodic < 0) {
+      throw new IllegalStateException("Periodic is not set");
+    }
+
+    if (ignoreCharging < 0) {
+      throw new IllegalStateException("Ignore Charging is not set");
+    }
+
+    if (set) {
+      throw new IllegalStateException("Must be reset before we can queue");
+    }
+  }
+
+  @NonNull @Override public Queuer cancel() {
+    reset();
+    cancelRunning = true;
     return this;
   }
 
   @NonNull @Override public Queuer setType(@NonNull QueuerType queuerType) {
+    type = queuerType;
     return this;
   }
 
   @NonNull @Override public Queuer setDelayTime(long time) {
+    delayTime = time;
     return this;
   }
 
   @NonNull @Override public Queuer setPeriodic(boolean periodic) {
+    this.periodic = (periodic ? 1 : 0);
     return this;
   }
 
   @NonNull @Override public Queuer setIgnoreCharging(boolean ignore) {
+    ignoreCharging = (ignore ? 1 : 0);
     return this;
   }
 
   @NonNull @Override public Queuer setPeriodicEnableTime(long time) {
+    periodicEnableTime = time;
     return this;
   }
 
   @NonNull @Override public Queuer setPeriodicDisableTime(long time) {
+    periodicDisableTime = time;
     return this;
   }
 
   @Override public void queue() {
+    checkAll();
+    set = true;
 
+    if (cancelRunning) {
+      // TODO Cancel AlarmManager
+      SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
+    }
+
+    if (delayTime <= 60L) {
+      queueShort();
+    } else {
+      queueLong();
+    }
+  }
+
+  private void queueShort() {
+    SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
+    smallTimeQueuedSubscription = Observable.defer(() -> {
+      Timber.d("Prepare a short queue job %s with delay: %d seconds", jobTag, delayTime);
+      return Observable.just(true);
+    })
+        .delay(delayTime, TimeUnit.SECONDS)
+        .subscribeOn(handlerScheduler)
+        .observeOn(handlerScheduler)
+        .subscribe(ignore -> {
+              if (type == null) {
+                throw new IllegalStateException("QueueType is NULL");
+              }
+
+              Timber.d("Run short queue job: %s", jobTag);
+              if (type == QueuerType.ENABLE) {
+                Timber.i("Enable job: %s", jobTag);
+                if (!stateObserver.is()) {
+                  Timber.w("RUN: ENABLE %s", jobTag);
+                  stateModifier.set();
+                }
+              } else if (type == QueuerType.DISABLE) {
+                Timber.i("Disable job: %s", jobTag);
+                if (stateObserver.is()) {
+                  Timber.w("RUN: DISABLE %s", jobTag);
+                  stateModifier.unset();
+                }
+              } else if (type == QueuerType.TOGGLE_ENABLE) {
+                Timber.i("Toggle Enable job: %s", jobTag);
+                if (stateObserver.is()) {
+                  Timber.w("RUN: TOGGLE_ENABLE %s", jobTag);
+                  stateModifier.unset();
+                }
+              } else if (type == QueuerType.TOGGLE_DISABLE) {
+                Timber.i("Toggle Disable job: %s", jobTag);
+                if (!stateObserver.is()) {
+                  Timber.w("RUN: TOGGLE_DISABLE %s", jobTag);
+                  stateModifier.set();
+                }
+              } else {
+                throw new IllegalStateException("QueueType is Invalid");
+              }
+            }, throwable -> Timber.e(throwable, "onError Queuer queueShort"),
+            () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
+  }
+
+  private void queueLong() {
+    // TODO Cancel AlarmManager
+    // TODO Set exact AlarmManager
   }
 }

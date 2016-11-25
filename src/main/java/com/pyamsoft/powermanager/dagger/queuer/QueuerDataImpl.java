@@ -16,24 +16,18 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.support.annotation.CheckResult;
+import android.app.AlarmManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import javax.inject.Inject;
+import rx.Scheduler;
 
-public interface Queuer {
+class QueuerDataImpl extends QueuerImpl {
 
-  @NonNull Queuer cancel();
-
-  @CheckResult @NonNull Queuer setType(@NonNull QueuerType queuerType);
-
-  @CheckResult @NonNull Queuer setDelayTime(long time);
-
-  @CheckResult @NonNull Queuer setPeriodic(boolean periodic);
-
-  @CheckResult @NonNull Queuer setIgnoreCharging(boolean ignore);
-
-  @CheckResult @NonNull Queuer setPeriodicEnableTime(long time);
-
-  @CheckResult @NonNull Queuer setPeriodicDisableTime(long time);
-
-  void queue();
+  @Inject QueuerDataImpl(@NonNull AlarmManager alarmManager, @NonNull Scheduler handlerScheduler,
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier) {
+    super("DATA", alarmManager, handlerScheduler, stateObserver, stateModifier);
+  }
 }

@@ -49,16 +49,12 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @Override public void destroy() {
-    final String jobTag = getJobTag();
-    Timber.d("Cancel jobs in background with tag: %s", jobTag);
-    queuer.cancel(jobTag);
+    queuer.cancel();
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.defer(() -> {
-      final String jobTag = getJobTag();
-      Timber.d("Cancel jobs in with tag: %s", jobTag);
-      queuer.cancel(jobTag);
+      destroy();
       return Observable.just(true);
     });
   }
@@ -90,7 +86,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up an enable job
-    queuer.cancel(getJobTag())
+    queuer.cancel()
         .setType(queuerType)
         .setDelayTime(100L)
         .setPeriodic(false)
@@ -115,7 +111,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up a disable job
-    queuer.cancel(getJobTag())
+    queuer.cancel()
         .setType(queuerType)
         .setDelayTime(getDelayTime())
         .setPeriodic(isPeriodic())

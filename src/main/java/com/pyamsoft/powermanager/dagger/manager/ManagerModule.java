@@ -38,8 +38,9 @@ import rx.Scheduler;
   }
 
   @Provides @Named("wifi_manager_interactor")
-  WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull @Named("logger_wifi") Logger logger,
+  WearAwareManagerInteractor provideManagerWifiInteractor(
+      @NonNull @Named("queuer_wifi") Queuer queuer, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("logger_wifi") Logger logger,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
       @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
@@ -55,7 +56,7 @@ import rx.Scheduler;
   }
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
-      @NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("queuer_data") Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("logger_data") Logger logger,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("obs_data_state") BooleanInterestObserver stateObserver,
@@ -71,7 +72,8 @@ import rx.Scheduler;
   }
 
   @Provides @Named("bluetooth_manager_interactor")
-  WearAwareManagerInteractor provideManagerBluetoothInteractor(@NonNull Queuer queuer,
+  WearAwareManagerInteractor provideManagerBluetoothInteractor(
+      @NonNull @Named("queuer_bluetooth") Queuer queuer,
       @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("logger_bluetooth") Logger logger,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver,
@@ -89,7 +91,7 @@ import rx.Scheduler;
   }
 
   @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
-      @NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("queuer_sync") Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @NonNull @Named("logger_sync") Logger logger,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
       @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
@@ -105,7 +107,7 @@ import rx.Scheduler;
 
   @Provides @Named("doze_manager_interactor")
   ExclusiveWearUnawareManagerInteractor provideManagerDozeInteractor(
-      @NonNull PowerManagerPreferences preferences, @NonNull Queuer queuer,
+      @NonNull PowerManagerPreferences preferences, @NonNull @Named("queuer_doze") Queuer queuer,
       @NonNull @Named("logger_doze") Logger logger,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_state") BooleanInterestObserver stateObserver,
@@ -122,7 +124,8 @@ import rx.Scheduler;
 
   @Provides @Named("airplane_manager_interactor")
   WearAwareManagerInteractor provideManagerAirplaneInteractor(
-      @NonNull PowerManagerPreferences preferences, @NonNull Queuer queuer,
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("queuer_airplane") Queuer queuer,
       @NonNull @Named("logger_airplane") Logger logger,
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
