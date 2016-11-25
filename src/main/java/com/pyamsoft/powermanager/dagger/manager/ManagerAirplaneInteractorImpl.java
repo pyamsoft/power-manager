@@ -16,13 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.app.AlarmManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.logger.Logger;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
+import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
@@ -32,16 +31,14 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
 
-  @Inject ManagerAirplaneInteractorImpl(@NonNull AlarmManager alarmManager,
+  @Inject ManagerAirplaneInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver,
-      @NonNull PermissionObserver rootPermissionObserver,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    super(alarmManager, preferences, manageObserver, stateObserver, stateModifier,
-        wearManageObserver, wearStateObserver, chargingObserver, logger);
+      @NonNull PermissionObserver rootPermissionObserver, @NonNull Logger logger) {
+    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver,
+        logger);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 

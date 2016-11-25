@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
-import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

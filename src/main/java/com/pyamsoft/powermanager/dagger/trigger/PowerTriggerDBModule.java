@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.state;
+package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
-import javax.inject.Inject;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Singleton;
+import rx.schedulers.Schedulers;
 
-class DataStateModifier extends StateModifier {
+@Module public class PowerTriggerDBModule {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
-
-  @Inject DataStateModifier(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
-    this.wrapper = wrapper;
-  }
-
-  @Override void set(@NonNull Context context) {
-    wrapper.enable();
-  }
-
-  @Override void unset(@NonNull Context context) {
-    wrapper.disable();
+  @Singleton @Provides PowerTriggerDB providePowerTriggerDB(@NonNull Context context) {
+    return new PowerTriggerDBImpl(context.getApplicationContext(), Schedulers.io());
   }
 }

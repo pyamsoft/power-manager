@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.state;
+package com.pyamsoft.powermanager.dagger.wrapper;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
-import javax.inject.Inject;
 
-class DataStateModifier extends StateModifier {
+public interface DeviceFunctionWrapper {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
+  @NonNull String SETTINGS_URI_MOBILE_DATA = "mobile_data";
 
-  @Inject DataStateModifier(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
-    this.wrapper = wrapper;
-  }
+  void enable();
 
-  @Override void set(@NonNull Context context) {
-    wrapper.enable();
-  }
+  void disable();
 
-  @Override void unset(@NonNull Context context) {
-    wrapper.disable();
-  }
+  @CheckResult boolean isEnabled();
 }

@@ -25,7 +25,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import java.lang.reflect.Method;
 import javax.inject.Inject;

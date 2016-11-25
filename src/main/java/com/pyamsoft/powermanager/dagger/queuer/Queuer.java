@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.modifier.state;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.content.Context;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
-import javax.inject.Inject;
 
-class DataStateModifier extends StateModifier {
+public interface Queuer {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
+  @NonNull Queuer cancel(@NonNull String tag);
 
-  @Inject DataStateModifier(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
-    this.wrapper = wrapper;
-  }
+  @CheckResult @NonNull Queuer setType(@NonNull QueuerType queuerType);
 
-  @Override void set(@NonNull Context context) {
-    wrapper.enable();
-  }
+  @CheckResult @NonNull Queuer setDelayTime(long time);
 
-  @Override void unset(@NonNull Context context) {
-    wrapper.disable();
-  }
+  @CheckResult @NonNull Queuer setPeriodic(boolean periodic);
+
+  @CheckResult @NonNull Queuer setIgnoreCharging(boolean ignore);
+
+  @CheckResult @NonNull Queuer setPeriodicEnableTime(long time);
+
+  @CheckResult @NonNull Queuer setPeriodicDisableTime(long time);
+
+  void queue();
 }

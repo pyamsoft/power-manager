@@ -32,7 +32,7 @@ import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
-import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;

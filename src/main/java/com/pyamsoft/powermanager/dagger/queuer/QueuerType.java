@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.wrapper;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
+public enum QueuerType {
 
-public interface DeviceFunctionWrapper {
-
-  @NonNull String SETTINGS_URI_MOBILE_DATA = "mobile_data";
-
-  void enable();
-
-  void disable();
-
-  @CheckResult boolean isEnabled();
+  ENABLE,
+  TOGGLE_ENABLE,
+  DISABLE,
+  TOGGLE_DISABLE
 }

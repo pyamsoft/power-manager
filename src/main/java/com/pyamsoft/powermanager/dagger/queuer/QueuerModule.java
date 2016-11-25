@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.manager;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import com.pyamsoft.powermanager.app.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.powermanager.dagger.queuer.QueuerModule;
-import dagger.Subcomponent;
+import dagger.Module;
+import dagger.Provides;
 
-@Subcomponent(modules = {ManagerModule.class, QueuerModule.class}) public interface ManagerComponent {
+@Module public class QueuerModule {
 
-  void inject(ScreenOnOffReceiver receiver);
+  @Provides Queuer provideQueuer() {
+    return new QueuerImpl();
+  }
 }

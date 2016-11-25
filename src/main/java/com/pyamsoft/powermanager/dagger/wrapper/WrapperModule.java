@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.wrapper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
