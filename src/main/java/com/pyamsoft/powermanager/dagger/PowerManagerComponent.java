@@ -41,7 +41,6 @@ import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.dagger.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
 import com.pyamsoft.powermanager.dagger.wrapper.WrapperModule;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -49,8 +48,8 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
-    ActionToggleModule.class, JobSchedulerCompatModule.class, WrapperModule.class,
-    PermissionObserverModule.class, LoggerModule.class
+    ActionToggleModule.class, WrapperModule.class, PermissionObserverModule.class,
+    LoggerModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();
