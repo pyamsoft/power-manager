@@ -113,10 +113,6 @@ dependencies {
   // Needs to compile support annotations into actual project
   annotationProcessor "com.android.support:support-annotations:$supportLib"
 
-  // Job Scheduling
-  compile "com.birbit:android-priority-jobqueue:$androidPriorityJobQueue"
-  compile "com.google.android.gms:play-services-gcm:$firebase"
-
   // Google Play Services for other components
   // Check if Android Wear is connected before handling Bluetooth/Wifi
   compile "com.google.android.gms:play-services-wearable:$firebase"
