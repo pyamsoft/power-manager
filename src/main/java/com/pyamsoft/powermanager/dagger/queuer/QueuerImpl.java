@@ -178,6 +178,8 @@ abstract class QueuerImpl implements Queuer {
               logger.d("Run short queue job: %s", jobTag);
               QueueRunner.run(jobTag, type, stateObserver, stateModifier, chargingObserver, logger,
                   ignoreCharging);
+
+              queuePeriodic();
             }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
   }
@@ -190,14 +192,38 @@ abstract class QueuerImpl implements Queuer {
     final Intent intent = getLongTermIntent(appContext);
     intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
     intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
-    intent.putExtra(BaseLongTermService.EXTRA_IS_PERIODIC, periodic);
-    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
-    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
     jobQueuerWrapper.cancel(intent);
     final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
     jobQueuerWrapper.set(intent, triggerAtTime);
+
+    queuePeriodic();
+  }
+
+  @SuppressWarnings("WeakerAccess") void queuePeriodic() {
+    // TODO Queue periodic here that way we do not have to constantly re-queue in job loop
+    if (periodic < 1) {
+      logger.i("This job %s is not periodic. Skip", jobTag);
+      return;
+    }
+
+    if (periodicEnableTime < 60L) {
+      logger.w("Periodic Enable time for %s is too low %d. Must be at least 60", jobTag,
+          periodicEnableTime);
+      return;
+    }
+
+    if (periodicEnableTime < 60L) {
+      logger.w("Periodic Disable time for %s is too low %d. Must be at least 60", jobTag,
+          periodicDisableTime);
+      return;
+    }
+
+    // Remember that the times are switched to make the logic work correctly even if naming is confusing
+    logger.d("Queue periodic jobs for %s running every %d seconds for %d seconds", jobTag,
+        periodicDisableTime, periodicEnableTime);
+    // TODO Queue repeating jobQueueWrapper.setRepeating(intent, startTime, intervalLength);
   }
 
   @CheckResult @NonNull abstract Intent getLongTermIntent(@NonNull Context context);
