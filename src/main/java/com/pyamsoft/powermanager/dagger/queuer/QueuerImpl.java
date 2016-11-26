@@ -24,6 +24,7 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
@@ -31,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
-import timber.log.Timber;
 
 abstract class QueuerImpl implements Queuer {
 
@@ -41,6 +41,7 @@ abstract class QueuerImpl implements Queuer {
   @NonNull private final AlarmManager alarmManager;
   @NonNull private final Scheduler handlerScheduler;
   @NonNull private final String jobTag;
+  @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") long delayTime;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
@@ -54,13 +55,14 @@ abstract class QueuerImpl implements Queuer {
 
   QueuerImpl(@NonNull String jobTag, @NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier) {
+      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
     this.jobTag = jobTag;
     this.appContext = context.getApplicationContext();
     this.alarmManager = alarmManager;
     this.handlerScheduler = handlerScheduler;
     this.stateObserver = stateObserver;
     this.stateModifier = stateModifier;
+    this.logger = logger;
     reset();
   }
 
@@ -146,6 +148,7 @@ abstract class QueuerImpl implements Queuer {
     set = true;
 
     if (cancelRunning) {
+      logger.d("Cancel any previous jobs for %s", jobTag);
       alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
@@ -158,9 +161,11 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void queueShort() {
+    logger.d("Queue short term job with delay: %d (%s)", delayTime, jobTag);
+
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     smallTimeQueuedSubscription = Observable.defer(() -> {
-      Timber.d("Prepare a short queue job %s with delay: %d seconds", jobTag, delayTime);
+      logger.d("Prepare a short queue job %s with delay: %d seconds", jobTag, delayTime);
       return Observable.just(true);
     })
         .delay(delayTime, TimeUnit.SECONDS)
@@ -171,39 +176,41 @@ abstract class QueuerImpl implements Queuer {
                 throw new IllegalStateException("QueueType is NULL");
               }
 
-              Timber.d("Run short queue job: %s", jobTag);
+              logger.d("Run short queue job: %s", jobTag);
               if (type == QueuerType.ENABLE) {
-                Timber.i("Enable job: %s", jobTag);
+                logger.i("Enable job: %s", jobTag);
                 if (!stateObserver.is()) {
-                  Timber.w("RUN: ENABLE %s", jobTag);
+                  logger.w("RUN: ENABLE %s", jobTag);
                   stateModifier.set();
                 }
               } else if (type == QueuerType.DISABLE) {
-                Timber.i("Disable job: %s", jobTag);
+                logger.i("Disable job: %s", jobTag);
                 if (stateObserver.is()) {
-                  Timber.w("RUN: DISABLE %s", jobTag);
+                  logger.w("RUN: DISABLE %s", jobTag);
                   stateModifier.unset();
                 }
               } else if (type == QueuerType.TOGGLE_ENABLE) {
-                Timber.i("Toggle Enable job: %s", jobTag);
+                logger.i("Toggle Enable job: %s", jobTag);
                 if (stateObserver.is()) {
-                  Timber.w("RUN: TOGGLE_ENABLE %s", jobTag);
+                  logger.w("RUN: TOGGLE_ENABLE %s", jobTag);
                   stateModifier.unset();
                 }
               } else if (type == QueuerType.TOGGLE_DISABLE) {
-                Timber.i("Toggle Disable job: %s", jobTag);
+                logger.i("Toggle Disable job: %s", jobTag);
                 if (!stateObserver.is()) {
-                  Timber.w("RUN: TOGGLE_DISABLE %s", jobTag);
+                  logger.w("RUN: TOGGLE_DISABLE %s", jobTag);
                   stateModifier.set();
                 }
               } else {
                 throw new IllegalStateException("QueueType is Invalid");
               }
-            }, throwable -> Timber.e(throwable, "onError Queuer queueShort"),
+            }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
   }
 
   private void queueLong() {
+    logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
+
     alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
 
     final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);

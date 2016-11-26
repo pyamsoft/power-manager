@@ -20,6 +20,7 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
@@ -29,8 +30,8 @@ class QueuerWifiImpl extends QueuerImpl {
 
   @Inject QueuerWifiImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier) {
-    super("WIFI", context, alarmManager, handlerScheduler, stateObserver, stateModifier);
+      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
+    super("WIFI", context, alarmManager, handlerScheduler, stateObserver, stateModifier, logger);
   }
 
   @NonNull @Override Intent getLongTermIntent() {
