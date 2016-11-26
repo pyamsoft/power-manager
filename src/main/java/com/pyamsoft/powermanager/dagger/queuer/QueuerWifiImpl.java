@@ -17,18 +17,14 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.AlarmManager;
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Scheduler;
-import timber.log.Timber;
 
 class QueuerWifiImpl extends QueuerImpl {
 
@@ -39,34 +35,6 @@ class QueuerWifiImpl extends QueuerImpl {
   }
 
   @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {
-    return new Intent(context.getApplicationContext(), LongTermService.class);
-  }
-
-  public static class LongTermService extends BaseLongTermService {
-
-    @Inject @Named("obs_wifi_state") BooleanInterestObserver stateObserver;
-    @Inject @Named("mod_wifi_state") BooleanInterestModifier stateModifier;
-
-    public LongTermService() {
-      super(LongTermService.class.getName());
-    }
-
-    @Override void set() {
-      if (!stateObserver.is()) {
-        stateModifier.set();
-      }
-    }
-
-    @Override void unset() {
-      if (stateObserver.is()) {
-        stateModifier.unset();
-      }
-    }
-
-    @Override void injectDependencies() {
-      if (stateObserver == null || stateModifier == null) {
-        Injector.get().provideComponent().plusQueuerComponent().inject(this);
-      }
-    }
+    return new Intent(context.getApplicationContext(), QueuerWifiLongTermService.class);
   }
 }

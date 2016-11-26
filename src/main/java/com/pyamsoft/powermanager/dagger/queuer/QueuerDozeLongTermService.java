@@ -16,26 +16,36 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.app.AlarmManager;
-import android.content.Context;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.logger.Logger;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
-import rx.Scheduler;
+import javax.inject.Named;
 
-class QueuerAirplaneImpl extends QueuerImpl {
+public class QueuerDozeLongTermService extends BaseLongTermService {
 
-  @Inject QueuerAirplaneImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
-      @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
-    super("AIRPLANE", context, alarmManager, handlerScheduler, stateObserver, stateModifier,
-        logger);
+  @Inject @Named("obs_doze_state") BooleanInterestObserver stateObserver;
+  @Inject @Named("mod_doze_state") BooleanInterestModifier stateModifier;
+
+  public QueuerDozeLongTermService() {
+    super(QueuerDozeLongTermService.class.getName());
   }
 
-  @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {
-    return new Intent(context.getApplicationContext(), QueuerAirplaneLongTermService.class);
+  @Override void set() {
+    if (!stateObserver.is()) {
+      stateModifier.set();
+    }
+  }
+
+  @Override void unset() {
+    if (stateObserver.is()) {
+      stateModifier.unset();
+    }
+  }
+
+  @Override void injectDependencies() {
+    if (stateObserver == null || stateModifier == null) {
+      Injector.get().provideComponent().plusQueuerComponent().inject(this);
+    }
   }
 }

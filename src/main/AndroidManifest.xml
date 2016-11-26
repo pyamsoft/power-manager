@@ -81,22 +81,22 @@
         android:exported="false"/>
 
     <service
-        android:name=".dagger.queuer.QueuerAirplaneImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerAirplaneLongTermService"
         android:exported="false"/>
     <service
-        android:name=".dagger.queuer.QueuerDataImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerDataLongTermService"
         android:exported="false"/>
     <service
-        android:name=".dagger.queuer.QueuerDozeImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerDozeLongTermService"
         android:exported="false"/>
     <service
-        android:name=".dagger.queuer.QueuerWifiImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerWifiLongTermService"
         android:exported="false"/>
     <service
-        android:name=".dagger.queuer.QueuerBluetoothImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerBluetoothLongTermService"
         android:exported="false"/>
     <service
-        android:name=".dagger.queuer.QueuerSyncImpl$LongTermService"
+        android:name=".dagger.queuer.QueuerSyncLongTermService"
         android:exported="false"/>
 
     <provider

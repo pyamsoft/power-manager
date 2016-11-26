@@ -20,15 +20,15 @@ import dagger.Subcomponent;
 
 @Subcomponent public interface QueuerComponent {
 
-  void inject(QueuerAirplaneImpl.LongTermService longTermService);
+  void inject(QueuerAirplaneLongTermService longTermService);
 
-  void inject(QueuerBluetoothImpl.LongTermService longTermService);
+  void inject(QueuerBluetoothLongTermService longTermService);
 
-  void inject(QueuerDataImpl.LongTermService longTermService);
+  void inject(QueuerDataLongTermService longTermService);
 
-  void inject(QueuerDozeImpl.LongTermService longTermService);
+  void inject(QueuerDozeLongTermService longTermService);
 
-  void inject(QueuerSyncImpl.LongTermService longTermService);
+  void inject(QueuerSyncLongTermService longTermService);
 
-  void inject(QueuerWifiImpl.LongTermService longTermService);
+  void inject(QueuerWifiLongTermService longTermService);
 }
