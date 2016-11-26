@@ -32,12 +32,10 @@ import rx.schedulers.Schedulers;
 
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final AlarmManager alarmManager;
 
   public PowerManagerModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
     preferences = new PowerManagerPreferencesImpl(appContext);
-    alarmManager = appContext.getSystemService(AlarmManager.class);
   }
 
   @Singleton @Provides Context provideContext() {
@@ -46,10 +44,6 @@ import rx.schedulers.Schedulers;
 
   @Singleton @Provides PowerManagerPreferences providePreferences() {
     return preferences;
-  }
-
-  @Singleton @Provides AlarmManager provideAlarmManager() {
-    return alarmManager;
   }
 
   @Singleton @Provides @Named("sub") Scheduler provideIOScheduler() {

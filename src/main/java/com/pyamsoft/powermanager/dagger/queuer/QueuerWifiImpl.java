@@ -16,23 +16,23 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import rx.Scheduler;
 
 class QueuerWifiImpl extends QueuerImpl {
 
-  @Inject QueuerWifiImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
+  @Inject QueuerWifiImpl(@NonNull Context context, @NonNull JobQueuerWrapper jobQueuerWrapper,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    super("WIFI", context, alarmManager, handlerScheduler, stateObserver, stateModifier,
+    super("WIFI", context, jobQueuerWrapper, handlerScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 

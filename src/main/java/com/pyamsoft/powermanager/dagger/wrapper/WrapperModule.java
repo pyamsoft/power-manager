@@ -54,4 +54,8 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DozeDeviceWrapperImpl(context, preferences);
   }
+
+  @Singleton @Provides JobQueuerWrapper provideJobQueuerWrapper(@NonNull Context context) {
+    return new JobQueuerWrapperImpl(context);
+  }
 }

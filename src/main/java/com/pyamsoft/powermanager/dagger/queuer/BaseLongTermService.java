@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -38,7 +39,7 @@ public abstract class BaseLongTermService extends IntentService {
   private static final long MINIMUM_PERIODIC_TIME = 60L;
 
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
-  @Inject AlarmManager alarmManager;
+  @Inject JobQueuerWrapper jobQueuerWrapper;
 
   BaseLongTermService(String name) {
     super(name);

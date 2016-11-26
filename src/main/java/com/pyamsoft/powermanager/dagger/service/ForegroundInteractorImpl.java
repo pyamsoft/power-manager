@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -33,6 +32,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
 import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;
@@ -44,7 +44,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   private static final int TOGGLE_RC = 421;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @NonNull private final AlarmManager alarmManager;
+  @NonNull private final JobQueuerWrapper jobQueuerWrapper;
   @NonNull private final BooleanInterestObserver wifiObserver;
   @NonNull private final BooleanInterestObserver dataObserver;
   @NonNull private final BooleanInterestObserver bluetoothObserver;
@@ -56,9 +56,9 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @NonNull private final PowerTriggerDB powerTriggerDB;
   @NonNull private final Logger logger;
 
-  @Inject ForegroundInteractorImpl(@NonNull AlarmManager alarmManager, @NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver wifiObserver,
-      @NonNull BooleanInterestObserver dataObserver,
+  @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
       @NonNull BooleanInterestObserver bluetoothObserver,
       @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
       @NonNull BooleanInterestModifier dataModifier,
@@ -66,7 +66,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
       @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB,
       @NonNull Logger logger) {
     super(preferences);
-    this.alarmManager = alarmManager;
+    this.jobQueuerWrapper = jobQueuerWrapper;
     appContext = context.getApplicationContext();
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;

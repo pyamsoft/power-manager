@@ -16,17 +16,15 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
@@ -41,7 +39,7 @@ abstract class QueuerImpl implements Queuer {
   @NonNull final BooleanInterestModifier stateModifier;
   @NonNull final BooleanInterestObserver chargingObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final String jobTag;
-  @NonNull private final AlarmManager alarmManager;
+  @NonNull private final JobQueuerWrapper jobQueuerWrapper;
   @NonNull private final Scheduler handlerScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
@@ -54,13 +52,14 @@ abstract class QueuerImpl implements Queuer {
   private boolean set;
   private boolean cancelRunning;
 
-  QueuerImpl(@NonNull String jobTag, @NonNull Context context, @NonNull AlarmManager alarmManager,
-      @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
+  QueuerImpl(@NonNull String jobTag, @NonNull Context context,
+      @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull Scheduler handlerScheduler,
+      @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     this.jobTag = jobTag;
     this.appContext = context.getApplicationContext();
-    this.alarmManager = alarmManager;
+    this.jobQueuerWrapper = jobQueuerWrapper;
     this.handlerScheduler = handlerScheduler;
     this.chargingObserver = chargingObserver;
     this.stateObserver = stateObserver;
@@ -152,8 +151,7 @@ abstract class QueuerImpl implements Queuer {
 
     if (cancelRunning) {
       logger.d("Cancel any previous jobs for %s", jobTag);
-      alarmManager.cancel(
-          PendingIntent.getService(appContext, 0, getLongTermIntent(appContext), 0));
+      jobQueuerWrapper.cancel(getLongTermIntent(appContext));
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
 
@@ -197,16 +195,9 @@ abstract class QueuerImpl implements Queuer {
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
-    alarmManager.cancel(PendingIntent.getService(appContext, 0, intent, 0));
-
+    jobQueuerWrapper.cancel(intent);
     final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtTime,
-          PendingIntent.getService(appContext, 0, intent, 0));
-    } else {
-      alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtTime,
-          PendingIntent.getService(appContext, 0, intent, 0));
-    }
+    jobQueuerWrapper.set(intent, triggerAtTime);
   }
 
   @CheckResult @NonNull abstract Intent getLongTermIntent(@NonNull Context context);

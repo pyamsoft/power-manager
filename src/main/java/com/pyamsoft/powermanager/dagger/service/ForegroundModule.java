@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.service;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
@@ -25,6 +24,7 @@ import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
 import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -40,7 +40,7 @@ import rx.Scheduler;
   }
 
   @Singleton @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
-      @NonNull AlarmManager alarmManager, @NonNull PowerManagerPreferences preferences,
+      @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull PowerManagerPreferences preferences,
       @NonNull PowerTriggerDB powerTriggerDB, @Named("logger_trigger") @NonNull Logger logger,
       @NonNull @Named("obs_wifi_state") BooleanInterestObserver wifiObserver,
       @NonNull @Named("obs_data_state") BooleanInterestObserver dataObserver,
@@ -50,7 +50,7 @@ import rx.Scheduler;
       @NonNull @Named("mod_data_state") BooleanInterestModifier dataModifier,
       @NonNull @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier,
       @NonNull @Named("mod_sync_state") BooleanInterestModifier syncModifier) {
-    return new ForegroundInteractorImpl(alarmManager, context, preferences, wifiObserver,
+    return new ForegroundInteractorImpl(jobQueuerWrapper, context, preferences, wifiObserver,
         dataObserver, bluetoothObserver, syncObserver, wifiModifier, dataModifier,
         bluetoothModifier, syncModifier, powerTriggerDB, logger);
   }
