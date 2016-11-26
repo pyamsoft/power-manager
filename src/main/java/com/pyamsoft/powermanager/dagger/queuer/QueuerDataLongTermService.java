@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
@@ -26,21 +28,26 @@ public class QueuerDataLongTermService extends BaseLongTermService {
 
   @Inject @Named("obs_data_state") BooleanInterestObserver stateObserver;
   @Inject @Named("mod_data_state") BooleanInterestModifier stateModifier;
+  @Inject @Named("logger_data") Logger logger;
 
   public QueuerDataLongTermService() {
     super(QueuerDataLongTermService.class.getName());
   }
 
-  @Override void set() {
-    if (!stateObserver.is()) {
-      stateModifier.set();
-    }
+  @NonNull @Override String getJobTag() {
+    return "DATA";
   }
 
-  @Override void unset() {
-    if (stateObserver.is()) {
-      stateModifier.unset();
-    }
+  @NonNull @Override Logger getLogger() {
+    return logger;
+  }
+
+  @Override public BooleanInterestModifier getStateModifier() {
+    return stateModifier;
+  }
+
+  @Override public BooleanInterestObserver getStateObserver() {
+    return stateObserver;
   }
 
   @Override void injectDependencies() {

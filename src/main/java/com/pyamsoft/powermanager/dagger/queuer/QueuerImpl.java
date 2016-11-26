@@ -36,6 +36,7 @@ import rx.Subscription;
 abstract class QueuerImpl implements Queuer {
 
   @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
+  @NonNull static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
   private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
@@ -234,6 +235,7 @@ abstract class QueuerImpl implements Queuer {
 
     final Intent intent = getLongTermIntent(appContext);
     intent.putExtra(EXTRA_JOB_TYPE, type.name());
+    intent.putExtra(EXTRA_IGNORE_CHARGING, ignoreCharging);
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
     alarmManager.cancel(PendingIntent.getService(appContext, 0, intent, 0));

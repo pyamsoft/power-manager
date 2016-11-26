@@ -18,52 +18,104 @@ package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.IntentService;
 import android.content.Intent;
-import timber.log.Timber;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.app.logger.Logger;
+import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-abstract class BaseLongTermService extends IntentService {
+public abstract class BaseLongTermService extends IntentService {
+
+  @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
 
   BaseLongTermService(String name) {
     super(name);
   }
 
   @Override protected final void onHandleIntent(Intent intent) {
+    inject();
+
     if (intent == null) {
-      Timber.e("Intent is NULL. Skip");
+      getLogger().e("Intent is NULL. Skip");
       return;
     }
 
     if (!intent.hasExtra(QueuerImpl.EXTRA_JOB_TYPE)) {
-      Timber.e("Intent does not have QueueType. Skip");
+      getLogger().e("Intent does not have QueueType. Skip");
       return;
     }
 
     final String type = intent.getStringExtra(QueuerImpl.EXTRA_JOB_TYPE);
     if (type == null) {
-      Timber.e("QueuerType extra is NULL. Skip");
+      getLogger().e("QueuerType extra is NULL. Skip");
+      return;
+    }
+
+    final int ignoreCharging = intent.getIntExtra(QueuerImpl.EXTRA_IGNORE_CHARGING, -1);
+    if (ignoreCharging < 0) {
+      getLogger().e("Ignore Charging was not passed with Intent");
       return;
     }
 
     final QueuerType queuerType = QueuerType.valueOf(type);
     if (queuerType == QueuerType.ENABLE) {
-      injectDependencies();
-      set();
+      set(queuerType);
     } else if (queuerType == QueuerType.DISABLE) {
-      injectDependencies();
-      unset();
+      if (ignoreCharging == 1) {
+        if (chargingObserver.is()) {
+          getLogger().w("Ignore disable job because we are charging: %s", getJobTag());
+          return;
+        }
+      }
+
+      unset(queuerType);
     } else if (queuerType == QueuerType.TOGGLE_ENABLE) {
-      injectDependencies();
-      unset();
+      unset(queuerType);
     } else if (queuerType == QueuerType.TOGGLE_DISABLE) {
-      injectDependencies();
-      set();
+      if (ignoreCharging == 1) {
+        if (chargingObserver.is()) {
+          getLogger().w("Ignore disable job because we are charging: %s", getJobTag());
+          return;
+        }
+      }
+
+      set(queuerType);
     } else {
-      Timber.e("QueuerType %s invalid. Skip", queuerType.name());
+      getLogger().e("QueuerType %s invalid. Skip", queuerType.name());
     }
   }
 
-  abstract void set();
+  void inject() {
+    Injector.get().provideComponent().plusQueuerComponent().inject(this);
+    injectDependencies();
+  }
 
-  abstract void unset();
+  void set(@NonNull QueuerType queuerType) {
+    getLogger().i("Toggle %s job: %s", queuerType, getJobTag());
+    if (!getStateObserver().is()) {
+      getLogger().i("Toggle %s job: %s", queuerType, getJobTag());
+      getStateModifier().set();
+    }
+  }
+
+  void unset(@NonNull QueuerType queuerType) {
+    getLogger().i("Toggle %s job: %s", queuerType, getJobTag());
+    if (getStateObserver().is()) {
+      getLogger().i("Toggle %s job: %s", queuerType, getJobTag());
+      getStateModifier().unset();
+    }
+  }
+
+  @CheckResult @NonNull abstract String getJobTag();
+
+  @CheckResult @NonNull abstract Logger getLogger();
+
+  @CheckResult @Named abstract BooleanInterestObserver getStateObserver();
+
+  @CheckResult @Named abstract BooleanInterestModifier getStateModifier();
 
   abstract void injectDependencies();
 }
