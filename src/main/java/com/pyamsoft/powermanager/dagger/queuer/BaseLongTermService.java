@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.CheckResult;
@@ -37,6 +38,7 @@ public abstract class BaseLongTermService extends IntentService {
   private static final long MINIMUM_PERIODIC_TIME = 60L;
 
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
+  @Inject AlarmManager alarmManager;
 
   BaseLongTermService(String name) {
     super(name);
