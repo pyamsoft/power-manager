@@ -17,6 +17,8 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.AlarmManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -25,9 +27,13 @@ import rx.Scheduler;
 
 class QueuerDataImpl extends QueuerImpl {
 
-  @Inject QueuerDataImpl(@NonNull AlarmManager alarmManager, @NonNull Scheduler handlerScheduler,
-      @NonNull BooleanInterestObserver stateObserver,
+  @Inject QueuerDataImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
+      @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier) {
-    super("DATA", alarmManager, handlerScheduler, stateObserver, stateModifier);
+    super("DATA", context, alarmManager, handlerScheduler, stateObserver, stateModifier);
+  }
+
+  @NonNull @Override Intent getLongTermIntent() {
+    return null;
   }
 }

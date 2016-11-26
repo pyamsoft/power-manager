@@ -17,6 +17,11 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
@@ -30,6 +35,7 @@ import timber.log.Timber;
 
 abstract class QueuerImpl implements Queuer {
 
+  private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
   @NonNull private final AlarmManager alarmManager;
@@ -38,6 +44,7 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") long delayTime;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
+  @NonNull private Context appContext;
   private long periodicEnableTime;
   private long periodicDisableTime;
   private int periodic;
@@ -45,10 +52,11 @@ abstract class QueuerImpl implements Queuer {
   private boolean set;
   private boolean cancelRunning;
 
-  QueuerImpl(@NonNull String jobTag, @NonNull AlarmManager alarmManager,
+  QueuerImpl(@NonNull String jobTag, @NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier) {
     this.jobTag = jobTag;
+    this.appContext = context.getApplicationContext();
     this.alarmManager = alarmManager;
     this.handlerScheduler = handlerScheduler;
     this.stateObserver = stateObserver;
@@ -138,11 +146,11 @@ abstract class QueuerImpl implements Queuer {
     set = true;
 
     if (cancelRunning) {
-      // TODO Cancel AlarmManager
+      alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
 
-    if (delayTime <= 60L) {
+    if (delayTime <= LARGEST_TIME_WITHOUT_ALARM) {
       queueShort();
     } else {
       queueLong();
@@ -196,7 +204,17 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void queueLong() {
-    // TODO Cancel AlarmManager
-    // TODO Set exact AlarmManager
+    alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+
+    final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtTime,
+          PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+    } else {
+      alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtTime,
+          PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+    }
   }
+
+  @CheckResult @NonNull abstract Intent getLongTermIntent();
 }

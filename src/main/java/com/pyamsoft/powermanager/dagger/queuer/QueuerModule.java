@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.AlarmManager;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
@@ -27,45 +28,47 @@ import rx.Scheduler;
 
 @Module public class QueuerModule {
 
-  @Provides @Named("queuer_wifi") Queuer provideWifiQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_wifi") Queuer provideWifiQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_wifi_state") BooleanInterestModifier stateModifier) {
-    return new QueuerWifiImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerWifiImpl(context, alarmManager, subScheduler, stateObserver, stateModifier);
   }
 
-  @Provides @Named("queuer_data") Queuer provideDataQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_data") Queuer provideDataQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_data_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_data_state") BooleanInterestModifier stateModifier) {
-    return new QueuerDataImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerDataImpl(context, alarmManager, subScheduler, stateObserver, stateModifier);
   }
 
-  @Provides @Named("queuer_bluetooth") Queuer provideBluetoothQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_bluetooth") Queuer provideBluetoothQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier) {
-    return new QueuerBluetoothImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerBluetoothImpl(context, alarmManager, subScheduler, stateObserver,
+        stateModifier);
   }
 
-  @Provides @Named("queuer_sync") Queuer provideSyncQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_sync") Queuer provideSyncQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_sync_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_sync_state") BooleanInterestModifier stateModifier) {
-    return new QueuerSyncImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerSyncImpl(context, alarmManager, subScheduler, stateObserver, stateModifier);
   }
 
-  @Provides @Named("queuer_doze") Queuer provideDozeQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_doze") Queuer provideDozeQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_doze_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_doze_state") BooleanInterestModifier stateModifier) {
-    return new QueuerDozeImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerDozeImpl(context, alarmManager, subScheduler, stateObserver, stateModifier);
   }
 
-  @Provides @Named("queuer_airplane") Queuer provideAirplaneQueuer(@NonNull AlarmManager alarmManager,
-      @NonNull @Named("sub") Scheduler subScheduler,
+  @Provides @Named("queuer_airplane") Queuer provideAirplaneQueuer(@NonNull Context context,
+      @NonNull AlarmManager alarmManager, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_airplane_state") BooleanInterestModifier stateModifier) {
-    return new QueuerAirplaneImpl(alarmManager, subScheduler, stateObserver, stateModifier);
+    return new QueuerAirplaneImpl(context, alarmManager, subScheduler, stateObserver,
+        stateModifier);
   }
 }
