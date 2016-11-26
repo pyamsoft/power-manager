@@ -69,34 +69,9 @@ public abstract class BaseLongTermService extends IntentService {
       return;
     }
 
-    getLogger().d("Run long queue job: %s", getJobTag());
     final QueuerType queuerType = QueuerType.valueOf(type);
-    if (queuerType == QueuerType.ENABLE) {
-      set(queuerType);
-    } else if (queuerType == QueuerType.DISABLE) {
-      if (ignoreCharging == 1) {
-        if (chargingObserver.is()) {
-          getLogger().w("Ignore disable job because we are charging: %s", getJobTag());
-          return;
-        }
-      }
-
-      unset(queuerType);
-    } else if (queuerType == QueuerType.TOGGLE_ENABLE) {
-      unset(queuerType);
-    } else if (queuerType == QueuerType.TOGGLE_DISABLE) {
-      if (ignoreCharging == 1) {
-        if (chargingObserver.is()) {
-          getLogger().w("Ignore disable job because we are charging: %s", getJobTag());
-          return;
-        }
-      }
-
-      set(queuerType);
-    } else {
-      getLogger().e("QueuerType %s invalid. Skip", queuerType.name());
-      return;
-    }
+    getLogger().d("Run long queue job: %s", getJobTag());
+    QueueRunner.run(getJobTag(), queuerType, getStateObserver(), getStateModifier(), chargingObserver, getLogger(), ignoreCharging);
 
     final int periodic = intent.getIntExtra(EXTRA_IS_PERIODIC, -1);
     if (periodic < 0) {

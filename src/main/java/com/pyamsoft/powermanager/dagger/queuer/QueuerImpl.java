@@ -37,20 +37,20 @@ abstract class QueuerImpl implements Queuer {
 
   private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
   @NonNull final Logger logger;
-  @NonNull private final BooleanInterestObserver stateObserver;
-  @NonNull private final BooleanInterestModifier stateModifier;
-  @NonNull private final BooleanInterestObserver chargingObserver;
+  @NonNull final BooleanInterestObserver stateObserver;
+  @NonNull final BooleanInterestModifier stateModifier;
+  @NonNull final BooleanInterestObserver chargingObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final String jobTag;
   @NonNull private final AlarmManager alarmManager;
   @NonNull private final Scheduler handlerScheduler;
-  @NonNull private final String jobTag;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
+  @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
+  @SuppressWarnings("WeakerAccess") int ignoreCharging;
   private long delayTime;
-  @Nullable private QueuerType type;
   @NonNull private Context appContext;
   private long periodicEnableTime;
   private long periodicDisableTime;
   private int periodic;
-  private int ignoreCharging;
   private boolean set;
   private boolean cancelRunning;
 
@@ -172,58 +172,16 @@ abstract class QueuerImpl implements Queuer {
         .delay(delayTime, TimeUnit.MILLISECONDS)
         .subscribeOn(handlerScheduler)
         .observeOn(handlerScheduler)
-        .subscribe(ignore -> runQueueShort(),
-            throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
+        .subscribe(ignore -> {
+              if (type == null) {
+                throw new IllegalStateException("Type is NULL");
+              }
+
+              logger.d("Run short queue job: %s", jobTag);
+              QueueRunner.run(jobTag, type, stateObserver, stateModifier, chargingObserver, logger,
+                  ignoreCharging);
+            }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
-  }
-
-  @SuppressWarnings("WeakerAccess") void runQueueShort() {
-    if (type == null) {
-      throw new IllegalStateException("QueueType is NULL");
-    }
-
-    logger.d("Run short queue job: %s", jobTag);
-    if (type == QueuerType.ENABLE) {
-      logger.i("Enable job: %s", jobTag);
-      if (!stateObserver.is()) {
-        logger.w("RUN: ENABLE %s", jobTag);
-        stateModifier.set();
-      }
-    } else if (type == QueuerType.DISABLE) {
-      logger.i("Disable job: %s", jobTag);
-      if (ignoreCharging == 1) {
-        if (chargingObserver.is()) {
-          logger.w("Ignore disable job because we are charging: %s", jobTag);
-          return;
-        }
-      }
-
-      if (stateObserver.is()) {
-        logger.w("RUN: DISABLE %s", jobTag);
-        stateModifier.unset();
-      }
-    } else if (type == QueuerType.TOGGLE_ENABLE) {
-      logger.i("Toggle Enable job: %s", jobTag);
-      if (stateObserver.is()) {
-        logger.w("RUN: TOGGLE_ENABLE %s", jobTag);
-        stateModifier.unset();
-      }
-    } else if (type == QueuerType.TOGGLE_DISABLE) {
-      logger.i("Toggle Disable job: %s", jobTag);
-      if (ignoreCharging == 1) {
-        if (chargingObserver.is()) {
-          logger.w("Ignore disable job because we are charging: %s", jobTag);
-          return;
-        }
-      }
-
-      if (!stateObserver.is()) {
-        logger.w("RUN: TOGGLE_DISABLE %s", jobTag);
-        stateModifier.set();
-      }
-    } else {
-      throw new IllegalStateException("QueueType is Invalid");
-    }
   }
 
   private void queueLong() {
