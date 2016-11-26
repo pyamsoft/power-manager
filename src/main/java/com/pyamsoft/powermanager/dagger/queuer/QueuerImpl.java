@@ -155,7 +155,7 @@ abstract class QueuerImpl implements Queuer {
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
 
-    if (delayTime <= LARGEST_TIME_WITHOUT_ALARM) {
+    if (delayTime <= LARGEST_TIME_WITHOUT_ALARM * 1000L) {
       queueShort();
     } else {
       queueLong();
@@ -179,7 +179,7 @@ abstract class QueuerImpl implements Queuer {
               QueueRunner.run(jobTag, type, stateObserver, stateModifier, chargingObserver, logger,
                   ignoreCharging);
 
-              queuePeriodic();
+              queuePeriodic(System.currentTimeMillis());
             }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
   }
@@ -189,20 +189,18 @@ abstract class QueuerImpl implements Queuer {
       throw new IllegalStateException("QueueType is NULL");
     }
 
-    final Intent intent = getLongTermIntent(appContext);
+    final Intent intent = getQueueIntent(appContext);
     intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
-    intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
     jobQueuerWrapper.cancel(intent);
     final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
     jobQueuerWrapper.set(intent, triggerAtTime);
 
-    queuePeriodic();
+    queuePeriodic(triggerAtTime);
   }
 
-  @SuppressWarnings("WeakerAccess") void queuePeriodic() {
-    // TODO Queue periodic here that way we do not have to constantly re-queue in job loop
+  @SuppressWarnings("WeakerAccess") void queuePeriodic(long timeOfFirstTrigger) {
     if (periodic < 1) {
       logger.i("This job %s is not periodic. Skip", jobTag);
       return;
@@ -214,16 +212,56 @@ abstract class QueuerImpl implements Queuer {
       return;
     }
 
-    if (periodicEnableTime < 60L) {
+    if (periodicDisableTime < 60L) {
       logger.w("Periodic Disable time for %s is too low %d. Must be at least 60", jobTag,
           periodicDisableTime);
       return;
     }
 
     // Remember that the times are switched to make the logic work correctly even if naming is confusing
-    logger.d("Queue periodic jobs for %s running every %d seconds for %d seconds", jobTag,
-        periodicDisableTime, periodicEnableTime);
-    // TODO Queue repeating jobQueueWrapper.setRepeating(intent, startTime, intervalLength);
+    final long intervalUntilReEnable = periodicDisableTime * 1000L;
+    final long intervalUntilReDisable = periodicEnableTime * 1000L;
+
+    final long reEnableTime = timeOfFirstTrigger + intervalUntilReEnable;
+    final long reDisableTime = reEnableTime + intervalUntilReDisable;
+
+    if (type == null) {
+      throw new IllegalStateException("QueueType is NULL");
+    }
+
+    final Intent intent = getQueueIntent(appContext);
+
+    final QueuerType newType;
+    if (type == QueuerType.ENABLE) {
+      newType = QueuerType.DISABLE;
+    } else if (type == QueuerType.DISABLE) {
+      newType = QueuerType.ENABLE;
+    } else if (type == QueuerType.TOGGLE_ENABLE) {
+      newType = QueuerType.TOGGLE_DISABLE;
+    } else if (type == QueuerType.TOGGLE_DISABLE) {
+      newType = QueuerType.TOGGLE_ENABLE;
+    } else {
+      throw new IllegalStateException("Invalid queue type");
+    }
+
+    // Queue a constant re-enable job with the same Type as original
+    logger.i("Set repeating enable job %s starting at %d window %d", jobTag, reEnableTime,
+        intervalUntilReEnable);
+    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
+    jobQueuerWrapper.setRepeating(intent, reEnableTime, intervalUntilReEnable);
+
+    // Queue a constant re-disable job with the opposite type
+    final Intent newIntent = new Intent(intent);
+    logger.i("Set repeating disable job %s starting at %d window %d", jobTag, reDisableTime,
+        intervalUntilReDisable);
+    newIntent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, newType.name());
+    jobQueuerWrapper.setRepeating(newIntent, reDisableTime, intervalUntilReDisable);
+  }
+
+  @CheckResult @NonNull private Intent getQueueIntent(@NonNull Context context) {
+    final Intent intent = getLongTermIntent(context);
+    intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
+    return intent;
   }
 
   @CheckResult @NonNull abstract Intent getLongTermIntent(@NonNull Context context);
