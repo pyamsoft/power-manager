@@ -35,19 +35,17 @@ import rx.Subscription;
 
 abstract class QueuerImpl implements Queuer {
 
-  @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
-  @NonNull static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
   private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
+  @NonNull final Logger logger;
+  @NonNull private final BooleanInterestObserver stateObserver;
+  @NonNull private final BooleanInterestModifier stateModifier;
+  @NonNull private final BooleanInterestObserver chargingObserver;
   @NonNull private final AlarmManager alarmManager;
   @NonNull private final Scheduler handlerScheduler;
   @NonNull private final String jobTag;
-  @NonNull private final Logger logger;
-  @SuppressWarnings("WeakerAccess") long delayTime;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
-  @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
+  private long delayTime;
+  @Nullable private QueuerType type;
   @NonNull private Context appContext;
   private long periodicEnableTime;
   private long periodicDisableTime;
@@ -170,62 +168,62 @@ abstract class QueuerImpl implements Queuer {
     logger.d("Queue short term job with delay: %d (%s)", delayTime, jobTag);
 
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
-    smallTimeQueuedSubscription = Observable.defer(() -> {
-      logger.d("Prepare a short queue job %s with delay: %d milliseconds", jobTag, delayTime);
-      return Observable.just(true);
-    })
+    smallTimeQueuedSubscription = Observable.defer(() -> Observable.just(true))
         .delay(delayTime, TimeUnit.MILLISECONDS)
         .subscribeOn(handlerScheduler)
         .observeOn(handlerScheduler)
-        .subscribe(ignore -> {
-              if (type == null) {
-                throw new IllegalStateException("QueueType is NULL");
-              }
-
-              logger.d("Run short queue job: %s", jobTag);
-              if (type == QueuerType.ENABLE) {
-                logger.i("Enable job: %s", jobTag);
-                if (!stateObserver.is()) {
-                  logger.w("RUN: ENABLE %s", jobTag);
-                  stateModifier.set();
-                }
-              } else if (type == QueuerType.DISABLE) {
-                logger.i("Disable job: %s", jobTag);
-                if (ignoreCharging == 1) {
-                  if (chargingObserver.is()) {
-                    logger.w("Ignore disable job because we are charging: %s", jobTag);
-                    return;
-                  }
-                }
-
-                if (stateObserver.is()) {
-                  logger.w("RUN: DISABLE %s", jobTag);
-                  stateModifier.unset();
-                }
-              } else if (type == QueuerType.TOGGLE_ENABLE) {
-                logger.i("Toggle Enable job: %s", jobTag);
-                if (stateObserver.is()) {
-                  logger.w("RUN: TOGGLE_ENABLE %s", jobTag);
-                  stateModifier.unset();
-                }
-              } else if (type == QueuerType.TOGGLE_DISABLE) {
-                logger.i("Toggle Disable job: %s", jobTag);
-                if (ignoreCharging == 1) {
-                  if (chargingObserver.is()) {
-                    logger.w("Ignore disable job because we are charging: %s", jobTag);
-                    return;
-                  }
-                }
-
-                if (!stateObserver.is()) {
-                  logger.w("RUN: TOGGLE_DISABLE %s", jobTag);
-                  stateModifier.set();
-                }
-              } else {
-                throw new IllegalStateException("QueueType is Invalid");
-              }
-            }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
+        .subscribe(ignore -> runQueueShort(),
+            throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
+  }
+
+  @SuppressWarnings("WeakerAccess") void runQueueShort() {
+    if (type == null) {
+      throw new IllegalStateException("QueueType is NULL");
+    }
+
+    logger.d("Run short queue job: %s", jobTag);
+    if (type == QueuerType.ENABLE) {
+      logger.i("Enable job: %s", jobTag);
+      if (!stateObserver.is()) {
+        logger.w("RUN: ENABLE %s", jobTag);
+        stateModifier.set();
+      }
+    } else if (type == QueuerType.DISABLE) {
+      logger.i("Disable job: %s", jobTag);
+      if (ignoreCharging == 1) {
+        if (chargingObserver.is()) {
+          logger.w("Ignore disable job because we are charging: %s", jobTag);
+          return;
+        }
+      }
+
+      if (stateObserver.is()) {
+        logger.w("RUN: DISABLE %s", jobTag);
+        stateModifier.unset();
+      }
+    } else if (type == QueuerType.TOGGLE_ENABLE) {
+      logger.i("Toggle Enable job: %s", jobTag);
+      if (stateObserver.is()) {
+        logger.w("RUN: TOGGLE_ENABLE %s", jobTag);
+        stateModifier.unset();
+      }
+    } else if (type == QueuerType.TOGGLE_DISABLE) {
+      logger.i("Toggle Disable job: %s", jobTag);
+      if (ignoreCharging == 1) {
+        if (chargingObserver.is()) {
+          logger.w("Ignore disable job because we are charging: %s", jobTag);
+          return;
+        }
+      }
+
+      if (!stateObserver.is()) {
+        logger.w("RUN: TOGGLE_DISABLE %s", jobTag);
+        stateModifier.set();
+      }
+    } else {
+      throw new IllegalStateException("QueueType is Invalid");
+    }
   }
 
   private void queueLong() {
@@ -234,8 +232,11 @@ abstract class QueuerImpl implements Queuer {
     }
 
     final Intent intent = getLongTermIntent(appContext);
-    intent.putExtra(EXTRA_JOB_TYPE, type.name());
-    intent.putExtra(EXTRA_IGNORE_CHARGING, ignoreCharging);
+    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
+    intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
+    intent.putExtra(BaseLongTermService.EXTRA_IS_PERIODIC, periodic);
+    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
+    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
     alarmManager.cancel(PendingIntent.getService(appContext, 0, intent, 0));

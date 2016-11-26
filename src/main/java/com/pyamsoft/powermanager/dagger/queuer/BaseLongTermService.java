@@ -29,6 +29,13 @@ import javax.inject.Named;
 
 public abstract class BaseLongTermService extends IntentService {
 
+  @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
+  @NonNull static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
+  @NonNull static final String EXTRA_IS_PERIODIC = "extra_periodic";
+  @NonNull static final String EXTRA_PERIODIC_ENABLE = "extra_periodic_enable";
+  @NonNull static final String EXTRA_PERIODIC_DISABLE = "extra_periodic_disable";
+  private static final long MINIMUM_PERIODIC_TIME = 60L;
+
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
 
   BaseLongTermService(String name) {
@@ -43,23 +50,24 @@ public abstract class BaseLongTermService extends IntentService {
       return;
     }
 
-    if (!intent.hasExtra(QueuerImpl.EXTRA_JOB_TYPE)) {
+    if (!intent.hasExtra(EXTRA_JOB_TYPE)) {
       getLogger().e("Intent does not have QueueType. Skip");
       return;
     }
 
-    final String type = intent.getStringExtra(QueuerImpl.EXTRA_JOB_TYPE);
+    final String type = intent.getStringExtra(EXTRA_JOB_TYPE);
     if (type == null) {
       getLogger().e("QueuerType extra is NULL. Skip");
       return;
     }
 
-    final int ignoreCharging = intent.getIntExtra(QueuerImpl.EXTRA_IGNORE_CHARGING, -1);
+    final int ignoreCharging = intent.getIntExtra(EXTRA_IGNORE_CHARGING, -1);
     if (ignoreCharging < 0) {
       getLogger().e("Ignore Charging was not passed with Intent");
       return;
     }
 
+    getLogger().d("Run long queue job: %s", getJobTag());
     final QueuerType queuerType = QueuerType.valueOf(type);
     if (queuerType == QueuerType.ENABLE) {
       set(queuerType);
@@ -85,6 +93,32 @@ public abstract class BaseLongTermService extends IntentService {
       set(queuerType);
     } else {
       getLogger().e("QueuerType %s invalid. Skip", queuerType.name());
+      return;
+    }
+
+    final int periodic = intent.getIntExtra(EXTRA_IS_PERIODIC, -1);
+    if (periodic < 0) {
+      getLogger().e("Is Periodic was not passed with Intent");
+      return;
+    }
+
+    final long periodicEnableTime = intent.getLongExtra(EXTRA_PERIODIC_ENABLE, 0L);
+    if (periodicEnableTime < MINIMUM_PERIODIC_TIME) {
+      getLogger().e("Periodic enable is %d, too small. Must be at least %d", periodicEnableTime,
+          MINIMUM_PERIODIC_TIME);
+      return;
+    }
+
+    final long periodicDisableTime = intent.getLongExtra(EXTRA_PERIODIC_DISABLE, 0L);
+    if (periodicDisableTime < MINIMUM_PERIODIC_TIME) {
+      getLogger().e("Periodic disable is %d, too small. Must be at least %d", periodicDisableTime,
+          MINIMUM_PERIODIC_TIME);
+      return;
+    }
+
+    if (periodic == 1) {
+      getLogger().i("Job %s is periodic, continue queuing on schedule", getJobTag());
+      // TODO Re-Queue
     }
   }
 
