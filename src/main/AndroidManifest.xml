@@ -80,6 +80,25 @@
         android:name=".app.service.ActionToggleService"
         android:exported="false"/>
 
+    <service
+        android:name=".dagger.queuer.QueuerAirplaneImpl$LongTermService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerDataImpl$LongTermService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerDozeImpl$LongTermService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerWifiImpl$LongTermService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerBluetoothImpl$LongTermService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerSyncImpl$LongTermService"
+        android:exported="false"/>
+
     <provider
         android:name=".PowerManagerSingleInitProvider"
         android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"

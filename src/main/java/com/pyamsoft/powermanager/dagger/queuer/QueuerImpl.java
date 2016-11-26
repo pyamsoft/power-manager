@@ -35,6 +35,7 @@ import rx.Subscription;
 
 abstract class QueuerImpl implements Queuer {
 
+  @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
   private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
@@ -149,7 +150,7 @@ abstract class QueuerImpl implements Queuer {
 
     if (cancelRunning) {
       logger.d("Cancel any previous jobs for %s", jobTag);
-      alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+      alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(appContext), 0));
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
 
@@ -209,19 +210,25 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void queueLong() {
+    if (type == null) {
+      throw new IllegalStateException("QueueType is NULL");
+    }
+
+    final Intent intent = getLongTermIntent(appContext);
+    intent.putExtra(EXTRA_JOB_TYPE, type.name());
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
-    alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+    alarmManager.cancel(PendingIntent.getService(appContext, 0, intent, 0));
 
     final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtTime,
-          PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+          PendingIntent.getService(appContext, 0, intent, 0));
     } else {
       alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtTime,
-          PendingIntent.getService(appContext, 0, getLongTermIntent(), 0));
+          PendingIntent.getService(appContext, 0, intent, 0));
     }
   }
 
-  @CheckResult @NonNull abstract Intent getLongTermIntent();
+  @CheckResult @NonNull abstract Intent getLongTermIntent(@NonNull Context context);
 }

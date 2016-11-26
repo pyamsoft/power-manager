@@ -31,6 +31,7 @@ import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObs
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.overview.OverviewComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.queuer.QueuerComponent;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleModule;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
@@ -83,4 +84,6 @@ import javax.inject.Singleton;
   OverviewComponent plusOverviewComponent();
 
   LoggerComponent plusLoggerComponent();
+
+  QueuerComponent plusQueuerComponent();
 }
