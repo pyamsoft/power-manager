@@ -39,6 +39,7 @@ abstract class QueuerImpl implements Queuer {
   private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
   @NonNull private final AlarmManager alarmManager;
   @NonNull private final Scheduler handlerScheduler;
   @NonNull private final String jobTag;
@@ -56,11 +57,13 @@ abstract class QueuerImpl implements Queuer {
 
   QueuerImpl(@NonNull String jobTag, @NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     this.jobTag = jobTag;
     this.appContext = context.getApplicationContext();
     this.alarmManager = alarmManager;
     this.handlerScheduler = handlerScheduler;
+    this.chargingObserver = chargingObserver;
     this.stateObserver = stateObserver;
     this.stateModifier = stateModifier;
     this.logger = logger;
@@ -150,7 +153,8 @@ abstract class QueuerImpl implements Queuer {
 
     if (cancelRunning) {
       logger.d("Cancel any previous jobs for %s", jobTag);
-      alarmManager.cancel(PendingIntent.getService(appContext, 0, getLongTermIntent(appContext), 0));
+      alarmManager.cancel(
+          PendingIntent.getService(appContext, 0, getLongTermIntent(appContext), 0));
       SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     }
 
@@ -186,6 +190,13 @@ abstract class QueuerImpl implements Queuer {
                 }
               } else if (type == QueuerType.DISABLE) {
                 logger.i("Disable job: %s", jobTag);
+                if (ignoreCharging == 1) {
+                  if (chargingObserver.is()) {
+                    logger.w("Ignore disable job because we are charging: %s", jobTag);
+                    return;
+                  }
+                }
+
                 if (stateObserver.is()) {
                   logger.w("RUN: DISABLE %s", jobTag);
                   stateModifier.unset();
@@ -198,6 +209,13 @@ abstract class QueuerImpl implements Queuer {
                 }
               } else if (type == QueuerType.TOGGLE_DISABLE) {
                 logger.i("Toggle Disable job: %s", jobTag);
+                if (ignoreCharging == 1) {
+                  if (chargingObserver.is()) {
+                    logger.w("Ignore disable job because we are charging: %s", jobTag);
+                    return;
+                  }
+                }
+
                 if (!stateObserver.is()) {
                   logger.w("RUN: TOGGLE_DISABLE %s", jobTag);
                   stateModifier.set();

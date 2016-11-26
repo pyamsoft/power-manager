@@ -30,9 +30,10 @@ class QueuerAirplaneImpl extends QueuerImpl {
 
   @Inject QueuerAirplaneImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super("AIRPLANE", context, alarmManager, handlerScheduler, stateObserver, stateModifier,
-        logger);
+        chargingObserver, logger);
   }
 
   @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {

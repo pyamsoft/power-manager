@@ -30,8 +30,10 @@ class QueuerWifiImpl extends QueuerImpl {
 
   @Inject QueuerWifiImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
-    super("WIFI", context, alarmManager, handlerScheduler, stateObserver, stateModifier, logger);
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+    super("WIFI", context, alarmManager, handlerScheduler, stateObserver, stateModifier,
+        chargingObserver, logger);
   }
 
   @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {

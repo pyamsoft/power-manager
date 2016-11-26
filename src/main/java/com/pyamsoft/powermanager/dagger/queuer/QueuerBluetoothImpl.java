@@ -30,9 +30,10 @@ class QueuerBluetoothImpl extends QueuerImpl {
 
   @Inject QueuerBluetoothImpl(@NonNull Context context, @NonNull AlarmManager alarmManager,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull Logger logger) {
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     super("BLUETOOTH", context, alarmManager, handlerScheduler, stateObserver, stateModifier,
-        logger);
+        chargingObserver, logger);
   }
 
   @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {
