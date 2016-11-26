@@ -171,10 +171,10 @@ abstract class QueuerImpl implements Queuer {
 
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
     smallTimeQueuedSubscription = Observable.defer(() -> {
-      logger.d("Prepare a short queue job %s with delay: %d seconds", jobTag, delayTime);
+      logger.d("Prepare a short queue job %s with delay: %d milliseconds", jobTag, delayTime);
       return Observable.just(true);
     })
-        .delay(delayTime, TimeUnit.SECONDS)
+        .delay(delayTime, TimeUnit.MILLISECONDS)
         .subscribeOn(handlerScheduler)
         .observeOn(handlerScheduler)
         .subscribe(ignore -> {
