@@ -251,7 +251,7 @@ abstract class QueuerImpl implements Queuer {
     jobQueuerWrapper.setRepeating(intent, reEnableTime, intervalUntilReEnable);
 
     // Queue a constant re-disable job with the opposite type
-    final Intent newIntent = new Intent(intent);
+    final Intent newIntent = getQueueIntent(appContext);
     logger.i("Set repeating disable job %s starting at %d window %d", jobTag, reDisableTime,
         intervalUntilReDisable);
     newIntent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, newType.name());

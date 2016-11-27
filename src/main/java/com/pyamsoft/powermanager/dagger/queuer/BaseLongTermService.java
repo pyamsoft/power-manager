@@ -48,11 +48,6 @@ public abstract class BaseLongTermService extends IntentService {
       return;
     }
 
-    if (!intent.hasExtra(EXTRA_JOB_TYPE)) {
-      getLogger().e("Intent does not have QueueType. Skip");
-      return;
-    }
-
     final String type = intent.getStringExtra(EXTRA_JOB_TYPE);
     if (type == null) {
       getLogger().e("QueuerType extra is NULL. Skip");
@@ -61,7 +56,7 @@ public abstract class BaseLongTermService extends IntentService {
 
     final int ignoreCharging = intent.getIntExtra(EXTRA_IGNORE_CHARGING, -1);
     if (ignoreCharging < 0) {
-      getLogger().e("Ignore Charging was not passed with Intent");
+      getLogger().e("Ignore Charging was not passed with Intent. Skip");
       return;
     }
 
