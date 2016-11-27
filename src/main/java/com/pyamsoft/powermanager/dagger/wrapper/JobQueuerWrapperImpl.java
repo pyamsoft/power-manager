@@ -44,11 +44,11 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
     cancel(intent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Timber.i("Set and allow while idle: %s at %d", intent, time);
-      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
+      alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
           PendingIntent.getService(appContext, 0, intent, 0));
     } else {
       Timber.i("Set: %s at %d", intent, time);
-      alarmManager.set(AlarmManager.RTC_WAKEUP, time,
+      alarmManager.setExact(AlarmManager.RTC_WAKEUP, time,
           PendingIntent.getService(appContext, 0, intent, 0));
     }
   }
