@@ -23,7 +23,6 @@ import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -39,8 +38,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
   @SuppressWarnings("WeakerAccess") @NonNull Subscription createSubscription =
       Subscriptions.empty();
 
-  @Inject TriggerPresenterImpl(@NonNull @Named("obs") Scheduler observeScheduler,
-      @NonNull @Named("io") Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
+  @Inject TriggerPresenterImpl(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
