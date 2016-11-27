@@ -16,11 +16,12 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
@@ -35,11 +36,12 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-public class TriggerRunner extends IntentService {
+public class TriggerRunner extends Service {
 
   @Inject @Named("logger_trigger") Logger logger;
   @Inject PowerTriggerDB powerTriggerDB;
@@ -51,16 +53,17 @@ public class TriggerRunner extends IntentService {
   @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;
   @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
   @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
+  @Inject @Named("obs") Scheduler obsScheduler;
+  @Inject @Named("sub") Scheduler subScheduler;
 
   @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
 
-  public TriggerRunner() {
-    super(TriggerRunner.class.getName());
+  @Override public void onCreate() {
+    super.onCreate();
+    Injector.get().provideComponent().plusTriggerRunnerComponent().inject(this);
   }
 
-  @Override protected void onHandleIntent(Intent intent) {
-    Injector.get().provideComponent().plusTriggerRunnerComponent().inject(this);
-
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
     final IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     final Intent batteryIntent = getApplicationContext().registerReceiver(null, batteryFilter);
 
@@ -82,6 +85,7 @@ public class TriggerRunner extends IntentService {
 
     Timber.d("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent, charging);
+    return START_NOT_STICKY;
   }
 
   private void runTriggerForPercent(int percent, boolean charging) {
@@ -185,7 +189,9 @@ public class TriggerRunner extends IntentService {
     }
 
     SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = powerTriggerEntryObservable.subscribe(entry -> {
+    runSubscription = powerTriggerEntryObservable.subscribeOn(subScheduler)
+        .observeOn(obsScheduler)
+        .subscribe(entry -> {
           if (charging) {
             Timber.w("Do not run Trigger because device is charging");
           } else if (PowerTriggerEntry.isEmpty(entry)) {
@@ -193,8 +199,10 @@ public class TriggerRunner extends IntentService {
           } else {
             onTriggerRun(entry);
           }
-        }, throwable -> Timber.e(throwable, "onError"),
-        () -> SubscriptionHelper.unsubscribe(runSubscription));
+        }, throwable -> Timber.e(throwable, "onError"), () -> {
+          SubscriptionHelper.unsubscribe(runSubscription);
+          stopSelf();
+        });
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
@@ -276,5 +284,9 @@ public class TriggerRunner extends IntentService {
   @Override public void onDestroy() {
     super.onDestroy();
     SubscriptionHelper.unsubscribe(runSubscription);
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 }
