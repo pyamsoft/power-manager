@@ -92,11 +92,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
     return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
         .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map)
-        .map(powerTriggerEntries -> {
-          closeDatabase();
-          return powerTriggerEntries;
-        })
-        .filter(padLockEntries -> padLockEntries != null);
+        .doOnSubscribe(this::closeDatabase)
+        .filter(triggers -> triggers != null);
   }
 
   @Override @NonNull @CheckResult
@@ -108,10 +105,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
         Integer.toString(percent))
         .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
             PowerTriggerEntry.empty())
-        .map(entry -> {
-          closeDatabase();
-          return entry;
-        })
+        .doOnSubscribe(this::closeDatabase)
         .filter(entry -> entry != null);
   }
 
