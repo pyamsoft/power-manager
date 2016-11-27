@@ -112,7 +112,7 @@ public class TriggerRunner extends IntentService {
           triggerQuery.flatMap(new Func1<List<PowerTriggerEntry>, Observable<Integer>>() {
             @Override public Observable<Integer> call(List<PowerTriggerEntry> powerTriggerEntries) {
               // Not final so we can call merges on it
-              Observable<Integer> updateTriggerResult = Observable.empty();
+              Observable<Integer> updateTriggerResult = Observable.just(-1);
 
               Timber.i("We are charging, mark any available triggers");
               for (final PowerTriggerEntry entry : powerTriggerEntries) {
@@ -128,9 +128,9 @@ public class TriggerRunner extends IntentService {
 
               return updateTriggerResult;
             }
-            // Convert to list so that we interate over all the triggers we have found instead of just first
+            // Convert to list so that we iterate over all the triggers we have found instead of just first
           }).toList().first().map(integers -> {
-            Timber.d("Number of values marked available: %d", integers.size());
+            Timber.d("Number of values marked available: %d", integers.size() - 1);
             Timber.d("Return an empty trigger");
             return PowerTriggerEntry.empty();
           });
