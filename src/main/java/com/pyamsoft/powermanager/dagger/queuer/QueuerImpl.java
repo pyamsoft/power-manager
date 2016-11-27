@@ -194,7 +194,7 @@ abstract class QueuerImpl implements Queuer {
     logger.d("Queue long term job with delay: %d (%s)", delayTime, jobTag);
 
     jobQueuerWrapper.cancel(intent);
-    final long triggerAtTime = System.currentTimeMillis() + (delayTime * 1000L);
+    final long triggerAtTime = System.currentTimeMillis() + delayTime;
     jobQueuerWrapper.set(intent, triggerAtTime);
 
     queuePeriodic(triggerAtTime);
