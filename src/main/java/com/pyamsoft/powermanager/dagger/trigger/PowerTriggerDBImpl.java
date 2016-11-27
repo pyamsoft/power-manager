@@ -76,13 +76,11 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: INSERT");
       openDatabase();
-
       final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
       return deleteWithPercentUnguarded(percent);
     }).map(deleted -> {
       Timber.d("Delete result: %d", deleted);
       final long result = briteDatabase.insert(PowerTriggerEntry.TABLE_NAME, contentValues);
-
       closeDatabase();
       return result;
     });
@@ -93,10 +91,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: UPDATE");
       openDatabase();
-
       final int result = briteDatabase.update(PowerTriggerEntry.TABLE_NAME, contentValues,
           PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
-
       closeDatabase();
       return Observable.just(result);
     });
@@ -106,13 +102,11 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY ALL");
       openDatabase();
-
-      final Observable<List<PowerTriggerEntry>> entry =
-          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-              .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map);
-
+      return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
+          .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map);
+    }).map(result -> {
       closeDatabase();
-      return entry;
+      return result;
     });
   }
 
@@ -121,15 +115,13 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY PERCENT");
       openDatabase();
-
-      final Observable<PowerTriggerEntry> entry =
-          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-              Integer.toString(percent))
-              .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
-                  PowerTriggerEntry.empty());
-
+      return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
+          Integer.toString(percent))
+          .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
+              PowerTriggerEntry.empty());
+    }).map(result -> {
       closeDatabase();
-      return entry;
+      return result;
     });
   }
 
@@ -137,9 +129,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: DELETE PERCENT");
       openDatabase();
-
       final Observable<Integer> result = deleteWithPercentUnguarded(percent);
-
       closeDatabase();
       return result;
     });
