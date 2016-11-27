@@ -26,12 +26,9 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.main.MainActivity;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
-import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerRunner;
 import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import rx.Observable;
@@ -45,39 +42,12 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final JobQueuerWrapper jobQueuerWrapper;
-  @NonNull private final BooleanInterestObserver wifiObserver;
-  @NonNull private final BooleanInterestObserver dataObserver;
-  @NonNull private final BooleanInterestObserver bluetoothObserver;
-  @NonNull private final BooleanInterestObserver syncObserver;
-  @NonNull private final BooleanInterestModifier wifiModifier;
-  @NonNull private final BooleanInterestModifier dataModifier;
-  @NonNull private final BooleanInterestModifier bluetoothModifier;
-  @NonNull private final BooleanInterestModifier syncModifier;
-  @NonNull private final PowerTriggerDB powerTriggerDB;
-  @NonNull private final Logger logger;
 
   @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
-      @NonNull BooleanInterestObserver bluetoothObserver,
-      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
-      @NonNull BooleanInterestModifier dataModifier,
-      @NonNull BooleanInterestModifier bluetoothModifier,
-      @NonNull BooleanInterestModifier syncModifier, @NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull Logger logger) {
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     super(preferences);
     this.jobQueuerWrapper = jobQueuerWrapper;
     appContext = context.getApplicationContext();
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.wifiModifier = wifiModifier;
-    this.dataModifier = dataModifier;
-    this.bluetoothModifier = bluetoothModifier;
-    this.syncModifier = syncModifier;
-    this.powerTriggerDB = powerTriggerDB;
-    this.logger = logger;
 
     final Intent intent =
         new Intent(appContext, MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -96,16 +66,20 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   }
 
   @Override public void create() {
-    // TODO Queue triggers
-    //JobHelper.queueTriggerJob(jobManager, wifiObserver, dataObserver, bluetoothObserver,
-    //    syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-    //    getPreferences(), logger);
+    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
+    jobQueuerWrapper.cancel(triggerRunner);
+
+    final long delayTime = getPreferences().getTriggerPeriodTime();
+    final long triggerPeriod = delayTime * 1000L;
+    jobQueuerWrapper.setRepeating(triggerRunner, System.currentTimeMillis() + triggerPeriod,
+        triggerPeriod);
   }
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    // TODO Cancel triggers
-    //jobManager.cancelJobsInBackground(TagConstraint.ANY, TriggerJob.TRIGGER_TAG);
+
+    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
+    jobQueuerWrapper.cancel(triggerRunner);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

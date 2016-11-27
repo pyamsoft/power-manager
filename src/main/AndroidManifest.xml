@@ -98,6 +98,9 @@
     <service
         android:name=".dagger.queuer.QueuerSyncLongTermService"
         android:exported="false"/>
+    <service
+        android:name=".dagger.trigger.TriggerRunner"
+        android:exported="false"/>
 
     <provider
         android:name=".PowerManagerSingleInitProvider"

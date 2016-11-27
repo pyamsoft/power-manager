@@ -40,6 +40,7 @@ import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerRunnerComponent;
 import com.pyamsoft.powermanager.dagger.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.dagger.wrapper.WrapperModule;
@@ -86,4 +87,6 @@ import javax.inject.Singleton;
   LoggerComponent plusLoggerComponent();
 
   QueuerComponent plusQueuerComponent();
+
+  TriggerRunnerComponent plusTriggerRunnerComponent();
 }

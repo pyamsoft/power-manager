@@ -71,7 +71,7 @@ public abstract class BaseLongTermService extends IntentService {
         chargingObserver, getLogger(), ignoreCharging);
   }
 
-  void inject() {
+  private void inject() {
     Injector.get().provideComponent().plusQueuerComponent().inject(this);
     injectDependencies();
   }
