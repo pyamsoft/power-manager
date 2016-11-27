@@ -33,7 +33,7 @@ import rx.Subscription;
 
 abstract class QueuerImpl implements Queuer {
 
-  private static final long LARGEST_TIME_WITHOUT_ALARM = 120L;
+  private static final long LARGEST_TIME_WITHOUT_ALARM = 60L;
   @NonNull final Logger logger;
   @NonNull final BooleanInterestObserver stateObserver;
   @NonNull final BooleanInterestModifier stateModifier;
