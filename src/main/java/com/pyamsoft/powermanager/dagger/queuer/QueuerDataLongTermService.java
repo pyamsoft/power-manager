@@ -30,10 +30,6 @@ public class QueuerDataLongTermService extends BaseLongTermService {
   @Inject @Named("mod_data_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_data") Logger logger;
 
-  public QueuerDataLongTermService() {
-    super(QueuerDataLongTermService.class.getName());
-  }
-
   @NonNull @Override String getJobTag() {
     return "DATA";
   }
