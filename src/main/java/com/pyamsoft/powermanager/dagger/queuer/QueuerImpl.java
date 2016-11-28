@@ -194,8 +194,6 @@ abstract class QueuerImpl implements Queuer {
     final Intent intent =
         BaseLongTermService.buildIntent(appContext, serviceClass, type, ignoreCharging, periodic,
             periodicEnableTime, periodicDisableTime);
-    jobQueuerWrapper.cancel(intent);
-
     logger.d("Queue long term job with delay: %d", delayTime);
     final long triggerAtTime = System.currentTimeMillis() + delayTime;
     jobQueuerWrapper.set(intent, triggerAtTime);
