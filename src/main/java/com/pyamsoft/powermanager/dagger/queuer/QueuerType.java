@@ -16,14 +16,11 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-public final class QueuerType {
+public enum QueuerType {
 
-  public static final int ENABLE = 1;
-  public static final int TOGGLE_DISABLE = 1;
-  public static final int DISABLE = 2;
-  public static final int TOGGLE_ENABLE = 2;
+  ENABLE,
+  TOGGLE_DISABLE,
+  DISABLE,
+  TOGGLE_ENABLE
 
-  private QueuerType() {
-    throw new RuntimeException("No instances");
-  }
 }

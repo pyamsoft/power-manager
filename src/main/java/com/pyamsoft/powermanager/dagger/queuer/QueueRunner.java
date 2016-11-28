@@ -33,7 +33,7 @@ class QueueRunner {
   @NonNull private final JobQueuerWrapper jobQueuerWrapper;
   @NonNull private final Class<? extends BaseLongTermService> enableServiceClass;
   @NonNull private final Class<? extends BaseLongTermService> disableServiceClass;
-  private final int type;
+  @NonNull private final QueuerType type;
   @NonNull private final BooleanInterestObserver observer;
   @NonNull private final BooleanInterestModifier modifier;
   @NonNull private final BooleanInterestObserver charging;
@@ -46,8 +46,8 @@ class QueueRunner {
   @SuppressWarnings("WeakerAccess") QueueRunner(@NonNull Context context,
       @NonNull JobQueuerWrapper jobQueuerWrapper,
       @NonNull Class<? extends BaseLongTermService> enableServiceClass,
-      @NonNull Class<? extends BaseLongTermService> disableServiceClass, int type, int periodic,
-      long periodicEnableTime, long periodicDisableTime, int ignoreCharging,
+      @NonNull Class<? extends BaseLongTermService> disableServiceClass, @NonNull QueuerType type,
+      int periodic, long periodicEnableTime, long periodicDisableTime, int ignoreCharging,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
@@ -76,25 +76,19 @@ class QueueRunner {
   }
 
   private void immediateAction() {
-    if (type < QueuerType.ENABLE) {
-      throw new IllegalStateException("QueueType is Invalid");
-    } else {
-      if (type == QueuerType.TOGGLE_DISABLE || type == QueuerType.DISABLE) {
-        if (type == QueuerType.DISABLE) {
-          if (ignoreCharging == 1) {
-            if (charging.is()) {
-              logger.w("Ignore disable job because we are charging");
-              return;
-            }
-          }
+    if (type == QueuerType.DISABLE || type == QueuerType.TOGGLE_DISABLE) {
+      if (ignoreCharging == 1) {
+        if (charging.is()) {
+          logger.w("Ignore disable job because we are charging");
+          return;
         }
       }
+    }
 
-      if (type == QueuerType.ENABLE) {
-        set();
-      } else {
-        unset();
-      }
+    if (type == QueuerType.ENABLE || type == QueuerType.TOGGLE_DISABLE) {
+      set();
+    } else {
+      unset();
     }
   }
 
@@ -121,11 +115,15 @@ class QueueRunner {
     final long reEnableTime = System.currentTimeMillis() + intervalUntilReEnable;
     final long reDisableTime = reEnableTime + intervalUntilReDisable;
 
-    final int newType;
+    final QueuerType newType;
     if (type == QueuerType.ENABLE) {
       newType = QueuerType.DISABLE;
     } else if (type == QueuerType.DISABLE) {
       newType = QueuerType.ENABLE;
+    } else if (type == QueuerType.TOGGLE_ENABLE) {
+      newType = QueuerType.TOGGLE_DISABLE;
+    } else if (type == QueuerType.TOGGLE_DISABLE) {
+      newType = QueuerType.TOGGLE_ENABLE;
     } else {
       throw new IllegalStateException("Invalid queue type");
     }
@@ -169,7 +167,7 @@ class QueueRunner {
     @Nullable private JobQueuerWrapper jobQueuerWrapper;
     @Nullable private Class<? extends BaseLongTermService> enableServiceClass;
     @Nullable private Class<? extends BaseLongTermService> disableServiceClass;
-    private int type;
+    @Nullable private QueuerType type;
     @Nullable private BooleanInterestObserver observer;
     @Nullable private BooleanInterestModifier modifier;
     @Nullable private BooleanInterestObserver charging;
@@ -183,7 +181,7 @@ class QueueRunner {
       appContext = context.getApplicationContext();
       enableServiceClass = null;
       disableServiceClass = null;
-      type = 0;
+      type = null;
       periodicDisableTime = -1L;
       periodicEnableTime = -1L;
       periodic = -1;
@@ -207,7 +205,7 @@ class QueueRunner {
       return this;
     }
 
-    @CheckResult @NonNull Builder setType(int type) {
+    @CheckResult @NonNull Builder setType(@NonNull QueuerType type) {
       this.type = type;
       return this;
     }
@@ -265,7 +263,7 @@ class QueueRunner {
         throw new IllegalStateException("Disable Service Class is NULL");
       }
 
-      if (type == 0) {
+      if (type == null) {
         throw new IllegalStateException("Type is unset");
       }
 

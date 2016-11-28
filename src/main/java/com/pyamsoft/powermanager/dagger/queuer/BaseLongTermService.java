@@ -50,11 +50,11 @@ public abstract class BaseLongTermService extends Service {
   @Inject JobQueuerWrapper jobQueuerWrapper;
 
   @CheckResult @NonNull static Intent buildIntent(@NonNull Context context,
-      @NonNull Class<? extends BaseLongTermService> serviceClass, int type, int ignoreCharging,
-      int periodic, long periodicEnableTime, long periodicDisableTime) {
+      @NonNull Class<? extends BaseLongTermService> serviceClass, @NonNull QueuerType type,
+      int ignoreCharging, int periodic, long periodicEnableTime, long periodicDisableTime) {
     final Intent intent = new Intent(context.getApplicationContext(), serviceClass);
     intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
-    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type);
+    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC, periodic);
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
@@ -76,8 +76,8 @@ public abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    final int type = intent.getIntExtra(EXTRA_JOB_TYPE, 0);
-    if (type == 0) {
+    final String type = intent.getStringExtra(EXTRA_JOB_TYPE);
+    if (type == null) {
       getLogger().e("QueuerType extra is unset. Skip");
       return START_NOT_STICKY;
     }
@@ -107,12 +107,13 @@ public abstract class BaseLongTermService extends Service {
     }
 
     getLogger().d("Run long queue job");
-    runJob(type, ignoreCharging, periodic, periodicEnableTime, periodicDisableTime);
+    runJob(QueuerType.valueOf(type), ignoreCharging, periodic, periodicEnableTime,
+        periodicDisableTime);
     return START_NOT_STICKY;
   }
 
-  private void runJob(int queuerType, int ignoreCharging, int periodic, long periodicEnableTime,
-      long periodicDisableTime) {
+  private void runJob(@NonNull QueuerType queuerType, int ignoreCharging, int periodic,
+      long periodicEnableTime, long periodicDisableTime) {
     SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = Observable.defer(() -> {
       QueueRunner.builder(getApplicationContext())

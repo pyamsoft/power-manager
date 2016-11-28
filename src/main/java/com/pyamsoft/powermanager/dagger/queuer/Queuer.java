@@ -23,7 +23,7 @@ public interface Queuer {
 
   void cancel();
 
-  @CheckResult @NonNull Queuer setType(int queuerType);
+  @CheckResult @NonNull Queuer setType(@NonNull QueuerType queuerType);
 
   @CheckResult @NonNull Queuer setDelayTime(long time);
 

@@ -41,7 +41,7 @@ abstract class QueuerImpl implements Queuer {
   @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @NonNull private final Scheduler handlerScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
-  @SuppressWarnings("WeakerAccess") int type;
+  @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
   @SuppressWarnings("WeakerAccess") @NonNull Context appContext;
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
@@ -64,7 +64,7 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void reset() {
-    type = 0;
+    type = null;
     delayTime = -1L;
     periodicDisableTime = -1L;
     periodicEnableTime = -1L;
@@ -85,7 +85,7 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void checkAll() {
-    if (type == 0) {
+    if (type == null) {
       throw new IllegalStateException("Type is unset");
     }
 
@@ -110,7 +110,7 @@ abstract class QueuerImpl implements Queuer {
     }
   }
 
-  @NonNull @Override public Queuer setType(int queuerType) {
+  @NonNull @Override public Queuer setType(@NonNull QueuerType queuerType) {
     type = queuerType;
     return this;
   }
@@ -160,7 +160,7 @@ abstract class QueuerImpl implements Queuer {
         .subscribeOn(handlerScheduler)
         .observeOn(handlerScheduler)
         .subscribe(ignore -> {
-              if (type == 0) {
+              if (type == null) {
                 throw new IllegalStateException("Type is unset");
               }
 
@@ -186,9 +186,9 @@ abstract class QueuerImpl implements Queuer {
 
   private void queueLong() {
     final Class<? extends BaseLongTermService> serviceClass;
-    if (type == 0) {
+    if (type == null) {
       throw new IllegalStateException("QueueType is unset");
-    } else if (type == QueuerType.ENABLE) {
+    } else if (type == QueuerType.ENABLE || type == QueuerType.TOGGLE_ENABLE) {
       serviceClass = getEnableServiceClass();
     } else {
       serviceClass = getDisableServiceClass();
