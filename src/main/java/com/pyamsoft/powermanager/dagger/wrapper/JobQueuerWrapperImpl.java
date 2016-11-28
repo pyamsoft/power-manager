@@ -41,7 +41,6 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
   }
 
   @Override public void set(@NonNull Intent intent, long time) {
-    cancel(intent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Timber.i("Set and allow while idle: %s at %d", intent, time);
       alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
@@ -51,13 +50,5 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, time,
           PendingIntent.getService(appContext, 0, intent, 0));
     }
-  }
-
-  @Override public void setRepeating(@NonNull Intent intent, long time, long interval) {
-    cancel(intent);
-
-    Timber.i("Set repeating: %s at %d window %d", intent, time, interval);
-    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, interval,
-        PendingIntent.getService(appContext, 0, intent, 0));
   }
 }

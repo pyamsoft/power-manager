@@ -30,10 +30,6 @@ public class QueuerSyncLongTermService extends BaseLongTermService {
   @Inject @Named("mod_sync_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_sync") Logger logger;
 
-  @NonNull @Override String getJobTag() {
-    return "SYNC";
-  }
-
   @NonNull @Override Logger getLogger() {
     return logger;
   }

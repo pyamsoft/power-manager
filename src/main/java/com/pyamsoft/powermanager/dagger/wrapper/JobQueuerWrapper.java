@@ -24,6 +24,4 @@ public interface JobQueuerWrapper {
   void cancel(@NonNull Intent intent);
 
   void set(@NonNull Intent intent, long time);
-
-  void setRepeating(@NonNull Intent intent, long time, long interval);
 }

@@ -39,11 +39,25 @@ public abstract class BaseLongTermService extends Service {
 
   @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
   @NonNull static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
+  @NonNull static final String EXTRA_PERIODIC = "extra_periodic";
+  @NonNull static final String EXTRA_PERIODIC_ENABLE = "extra_periodic_enable";
+  @NonNull static final String EXTRA_PERIODIC_DISABLE = "extra_periodic_disable";
   @Nullable Subscription runSubscription;
 
   @Inject @Named("sub") Scheduler subScheduler;
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
   @Inject JobQueuerWrapper jobQueuerWrapper;
+
+  @CheckResult @NonNull
+  static Intent buildIntent(@NonNull Intent intent, @NonNull QueuerType type, int ignoreCharging,
+      int periodic, long periodicEnableTime, long periodicDisableTime) {
+    intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
+    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
+    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC, periodic);
+    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
+    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
+    return intent;
+  }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -72,24 +86,54 @@ public abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    final QueuerType queuerType = QueuerType.valueOf(type);
-    getLogger().d("Run long queue job: %s", getJobTag());
+    final int periodic = intent.getIntExtra(EXTRA_PERIODIC, -1);
+    if (periodic < 0) {
+      getLogger().e("Periodic was not passed with Intent. Skip");
+      return START_NOT_STICKY;
+    }
 
-    runJob(queuerType, ignoreCharging);
+    final long periodicEnableTime = intent.getIntExtra(EXTRA_PERIODIC_ENABLE, -1);
+    if (periodicEnableTime < 60) {
+      getLogger().e("Periodic Enable time was not passed with Intent. Skip");
+      return START_NOT_STICKY;
+    }
+
+    final long periodicDisableTime = intent.getIntExtra(EXTRA_PERIODIC_DISABLE, -1);
+    if (periodicDisableTime < 60) {
+      getLogger().e("Periodic Disable time was not passed with Intent. Skip");
+      return START_NOT_STICKY;
+    }
+
+    getLogger().d("Run long queue job");
+    runJob(intent, QueuerType.valueOf(type), ignoreCharging, periodic, periodicEnableTime,
+        periodicDisableTime);
     return START_NOT_STICKY;
   }
 
-  private void runJob(@NonNull QueuerType queuerType, int ignoreCharging) {
+  private void runJob(@NonNull Intent originalIntent, @NonNull QueuerType queuerType,
+      int ignoreCharging, int periodic, long periodicEnableTime, long periodicDisableTime) {
     SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = Observable.defer(() -> {
-      QueueRunner.run(getJobTag(), queuerType, getStateObserver(), getStateModifier(),
-          chargingObserver, getLogger(), ignoreCharging);
+      QueueRunner.builder()
+          .setJobQueueWrapper(jobQueuerWrapper)
+          .setType(queuerType)
+          .setObserver(getStateObserver())
+          .setModifier(getStateModifier())
+          .setCharging(chargingObserver)
+          .setIgnoreCharging(ignoreCharging)
+          .setLogger(getLogger())
+          .setPeriodic(periodic)
+          .setPeriodicEnableTime(periodicEnableTime)
+          .setPeriodicDisableTime(periodicDisableTime)
+          .setIntent(new Intent(originalIntent))
+          .build()
+          .run();
       return Observable.just(true);
     })
         .subscribeOn(subScheduler)
         .observeOn(subScheduler)
-        .subscribe(ignore -> Timber.d("Finished running long job: %s", getJobTag()),
-            throwable -> Timber.e(throwable, "onError runJob %s", getJobTag()), () -> {
+        .subscribe(ignore -> Timber.d("Finished running long job"),
+            throwable -> Timber.e(throwable, "onError runJob"), () -> {
               SubscriptionHelper.unsubscribe(runSubscription);
               stopSelf();
             });
@@ -104,8 +148,6 @@ public abstract class BaseLongTermService extends Service {
     Injector.get().provideComponent().plusQueuerComponent().inject(this);
     injectDependencies();
   }
-
-  @CheckResult @NonNull abstract String getJobTag();
 
   @CheckResult @NonNull abstract Logger getLogger();
 

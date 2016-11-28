@@ -29,6 +29,7 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.List;
@@ -43,6 +44,9 @@ import timber.log.Timber;
 
 public class TriggerRunner extends Service {
 
+  @NonNull public static final String EXTRA_DELAY_PERIOD = "extra_trigger_delay";
+
+  @Inject JobQueuerWrapper jobQueuerWrapper;
   @Inject @Named("logger_trigger") Logger logger;
   @Inject PowerTriggerDB powerTriggerDB;
   @Inject @Named("obs_wifi_state") BooleanInterestObserver wifiObserver;
@@ -85,6 +89,7 @@ public class TriggerRunner extends Service {
 
     Timber.d("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent, charging);
+    requeueTriggerJob(intent);
     return START_NOT_STICKY;
   }
 
@@ -279,6 +284,20 @@ public class TriggerRunner extends Service {
         }
       }
     }
+  }
+
+  private void requeueTriggerJob(@NonNull Intent intent) {
+    final long delay = intent.getLongExtra(EXTRA_DELAY_PERIOD, -1);
+    if (delay < 0) {
+      logger.e("Invalid delay period passed. Not requeuing trigger job");
+      return;
+    }
+
+    final Intent newIntent = new Intent(intent);
+    intent.putExtra(EXTRA_DELAY_PERIOD, delay);
+
+    jobQueuerWrapper.cancel(newIntent);
+    jobQueuerWrapper.set(newIntent, System.currentTimeMillis() + delay);
   }
 
   @Override public void onDestroy() {

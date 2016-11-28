@@ -32,7 +32,7 @@ class QueuerDataImpl extends QueuerImpl {
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    super("DATA", context, jobQueuerWrapper, handlerScheduler, stateObserver, stateModifier,
+    super(context, jobQueuerWrapper, handlerScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 

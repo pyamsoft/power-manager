@@ -30,10 +30,6 @@ public class QueuerAirplaneLongTermService extends BaseLongTermService {
   @Inject @Named("mod_airplane_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_airplane") Logger logger;
 
-  @NonNull @Override String getJobTag() {
-    return "AIRPLANE";
-  }
-
   @NonNull @Override Logger getLogger() {
     return logger;
   }

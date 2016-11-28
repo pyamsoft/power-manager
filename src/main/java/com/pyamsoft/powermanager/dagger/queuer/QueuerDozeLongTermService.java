@@ -30,10 +30,6 @@ public class QueuerDozeLongTermService extends BaseLongTermService {
   @Inject @Named("mod_doze_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_doze") Logger logger;
 
-  @NonNull @Override String getJobTag() {
-    return "DOZE";
-  }
-
   @NonNull @Override Logger getLogger() {
     return logger;
   }

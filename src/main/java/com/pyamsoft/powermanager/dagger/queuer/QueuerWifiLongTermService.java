@@ -30,10 +30,6 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
   @Inject @Named("mod_wifi_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_wifi") Logger logger;
 
-  @NonNull @Override String getJobTag() {
-    return "WIFI";
-  }
-
   @NonNull @Override Logger getLogger() {
     return logger;
   }

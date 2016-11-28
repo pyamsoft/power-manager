@@ -30,10 +30,6 @@ public class QueuerBluetoothLongTermService extends BaseLongTermService {
   @Inject @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_bluetooth") Logger logger;
 
-  @NonNull @Override String getJobTag() {
-    return "BLUETOOTH";
-  }
-
   @NonNull @Override Logger getLogger() {
     return logger;
   }
