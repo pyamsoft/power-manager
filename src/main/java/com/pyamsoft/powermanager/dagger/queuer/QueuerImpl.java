@@ -217,7 +217,7 @@ abstract class QueuerImpl implements Queuer {
 
     final QueuerType newType = type.flip();
     final long newDelayTime;
-    if (newType == QueuerType.SCREEN_ON_ENABLE || newType == QueuerType.SCREEN_OFF_ENABLE) {
+    if (newType == QueuerType.SCREEN_ON_ENABLE || newType == QueuerType.SCREEN_ON_DISABLE) {
       newDelayTime = periodicDisableTime * 1000L;
     } else {
       newDelayTime = periodicEnableTime * 1000L;
