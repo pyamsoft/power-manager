@@ -24,11 +24,12 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class QueuerAirplaneLongTermService extends BaseLongTermService {
+public abstract class QueuerAirplaneLongTermService extends BaseLongTermService {
 
   @Inject @Named("obs_airplane_state") BooleanInterestObserver stateObserver;
   @Inject @Named("mod_airplane_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_airplane") Logger logger;
+  @Inject @Named("queuer_airplane") Queuer queuer;
 
   @NonNull @Override Logger getLogger() {
     return logger;
@@ -36,6 +37,10 @@ public class QueuerAirplaneLongTermService extends BaseLongTermService {
 
   @Override public BooleanInterestModifier getStateModifier() {
     return stateModifier;
+  }
+
+  @Override public Queuer getQueuer() {
+    return queuer;
   }
 
   @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
@@ -51,8 +56,6 @@ public class QueuerAirplaneLongTermService extends BaseLongTermService {
   }
 
   @Override void injectDependencies() {
-    if (stateObserver == null || stateModifier == null) {
-      Injector.get().provideComponent().plusQueuerComponent().inject(this);
-    }
+    Injector.get().provideComponent().plusQueuerComponent().inject(this);
   }
 }

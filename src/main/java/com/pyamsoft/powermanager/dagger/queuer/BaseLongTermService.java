@@ -107,28 +107,22 @@ public abstract class BaseLongTermService extends Service {
     }
 
     getLogger().d("Run long queue job");
-    runJob(QueuerType.valueOf(type), ignoreCharging, periodic, periodicEnableTime,
-        periodicDisableTime);
+    final QueuerType queuerType = QueuerType.valueOf(type);
+    run(queuerType, ignoreCharging);
+    requeue(queuerType, ignoreCharging, periodic, periodicEnableTime, periodicDisableTime);
     return START_NOT_STICKY;
   }
 
-  private void runJob(@NonNull QueuerType queuerType, int ignoreCharging, int periodic,
-      long periodicEnableTime, long periodicDisableTime) {
+  private void run(@NonNull QueuerType queuerType, int ignoreCharging) {
     SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = Observable.defer(() -> {
-      QueueRunner.builder(getApplicationContext())
-          .setJobQueueWrapper(jobQueuerWrapper)
-          .setEnableService(getEnableServiceClass())
-          .setDisableService(getDisableServiceClass())
+      QueueRunner.builder()
           .setType(queuerType)
           .setObserver(getStateObserver())
           .setModifier(getStateModifier())
           .setCharging(chargingObserver)
           .setIgnoreCharging(ignoreCharging)
           .setLogger(getLogger())
-          .setPeriodic(periodic)
-          .setPeriodicEnableTime(periodicEnableTime)
-          .setPeriodicDisableTime(periodicDisableTime)
           .build()
           .run();
       return Observable.just(true);
@@ -136,10 +130,32 @@ public abstract class BaseLongTermService extends Service {
         .subscribeOn(subScheduler)
         .observeOn(subScheduler)
         .subscribe(ignore -> Timber.d("Finished running long job"),
-            throwable -> Timber.e(throwable, "onError runJob"), () -> {
+            throwable -> Timber.e(throwable, "onError run"), () -> {
               SubscriptionHelper.unsubscribe(runSubscription);
               stopSelf();
             });
+  }
+
+  private void requeue(@NonNull QueuerType queuerType, int ignoreCharging, int periodic,
+      long periodicEnableTime, long periodicDisableTime) {
+    final QueuerType newType = queuerType.flip();
+    final long newDelayTime;
+    if (newType == QueuerType.ENABLE) {
+      newDelayTime = periodicDisableTime * 1000L;
+    } else {
+      newDelayTime = periodicEnableTime * 1000L;
+    }
+
+    getQueuer().cancel();
+    getLogger().d("Requeue for periodic job. New type: %s, new delay time: %d", newType,
+        newDelayTime);
+    getQueuer().setType(newType)
+        .setDelayTime(newDelayTime)
+        .setIgnoreCharging(ignoreCharging == 1)
+        .setPeriodic(periodic == 1)
+        .setPeriodicEnableTime(periodicEnableTime)
+        .setPeriodicDisableTime(periodicDisableTime)
+        .queue();
   }
 
   @Override public void onDestroy() {
@@ -157,6 +173,8 @@ public abstract class BaseLongTermService extends Service {
   @CheckResult @Named abstract BooleanInterestObserver getStateObserver();
 
   @CheckResult @Named abstract BooleanInterestModifier getStateModifier();
+
+  @CheckResult @Named abstract Queuer getQueuer();
 
   @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
 

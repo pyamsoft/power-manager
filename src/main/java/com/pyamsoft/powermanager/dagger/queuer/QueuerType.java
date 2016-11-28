@@ -16,9 +16,22 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+
 public enum QueuerType {
 
   ENABLE,
-  DISABLE,
+  DISABLE;
+
+  @CheckResult @NonNull public QueuerType flip() {
+    final QueuerType newType;
+    if (this == QueuerType.ENABLE) {
+      newType = QueuerType.DISABLE;
+    } else {
+      newType = QueuerType.ENABLE;
+    }
+    return newType;
+  }
 
 }

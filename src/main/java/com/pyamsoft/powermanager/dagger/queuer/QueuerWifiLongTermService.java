@@ -29,6 +29,7 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
   @Inject @Named("obs_wifi_state") BooleanInterestObserver stateObserver;
   @Inject @Named("mod_wifi_state") BooleanInterestModifier stateModifier;
   @Inject @Named("logger_wifi") Logger logger;
+  @Inject @Named("queuer_wifi") Queuer queuer;
 
   @NonNull @Override Logger getLogger() {
     return logger;
@@ -42,6 +43,10 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @Override Queuer getQueuer() {
+    return queuer;
+  }
+
   @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
     return QueuerWifiEnableService.class;
   }
@@ -51,8 +56,6 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
   }
 
   @Override void injectDependencies() {
-    if (stateObserver == null || stateModifier == null) {
-      Injector.get().provideComponent().plusQueuerComponent().inject(this);
-    }
+    Injector.get().provideComponent().plusQueuerComponent().inject(this);
   }
 }

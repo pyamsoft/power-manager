@@ -16,66 +16,39 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
-import java.util.Date;
 
 class QueueRunner {
 
-  @NonNull private final Context appContext;
-  @NonNull private final JobQueuerWrapper jobQueuerWrapper;
-  @NonNull private final Class<? extends BaseLongTermService> enableServiceClass;
-  @NonNull private final Class<? extends BaseLongTermService> disableServiceClass;
   @NonNull private final QueuerType type;
   @NonNull private final BooleanInterestObserver observer;
   @NonNull private final BooleanInterestModifier modifier;
   @NonNull private final BooleanInterestObserver charging;
   @NonNull private final Logger logger;
-  private final int periodic;
   private final int ignoreCharging;
-  private final long periodicEnableTime;
-  private final long periodicDisableTime;
 
-  @SuppressWarnings("WeakerAccess") QueueRunner(@NonNull Context context,
-      @NonNull JobQueuerWrapper jobQueuerWrapper,
-      @NonNull Class<? extends BaseLongTermService> enableServiceClass,
-      @NonNull Class<? extends BaseLongTermService> disableServiceClass, @NonNull QueuerType type,
-      int periodic, long periodicEnableTime, long periodicDisableTime, int ignoreCharging,
+  @SuppressWarnings("WeakerAccess") QueueRunner(@NonNull QueuerType type, int ignoreCharging,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    this.appContext = context.getApplicationContext();
-    this.jobQueuerWrapper = jobQueuerWrapper;
-    this.enableServiceClass = enableServiceClass;
-    this.disableServiceClass = disableServiceClass;
     this.type = type;
-    this.periodic = periodic;
     this.ignoreCharging = ignoreCharging;
-    this.periodicEnableTime = periodicEnableTime;
-    this.periodicDisableTime = periodicDisableTime;
     this.observer = stateObserver;
     this.modifier = stateModifier;
     this.charging = chargingObserver;
     this.logger = logger;
   }
 
-  @CheckResult @NonNull static Builder builder(@NonNull Context context) {
-    return new Builder(context);
+  @CheckResult @NonNull static Builder builder() {
+    return new Builder();
   }
 
   void run() {
-    immediateAction();
-    scheduleFutureAction();
-  }
-
-  private void immediateAction() {
     if (type == QueuerType.DISABLE) {
       if (ignoreCharging == 1) {
         if (charging.is()) {
@@ -90,50 +63,6 @@ class QueueRunner {
     } else {
       unset();
     }
-  }
-
-  private void scheduleFutureAction() {
-    if (periodic < 1) {
-      logger.i("This job is not periodic. Skip");
-      return;
-    }
-
-    if (periodicEnableTime < 60L) {
-      logger.w("Periodic Enable time is too low %d. Must be at least 60", periodicEnableTime);
-      return;
-    }
-
-    if (periodicDisableTime < 60L) {
-      logger.w("Periodic Disable time is too low %d. Must be at least 60", periodicDisableTime);
-      return;
-    }
-
-    final QueuerType newType;
-    final Class<? extends BaseLongTermService> serviceClass;
-    final long intervalPeriod;
-    // Remember that the times are switched to make the logic work
-    // correctly even if naming is confusing
-    if (type == QueuerType.ENABLE) {
-      // Queue a job with the opposite type
-      newType = QueuerType.DISABLE;
-      intervalPeriod = periodicEnableTime * 1000L;
-      serviceClass = disableServiceClass;
-    } else if (type == QueuerType.DISABLE) {
-      // Queue a job with the opposite type
-      newType = QueuerType.ENABLE;
-      intervalPeriod = periodicDisableTime * 1000L;
-      serviceClass = enableServiceClass;
-    } else {
-      throw new IllegalStateException("Invalid queue type");
-    }
-
-    final long triggerTime = System.currentTimeMillis() + intervalPeriod;
-    final Date triggerDate = new Date(triggerTime);
-    logger.i("Set periodic %s job starting at %s", newType, triggerDate);
-    final Intent intent =
-        BaseLongTermService.buildIntent(appContext, serviceClass, newType, ignoreCharging, periodic,
-            periodicEnableTime, periodicDisableTime);
-    jobQueuerWrapper.set(intent, triggerTime);
   }
 
   private void set() {
@@ -154,46 +83,16 @@ class QueueRunner {
 
   static final class Builder {
 
-    @NonNull private final Context appContext;
-    @Nullable private JobQueuerWrapper jobQueuerWrapper;
-    @Nullable private Class<? extends BaseLongTermService> enableServiceClass;
-    @Nullable private Class<? extends BaseLongTermService> disableServiceClass;
     @Nullable private QueuerType type;
     @Nullable private BooleanInterestObserver observer;
     @Nullable private BooleanInterestModifier modifier;
     @Nullable private BooleanInterestObserver charging;
     @Nullable private Logger logger;
-    private int periodic;
     private int ignoreCharging;
-    private long periodicEnableTime;
-    private long periodicDisableTime;
 
-    Builder(@NonNull Context context) {
-      appContext = context.getApplicationContext();
-      enableServiceClass = null;
-      disableServiceClass = null;
+    Builder() {
       type = null;
-      periodicDisableTime = -1L;
-      periodicEnableTime = -1L;
-      periodic = -1;
       ignoreCharging = -1;
-    }
-
-    @CheckResult @NonNull Builder setJobQueueWrapper(@NonNull JobQueuerWrapper jobQueueWrapper) {
-      this.jobQueuerWrapper = jobQueueWrapper;
-      return this;
-    }
-
-    @CheckResult @NonNull Builder setEnableService(
-        @NonNull Class<? extends BaseLongTermService> serviceClass) {
-      this.enableServiceClass = serviceClass;
-      return this;
-    }
-
-    @CheckResult @NonNull Builder setDisableService(
-        @NonNull Class<? extends BaseLongTermService> serviceClass) {
-      this.disableServiceClass = serviceClass;
-      return this;
     }
 
     @CheckResult @NonNull Builder setType(@NonNull QueuerType type) {
@@ -201,23 +100,8 @@ class QueueRunner {
       return this;
     }
 
-    @CheckResult @NonNull Builder setPeriodic(int periodic) {
-      this.periodic = periodic;
-      return this;
-    }
-
     @CheckResult @NonNull Builder setIgnoreCharging(int ignore) {
       this.ignoreCharging = ignore;
-      return this;
-    }
-
-    @CheckResult @NonNull Builder setPeriodicEnableTime(long time) {
-      this.periodicEnableTime = time;
-      return this;
-    }
-
-    @CheckResult @NonNull Builder setPeriodicDisableTime(long time) {
-      this.periodicDisableTime = time;
       return this;
     }
 
@@ -242,32 +126,8 @@ class QueueRunner {
     }
 
     private void checkAll() {
-      if (jobQueuerWrapper == null) {
-        throw new IllegalStateException("JobQueuerWrapper is NULL");
-      }
-
-      if (enableServiceClass == null) {
-        throw new IllegalStateException("Enable Service Class is NULL");
-      }
-
-      if (disableServiceClass == null) {
-        throw new IllegalStateException("Disable Service Class is NULL");
-      }
-
       if (type == null) {
         throw new IllegalStateException("Type is unset");
-      }
-
-      if (periodicDisableTime < 0) {
-        throw new IllegalStateException("Periodic Disable time is less than 0");
-      }
-
-      if (periodicEnableTime < 0) {
-        throw new IllegalStateException("Periodic Enable time is less than 0");
-      }
-
-      if (periodic < 0) {
-        throw new IllegalStateException("Periodic is not set");
       }
 
       if (ignoreCharging < 0) {
@@ -296,9 +156,7 @@ class QueueRunner {
 
       // We checked for nulls and such before this
       //noinspection ConstantConditions
-      return new QueueRunner(appContext, jobQueuerWrapper, enableServiceClass, disableServiceClass,
-          type, periodic, periodicEnableTime, periodicDisableTime, ignoreCharging, observer,
-          modifier, charging, logger);
+      return new QueueRunner(type, ignoreCharging, observer, modifier, charging, logger);
     }
   }
 }

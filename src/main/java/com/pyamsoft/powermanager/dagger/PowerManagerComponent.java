@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.overview.OverviewComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.queuer.QueuerComponent;
+import com.pyamsoft.powermanager.dagger.queuer.QueuerModule;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleModule;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
@@ -51,7 +52,7 @@ import javax.inject.Singleton;
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
     ActionToggleModule.class, WrapperModule.class, PermissionObserverModule.class,
-    PowerTriggerDBModule.class, LoggerModule.class,
+    PowerTriggerDBModule.class, LoggerModule.class, QueuerModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();

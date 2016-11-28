@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import timber.log.Timber;
 
 abstract class QueuerImpl implements Queuer {
 
@@ -39,7 +40,7 @@ abstract class QueuerImpl implements Queuer {
   @NonNull final BooleanInterestModifier stateModifier;
   @NonNull final BooleanInterestObserver chargingObserver;
   @NonNull final JobQueuerWrapper jobQueuerWrapper;
-  @NonNull private final Scheduler handlerScheduler;
+  @SuppressWarnings("WeakerAccess") @NonNull final Scheduler handlerScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
@@ -165,21 +166,17 @@ abstract class QueuerImpl implements Queuer {
               }
 
               logger.d("Run short queue job");
-              QueueRunner.builder(appContext)
-                  .setJobQueueWrapper(jobQueuerWrapper)
+              QueueRunner.builder()
                   .setType(type)
                   .setObserver(stateObserver)
                   .setModifier(stateModifier)
                   .setCharging(chargingObserver)
                   .setIgnoreCharging(ignoreCharging)
                   .setLogger(logger)
-                  .setPeriodic(periodic)
-                  .setPeriodicEnableTime(periodicEnableTime)
-                  .setPeriodicDisableTime(periodicDisableTime)
-                  .setEnableService(getEnableServiceClass())
-                  .setDisableService(getDisableServiceClass())
                   .build()
                   .run();
+
+              requeue();
             }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
             () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
   }
@@ -202,6 +199,34 @@ abstract class QueuerImpl implements Queuer {
     logger.d("Queue long term job with delay: %d", delayTime);
     final long triggerAtTime = System.currentTimeMillis() + delayTime;
     jobQueuerWrapper.set(intent, triggerAtTime);
+  }
+
+  /**
+   * Switch the type of the job running (ENABLE <=> DISABLE) and set the delay time to the correct
+   * constant, either periodicDisableTime or periodicEnableTime
+   */
+  @SuppressWarnings("WeakerAccess") void requeue() {
+    if (periodic < 1) {
+      Timber.e("Job is not periodic. Skip");
+      return;
+    }
+
+    if (type == null) {
+      throw new IllegalStateException("Type is unset");
+    }
+
+    final QueuerType newType = type.flip();
+    final long newDelayTime;
+    if (newType == QueuerType.ENABLE) {
+      newDelayTime = periodicDisableTime * 1000L;
+    } else {
+      newDelayTime = periodicEnableTime * 1000L;
+    }
+
+    logger.d("Requeue for periodic job. New type: %s, new delay time: %d", newType, newDelayTime);
+    setType(newType);
+    setDelayTime(newDelayTime);
+    queue();
   }
 
   @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
