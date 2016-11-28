@@ -108,37 +108,32 @@ class QueueRunner {
       return;
     }
 
-    // Remember that the times are switched to make the logic work correctly even if naming is confusing
-    final long intervalUntilReEnable = periodicDisableTime * 1000L;
-    final long intervalUntilReDisable = periodicEnableTime * 1000L;
-
-    final long reEnableTime = System.currentTimeMillis() + intervalUntilReEnable;
-    final long reDisableTime = reEnableTime + intervalUntilReDisable;
-
     final QueuerType newType;
+    final Class<? extends BaseLongTermService> serviceClass;
+    final long intervalPeriod;
+    // Remember that the times are switched to make the logic work
+    // correctly even if naming is confusing
     if (type == QueuerType.ENABLE) {
+      // Queue a job with the opposite type
       newType = QueuerType.DISABLE;
+      intervalPeriod = periodicEnableTime * 1000L;
+      serviceClass = disableServiceClass;
     } else if (type == QueuerType.DISABLE) {
+      // Queue a job with the opposite type
       newType = QueuerType.ENABLE;
+      intervalPeriod = periodicDisableTime * 1000L;
+      serviceClass = enableServiceClass;
     } else {
       throw new IllegalStateException("Invalid queue type");
     }
 
-    // Queue a constant re-enable job with the same Type as original
-    final Date reEnableDate = new Date(reEnableTime);
-    logger.i("Set periodic enable job starting at %s", reEnableDate);
-    final Intent reEnableIntent =
-        BaseLongTermService.buildIntent(appContext, enableServiceClass, type, ignoreCharging,
-            periodic, periodicEnableTime, periodicDisableTime);
-    jobQueuerWrapper.set(reEnableIntent, reEnableTime);
-
-    // Queue a constant re-disable job with the opposite type
-    final Date reDisableDate = new Date(reDisableTime);
-    logger.i("Set periodic disable job starting at %s", reDisableDate);
-    final Intent reDisableIntent =
-        BaseLongTermService.buildIntent(appContext, disableServiceClass, newType, ignoreCharging,
-            periodic, periodicEnableTime, periodicDisableTime);
-    jobQueuerWrapper.set(reDisableIntent, reDisableTime);
+    final long triggerTime = System.currentTimeMillis() + intervalPeriod;
+    final Date triggerDate = new Date(triggerTime);
+    logger.i("Set periodic %s job starting at %s", newType, triggerDate);
+    final Intent intent =
+        BaseLongTermService.buildIntent(appContext, serviceClass, newType, ignoreCharging, periodic,
+            periodicEnableTime, periodicDisableTime);
+    jobQueuerWrapper.set(intent, triggerTime);
   }
 
   private void set() {
