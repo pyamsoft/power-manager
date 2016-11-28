@@ -76,7 +76,7 @@ class QueueRunner {
   }
 
   private void immediateAction() {
-    if (type == QueuerType.DISABLE || type == QueuerType.TOGGLE_DISABLE) {
+    if (type == QueuerType.DISABLE) {
       if (ignoreCharging == 1) {
         if (charging.is()) {
           logger.w("Ignore disable job because we are charging");
@@ -85,7 +85,7 @@ class QueueRunner {
       }
     }
 
-    if (type == QueuerType.ENABLE || type == QueuerType.TOGGLE_DISABLE) {
+    if (type == QueuerType.ENABLE) {
       set();
     } else {
       unset();
@@ -120,10 +120,6 @@ class QueueRunner {
       newType = QueuerType.DISABLE;
     } else if (type == QueuerType.DISABLE) {
       newType = QueuerType.ENABLE;
-    } else if (type == QueuerType.TOGGLE_ENABLE) {
-      newType = QueuerType.TOGGLE_DISABLE;
-    } else if (type == QueuerType.TOGGLE_DISABLE) {
-      newType = QueuerType.TOGGLE_ENABLE;
     } else {
       throw new IllegalStateException("Invalid queue type");
     }

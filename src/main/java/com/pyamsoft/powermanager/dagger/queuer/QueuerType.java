@@ -19,8 +19,6 @@ package com.pyamsoft.powermanager.dagger.queuer;
 public enum QueuerType {
 
   ENABLE,
-  TOGGLE_DISABLE,
   DISABLE,
-  TOGGLE_ENABLE
 
 }

@@ -76,10 +76,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final QueuerType queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:
-        queuerType = QueuerType.TOGGLE_ENABLE;
+        queuerType = QueuerType.DISABLE;
         break;
       case ManagerInteractor.DOZE_JOB_TAG:
-        queuerType = QueuerType.TOGGLE_ENABLE;
+        queuerType = QueuerType.DISABLE;
         break;
       default:
         queuerType = QueuerType.ENABLE;
@@ -101,10 +101,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final QueuerType queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:
-        queuerType = QueuerType.TOGGLE_DISABLE;
+        queuerType = QueuerType.ENABLE;
         break;
       case ManagerInteractor.DOZE_JOB_TAG:
-        queuerType = QueuerType.TOGGLE_DISABLE;
+        queuerType = QueuerType.ENABLE;
         break;
       default:
         queuerType = QueuerType.DISABLE;

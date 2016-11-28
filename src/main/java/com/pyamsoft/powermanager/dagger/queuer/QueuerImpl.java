@@ -188,7 +188,7 @@ abstract class QueuerImpl implements Queuer {
     final Class<? extends BaseLongTermService> serviceClass;
     if (type == null) {
       throw new IllegalStateException("QueueType is unset");
-    } else if (type == QueuerType.ENABLE || type == QueuerType.TOGGLE_ENABLE) {
+    } else if (type == QueuerType.ENABLE) {
       serviceClass = getEnableServiceClass();
     } else {
       serviceClass = getDisableServiceClass();
