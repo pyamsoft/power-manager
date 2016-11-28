@@ -79,6 +79,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
 
   @Override
   public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
+    logWithTimber(logType, fmt, args);
     final Subscription logSubscription =
         interactor.isLoggingEnabled()
             .filter(enabled -> enabled)
@@ -86,7 +87,6 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
               final String message = String.format(Locale.getDefault(), fmt, args);
               final String logMessage =
                   String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
-              logWithTimber(logType, message);
 
               final Observable<Boolean> writeAppendResult;
               if (loggingEnabled) {
@@ -110,19 +110,19 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   }
 
   @SuppressWarnings("WeakerAccess") void logWithTimber(@NonNull LogType logType,
-      @NonNull String message) {
+      @NonNull String fmt, @Nullable Object... args) {
     switch (logType) {
       case DEBUG:
-        Timber.d(message);
+        Timber.d(fmt, args);
         break;
       case INFO:
-        Timber.i(message);
+        Timber.i(fmt, args);
         break;
       case WARNING:
-        Timber.w(message);
+        Timber.w(fmt, args);
         break;
       case ERROR:
-        Timber.e(message);
+        Timber.e(fmt, args);
         break;
       default:
         throw new IllegalStateException("Invalid LogType: " + logType.name());
@@ -135,9 +135,8 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> {
-              logSubscriptions.clear();
-            }, throwable -> Timber.e(throwable, "onError clearing composite subscription"),
+        .subscribe(aBoolean -> logSubscriptions.clear(),
+            throwable -> Timber.e(throwable, "onError clearing composite subscription"),
             () -> SubscriptionHelper.unsubscribe(clearLogSubscription));
   }
 
