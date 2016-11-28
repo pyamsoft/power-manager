@@ -32,7 +32,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     implements CustomTimeInputPreferencePresenter {
 
   // Max time 10 minutes
-  private static final long MAX_TIME_SECONDS = 10 * 60;
+  private static final long MAX_TIME_SECONDS = 30 * 60;
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimeInputPreferenceInteractor interactor;

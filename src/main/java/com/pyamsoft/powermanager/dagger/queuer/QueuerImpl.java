@@ -41,7 +41,7 @@ abstract class QueuerImpl implements Queuer {
   @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @NonNull private final Scheduler handlerScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
-  @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
+  @SuppressWarnings("WeakerAccess") int type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
   @SuppressWarnings("WeakerAccess") @NonNull Context appContext;
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
@@ -64,7 +64,7 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void reset() {
-    type = null;
+    type = 0;
     delayTime = -1L;
     periodicDisableTime = -1L;
     periodicEnableTime = -1L;
@@ -79,13 +79,14 @@ abstract class QueuerImpl implements Queuer {
 
   private void internalCancel() {
     logger.d("Cancel any previous jobs");
-    jobQueuerWrapper.cancel(getLongTermIntent(appContext));
+    jobQueuerWrapper.cancel(new Intent(appContext, getEnableServiceClass()));
+    jobQueuerWrapper.cancel(new Intent(appContext, getDisableServiceClass()));
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
   }
 
   private void checkAll() {
-    if (type == null) {
-      throw new IllegalStateException("Type is NULL1");
+    if (type == 0) {
+      throw new IllegalStateException("Type is unset");
     }
 
     if (delayTime < 0) {
@@ -109,7 +110,7 @@ abstract class QueuerImpl implements Queuer {
     }
   }
 
-  @NonNull @Override public Queuer setType(@NonNull QueuerType queuerType) {
+  @NonNull @Override public Queuer setType(int queuerType) {
     type = queuerType;
     return this;
   }
@@ -159,12 +160,12 @@ abstract class QueuerImpl implements Queuer {
         .subscribeOn(handlerScheduler)
         .observeOn(handlerScheduler)
         .subscribe(ignore -> {
-              if (type == null) {
-                throw new IllegalStateException("Type is NULL");
+              if (type == 0) {
+                throw new IllegalStateException("Type is unset");
               }
 
               logger.d("Run short queue job");
-              QueueRunner.builder()
+              QueueRunner.builder(appContext)
                   .setJobQueueWrapper(jobQueuerWrapper)
                   .setType(type)
                   .setObserver(stateObserver)
@@ -175,7 +176,8 @@ abstract class QueuerImpl implements Queuer {
                   .setPeriodic(periodic)
                   .setPeriodicEnableTime(periodicEnableTime)
                   .setPeriodicDisableTime(periodicDisableTime)
-                  .setIntent(getLongTermIntent(appContext))
+                  .setEnableService(getEnableServiceClass())
+                  .setDisableService(getDisableServiceClass())
                   .build()
                   .run();
             }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
@@ -183,13 +185,18 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void queueLong() {
-    if (type == null) {
-      throw new IllegalStateException("QueueType is NULL");
+    final Class<? extends BaseLongTermService> serviceClass;
+    if (type == 0) {
+      throw new IllegalStateException("QueueType is unset");
+    } else if (type == QueuerType.ENABLE) {
+      serviceClass = getEnableServiceClass();
+    } else {
+      serviceClass = getDisableServiceClass();
     }
 
     final Intent intent =
-        BaseLongTermService.buildIntent(getLongTermIntent(appContext), type, ignoreCharging,
-            periodic, periodicEnableTime, periodicDisableTime);
+        BaseLongTermService.buildIntent(appContext, serviceClass, type, ignoreCharging, periodic,
+            periodicEnableTime, periodicDisableTime);
     jobQueuerWrapper.cancel(intent);
 
     logger.d("Queue long term job with delay: %d", delayTime);
@@ -197,5 +204,7 @@ abstract class QueuerImpl implements Queuer {
     jobQueuerWrapper.set(intent, triggerAtTime);
   }
 
-  @CheckResult @NonNull abstract Intent getLongTermIntent(@NonNull Context context);
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
+
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getDisableServiceClass();
 }

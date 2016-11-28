@@ -38,6 +38,14 @@ public class QueuerBluetoothLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerBluetoothEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerBluetoothDisableService.class;
+  }
+
   @Override public BooleanInterestObserver getStateObserver() {
     return stateObserver;
   }

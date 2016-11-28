@@ -38,6 +38,14 @@ public class QueuerAirplaneLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerAirplaneEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerAirplaneDisableService.class;
+  }
+
   @Override public BooleanInterestObserver getStateObserver() {
     return stateObserver;
   }

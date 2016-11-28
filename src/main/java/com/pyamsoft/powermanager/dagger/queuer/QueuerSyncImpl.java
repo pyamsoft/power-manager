@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
@@ -36,7 +35,11 @@ class QueuerSyncImpl extends QueuerImpl {
         chargingObserver, logger);
   }
 
-  @NonNull @Override Intent getLongTermIntent(@NonNull Context context) {
-    return new Intent(context.getApplicationContext(), QueuerSyncLongTermService.class);
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerSyncEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerSyncDisableService.class;
   }
 }

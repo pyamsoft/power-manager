@@ -16,24 +16,5 @@
 
 package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-
-public interface Queuer {
-
-  void cancel();
-
-  @CheckResult @NonNull Queuer setType(int queuerType);
-
-  @CheckResult @NonNull Queuer setDelayTime(long time);
-
-  @CheckResult @NonNull Queuer setPeriodic(boolean periodic);
-
-  @CheckResult @NonNull Queuer setIgnoreCharging(boolean ignore);
-
-  @CheckResult @NonNull Queuer setPeriodicEnableTime(long time);
-
-  @CheckResult @NonNull Queuer setPeriodicDisableTime(long time);
-
-  void queue();
+public class QueuerBluetoothEnableService extends QueuerBluetoothLongTermService {
 }

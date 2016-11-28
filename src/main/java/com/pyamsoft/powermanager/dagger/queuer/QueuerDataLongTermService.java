@@ -38,6 +38,14 @@ public class QueuerDataLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerDataEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerDataDisableService.class;
+  }
+
   @Override public BooleanInterestObserver getStateObserver() {
     return stateObserver;
   }

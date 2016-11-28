@@ -42,6 +42,14 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerWifiEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerWifiDisableService.class;
+  }
+
   @Override void injectDependencies() {
     if (stateObserver == null || stateModifier == null) {
       Injector.get().provideComponent().plusQueuerComponent().inject(this);

@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.queuer;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.CheckResult;
@@ -48,11 +49,12 @@ public abstract class BaseLongTermService extends Service {
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
   @Inject JobQueuerWrapper jobQueuerWrapper;
 
-  @CheckResult @NonNull
-  static Intent buildIntent(@NonNull Intent intent, @NonNull QueuerType type, int ignoreCharging,
+  @CheckResult @NonNull static Intent buildIntent(@NonNull Context context,
+      @NonNull Class<? extends BaseLongTermService> serviceClass, int type, int ignoreCharging,
       int periodic, long periodicEnableTime, long periodicDisableTime) {
+    final Intent intent = new Intent(context.getApplicationContext(), serviceClass);
     intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
-    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
+    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type);
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC, periodic);
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
     intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
@@ -74,9 +76,9 @@ public abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    final String type = intent.getStringExtra(EXTRA_JOB_TYPE);
-    if (type == null) {
-      getLogger().e("QueuerType extra is NULL. Skip");
+    final int type = intent.getIntExtra(EXTRA_JOB_TYPE, 0);
+    if (type == 0) {
+      getLogger().e("QueuerType extra is unset. Skip");
       return START_NOT_STICKY;
     }
 
@@ -105,17 +107,18 @@ public abstract class BaseLongTermService extends Service {
     }
 
     getLogger().d("Run long queue job");
-    runJob(intent, QueuerType.valueOf(type), ignoreCharging, periodic, periodicEnableTime,
-        periodicDisableTime);
+    runJob(type, ignoreCharging, periodic, periodicEnableTime, periodicDisableTime);
     return START_NOT_STICKY;
   }
 
-  private void runJob(@NonNull Intent originalIntent, @NonNull QueuerType queuerType,
-      int ignoreCharging, int periodic, long periodicEnableTime, long periodicDisableTime) {
+  private void runJob(int queuerType, int ignoreCharging, int periodic, long periodicEnableTime,
+      long periodicDisableTime) {
     SubscriptionHelper.unsubscribe(runSubscription);
     runSubscription = Observable.defer(() -> {
-      QueueRunner.builder()
+      QueueRunner.builder(getApplicationContext())
           .setJobQueueWrapper(jobQueuerWrapper)
+          .setEnableService(getEnableServiceClass())
+          .setDisableService(getDisableServiceClass())
           .setType(queuerType)
           .setObserver(getStateObserver())
           .setModifier(getStateModifier())
@@ -125,7 +128,6 @@ public abstract class BaseLongTermService extends Service {
           .setPeriodic(periodic)
           .setPeriodicEnableTime(periodicEnableTime)
           .setPeriodicDisableTime(periodicDisableTime)
-          .setIntent(new Intent(originalIntent))
           .build()
           .run();
       return Observable.just(true);
@@ -154,6 +156,10 @@ public abstract class BaseLongTermService extends Service {
   @CheckResult @Named abstract BooleanInterestObserver getStateObserver();
 
   @CheckResult @Named abstract BooleanInterestModifier getStateModifier();
+
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
+
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getDisableServiceClass();
 
   abstract void injectDependencies();
 }

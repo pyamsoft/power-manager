@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import java.util.Date;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -37,18 +38,20 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
 
   @Override public void cancel(@NonNull Intent intent) {
     Timber.w("Cancel Alarm: %s", intent);
-    alarmManager.cancel(PendingIntent.getService(appContext, 0, intent, 0));
+    alarmManager.cancel(
+        PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
   }
 
   @Override public void set(@NonNull Intent intent, long time) {
+    final Date date = new Date(time);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Timber.i("Set and allow while idle: %s at %d", intent, time);
+      Timber.i("Set and allow while idle: %s at %s", intent, date);
       alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
-          PendingIntent.getService(appContext, 0, intent, 0));
+          PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     } else {
-      Timber.i("Set: %s at %d", intent, time);
+      Timber.i("Set: %s at %s", intent, date);
       alarmManager.setExact(AlarmManager.RTC_WAKEUP, time,
-          PendingIntent.getService(appContext, 0, intent, 0));
+          PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
   }
 }

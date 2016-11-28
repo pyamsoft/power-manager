@@ -38,6 +38,14 @@ public class QueuerDozeLongTermService extends BaseLongTermService {
     return stateModifier;
   }
 
+  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+    return QueuerDozeEnableService.class;
+  }
+
+  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+    return QueuerDozeDisableService.class;
+  }
+
   @Override public BooleanInterestObserver getStateObserver() {
     return stateObserver;
   }

@@ -73,7 +73,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {
     Timber.d("Queue new enable job");
-    final QueuerType queuerType;
+    final int queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.TOGGLE_ENABLE;
@@ -98,7 +98,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
     Timber.d("Queue new disable job");
-    final QueuerType queuerType;
+    final int queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.TOGGLE_DISABLE;
