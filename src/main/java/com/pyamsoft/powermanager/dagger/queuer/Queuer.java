@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 
 public interface Queuer {
 
-  @NonNull Queuer cancel();
+  void cancel();
 
   @CheckResult @NonNull Queuer setType(@NonNull QueuerType queuerType);
 

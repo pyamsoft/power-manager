@@ -47,7 +47,6 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
   @SuppressWarnings("WeakerAccess") long periodicDisableTime;
   @SuppressWarnings("WeakerAccess") int periodic;
-  @SuppressWarnings("WeakerAccess") boolean cancelRunning;
   private long delayTime;
 
   QueuerImpl(@NonNull Context context, @NonNull JobQueuerWrapper jobQueuerWrapper,
@@ -71,7 +70,17 @@ abstract class QueuerImpl implements Queuer {
     periodicEnableTime = -1L;
     periodic = -1;
     ignoreCharging = -1;
-    cancelRunning = false;
+  }
+
+  @Override public void cancel() {
+    reset();
+    internalCancel();
+  }
+
+  private void internalCancel() {
+    logger.d("Cancel any previous jobs");
+    jobQueuerWrapper.cancel(getLongTermIntent(appContext));
+    SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
   }
 
   private void checkAll() {
@@ -98,12 +107,6 @@ abstract class QueuerImpl implements Queuer {
     if (ignoreCharging < 0) {
       throw new IllegalStateException("Ignore Charging is not set");
     }
-  }
-
-  @NonNull @Override public Queuer cancel() {
-    reset();
-    cancelRunning = true;
-    return this;
   }
 
   @NonNull @Override public Queuer setType(@NonNull QueuerType queuerType) {
@@ -139,12 +142,7 @@ abstract class QueuerImpl implements Queuer {
   @Override public void queue() {
     checkAll();
 
-    if (cancelRunning) {
-      logger.d("Cancel any previous jobs");
-      jobQueuerWrapper.cancel(getLongTermIntent(appContext));
-      SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
-    }
-
+    internalCancel();
     if (delayTime <= LARGEST_TIME_WITHOUT_ALARM * 1000L) {
       queueShort();
     } else {

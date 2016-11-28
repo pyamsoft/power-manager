@@ -92,13 +92,13 @@ public abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    final long periodicEnableTime = intent.getIntExtra(EXTRA_PERIODIC_ENABLE, -1);
+    final long periodicEnableTime = intent.getLongExtra(EXTRA_PERIODIC_ENABLE, -1);
     if (periodicEnableTime < 60) {
       getLogger().e("Periodic Enable time was not passed with Intent. Skip");
       return START_NOT_STICKY;
     }
 
-    final long periodicDisableTime = intent.getIntExtra(EXTRA_PERIODIC_DISABLE, -1);
+    final long periodicDisableTime = intent.getLongExtra(EXTRA_PERIODIC_DISABLE, -1);
     if (periodicDisableTime < 60) {
       getLogger().e("Periodic Disable time was not passed with Intent. Skip");
       return START_NOT_STICKY;

@@ -86,8 +86,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up an enable job
-    queuer.cancel()
-        .setType(queuerType)
+    queuer.cancel();
+    queuer.setType(queuerType)
         .setDelayTime(100L)
         .setPeriodic(false)
         .setPeriodicEnableTime(0L)
@@ -111,8 +111,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up a disable job
-    queuer.cancel()
-        .setType(queuerType)
+    queuer.cancel();
+    queuer.setType(queuerType)
         .setDelayTime(getDelayTime() * 1000L)
         .setPeriodic(isPeriodic())
         .setPeriodicEnableTime(getPeriodicEnableTime())
