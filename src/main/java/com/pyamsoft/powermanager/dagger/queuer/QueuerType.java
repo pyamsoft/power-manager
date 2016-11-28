@@ -35,7 +35,7 @@ public enum QueuerType {
     } else if (this == QueuerType.SCREEN_ON_ENABLE) {
       newType = QueuerType.SCREEN_OFF_DISABLE;
     } else if (this == QueuerType.SCREEN_ON_DISABLE) {
-      newType = QueuerType.SCREEN_OFF_DISABLE;
+      newType = QueuerType.SCREEN_OFF_ENABLE;
     } else {
       throw new IllegalStateException("Invalid QueuerType " + this);
     }
