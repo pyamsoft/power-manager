@@ -141,8 +141,6 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   }
 
   @Override public void deleteLog() {
-    Timber.d("Delete log file for %s", interactor.getLogId());
-
     // Stop everything before we delete the log
     logSubscriptions.clear();
     SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,

@@ -48,11 +48,11 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
     final Date date = new Date(time);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Timber.i("Set and allow while idle: %s at %s", intent, date);
-      alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
+      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
           PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     } else {
       Timber.i("Set: %s at %s", intent, date);
-      alarmManager.setExact(AlarmManager.RTC_WAKEUP, time,
+      alarmManager.set(AlarmManager.RTC_WAKEUP, time,
           PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
   }
