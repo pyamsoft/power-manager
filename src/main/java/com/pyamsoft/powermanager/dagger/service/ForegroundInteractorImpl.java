@@ -68,7 +68,7 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @Override public void create() {
     final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
     final long delayTime = getPreferences().getTriggerPeriodTime();
-    final long triggerPeriod = delayTime * 1000L;
+    final long triggerPeriod = delayTime * 60 * 1000L;
     triggerRunner.putExtra(TriggerRunner.EXTRA_DELAY_PERIOD, triggerPeriod);
     jobQueuerWrapper.cancel(triggerRunner);
     jobQueuerWrapper.set(triggerRunner, System.currentTimeMillis() + triggerPeriod);
