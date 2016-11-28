@@ -140,7 +140,7 @@ public abstract class BaseLongTermService extends Service {
       long periodicEnableTime, long periodicDisableTime) {
     final QueuerType newType = queuerType.flip();
     final long newDelayTime;
-    if (newType == QueuerType.ENABLE) {
+    if (newType == QueuerType.SCREEN_ON_ENABLE || newType == QueuerType.SCREEN_OFF_ENABLE) {
       newDelayTime = periodicDisableTime * 1000L;
     } else {
       newDelayTime = periodicEnableTime * 1000L;

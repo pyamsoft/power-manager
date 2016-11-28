@@ -185,7 +185,7 @@ abstract class QueuerImpl implements Queuer {
     final Class<? extends BaseLongTermService> serviceClass;
     if (type == null) {
       throw new IllegalStateException("QueueType is unset");
-    } else if (type == QueuerType.ENABLE) {
+    } else if (type == QueuerType.SCREEN_OFF_ENABLE || type == QueuerType.SCREEN_ON_ENABLE) {
       serviceClass = getEnableServiceClass();
     } else {
       serviceClass = getDisableServiceClass();
@@ -217,7 +217,7 @@ abstract class QueuerImpl implements Queuer {
 
     final QueuerType newType = type.flip();
     final long newDelayTime;
-    if (newType == QueuerType.ENABLE) {
+    if (newType == QueuerType.SCREEN_ON_ENABLE || newType == QueuerType.SCREEN_OFF_ENABLE) {
       newDelayTime = periodicDisableTime * 1000L;
     } else {
       newDelayTime = periodicEnableTime * 1000L;

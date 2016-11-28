@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
-import rx.functions.Func1;
 import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
@@ -80,34 +79,31 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
 
   @Override
   public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
-    final Subscription logSubscription = interactor.isLoggingEnabled().filter(enabled -> {
-      Timber.d("Filter out logging not enabled ");
-      return enabled;
-    }).flatMap(new Func1<Boolean, Observable<Boolean>>() {
-      @Override public Observable<Boolean> call(Boolean loggingEnabled) {
-        Timber.d("Format message");
-        final String message = String.format(Locale.getDefault(), fmt, args);
-        final String logMessage =
-            String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
-        logWithTimber(logType, message);
+    final Subscription logSubscription =
+        interactor.isLoggingEnabled()
+            .filter(enabled -> enabled)
+            .flatMap(loggingEnabled -> {
+              final String message = String.format(Locale.getDefault(), fmt, args);
+              final String logMessage =
+                  String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
+              logWithTimber(logType, message);
 
-        final Observable<Boolean> writeAppendResult;
-        if (loggingEnabled) {
-          Timber.d("Attempt to append to log");
-          writeAppendResult = interactor.appendToLog(logMessage);
-        } else {
-          Timber.w("Logging disabled, return false");
-          writeAppendResult = Observable.just(false);
-        }
-        return writeAppendResult;
-      }
-    }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(success -> {
-      Timber.d("Successfully logged message to log file: %s", success);
-      // TODO anything else?
-    }, throwable -> {
-      Timber.e(throwable, "onError: Unable to successfully log message to log file");
-      // TODO Any other error handling?
-    });
+              final Observable<Boolean> writeAppendResult;
+              if (loggingEnabled) {
+                writeAppendResult = interactor.appendToLog(logMessage);
+              } else {
+                writeAppendResult = Observable.just(false);
+              }
+              return writeAppendResult;
+            })
+            .subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(success -> {
+              // TODO anything else?
+            }, throwable -> {
+              Timber.e(throwable, "onError: Unable to successfully log message to log file");
+              // TODO Any other error handling?
+            });
 
     queueClearLogSubscription();
     logSubscriptions.add(logSubscription);

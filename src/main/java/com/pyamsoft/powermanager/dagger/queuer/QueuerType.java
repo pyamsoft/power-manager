@@ -21,15 +21,23 @@ import android.support.annotation.NonNull;
 
 public enum QueuerType {
 
-  ENABLE,
-  DISABLE;
+  SCREEN_OFF_ENABLE,
+  SCREEN_OFF_DISABLE,
+  SCREEN_ON_ENABLE,
+  SCREEN_ON_DISABLE;
 
   @CheckResult @NonNull public QueuerType flip() {
     final QueuerType newType;
-    if (this == QueuerType.ENABLE) {
-      newType = QueuerType.DISABLE;
+    if (this == QueuerType.SCREEN_OFF_DISABLE) {
+      newType = QueuerType.SCREEN_ON_ENABLE;
+    } else if (this == QueuerType.SCREEN_OFF_ENABLE) {
+      newType = QueuerType.SCREEN_ON_DISABLE;
+    } else if (this == QueuerType.SCREEN_ON_ENABLE) {
+      newType = QueuerType.SCREEN_OFF_DISABLE;
+    } else if (this == QueuerType.SCREEN_ON_DISABLE) {
+      newType = QueuerType.SCREEN_OFF_DISABLE;
     } else {
-      newType = QueuerType.ENABLE;
+      throw new IllegalStateException("Invalid QueuerType " + this);
     }
     return newType;
   }

@@ -49,7 +49,7 @@ class QueueRunner {
   }
 
   void run() {
-    if (type == QueuerType.DISABLE) {
+    if (type == QueuerType.SCREEN_OFF_DISABLE || type == QueuerType.SCREEN_ON_DISABLE) {
       if (ignoreCharging == 1) {
         if (charging.is()) {
           logger.w("Ignore disable job because we are charging");
@@ -58,7 +58,7 @@ class QueueRunner {
       }
     }
 
-    if (type == QueuerType.ENABLE) {
+    if (type == QueuerType.SCREEN_ON_ENABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       set();
     } else {
       unset();
