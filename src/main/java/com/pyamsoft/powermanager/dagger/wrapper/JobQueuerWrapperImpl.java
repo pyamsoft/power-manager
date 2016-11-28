@@ -38,8 +38,10 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
 
   @Override public void cancel(@NonNull Intent intent) {
     Timber.w("Cancel Alarm: %s", intent);
-    alarmManager.cancel(
-        PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+    final PendingIntent pendingIntent =
+        PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    alarmManager.cancel(pendingIntent);
+    pendingIntent.cancel();
   }
 
   @Override public void set(@NonNull Intent intent, long time) {
