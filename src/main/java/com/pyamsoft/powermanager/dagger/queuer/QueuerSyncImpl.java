@@ -35,11 +35,11 @@ class QueuerSyncImpl extends QueuerImpl {
         chargingObserver, logger);
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
     return QueuerSyncEnableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
     return QueuerSyncDisableService.class;
   }
 }

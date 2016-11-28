@@ -80,8 +80,8 @@ abstract class QueuerImpl implements Queuer {
 
   private void internalCancel() {
     logger.d("Cancel any previous jobs");
-    jobQueuerWrapper.cancel(new Intent(appContext, getEnableServiceClass()));
-    jobQueuerWrapper.cancel(new Intent(appContext, getDisableServiceClass()));
+    jobQueuerWrapper.cancel(new Intent(appContext, getScreenOnServiceClass()));
+    jobQueuerWrapper.cancel(new Intent(appContext, getScreenOffServiceClass()));
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
   }
 
@@ -186,9 +186,9 @@ abstract class QueuerImpl implements Queuer {
     if (type == null) {
       throw new IllegalStateException("QueueType is unset");
     } else if (type == QueuerType.SCREEN_OFF_ENABLE || type == QueuerType.SCREEN_ON_ENABLE) {
-      serviceClass = getEnableServiceClass();
+      serviceClass = getScreenOnServiceClass();
     } else {
-      serviceClass = getDisableServiceClass();
+      serviceClass = getScreenOffServiceClass();
     }
 
     final Intent intent =
@@ -229,7 +229,7 @@ abstract class QueuerImpl implements Queuer {
     queue();
   }
 
-  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getScreenOnServiceClass();
 
-  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getDisableServiceClass();
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getScreenOffServiceClass();
 }

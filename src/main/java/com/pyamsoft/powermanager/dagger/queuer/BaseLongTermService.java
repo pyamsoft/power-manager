@@ -176,9 +176,9 @@ public abstract class BaseLongTermService extends Service {
 
   @CheckResult @Named abstract Queuer getQueuer();
 
-  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getEnableServiceClass();
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getScreenOnServiceClass();
 
-  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getDisableServiceClass();
+  @CheckResult @NonNull abstract Class<? extends BaseLongTermService> getScreenOffServiceClass();
 
   abstract void injectDependencies();
 }

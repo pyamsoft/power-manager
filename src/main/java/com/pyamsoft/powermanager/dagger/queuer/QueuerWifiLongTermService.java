@@ -47,11 +47,11 @@ public class QueuerWifiLongTermService extends BaseLongTermService {
     return queuer;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
     return QueuerWifiEnableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
     return QueuerWifiDisableService.class;
   }
 

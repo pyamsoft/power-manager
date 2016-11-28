@@ -43,12 +43,12 @@ public abstract class QueuerAirplaneLongTermService extends BaseLongTermService 
     return queuer;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
-    return QueuerAirplaneEnableService.class;
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
+    return QueuerAirplaneDisableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
-    return QueuerAirplaneDisableService.class;
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
+    return QueuerAirplaneEnableService.class;
   }
 
   @Override public BooleanInterestObserver getStateObserver() {

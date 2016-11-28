@@ -35,11 +35,11 @@ class QueuerDataImpl extends QueuerImpl {
         chargingObserver, logger);
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
     return QueuerDataEnableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
     return QueuerDataDisableService.class;
   }
 }

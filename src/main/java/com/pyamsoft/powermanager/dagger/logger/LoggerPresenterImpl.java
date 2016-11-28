@@ -130,14 +130,12 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
   }
 
   private void queueClearLogSubscription() {
-    Timber.d("Queue to clear the Log CompositeSubscription in 1 minute");
     SubscriptionHelper.unsubscribe(clearLogSubscription);
     clearLogSubscription = Observable.just(true)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> {
-              Timber.d("Clear composite Log subscriptions");
               logSubscriptions.clear();
             }, throwable -> Timber.e(throwable, "onError clearing composite subscription"),
             () -> SubscriptionHelper.unsubscribe(clearLogSubscription));

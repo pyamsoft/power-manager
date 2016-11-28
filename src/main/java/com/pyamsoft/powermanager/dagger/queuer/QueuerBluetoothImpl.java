@@ -35,11 +35,11 @@ class QueuerBluetoothImpl extends QueuerImpl {
         chargingObserver, logger);
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
     return QueuerBluetoothEnableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
     return QueuerBluetoothDisableService.class;
   }
 }

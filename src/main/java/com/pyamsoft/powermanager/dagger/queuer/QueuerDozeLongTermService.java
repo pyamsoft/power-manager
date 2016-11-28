@@ -43,12 +43,12 @@ public abstract class QueuerDozeLongTermService extends BaseLongTermService {
     return queuer;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getEnableServiceClass() {
-    return QueuerDozeEnableService.class;
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {
+    return QueuerDozeDisableService.class;
   }
 
-  @NonNull @Override Class<? extends BaseLongTermService> getDisableServiceClass() {
-    return QueuerDozeDisableService.class;
+  @NonNull @Override Class<? extends BaseLongTermService> getScreenOffServiceClass() {
+    return QueuerDozeEnableService.class;
   }
 
   @Override public BooleanInterestObserver getStateObserver() {
