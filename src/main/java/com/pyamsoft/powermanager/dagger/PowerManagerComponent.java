@@ -31,17 +31,19 @@ import com.pyamsoft.powermanager.dagger.observer.preference.periodic.PeriodicObs
 import com.pyamsoft.powermanager.dagger.observer.state.StateObserverModule;
 import com.pyamsoft.powermanager.dagger.overview.OverviewComponent;
 import com.pyamsoft.powermanager.dagger.preference.CustomPreferenceComponent;
+import com.pyamsoft.powermanager.dagger.queuer.QueuerComponent;
+import com.pyamsoft.powermanager.dagger.queuer.QueuerModule;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleModule;
 import com.pyamsoft.powermanager.dagger.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.dagger.service.ForegroundModule;
 import com.pyamsoft.powermanager.dagger.service.ForegroundServiceComponent;
-import com.pyamsoft.powermanager.dagger.service.jobs.JobServiceComponent;
 import com.pyamsoft.powermanager.dagger.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.dagger.sync.SyncScreenComponent;
+import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.dagger.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerRunnerComponent;
 import com.pyamsoft.powermanager.dagger.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.dagger.wifi.WifiScreenComponent;
-import com.pyamsoft.powermanager.dagger.wrapper.JobSchedulerCompatModule;
 import com.pyamsoft.powermanager.dagger.wrapper.WrapperModule;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -49,8 +51,8 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PeriodicObserverModule.class, ForegroundModule.class,
-    ActionToggleModule.class, JobSchedulerCompatModule.class, WrapperModule.class,
-    PermissionObserverModule.class, LoggerModule.class
+    ActionToggleModule.class, WrapperModule.class, PermissionObserverModule.class,
+    PowerTriggerDBModule.class, LoggerModule.class, QueuerModule.class
 }) public interface PowerManagerComponent {
 
   MainComponent plusMainComponent();
@@ -81,9 +83,11 @@ import javax.inject.Singleton;
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
 
-  JobServiceComponent plusJobServiceComponent();
-
   OverviewComponent plusOverviewComponent();
 
   LoggerComponent plusLoggerComponent();
+
+  QueuerComponent plusQueuerComponent();
+
+  TriggerRunnerComponent plusTriggerRunnerComponent();
 }

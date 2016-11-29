@@ -14,15 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service.jobs;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import com.pyamsoft.powermanager.app.service.job.PowerManagerFrameworkJobSchedulerService;
-import com.pyamsoft.powermanager.app.service.job.PowerManagerGCMJobSchedulerService;
-import dagger.Subcomponent;
-
-@Subcomponent public interface JobServiceComponent {
-
-  void inject(PowerManagerFrameworkJobSchedulerService service);
-
-  void inject(PowerManagerGCMJobSchedulerService service);
+public class QueuerAirplaneEnableService extends QueuerAirplaneLongTermService {
 }

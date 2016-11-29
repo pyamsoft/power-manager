@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.wrapper;
+package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.content.ContentValues;
 import android.support.annotation.CheckResult;

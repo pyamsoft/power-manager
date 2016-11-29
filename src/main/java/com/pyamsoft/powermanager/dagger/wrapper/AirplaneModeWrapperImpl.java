@@ -21,7 +21,6 @@ import android.content.Context;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;

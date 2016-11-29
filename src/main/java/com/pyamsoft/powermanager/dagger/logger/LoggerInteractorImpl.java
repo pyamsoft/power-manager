@@ -71,7 +71,6 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
       logPath = new File(logDirPath, type);
     }
 
-    Timber.d("%s Log location: %s", type, logPath.getAbsolutePath());
     return logPath;
   }
 

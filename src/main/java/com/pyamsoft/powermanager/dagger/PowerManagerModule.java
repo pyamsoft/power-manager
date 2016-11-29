@@ -16,10 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -32,20 +32,14 @@ import rx.schedulers.Schedulers;
 
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final PowerTriggerDB powerTriggerDB;
 
   public PowerManagerModule(final @NonNull Context context) {
     appContext = context.getApplicationContext();
     preferences = new PowerManagerPreferencesImpl(appContext);
-    powerTriggerDB = new PowerTriggerDBImpl(appContext, Schedulers.io());
   }
 
   @Singleton @Provides Context provideContext() {
     return appContext;
-  }
-
-  @Singleton @Provides PowerTriggerDB providePowerTriggerDB() {
-    return powerTriggerDB;
   }
 
   @Singleton @Provides PowerManagerPreferences providePreferences() {

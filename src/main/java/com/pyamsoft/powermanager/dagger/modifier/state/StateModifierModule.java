@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.dagger.modifier.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.dagger.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

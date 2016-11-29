@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.dagger.trigger;
 
-public enum JobType {
-  ENABLE, DISABLE,
-  TOGGLE_ENABLE, TOGGLE_DISABLE,
+import dagger.Subcomponent;
+
+@Subcomponent public interface TriggerRunnerComponent {
+
+  void inject(TriggerRunner runner);
 }

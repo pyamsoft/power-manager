@@ -76,23 +76,54 @@
       </intent-filter>
     </receiver>
 
-    <!-- Framework Job Scheduler -->
-    <service
-        android:name=".app.service.job.PowerManagerFrameworkJobSchedulerService"
-        android:permission="android.permission.BIND_JOB_SERVICE"/>
-
-    <!-- GCM Job Scheduler -->
-    <service
-        android:name=".app.service.job.PowerManagerGCMJobSchedulerService"
-        android:exported="true"
-        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-      <intent-filter>
-        <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY"/>
-      </intent-filter>
-    </service>
-
     <service
         android:name=".app.service.ActionToggleService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.trigger.TriggerRunner"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerWifiEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerWifiDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerDataEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerDataDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerBluetoothEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerBluetoothDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerSyncEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerSyncDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerAirplaneEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerAirplaneDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".dagger.queuer.QueuerDozeEnableService"
+        android:exported="false"/>
+    <service
+        android:name=".dagger.queuer.QueuerDozeDisableService"
         android:exported="false"/>
 
     <provider

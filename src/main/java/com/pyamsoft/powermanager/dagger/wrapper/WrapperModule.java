@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.wrapper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.wrapper.DeviceFunctionWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -54,5 +53,9 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new DozeDeviceWrapperImpl(context, preferences);
+  }
+
+  @Singleton @Provides JobQueuerWrapper provideJobQueuerWrapper(@NonNull Context context) {
+    return new JobQueuerWrapperImpl(context);
   }
 }

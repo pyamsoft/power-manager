@@ -14,73 +14,60 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.job;
+package com.pyamsoft.powermanager.dagger.trigger;
 
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-import com.birbit.android.jobqueue.Params;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
-import com.pyamsoft.powermanager.app.wrapper.PowerTriggerDB;
+import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class TriggerJob extends BaseJob {
+public class TriggerRunner extends Service {
 
-  @NonNull public static final String TRIGGER_TAG = "trigger";
-  private static final int PRIORITY = 2;
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
-  @NonNull private final BooleanInterestObserver wifiObserver;
-  @NonNull private final BooleanInterestObserver dataObserver;
-  @NonNull private final BooleanInterestObserver bluetoothObserver;
-  @NonNull private final BooleanInterestObserver syncObserver;
-  @NonNull private final BooleanInterestModifier wifiModifier;
-  @NonNull private final BooleanInterestModifier dataModifier;
-  @NonNull private final BooleanInterestModifier bluetoothModifier;
-  @NonNull private final BooleanInterestModifier syncModifier;
-  @NonNull private final JobSchedulerCompat jobSchedulerCompat;
-  @NonNull private final PowerManagerPreferences preferences;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
+  @NonNull public static final String EXTRA_DELAY_PERIOD = "extra_trigger_delay";
 
-  TriggerJob(long delay, @NonNull BooleanInterestObserver wifiObserver,
-      @NonNull BooleanInterestObserver dataObserver,
-      @NonNull BooleanInterestObserver bluetoothObserver,
-      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
-      @NonNull BooleanInterestModifier dataModifier,
-      @NonNull BooleanInterestModifier bluetoothModifier,
-      @NonNull BooleanInterestModifier syncModifier, @NonNull JobSchedulerCompat jobSchedulerCompat,
-      @NonNull PowerTriggerDB powerTriggerDB, @NonNull PowerManagerPreferences preferences,
-      @NonNull Logger logger) {
-    super(new Params(PRIORITY).setDelayMs(delay).addTags(TRIGGER_TAG), logger);
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.wifiModifier = wifiModifier;
-    this.dataModifier = dataModifier;
-    this.bluetoothModifier = bluetoothModifier;
-    this.syncModifier = syncModifier;
-    this.jobSchedulerCompat = jobSchedulerCompat;
-    this.powerTriggerDB = powerTriggerDB;
-    this.preferences = preferences;
+  @Inject JobQueuerWrapper jobQueuerWrapper;
+  @Inject @Named("logger_trigger") Logger logger;
+  @Inject PowerTriggerDB powerTriggerDB;
+  @Inject @Named("obs_wifi_state") BooleanInterestObserver wifiObserver;
+  @Inject @Named("obs_data_state") BooleanInterestObserver dataObserver;
+  @Inject @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver;
+  @Inject @Named("obs_sync_state") BooleanInterestObserver syncObserver;
+  @Inject @Named("mod_wifi_state") BooleanInterestModifier wifiModifier;
+  @Inject @Named("mod_data_state") BooleanInterestModifier dataModifier;
+  @Inject @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier;
+  @Inject @Named("mod_sync_state") BooleanInterestModifier syncModifier;
+  @Inject @Named("obs") Scheduler obsScheduler;
+  @Inject @Named("sub") Scheduler subScheduler;
+
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
+
+  @Override public void onCreate() {
+    super.onCreate();
+    Injector.get().provideComponent().plusTriggerRunnerComponent().inject(this);
   }
 
-  @Override public void onRun() throws Throwable {
+  @Override public int onStartCommand(Intent intent, int flags, int startId) {
     final IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     final Intent batteryIntent = getApplicationContext().registerReceiver(null, batteryFilter);
 
@@ -102,6 +89,8 @@ public class TriggerJob extends BaseJob {
 
     Timber.d("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent, charging);
+    requeueTriggerJob(intent);
+    return START_NOT_STICKY;
   }
 
   private void runTriggerForPercent(int percent, boolean charging) {
@@ -132,7 +121,7 @@ public class TriggerJob extends BaseJob {
           triggerQuery.flatMap(new Func1<List<PowerTriggerEntry>, Observable<Integer>>() {
             @Override public Observable<Integer> call(List<PowerTriggerEntry> powerTriggerEntries) {
               // Not final so we can call merges on it
-              Observable<Integer> updateTriggerResult = Observable.empty();
+              Observable<Integer> updateTriggerResult = Observable.just(-1);
 
               Timber.i("We are charging, mark any available triggers");
               for (final PowerTriggerEntry entry : powerTriggerEntries) {
@@ -148,9 +137,9 @@ public class TriggerJob extends BaseJob {
 
               return updateTriggerResult;
             }
-            // Convert to list so that we interate over all the triggers we have found instead of just first
+            // Convert to list so that we iterate over all the triggers we have found instead of just first
           }).toList().first().map(integers -> {
-            Timber.d("Number of values marked available: %d", integers.size());
+            Timber.d("Number of values marked available: %d", integers.size() - 1);
             Timber.d("Return an empty trigger");
             return PowerTriggerEntry.empty();
           });
@@ -205,7 +194,9 @@ public class TriggerJob extends BaseJob {
     }
 
     SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = powerTriggerEntryObservable.subscribe(entry -> {
+    runSubscription = powerTriggerEntryObservable.subscribeOn(subScheduler)
+        .observeOn(obsScheduler)
+        .subscribe(entry -> {
           if (charging) {
             Timber.w("Do not run Trigger because device is charging");
           } else if (PowerTriggerEntry.isEmpty(entry)) {
@@ -213,22 +204,15 @@ public class TriggerJob extends BaseJob {
           } else {
             onTriggerRun(entry);
           }
-
-          requeueJob();
-        }, throwable -> Timber.e(throwable, "onError"),
-        () -> SubscriptionHelper.unsubscribe(runSubscription));
-  }
-
-  @SuppressWarnings("WeakerAccess") void requeueJob() {
-    Timber.d("Requeue the trigger job");
-    JobHelper.queueTriggerJob(jobSchedulerCompat, wifiObserver, dataObserver, bluetoothObserver,
-        syncObserver, wifiModifier, dataModifier, bluetoothModifier, syncModifier, powerTriggerDB,
-        preferences, getLogger());
+        }, throwable -> Timber.e(throwable, "onError"), () -> {
+          SubscriptionHelper.unsubscribe(runSubscription);
+          stopSelf();
+        });
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
-    getLogger().d("Run trigger for entry name: %s", entry.name());
-    getLogger().d("Run trigger for entry percent: %d", entry.percent());
+    logger.d("Run trigger for entry name: %s", entry.name());
+    logger.d("Run trigger for entry percent: %d", entry.percent());
     final String formatted =
         String.format(Locale.getDefault(), "Run trigger: %s [%d]", entry.name(), entry.percent());
     Toast.makeText(getApplicationContext(), formatted, Toast.LENGTH_SHORT).show();
@@ -238,13 +222,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableWifi()) {
         Timber.d("Wifi should enable");
         if (!wifiObserver.is()) {
-          getLogger().i("Trigger job: %s set wifi", entry.name());
+          logger.i("Trigger job: %s set wifi", entry.name());
           wifiModifier.set();
         }
       } else {
         Timber.d("Wifi should disable");
         if (wifiObserver.is()) {
-          getLogger().i("Trigger job: %s unset wifi", entry.name());
+          logger.i("Trigger job: %s unset wifi", entry.name());
           wifiModifier.unset();
         }
       }
@@ -255,13 +239,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableData()) {
         Timber.d("Data should enable");
         if (!dataObserver.is()) {
-          getLogger().i("Trigger job: %s set data", entry.name());
+          logger.i("Trigger job: %s set data", entry.name());
           dataModifier.set();
         }
       } else {
         Timber.d("Data should disable");
         if (dataObserver.is()) {
-          getLogger().i("Trigger job: %s unset data", entry.name());
+          logger.i("Trigger job: %s unset data", entry.name());
           dataModifier.unset();
         }
       }
@@ -272,13 +256,13 @@ public class TriggerJob extends BaseJob {
       if (entry.enableBluetooth()) {
         Timber.d("Bluetooth should enable");
         if (!bluetoothObserver.is()) {
-          getLogger().i("Trigger job: %s set bluetooth", entry.name());
+          logger.i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.set();
         }
       } else {
         Timber.d("Bluetooth should disable");
         if (bluetoothObserver.is()) {
-          getLogger().i("Trigger job: %s set bluetooth", entry.name());
+          logger.i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.unset();
         }
       }
@@ -289,21 +273,39 @@ public class TriggerJob extends BaseJob {
       if (entry.enableSync()) {
         Timber.d("Sync should enable");
         if (!syncObserver.is()) {
-          getLogger().i("Trigger job: %s set sync", entry.name());
+          logger.i("Trigger job: %s set sync", entry.name());
           syncModifier.set();
         }
       } else {
         Timber.d("Sync should disable");
         if (syncObserver.is()) {
-          getLogger().i("Trigger job: %s unset sync", entry.name());
+          logger.i("Trigger job: %s unset sync", entry.name());
           syncModifier.unset();
         }
       }
     }
   }
 
-  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-    super.onCancel(cancelReason, throwable);
+  private void requeueTriggerJob(@NonNull Intent intent) {
+    final long delay = intent.getLongExtra(EXTRA_DELAY_PERIOD, -1);
+    if (delay < 0) {
+      logger.e("Invalid delay period passed. Not requeuing trigger job");
+      return;
+    }
+
+    final Intent newIntent = new Intent(intent);
+    intent.putExtra(EXTRA_DELAY_PERIOD, delay);
+
+    jobQueuerWrapper.cancel(newIntent);
+    jobQueuerWrapper.set(newIntent, System.currentTimeMillis() + delay);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
     SubscriptionHelper.unsubscribe(runSubscription);
+  }
+
+  @Nullable @Override public IBinder onBind(Intent intent) {
+    return null;
   }
 }

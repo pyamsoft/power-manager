@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.wrapper;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.app.Service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.birbit.android.jobqueue.Job;
-import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.TagConstraint;
 
-public interface JobSchedulerCompat {
+public interface Queuer {
 
-  @CheckResult @NonNull JobManager provideManagerToService(@NonNull Service service);
+  void cancel();
 
-  void cancelJobsInBackground(@NonNull TagConstraint constraint, @NonNull String... tags);
+  @CheckResult @NonNull Queuer setType(@NonNull QueuerType queuerType);
 
-  void addJobInBackground(@NonNull Job job);
+  @CheckResult @NonNull Queuer setDelayTime(long time);
 
-  void cancelJobs(@NonNull TagConstraint constraint, @NonNull String... tags);
+  @CheckResult @NonNull Queuer setPeriodic(boolean periodic);
 
-  void addJob(@NonNull Job job);
+  @CheckResult @NonNull Queuer setIgnoreCharging(boolean ignore);
+
+  @CheckResult @NonNull Queuer setPeriodicEnableTime(long time);
+
+  @CheckResult @NonNull Queuer setPeriodicDisableTime(long time);
+
+  void queue();
 }

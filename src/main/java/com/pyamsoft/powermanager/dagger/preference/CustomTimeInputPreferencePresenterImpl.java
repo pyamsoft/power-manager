@@ -31,7 +31,7 @@ public abstract class CustomTimeInputPreferencePresenterImpl
     extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
     implements CustomTimeInputPreferencePresenter {
 
-  // Max time 30 minutes
+  // Max time 10 minutes
   private static final long MAX_TIME_SECONDS = 30 * 60;
   private static final int MAX_CUSTOM_LENGTH = 6;
 

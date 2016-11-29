@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.wrapper;
+package com.pyamsoft.powermanager.dagger.queuer;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
+import dagger.Subcomponent;
 
-@Module public class JobSchedulerCompatModule {
+@Subcomponent public interface QueuerComponent {
 
-  @Singleton @Provides JobSchedulerCompat provideJobSchedulerCompat(@NonNull Context context) {
-    return new JobSchedulerCompatImpl(context);
-  }
+  void inject(BaseLongTermService longTermService);
+
+  void inject(QueuerAirplaneLongTermService longTermService);
+
+  void inject(QueuerBluetoothLongTermService longTermService);
+
+  void inject(QueuerDataLongTermService longTermService);
+
+  void inject(QueuerDozeLongTermService longTermService);
+
+  void inject(QueuerSyncLongTermService longTermService);
+
+  void inject(QueuerWifiLongTermService longTermService);
 }

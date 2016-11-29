@@ -20,26 +20,20 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.logger.Logger;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.functions.FuncN;
 
 class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerWifiInteractorImpl(@NonNull JobSchedulerCompat jobManager,
+  @Inject ManagerWifiInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver,
-      @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateObserver, stateModifier, wearManageObserver,
-        wearStateObserver, chargingObserver, logger);
+      @NonNull BooleanInterestObserver wearStateObserver, @NonNull Logger logger) {
+    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver,
+        logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {

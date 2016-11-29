@@ -20,10 +20,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.logger.Logger;
-import com.pyamsoft.powermanager.app.modifier.BooleanInterestModifier;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
-import com.pyamsoft.powermanager.app.wrapper.JobSchedulerCompat;
+import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
@@ -34,15 +33,11 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
 
   @NonNull private final PermissionObserver dozePermissionObserver;
 
-  @Inject ManagerDozeInteractorImpl(@NonNull JobSchedulerCompat jobManager,
+  @Inject ManagerDozeInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier,
-      @NonNull PermissionObserver dozePermissionObserver,
-      @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull Logger logger) {
-    super(jobManager, preferences, manageObserver, stateModifier, stateObserver, chargingObserver,
-        logger);
+      @NonNull PermissionObserver dozePermissionObserver, @NonNull Logger logger) {
+    super(queuer, preferences, manageObserver, stateObserver, logger);
     this.dozePermissionObserver = dozePermissionObserver;
   }
 

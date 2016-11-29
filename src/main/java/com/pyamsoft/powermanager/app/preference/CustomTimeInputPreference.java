@@ -26,11 +26,9 @@ import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
-import java.lang.ref.WeakReference;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends Preference

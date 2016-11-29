@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.app.wrapper;
+package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
 import android.support.annotation.NonNull;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Singleton;
+import rx.schedulers.Schedulers;
 
-public interface DeviceFunctionWrapper {
+@Module public class PowerTriggerDBModule {
 
-  @NonNull String SETTINGS_URI_MOBILE_DATA = "mobile_data";
-
-  void enable();
-
-  void disable();
-
-  @CheckResult boolean isEnabled();
+  @Singleton @Provides PowerTriggerDB providePowerTriggerDB(@NonNull Context context) {
+    return new PowerTriggerDBImpl(context.getApplicationContext(), Schedulers.io());
+  }
 }
