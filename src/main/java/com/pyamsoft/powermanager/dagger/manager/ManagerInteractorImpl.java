@@ -21,12 +21,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.powermanager.dagger.queuer.QueuerType;
 import rx.Observable;
-import timber.log.Timber;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
@@ -34,16 +32,14 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final Queuer queuer;
-  @NonNull private final Logger logger;
   @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerInteractorImpl(@NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver stateObserver) {
     this.queuer = queuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
-    this.logger = logger;
     this.preferences = preferences;
     originalStateEnabled = false;
   }
@@ -60,19 +56,14 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @CallSuper @NonNull @Override public synchronized Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> {
-      logger.d("Original state: %s", originalStateEnabled);
-      return Observable.just(originalStateEnabled);
-    });
+    return Observable.defer(() -> Observable.just(originalStateEnabled));
   }
 
   @CallSuper @Override public synchronized void setOriginalStateEnabled(boolean enabled) {
-    logger.d("Set original state: %s", enabled);
     originalStateEnabled = enabled;
   }
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {
-    Timber.d("Queue new enable job");
     final QueuerType queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:
@@ -97,7 +88,6 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
-    Timber.d("Queue new disable job");
     final QueuerType queuerType;
     switch (getJobTag()) {
       case ManagerInteractor.AIRPLANE_JOB_TAG:

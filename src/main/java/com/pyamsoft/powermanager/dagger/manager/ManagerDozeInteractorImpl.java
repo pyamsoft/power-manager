@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
@@ -36,8 +35,8 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
   @Inject ManagerDozeInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull PermissionObserver dozePermissionObserver, @NonNull Logger logger) {
-    super(queuer, preferences, manageObserver, stateObserver, logger);
+      @NonNull PermissionObserver dozePermissionObserver) {
+    super(queuer, preferences, manageObserver, stateObserver);
     this.dozePermissionObserver = dozePermissionObserver;
   }
 

@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
@@ -29,8 +28,8 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
 
   @Inject ManagerSyncInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull Logger logger) {
-    super(queuer, preferences, manageObserver, stateObserver, logger);
+      @NonNull BooleanInterestObserver stateObserver) {
+    super(queuer, preferences, manageObserver, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {

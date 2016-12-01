@@ -50,8 +50,6 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
   }
 
   @Override public void insertCustomLicensesIntoMap() {
-    Licenses.create("Android Priority Job Queue",
-        "https://github.com/yigit/android-priority-jobqueue", "licenses/androidpriorityjobqueue");
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");

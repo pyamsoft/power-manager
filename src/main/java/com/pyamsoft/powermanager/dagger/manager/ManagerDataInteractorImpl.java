@@ -36,8 +36,8 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
   @Inject ManagerDataInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull PermissionObserver rootPermissionObserver, @NonNull Logger logger) {
-    super(queuer, preferences, manageObserver, stateObserver, logger);
+      @NonNull PermissionObserver rootPermissionObserver) {
+    super(queuer, preferences, manageObserver, stateObserver);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 

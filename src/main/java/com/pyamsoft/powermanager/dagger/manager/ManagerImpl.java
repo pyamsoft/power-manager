@@ -85,6 +85,8 @@ abstract class ManagerImpl implements Manager {
     }).map(originalState -> {
       if (originalState) {
         interactor.queueEnableJob();
+        Timber.d("%s: Unset original state", getJobTag());
+        interactor.setOriginalStateEnabled(false);
       }
       return originalState;
     }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
@@ -132,6 +134,9 @@ abstract class ManagerImpl implements Manager {
   @CallSuper @Override public void cleanup() {
     interactor.destroy();
     SubscriptionHelper.unsubscribe(subscription);
+
+    // Reset the device back to its original state when the Service is cleaned up
+    queueSet();
   }
 
   @CheckResult @NonNull

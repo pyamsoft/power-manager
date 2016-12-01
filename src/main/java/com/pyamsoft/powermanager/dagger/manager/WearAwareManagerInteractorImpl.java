@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import rx.Observable;
@@ -34,8 +33,8 @@ abstract class WearAwareManagerInteractorImpl extends ManagerInteractorImpl
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver, @NonNull Logger logger) {
-    super(queuer, preferences, manageObserver, stateObserver, logger);
+      @NonNull BooleanInterestObserver wearStateObserver) {
+    super(queuer, preferences, manageObserver, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
   }
