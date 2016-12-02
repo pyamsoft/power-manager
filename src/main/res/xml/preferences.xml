@@ -21,13 +21,6 @@
   <PreferenceCategory
       android:title="Service Settings">
 
-    <!--suppress AndroidElementNotAllowed -->
-    <SwitchPreferenceCompat
-        android:key="@string/boot_key"
-        android:summary="@string/boot_summary"
-        android:title="@string/boot_title"
-        />
-
     <CheckBoxPreference
         android:defaultValue="@bool/unsuspend_when_open_default"
         android:key="@string/unsuspend_when_open_key"

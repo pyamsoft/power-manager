@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.receiver.BootReceiver;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
@@ -100,15 +99,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
         (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
     showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
 
-    final SwitchPreferenceCompat startBoot =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.boot_key));
-    startBoot.setChecked(BootReceiver.isBootEnabled(getContext()));
-    startBoot.setOnPreferenceClickListener(preference -> {
-      final boolean currentState = BootReceiver.isBootEnabled(getContext());
-      BootReceiver.setBootEnabled(getContext(), !currentState);
-      return true;
-    });
-
     final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
     showAboutLicenses.setOnPreferenceClickListener(
         preference -> showAboutLicensesFragment(R.id.main_container,
@@ -143,7 +133,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onClearAll() {
     Timber.d("Everything is cleared, kill self");
-    BootReceiver.setBootEnabled(getContext(), false);
     getActivity().getApplicationContext()
         .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
     final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
