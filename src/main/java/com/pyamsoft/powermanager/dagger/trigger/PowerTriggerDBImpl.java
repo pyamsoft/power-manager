@@ -144,12 +144,9 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: DELETE ALL");
       openDatabase();
-
-      final int result =
-          briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_ALL);
-
+      briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
       closeDatabase();
-      return Observable.just(result);
+      return Observable.just(1);
     });
   }
 
