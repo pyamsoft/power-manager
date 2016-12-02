@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.model.sql;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -38,11 +37,6 @@ import com.google.auto.value.AutoValue;
   @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER =
       FACTORY.with_percentMapper();
 
-  @NonNull @CheckResult
-  public static ContentValues asContentValues(@NonNull PowerTriggerEntry entry) {
-    return new Marshal(entry).asContentValues();
-  }
-
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
     return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
         false, false, false, false, false, false);
@@ -58,8 +52,8 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  public static DeleteManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
-    return new DeleteManager(openHelper);
+  public static DeleteTriggerManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
+    return new DeleteTriggerManager(openHelper);
   }
 
   @CheckResult @NonNull
@@ -72,10 +66,10 @@ import com.google.auto.value.AutoValue;
     return new UpdateEnabledManager(openHelper);
   }
 
-  @SuppressWarnings("WeakerAccess") public static class DeleteManager {
+  @SuppressWarnings("WeakerAccess") public static class DeleteTriggerManager {
     @NonNull private final Delete_trigger deleteTrigger;
 
-    DeleteManager(@NonNull SQLiteOpenHelper openHelper) {
+    DeleteTriggerManager(@NonNull SQLiteOpenHelper openHelper) {
       this.deleteTrigger = new Delete_trigger(openHelper.getWritableDatabase());
     }
 
