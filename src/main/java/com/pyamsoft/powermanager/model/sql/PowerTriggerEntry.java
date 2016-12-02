@@ -26,14 +26,19 @@ import com.google.auto.value.AutoValue;
   @NonNull public static final String EMPTY_NAME =
       PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
   public static final int EMPTY_PERCENT = -1;
-
-  @NonNull public static final Factory<PowerTriggerEntry> FACTORY =
-      new Factory<>(AutoValue_PowerTriggerEntry::new);
   // SQLDelight does not yet support delete strings
   @NonNull public static final String DELETE_WITH_PERCENT = "percent = ?";
   @NonNull public static final String DELETE_ALL = "1=1";
   // SQLDelight does not yet support update strings
   @NonNull public static final String UPDATE_WITH_PERCENT = "percent = ?";
+
+  @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
+  private static final Factory<PowerTriggerEntry> FACTORY =
+      new Factory<>(AutoValue_PowerTriggerEntry::new);
+
+  @NonNull public static final Creator<PowerTriggerEntry> CREATOR = FACTORY.creator;
+  @NonNull public static final Mapper<PowerTriggerEntry> ALL_ENTRIES_MAPPER = FACTORY.all_entriesMapper();
+  @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER = FACTORY.with_percentMapper();
 
   @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
@@ -48,26 +53,13 @@ import com.google.auto.value.AutoValue;
     final boolean enableData = values.getAsBoolean(PowerTriggerEntry.ENABLEDATA);
     final boolean enableBluetooth = values.getAsBoolean(PowerTriggerEntry.ENABLEBLUETOOTH);
     final boolean enableSync = values.getAsBoolean(PowerTriggerEntry.ENABLESYNC);
-    return FACTORY.creator.create(percent, name, enabled, available, toggleWifi, toggleData,
+    return CREATOR.create(percent, name, enabled, available, toggleWifi, toggleData,
         toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
   }
 
   @NonNull @CheckResult
   public static ContentValues asContentValues(@NonNull PowerTriggerEntry entry) {
-    return FACTORY.marshal()
-        .name(entry.name())
-        .percent(entry.percent())
-        .enabled(entry.enabled())
-        .available(entry.available())
-        .toggleWifi(entry.toggleWifi())
-        .toggleData(entry.toggleData())
-        .toggleBluetooth(entry.toggleBluetooth())
-        .toggleSync(entry.toggleSync())
-        .enableWifi(entry.enableWifi())
-        .enableData(entry.enableData())
-        .enableBluetooth(entry.enableBluetooth())
-        .enableSync(entry.enableSync())
-        .asContentValues();
+    return new Marshal(entry).asContentValues();
   }
 
   @CheckResult @NonNull public static PowerTriggerEntry empty() {
@@ -97,7 +89,7 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
+  private static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
       boolean available) {
     return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, available,
         old.toggleWifi(), old.toggleData(), old.toggleBluetooth(), old.toggleSync(),

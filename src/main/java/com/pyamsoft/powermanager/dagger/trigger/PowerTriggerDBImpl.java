@@ -35,15 +35,14 @@ import timber.log.Timber;
 
 class PowerTriggerDBImpl implements PowerTriggerDB {
 
-  @NonNull private final Scheduler dbScheduler;
+  @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @NonNull private final AtomicInteger openCount;
   @NonNull private final PowerTriggerOpenHelper openHelper;
-  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
     openHelper = new PowerTriggerOpenHelper(context);
     openCount = new AtomicInteger(0);
-    dbScheduler = scheduler;
+    briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler);
   }
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult int getOpenCount() {
@@ -52,9 +51,6 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
     Timber.d("Increment open count to: %d", openCount.incrementAndGet());
-    if (briteDatabase == null) {
-      briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, dbScheduler);
-    }
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void closeDatabase() {
@@ -64,10 +60,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
     if (openCount.get() == 0) {
       Timber.d("Close and recycle database connection");
-      if (briteDatabase != null) {
-        briteDatabase.close();
-        briteDatabase = null;
-      }
+      briteDatabase.close();
     }
   }
 
@@ -103,7 +96,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       Timber.i("DB: QUERY ALL");
       openDatabase();
       return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-          .mapToList(PowerTriggerEntry.FACTORY.all_entriesMapper()::map);
+          .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map);
     }).map(result -> {
       closeDatabase();
       return result;
@@ -117,8 +110,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       openDatabase();
       return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
           Integer.toString(percent))
-          .mapToOneOrDefault(PowerTriggerEntry.FACTORY.with_percentMapper()::map,
-              PowerTriggerEntry.empty());
+          .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map, PowerTriggerEntry.empty());
     }).map(result -> {
       closeDatabase();
       return result;
