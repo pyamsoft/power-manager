@@ -38,7 +38,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   @NonNull private final Scheduler dbScheduler;
   @NonNull private final AtomicInteger openCount;
   @NonNull private final PowerTriggerOpenHelper openHelper;
-  @SuppressWarnings("WeakerAccess") BriteDatabase briteDatabase;
+  @SuppressWarnings("WeakerAccess") volatile BriteDatabase briteDatabase;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
     openHelper = new PowerTriggerOpenHelper(context);
