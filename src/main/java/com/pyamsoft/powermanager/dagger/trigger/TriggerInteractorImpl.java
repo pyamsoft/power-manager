@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
@@ -34,35 +33,32 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
     return getPowerTriggerDB().queryAll().first().concatMap(Observable::from);
   }
 
-  @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull ContentValues values) {
-    return getPowerTriggerDB().queryWithPercent(values.getAsInteger(PowerTriggerEntry.PERCENT))
-        .first()
-        .flatMap(entry -> {
-          if (!PowerTriggerEntry.isEmpty(entry)) {
-            Timber.e("Entry already exists, throw");
-            throw new SQLiteConstraintException(
-                "Entry already exists with percent: " + entry.percent());
-          }
+  @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
+    return getPowerTriggerDB().queryWithPercent(entry.percent()).first().flatMap(triggerEntry -> {
+      if (!PowerTriggerEntry.isEmpty(triggerEntry)) {
+        Timber.e("Entry already exists, throw");
+        throw new SQLiteConstraintException(
+            "Entry already exists with percent: " + entry.percent());
+      }
 
-          if (PowerTriggerEntry.isEmpty(values)) {
-            Timber.e("Trigger is EMPTY");
-            return Observable.just(-1L);
-          } else if (values.getAsInteger(PowerTriggerEntry.PERCENT) > 100) {
-            Timber.e("Percent too high");
-            return Observable.just(-1L);
-          } else {
-            Timber.d("Insert new Trigger into DB");
-            return getPowerTriggerDB().insert(values);
-          }
-        })
-        .map(aLong -> {
-          if (aLong == -1L) {
-            throw new IllegalStateException("Trigger is EMPTY");
-          } else {
-            Timber.d("new trigger created");
-            return PowerTriggerEntry.asTrigger(values);
-          }
-        });
+      if (PowerTriggerEntry.isEmpty(entry)) {
+        Timber.e("Trigger is EMPTY");
+        return Observable.just(-1L);
+      } else if (entry.percent() > 100 || entry.percent() <= 0) {
+        Timber.e("Percent too high");
+        return Observable.just(-1L);
+      } else {
+        Timber.d("Insert new Trigger into DB");
+        return getPowerTriggerDB().insert(entry);
+      }
+    }).map(aLong -> {
+      if (aLong == -1L) {
+        throw new IllegalStateException("Trigger is EMPTY");
+      } else {
+        Timber.d("new trigger created");
+        return entry;
+      }
+    });
   }
 
   @NonNull @Override public Observable<Integer> delete(int percent) {

@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
@@ -71,10 +72,10 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     getView(TriggerView::onShowNewTriggerDialog);
   }
 
-  @Override public void createPowerTrigger(@NonNull ContentValues values) {
+  @Override public void createPowerTrigger(@NonNull PowerTriggerEntry entry) {
     Timber.d("Create new power trigger");
     SubscriptionHelper.unsubscribe(createSubscription);
-    createSubscription = interactor.put(values)
+    createSubscription = interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(entry1 -> {

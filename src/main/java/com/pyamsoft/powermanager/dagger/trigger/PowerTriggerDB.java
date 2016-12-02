@@ -25,7 +25,7 @@ import rx.Observable;
 
 public interface PowerTriggerDB {
 
-  @CheckResult @NonNull Observable<Long> insert(final @NonNull ContentValues contentValues);
+  @CheckResult @NonNull Observable<Long> insert(@NonNull PowerTriggerEntry entry);
 
   @CheckResult @NonNull Observable<Integer> update(final @NonNull ContentValues contentValues,
       final int percent);

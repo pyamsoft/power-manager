@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -94,16 +93,15 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final PowerTriggerEntry entry =
         PowerTriggerEntry.CREATOR.create(percent, name, true, true, wifiToggle, dataToggle,
             bluetoothToggle, syncToggle, wifiEnable, dataEnable, bluetoothEnable, syncEnable);
-    final ContentValues values = PowerTriggerEntry.asContentValues(entry);
-    sendCreateEvent(values);
+    sendCreateEvent(entry);
   }
 
-  private void sendCreateEvent(@NonNull ContentValues values) {
+  private void sendCreateEvent(@NonNull PowerTriggerEntry entry) {
     final Fragment powerTriggerListFragment =
         fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);
     if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
       ((PowerTriggerListFragment) powerTriggerListFragment).getPresenter()
-          .createPowerTrigger(values);
+          .createPowerTrigger(entry);
     } else {
       throw new ClassCastException("Fragment is not PowerTriggerListFragment");
     }

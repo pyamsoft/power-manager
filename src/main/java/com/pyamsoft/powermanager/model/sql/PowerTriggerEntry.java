@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.model.sql;
 
 import android.content.ContentValues;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
@@ -37,8 +38,10 @@ import com.google.auto.value.AutoValue;
       new Factory<>(AutoValue_PowerTriggerEntry::new);
 
   @NonNull public static final Creator<PowerTriggerEntry> CREATOR = FACTORY.creator;
-  @NonNull public static final Mapper<PowerTriggerEntry> ALL_ENTRIES_MAPPER = FACTORY.all_entriesMapper();
-  @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER = FACTORY.with_percentMapper();
+  @NonNull public static final Mapper<PowerTriggerEntry> ALL_ENTRIES_MAPPER =
+      FACTORY.all_entriesMapper();
+  @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER =
+      FACTORY.with_percentMapper();
 
   @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
     final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
@@ -94,5 +97,26 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, available,
         old.toggleWifi(), old.toggleData(), old.toggleBluetooth(), old.toggleSync(),
         old.enableWifi(), old.enableData(), old.enableBluetooth(), old.enableSync());
+  }
+
+  @CheckResult @NonNull
+  public static InsertManager insertNewTrigger(@NonNull SQLiteOpenHelper openHelper) {
+    return new InsertManager(openHelper);
+  }
+
+  public static class InsertManager {
+    @NonNull private final PowerTriggerEntry.Insert_trigger insertTrigger;
+
+    InsertManager(@NonNull SQLiteOpenHelper openHelper) {
+      this.insertTrigger = new PowerTriggerEntry.Insert_trigger(openHelper.getWritableDatabase());
+    }
+
+    @CheckResult public long executeProgram(@NonNull PowerTriggerEntry newEntry) {
+      insertTrigger.bind(newEntry.percent(), newEntry.name(), newEntry.enabled(),
+          newEntry.available(), newEntry.toggleWifi(), newEntry.toggleData(),
+          newEntry.toggleBluetooth(), newEntry.toggleSync(), newEntry.enableWifi(),
+          newEntry.enableData(), newEntry.enableBluetooth(), newEntry.enableSync());
+      return insertTrigger.program.executeInsert();
+    }
   }
 }

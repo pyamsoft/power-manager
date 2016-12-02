@@ -24,3 +24,10 @@ SELECT *
 FROM power_triggers
 WHERE percent = ?;
 
+insert_trigger:
+INSERT INTO power_triggers(percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+delete_trigger:
+DELETE FROM power_triggers
+WHERE percent = ?;

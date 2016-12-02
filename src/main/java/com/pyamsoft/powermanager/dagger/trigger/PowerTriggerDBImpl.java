@@ -64,16 +64,15 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     }
   }
 
-  @Override @CheckResult @NonNull
-  public Observable<Long> insert(final @NonNull ContentValues contentValues) {
+  @Override @CheckResult @NonNull public Observable<Long> insert(@NonNull PowerTriggerEntry entry) {
     return Observable.defer(() -> {
       Timber.i("DB: INSERT");
       openDatabase();
-      final int percent = PowerTriggerEntry.asTrigger(contentValues).percent();
+      final int percent = entry.percent();
       return deleteWithPercentUnguarded(percent);
     }).map(deleted -> {
       Timber.d("Delete result: %d", deleted);
-      final long result = briteDatabase.insert(PowerTriggerEntry.TABLE_NAME, contentValues);
+      final long result = PowerTriggerEntry.insertNewTrigger(openHelper).executeProgram(entry);
       closeDatabase();
       return result;
     });
