@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
@@ -128,10 +127,8 @@ public class TriggerRunner extends Service {
                 Timber.d("Current entry: %s %d", entry.name(), entry.percent());
                 if (entry.percent() <= percent && !entry.available()) {
                   Timber.d("Mark entry available for percent: %d", entry.percent());
-                  final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, true);
-                  final ContentValues values = PowerTriggerEntry.asContentValues(updated);
                   updateTriggerResult = updateTriggerResult.mergeWith(
-                      powerTriggerDB.update(values, updated.percent()));
+                      powerTriggerDB.updateAvailable(true, entry.percent()));
                 }
               }
 
@@ -177,12 +174,11 @@ public class TriggerRunner extends Service {
           final Observable<PowerTriggerEntry> updateTriggerResult;
           if (!PowerTriggerEntry.isEmpty(entry)) {
             Timber.d("Mark trigger as unavailable: %s %d", entry.name(), entry.percent());
-            final PowerTriggerEntry updated = PowerTriggerEntry.updatedAvailable(entry, false);
-            final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-            updateTriggerResult = powerTriggerDB.update(values, updated.percent()).map(integer -> {
-              Timber.d("Updated trigger: (%d) %s", integer, updated);
-              return updated;
-            });
+            updateTriggerResult =
+                powerTriggerDB.updateAvailable(entry.available(), entry.percent()).map(integer -> {
+                  Timber.d("Updated trigger: (%d) unavailable", integer);
+                  return entry;
+                });
           } else {
             Timber.w("No trigger marked, EMPTY result");
             updateTriggerResult = Observable.empty();

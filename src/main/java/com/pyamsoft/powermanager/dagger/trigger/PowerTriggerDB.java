@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.content.ContentValues;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
@@ -27,14 +26,15 @@ public interface PowerTriggerDB {
 
   @CheckResult @NonNull Observable<Long> insert(@NonNull PowerTriggerEntry entry);
 
-  @CheckResult @NonNull Observable<Integer> update(final @NonNull ContentValues contentValues,
-      final int percent);
+  @CheckResult @NonNull Observable<Integer> updateAvailable(boolean available, int percent);
+
+  @CheckResult @NonNull Observable<Integer> updateEnabled(boolean enabled, int percent);
 
   @NonNull @CheckResult Observable<List<PowerTriggerEntry>> queryAll();
 
   @NonNull @CheckResult Observable<PowerTriggerEntry> queryWithPercent(int percent);
 
-  @CheckResult @NonNull Observable<Integer> deleteWithPercent(final int percent);
+  @CheckResult @NonNull Observable<Integer> deleteWithPercent(int percent);
 
   @CheckResult @NonNull Observable<Integer> deleteAll();
 

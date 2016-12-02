@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.content.ContentValues;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import javax.inject.Inject;
@@ -54,17 +53,11 @@ class TriggerListAdapterInteractorImpl extends BaseTriggerInteractorImpl
   @NonNull @Override
   public Observable<Boolean> update(@NonNull PowerTriggerEntry entry, boolean enabled) {
     return Observable.defer(() -> {
-      final PowerTriggerEntry updated = PowerTriggerEntry.updatedEnabled(entry, enabled);
-      final ContentValues values = PowerTriggerEntry.asContentValues(updated);
-
-      final int percent = updated.percent();
+      final int percent = entry.percent();
       Timber.d("Update enabled state with percent: %d", percent);
-      Timber.d("Update entry to enabled state: %s", updated.enabled());
-
-      // KLUDGE Update states it is successful, but changes are not actually written
-      return getPowerTriggerDB().update(values, percent);
+      Timber.d("Update entry to enabled state: %s", enabled);
+      return getPowerTriggerDB().updateEnabled(enabled, percent);
     }).map(integer -> {
-      // TODO handle the int return value
       Timber.d("Return code for update(): %d", integer);
 
       // For now, just return true

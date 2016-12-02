@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -78,13 +77,23 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     });
   }
 
-  @Override @CheckResult @NonNull
-  public Observable<Integer> update(final @NonNull ContentValues contentValues, final int percent) {
+  @NonNull @Override public Observable<Integer> updateAvailable(boolean available, int percent) {
     return Observable.defer(() -> {
-      Timber.i("DB: UPDATE");
+      Timber.i("DB: UPDATE AVAILABLE");
       openDatabase();
-      final int result = briteDatabase.update(PowerTriggerEntry.TABLE_NAME, contentValues,
-          PowerTriggerEntry.UPDATE_WITH_PERCENT, String.valueOf(percent));
+      final int result =
+          PowerTriggerEntry.updateAvailable(openHelper).executeProgram(available, percent);
+      closeDatabase();
+      return Observable.just(result);
+    });
+  }
+
+  @NonNull @Override public Observable<Integer> updateEnabled(boolean enabled, int percent) {
+    return Observable.defer(() -> {
+      Timber.i("DB: UPDATE ENABLED");
+      openDatabase();
+      final int result =
+          PowerTriggerEntry.updateEnabled(openHelper).executeProgram(enabled, percent);
       closeDatabase();
       return Observable.just(result);
     });
@@ -116,7 +125,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     });
   }
 
-  @Override @CheckResult @NonNull public Observable<Integer> deleteWithPercent(final int percent) {
+  @Override @CheckResult @NonNull public Observable<Integer> deleteWithPercent(int percent) {
     return Observable.defer(() -> {
       Timber.i("DB: DELETE PERCENT");
       openDatabase();

@@ -53,25 +53,6 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  public static PowerTriggerEntry updatedEnabled(@NonNull PowerTriggerEntry old, boolean enabled) {
-    return updated(old, enabled, old.available());
-  }
-
-  @CheckResult @NonNull
-  public static PowerTriggerEntry updatedAvailable(@NonNull PowerTriggerEntry old,
-      boolean available) {
-    return updated(old, old.enabled(), available);
-  }
-
-  @CheckResult @NonNull
-  private static PowerTriggerEntry updated(@NonNull PowerTriggerEntry old, boolean enabled,
-      boolean available) {
-    return new AutoValue_PowerTriggerEntry(old.percent(), old.name(), enabled, available,
-        old.toggleWifi(), old.toggleData(), old.toggleBluetooth(), old.toggleSync(),
-        old.enableWifi(), old.enableData(), old.enableBluetooth(), old.enableSync());
-  }
-
-  @CheckResult @NonNull
   public static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
     return new InsertManager(openHelper);
   }
@@ -81,8 +62,18 @@ import com.google.auto.value.AutoValue;
     return new DeleteManager(openHelper);
   }
 
+  @CheckResult @NonNull
+  public static UpdateAvailabeManager updateAvailable(@NonNull SQLiteOpenHelper openHelper) {
+    return new UpdateAvailabeManager(openHelper);
+  }
+
+  @CheckResult @NonNull
+  public static UpdateEnabledManager updateEnabled(@NonNull SQLiteOpenHelper openHelper) {
+    return new UpdateEnabledManager(openHelper);
+  }
+
   @SuppressWarnings("WeakerAccess") public static class DeleteManager {
-    @NonNull private final PowerTriggerEntry.Delete_trigger deleteTrigger;
+    @NonNull private final Delete_trigger deleteTrigger;
 
     DeleteManager(@NonNull SQLiteOpenHelper openHelper) {
       this.deleteTrigger = new Delete_trigger(openHelper.getWritableDatabase());
@@ -95,10 +86,10 @@ import com.google.auto.value.AutoValue;
   }
 
   @SuppressWarnings("WeakerAccess") public static class InsertManager {
-    @NonNull private final PowerTriggerEntry.Insert_trigger insertTrigger;
+    @NonNull private final Insert_trigger insertTrigger;
 
     InsertManager(@NonNull SQLiteOpenHelper openHelper) {
-      this.insertTrigger = new PowerTriggerEntry.Insert_trigger(openHelper.getWritableDatabase());
+      this.insertTrigger = new Insert_trigger(openHelper.getWritableDatabase());
     }
 
     @CheckResult public long executeProgram(@NonNull PowerTriggerEntry newEntry) {
@@ -107,6 +98,32 @@ import com.google.auto.value.AutoValue;
           newEntry.toggleBluetooth(), newEntry.toggleSync(), newEntry.enableWifi(),
           newEntry.enableData(), newEntry.enableBluetooth(), newEntry.enableSync());
       return insertTrigger.program.executeInsert();
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") public static class UpdateAvailabeManager {
+    @NonNull private final Update_available updateAvailable;
+
+    UpdateAvailabeManager(@NonNull SQLiteOpenHelper openHelper) {
+      this.updateAvailable = new Update_available(openHelper.getWritableDatabase());
+    }
+
+    @CheckResult public int executeProgram(boolean available, int percent) {
+      updateAvailable.bind(available, percent);
+      return updateAvailable.program.executeUpdateDelete();
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") public static class UpdateEnabledManager {
+    @NonNull private final Update_enabled updateEnabled;
+
+    UpdateEnabledManager(@NonNull SQLiteOpenHelper openHelper) {
+      this.updateEnabled = new Update_enabled(openHelper.getWritableDatabase());
+    }
+
+    @CheckResult public int executeProgram(boolean enabled, int percent) {
+      updateEnabled.bind(enabled, percent);
+      return updateEnabled.program.executeUpdateDelete();
     }
   }
 }
