@@ -31,3 +31,17 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 delete_trigger:
 DELETE FROM power_triggers
 WHERE percent = ?;
+
+delete_all:
+DELETE FROM power_triggers
+WHERE 1 = 1;
+
+update_enabled:
+UPDATE power_triggers
+SET enabled = ?
+WHERE percent = ?;
+
+update_available:
+UPDATE power_triggers
+SET available = ?
+WHERE percent = ?;

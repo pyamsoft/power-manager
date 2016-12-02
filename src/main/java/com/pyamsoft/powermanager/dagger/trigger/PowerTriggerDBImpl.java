@@ -72,7 +72,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       return deleteWithPercentUnguarded(percent);
     }).map(deleted -> {
       Timber.d("Delete result: %d", deleted);
-      final long result = PowerTriggerEntry.insertNewTrigger(openHelper).executeProgram(entry);
+      final long result = PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry);
       closeDatabase();
       return result;
     });
@@ -128,9 +128,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
   Observable<Integer> deleteWithPercentUnguarded(int percent) {
-    return Observable.just(
-        briteDatabase.delete(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.DELETE_WITH_PERCENT,
-            Integer.toString(percent)));
+    return Observable.just(PowerTriggerEntry.deleteTrigger(openHelper).executeProgram(percent));
   }
 
   @Override @CheckResult @NonNull public Observable<Integer> deleteAll() {

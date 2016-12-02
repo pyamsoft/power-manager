@@ -27,11 +27,6 @@ import com.google.auto.value.AutoValue;
   @NonNull public static final String EMPTY_NAME =
       PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
   public static final int EMPTY_PERCENT = -1;
-  // SQLDelight does not yet support delete strings
-  @NonNull public static final String DELETE_WITH_PERCENT = "percent = ?";
-  @NonNull public static final String DELETE_ALL = "1=1";
-  // SQLDelight does not yet support update strings
-  @NonNull public static final String UPDATE_WITH_PERCENT = "percent = ?";
 
   @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
   private static final Factory<PowerTriggerEntry> FACTORY =
@@ -42,23 +37,6 @@ import com.google.auto.value.AutoValue;
       FACTORY.all_entriesMapper();
   @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER =
       FACTORY.with_percentMapper();
-
-  @NonNull @CheckResult public static PowerTriggerEntry asTrigger(@NonNull ContentValues values) {
-    final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
-    final String name = values.getAsString(PowerTriggerEntry.NAME);
-    final boolean enabled = values.getAsBoolean(PowerTriggerEntry.ENABLED);
-    final boolean available = values.getAsBoolean(PowerTriggerEntry.AVAILABLE);
-    final boolean toggleWifi = values.getAsBoolean(PowerTriggerEntry.TOGGLEWIFI);
-    final boolean toggleData = values.getAsBoolean(PowerTriggerEntry.TOGGLEDATA);
-    final boolean toggleBluetooth = values.getAsBoolean(PowerTriggerEntry.TOGGLEBLUETOOTH);
-    final boolean toggleSync = values.getAsBoolean(PowerTriggerEntry.TOGGLESYNC);
-    final boolean enableWifi = values.getAsBoolean(PowerTriggerEntry.ENABLEWIFI);
-    final boolean enableData = values.getAsBoolean(PowerTriggerEntry.ENABLEDATA);
-    final boolean enableBluetooth = values.getAsBoolean(PowerTriggerEntry.ENABLEBLUETOOTH);
-    final boolean enableSync = values.getAsBoolean(PowerTriggerEntry.ENABLESYNC);
-    return CREATOR.create(percent, name, enabled, available, toggleWifi, toggleData,
-        toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync);
-  }
 
   @NonNull @CheckResult
   public static ContentValues asContentValues(@NonNull PowerTriggerEntry entry) {
@@ -72,12 +50,6 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
     return entry.percent() == EMPTY_PERCENT || EMPTY_NAME.equals(entry.name());
-  }
-
-  @CheckResult public static boolean isEmpty(@NonNull ContentValues values) {
-    final int percent = values.getAsInteger(PowerTriggerEntry.PERCENT);
-    final String name = values.getAsString(PowerTriggerEntry.NAME);
-    return percent == EMPTY_PERCENT || EMPTY_NAME.equals(name) || name.isEmpty();
   }
 
   @CheckResult @NonNull
@@ -100,11 +72,29 @@ import com.google.auto.value.AutoValue;
   }
 
   @CheckResult @NonNull
-  public static InsertManager insertNewTrigger(@NonNull SQLiteOpenHelper openHelper) {
+  public static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
     return new InsertManager(openHelper);
   }
 
-  public static class InsertManager {
+  @CheckResult @NonNull
+  public static DeleteManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
+    return new DeleteManager(openHelper);
+  }
+
+  @SuppressWarnings("WeakerAccess") public static class DeleteManager {
+    @NonNull private final PowerTriggerEntry.Delete_trigger deleteTrigger;
+
+    DeleteManager(@NonNull SQLiteOpenHelper openHelper) {
+      this.deleteTrigger = new Delete_trigger(openHelper.getWritableDatabase());
+    }
+
+    @CheckResult public int executeProgram(int percent) {
+      deleteTrigger.bind(percent);
+      return deleteTrigger.program.executeUpdateDelete();
+    }
+  }
+
+  @SuppressWarnings("WeakerAccess") public static class InsertManager {
     @NonNull private final PowerTriggerEntry.Insert_trigger insertTrigger;
 
     InsertManager(@NonNull SQLiteOpenHelper openHelper) {
