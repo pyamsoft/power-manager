@@ -69,7 +69,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
     taskMap.clear();
-    holder.binding.adapterItemOverviewRoot.setOnClickListener(null);
     holder.binding.adapterItemOverviewImage.setImageDrawable(null);
     holder.binding.adapterItemOverviewImage.setOnClickListener(null);
     holder.binding.adapterItemOverviewTitle.setText(null);
