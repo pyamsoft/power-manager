@@ -21,46 +21,47 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
+import rx.Subscription;
 import timber.log.Timber;
 
 class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
-  @NonNull private final AtomicInteger openCount;
-  @NonNull private final PowerTriggerOpenHelper openHelper;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
+  @NonNull private final Scheduler dbScheduler;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription dbOpenSubscription;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
+    dbScheduler = scheduler;
     openHelper = new PowerTriggerOpenHelper(context);
-    openCount = new AtomicInteger(0);
     briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler);
   }
 
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult int getOpenCount() {
-    return openCount.get();
-  }
-
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    Timber.d("Increment open count to: %d", openCount.incrementAndGet());
-  }
+    SubscriptionHelper.unsubscribe(dbOpenSubscription);
 
-  @SuppressWarnings("WeakerAccess") synchronized void closeDatabase() {
-    if (openCount.get() > 0) {
-      Timber.d("Decrement open count to: %d", openCount.decrementAndGet());
-    }
-
-    if (openCount.get() == 0) {
-      Timber.d("Close and recycle database connection");
-      briteDatabase.close();
-    }
+    // After a 1 minute timeout, close the DB
+    dbOpenSubscription = Observable.timer(1, TimeUnit.MINUTES)
+        .map(aLong -> {
+          briteDatabase.close();
+          return true;
+        })
+        .subscribeOn(dbScheduler)
+        .observeOn(dbScheduler)
+        .subscribe(ignoreMe -> Timber.d("PowerTriggerDB is closed"),
+            throwable -> Timber.e(throwable, "onError closing database"),
+            () -> SubscriptionHelper.unsubscribe(dbOpenSubscription));
   }
 
   @Override @CheckResult @NonNull public Observable<Long> insert(@NonNull PowerTriggerEntry entry) {
@@ -71,9 +72,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       return deleteWithPercentUnguarded(percent);
     }).map(deleted -> {
       Timber.d("Delete result: %d", deleted);
-      final long result = PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry);
-      closeDatabase();
-      return result;
+      return PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry);
     });
   }
 
@@ -81,10 +80,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: UPDATE AVAILABLE");
       openDatabase();
-      final int result =
-          PowerTriggerEntry.updateAvailable(openHelper).executeProgram(available, percent);
-      closeDatabase();
-      return Observable.just(result);
+      return Observable.fromCallable(
+          () -> PowerTriggerEntry.updateAvailable(openHelper).executeProgram(available, percent));
     });
   }
 
@@ -92,10 +89,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: UPDATE ENABLED");
       openDatabase();
-      final int result =
-          PowerTriggerEntry.updateEnabled(openHelper).executeProgram(enabled, percent);
-      closeDatabase();
-      return Observable.just(result);
+      return Observable.fromCallable(
+          () -> PowerTriggerEntry.updateEnabled(openHelper).executeProgram(enabled, percent));
     });
   }
 
@@ -105,9 +100,6 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       openDatabase();
       return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
           .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map);
-    }).map(result -> {
-      closeDatabase();
-      return result;
     });
   }
 
@@ -119,9 +111,6 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
           Integer.toString(percent))
           .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map, PowerTriggerEntry.empty());
-    }).map(result -> {
-      closeDatabase();
-      return result;
     });
   }
 
@@ -129,9 +118,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: DELETE PERCENT");
       openDatabase();
-      final Observable<Integer> result = deleteWithPercentUnguarded(percent);
-      closeDatabase();
-      return result;
+      return deleteWithPercentUnguarded(percent);
     });
   }
 
@@ -143,9 +130,10 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   @Override @CheckResult @NonNull public Observable<Integer> deleteAll() {
     return Observable.defer(() -> {
       Timber.i("DB: DELETE ALL");
-      openDatabase();
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
-      closeDatabase();
+      SubscriptionHelper.unsubscribe(dbOpenSubscription);
+      briteDatabase.close();
+      deleteDatabase();
       return Observable.just(1);
     });
   }

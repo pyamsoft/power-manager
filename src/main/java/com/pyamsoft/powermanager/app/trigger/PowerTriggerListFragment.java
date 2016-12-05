@@ -27,7 +27,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.Toast;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.trigger.create.CreateTriggerDialog;
@@ -39,6 +41,8 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import java.util.List;
+import java.util.Locale;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
@@ -114,6 +118,73 @@ public class PowerTriggerListFragment extends ActionBarFragment
     super.onStart();
     if (adapter == null) {
       adapter = new FastItemAdapter<>();
+      adapter.withSelectable(true);
+      adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
+        AppUtil.guaranteeSingleDialogFragment(getActivity(),
+            DeleteTriggerDialog.newInstance(item.getTrigger()), "delete_trigger");
+        return true;
+      });
+
+      adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List list) {
+          if (i < 0) {
+            Timber.e("onBindViewHolder passed with invalid index: %d", i);
+            return;
+          }
+
+          Timber.d("onBindViewHolder: %d", i);
+          final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
+          final PowerTriggerEntry trigger =
+              adapter.getAdapterItem(holder.getAdapterPosition()).getTrigger();
+          holder.binding.triggerName.setText(trigger.name());
+          holder.binding.triggerPercent.setText(
+              String.format(Locale.getDefault(), "Percent: %s", trigger.percent()));
+          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+
+          Timber.d("Entry enabled: %s", trigger.enabled());
+          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+          holder.binding.triggerEnabledSwitch.setChecked(trigger.enabled());
+          final CompoundButton.OnCheckedChangeListener listener =
+              new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(@NonNull CompoundButton compoundButton, boolean b) {
+                  compoundButton.setOnCheckedChangeListener(null);
+                  compoundButton.setChecked(!b);
+                  compoundButton.setOnCheckedChangeListener(this);
+
+                  Timber.d("Toggle enabled: %s", b);
+                  listAdapterPresenter.toggleEnabledState(holder.getAdapterPosition(),
+                      adapter.getAdapterItem(holder.getAdapterPosition()).getTrigger(), b);
+                }
+              };
+
+          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
+        }
+
+        @CheckResult @NonNull private PowerTriggerListItem.ViewHolder toPowerTriggerListItem(
+            RecyclerView.ViewHolder viewHolder) {
+          if (viewHolder instanceof PowerTriggerListItem.ViewHolder) {
+            return (PowerTriggerListItem.ViewHolder) viewHolder;
+          } else {
+            throw new IllegalStateException("ViewHolder is not PowerTriggerListItem.ViewHolder");
+          }
+        }
+
+        @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+          if (i < 0) {
+            Timber.e("onBindViewHolder passed with invalid index: %d", i);
+            return;
+          }
+
+          Timber.d("unBindViewHolder: %d", i);
+          final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
+          holder.binding.triggerName.setText(null);
+          holder.binding.triggerPercent.setText(null);
+          holder.itemView.setOnLongClickListener(null);
+          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+        }
+      });
     }
 
     listAdapterPresenter.bindView(this);
@@ -210,11 +281,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
   @CheckResult @NonNull
   private PowerTriggerListItem createNewPowerTriggerListItem(@NonNull PowerTriggerEntry entry) {
-    return new PowerTriggerListItem(entry,
-        (entry12, position12, isChecked) -> listAdapterPresenter.toggleEnabledState(position12,
-            entry12, isChecked),
-        (entry1, position1) -> AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-            DeleteTriggerDialog.newInstance(entry1), "delete"));
+    return new PowerTriggerListItem(entry);
   }
 
   @Override public void onNewTriggerCreateError() {
