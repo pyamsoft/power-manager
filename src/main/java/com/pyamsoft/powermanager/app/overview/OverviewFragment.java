@@ -92,6 +92,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   @Override public void onDestroyView() {
     super.onDestroyView();
+    adapter.withOnClickListener(null);
     binding.unbind();
   }
 
@@ -130,30 +131,68 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   private void populateAdapter(@NonNull View view) {
     adapter = new FastItemAdapter<>();
+    adapter.withSelectable(true);
+    adapter.withOnClickListener((view1, iAdapter, item, i) -> {
+      final Fragment fragment;
+      switch (item.getTitle()) {
+        case WifiFragment.TAG:
+          fragment = WifiFragment.newInstance(view1, item.getRootView());
+          break;
+        case DataFragment.TAG:
+          fragment = DataFragment.newInstance(view1, item.getRootView());
+          break;
+        case BluetoothFragment.TAG:
+          fragment = BluetoothFragment.newInstance(view1, item.getRootView());
+          break;
+        case SyncFragment.TAG:
+          fragment = SyncFragment.newInstance(view1, item.getRootView());
+          break;
+        case PowerTriggerFragment.TAG:
+          fragment = PowerTriggerFragment.newInstance(view1, item.getRootView());
+          break;
+        case DozeFragment.TAG:
+          fragment = DozeFragment.newInstance(view1, item.getRootView());
+          break;
+        case WearFragment.TAG:
+          fragment = WearFragment.newInstance(view1, item.getRootView());
+          break;
+        case SettingsFragment.TAG:
+          fragment = SettingsFragment.newInstance(view1, item.getRootView());
+          break;
+        case AirplaneFragment.TAG:
+          fragment = AirplaneFragment.newInstance(view1, item.getRootView());
+          break;
+        default:
+          throw new IllegalStateException("Invalid tag: " + item.getTitle());
+      }
+
+      loadFragment(item.getTitle(), fragment);
+      return true;
+    });
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
-            wifiManageObserver, this::loadFragment));
+            wifiManageObserver));
     adapter.add(
         new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
-            dataManageObserver, this::loadFragment));
+            dataManageObserver));
     adapter.add(
         new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
-            bluetoothManageObserver, this::loadFragment));
+            bluetoothManageObserver));
     adapter.add(new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
-        syncManageObserver, this::loadFragment));
+        syncManageObserver));
     adapter.add(
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
-            null, this::loadFragment));
+            null));
     adapter.add(new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
-        R.color.cyan500, airplaneManageObserver, this::loadFragment));
+        R.color.cyan500, airplaneManageObserver));
     adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
-        dozeManageObserver, this::loadFragment));
+        dozeManageObserver));
     adapter.add(
         new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
-            wearManageObserver, this::loadFragment));
+            wearManageObserver));
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
-            null, this::loadFragment));
+            null));
 
     // Can't use the normal withOnClickListener on the adapter for some reason
   }

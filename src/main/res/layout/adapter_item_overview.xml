@@ -88,14 +88,6 @@
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/adapter_item_overview_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
-        />
-
-
   </com.pyamsoft.pydroid.widget.SquareCardView>
 
 </layout>

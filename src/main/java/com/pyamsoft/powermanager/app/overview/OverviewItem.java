@@ -22,23 +22,13 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
-import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
-import com.pyamsoft.powermanager.app.data.DataFragment;
-import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.settings.SettingsFragment;
-import com.pyamsoft.powermanager.app.sync.SyncFragment;
-import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
-import com.pyamsoft.powermanager.app.wear.WearFragment;
-import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -53,18 +43,19 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
   @NonNull private final String title;
   @DrawableRes private final int image;
   @ColorRes private final int background;
-  @NonNull private final ItemClickListener itemClickListener;
   @Nullable private final BooleanInterestObserver observer;
 
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
-      @ColorRes int background, @Nullable BooleanInterestObserver observer,
-      @NonNull ItemClickListener itemClickListener) {
+      @ColorRes int background, @Nullable BooleanInterestObserver observer) {
     this.rootView = rootView;
     this.title = title;
     this.image = image;
     this.background = background;
     this.observer = observer;
-    this.itemClickListener = itemClickListener;
+  }
+
+  @NonNull @CheckResult View getRootView() {
+    return rootView;
   }
 
   @Override public int getType() {
@@ -87,39 +78,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List payloads) {
     super.bindView(holder, payloads);
-    final Fragment fragment;
-    switch (title) {
-      case WifiFragment.TAG:
-        fragment = WifiFragment.newInstance(holder.itemView, rootView);
-        break;
-      case DataFragment.TAG:
-        fragment = DataFragment.newInstance(holder.itemView, rootView);
-        break;
-      case BluetoothFragment.TAG:
-        fragment = BluetoothFragment.newInstance(holder.itemView, rootView);
-        break;
-      case SyncFragment.TAG:
-        fragment = SyncFragment.newInstance(holder.itemView, rootView);
-        break;
-      case PowerTriggerFragment.TAG:
-        fragment = PowerTriggerFragment.newInstance(holder.itemView, rootView);
-        break;
-      case DozeFragment.TAG:
-        fragment = DozeFragment.newInstance(holder.itemView, rootView);
-        break;
-      case WearFragment.TAG:
-        fragment = WearFragment.newInstance(holder.itemView, rootView);
-        break;
-      case SettingsFragment.TAG:
-        fragment = SettingsFragment.newInstance(holder.itemView, rootView);
-        break;
-      case AirplaneFragment.TAG:
-        fragment = AirplaneFragment.newInstance(holder.itemView, rootView);
-        break;
-      default:
-        throw new IllegalStateException("Invalid tag: " + title);
-    }
-
     // Tint check mark white
     // Avoids a NoMethod crash on API 19
     holder.binding.adapterItemOverviewColor.setBackgroundColor(
@@ -142,18 +100,11 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
       holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
     }
 
-    holder.binding.adapterItemOverviewRoot.setOnClickListener(
-        view -> getItemClickListener().onItemClicked(getTitle(), fragment));
-
     final AsyncMap.Entry task = AsyncDrawable.with(holder.itemView.getContext())
         .load(image)
         .tint(android.R.color.white)
         .into(holder.binding.adapterItemOverviewImage);
     taskMap.put(title, task);
-  }
-
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult ItemClickListener getItemClickListener() {
-    return itemClickListener;
   }
 
   @NonNull @CheckResult public String getTitle() {
@@ -162,11 +113,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
     return FACTORY;
-  }
-
-  interface ItemClickListener {
-
-    void onItemClicked(@NonNull String title, @NonNull Fragment fragment);
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory
