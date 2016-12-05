@@ -26,6 +26,9 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import java.util.List;
+import java.util.Locale;
+import timber.log.Timber;
 
 class PowerTriggerListItem
     extends AbstractItem<PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
@@ -52,6 +55,22 @@ class PowerTriggerListItem
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
     return FACTORY;
+  }
+
+  @Override public void bindView(ViewHolder holder, List payloads) {
+    super.bindView(holder, payloads);
+    holder.binding.triggerName.setText(trigger.name());
+    holder.binding.triggerPercent.setText(
+        String.format(Locale.getDefault(), "Percent: %s", trigger.percent()));
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+    Timber.d("Entry enabled: %s", trigger.enabled());
+    holder.binding.triggerEnabledSwitch.setChecked(trigger.enabled());
+  }
+
+  @Override public void unbindView(ViewHolder holder) {
+    super.unbindView(holder);
+    holder.binding.triggerName.setText(null);
+    holder.binding.triggerPercent.setText(null);
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory

@@ -42,7 +42,6 @@ import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.List;
-import java.util.Locale;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
@@ -136,16 +135,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
           Timber.d("onBindViewHolder: %d", i);
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
-          final PowerTriggerEntry trigger =
-              adapter.getAdapterItem(holder.getAdapterPosition()).getTrigger();
-          holder.binding.triggerName.setText(trigger.name());
-          holder.binding.triggerPercent.setText(
-              String.format(Locale.getDefault(), "Percent: %s", trigger.percent()));
-          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+          adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
 
-          Timber.d("Entry enabled: %s", trigger.enabled());
-          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
-          holder.binding.triggerEnabledSwitch.setChecked(trigger.enabled());
           final CompoundButton.OnCheckedChangeListener listener =
               new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -159,7 +150,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
                       adapter.getAdapterItem(holder.getAdapterPosition()).getTrigger(), b);
                 }
               };
-
           holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
         }
 
@@ -180,9 +170,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
           Timber.d("unBindViewHolder: %d", i);
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
-          holder.binding.triggerName.setText(null);
-          holder.binding.triggerPercent.setText(null);
-          holder.itemView.setOnLongClickListener(null);
+          adapter.getAdapterItem(holder.getAdapterPosition()).unbindView(holder);
           holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
         }
       });

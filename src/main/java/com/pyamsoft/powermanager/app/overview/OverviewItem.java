@@ -70,9 +70,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     super.unbindView(holder);
     taskMap.clear();
     holder.binding.adapterItemOverviewImage.setImageDrawable(null);
-    holder.binding.adapterItemOverviewImage.setOnClickListener(null);
     holder.binding.adapterItemOverviewTitle.setText(null);
-    holder.binding.adapterItemOverviewTitle.setOnClickListener(null);
   }
 
   @Override public void bindView(ViewHolder holder, List payloads) {
