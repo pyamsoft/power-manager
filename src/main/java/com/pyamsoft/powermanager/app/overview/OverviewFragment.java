@@ -169,6 +169,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
       loadFragment(item.getTitle(), fragment);
       return true;
     });
+
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             wifiManageObserver));
@@ -193,8 +194,6 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
             null));
-
-    // Can't use the normal withOnClickListener on the adapter for some reason
   }
 
   @SuppressWarnings("WeakerAccess") void loadFragment(@NonNull String title,

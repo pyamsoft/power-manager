@@ -120,7 +120,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
       adapter.withSelectable(true);
       adapter.withSelectOnLongClick(true);
       adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
-        AppUtil.guaranteeSingleDialogFragment(getActivity(),
+        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
             DeleteTriggerDialog.newInstance(item.getTrigger()), "delete_trigger");
         return true;
       });
