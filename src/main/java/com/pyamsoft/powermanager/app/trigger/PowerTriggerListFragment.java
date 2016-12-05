@@ -119,6 +119,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     if (adapter == null) {
       adapter = new FastItemAdapter<>();
       adapter.withSelectable(true);
+      adapter.withSelectOnLongClick(true);
       adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
         AppUtil.guaranteeSingleDialogFragment(getActivity(),
             DeleteTriggerDialog.newInstance(item.getTrigger()), "delete_trigger");
