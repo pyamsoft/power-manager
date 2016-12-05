@@ -25,9 +25,8 @@ import rx.Scheduler;
 
 class DozeDelayPreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject DozeDelayPreferencePresenterImpl(
-      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  @Inject DozeDelayPreferencePresenterImpl(@Nullable CustomTimeInputPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
   }
 }

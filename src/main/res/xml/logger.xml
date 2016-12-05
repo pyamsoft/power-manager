@@ -23,8 +23,8 @@
 
     <!--suppress AndroidElementNotAllowed -->
     <SwitchPreferenceCompat
-        android:key="@string/logger_enabled"
         android:defaultValue="@bool/logger_enabled_default"
+        android:key="@string/logger_enabled"
         android:summaryOff="@string/logger_summary_off"
         android:summaryOn="@string/logger_summary_on"
         android:title="@string/logger_title"

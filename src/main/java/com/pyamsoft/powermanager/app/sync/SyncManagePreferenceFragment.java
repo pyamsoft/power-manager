@@ -28,8 +28,7 @@ public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
 
   }
 
-  @NonNull @Override
-  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new SyncManagePresenterLoader();
   }
 

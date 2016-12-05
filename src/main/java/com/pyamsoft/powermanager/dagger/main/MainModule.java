@@ -28,9 +28,8 @@ import rx.Scheduler;
 @Module public class MainModule {
 
   @Provides MainPresenter provideMainPresenter(@NonNull MainInteractor interactor,
-      @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler,
-      @Named("obs_root_permission")PermissionObserver rootPermissionObserver) {
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new MainPresenterImpl(interactor, obsScheduler, subScheduler, rootPermissionObserver);
   }
 

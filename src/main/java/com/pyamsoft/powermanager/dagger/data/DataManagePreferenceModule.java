@@ -35,8 +35,8 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new DataManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler, manageObserver,
-        rootPermissionObserver);
+    return new DataManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+        manageObserver, rootPermissionObserver);
   }
 
   @Provides @Named("data_manage_pref_interactor")

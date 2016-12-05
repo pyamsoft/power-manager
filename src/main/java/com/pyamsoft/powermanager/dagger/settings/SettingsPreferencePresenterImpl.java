@@ -76,12 +76,11 @@ class SettingsPreferencePresenterImpl
     rootSubscription = interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(
-            hasPermission -> getView(view -> view.onRootCallback(causedByUser, hasPermission, rootEnable)),
-            throwable -> {
-              Timber.e(throwable, "onError checking root");
-              getView(view -> view.onRootCallback(causedByUser, false, rootEnable));
-            }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
+        .subscribe(hasPermission -> getView(
+            view -> view.onRootCallback(causedByUser, hasPermission, rootEnable)), throwable -> {
+          Timber.e(throwable, "onError checking root");
+          getView(view -> view.onRootCallback(causedByUser, false, rootEnable));
+        }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
   }
 
   @Override public void processClearRequest(int type) {

@@ -38,9 +38,9 @@ public abstract class ManagePreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
       Subscriptions.empty();
 
-  protected ManagePreferencePresenterImpl(
-      @NonNull ManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver) {
+  protected ManagePreferencePresenterImpl(@NonNull ManagePreferenceInteractor manageInteractor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = manageInteractor;
     this.manageObserver = manageObserver;

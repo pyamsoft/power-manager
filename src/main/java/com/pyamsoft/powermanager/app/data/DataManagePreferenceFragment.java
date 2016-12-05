@@ -31,8 +31,7 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
 
   }
 
-  @NonNull @Override
-  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new DataManagePresenterLoader();
   }
 
@@ -62,7 +61,8 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
-    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Mobile Data", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Mobile Data",
+        Toast.LENGTH_SHORT).show();
   }
 
   @NonNull @Override protected String getModuleName() {

@@ -48,8 +48,7 @@ public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
     return R.string.periodic_sync_disable_key;
   }
 
-  @NonNull @Override
-  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new SyncPeriodPresenterLoader();
   }
 

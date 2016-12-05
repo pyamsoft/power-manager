@@ -62,8 +62,7 @@ class ManagerDozeImpl extends WearUnawareManagerImpl implements ExclusiveManager
             () -> SubscriptionHelper.unsubscribe(dozeSetSubscription));
   }
 
-  @Override
-  public void queueExclusiveUnset(@Nullable NonExclusiveCallback callback) {
+  @Override public void queueExclusiveUnset(@Nullable NonExclusiveCallback callback) {
     queueUnset();
 
     SubscriptionHelper.unsubscribe(dozeUnsetSubscription);

@@ -28,8 +28,7 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public abstract class OverviewPagerPresenterImpl
-    extends SchedulerPresenter<OverviewPagerPresenter.View>
-    implements OverviewPagerPresenter {
+    extends SchedulerPresenter<OverviewPagerPresenter.View> implements OverviewPagerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();

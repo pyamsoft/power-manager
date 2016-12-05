@@ -22,8 +22,8 @@ import rx.Scheduler;
 
 class ManagerSyncImpl extends WearUnawareManagerImpl {
 
-  @Inject ManagerSyncImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  @Inject ManagerSyncImpl(@NonNull ManagerInteractor interactor,
+      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observerScheduler, subscribeScheduler);
   }
 }

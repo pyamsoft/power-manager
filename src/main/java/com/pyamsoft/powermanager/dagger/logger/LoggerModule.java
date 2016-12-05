@@ -156,7 +156,8 @@ import rx.Scheduler;
     return new LoggerImpl(loggerPresenter);
   }
 
-  @Singleton @Provides @Named("logger_presenter_trigger") LoggerPresenter provideLoggerPresenterTrigger(
+  @Singleton @Provides @Named("logger_presenter_trigger")
+  LoggerPresenter provideLoggerPresenterTrigger(
       @NonNull @Named("logger_interactor_trigger") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);

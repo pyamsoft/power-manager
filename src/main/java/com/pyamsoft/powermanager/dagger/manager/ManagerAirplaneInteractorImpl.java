@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.app.logger.Logger;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
@@ -37,7 +36,8 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver,
       @NonNull PermissionObserver rootPermissionObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver);
+    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
+        wearStateObserver);
     this.rootPermissionObserver = rootPermissionObserver;
   }
 

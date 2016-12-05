@@ -24,8 +24,7 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
-  @NonNull @Override
-  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new WifiPeriodPresenterLoader();
   }
 

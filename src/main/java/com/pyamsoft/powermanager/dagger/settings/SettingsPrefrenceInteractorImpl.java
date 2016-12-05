@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.dagger.settings;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
-import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
 import com.pyamsoft.powermanager.dagger.ShellCommandHelper;
+import com.pyamsoft.powermanager.dagger.trigger.PowerTriggerDB;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;

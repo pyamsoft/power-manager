@@ -48,8 +48,7 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
     return R.string.periodic_data_disable_key;
   }
 
-  @NonNull @Override
-  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new DataPeriodPresenterLoader();
   }
 

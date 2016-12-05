@@ -30,8 +30,7 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
 
   }
 
-  @NonNull @Override
-  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new WearPresenterLoader();
   }
 

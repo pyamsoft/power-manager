@@ -48,8 +48,7 @@ public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragme
     return R.string.periodic_airplane_disable_key;
   }
 
-  @NonNull @Override
-  protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
     return new AirplanePeriodPresenterLoader();
   }
 

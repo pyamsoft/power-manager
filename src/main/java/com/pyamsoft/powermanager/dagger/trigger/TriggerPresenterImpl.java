@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.content.ContentValues;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;

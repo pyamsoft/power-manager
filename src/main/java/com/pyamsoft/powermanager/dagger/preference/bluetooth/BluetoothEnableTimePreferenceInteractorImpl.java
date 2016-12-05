@@ -23,7 +23,8 @@ import javax.inject.Inject;
 
 class BluetoothEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
 
-  @Inject BluetoothEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject BluetoothEnableTimePreferenceInteractorImpl(
+      @NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 

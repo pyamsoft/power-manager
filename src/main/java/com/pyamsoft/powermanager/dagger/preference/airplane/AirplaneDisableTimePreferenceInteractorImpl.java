@@ -23,7 +23,8 @@ import javax.inject.Inject;
 
 class AirplaneDisableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
 
-  @Inject AirplaneDisableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject AirplaneDisableTimePreferenceInteractorImpl(
+      @NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 

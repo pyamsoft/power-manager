@@ -30,8 +30,7 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
   }
 
-  @NonNull @Override
-  protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new AirplaneManagePresenterLoader();
   }
 
@@ -61,7 +60,9 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void onShowManagePermissionNeededMessage() {
-    Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Airplane Mode", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getContext(),
+        "Enable SuperUser from the Settings module to manage Airplane Mode", Toast.LENGTH_SHORT)
+        .show();
   }
 
   @NonNull @Override protected String getModuleName() {
