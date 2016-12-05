@@ -43,7 +43,6 @@ import timber.log.Timber;
 
 abstract class LoggerInteractorImpl implements LoggerInteractor {
 
-  @NonNull private static final DateFormat DATE_FORMAT = DateFormat.getDateTimeInstance();
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @Nullable private File logPath;
@@ -128,7 +127,8 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
   }
 
   @NonNull @CheckResult private String formatMessage(@NonNull String message) {
-    final String datePrefix = DATE_FORMAT.format(Calendar.getInstance().getTime());
+    final String datePrefix =
+        DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime());
     return String.format(Locale.getDefault(), "[%s] - %s", datePrefix, message);
   }
 }

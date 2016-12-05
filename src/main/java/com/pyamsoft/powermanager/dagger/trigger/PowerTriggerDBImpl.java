@@ -40,7 +40,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
   @NonNull private final Scheduler dbScheduler;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription dbOpenSubscription;
+  @SuppressWarnings("WeakerAccess") @Nullable volatile Subscription dbOpenSubscription;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
     dbScheduler = scheduler;
