@@ -22,13 +22,23 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
+import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
+import com.pyamsoft.powermanager.app.data.DataFragment;
+import com.pyamsoft.powermanager.app.doze.DozeFragment;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.settings.SettingsFragment;
+import com.pyamsoft.powermanager.app.sync.SyncFragment;
+import com.pyamsoft.powermanager.app.trigger.PowerTriggerFragment;
+import com.pyamsoft.powermanager.app.wear.WearFragment;
+import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
@@ -54,10 +64,6 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     this.observer = observer;
   }
 
-  @NonNull @CheckResult View getRootView() {
-    return rootView;
-  }
-
   @Override public int getType() {
     return R.id.adapter_overview_item;
   }
@@ -76,12 +82,50 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
     holder.bind(background, title, image, observer);
   }
 
-  @NonNull @CheckResult public String getTitle() {
-    return title;
+  void click(@NonNull View view, @NonNull OnOverviewItemClicked itemClicked) {
+    final Fragment fragment;
+    switch (title) {
+      case WifiFragment.TAG:
+        fragment = WifiFragment.newInstance(view, rootView);
+        break;
+      case DataFragment.TAG:
+        fragment = DataFragment.newInstance(view, rootView);
+        break;
+      case BluetoothFragment.TAG:
+        fragment = BluetoothFragment.newInstance(view, rootView);
+        break;
+      case SyncFragment.TAG:
+        fragment = SyncFragment.newInstance(view, rootView);
+        break;
+      case PowerTriggerFragment.TAG:
+        fragment = PowerTriggerFragment.newInstance(view, rootView);
+        break;
+      case DozeFragment.TAG:
+        fragment = DozeFragment.newInstance(view, rootView);
+        break;
+      case WearFragment.TAG:
+        fragment = WearFragment.newInstance(view, rootView);
+        break;
+      case SettingsFragment.TAG:
+        fragment = SettingsFragment.newInstance(view, rootView);
+        break;
+      case AirplaneFragment.TAG:
+        fragment = AirplaneFragment.newInstance(view, rootView);
+        break;
+      default:
+        throw new IllegalStateException("Invalid tag: " + title);
+    }
+
+    itemClicked.onItemClicked(title, fragment);
   }
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
     return FACTORY;
+  }
+
+  interface OnOverviewItemClicked {
+
+    void onItemClicked(@NonNull String title, @NonNull Fragment fragment);
   }
 
   @SuppressWarnings("WeakerAccess") protected static class ItemFactory

@@ -27,7 +27,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -120,14 +119,14 @@ public class PowerTriggerListFragment extends ActionBarFragment
       adapter.withSelectable(true);
       adapter.withSelectOnLongClick(true);
       adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
-        AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-            DeleteTriggerDialog.newInstance(item.getTrigger()), "delete_trigger");
+        item.click(item1 -> AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
+            DeleteTriggerDialog.newInstance(item1), "delete_trigger"));
         return true;
       });
 
       adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List list) {
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List<Object> list) {
           if (i < 0) {
             Timber.e("onBindViewHolder passed with invalid index: %d", i);
             return;
@@ -136,21 +135,9 @@ public class PowerTriggerListFragment extends ActionBarFragment
           Timber.d("onBindViewHolder: %d", i);
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
           adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
-
-          final CompoundButton.OnCheckedChangeListener listener =
-              new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(@NonNull CompoundButton compoundButton, boolean b) {
-                  compoundButton.setOnCheckedChangeListener(null);
-                  compoundButton.setChecked(!b);
-                  compoundButton.setOnCheckedChangeListener(this);
-
-                  Timber.d("Toggle enabled: %s", b);
-                  listAdapterPresenter.toggleEnabledState(holder.getAdapterPosition(),
-                      adapter.getAdapterItem(holder.getAdapterPosition()).getTrigger(), b);
-                }
-              };
-          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
+          holder.bind((position, entry, isChecked) -> {
+            listAdapterPresenter.toggleEnabledState(position, entry, isChecked);
+          });
         }
 
         @CheckResult @NonNull private PowerTriggerListItem.ViewHolder toPowerTriggerListItem(
@@ -171,7 +158,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
           Timber.d("unBindViewHolder: %d", i);
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
           adapter.getAdapterItem(holder.getAdapterPosition()).unbindView(holder);
-          holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
         }
       });
     }

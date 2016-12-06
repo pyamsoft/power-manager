@@ -133,40 +133,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
     adapter = new FastItemAdapter<>();
     adapter.withSelectable(true);
     adapter.withOnClickListener((view1, iAdapter, item, i) -> {
-      final Fragment fragment;
-      switch (item.getTitle()) {
-        case WifiFragment.TAG:
-          fragment = WifiFragment.newInstance(view1, item.getRootView());
-          break;
-        case DataFragment.TAG:
-          fragment = DataFragment.newInstance(view1, item.getRootView());
-          break;
-        case BluetoothFragment.TAG:
-          fragment = BluetoothFragment.newInstance(view1, item.getRootView());
-          break;
-        case SyncFragment.TAG:
-          fragment = SyncFragment.newInstance(view1, item.getRootView());
-          break;
-        case PowerTriggerFragment.TAG:
-          fragment = PowerTriggerFragment.newInstance(view1, item.getRootView());
-          break;
-        case DozeFragment.TAG:
-          fragment = DozeFragment.newInstance(view1, item.getRootView());
-          break;
-        case WearFragment.TAG:
-          fragment = WearFragment.newInstance(view1, item.getRootView());
-          break;
-        case SettingsFragment.TAG:
-          fragment = SettingsFragment.newInstance(view1, item.getRootView());
-          break;
-        case AirplaneFragment.TAG:
-          fragment = AirplaneFragment.newInstance(view1, item.getRootView());
-          break;
-        default:
-          throw new IllegalStateException("Invalid tag: " + item.getTitle());
-      }
-
-      loadFragment(item.getTitle(), fragment);
+      item.click(view1, this::loadFragment);
       return true;
     });
 
