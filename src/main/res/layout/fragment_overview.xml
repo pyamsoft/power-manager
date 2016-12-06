@@ -24,17 +24,10 @@
       android:layout_height="match_parent"
       >
 
-    <!--
-      These padding are strange so that the Cards look proper
-    -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/overview_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="8dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp"
         />
 
   </FrameLayout>
