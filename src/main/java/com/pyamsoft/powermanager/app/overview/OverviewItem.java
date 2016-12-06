@@ -32,13 +32,13 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import java.util.List;
 
 class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
   @NonNull private final View rootView;
   @NonNull private final String title;
   @DrawableRes private final int image;
@@ -68,40 +68,12 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    taskMap.clear();
-    holder.binding.adapterItemOverviewImage.setImageDrawable(null);
-    holder.binding.adapterItemOverviewTitle.setText(null);
+    holder.unbind();
   }
 
-  @Override public void bindView(ViewHolder holder, List payloads) {
+  @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    // Tint check mark white
-    // Avoids a NoMethod crash on API 19
-    holder.binding.adapterItemOverviewColor.setBackgroundColor(
-        ContextCompat.getColor(holder.itemView.getContext(), background));
-
-    holder.binding.adapterItemOverviewTitle.setText(title);
-    if (observer != null) {
-      final int check;
-      if (observer.is()) {
-        check = R.drawable.ic_check_box_24dp;
-      } else {
-        check = R.drawable.ic_check_box_outline_24dp;
-      }
-      final AsyncMap.Entry checkTask = AsyncDrawable.with(holder.itemView.getContext())
-          .load(check)
-          .tint(android.R.color.white)
-          .into(holder.binding.adapterItemOverviewCheck);
-      taskMap.put(title + "check", checkTask);
-    } else {
-      holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
-    }
-
-    final AsyncMap.Entry task = AsyncDrawable.with(holder.itemView.getContext())
-        .load(image)
-        .tint(android.R.color.white)
-        .into(holder.binding.adapterItemOverviewImage);
-    taskMap.put(title, task);
+    holder.bind(background, title, image, observer);
   }
 
   @NonNull @CheckResult public String getTitle() {
@@ -121,11 +93,55 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final AdapterItemOverviewBinding binding;
+    @NonNull private final AdapterItemOverviewBinding binding;
+    @Nullable private AsyncMap.Entry checkTask;
+    @Nullable private AsyncMap.Entry titleTask;
 
-    public ViewHolder(View itemView) {
+    ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
+    }
+
+    @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {
+      return binding;
+    }
+
+    void bind(@ColorRes int background, @NonNull String title, @DrawableRes int image,
+        @Nullable BooleanInterestObserver observer) {
+      // Tint check mark white
+      // Avoids a NoMethod crash on API 19
+      binding.adapterItemOverviewColor.setBackgroundColor(
+          ContextCompat.getColor(itemView.getContext(), background));
+
+      binding.adapterItemOverviewTitle.setText(title);
+      if (observer != null) {
+        final int check;
+        if (observer.is()) {
+          check = R.drawable.ic_check_box_24dp;
+        } else {
+          check = R.drawable.ic_check_box_outline_24dp;
+        }
+
+        AsyncMapHelper.unsubscribe(checkTask);
+        checkTask = AsyncDrawable.with(itemView.getContext())
+            .load(check)
+            .tint(android.R.color.white)
+            .into(binding.adapterItemOverviewCheck);
+      } else {
+        binding.adapterItemOverviewCheck.setImageDrawable(null);
+      }
+
+      AsyncMapHelper.unsubscribe(titleTask);
+      titleTask = AsyncDrawable.with(itemView.getContext())
+          .load(image)
+          .tint(android.R.color.white)
+          .into(binding.adapterItemOverviewImage);
+    }
+
+    void unbind() {
+      AsyncMapHelper.unsubscribe(checkTask, titleTask);
+      binding.adapterItemOverviewImage.setImageDrawable(null);
+      binding.adapterItemOverviewTitle.setText(null);
     }
   }
 }

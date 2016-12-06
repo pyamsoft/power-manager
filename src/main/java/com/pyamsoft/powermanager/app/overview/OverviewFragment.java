@@ -235,12 +235,13 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
       // If we use the first item we get a weird location, try a different item
       final OverviewItem.ViewHolder tapTargetView =
           (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
-      final TapTarget overview = TapTarget.forView(tapTargetView.binding.adapterItemOverviewImage,
-          getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
-          .cancelable(false);
+      final TapTarget overview =
+          TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewImage,
+              getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
+              .cancelable(false);
 
       final TapTarget manageTarget =
-          TapTarget.forView(tapTargetView.binding.adapterItemOverviewCheck,
+          TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewCheck,
               getString(R.string.onboard_title_module_manage),
               getString(R.string.onboard_desc_module_manage)).cancelable(false);
 
