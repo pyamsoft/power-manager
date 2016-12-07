@@ -232,15 +232,13 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "FEATURE: Add module for Airplane mode";
-    final String line2 = "FEATURE: Better performance for calls to SuperUser";
-    final String line3 = "FEATURE: Add options to enable or disable SuperUser based options";
-    final String line4 = "FEATURE: Add more options for Doze mode";
-    final String line5 = "BUGFIX: More reliable manager queueing";
-    final String line6 = "BUGFIX: More reliable Power Triggers";
-    final String line7 =
-        "BUGFIX: General bugfixes and optimizations of the automatic power management";
-    return new String[] { line1, line2, line3, line4, line5, line6, line7 };
+    final String line1 =
+        "CHANGE: Always start the application on boot. This change is done to fix an issue where, on some devices, Home Button does not always start on boot.";
+    final String line2 = "BUGFIX: Fix crash in donation page";
+    final String line3 = "BUGFIX: Fix crash in image loading on KitKat";
+    final String line4 = "BUGFIX: Smaller APK size";
+    final String line5 = "BUGFIX: Various optimizations and fixes";
+    return new String[] { line1, line2, line3, line4, line5 };
   }
 
   @NonNull @Override protected String getVersionName() {
