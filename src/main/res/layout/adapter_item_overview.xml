@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <FrameLayout
+  <com.pyamsoft.pydroid.widget.SquareFrameLayout
       android:id="@+id/adapter_item_overview_color"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -77,6 +77,6 @@
 
     </LinearLayout>
 
-  </FrameLayout>
+  </com.pyamsoft.pydroid.widget.SquareFrameLayout>
 
 </layout>
