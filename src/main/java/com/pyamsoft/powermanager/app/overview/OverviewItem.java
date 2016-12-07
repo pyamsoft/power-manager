@@ -167,8 +167,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
         }
 
         AsyncMapHelper.unsubscribe(checkTask);
-        checkTask = AsyncDrawable.with(itemView.getContext())
-            .load(check)
+        checkTask = AsyncDrawable.load(check)
             .tint(android.R.color.white)
             .into(binding.adapterItemOverviewCheck);
       } else {
@@ -176,8 +175,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
       }
 
       AsyncMapHelper.unsubscribe(titleTask);
-      titleTask = AsyncDrawable.with(itemView.getContext())
-          .load(image)
+      titleTask = AsyncDrawable.load(image)
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
     }

@@ -36,8 +36,10 @@ import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBin
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroidrx.RXLoader;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment
@@ -47,12 +49,12 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
-  @NonNull private final AsyncDrawable.Mapper asyncDrawableMap = new AsyncDrawable.Mapper();
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
   private long loadedKey;
+  @Nullable private AsyncMap.Entry subscription;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,7 +85,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     super.onDestroyView();
     removeTabLayout();
     setActionBarUpEnabled(false);
-    asyncDrawableMap.clear();
+    AsyncMapHelper.unsubscribe(subscription);
     binding.unbind();
   }
 
@@ -210,11 +212,10 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
       Timber.w("Icon is 0, hiding FAB");
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
-      final AsyncMap.Entry subscription = AsyncDrawable.with(getContext())
-          .load(fabIcon)
+      AsyncMapHelper.unsubscribe(subscription);
+      subscription = AsyncDrawable.load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
-      asyncDrawableMap.put("fab", subscription);
     }
   }
 

@@ -135,9 +135,8 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final AsyncMap.Entry continueTask = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_arrow_forward_24dp)
-        .into(binding.newTriggerContinue);
+    final AsyncMap.Entry continueTask =
+        AsyncDrawable.load(R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
   }
 
@@ -152,14 +151,12 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final AsyncMap.Entry backTask = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_arrow_back_24dp)
-        .into(binding.newTriggerBack);
+    final AsyncMap.Entry backTask =
+        AsyncDrawable.load(R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
-    final AsyncMap.Entry closeTask = AsyncDrawable.with(getContext())
-        .load(R.drawable.ic_close_24dp)
-        .into(binding.newTriggerClose);
+    final AsyncMap.Entry closeTask =
+        AsyncDrawable.load(R.drawable.ic_close_24dp).into(binding.newTriggerClose);
     taskMap.put("close", closeTask);
   }
 
