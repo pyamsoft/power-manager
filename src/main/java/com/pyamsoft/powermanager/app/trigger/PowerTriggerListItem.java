@@ -120,6 +120,8 @@ class PowerTriggerListItem
               Timber.d("Toggle enabled: %s", b);
               if (trigger != null) {
                 onTriggerEnabledChanged.onChange(getAdapterPosition(), trigger, b);
+              } else {
+                Timber.e("Trigger is NULL");
               }
             }
           };
