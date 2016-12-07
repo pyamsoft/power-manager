@@ -150,7 +150,11 @@ public class PowerTriggerListFragment extends ActionBarFragment
         }
 
         @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
-          toPowerTriggerListItem(viewHolder).unbind();
+          final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
+          final PowerTriggerListItem item = (PowerTriggerListItem) holder.itemView.getTag();
+          if (item != null) {
+            item.unbindView(holder);
+          }
         }
       });
     }
