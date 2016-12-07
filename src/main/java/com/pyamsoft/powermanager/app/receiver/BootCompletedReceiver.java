@@ -22,7 +22,7 @@ import android.content.Intent;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import timber.log.Timber;
 
-public class BootReceiver extends BroadcastReceiver {
+public class BootCompletedReceiver extends BroadcastReceiver {
 
   @Override public void onReceive(Context context, Intent intent) {
     if (intent != null) {
