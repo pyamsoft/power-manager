@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.app.trigger;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -27,7 +28,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.ActionSingle;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import timber.log.Timber;
@@ -84,12 +84,11 @@ class PowerTriggerListItem
   public static final class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull private final AdapterItemTriggerBinding binding;
-    @NonNull WeakReference<PowerTriggerEntry> weakTrigger;
+    @Nullable PowerTriggerEntry trigger;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
-      weakTrigger = new WeakReference<>(null);
     }
 
     void bind(@NonNull PowerTriggerEntry trigger) {
@@ -99,15 +98,14 @@ class PowerTriggerListItem
       binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
       binding.triggerEnabledSwitch.setChecked(trigger.enabled());
 
-      weakTrigger.clear();
-      weakTrigger = new WeakReference<>(trigger);
+      this.trigger = trigger;
     }
 
     void unbind() {
       binding.triggerName.setText(null);
       binding.triggerPercent.setText(null);
       binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
-      weakTrigger.clear();
+      trigger = null;
     }
 
     void bind(@NonNull OnTriggerEnabledChanged onTriggerEnabledChanged) {
@@ -120,9 +118,8 @@ class PowerTriggerListItem
               compoundButton.setOnCheckedChangeListener(this);
 
               Timber.d("Toggle enabled: %s", b);
-              final PowerTriggerEntry entry = weakTrigger.get();
-              if (entry != null) {
-                onTriggerEnabledChanged.onChange(getAdapterPosition(), entry, b);
+              if (trigger != null) {
+                onTriggerEnabledChanged.onChange(getAdapterPosition(), trigger, b);
               }
             }
           };
