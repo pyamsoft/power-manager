@@ -17,26 +17,14 @@
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <com.pyamsoft.pydroid.widget.SquareCardView
+  <FrameLayout
+      android:id="@+id/adapter_item_overview_color"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:clickable="false"
-      android:focusable="false"
-      android:longClickable="false"
-      app:cardCornerRadius="4dp"
-      app:cardElevation="4dp"
-      app:cardUseCompatPadding="true"
+      android:layout_height="match_parent"
       >
-
-    <FrameLayout
-        android:id="@+id/adapter_item_overview_color"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -89,6 +77,6 @@
 
     </LinearLayout>
 
-  </com.pyamsoft.pydroid.widget.SquareCardView>
+  </FrameLayout>
 
 </layout>
