@@ -28,4 +28,9 @@ interface TriggerInteractor extends BaseTriggerInteractor {
   @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry);
 
   @CheckResult @NonNull Observable<Integer> delete(int percent);
+
+  @CheckResult @NonNull Observable<Boolean> update(@NonNull PowerTriggerEntry entry,
+      boolean enabled);
+
+  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int percent);
 }

@@ -16,14 +16,10 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import com.pyamsoft.powermanager.app.trigger.TriggerListAdapterPresenterLoader;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenterLoader;
 import dagger.Subcomponent;
 
-@Subcomponent(modules = { TriggerListAdapterModule.class, TriggerModule.class })
-public interface TriggerComponent {
+@Subcomponent(modules = TriggerModule.class) public interface TriggerComponent {
 
   void inject(TriggerPresenterLoader loader);
-
-  void inject(TriggerListAdapterPresenterLoader loader);
 }

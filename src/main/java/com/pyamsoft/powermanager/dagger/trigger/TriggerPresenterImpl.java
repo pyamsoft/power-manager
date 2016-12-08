@@ -37,6 +37,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
   @SuppressWarnings("WeakerAccess") @NonNull Subscription viewSubscription = Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription createSubscription =
       Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription updateSubscription =
+      Subscriptions.empty();
 
   @Inject TriggerPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -46,7 +48,8 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(viewSubscription, deleteSubscription, createSubscription);
+    SubscriptionHelper.unsubscribe(viewSubscription, deleteSubscription, createSubscription,
+        updateSubscription);
   }
 
   @Override public void loadTriggerView() {
@@ -77,18 +80,17 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     createSubscription = interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(entry1 -> {
-          getView(triggerView -> triggerView.onNewTriggerAdded(entry1.percent()));
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          if (throwable instanceof SQLiteConstraintException) {
-            Timber.e("Error inserting into DB");
-            getView(TriggerView::onNewTriggerInsertError);
-          } else {
-            Timber.e("Issue creating trigger");
-            getView(TriggerView::onNewTriggerCreateError);
-          }
-        }, () -> SubscriptionHelper.unsubscribe(createSubscription));
+        .subscribe(entry1 -> getView(triggerView -> triggerView.onNewTriggerAdded(entry1)),
+            throwable -> {
+              Timber.e(throwable, "onError");
+              if (throwable instanceof SQLiteConstraintException) {
+                Timber.e("Error inserting into DB");
+                getView(TriggerView::onNewTriggerInsertError);
+              } else {
+                Timber.e("Issue creating trigger");
+                getView(TriggerView::onNewTriggerCreateError);
+              }
+            }, () -> SubscriptionHelper.unsubscribe(createSubscription));
   }
 
   @Override public void deleteTrigger(int percent) {
@@ -96,11 +98,25 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
     deleteSubscription = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(position -> {
-          getView(triggerView -> triggerView.onTriggerDeleted(position));
-        }, throwable -> {
-          // TODO
-          Timber.e(throwable, "onError");
-        }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
+        .subscribe(position -> getView(triggerView -> triggerView.onTriggerDeleted(position)),
+            throwable -> {
+              // TODO
+              Timber.e(throwable, "onError");
+            }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
+  }
+
+  @Override
+  public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled) {
+    SubscriptionHelper.unsubscribe(updateSubscription);
+    updateSubscription = interactor.update(entry, enabled)
+        .flatMap(updated -> interactor.get(entry.percent()))
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(result -> getView(
+            triggerListAdapterView -> triggerListAdapterView.updateViewHolder(position, result)),
+            throwable -> {
+              // TODO
+              Timber.e(throwable, "onError");
+            }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
   }
 }

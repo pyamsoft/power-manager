@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.app.trigger;
 
 import android.databinding.DataBindingUtil;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,7 @@ class PowerTriggerListItem
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerEntry trigger;
+  @NonNull private final PowerTriggerEntry trigger;
 
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
     this.trigger = trigger;
@@ -45,6 +46,10 @@ class PowerTriggerListItem
 
   void click(@NonNull ActionSingle<PowerTriggerEntry> onClick) {
     onClick.call(trigger);
+  }
+
+  @CheckResult int getPercent() {
+    return trigger.percent();
   }
 
   @Override public int getType() {

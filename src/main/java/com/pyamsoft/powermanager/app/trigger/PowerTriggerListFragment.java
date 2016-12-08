@@ -44,20 +44,18 @@ import java.util.List;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment
-    implements TriggerPresenter.TriggerView, TriggerListAdapterPresenter.TriggerListAdapterView {
+    implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
   @NonNull private static final String KEY_ADAPTER = "key_trigger_adapter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
 
-  TriggerListAdapterPresenter listAdapterPresenter;
   TriggerPresenter presenter;
 
   FastItemAdapter<PowerTriggerListItem> adapter;
   RecyclerView.ItemDecoration dividerDecoration;
   private long loadedPresenterKey;
-  private long loadedPresenterAdapterKey;
   private FragmentPowertriggerBinding binding;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,19 +70,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
             presenter = persist;
           }
         });
-
-    loadedPresenterAdapterKey = PersistentCache.get()
-        .load(KEY_ADAPTER, savedInstanceState,
-            new PersistLoader.Callback<TriggerListAdapterPresenter>() {
-              @NonNull @Override public PersistLoader<TriggerListAdapterPresenter> createLoader() {
-                return new TriggerListAdapterPresenterLoader();
-              }
-
-              @Override
-              public void onPersistentLoaded(@NonNull TriggerListAdapterPresenter persist) {
-                listAdapterPresenter = persist;
-              }
-            });
   }
 
   @CheckResult @NonNull public TriggerPresenter getPresenter() {
@@ -124,6 +109,18 @@ public class PowerTriggerListFragment extends ActionBarFragment
         return true;
       });
 
+      adapter.getItemAdapter().withComparator((item1, item2) -> {
+        final int item1Percent = item1.getPercent();
+        final int item2PPercent = item2.getPercent();
+        if (item1Percent == item2PPercent) {
+          throw new IllegalStateException("Cannot have two triggers with same percent");
+        } else if (item1Percent < item2PPercent) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }, true);
+
       adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List<Object> list) {
@@ -136,7 +133,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
           adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
           holder.bind((position, entry, isChecked) -> {
-            listAdapterPresenter.toggleEnabledState(position, entry, isChecked);
+            presenter.toggleEnabledState(position, entry, isChecked);
           });
         }
 
@@ -159,7 +156,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
       });
     }
 
-    listAdapterPresenter.bindView(this);
     presenter.bindView(this);
     presenter.loadTriggerView();
   }
@@ -172,20 +168,17 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
-    listAdapterPresenter.unbindView();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     if (!getActivity().isChangingConfigurations()) {
       PersistentCache.get().unload(loadedPresenterKey);
-      PersistentCache.get().unload(loadedPresenterAdapterKey);
     }
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
     PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedPresenterKey);
-    PersistentCache.get().saveKey(outState, KEY_ADAPTER, loadedPresenterAdapterKey);
     super.onSaveInstanceState(outState);
   }
 
@@ -236,14 +229,10 @@ public class PowerTriggerListFragment extends ActionBarFragment
     binding.powerTriggerList.setVisibility(View.VISIBLE);
   }
 
-  @Override public void onNewTriggerAdded(int percent) {
-    Timber.d("Added new trigger with percent: %d", percent);
-    final int position = listAdapterPresenter.getPositionForPercent(percent);
-    final PowerTriggerEntry entry = listAdapterPresenter.get(position);
+  @Override public void onNewTriggerAdded(@NonNull PowerTriggerEntry entry) {
+    Timber.d("Added new trigger with percent: %d", entry.percent());
 
     adapter.add(createNewPowerTriggerListItem(entry));
-    adapter.notifyAdapterItemInserted(position);
-
     if (binding.powerTriggerList.getAdapter() == null) {
       Timber.d("First trigger, show list");
       loadListView();
@@ -280,10 +269,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
     }
   }
 
-  @Override public void updateViewHolder(int position) {
+  @Override public void updateViewHolder(int position, @NonNull PowerTriggerEntry entry) {
     Timber.d("update view holder at position: %d", position);
-    final PowerTriggerEntry entry = listAdapterPresenter.get(position);
     adapter.set(position, createNewPowerTriggerListItem(entry));
-    adapter.notifyAdapterItemChanged(position);
   }
 }

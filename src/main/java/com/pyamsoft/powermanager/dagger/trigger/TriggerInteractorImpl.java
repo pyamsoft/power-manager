@@ -76,4 +76,23 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
       return positionObservable;
     });
   }
+
+  @NonNull @Override
+  public Observable<Boolean> update(@NonNull PowerTriggerEntry entry, boolean enabled) {
+    return Observable.defer(() -> {
+      final int percent = entry.percent();
+      Timber.d("Update enabled state with percent: %d", percent);
+      Timber.d("Update entry to enabled state: %s", enabled);
+      return getPowerTriggerDB().updateEnabled(enabled, percent);
+    }).map(integer -> {
+      Timber.d("Return code for update(): %d", integer);
+
+      // For now, just return true
+      return true;
+    });
+  }
+
+  @NonNull @Override public Observable<PowerTriggerEntry> get(int percent) {
+    return getPowerTriggerDB().queryWithPercent(percent).first();
+  }
 }

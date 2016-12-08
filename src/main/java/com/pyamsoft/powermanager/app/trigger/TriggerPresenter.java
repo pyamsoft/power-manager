@@ -22,6 +22,8 @@ import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView> {
 
+  void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled);
+
   void loadTriggerView();
 
   void showNewTriggerDialog();
@@ -36,18 +38,16 @@ public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView
 
     void onTriggerDeleted(int position);
 
-    void onNewTriggerAdded(int percent);
+    void onNewTriggerAdded(@NonNull PowerTriggerEntry entry);
 
     void onNewTriggerCreateError();
 
     void onNewTriggerInsertError();
-    //
-    //void loadEmptyView();
-    //
-    //void loadListView();
 
     void onTriggerLoaded(@NonNull PowerTriggerEntry entry);
 
     void onTriggerLoadFinished();
+
+    void updateViewHolder(int position, @NonNull PowerTriggerEntry entry);
   }
 }
