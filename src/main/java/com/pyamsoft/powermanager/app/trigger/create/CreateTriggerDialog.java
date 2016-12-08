@@ -44,12 +44,6 @@ public class CreateTriggerDialog extends DialogFragment {
   @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
     final Dialog dialog = super.onCreateDialog(savedInstanceState);
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-    final Window window = dialog.getWindow();
-    if (window != null) {
-      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    }
-
     return dialog;
   }
 
@@ -163,5 +157,15 @@ public class CreateTriggerDialog extends DialogFragment {
   @Override public void onSaveInstanceState(Bundle outState) {
     outState.putInt(CURRENT_PAGE, binding.newTriggerPager.getCurrentItem());
     super.onSaveInstanceState(outState);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+
+    final Window window = getDialog().getWindow();
+    if (window != null) {
+      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+    }
+
   }
 }

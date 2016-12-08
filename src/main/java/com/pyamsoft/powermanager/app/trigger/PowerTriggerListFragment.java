@@ -48,7 +48,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
-  @NonNull private static final String KEY_ADAPTER = "key_trigger_adapter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
 
   TriggerPresenter presenter;
@@ -124,12 +123,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
       adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List<Object> list) {
-          if (i < 0) {
-            Timber.e("onBindViewHolder passed with invalid index: %d", i);
-            return;
-          }
-
-          Timber.d("onBindViewHolder: %d", i);
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
           adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
           holder.bind((position, entry, isChecked) -> {
@@ -262,7 +255,6 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
   @Override public void onTriggerDeleted(int position) {
     adapter.remove(position);
-    adapter.notifyAdapterItemRemoved(position);
     if (adapter.getItemCount() == 0) {
       Timber.d("Last trigger, hide list");
       loadEmptyView();
