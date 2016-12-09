@@ -30,7 +30,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   @NonNull private static final String overviewOnboard = "overview_onboard";
   @NonNull private static final String manageOnboard = "manage_onboard";
   @NonNull private static final String periodOnboard = "period_onboard";
-  @NonNull private static final String foregroundServiceEnabled = "foregroundServiceEnabled";
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
@@ -233,14 +232,6 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
 
   @Override public boolean isLoggerEnabled() {
     return get(loggerEnabled, loggerEnabledDefault);
-  }
-
-  //@Override public boolean isForegroundServiceEnabled() {
-  //  return get(foregroundServiceEnabled, true);
-  //}
-
-  @Override public void setForegroundServiceEnabled(boolean state) {
-    put(foregroundServiceEnabled, state);
   }
 
   @Override public boolean isRootEnabled() {

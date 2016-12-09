@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
@@ -46,7 +47,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
-    return null;
+    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(context);
   }
 
   @Override public void insertCustomLicensesIntoMap() {

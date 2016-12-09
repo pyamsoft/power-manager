@@ -25,10 +25,6 @@ public interface PowerManagerPreferences {
   @CheckResult long getTriggerPeriodTime();
 
   @CheckResult boolean isLoggerEnabled();
-  //
-  //@CheckResult boolean isForegroundServiceEnabled();
-
-  void setForegroundServiceEnabled(boolean state);
 
   @CheckResult boolean isRootEnabled();
 
