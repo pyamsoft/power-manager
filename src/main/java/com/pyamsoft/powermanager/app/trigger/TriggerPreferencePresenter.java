@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.app.trigger;
 
-interface BaseServiceInteractor {
+public interface TriggerPreferencePresenter {
 
-  void setServiceEnabled(boolean state);
+  void restartService();
 }

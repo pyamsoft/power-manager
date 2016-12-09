@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface ForegroundInteractor extends BaseServiceInteractor {
+interface ForegroundInteractor extends ActionToggleInteractor {
 
   void create();
 

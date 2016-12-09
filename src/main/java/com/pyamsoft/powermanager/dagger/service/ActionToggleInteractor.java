@@ -20,7 +20,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import rx.Observable;
 
-interface ActionToggleInteractor extends BaseServiceInteractor {
+interface ActionToggleInteractor {
+
+  void setServiceEnabled(boolean state);
 
   @CheckResult @NonNull Observable<Boolean> isServiceEnabled();
 }

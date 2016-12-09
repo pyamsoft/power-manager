@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ActionTogglePresenter;
+import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Scheduler;
@@ -26,15 +27,15 @@ import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class ActionTogglePresenterImpl
-    extends BaseServicePresenterImpl<ActionTogglePresenter.ActionToggleProvider>
+    extends SchedulerPresenter<ActionTogglePresenter.ActionToggleProvider>
     implements ActionTogglePresenter {
 
-  @NonNull private final ActionToggleInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final ActionToggleInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
   @Inject ActionTogglePresenterImpl(@NonNull ActionToggleInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(interactor, observeScheduler, subscribeScheduler);
+    super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
@@ -48,7 +49,7 @@ class ActionTogglePresenterImpl
     subscription = interactor.isServiceEnabled()
         .map(enabled -> {
           final boolean newState = !enabled;
-          setForegroundState(newState);
+          interactor.setServiceEnabled(newState);
           return newState;
         })
         .subscribeOn(getSubscribeScheduler())

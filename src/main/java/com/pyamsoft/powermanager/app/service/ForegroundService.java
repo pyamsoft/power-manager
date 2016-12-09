@@ -30,8 +30,8 @@ import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
 
-  @NonNull public static final String POWER_MANAGER_SERVICE_ENABLED =
-      "POWER_MANAGER_SERVICE_ENABLED";
+  @NonNull private static final String EXTRA_SERVICE_ENABLED = "EXTRA_SERVICE_ENABLED";
+  @NonNull private static final String EXTRA_RESTART_TRIGGERS = "EXTRA_RESTART_TRIGGERS";
   private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
@@ -42,7 +42,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   private static void forceService(@NonNull Context context, boolean state) {
     final Context appContext = context.getApplicationContext();
     final Intent service = new Intent(appContext, ForegroundService.class);
-    service.putExtra(POWER_MANAGER_SERVICE_ENABLED, state);
+    service.putExtra(EXTRA_SERVICE_ENABLED, state);
 
     Timber.d("Force service: %s", state);
     appContext.startService(service);
@@ -60,6 +60,17 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
    */
   public static void stop(@NonNull Context context) {
     forceService(context, false);
+  }
+
+  /**
+   * Restart the triggers
+   */
+  public static void restartTriggers(@NonNull Context context) {
+    final Context appContext = context.getApplicationContext();
+    final Intent service = new Intent(appContext, ForegroundService.class);
+    service.putExtra(EXTRA_RESTART_TRIGGERS, true);
+    Timber.d("Restart Power Triggers");
+    appContext.startService(service);
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
@@ -89,20 +100,33 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
-      if (intent.hasExtra(POWER_MANAGER_SERVICE_ENABLED)) {
-        final boolean enable = intent.getBooleanExtra(POWER_MANAGER_SERVICE_ENABLED, true);
-        presenter.setForegroundState(enable);
-        if (enable) {
-          Timber.i("Register SCREEN receiver");
-          screenOnOffReceiver.register();
-        } else {
-          Timber.w("Unregister SCREEN receiver");
-          screenOnOffReceiver.unregister();
-        }
+      if (intent.hasExtra(EXTRA_SERVICE_ENABLED)) {
+        final boolean enable = intent.getBooleanExtra(EXTRA_SERVICE_ENABLED, true);
+        processServiceEnableCommand(enable);
+      } else if (intent.hasExtra(EXTRA_RESTART_TRIGGERS)) {
+        final boolean restart = intent.getBooleanExtra(EXTRA_RESTART_TRIGGERS, true);
+        processTriggerRestartCommand(restart);
       }
     }
     presenter.onStartNotification();
     return START_STICKY;
+  }
+
+  private void processTriggerRestartCommand(boolean restart) {
+    if (restart) {
+      presenter.restartTriggerAlarm();
+    }
+  }
+
+  private void processServiceEnableCommand(boolean enable) {
+    presenter.setForegroundState(enable);
+    if (enable) {
+      Timber.i("Register SCREEN receiver");
+      screenOnOffReceiver.register();
+    } else {
+      Timber.w("Unregister SCREEN receiver");
+      screenOnOffReceiver.unregister();
+    }
   }
 
   @Override public void startNotificationInForeground(@NonNull Notification notification) {
