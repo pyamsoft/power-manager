@@ -16,21 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import rx.Observable;
+interface TriggerPreferenceInteractor {
 
-interface TriggerInteractor {
-
-  @CheckResult @NonNull Observable<PowerTriggerEntry> queryAll();
-
-  @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry);
-
-  @CheckResult @NonNull Observable<Integer> delete(int percent);
-
-  @CheckResult @NonNull Observable<Boolean> update(@NonNull PowerTriggerEntry entry,
-      boolean enabled);
-
-  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int percent);
+  void restartTriggers();
 }

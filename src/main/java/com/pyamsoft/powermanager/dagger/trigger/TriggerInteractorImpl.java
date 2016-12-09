@@ -19,22 +19,25 @@ package com.pyamsoft.powermanager.dagger.trigger;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import java.util.Collections;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements TriggerInteractor {
+class TriggerInteractorImpl implements TriggerInteractor {
 
-  @Inject TriggerInteractorImpl(PowerTriggerDB powerTriggerDB) {
-    super(powerTriggerDB);
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
+
+  @Inject TriggerInteractorImpl(@NonNull PowerTriggerDB powerTriggerDB) {
+    this.powerTriggerDB = powerTriggerDB;
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> queryAll() {
-    return getPowerTriggerDB().queryAll().first().concatMap(Observable::from);
+    return powerTriggerDB.queryAll().first().concatMap(Observable::from);
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
-    return getPowerTriggerDB().queryWithPercent(entry.percent()).first().flatMap(triggerEntry -> {
+    return powerTriggerDB.queryWithPercent(entry.percent()).first().flatMap(triggerEntry -> {
       if (!PowerTriggerEntry.isEmpty(triggerEntry)) {
         Timber.e("Entry already exists, throw");
         throw new SQLiteConstraintException(
@@ -49,7 +52,7 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
         return Observable.just(-1L);
       } else {
         Timber.d("Insert new Trigger into DB");
-        return getPowerTriggerDB().insert(entry);
+        return powerTriggerDB.insert(entry);
       }
     }).map(aLong -> {
       if (aLong == -1L) {
@@ -62,18 +65,42 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
   }
 
   @NonNull @Override public Observable<Integer> delete(int percent) {
-    Timber.d("Cache position");
-    final Observable<Integer> positionObservable = Observable.defer(() -> {
-      Timber.d("Get position of trigger before delete");
-      return getPosition(percent);
-    }).cache();
+    return powerTriggerDB.queryAll().first().map(powerTriggerEntries -> {
 
-    return positionObservable.flatMap(integer -> {
+      // Sort first
+      Collections.sort(powerTriggerEntries, (entry, entry2) -> {
+        if (entry.percent() < entry2.percent()) {
+          // This is less, goes first
+          return -1;
+        } else if (entry.percent() > entry2.percent()) {
+          // This is greater, goes second
+          return 1;
+        } else {
+          // Same percent. This is impossible technically due to DB rules
+          throw new IllegalStateException("Cannot have two entries with the same percent");
+        }
+      });
+
+      int foundEntry = -1;
+      for (int i = 0; i < powerTriggerEntries.size(); ++i) {
+        final PowerTriggerEntry entry = powerTriggerEntries.get(i);
+        if (entry.percent() == percent) {
+          foundEntry = i;
+          break;
+        }
+      }
+
+      if (foundEntry == -1) {
+        throw new IllegalStateException("Could not find entry with percent: " + percent);
+      }
+
+      return foundEntry;
+    }).flatMap(position -> {
       Timber.d("Delete trigger with percent: %d", percent);
-      return getPowerTriggerDB().deleteWithPercent(percent);
-    }).flatMap(integer -> {
-      Timber.d("Flat map back to cached observable");
-      return positionObservable;
+      return powerTriggerDB.deleteWithPercent(percent).map(integer -> {
+        Timber.d("Return the position");
+        return position;
+      });
     });
   }
 
@@ -83,7 +110,7 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
       final int percent = entry.percent();
       Timber.d("Update enabled state with percent: %d", percent);
       Timber.d("Update entry to enabled state: %s", enabled);
-      return getPowerTriggerDB().updateEnabled(enabled, percent);
+      return powerTriggerDB.updateEnabled(enabled, percent);
     }).map(integer -> {
       Timber.d("Return code for update(): %d", integer);
 
@@ -93,6 +120,6 @@ class TriggerInteractorImpl extends BaseTriggerInteractorImpl implements Trigger
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> get(int percent) {
-    return getPowerTriggerDB().queryWithPercent(percent).first();
+    return powerTriggerDB.queryWithPercent(percent).first();
   }
 }

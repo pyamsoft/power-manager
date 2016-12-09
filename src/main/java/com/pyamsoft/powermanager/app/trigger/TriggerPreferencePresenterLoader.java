@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.trigger;
+package com.pyamsoft.powermanager.app.trigger;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import rx.Observable;
+import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-interface TriggerInteractor {
+public class TriggerPreferencePresenterLoader extends PersistLoader<TriggerPreferencePresenter> {
 
-  @CheckResult @NonNull Observable<PowerTriggerEntry> queryAll();
+  @SuppressWarnings("WeakerAccess") @Inject Provider<TriggerPreferencePresenter> presenterProvider;
 
-  @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry);
+  TriggerPreferencePresenterLoader() {
+  }
 
-  @CheckResult @NonNull Observable<Integer> delete(int percent);
-
-  @CheckResult @NonNull Observable<Boolean> update(@NonNull PowerTriggerEntry entry,
-      boolean enabled);
-
-  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int percent);
+  @NonNull @Override public TriggerPreferencePresenter loadPersistent() {
+    Injector.get().provideComponent().plusTriggerComponent().inject(this);
+    return presenterProvider.get();
+  }
 }

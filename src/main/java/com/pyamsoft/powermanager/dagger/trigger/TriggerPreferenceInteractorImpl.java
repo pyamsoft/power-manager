@@ -16,11 +16,20 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
+import javax.inject.Inject;
 
-interface BaseTriggerInteractor {
+class TriggerPreferenceInteractorImpl implements TriggerPreferenceInteractor {
 
-  @CheckResult @NonNull Observable<Integer> getPosition(int percent);
+  @NonNull private final Context appContext;
+
+  @Inject TriggerPreferenceInteractorImpl(@NonNull Context context) {
+    appContext = context.getApplicationContext();
+  }
+
+  @Override public void restartTriggers() {
+    ForegroundService.restartTriggers(appContext);
+  }
 }

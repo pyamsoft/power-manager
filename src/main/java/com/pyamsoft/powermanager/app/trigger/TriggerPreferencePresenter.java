@@ -16,7 +16,13 @@
 
 package com.pyamsoft.powermanager.app.trigger;
 
-public interface TriggerPreferencePresenter {
+import com.pyamsoft.pydroid.presenter.Presenter;
+
+public interface TriggerPreferencePresenter extends Presenter<TriggerPreferencePresenter.Provider> {
 
   void restartService();
+
+  interface Provider {
+
+  }
 }

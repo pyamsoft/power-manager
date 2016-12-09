@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.app.trigger.TriggerPreferencePresenter;
 import com.pyamsoft.powermanager.app.trigger.TriggerPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -32,5 +34,16 @@ import rx.Scheduler;
 
   @Provides TriggerInteractor provideTriggerInteractor(PowerTriggerDB powerTriggerDB) {
     return new TriggerInteractorImpl(powerTriggerDB);
+  }
+
+  @Provides TriggerPreferencePresenter provideTriggerPreferencePresenter(
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
+      @NonNull TriggerPreferenceInteractor interactor) {
+    return new TriggerPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides TriggerPreferenceInteractor provideTriggerPreferenceInteractor(
+      @NonNull Context context) {
+    return new TriggerPreferenceInteractorImpl(context);
   }
 }

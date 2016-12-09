@@ -28,7 +28,7 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerRunner;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerRunnerService;
 import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import rx.Observable;
@@ -66,10 +66,13 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   }
 
   @Override public void create() {
-    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
+    final Intent triggerRunner = new Intent(appContext, TriggerRunnerService.class);
     final long delayTime = preferences.getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
-    triggerRunner.putExtra(TriggerRunner.EXTRA_DELAY_PERIOD, triggerPeriod);
+    triggerRunner.putExtra(TriggerRunnerService.EXTRA_DELAY_PERIOD, triggerPeriod);
+
+    Timber.d("Trigger period: %d", triggerPeriod);
+
     jobQueuerWrapper.cancel(triggerRunner);
     jobQueuerWrapper.set(triggerRunner, System.currentTimeMillis() + triggerPeriod);
   }
@@ -77,7 +80,7 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
 
-    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
+    final Intent triggerRunner = new Intent(appContext, TriggerRunnerService.class);
     jobQueuerWrapper.cancel(triggerRunner);
   }
 
