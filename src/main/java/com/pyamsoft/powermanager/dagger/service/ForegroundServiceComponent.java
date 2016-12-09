@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.ForegroundService;
 import dagger.Subcomponent;
-import javax.inject.Singleton;
 
-@Singleton @Subcomponent public interface ForegroundServiceComponent {
+@Subcomponent public interface ForegroundServiceComponent {
 
   void inject(ForegroundService service);
 }

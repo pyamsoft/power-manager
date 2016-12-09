@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.logger;
 
 import com.pyamsoft.powermanager.app.logger.LoggerPreferenceFragment;
 import dagger.Subcomponent;
-import javax.inject.Singleton;
 
-@Singleton @Subcomponent() public interface LoggerComponent {
+@Subcomponent() public interface LoggerComponent {
 
   void inject(LoggerPreferenceFragment fragment);
 }

@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
 import dagger.Subcomponent;
-import javax.inject.Singleton;
 
-@Singleton @Subcomponent public interface ActionToggleServiceComponent {
+@Subcomponent public interface ActionToggleServiceComponent {
 
   void inject(ActionToggleService service);
 }
