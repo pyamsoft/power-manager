@@ -16,11 +16,7 @@
 
 package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import rx.Observable;
+interface TriggerPreferenceInteractor {
 
-interface BaseTriggerInteractor {
-
-  @CheckResult @NonNull Observable<Integer> getPosition(int percent);
+  void restartTriggers();
 }

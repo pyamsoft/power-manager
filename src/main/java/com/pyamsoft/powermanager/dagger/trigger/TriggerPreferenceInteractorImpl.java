@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.dagger.trigger;
 
-import android.support.annotation.CheckResult;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.service.ForegroundService;
+import javax.inject.Inject;
 
-abstract class BaseServiceInteractorImpl implements BaseServiceInteractor {
+class TriggerPreferenceInteractorImpl implements TriggerPreferenceInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final Context appContext;
 
-  BaseServiceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
-    this.preferences = preferences;
+  @Inject TriggerPreferenceInteractorImpl(@NonNull Context context) {
+    appContext = context.getApplicationContext();
   }
 
-  @Override public void setServiceEnabled(boolean state) {
-    preferences.setForegroundServiceEnabled(state);
-  }
-
-  @NonNull @CheckResult PowerManagerPreferences getPreferences() {
-    return preferences;
+  @Override public void restartTriggers() {
+    ForegroundService.restartTriggers(appContext);
   }
 }

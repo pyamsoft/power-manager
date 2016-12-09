@@ -41,7 +41,7 @@ import rx.Subscription;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-public class TriggerRunner extends Service {
+public class TriggerRunnerService extends Service {
 
   @NonNull public static final String EXTRA_DELAY_PERIOD = "extra_trigger_delay";
 
@@ -71,8 +71,8 @@ public class TriggerRunner extends Service {
     final Intent batteryIntent = getApplicationContext().registerReceiver(null, batteryFilter);
 
     // Get battery level
-    int percent;
-    boolean charging;
+    final int percent;
+    final boolean charging;
     if (batteryIntent != null) {
       Timber.d("Retrieve battery info");
       percent = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);

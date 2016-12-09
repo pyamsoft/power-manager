@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.app.service.ForegroundPresenter;
+import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,8 +27,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ForegroundPresenterImpl
-    extends BaseServicePresenterImpl<ForegroundPresenter.ForegroundProvider>
+class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
   @NonNull private final ForegroundInteractor interactor;
@@ -36,7 +36,7 @@ class ForegroundPresenterImpl
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
-    super(interactor, obsScheduler, subScheduler);
+    super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
 
@@ -63,5 +63,19 @@ class ForegroundPresenterImpl
           Timber.e(throwable, "onError");
           // TODO handle error
         }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
+  }
+
+  /**
+   * Trigger interval is only read on interactor.create()
+   *
+   * Restart it by destroying and then re-creating the interactor
+   */
+  @Override public void restartTriggerAlarm() {
+    interactor.destroy();
+    interactor.create();
+  }
+
+  @Override public void setForegroundState(boolean enable) {
+    interactor.setServiceEnabled(enable);
   }
 }

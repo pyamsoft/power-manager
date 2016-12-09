@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.dagger.trigger;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.app.service.BaseServicePresenter;
+import com.pyamsoft.powermanager.app.trigger.TriggerPreferencePresenter;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
-import timber.log.Timber;
 
-class BaseServicePresenterImpl<I> extends SchedulerPresenter<I> implements BaseServicePresenter {
+class TriggerPreferencePresenterImpl extends SchedulerPresenter<TriggerPreferencePresenter.Provider>
+    implements TriggerPreferencePresenter {
 
-  @NonNull private final BaseServiceInteractor interactor;
+  @NonNull private final TriggerPreferenceInteractor interactor;
 
-  @Inject BaseServicePresenterImpl(@NonNull BaseServiceInteractor interactor,
+  @Inject TriggerPreferencePresenterImpl(@NonNull TriggerPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
-  @Override public void setForegroundState(boolean state) {
-    Timber.d("Set foreground state to %s", state);
-    interactor.setServiceEnabled(state);
+  @Override public void restartService() {
+    interactor.restartTriggers();
   }
 }

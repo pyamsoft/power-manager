@@ -235,9 +235,9 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     return get(loggerEnabled, loggerEnabledDefault);
   }
 
-  @Override public boolean isForegroundServiceEnabled() {
-    return get(foregroundServiceEnabled, true);
-  }
+  //@Override public boolean isForegroundServiceEnabled() {
+  //  return get(foregroundServiceEnabled, true);
+  //}
 
   @Override public void setForegroundServiceEnabled(boolean state) {
     put(foregroundServiceEnabled, state);

@@ -17,18 +17,22 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.PowerManagerPreferences;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ActionToggleInteractorImpl extends BaseServiceInteractorImpl
-    implements ActionToggleInteractor {
+class ActionToggleInteractorImpl implements ActionToggleInteractor {
 
-  @Inject ActionToggleInteractorImpl(@NonNull PowerManagerPreferences preferences) {
-    super(preferences);
+  @SuppressWarnings("WeakerAccess") boolean serviceEnabled;
+
+  @Inject ActionToggleInteractorImpl() {
+    serviceEnabled = true;
+  }
+
+  @Override public void setServiceEnabled(boolean state) {
+    serviceEnabled = state;
   }
 
   @NonNull @Override public Observable<Boolean> isServiceEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isForegroundServiceEnabled()));
+    return Observable.defer(() -> Observable.just(serviceEnabled));
   }
 }

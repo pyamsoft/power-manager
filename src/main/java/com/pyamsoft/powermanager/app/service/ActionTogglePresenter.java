@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.app.service;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface ActionTogglePresenter
-    extends Presenter<ActionTogglePresenter.ActionToggleProvider>, BaseServicePresenter {
+    extends Presenter<ActionTogglePresenter.ActionToggleProvider> {
 
   void toggleForegroundState();
 

@@ -20,5 +20,5 @@ import dagger.Subcomponent;
 
 @Subcomponent public interface TriggerRunnerComponent {
 
-  void inject(TriggerRunner runner);
+  void inject(TriggerRunnerService runner);
 }

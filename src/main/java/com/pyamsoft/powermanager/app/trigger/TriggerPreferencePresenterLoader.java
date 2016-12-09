@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.service;
+package com.pyamsoft.powermanager.app.trigger;
 
-import android.app.Notification;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import rx.Observable;
+import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.pydroid.app.PersistLoader;
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-interface ForegroundInteractor extends ActionToggleInteractor {
+public class TriggerPreferencePresenterLoader extends PersistLoader<TriggerPreferencePresenter> {
 
-  void create();
+  @SuppressWarnings("WeakerAccess") @Inject Provider<TriggerPreferencePresenter> presenterProvider;
 
-  void destroy();
+  TriggerPreferencePresenterLoader() {
+  }
 
-  @CheckResult @NonNull Observable<Notification> createNotification();
+  @NonNull @Override public TriggerPreferencePresenter loadPersistent() {
+    Injector.get().provideComponent().plusTriggerComponent().inject(this);
+    return presenterProvider.get();
+  }
 }

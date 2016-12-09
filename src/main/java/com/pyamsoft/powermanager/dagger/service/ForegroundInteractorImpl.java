@@ -28,25 +28,25 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.main.MainActivity;
 import com.pyamsoft.powermanager.app.service.ActionToggleService;
-import com.pyamsoft.powermanager.dagger.trigger.TriggerRunner;
+import com.pyamsoft.powermanager.dagger.trigger.TriggerRunnerService;
 import com.pyamsoft.powermanager.dagger.wrapper.JobQueuerWrapper;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.functions.Func1;
 import timber.log.Timber;
 
-class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements ForegroundInteractor {
+class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements ForegroundInteractor {
 
   private static final int PENDING_RC = 1004;
   private static final int TOGGLE_RC = 421;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final JobQueuerWrapper jobQueuerWrapper;
+  @NonNull private final PowerManagerPreferences preferences;
 
   @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    super(preferences);
     this.jobQueuerWrapper = jobQueuerWrapper;
+    this.preferences = preferences;
     appContext = context.getApplicationContext();
 
     final Intent intent =
@@ -66,10 +66,13 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   }
 
   @Override public void create() {
-    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
-    final long delayTime = getPreferences().getTriggerPeriodTime();
+    final Intent triggerRunner = new Intent(appContext, TriggerRunnerService.class);
+    final long delayTime = preferences.getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
-    triggerRunner.putExtra(TriggerRunner.EXTRA_DELAY_PERIOD, triggerPeriod);
+    triggerRunner.putExtra(TriggerRunnerService.EXTRA_DELAY_PERIOD, triggerPeriod);
+
+    Timber.d("Trigger period: %d", triggerPeriod);
+
     jobQueuerWrapper.cancel(triggerRunner);
     jobQueuerWrapper.set(triggerRunner, System.currentTimeMillis() + triggerPeriod);
   }
@@ -77,37 +80,34 @@ class ForegroundInteractorImpl extends BaseServiceInteractorImpl implements Fore
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
 
-    final Intent triggerRunner = new Intent(appContext, TriggerRunner.class);
+    final Intent triggerRunner = new Intent(appContext, TriggerRunnerService.class);
     jobQueuerWrapper.cancel(triggerRunner);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
   Observable<Integer> getNotificationPriority() {
-    return Observable.defer(() -> Observable.just(getPreferences().getNotificationPriority()));
+    return Observable.defer(() -> Observable.just(preferences.getNotificationPriority()));
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {
-    return Observable.defer(() -> Observable.just(getPreferences().isForegroundServiceEnabled()))
-        .flatMap(new Func1<Boolean, Observable<Notification>>() {
-          @Override public Observable<Notification> call(Boolean serviceEnabled) {
-            final String actionName = serviceEnabled ? "Suspend" : "Start";
-            final Intent toggleService = new Intent(appContext, ActionToggleService.class);
-            final PendingIntent actionToggleService =
-                PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+    return isServiceEnabled().flatMap(serviceEnabled -> {
+      final String actionName = serviceEnabled ? "Suspend" : "Start";
+      final Intent toggleService = new Intent(appContext, ActionToggleService.class);
+      final PendingIntent actionToggleService =
+          PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
+              PendingIntent.FLAG_UPDATE_CURRENT);
 
-            final String title =
-                serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
+      final String title =
+          serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
 
-            return getNotificationPriority().map(priority -> {
-              // Clear all of the Actions
-              builder.mActions.clear();
-              return builder.setPriority(priority)
-                  .setContentText(title)
-                  .addAction(R.drawable.ic_notification, actionName, actionToggleService)
-                  .build();
-            });
-          }
-        });
+      return getNotificationPriority().map(priority -> {
+        // Clear all of the Actions
+        builder.mActions.clear();
+        return builder.setPriority(priority)
+            .setContentText(title)
+            .addAction(R.drawable.ic_notification, actionName, actionToggleService)
+            .build();
+      });
+    });
   }
 }

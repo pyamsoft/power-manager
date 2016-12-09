@@ -81,7 +81,7 @@
         android:exported="false"/>
 
     <service
-        android:name=".dagger.trigger.TriggerRunner"
+        android:name=".dagger.trigger.TriggerRunnerService"
         android:exported="false"/>
 
     <service
