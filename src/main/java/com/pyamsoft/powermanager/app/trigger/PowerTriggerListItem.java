@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
@@ -33,23 +33,21 @@ import java.util.List;
 import java.util.Locale;
 import timber.log.Timber;
 
-class PowerTriggerListItem
-    extends AbstractItem<PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
+class PowerTriggerListItem extends
+    GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final PowerTriggerEntry trigger;
-
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
-    this.trigger = trigger;
+    super(trigger);
   }
 
   void click(@NonNull ActionSingle<PowerTriggerEntry> onClick) {
-    onClick.call(trigger);
+    onClick.call(getModel());
   }
 
   @CheckResult int getPercent() {
-    return trigger.percent();
+    return getModel().percent();
   }
 
   @Override public int getType() {
@@ -66,7 +64,7 @@ class PowerTriggerListItem
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.bind(trigger);
+    holder.bind(getModel());
   }
 
   @Override public void unbindView(ViewHolder holder) {

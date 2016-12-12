@@ -26,7 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
@@ -45,23 +45,20 @@ import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import java.util.List;
 
-class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
+class OverviewItem
+    extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
-  @NonNull private final View rootView;
-  @NonNull private final String title;
-  @DrawableRes private final int image;
-  @ColorRes private final int background;
-  @Nullable private final BooleanInterestObserver observer;
-
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
       @ColorRes int background, @Nullable BooleanInterestObserver observer) {
-    this.rootView = rootView;
-    this.title = title;
-    this.image = image;
-    this.background = background;
-    this.observer = observer;
+    super(OverviewModel.builder()
+        .background(background)
+        .image(image)
+        .rootView(rootView)
+        .title(title)
+        .observer(observer)
+        .build());
   }
 
   @Override public int getType() {
@@ -79,11 +76,13 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.bind(background, title, image, observer);
+    holder.bind(getModel());
   }
 
   void click(@NonNull View view, @NonNull OnOverviewItemClicked itemClicked) {
     final Fragment fragment;
+    final View rootView = getModel().rootView();
+    final String title = getModel().title();
     switch (title) {
       case WifiFragment.TAG:
         fragment = WifiFragment.newInstance(view, rootView);
@@ -150,14 +149,14 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
       return binding;
     }
 
-    void bind(@ColorRes int background, @NonNull String title, @DrawableRes int image,
-        @Nullable BooleanInterestObserver observer) {
+    void bind(@NonNull OverviewModel model) {
       // Tint check mark white
       // Avoids a NoMethod crash on API 19
       binding.adapterItemOverviewColor.setBackgroundColor(
-          ContextCompat.getColor(itemView.getContext(), background));
+          ContextCompat.getColor(itemView.getContext(), model.background()));
 
-      binding.adapterItemOverviewTitle.setText(title);
+      binding.adapterItemOverviewTitle.setText(model.title());
+      final BooleanInterestObserver observer = model.observer();
       if (observer != null) {
         final int check;
         if (observer.is()) {
@@ -175,7 +174,7 @@ class OverviewItem extends AbstractItem<OverviewItem, OverviewItem.ViewHolder> {
       }
 
       AsyncMapHelper.unsubscribe(titleTask);
-      titleTask = AsyncDrawable.load(image)
+      titleTask = AsyncDrawable.load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
     }
