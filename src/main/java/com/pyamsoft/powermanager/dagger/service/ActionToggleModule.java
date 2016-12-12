@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.dagger.service;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.service.ActionTogglePresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -32,7 +33,8 @@ import rx.Scheduler;
     return new ActionTogglePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
-  @Singleton @Provides ActionToggleInteractor provideActionToggleInteractor() {
-    return new ActionToggleInteractorImpl();
+  @Singleton @Provides ActionToggleInteractor provideActionToggleInteractor(
+      @NonNull PowerManagerPreferences preferences) {
+    return new ActionToggleInteractorImpl(preferences);
   }
 }
