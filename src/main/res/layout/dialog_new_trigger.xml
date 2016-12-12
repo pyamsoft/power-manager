@@ -19,16 +19,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:orientation="vertical"
       >
 
     <LinearLayout
         android:id="@+id/new_trigger_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
         android:orientation="horizontal"
         >
@@ -57,11 +57,17 @@
 
     </LinearLayout>
 
+    <com.pyamsoft.powermanager.app.trigger.create.CreateTriggerNonSwipePager
+        android:id="@+id/new_trigger_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        />
+
     <LinearLayout
         android:id="@+id/new_trigger_button_holder"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="horizontal"
@@ -84,14 +90,6 @@
 
     </LinearLayout>
 
-    <com.pyamsoft.powermanager.app.trigger.create.CreateTriggerNonSwipePager
-        android:id="@+id/new_trigger_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/new_trigger_button_holder"
-        android:layout_below="@id/new_trigger_toolbar"
-        />
-
-  </RelativeLayout>
+  </LinearLayout>
 
 </layout>
