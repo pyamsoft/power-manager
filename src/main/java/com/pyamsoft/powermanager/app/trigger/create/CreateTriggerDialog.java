@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
-import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
@@ -40,12 +40,6 @@ public class CreateTriggerDialog extends DialogFragment {
   @SuppressWarnings("WeakerAccess") DialogNewTriggerBinding binding;
   private CreateTriggerPagerAdapter adapter;
   private ViewPager.OnPageChangeListener pageChangeListener;
-
-  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final Dialog dialog = super.onCreateDialog(savedInstanceState);
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    return dialog;
-  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -162,10 +156,11 @@ public class CreateTriggerDialog extends DialogFragment {
   @Override public void onResume() {
     super.onResume();
 
+    // The dialog is super small for some reason. We have to set the size manually, in onResume
     final Window window = getDialog().getWindow();
     if (window != null) {
-      window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+      window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+          WindowManager.LayoutParams.WRAP_CONTENT);
     }
-
   }
 }
