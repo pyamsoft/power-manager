@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
+import rx.Observable;
 
 class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
 
@@ -57,5 +58,13 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
 
   @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
     return () -> getPreferences().isIgnoreChargingWifi();
+  }
+
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalWifi()));
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalWifi(enabled);
   }
 }

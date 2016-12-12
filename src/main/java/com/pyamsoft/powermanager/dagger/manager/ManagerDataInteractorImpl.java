@@ -74,4 +74,12 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
   @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
     return () -> getPreferences().isIgnoreChargingData();
   }
+
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalData()));
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalData(enabled);
+  }
 }

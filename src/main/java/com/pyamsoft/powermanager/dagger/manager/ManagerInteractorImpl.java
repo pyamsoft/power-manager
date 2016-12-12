@@ -28,11 +28,10 @@ import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @NonNull private final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final Queuer queuer;
-  @SuppressWarnings("WeakerAccess") boolean originalStateEnabled;
 
   ManagerInteractorImpl(@NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
@@ -41,7 +40,6 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
-    originalStateEnabled = false;
   }
 
   @Override public void destroy() {
@@ -53,14 +51,6 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
       destroy();
       return Observable.just(true);
     });
-  }
-
-  @CallSuper @NonNull @Override public synchronized Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(originalStateEnabled));
-  }
-
-  @CallSuper @Override public synchronized void setOriginalStateEnabled(boolean enabled) {
-    originalStateEnabled = enabled;
   }
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {

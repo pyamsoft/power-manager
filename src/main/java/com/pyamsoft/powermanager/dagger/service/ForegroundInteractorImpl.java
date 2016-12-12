@@ -41,12 +41,11 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @NonNull private final JobQueuerWrapper jobQueuerWrapper;
-  @NonNull private final PowerManagerPreferences preferences;
 
   @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+    super(preferences);
     this.jobQueuerWrapper = jobQueuerWrapper;
-    this.preferences = preferences;
     appContext = context.getApplicationContext();
 
     final Intent intent =
@@ -67,7 +66,7 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
 
   @Override public void create() {
     final Intent triggerRunner = new Intent(appContext, TriggerRunnerService.class);
-    final long delayTime = preferences.getTriggerPeriodTime();
+    final long delayTime = getPreferences().getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
     triggerRunner.putExtra(TriggerRunnerService.EXTRA_DELAY_PERIOD, triggerPeriod);
 
@@ -86,7 +85,7 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
   Observable<Integer> getNotificationPriority() {
-    return Observable.defer(() -> Observable.just(preferences.getNotificationPriority()));
+    return Observable.defer(() -> Observable.just(getPreferences().getNotificationPriority()));
   }
 
   @NonNull @Override public Observable<Notification> createNotification() {

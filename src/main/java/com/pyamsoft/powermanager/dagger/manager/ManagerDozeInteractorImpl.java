@@ -71,13 +71,22 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalDoze(enabled);
+  }
+
   @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
     return () -> getPreferences().isIgnoreChargingDoze();
   }
 
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalDoze()));
+  }
+
   @NonNull @Override public Observable<Boolean> isExclusive() {
     return Observable.defer(() -> {
-      final boolean preference = getPreferences().isExclusiveDoze() && preferences.isDozeManaged();
+      final boolean preference =
+          getPreferences().isExclusiveDoze() && getPreferences().isDozeManaged();
       return Observable.just(preference);
     });
   }

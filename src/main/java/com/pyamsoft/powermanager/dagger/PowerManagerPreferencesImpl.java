@@ -27,9 +27,16 @@ import javax.inject.Inject;
 class PowerManagerPreferencesImpl extends ApplicationPreferences
     implements PowerManagerPreferences {
 
-  @NonNull private static final String overviewOnboard = "overview_onboard";
-  @NonNull private static final String manageOnboard = "manage_onboard";
-  @NonNull private static final String periodOnboard = "period_onboard";
+  @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
+  @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
+  @NonNull private static final String PERIOD_ONBOARD = "period_onboard";
+  @NonNull private static final String SERVICE_ENABLED = "service_enabled";
+  @NonNull private static final String ORIGINAL_WIFI = "original_wifi";
+  @NonNull private static final String ORIGINAL_DATA = "original_data";
+  @NonNull private static final String ORIGINAL_BLUETOOTH = "original_bluetooth";
+  @NonNull private static final String ORIGINAL_SYNC = "original_sync";
+  @NonNull private static final String ORIGINAL_AIRPLANE = "original_airplane";
+  @NonNull private static final String ORIGINAL_DOZE = "original_doze";
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
@@ -226,6 +233,62 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
     triggerPeriodDefault = getResources().getString(R.string.trigger_period_default);
   }
 
+  @Override public boolean isOriginalWifi() {
+    return get(ORIGINAL_WIFI, false);
+  }
+
+  @Override public void setOriginalWifi(boolean state) {
+    put(ORIGINAL_WIFI, state);
+  }
+
+  @Override public boolean isOriginalData() {
+    return get(ORIGINAL_DATA, false);
+  }
+
+  @Override public void setOriginalData(boolean state) {
+    put(ORIGINAL_DATA, state);
+  }
+
+  @Override public boolean isOriginalBluetooh() {
+    return get(ORIGINAL_BLUETOOTH, false);
+  }
+
+  @Override public boolean isOriginalSync() {
+    return get(ORIGINAL_SYNC, false);
+  }
+
+  @Override public void setOriginalSync(boolean state) {
+    put(ORIGINAL_SYNC, state);
+  }
+
+  @Override public boolean isOriginalAirplane() {
+    return get(ORIGINAL_AIRPLANE, false);
+  }
+
+  @Override public void setOriginalAirplane(boolean state) {
+    put(ORIGINAL_AIRPLANE, state);
+  }
+
+  @Override public boolean isOriginalDoze() {
+    return get(ORIGINAL_DOZE, false);
+  }
+
+  @Override public void setOriginalDoze(boolean state) {
+    put(ORIGINAL_DOZE, state);
+  }
+
+  @Override public void setOriginalBluetooth(boolean state) {
+    put(ORIGINAL_BLUETOOTH, state);
+  }
+
+  @Override public boolean isServiceEnabled() {
+    return get(SERVICE_ENABLED, true);
+  }
+
+  @Override public void setServiceEnabled(boolean enabled) {
+    put(SERVICE_ENABLED, enabled);
+  }
+
   @Override public long getTriggerPeriodTime() {
     return Long.parseLong(get(triggerPeriodKey, triggerPeriodDefault));
   }
@@ -247,27 +310,27 @@ class PowerManagerPreferencesImpl extends ApplicationPreferences
   }
 
   @Override public boolean isPeriodicOnboardingShown() {
-    return get(periodOnboard, false);
+    return get(PERIOD_ONBOARD, false);
   }
 
   @Override public void setPeriodicOnboardingShown() {
-    put(periodOnboard, true);
+    put(PERIOD_ONBOARD, true);
   }
 
   @Override public boolean isManageOnboardingShown() {
-    return get(manageOnboard, false);
+    return get(MANAGE_ONBOARD, false);
   }
 
   @Override public void setManageOnboardingShown() {
-    put(manageOnboard, true);
+    put(MANAGE_ONBOARD, true);
   }
 
   @Override public boolean isOverviewOnboardingShown() {
-    return get(overviewOnboard, false);
+    return get(OVERVIEW_ONBOARD, false);
   }
 
   @Override public void setOverviewOnboardingShown() {
-    put(overviewOnboard, true);
+    put(OVERVIEW_ONBOARD, true);
   }
 
   @Override public long getWearableDelay() {

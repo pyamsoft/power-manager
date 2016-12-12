@@ -22,6 +22,34 @@ import android.support.annotation.NonNull;
 
 public interface PowerManagerPreferences {
 
+  @CheckResult boolean isOriginalWifi();
+
+  void setOriginalWifi(boolean state);
+
+  @CheckResult boolean isOriginalData();
+
+  void setOriginalData(boolean state);
+
+  @CheckResult boolean isOriginalBluetooh();
+
+  @CheckResult boolean isOriginalSync();
+
+  void setOriginalSync(boolean state);
+
+  @CheckResult boolean isOriginalAirplane();
+
+  void setOriginalAirplane(boolean state);
+
+  @CheckResult boolean isOriginalDoze();
+
+  void setOriginalDoze(boolean state);
+
+  void setOriginalBluetooth(boolean state);
+
+  @CheckResult boolean isServiceEnabled();
+
+  void setServiceEnabled(boolean enabled);
+
   @CheckResult long getTriggerPeriodTime();
 
   @CheckResult boolean isLoggerEnabled();

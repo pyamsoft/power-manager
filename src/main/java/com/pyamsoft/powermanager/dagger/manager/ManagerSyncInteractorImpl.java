@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
+import rx.Observable;
 
 class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
 
@@ -54,5 +55,13 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
 
   @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
     return () -> getPreferences().isIgnoreChargingSync();
+  }
+
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalSync()));
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalSync(enabled);
   }
 }

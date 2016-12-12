@@ -48,19 +48,19 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @Override protected long getDelayTime() {
-    return preferences.getAirplaneDelay();
+    return getPreferences().getAirplaneDelay();
   }
 
   @Override protected boolean isPeriodic() {
-    return preferences.isPeriodicAirplane();
+    return getPreferences().isPeriodicAirplane();
   }
 
   @Override protected long getPeriodicEnableTime() {
-    return preferences.getPeriodicEnableTimeAirplane();
+    return getPreferences().getPeriodicEnableTimeAirplane();
   }
 
   @Override protected long getPeriodicDisableTime() {
-    return preferences.getPeriodicDisableTimeAirplane();
+    return getPreferences().getPeriodicDisableTimeAirplane();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -72,7 +72,15 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalAirplane(enabled);
+  }
+
   @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
     return () -> getPreferences().isIgnoreChargingAirplane();
+  }
+
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalAirplane()));
   }
 }
