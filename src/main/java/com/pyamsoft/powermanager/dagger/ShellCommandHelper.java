@@ -94,7 +94,7 @@ public class ShellCommandHelper {
       int exitCode, @Nullable List<String> output, boolean rootShell) {
     if (output != null) {
       if (!output.isEmpty()) {
-        Timber.d("Command output");
+        Timber.d("%s Command output", (rootShell) ? "SU" : "SH");
         for (final String line : output) {
           if (line != null) {
             Timber.d("%s", line);
