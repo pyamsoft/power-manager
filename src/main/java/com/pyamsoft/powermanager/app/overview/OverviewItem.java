@@ -141,12 +141,10 @@ class OverviewItem
     @NonNull private final AdapterItemOverviewBinding binding;
     @Nullable private AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
-    @NonNull private WeakReference<OverviewModel> weakModel;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
-      weakModel = new WeakReference<>(null);
     }
 
     @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {
@@ -160,12 +158,6 @@ class OverviewItem
           ContextCompat.getColor(itemView.getContext(), model.background()));
       binding.adapterItemOverviewTitle.setText(model.title());
 
-      weakModel.clear();
-      weakModel = new WeakReference<>(model);
-    }
-
-    void bind(@NonNull Activity activity) {
-      final OverviewModel model = weakModel.get();
       final BooleanInterestObserver observer = model.observer();
       if (observer != null) {
         final int check;
@@ -176,7 +168,7 @@ class OverviewItem
         }
 
         AsyncMapHelper.unsubscribe(checkTask);
-        checkTask = AsyncDrawable.with(activity)
+        checkTask = AsyncDrawable
             .load(check)
             .tint(android.R.color.white)
             .into(binding.adapterItemOverviewCheck);
@@ -185,7 +177,7 @@ class OverviewItem
       }
 
       AsyncMapHelper.unsubscribe(titleTask);
-      titleTask = AsyncDrawable.with(activity)
+      titleTask = AsyncDrawable
           .load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
@@ -195,7 +187,6 @@ class OverviewItem
       AsyncMapHelper.unsubscribe(checkTask, titleTask);
       binding.adapterItemOverviewImage.setImageDrawable(null);
       binding.adapterItemOverviewTitle.setText(null);
-      weakModel.clear();
     }
   }
 }

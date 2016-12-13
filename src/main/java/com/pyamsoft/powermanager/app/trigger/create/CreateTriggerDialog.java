@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.trigger.create;
 
+import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +41,12 @@ public class CreateTriggerDialog extends DialogFragment {
   @SuppressWarnings("WeakerAccess") DialogNewTriggerBinding binding;
   private CreateTriggerPagerAdapter adapter;
   private ViewPager.OnPageChangeListener pageChangeListener;
+
+  @NonNull @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
+    final Dialog dialog = super.onCreateDialog(savedInstanceState);
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    return dialog;
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -123,7 +130,7 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final AsyncMap.Entry continueTask = AsyncDrawable.with(getActivity())
+    final AsyncMap.Entry continueTask = AsyncDrawable
         .load(R.drawable.ic_arrow_forward_24dp)
         .into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
@@ -140,12 +147,12 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final AsyncMap.Entry backTask = AsyncDrawable.with(getActivity())
+    final AsyncMap.Entry backTask = AsyncDrawable
         .load(R.drawable.ic_arrow_back_24dp)
         .into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
-    final AsyncMap.Entry closeTask = AsyncDrawable.with(getActivity())
+    final AsyncMap.Entry closeTask = AsyncDrawable
         .load(R.drawable.ic_close_24dp)
         .into(binding.newTriggerClose);
     taskMap.put("close", closeTask);

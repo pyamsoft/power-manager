@@ -182,8 +182,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   }
 
   private void setupFab() {
-    final AsyncMap.Entry subscription = AsyncDrawable.with(getActivity())
-        .load(R.drawable.ic_add_24dp)
+    final AsyncMap.Entry subscription = AsyncDrawable.load(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
         .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);
