@@ -95,13 +95,7 @@ public class ShellCommandHelper {
     final boolean recreate;
     if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
       Timber.e("Command failed. '%s'", command);
-      if (isSUAvailable()) {
-        Timber.d("SU is available, re-create the shell");
-        recreate = true;
-      } else {
-        Timber.d("SU is not available, stay dead");
-        recreate = false;
-      }
+      recreate = decideRecreation(rootShell);
     } else {
       recreate = false;
     }
@@ -129,6 +123,24 @@ public class ShellCommandHelper {
         runSHCommand(command);
       }
     }
+  }
+
+  @CheckResult private boolean decideRecreation(boolean rootShell) {
+    final boolean recreate;
+    if (rootShell) {
+      Timber.i("Decide recreation of root shell");
+      if (isSUAvailable()) {
+        Timber.i("SU is available, re-create the shell");
+        recreate = true;
+      } else {
+        Timber.w("SU is not available, stay dead");
+        recreate = false;
+      }
+    } else {
+      Timber.i("Always recreate shell");
+      recreate = true;
+    }
+    return recreate;
   }
 
   private void queueShellTimeout(@NonNull Shell.Interactive session) {
