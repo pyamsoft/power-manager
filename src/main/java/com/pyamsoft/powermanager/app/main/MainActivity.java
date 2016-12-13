@@ -52,7 +52,7 @@ import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.support.RatingActivity;
+import com.pyamsoft.pydroid.sec.TamperActivity;
 import com.pyamsoft.pydroid.support.RatingDialog;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public class MainActivity extends RatingActivity implements MainPresenter.View {
+public class MainActivity extends TamperActivity implements MainPresenter.View {
 
   @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
@@ -204,6 +204,10 @@ public class MainActivity extends RatingActivity implements MainPresenter.View {
   @Override protected void onPostResume() {
     super.onPostResume();
     RatingDialog.showRatingDialog(this, this);
+  }
+
+  @NonNull @Override protected String getSafePackageName() {
+    return "com.pyamsoft.powermanager";
   }
 
   public void addViewToAppBar(@NonNull String tag, @NonNull View view) {
