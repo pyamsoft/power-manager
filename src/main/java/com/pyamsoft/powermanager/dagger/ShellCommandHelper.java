@@ -92,14 +92,6 @@ public class ShellCommandHelper {
 
   @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(@NonNull String command,
       int exitCode, @Nullable List<String> output, boolean rootShell) {
-    final boolean recreate;
-    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
-      Timber.e("Command failed. '%s'", command);
-      recreate = decideRecreation(rootShell);
-    } else {
-      recreate = false;
-    }
-
     if (output != null) {
       if (!output.isEmpty()) {
         Timber.d("Command output");
@@ -109,6 +101,14 @@ public class ShellCommandHelper {
           }
         }
       }
+    }
+
+    final boolean recreate;
+    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
+      Timber.e("Command failed. '%s'", command);
+      recreate = decideRecreation(rootShell);
+    } else {
+      recreate = false;
     }
 
     if (recreate) {
