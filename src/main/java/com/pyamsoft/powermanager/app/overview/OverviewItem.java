@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
+import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
@@ -43,6 +44,7 @@ import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 class OverviewItem
@@ -139,10 +141,12 @@ class OverviewItem
     @NonNull private final AdapterItemOverviewBinding binding;
     @Nullable private AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
+    @NonNull private WeakReference<OverviewModel> weakModel;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
+      weakModel = new WeakReference<>(null);
     }
 
     @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {
@@ -154,8 +158,14 @@ class OverviewItem
       // Avoids a NoMethod crash on API 19
       binding.adapterItemOverviewColor.setBackgroundColor(
           ContextCompat.getColor(itemView.getContext(), model.background()));
-
       binding.adapterItemOverviewTitle.setText(model.title());
+
+      weakModel.clear();
+      weakModel = new WeakReference<>(model);
+    }
+
+    void bind(@NonNull Activity activity) {
+      final OverviewModel model = weakModel.get();
       final BooleanInterestObserver observer = model.observer();
       if (observer != null) {
         final int check;
@@ -166,7 +176,8 @@ class OverviewItem
         }
 
         AsyncMapHelper.unsubscribe(checkTask);
-        checkTask = AsyncDrawable.load(check)
+        checkTask = AsyncDrawable.with(activity)
+            .load(check)
             .tint(android.R.color.white)
             .into(binding.adapterItemOverviewCheck);
       } else {
@@ -174,7 +185,8 @@ class OverviewItem
       }
 
       AsyncMapHelper.unsubscribe(titleTask);
-      titleTask = AsyncDrawable.load(model.image())
+      titleTask = AsyncDrawable.with(activity)
+          .load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
     }
@@ -183,6 +195,7 @@ class OverviewItem
       AsyncMapHelper.unsubscribe(checkTask, titleTask);
       binding.adapterItemOverviewImage.setImageDrawable(null);
       binding.adapterItemOverviewTitle.setText(null);
+      weakModel.clear();
     }
   }
 }

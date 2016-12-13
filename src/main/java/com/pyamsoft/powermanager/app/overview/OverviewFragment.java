@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.app.overview;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
@@ -47,6 +49,7 @@ import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.PersistentCache;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -63,7 +66,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver;
   @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
   OverviewPresenter presenter;
-  private FastItemAdapter<OverviewItem> adapter;
+  FastItemAdapter<OverviewItem> adapter;
   private FragmentOverviewBinding binding;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;
@@ -80,6 +83,8 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
             presenter = persist;
           }
         });
+
+    adapter = new FastItemAdapter<>();
   }
 
   @Nullable @Override
@@ -130,13 +135,6 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   private void populateAdapter(@NonNull View view) {
-    adapter = new FastItemAdapter<>();
-    adapter.withSelectable(true);
-    adapter.withOnClickListener((view1, iAdapter, item, i) -> {
-      item.click(view1, this::loadFragment);
-      return true;
-    });
-
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             wifiManageObserver));
@@ -187,6 +185,40 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
       default:
         columnCount = 2;
     }
+
+    adapter.withSelectable(true);
+    adapter.withOnClickListener((view1, iAdapter, item, i) -> {
+      item.click(view1, this::loadFragment);
+      return true;
+    });
+
+    adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
+
+      @CheckResult @NonNull OverviewItem.ViewHolder toOverviewItemViewHolder(
+          @NonNull RecyclerView.ViewHolder viewHolder) {
+        if (viewHolder instanceof OverviewItem.ViewHolder) {
+          return (OverviewItem.ViewHolder) viewHolder;
+        } else {
+          throw new IllegalStateException("ViewHolder is not OverviewItem.ViewHolder");
+        }
+      }
+
+      @Override public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position,
+          List<Object> payloads) {
+        final OverviewItem.ViewHolder holder = toOverviewItemViewHolder(viewHolder);
+        adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, payloads);
+        holder.bind(getActivity());
+      }
+
+      @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        final OverviewItem.ViewHolder holder = toOverviewItemViewHolder(viewHolder);
+        final OverviewItem item = (OverviewItem) holder.itemView.getTag();
+        if (item != null) {
+          item.unbindView(holder);
+        }
+      }
+    });
+
     final RecyclerView.LayoutManager layoutManager =
         new GridLayoutManager(getActivity(), columnCount);
     binding.overviewRecycler.setLayoutManager(layoutManager);

@@ -39,7 +39,6 @@ import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroidrx.RXLoader;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment
@@ -213,7 +212,8 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
       AsyncMapHelper.unsubscribe(subscription);
-      subscription = AsyncDrawable.load(fabIcon)
+      subscription = AsyncDrawable.with(getActivity())
+          .load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
     }
