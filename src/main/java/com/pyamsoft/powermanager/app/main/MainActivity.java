@@ -236,13 +236,9 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 =
-        "CHANGE: Always start the application on boot. This change is done to fix an issue where, on some devices, Home Button does not always start on boot.";
-    final String line2 = "BUGFIX: Fix crash in donation page";
-    final String line3 = "BUGFIX: Fix crash in image loading on KitKat";
-    final String line4 = "BUGFIX: Smaller APK size";
-    final String line5 = "BUGFIX: Various optimizations and fixes";
-    return new String[] { line1, line2, line3, line4, line5 };
+    final String line1 = "BUGFIX: General stability improvements";
+    final String line2 = "BUGFIX: Power Trigger improvements";
+    return new String[] { line1, line2 };
   }
 
   @NonNull @Override protected String getVersionName() {
