@@ -148,11 +148,11 @@ public class ShellCommandHelper {
     shellTimeoutSubcscription = Observable.defer(() -> {
       Timber.d("Wait a bit and then close up");
       return Observable.just(true);
-    })
-        .delay(1, TimeUnit.MINUTES)
-        .subscribe(aBoolean -> session.close(),
-            throwable -> Timber.e(throwable, "onError queueShellTimeout"),
-            () -> SubscriptionHelper.unsubscribe(shellTimeoutSubcscription));
+    }).delay(15, TimeUnit.SECONDS).subscribe(aBoolean -> {
+          Timber.w("Closing session!");
+          session.close();
+        }, throwable -> Timber.e(throwable, "onError queueShellTimeout"),
+        () -> SubscriptionHelper.unsubscribe(shellTimeoutSubcscription));
   }
 
   @WorkerThread private void runSUCommand(@NonNull String command) {
