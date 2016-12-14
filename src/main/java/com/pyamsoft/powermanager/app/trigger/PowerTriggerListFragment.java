@@ -149,6 +149,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
       });
     }
 
+    // Because we may already have an Adapter with entries, we clear it first so that there are no doubles.
+    adapter.clear();
     presenter.bindView(this);
     presenter.loadTriggerView();
   }

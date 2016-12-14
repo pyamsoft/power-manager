@@ -132,6 +132,9 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   private void populateAdapter(@NonNull View view) {
+    // Because we create the adapter in onCreate, it may hang on to old entries.
+    // Clear theme here before we populate
+    adapter.clear();
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             wifiManageObserver));
