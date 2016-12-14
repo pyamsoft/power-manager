@@ -56,6 +56,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
   private RecyclerView.ItemDecoration dividerDecoration;
   private long loadedPresenterKey;
   private FragmentPowertriggerBinding binding;
+  private boolean listIsRefreshed;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -81,8 +82,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
+    listIsRefreshed = false;
     dividerDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_powertrigger, container, false);
     return binding.getRoot();
   }
@@ -149,10 +150,13 @@ public class PowerTriggerListFragment extends ActionBarFragment
       });
     }
 
-    // Because we may already have an Adapter with entries, we clear it first so that there are no doubles.
-    adapter.clear();
     presenter.bindView(this);
-    presenter.loadTriggerView();
+
+    if (!listIsRefreshed) {
+      // Because we may already have an Adapter with entries, we clear it first so that there are no doubles.
+      adapter.clear();
+      presenter.loadTriggerView();
+    }
   }
 
   @Override public void onResume() {
@@ -206,6 +210,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     if (adapter.getItemCount() == 0) {
       loadEmptyView();
     } else {
+      listIsRefreshed = true;
       loadListView();
     }
   }
