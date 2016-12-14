@@ -35,16 +35,16 @@ import timber.log.Timber;
 abstract class QueuerImpl implements Queuer {
 
   private static final long LARGEST_TIME_WITHOUT_ALARM = 60L;
-  @NonNull final Logger logger;
-  @NonNull final BooleanInterestObserver stateObserver;
-  @NonNull final BooleanInterestModifier stateModifier;
-  @NonNull final BooleanInterestObserver chargingObserver;
-  @NonNull final JobQueuerWrapper jobQueuerWrapper;
+  @SuppressWarnings("WeakerAccess") @NonNull final Logger logger;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier stateModifier;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @SuppressWarnings("WeakerAccess") @NonNull final Scheduler handlerScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
-  @SuppressWarnings("WeakerAccess") @NonNull Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
   @SuppressWarnings("WeakerAccess") long periodicDisableTime;
   @SuppressWarnings("WeakerAccess") int periodic;

@@ -28,10 +28,6 @@ import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new DozeManagePresenterLoader();
   }

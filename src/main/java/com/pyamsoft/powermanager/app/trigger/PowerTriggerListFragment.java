@@ -50,10 +50,10 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
 
-  TriggerPresenter presenter;
+  @SuppressWarnings("WeakerAccess") TriggerPresenter presenter;
 
-  FastItemAdapter<PowerTriggerListItem> adapter;
-  RecyclerView.ItemDecoration dividerDecoration;
+  @SuppressWarnings("WeakerAccess") FastItemAdapter<PowerTriggerListItem> adapter;
+  private RecyclerView.ItemDecoration dividerDecoration;
   private long loadedPresenterKey;
   private FragmentPowertriggerBinding binding;
 
@@ -190,7 +190,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     binding.powerTriggerFab.setOnClickListener(v -> presenter.showNewTriggerDialog());
   }
 
-  void setupRecyclerView() {
+  private void setupRecyclerView() {
     binding.powerTriggerList.setLayoutManager(new LinearLayoutManager(getContext()));
     binding.powerTriggerList.setHasFixedSize(true);
     binding.powerTriggerList.addItemDecoration(dividerDecoration);

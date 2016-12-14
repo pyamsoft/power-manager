@@ -24,10 +24,6 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new BluetoothManagePresenterLoader();
   }

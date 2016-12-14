@@ -27,10 +27,6 @@ import timber.log.Timber;
 
 public class DataManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new DataManagePresenterLoader();
   }

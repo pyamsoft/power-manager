@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class QueuerWifiLongTermService extends BaseLongTermService {
+public abstract class QueuerWifiLongTermService extends BaseLongTermService {
 
   @Inject @Named("obs_wifi_state") BooleanInterestObserver stateObserver;
   @Inject @Named("mod_wifi_state") BooleanInterestModifier stateModifier;

@@ -68,7 +68,7 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     });
   }
 
-  void deleteAllPreviousLogs() {
+  @SuppressWarnings("WeakerAccess") void deleteAllPreviousLogs() {
     loggerWifi.deleteLog();
     loggerData.deleteLog();
     loggerBluetooth.deleteLog();
@@ -122,7 +122,7 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     loggerTrigger.destroy();
   }
 
-  @CheckResult @NonNull LoggerDialog getLoggerDialog() {
+  @CheckResult @NonNull private LoggerDialog getLoggerDialog() {
     final Fragment loggerDialog = getParentFragment();
     if (loggerDialog instanceof LoggerDialog) {
       return (LoggerDialog) loggerDialog;

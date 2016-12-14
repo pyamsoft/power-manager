@@ -44,10 +44,10 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
-  String presetDisableTimeKey;
-  @Nullable TapTargetView periodicDisableTapTarget;
-  @Nullable TapTargetView periodicEnableTapTarget;
-  String presetEnableTimeKey;
+  @SuppressWarnings("WeakerAccess") String presetDisableTimeKey;
+  @SuppressWarnings("WeakerAccess") @Nullable TapTargetView periodicDisableTapTarget;
+  @SuppressWarnings("WeakerAccess") @Nullable TapTargetView periodicEnableTapTarget;
+  @SuppressWarnings("WeakerAccess") String presetEnableTimeKey;
   private String periodicKey;
   private String enableTimeKey;
   private String disableTimeKey;
@@ -315,14 +315,14 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
         });
   }
 
-  void endOnboarding() {
+  @SuppressWarnings("WeakerAccess") void endOnboarding() {
     if (presenter != null) {
       Timber.d("End manage onboarding");
       presenter.setShownOnBoarding();
     }
   }
 
-  void createPresetDisableTapTarget(@NonNull View itemView) {
+  @SuppressWarnings("WeakerAccess") void createPresetDisableTapTarget(@NonNull View itemView) {
     final TapTarget periodicDisable =
         TapTarget.forView(itemView, getString(R.string.onboard_title_period_disable),
             getString(R.string.onboard_desc_period_disable)).tintTarget(false).cancelable(false);
@@ -346,7 +346,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
         });
   }
 
-  void createPresetEnableTapTarget(@NonNull View itemView) {
+  @SuppressWarnings("WeakerAccess") void createPresetEnableTapTarget(@NonNull View itemView) {
     final TapTarget periodicEnable =
         TapTarget.forView(itemView, getString(R.string.onboard_title_period_enable),
             getString(R.string.onboard_desc_period_enable)).tintTarget(false).cancelable(false);

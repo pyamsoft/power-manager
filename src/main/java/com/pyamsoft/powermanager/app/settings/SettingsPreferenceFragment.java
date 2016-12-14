@@ -70,11 +70,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
             });
   }
 
-  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-    return super.onCreateView(inflater, container, savedInstanceState);
-  }
-
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 

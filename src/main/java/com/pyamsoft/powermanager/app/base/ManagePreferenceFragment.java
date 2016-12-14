@@ -45,12 +45,12 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
-  @Nullable TapTargetView manageTapTarget;
-  @Nullable TapTargetView presetTapTarget;
-  @Nullable TapTargetView customTimeTapTarget;
-  @Nullable TapTargetView fabTapTarget;
-  String presetTimeKey;
-  @Nullable String customTimeKey;
+  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView presetTapTarget;
+  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView customTimeTapTarget;
+  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView fabTapTarget;
+  @SuppressWarnings("WeakerAccess") String presetTimeKey;
+  @SuppressWarnings("WeakerAccess") @Nullable String customTimeKey;
+  @Nullable private TapTargetView manageTapTarget;
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
@@ -90,13 +90,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     } else {
       customTimeKey = null;
     }
-    injectDependencies();
   }
-
-  /**
-   * Inject anything here is individual fragment instances
-   */
-  protected abstract void injectDependencies();
 
   @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -312,7 +306,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
         });
   }
 
-  void createPresetTimeTapTarget(@NonNull View presetView) {
+  @SuppressWarnings("WeakerAccess") void createPresetTimeTapTarget(@NonNull View presetView) {
     final TapTarget presetListTarget =
         TapTarget.forView(presetView, getString(R.string.onboard_title_manage_preset),
             getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
@@ -336,7 +330,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
         });
   }
 
-  void createCustomTimeTapTarget(@NonNull View customTimeView) {
+  @SuppressWarnings("WeakerAccess") void createCustomTimeTapTarget(@NonNull View customTimeView) {
     final TapTarget customTimeTarget =
         TapTarget.forView(customTimeView, getString(R.string.onboard_title_manage_custom),
             getString(R.string.onboard_desc_manage_custom)).tintTarget(false).cancelable(false);
@@ -368,7 +362,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
         });
   }
 
-  void createFabTapTarget(@NonNull View fab) {
+  @SuppressWarnings("WeakerAccess") void createFabTapTarget(@NonNull View fab) {
     final TapTarget fabTarget =
         TapTarget.forView(fab, getString(R.string.onboard_title_overview_fab),
             getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
@@ -383,7 +377,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     });
   }
 
-  void endOnboarding() {
+  @SuppressWarnings("WeakerAccess") void endOnboarding() {
     if (presenter != null) {
       Timber.d("End manage onboarding");
       presenter.setShownOnBoarding();

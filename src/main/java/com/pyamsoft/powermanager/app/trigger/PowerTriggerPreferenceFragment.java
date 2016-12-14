@@ -31,7 +31,7 @@ public class PowerTriggerPreferenceFragment extends PreferenceFragmentCompat
 
   @NonNull public static final String TAG = "PowerTriggerPreferenceFragment";
   @NonNull private static final String KEY_PRESENTER = "key_trigger_pref_presenter";
-  TriggerPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") TriggerPreferencePresenter presenter;
   private long loadedKey;
 
   @Override public void onCreate(Bundle savedInstanceState) {

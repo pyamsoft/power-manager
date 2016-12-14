@@ -62,8 +62,8 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   @Inject @Named("obs_airplane_manage") BooleanInterestObserver airplaneManageObserver;
   @Inject @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver;
   @Inject @Named("obs_doze_manage") BooleanInterestObserver dozeManageObserver;
-  OverviewPresenter presenter;
-  FastItemAdapter<OverviewItem> adapter;
+  @SuppressWarnings("WeakerAccess") OverviewPresenter presenter;
+  private FastItemAdapter<OverviewItem> adapter;
   private FragmentOverviewBinding binding;
   private long loadedKey;
   @Nullable private TapTargetSequence sequence;

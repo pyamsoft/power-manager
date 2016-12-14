@@ -67,7 +67,7 @@ public class DeleteTriggerDialog extends DialogFragment {
         .create();
   }
 
-  void sendDeleteEvent(int percent) {
+  @SuppressWarnings("WeakerAccess") void sendDeleteEvent(int percent) {
     final FragmentManager fragmentManager = getFragmentManager();
     final Fragment powerTriggerListFragment =
         fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);

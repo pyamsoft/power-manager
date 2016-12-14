@@ -38,12 +38,12 @@ import timber.log.Timber;
 
 public abstract class BaseLongTermService extends Service {
 
-  @NonNull static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
-  @NonNull static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
-  @NonNull static final String EXTRA_PERIODIC = "extra_periodic";
-  @NonNull static final String EXTRA_PERIODIC_ENABLE = "extra_periodic_enable";
-  @NonNull static final String EXTRA_PERIODIC_DISABLE = "extra_periodic_disable";
-  @Nullable Subscription runSubscription;
+  @NonNull private static final String EXTRA_JOB_TYPE = "extra_job_queue_type";
+  @NonNull private static final String EXTRA_IGNORE_CHARGING = "extra_ignore_charging";
+  @NonNull private static final String EXTRA_PERIODIC = "extra_periodic";
+  @NonNull private static final String EXTRA_PERIODIC_ENABLE = "extra_periodic_enable";
+  @NonNull private static final String EXTRA_PERIODIC_DISABLE = "extra_periodic_disable";
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
 
   @Inject @Named("sub") Scheduler subScheduler;
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;

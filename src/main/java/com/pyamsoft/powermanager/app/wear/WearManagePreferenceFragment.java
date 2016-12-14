@@ -26,10 +26,6 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull static final String TAG = "WearManagePreferenceFragment";
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new WearPresenterLoader();
   }

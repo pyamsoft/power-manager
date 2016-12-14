@@ -56,13 +56,12 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     notificationSubscription = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(notification -> {
-          getView(
-              foregroundProvider -> foregroundProvider.startNotificationInForeground(notification));
-        }, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO handle error
-        }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
+        .subscribe(notification -> getView(
+            foregroundProvider -> foregroundProvider.startNotificationInForeground(notification)),
+            throwable -> {
+              Timber.e(throwable, "onError");
+              // TODO handle error
+            }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
   }
 
   /**

@@ -50,7 +50,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
-  FragmentPreferenceContainerPagerBinding binding;
+  private FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
   private long loadedKey;
   @Nullable private AsyncMap.Entry subscription;

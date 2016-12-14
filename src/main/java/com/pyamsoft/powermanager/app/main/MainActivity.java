@@ -68,7 +68,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : this::handleBackLongPress;
   @Nullable private final Handler mainHandler =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : new Handler(Looper.getMainLooper());
-  MainPresenter presenter;
+  @SuppressWarnings("WeakerAccess") MainPresenter presenter;
   private ActivityMainBinding binding;
   @ColorInt private int oldAppBarColor;
   @ColorInt private int oldStatusBarColor;
@@ -76,7 +76,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   @Nullable private ValueAnimator statusBarAnimator;
   private long loadedKey;
 
-  @CheckResult @ColorInt static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @ColorInt static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
     final float inverseRatio = 1f - ratio;
 
     final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
@@ -383,7 +383,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
     return super.onKeyUp(keyCode, event);
   }
 
-  boolean handleBackLongPress() {
+  @SuppressWarnings("WeakerAccess") boolean handleBackLongPress() {
     final String tag = "logger_dialog";
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(tag) == null) {

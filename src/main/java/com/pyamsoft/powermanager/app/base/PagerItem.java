@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.app.base;
 
-public interface PagerItem {
+interface PagerItem {
 
   void onSelected();
 

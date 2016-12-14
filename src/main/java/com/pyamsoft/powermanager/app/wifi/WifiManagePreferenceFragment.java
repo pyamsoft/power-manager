@@ -24,10 +24,6 @@ import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new WifiManagePresenterLoader();
   }

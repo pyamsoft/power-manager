@@ -26,10 +26,6 @@ import timber.log.Timber;
 
 public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Override protected void injectDependencies() {
-
-  }
-
   @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
     return new AirplaneManagePresenterLoader();
   }

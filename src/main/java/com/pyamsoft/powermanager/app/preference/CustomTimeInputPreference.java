@@ -39,23 +39,23 @@ public abstract class CustomTimeInputPreference extends Preference
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
 
-  public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init(context);
   }
 
-  public CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     init(context);
   }
 
-  public CustomTimeInputPreference(Context context, AttributeSet attrs) {
+  protected CustomTimeInputPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
     init(context);
   }
 
-  public CustomTimeInputPreference(Context context) {
+  protected CustomTimeInputPreference(Context context) {
     super(context);
     init(context);
   }
