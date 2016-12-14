@@ -80,14 +80,13 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
             presenter = persist;
           }
         });
-
-    adapter = new FastItemAdapter<>();
   }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     Injector.get().provideComponent().plusOverviewComponent().inject(this);
+    adapter = new FastItemAdapter<>();
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false);
     return binding.getRoot();
   }
@@ -132,9 +131,6 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   private void populateAdapter(@NonNull View view) {
-    // Because we create the adapter in onCreate, it may hang on to old entries.
-    // Clear theme here before we populate
-    adapter.clear();
     adapter.add(
         new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             wifiManageObserver));
