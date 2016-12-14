@@ -37,11 +37,6 @@ public abstract class OverviewSingleItemFragment extends AppBarColoringFragment 
     return inflater.inflate(R.layout.fragment_preference_container_single, container, false);
   }
 
-  @Override public final void onDestroyView() {
-    super.onDestroyView();
-    setActionBarUpEnabled(false);
-  }
-
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
