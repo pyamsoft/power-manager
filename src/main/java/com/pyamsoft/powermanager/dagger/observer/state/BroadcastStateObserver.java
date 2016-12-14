@@ -123,12 +123,14 @@ abstract class BroadcastStateObserver extends BroadcastReceiver implements Boole
     Timber.d("Received event for action: %s", action);
 
     if (is()) {
+      //noinspection Convert2streamapi
       for (final SetCallback setCallback : setMap.values()) {
         if (setCallback != null) {
           setCallback.call();
         }
       }
     } else {
+      //noinspection Convert2streamapi
       for (final UnsetCallback unsetCallback : unsetMap.values()) {
         if (unsetCallback != null) {
           unsetCallback.call();

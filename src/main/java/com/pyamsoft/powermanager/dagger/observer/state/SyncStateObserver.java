@@ -47,12 +47,14 @@ class SyncStateObserver implements BooleanInterestObserver {
     return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
         i -> {
           if (is()) {
+            //noinspection Convert2streamapi
             for (final SetCallback setCallback : setMap.values()) {
               if (setCallback != null) {
                 setCallback.call();
               }
             }
           } else {
+            //noinspection Convert2streamapi
             for (final UnsetCallback unsetCallback : unsetMap.values()) {
               if (unsetCallback != null) {
                 unsetCallback.call();

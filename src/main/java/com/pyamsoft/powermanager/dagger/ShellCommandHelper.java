@@ -95,6 +95,7 @@ public class ShellCommandHelper {
     if (output != null) {
       if (!output.isEmpty()) {
         Timber.d("%s Command output", (rootShell) ? "SU" : "SH");
+        //noinspection Convert2streamapi
         for (final String line : output) {
           if (line != null) {
             Timber.d("%s", line);

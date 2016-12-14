@@ -212,8 +212,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
       AsyncMapHelper.unsubscribe(subscription);
-      subscription = AsyncDrawable
-          .load(fabIcon)
+      subscription = AsyncDrawable.load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
     }

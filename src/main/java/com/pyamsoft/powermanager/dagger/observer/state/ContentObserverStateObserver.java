@@ -97,12 +97,14 @@ abstract class ContentObserverStateObserver extends ContentObserver
   @Override public void onChange(boolean selfChange) {
     super.onChange(selfChange);
     if (is()) {
+      //noinspection Convert2streamapi
       for (final SetCallback setCallback : setMap.values()) {
         if (setCallback != null) {
           setCallback.call();
         }
       }
     } else {
+      //noinspection Convert2streamapi
       for (final UnsetCallback unsetCallback : unsetMap.values()) {
         if (unsetCallback != null) {
           unsetCallback.call();

@@ -28,10 +28,10 @@ import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final Queuer queuer;
+  @NonNull private final PowerManagerPreferences preferences;
 
   ManagerInteractorImpl(@NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,

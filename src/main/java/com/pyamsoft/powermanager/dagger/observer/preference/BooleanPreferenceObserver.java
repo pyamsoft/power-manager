@@ -50,12 +50,14 @@ public abstract class BooleanPreferenceObserver
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
       if (is()) {
+        //noinspection Convert2streamapi
         for (final SetCallback setCallback : setMap.values()) {
           if (setCallback != null) {
             setCallback.call();
           }
         }
       } else {
+        //noinspection Convert2streamapi
         for (final UnsetCallback unsetCallback : unsetMap.values()) {
           if (unsetCallback != null) {
             unsetCallback.call();

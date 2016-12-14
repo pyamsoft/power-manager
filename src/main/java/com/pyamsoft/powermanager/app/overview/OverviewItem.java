@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.app.overview;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
@@ -44,7 +43,6 @@ import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 class OverviewItem
@@ -168,8 +166,7 @@ class OverviewItem
         }
 
         AsyncMapHelper.unsubscribe(checkTask);
-        checkTask = AsyncDrawable
-            .load(check)
+        checkTask = AsyncDrawable.load(check)
             .tint(android.R.color.white)
             .into(binding.adapterItemOverviewCheck);
       } else {
@@ -177,8 +174,7 @@ class OverviewItem
       }
 
       AsyncMapHelper.unsubscribe(titleTask);
-      titleTask = AsyncDrawable
-          .load(model.image())
+      titleTask = AsyncDrawable.load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
     }

@@ -41,10 +41,10 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @SuppressWarnings("WeakerAccess") @NonNull final Scheduler handlerScheduler;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
   @SuppressWarnings("WeakerAccess") long periodicDisableTime;
   @SuppressWarnings("WeakerAccess") int periodic;

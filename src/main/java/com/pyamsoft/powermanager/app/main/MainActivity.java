@@ -76,7 +76,8 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   @Nullable private ValueAnimator statusBarAnimator;
   private long loadedKey;
 
-  @SuppressWarnings("WeakerAccess") @CheckResult @ColorInt static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @ColorInt
+  static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
     final float inverseRatio = 1f - ratio;
 
     final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
@@ -126,6 +127,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
       appBarAnimator.cancel();
     }
 
+    //noinspection Convert2streamapi
     for (final String key : addedViewMap.keySet()) {
       removeViewFromAppBar(key);
     }
