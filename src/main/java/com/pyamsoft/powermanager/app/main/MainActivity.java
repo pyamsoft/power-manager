@@ -143,7 +143,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   @Override public void onBackPressed() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.getBackStackEntryCount() > 0) {
-      fragmentManager.popBackStack();
+      fragmentManager.popBackStackImmediate();
     } else {
       super.onBackPressed();
     }
