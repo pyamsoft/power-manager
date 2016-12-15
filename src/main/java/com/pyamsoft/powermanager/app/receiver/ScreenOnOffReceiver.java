@@ -20,7 +20,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.display.DisplayManager;
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.view.Display;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.app.logger.Logger;
@@ -40,6 +44,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   @NonNull private final Context appContext;
+  @NonNull private final DisplayManager displayManager;
 
   @Inject @Named("wifi_manager") Manager managerWifi;
   @Inject @Named("data_manager") Manager managerData;
@@ -54,7 +59,34 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
     this.appContext = context.getApplicationContext();
     isRegistered = false;
 
+    displayManager = (DisplayManager) appContext.getSystemService(Context.DISPLAY_SERVICE);
+
     Injector.get().provideComponent().plusManagerComponent().inject(this);
+  }
+
+  /**
+   * Checks the display state on API's which have finer tuned states.
+   *
+   * Returns true if the display is in the state we assume it to be.
+   */
+  @CheckResult private boolean checkDisplayState(boolean displayOn) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH) {
+      Timber.w("Old API, always trust the broadcast");
+      return true;
+    } else {
+      final Display[] allDisplays = displayManager.getDisplays();
+      final int checkState = displayOn ? Display.STATE_OFF : Display.STATE_ON;
+      boolean allInState = true;
+      for (final Display display : allDisplays) {
+        Timber.d("Check that display: %s is %s", display.getName(), displayOn ? "ON" : "OFF");
+        if (display.getState() == checkState) {
+          Timber.w("Display: %s is %s", display.getName(), displayOn ? "OFF" : "ON");
+          allInState = false;
+          break;
+        }
+      }
+      return allInState;
+    }
   }
 
   @Override public final void onReceive(final Context context, final Intent intent) {
@@ -62,12 +94,16 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
       final String action = intent.getAction();
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
-          Timber.d("Screen off event");
-          disableManagers();
+          if (checkDisplayState(false)) {
+            Timber.d("Screen off event");
+            disableManagers();
+          }
           break;
         case Intent.ACTION_SCREEN_ON:
-          Timber.d("Screen on event");
-          enableManagers();
+          if (checkDisplayState(true)) {
+            Timber.d("Screen on event");
+            enableManagers();
+          }
           break;
         default:
           Timber.e("Invalid event: %s", action);
