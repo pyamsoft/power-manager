@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.dagger.overview;
+package com.pyamsoft.powermanager.app.overview;
 
-import com.pyamsoft.powermanager.app.overview.OverviewFragment;
-import com.pyamsoft.powermanager.app.overview.OverviewItem;
-import com.pyamsoft.powermanager.app.overview.OverviewPresenterLoader;
-import dagger.Subcomponent;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-@Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
+public interface OverviewItemPresenter extends Presenter<OverviewItemPresenter.View> {
 
-  void inject(OverviewFragment fragment);
+  void decideManageState(@Nullable BooleanInterestObserver observer);
 
-  void inject(OverviewPresenterLoader loader);
+  interface View {
 
-  void inject(OverviewItem.ViewHolder holder);
+    void onManageStateDecided(@DrawableRes int icon);
+
+    void onManageStateNone();
+  }
 }

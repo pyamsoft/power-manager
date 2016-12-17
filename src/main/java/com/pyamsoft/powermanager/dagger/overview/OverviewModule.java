@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.dagger.overview;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
+import com.pyamsoft.powermanager.app.overview.OverviewItemPresenter;
 import com.pyamsoft.powermanager.app.overview.OverviewPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -25,6 +26,11 @@ import javax.inject.Named;
 import rx.Scheduler;
 
 @Module public class OverviewModule {
+
+  @Provides OverviewItemPresenter provideOverviewItemPresenter(@Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new OverviewItemPresenterImpl(obsScheduler, subScheduler);
+  }
 
   @Provides OverviewPresenter provideOverviewPresenter(@NonNull OverviewInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {

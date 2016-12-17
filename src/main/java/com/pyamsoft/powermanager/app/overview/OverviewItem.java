@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.app.bluetooth.BluetoothFragment;
@@ -44,8 +45,9 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import java.util.List;
+import javax.inject.Inject;
 
-class OverviewItem
+public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
@@ -134,15 +136,18 @@ class OverviewItem
     }
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
+  public static class ViewHolder extends RecyclerView.ViewHolder
+      implements OverviewItemPresenter.View {
 
     @NonNull private final AdapterItemOverviewBinding binding;
+    @Inject OverviewItemPresenter presenter;
     @Nullable private AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
+      Injector.get().provideComponent().plusOverviewComponent().inject(this);
     }
 
     @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {
@@ -150,39 +155,38 @@ class OverviewItem
     }
 
     void bind(@NonNull OverviewModel model) {
-      // Tint check mark white
-      // Avoids a NoMethod crash on API 19
+      presenter.bindView(this);
+
       binding.adapterItemOverviewColor.setBackgroundColor(
           ContextCompat.getColor(itemView.getContext(), model.background()));
       binding.adapterItemOverviewTitle.setText(model.title());
-
-      final BooleanInterestObserver observer = model.observer();
-      if (observer != null) {
-        final int check;
-        if (observer.is()) {
-          check = R.drawable.ic_check_box_24dp;
-        } else {
-          check = R.drawable.ic_check_box_outline_24dp;
-        }
-
-        AsyncMapHelper.unsubscribe(checkTask);
-        checkTask = AsyncDrawable.load(check)
-            .tint(android.R.color.white)
-            .into(binding.adapterItemOverviewCheck);
-      } else {
-        binding.adapterItemOverviewCheck.setImageDrawable(null);
-      }
 
       AsyncMapHelper.unsubscribe(titleTask);
       titleTask = AsyncDrawable.load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
+
+      presenter.decideManageState(model.observer());
     }
 
     void unbind() {
       AsyncMapHelper.unsubscribe(checkTask, titleTask);
       binding.adapterItemOverviewImage.setImageDrawable(null);
       binding.adapterItemOverviewTitle.setText(null);
+
+      presenter.unbindView();
+      presenter.destroy();
+    }
+
+    @Override public void onManageStateDecided(@DrawableRes int icon) {
+      AsyncMapHelper.unsubscribe(checkTask);
+      checkTask = AsyncDrawable.load(icon)
+          .tint(android.R.color.white)
+          .into(binding.adapterItemOverviewCheck);
+    }
+
+    @Override public void onManageStateNone() {
+      binding.adapterItemOverviewCheck.setImageDrawable(null);
     }
   }
 }
