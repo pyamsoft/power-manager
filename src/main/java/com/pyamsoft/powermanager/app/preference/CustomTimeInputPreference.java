@@ -34,7 +34,7 @@ import timber.log.Timber;
 public abstract class CustomTimeInputPreference extends Preference
     implements CustomTimeInputPreferencePresenter.View {
 
-  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") @Nullable CustomTimeInputPreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
@@ -64,67 +64,79 @@ public abstract class CustomTimeInputPreference extends Preference
     setLayoutResource(R.layout.preference_custom_time_input);
     injectPresenter(context);
     presenter = getPresenter();
+  }
 
-    Timber.d("onBindViewHolder");
-    presenter.bindView(this);
+  @Override public void onDetached() {
+    super.onDetached();
+    Timber.d("onDetached");
+    unbind(true);
+    if (presenter != null) {
+      presenter.unbindView();
+      presenter.destroy();
+    }
+  }
+
+  @Override public void onAttached() {
+    super.onAttached();
+    Timber.d("onAttached");
+    if (presenter != null) {
+      presenter.bindView(this);
+    }
   }
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
+    Timber.d("onBindViewHolder");
     // We call unbind because when a preference is changed it can be re-bound without being properly recycled
     unbind(false);
 
-    holder.itemView.setClickable(false);
+    // Crashes if we try to use actual DB class
     binding = DataBindingUtil.bind(holder.itemView);
     editText = binding.preferenceCustomTimeInput.getEditText();
 
-    watcher = new TextWatcher() {
-      @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-      }
-
-      @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-      }
-
-      @Override public void afterTextChanged(Editable s) {
-        Timber.d("After text changed");
-        final String text = s.toString();
-        presenter.updateCustomTime(text);
-      }
-    };
-
+    holder.itemView.setClickable(false);
     if (editText != null) {
+      watcher = new TextWatcher() {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override public void afterTextChanged(Editable s) {
+          Timber.d("After text changed");
+          if (presenter != null) {
+            final String text = s.toString();
+            presenter.updateCustomTime(text);
+          }
+        }
+      };
+
       Timber.d("Add text watcher");
       editText.addTextChangedListener(watcher);
     }
 
-    presenter.initializeCustomTime();
-  }
-
-  public final void destroy() {
-    presenter.unbindView();
-    presenter.destroy();
-  }
-
-  public final void unbind() {
-    unbind(true);
+    if (presenter != null) {
+      presenter.initializeCustomTime();
+    }
   }
 
   private void unbind(boolean finalSave) {
-    if (binding == null) {
-      Timber.w(
-          "onBindViewHolder was never called for this preference. Maybe it never came into view?");
-    } else {
+    if (binding != null) {
+      Timber.d("unbind");
       if (editText != null) {
         editText.removeTextChangedListener(watcher);
         editText.setOnFocusChangeListener(null);
         editText.setOnEditorActionListener(null);
 
         if (finalSave) {
-          // Save the last entered value to preferences
-          final String text = editText.getText().toString();
-          presenter.updateCustomTime(text, 0, false);
+          if (presenter != null) {
+            // Save the last entered value to preferences
+            final String text = editText.getText().toString();
+            presenter.updateCustomTime(text, 0, false);
+          }
         }
       }
 
@@ -159,8 +171,10 @@ public abstract class CustomTimeInputPreference extends Preference
   }
 
   public void updatePresetDelay(@NonNull String presetDelay) {
-    Timber.d("Update time with preset delay of: %s", presetDelay);
-    presenter.updateCustomTime(presetDelay, 0);
+    if (presenter != null) {
+      Timber.d("Update time with preset delay of: %s", presetDelay);
+      presenter.updateCustomTime(presetDelay, 0);
+    }
   }
 
   @CheckResult @NonNull protected abstract CharSequence formatSummaryStringForTime(long time);

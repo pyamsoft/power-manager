@@ -229,15 +229,11 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     if (customEnableTimePreference != null) {
       customEnableTimePreference.setOnPreferenceChangeListener(null);
       customEnableTimePreference.setOnPreferenceClickListener(null);
-      customEnableTimePreference.unbind();
-      customEnableTimePreference.destroy();
     }
 
     if (customDisableTimePreference != null) {
       customDisableTimePreference.setOnPreferenceChangeListener(null);
       customDisableTimePreference.setOnPreferenceClickListener(null);
-      customDisableTimePreference.unbind();
-      customDisableTimePreference.destroy();
     }
 
     if (periodicPreference != null) {

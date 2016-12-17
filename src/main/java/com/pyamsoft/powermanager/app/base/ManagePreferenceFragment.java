@@ -222,8 +222,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     if (customTimePreference != null) {
       customTimePreference.setOnPreferenceChangeListener(null);
       customTimePreference.setOnPreferenceClickListener(null);
-      customTimePreference.unbind();
-      customTimePreference.destroy();
     }
 
     if (managePreference != null) {
