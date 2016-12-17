@@ -48,10 +48,6 @@
             android:id="@+id/power_trigger_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="8dp"
-            android:paddingEnd="8dp"
-            android:paddingStart="0dp"
-            android:paddingTop="0dp"
             />
 
         <FrameLayout
