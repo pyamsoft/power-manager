@@ -20,17 +20,23 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 
 class DozeManageObserver extends BooleanPreferenceObserver {
 
-  @Inject DozeManageObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @NonNull private final PermissionObserver dozePermissionObserver;
+
+  @Inject DozeManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull PermissionObserver dozePermissionObserver) {
     super(preferences, context.getString(R.string.manage_doze_key));
+    this.dozePermissionObserver = dozePermissionObserver;
   }
 
   @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
-    return preferences.isDozeManaged();
+    return preferences.isDozeManaged() && dozePermissionObserver.hasPermission()
+        .toBlocking()
+        .first();
   }
 }

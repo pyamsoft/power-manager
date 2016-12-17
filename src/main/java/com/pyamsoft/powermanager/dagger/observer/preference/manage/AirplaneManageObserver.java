@@ -20,17 +20,24 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 
 class AirplaneManageObserver extends BooleanPreferenceObserver {
 
+  @NonNull private final PermissionObserver rootPermissionObserver;
+
   @Inject AirplaneManageObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull PermissionObserver permissionObserver) {
     super(preferences, context.getString(R.string.manage_airplane_key));
+    rootPermissionObserver = permissionObserver;
   }
 
   @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
-    return preferences.isAirplaneManaged();
+    return preferences.isAirplaneManaged() && rootPermissionObserver.hasPermission()
+        .toBlocking()
+        .first();
   }
 }

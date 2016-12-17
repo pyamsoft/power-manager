@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
@@ -30,20 +29,10 @@ import timber.log.Timber;
 class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     implements ExclusiveWearUnawareManagerInteractor {
 
-  @NonNull private final PermissionObserver dozePermissionObserver;
-
   @Inject ManagerDozeInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
-      @NonNull PermissionObserver dozePermissionObserver) {
+      @NonNull BooleanInterestObserver stateObserver) {
     super(queuer, preferences, manageObserver, stateObserver);
-    this.dozePermissionObserver = dozePermissionObserver;
-  }
-
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return super.isManaged()
-        .zipWith(dozePermissionObserver.hasPermission(),
-            (managed, hasPermission) -> managed && hasPermission);
   }
 
   @Override @CheckResult protected long getDelayTime() {

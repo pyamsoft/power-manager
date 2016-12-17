@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -33,8 +34,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_data_manage") @Provides BooleanInterestObserver provideDataObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DataManageObserver(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
+    return new DataManageObserver(context, preferences, rootPermissionObserver);
   }
 
   @Singleton @Named("obs_bluetooth_manage") @Provides
@@ -54,13 +56,15 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_doze_manage") @Provides BooleanInterestObserver provideDozeObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozeManageObserver(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
+    return new DozeManageObserver(context, preferences, dozePermissionObserver);
   }
 
   @Singleton @Named("obs_airplane_manage") @Provides
   BooleanInterestObserver provideAirplaneObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneManageObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences,
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
+    return new AirplaneManageObserver(context, preferences, rootPermissionObserver);
   }
 }

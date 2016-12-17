@@ -17,20 +17,32 @@
 package com.pyamsoft.powermanager.dagger.observer.preference.manage;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class DataManageObserver extends BooleanPreferenceObserver {
 
-  @Inject DataManageObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @NonNull private final PermissionObserver rootPermissionObserver;
+
+  @Inject DataManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull PermissionObserver permissionObserver) {
     super(preferences, context.getString(R.string.manage_data_key));
+    rootPermissionObserver = permissionObserver;
   }
 
   @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
-    return preferences.isDataManaged();
+    final boolean preferenceManaged = preferences.isDataManaged();
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+      Timber.d("isManaged: check for root on API > 19");
+      return preferenceManaged && rootPermissionObserver.hasPermission().toBlocking().first();
+    } else {
+      return preferenceManaged;
+    }
   }
 }

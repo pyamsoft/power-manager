@@ -16,39 +16,21 @@
 
 package com.pyamsoft.powermanager.dagger.manager;
 
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
-import timber.log.Timber;
 
 class ManagerDataInteractorImpl extends ManagerInteractorImpl {
 
-  @NonNull private final PermissionObserver rootPermissionObserver;
-
   @Inject ManagerDataInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
-      @NonNull PermissionObserver rootPermissionObserver) {
+      @NonNull BooleanInterestObserver stateObserver) {
     super(queuer, preferences, manageObserver, stateObserver);
-    this.rootPermissionObserver = rootPermissionObserver;
-  }
-
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    final Observable<Boolean> superManaged = super.isManaged();
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-      Timber.d("isManaged: check for root on API > 19");
-      return superManaged.zipWith(rootPermissionObserver.hasPermission(),
-          (managed, hasPermission) -> managed && hasPermission);
-    } else {
-      return superManaged;
-    }
   }
 
   @Override @CheckResult protected long getDelayTime() {

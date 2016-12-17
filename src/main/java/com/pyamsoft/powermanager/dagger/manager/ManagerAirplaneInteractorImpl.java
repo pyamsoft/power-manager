@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.dagger.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
@@ -28,23 +27,13 @@ import timber.log.Timber;
 
 class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @NonNull private final PermissionObserver rootPermissionObserver;
-
   @Inject ManagerAirplaneInteractorImpl(@NonNull Queuer queuer,
       @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver,
-      @NonNull PermissionObserver rootPermissionObserver) {
+      @NonNull BooleanInterestObserver wearStateObserver) {
     super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
         wearStateObserver);
-    this.rootPermissionObserver = rootPermissionObserver;
-  }
-
-  @NonNull @Override public Observable<Boolean> isManaged() {
-    return super.isManaged()
-        .zipWith(rootPermissionObserver.hasPermission(),
-            (managed, hasPermission) -> managed && hasPermission);
   }
 
   @Override protected long getDelayTime() {

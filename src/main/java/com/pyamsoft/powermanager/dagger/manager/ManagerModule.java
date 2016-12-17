@@ -21,7 +21,6 @@ import com.pyamsoft.powermanager.PowerManagerPreferences;
 import com.pyamsoft.powermanager.app.manager.ExclusiveManager;
 import com.pyamsoft.powermanager.app.manager.Manager;
 import com.pyamsoft.powermanager.app.observer.BooleanInterestObserver;
-import com.pyamsoft.powermanager.app.observer.PermissionObserver;
 import com.pyamsoft.powermanager.dagger.queuer.Queuer;
 import dagger.Module;
 import dagger.Provides;
@@ -56,10 +55,8 @@ import rx.Scheduler;
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
       @NonNull @Named("queuer_data") Queuer queuer, @NonNull PowerManagerPreferences preferences,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_data_state") BooleanInterestObserver stateObserver,
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new ManagerDataInteractorImpl(queuer, preferences, manageObserver, stateObserver,
-        rootPermissionObserver);
+      @Named("obs_data_state") BooleanInterestObserver stateObserver) {
+    return new ManagerDataInteractorImpl(queuer, preferences, manageObserver, stateObserver);
   }
 
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
@@ -103,10 +100,8 @@ import rx.Scheduler;
   ExclusiveWearUnawareManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull @Named("queuer_doze") Queuer queuer,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
-      @Named("obs_doze_state") BooleanInterestObserver stateObserver,
-      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new ManagerDozeInteractorImpl(queuer, preferences, manageObserver, stateObserver,
-        dozePermissionObserver);
+      @Named("obs_doze_state") BooleanInterestObserver stateObserver) {
+    return new ManagerDozeInteractorImpl(queuer, preferences, manageObserver, stateObserver);
   }
 
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
@@ -122,9 +117,8 @@ import rx.Scheduler;
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
-      @Named("obs_wear_state") BooleanInterestObserver wearStateObserver,
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
+      @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
     return new ManagerAirplaneInteractorImpl(queuer, preferences, manageObserver, stateObserver,
-        wearManageObserver, wearStateObserver, rootPermissionObserver);
+        wearManageObserver, wearStateObserver);
   }
 }
