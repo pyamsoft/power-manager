@@ -23,6 +23,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import eu.chainfire.libsuperuser.Shell;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
@@ -59,12 +60,12 @@ public class ShellCommandHelper {
   /**
    * Requires ROOT for su binary
    */
-  @WorkerThread public static void runRootShellCommand(@NonNull String command) {
-    INSTANCE.runSUCommand(command);
+  @WorkerThread public static void runRootShellCommand(@NonNull String... commands) {
+    INSTANCE.runSUCommand(commands);
   }
 
-  @WorkerThread public static void runShellCommand(@NonNull String command) {
-    INSTANCE.runSHCommand(command);
+  @WorkerThread public static void runShellCommand(@NonNull String... commands) {
+    INSTANCE.runSHCommand(commands);
   }
 
   @CheckResult @NonNull private Shell.Interactive openShellSession(boolean useRoot) {
@@ -90,23 +91,10 @@ public class ShellCommandHelper {
     }
   }
 
-  @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(@NonNull String command,
-      int exitCode, @Nullable List<String> output, boolean rootShell) {
-    if (output != null) {
-      if (!output.isEmpty()) {
-        Timber.d("%s Command output", (rootShell) ? "SU" : "SH");
-        //noinspection Convert2streamapi
-        for (final String line : output) {
-          if (line != null) {
-            Timber.d("%s", line);
-          }
-        }
-      }
-    }
-
+  private void afterCommandResult(int exitCode, boolean rootShell, @NonNull String... commands) {
     final boolean recreate;
     if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
-      Timber.e("Command failed. '%s'", command);
+      Timber.e("Command failed. '%s'", Arrays.toString(commands));
       recreate = decideRecreation(rootShell);
     } else {
       recreate = false;
@@ -119,11 +107,28 @@ public class ShellCommandHelper {
       // Attempt to run the command again
       Timber.w("Re-run command");
       if (rootShell) {
-        runSUCommand(command);
+        runSUCommand(commands);
       } else {
-        runSHCommand(command);
+        runSHCommand(commands);
       }
     }
+  }
+
+  @SuppressWarnings("WeakerAccess") @WorkerThread void parseCommandResult(int exitCode,
+      @Nullable List<String> output, boolean rootShell, @NonNull String... commands) {
+    if (output != null) {
+      if (!output.isEmpty()) {
+        Timber.d("%s Command output", (rootShell) ? "SU" : "SH");
+        //noinspection Convert2streamapi
+        for (final String line : output) {
+          if (line != null) {
+            Timber.d("%s", line);
+          }
+        }
+      }
+    }
+
+    afterCommandResult(exitCode, rootShell, commands);
   }
 
   @CheckResult private boolean decideRecreation(boolean rootShell) {
@@ -156,19 +161,19 @@ public class ShellCommandHelper {
         () -> SubscriptionHelper.unsubscribe(shellTimeoutSubcscription));
   }
 
-  @WorkerThread private void runSUCommand(@NonNull String command) {
+  @WorkerThread private void runSUCommand(@NonNull String... commands) {
     queueShellTimeout(rootSession);
-    Timber.d("Run command '%s' in SU session", command);
-    rootSession.addCommand(command, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
-      parseCommandResult(command, exitCode, output, commandCode == SHELL_TYPE_ROOT);
+    Timber.d("Run command '%s' in SU session", Arrays.toString(commands));
+    rootSession.addCommand(commands, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
     });
   }
 
-  @WorkerThread private void runSHCommand(@NonNull String command) {
+  @WorkerThread private void runSHCommand(@NonNull String... commands) {
     queueShellTimeout(shellSession);
-    Timber.d("Run command '%s' in Shell session", command);
-    shellSession.addCommand(command, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
-      parseCommandResult(command, exitCode, output, commandCode == SHELL_TYPE_ROOT);
+    Timber.d("Run command '%s' in Shell session", Arrays.toString(commands));
+    shellSession.addCommand(commands, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
     });
   }
 }

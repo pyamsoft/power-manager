@@ -47,8 +47,7 @@ class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
       final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
       final String airplaneBroadcastCommand =
           AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
-      ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand);
-      ShellCommandHelper.runRootShellCommand(airplaneBroadcastCommand);
+      ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand, airplaneBroadcastCommand);
     }
   }
 
