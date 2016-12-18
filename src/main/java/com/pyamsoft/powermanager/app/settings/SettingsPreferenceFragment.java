@@ -29,7 +29,6 @@ import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
@@ -78,28 +77,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       return true;
     });
 
-    final Preference resetAll = findPreference(getString(R.string.clear_all_key));
-    resetAll.setOnPreferenceClickListener(preference -> {
-      Timber.d("Reset settings onClick");
-      presenter.requestClearAll();
-      return true;
-    });
-
-    final Preference upgradeInfo = findPreference(getString(R.string.upgrade_info_key));
-    upgradeInfo.setOnPreferenceClickListener(preference -> showChangelog());
-
-    final SwitchPreferenceCompat showAds =
-        (SwitchPreferenceCompat) findPreference(getString(R.string.adview_key));
-    showAds.setOnPreferenceChangeListener((preference, newValue) -> toggleAdVisibility(newValue));
-
-    final Preference showAboutLicenses = findPreference(getString(R.string.about_license_key));
-    showAboutLicenses.setOnPreferenceClickListener(
-        preference -> showAboutLicensesFragment(R.id.main_container,
-            AboutLibrariesFragment.Styling.LIGHT));
-
-    final Preference checkVersion = findPreference(getString(R.string.check_version_key));
-    checkVersion.setOnPreferenceClickListener(preference -> checkForUpdate());
-
     useRoot = (SwitchPreferenceCompat) findPreference(getString(R.string.use_root_key));
     useRoot.setOnPreferenceChangeListener((preference, newValue) -> {
       if (newValue instanceof Boolean) {
@@ -113,10 +90,6 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       }
       return false;
     });
-  }
-
-  @Override public void onCreatePreferences(@Nullable Bundle bundle, @Nullable String s) {
-    addPreferencesFromResource(R.xml.preferences);
   }
 
   @Override public void showConfirmDialog(int type) {
@@ -145,6 +118,18 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onStop() {
     super.onStop();
     presenter.unbindView();
+  }
+
+  @Override protected int getRootViewContainer() {
+    return R.id.main_container;
+  }
+
+  @NonNull @Override protected String getApplicationName() {
+    return getString(R.string.app_name);
+  }
+
+  @Override protected int getPreferenceXmlResId() {
+    return R.xml.preferences;
   }
 
   @Override public void onDestroy() {
