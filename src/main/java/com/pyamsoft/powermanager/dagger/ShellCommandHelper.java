@@ -35,7 +35,7 @@ public class ShellCommandHelper {
   private static final int SHELL_TYPE_ROOT = 0;
   private static final int SHELL_TYPE_NORMAL = 1;
   @NonNull private static final ShellCommandHelper INSTANCE = createInstance();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription shellTimeoutSubcscription =
+  @SuppressWarnings("WeakerAccess") @NonNull volatile Subscription shellTimeoutSubcscription =
       Subscriptions.empty();
   @NonNull private Shell.Interactive shellSession;
   @NonNull private Shell.Interactive rootSession;
