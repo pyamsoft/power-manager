@@ -52,8 +52,8 @@ import com.pyamsoft.powermanager.app.wifi.WifiFragment;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.pydroid.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.sec.TamperActivity;
 import com.pyamsoft.pydroid.rating.RatingDialog;
+import com.pyamsoft.pydroid.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.HashMap;
@@ -238,9 +238,10 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: General stability improvements";
-    final String line2 = "BUGFIX: Power Trigger improvements";
-    return new String[] { line1, line2 };
+    final String line1 = "BUGFIX: Cleaner power trigger UI loading";
+    final String line2 = "BUGFIX: Slightly faster Airplane mode toggle";
+    final String line3 = "CHANGE: Some new settings to play with";
+    return new String[] { line1, line2, line3 };
   }
 
   @NonNull @Override protected String getVersionName() {
