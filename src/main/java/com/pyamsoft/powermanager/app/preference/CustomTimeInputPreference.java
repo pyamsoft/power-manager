@@ -21,7 +21,6 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,15 +28,17 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
+import com.pyamsoft.pydroid.BaseBoundPreference;
 import timber.log.Timber;
 
-public abstract class CustomTimeInputPreference extends Preference
+public abstract class CustomTimeInputPreference extends BaseBoundPreference
     implements CustomTimeInputPreferencePresenter.View {
 
   @SuppressWarnings("WeakerAccess") @Nullable CustomTimeInputPreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
+  private boolean isDetaching;
 
   protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -67,9 +68,9 @@ public abstract class CustomTimeInputPreference extends Preference
   }
 
   @Override public void onDetached() {
+    isDetaching = true;
     super.onDetached();
     Timber.d("onDetached");
-    unbind(true);
     if (presenter != null) {
       presenter.unbindView();
       presenter.destroy();
@@ -78,6 +79,7 @@ public abstract class CustomTimeInputPreference extends Preference
 
   @Override public void onAttached() {
     super.onAttached();
+    isDetaching = false;
     Timber.d("onAttached");
     if (presenter != null) {
       presenter.bindView(this);
@@ -87,8 +89,6 @@ public abstract class CustomTimeInputPreference extends Preference
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
     super.onBindViewHolder(holder);
     Timber.d("onBindViewHolder");
-    // We call unbind because when a preference is changed it can be re-bound without being properly recycled
-    unbind(false);
 
     // Crashes if we try to use actual DB class
     binding = DataBindingUtil.bind(holder.itemView);
@@ -123,7 +123,8 @@ public abstract class CustomTimeInputPreference extends Preference
     }
   }
 
-  private void unbind(boolean finalSave) {
+  @Override protected void onUnbindViewHolder() {
+    super.onUnbindViewHolder();
     if (binding != null) {
       Timber.d("unbind");
       if (editText != null) {
@@ -131,7 +132,7 @@ public abstract class CustomTimeInputPreference extends Preference
         editText.setOnFocusChangeListener(null);
         editText.setOnEditorActionListener(null);
 
-        if (finalSave) {
+        if (isDetaching) {
           if (presenter != null) {
             // Save the last entered value to preferences
             final String text = editText.getText().toString();
