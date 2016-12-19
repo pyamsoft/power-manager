@@ -55,8 +55,9 @@ public class PowerTriggerPreferenceFragment extends PreferenceFragmentCompat
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
+    PersistentCache.get()
+        .saveKey(outState, KEY_PRESENTER, loadedKey, TriggerPreferencePresenter.class);
     super.onSaveInstanceState(outState);
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
   }
 
   @Override public void onDestroy() {

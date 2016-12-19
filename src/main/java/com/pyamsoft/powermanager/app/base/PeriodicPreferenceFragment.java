@@ -220,7 +220,8 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get()
+        .saveKey(outState, KEY_PRESENTER, loadedKey, PeriodPreferencePresenter.class);
     super.onSaveInstanceState(outState);
   }
 

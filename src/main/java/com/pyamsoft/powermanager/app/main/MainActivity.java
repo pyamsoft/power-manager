@@ -350,8 +350,8 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, MainPresenter.class);
     super.onSaveInstanceState(outState);
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
   }
 
   // https://github.com/mozilla/gecko-dev/blob/master/mobile/android/base/java/org/mozilla/gecko/BrowserApp.java

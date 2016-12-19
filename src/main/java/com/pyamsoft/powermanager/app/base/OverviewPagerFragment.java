@@ -128,7 +128,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     if (tabLayout != null) {
       outState.putInt(CURRENT_TAB_KEY, tabLayout.getSelectedTabPosition());
     }
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, OverviewPagerPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

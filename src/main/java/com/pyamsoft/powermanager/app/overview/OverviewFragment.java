@@ -119,7 +119,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey);
+    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, OverviewPresenter.class);
     super.onSaveInstanceState(outState);
   }
 

@@ -177,7 +177,8 @@ public class PowerTriggerListFragment extends ActionBarFragment
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedPresenterKey);
+    PersistentCache.get()
+        .saveKey(outState, KEY_PRESENTER, loadedPresenterKey, TriggerPresenter.class);
     super.onSaveInstanceState(outState);
   }
 
