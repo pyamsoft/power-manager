@@ -33,8 +33,8 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   @NonNull private static final String EXTRA_SERVICE_ENABLED = "EXTRA_SERVICE_ENABLED";
   @NonNull private static final String EXTRA_RESTART_TRIGGERS = "EXTRA_RESTART_TRIGGERS";
   private static final int NOTIFICATION_ID = 1000;
-  private ForegroundPresenter presenter;
-  private ScreenOnOffReceiver screenOnOffReceiver;
+  @Nullable private ForegroundPresenter presenter;
+  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
 
   /**
    * Force the service into a state
@@ -79,25 +79,34 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public void onCreate() {
     super.onCreate();
-    Timber.d("onCreate");
-
-    screenOnOffReceiver = new ScreenOnOffReceiver(this);
-    presenter = new ForegroundServiceLoader().loadPersistent();
+    if (screenOnOffReceiver == null) {
+      screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    }
+    if (presenter == null) {
+      presenter = new ForegroundServiceLoader().loadPersistent();
+    }
     presenter.bindView(this);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    Timber.d("onDestroy");
+    if (screenOnOffReceiver != null) {
+      screenOnOffReceiver.unregister();
+    }
 
-    screenOnOffReceiver.unregister();
-    presenter.unbindView();
-    presenter.destroy();
+    if (presenter != null) {
+      presenter.unbindView();
+      presenter.destroy();
+    }
 
     stopForeground(true);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
+    if (presenter == null) {
+      throw new IllegalStateException("Presenter is NULL, cannot onStartCommand");
+    }
+
     if (intent != null) {
       if (intent.hasExtra(EXTRA_SERVICE_ENABLED)) {
         final boolean enable = intent.getBooleanExtra(EXTRA_SERVICE_ENABLED, true);
@@ -112,12 +121,24 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
   }
 
   private void processTriggerRestartCommand(boolean restart) {
+    if (presenter == null) {
+      throw new IllegalStateException("Presenter is NULL, cannot process restart command");
+    }
+
     if (restart) {
       presenter.restartTriggerAlarm();
     }
   }
 
   private void processServiceEnableCommand(boolean enable) {
+    if (presenter == null) {
+      throw new IllegalStateException("Presenter is NULL, cannot process service enable command");
+    }
+
+    if (screenOnOffReceiver == null) {
+      throw new IllegalStateException("Screen receiver is null, cannot register");
+    }
+
     presenter.setForegroundState(enable);
     if (enable) {
       Timber.i("Register SCREEN receiver");
