@@ -20,10 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataEnablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.data.DataPreferenceLoader;
 
 public class DataCustomTimePreference extends CustomTimeInputPreference {
 
@@ -48,15 +46,7 @@ public class DataCustomTimePreference extends CustomTimeInputPreference {
     return "Data";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new DataDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new DataEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new DataDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new DataPreferenceLoader();
   }
 }

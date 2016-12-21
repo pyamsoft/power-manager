@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagerpresenter.preference.data;
+package com.pyamsoft.powermanagerpresenter.preference.doze;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,11 +23,10 @@ import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePr
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class DataEnableTimePreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
+class DozeCustomTimePreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject DataEnableTimePreferencePresenterImpl(
-      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  @Inject DozeCustomTimePreferencePresenterImpl(@Nullable CustomTimeInputPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
   }
 }

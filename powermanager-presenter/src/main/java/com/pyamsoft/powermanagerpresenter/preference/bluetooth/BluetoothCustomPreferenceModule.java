@@ -32,7 +32,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new BluetoothCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_delay_interactor")
@@ -46,7 +46,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new BluetoothCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_enable_interactor")
@@ -60,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new BluetoothDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new BluetoothCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_disable_interactor")

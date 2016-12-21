@@ -17,20 +17,16 @@
 package com.pyamsoft.powermanagerpresenter.preference.sync;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagerpresenter.Injector;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import android.support.annotation.Nullable;
+import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenterImpl;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
+import rx.Scheduler;
 
-public class SyncEnablePreferenceLoader extends PersistLoader<CustomTimeInputPreferencePresenter> {
+class SyncCustomTimePreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("sync_custom_enable")
-  Provider<CustomTimeInputPreferencePresenter> presenterProvider;
-
-  @NonNull @Override public CustomTimeInputPreferencePresenter loadPersistent() {
-    Injector.get().provideComponent().plusCustomPreferenceComponent().inject(this);
-    return presenterProvider.get();
+  @Inject SyncCustomTimePreferencePresenterImpl(@Nullable CustomTimeInputPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observeScheduler, subscribeScheduler);
   }
 }

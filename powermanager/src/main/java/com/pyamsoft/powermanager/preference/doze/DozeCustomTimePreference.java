@@ -20,10 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeEnablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.doze.DozePreferenceLoader;
 
 public class DozeCustomTimePreference extends CustomTimeInputPreference {
 
@@ -48,15 +46,7 @@ public class DozeCustomTimePreference extends CustomTimeInputPreference {
     return "Doze";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new DozeDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new DozeEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new DozeDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new DozePreferenceLoader();
   }
 }

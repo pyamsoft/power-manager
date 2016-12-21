@@ -20,10 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothEnablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothPreferenceLoader;
 
 public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
 
@@ -48,15 +46,7 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
     return "Bluetooth";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new BluetoothDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new BluetoothEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new BluetoothDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new BluetoothPreferenceLoader();
   }
 }

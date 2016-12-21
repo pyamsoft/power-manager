@@ -20,10 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneEnablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplanePreferenceLoader;
 
 public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
 
@@ -48,15 +46,7 @@ public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
     return "Airplane";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new AirplaneDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new AirplaneEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new AirplaneDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new AirplanePreferenceLoader();
   }
 }

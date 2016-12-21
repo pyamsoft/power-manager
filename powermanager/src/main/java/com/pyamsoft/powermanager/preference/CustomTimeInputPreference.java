@@ -28,7 +28,9 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
+import com.pyamsoft.powermanagermodel.PreferenceType;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
 import com.pyamsoft.pydroidui.app.BaseBoundPreference;
 import java.util.Locale;
 import timber.log.Timber;
@@ -45,27 +47,27 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
   protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
-    init(context);
+    init();
   }
 
   protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
-    init(context);
+    init();
   }
 
   protected CustomTimeInputPreference(Context context, AttributeSet attrs) {
     super(context, attrs);
-    init(context);
+    init();
   }
 
   protected CustomTimeInputPreference(Context context) {
     super(context);
-    init(context);
+    init();
   }
 
-  private void init(@NonNull Context context) {
+  private void init() {
     setLayoutResource(R.layout.preference_custom_time_input);
-    presenter = getPresenter(getPreferenceType());
+    presenter = getPreferenceLoader().loadPresenter(getPreferenceType());
   }
 
   @Override public void onDetached() {
@@ -203,34 +205,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     // TODO can this ever happen
   }
 
-  @CheckResult @NonNull
-  private CustomTimeInputPreferencePresenter getPresenter(@NonNull PreferenceType type) {
-    final CustomTimeInputPreferencePresenter preferencePresenter;
-    switch (type) {
-      case DELAY:
-        preferencePresenter = getDelayPresenter();
-        break;
-      case PERIODIC_ENABLE:
-        preferencePresenter = getPeriodicEnablePresenter();
-        break;
-      case PERIODIC_DISABLE:
-        preferencePresenter = getPeriodicDisablePresenter();
-        break;
-      default:
-        throw new IllegalStateException("Invalid enum PreferenceType: " + type);
-    }
-    return preferencePresenter;
-  }
-
   @CheckResult @NonNull protected abstract String getName();
-
-  @CheckResult @NonNull protected abstract CustomTimeInputPreferencePresenter getDelayPresenter();
-
-  @CheckResult @NonNull
-  protected abstract CustomTimeInputPreferencePresenter getPeriodicEnablePresenter();
-
-  @CheckResult @NonNull
-  protected abstract CustomTimeInputPreferencePresenter getPeriodicDisablePresenter();
 
   @CheckResult @NonNull private PreferenceType getPreferenceType() {
     final String key = getKey();
@@ -255,9 +230,5 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     return type;
   }
 
-  public enum PreferenceType {
-    DELAY,
-    PERIODIC_ENABLE,
-    PERIODIC_DISABLE
-  }
+  @CheckResult @NonNull protected abstract PreferenceLoader getPreferenceLoader();
 }

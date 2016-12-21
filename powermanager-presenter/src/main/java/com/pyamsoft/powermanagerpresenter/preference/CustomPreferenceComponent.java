@@ -17,29 +17,11 @@
 package com.pyamsoft.powermanagerpresenter.preference;
 
 import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneEnablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothEnablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.data.DataCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataEnablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.doze.DozeCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozeEnablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.sync.SyncCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncEnablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiCustomPreferenceModule;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiEnablePreferenceLoader;
 import dagger.Subcomponent;
 
 @Subcomponent(modules = {
@@ -48,39 +30,5 @@ import dagger.Subcomponent;
     AirplaneCustomPreferenceModule.class, DozeCustomPreferenceModule.class
 }) public interface CustomPreferenceComponent {
 
-  void inject(WifiDelayPreferenceLoader wifiDelayPreferenceLoader);
-
-  void inject(WifiDisablePreferenceLoader wifiDisablePreferenceLoader);
-
-  void inject(WifiEnablePreferenceLoader wifiEnablePreferenceLoader);
-
-  void inject(SyncEnablePreferenceLoader syncEnablePreferenceLoader);
-
-  void inject(SyncDisablePreferenceLoader syncDisablePreferenceLoader);
-
-  void inject(SyncDelayPreferenceLoader syncDelayPreferenceLoader);
-
-  void inject(DozeEnablePreferenceLoader dozeEnablePreferenceLoader);
-
-  void inject(DozeDisablePreferenceLoader dozeDisablePreferenceLoader);
-
-  void inject(DozeDelayPreferenceLoader dozeDelayPreferenceLoader);
-
-  void inject(DataDelayPreferenceLoader dataDelayPreferenceLoader);
-
-  void inject(DataDisablePreferenceLoader dataDisablePreferenceLoader);
-
-  void inject(DataEnablePreferenceLoader dataEnablePreferenceLoader);
-
-  void inject(BluetoothEnablePreferenceLoader bluetoothEnablePreferenceLoader);
-
-  void inject(BluetoothDisablePreferenceLoader bluetoothDisablePreferenceLoader);
-
-  void inject(BluetoothDelayPreferenceLoader bluetoothDelayPreferenceLoader);
-
-  void inject(AirplaneDisablePreferenceLoader airplaneDisablePreferenceLoader);
-
-  void inject(AirplaneEnablePreferenceLoader airplaneEnablePreferenceLoader);
-
-  void inject(AirplaneDelayPreferenceLoader airplaneDelayPreferenceLoader);
+  void inject(PreferenceLoader loader);
 }

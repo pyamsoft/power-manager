@@ -20,11 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.sync.SyncEnablePreferenceLoader;
-import java.util.Locale;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.sync.SyncPreferenceLoader;
 
 public class SyncCustomTimePreference extends CustomTimeInputPreference {
 
@@ -49,15 +46,7 @@ public class SyncCustomTimePreference extends CustomTimeInputPreference {
     return "Sync";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new SyncDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new SyncEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new SyncDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new SyncPreferenceLoader();
   }
 }

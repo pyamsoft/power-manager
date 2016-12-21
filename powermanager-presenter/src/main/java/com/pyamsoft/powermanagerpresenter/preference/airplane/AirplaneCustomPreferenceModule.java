@@ -32,7 +32,7 @@ import rx.Scheduler;
       @NonNull @Named("airplane_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new AirplaneDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new AirplaneCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_delay_interactor")
@@ -46,7 +46,7 @@ import rx.Scheduler;
       @NonNull @Named("airplane_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new AirplaneEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new AirplaneCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_enable_interactor")
@@ -60,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("airplane_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new AirplaneDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new AirplaneCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_disable_interactor")

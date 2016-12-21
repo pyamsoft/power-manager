@@ -20,10 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDelayPreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDisablePreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiEnablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiPreferenceLoader;
 
 public class WifiCustomTimePreference extends CustomTimeInputPreference {
 
@@ -48,15 +46,7 @@ public class WifiCustomTimePreference extends CustomTimeInputPreference {
     return "WiFi";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
-    return new WifiDelayPreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
-    return new WifiEnablePreferenceLoader().loadPersistent();
-  }
-
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
-    return new WifiDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
+    return new WifiPreferenceLoader();
   }
 }

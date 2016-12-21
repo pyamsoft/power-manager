@@ -32,7 +32,7 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DataCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_delay_interactor")
@@ -46,7 +46,7 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DataCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_enable_interactor")
@@ -60,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("data_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DataDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DataCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_custom_disable_interactor")

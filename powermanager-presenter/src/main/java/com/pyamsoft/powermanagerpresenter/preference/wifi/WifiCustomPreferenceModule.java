@@ -32,7 +32,8 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiDelayPreferencePresenterImpl(interactor, obsScheduler, computationScheduler);
+    return new WifiCustomTimePreferencePresenterImpl(interactor, obsScheduler,
+        computationScheduler);
   }
 
   @Provides @Named("wifi_custom_delay_interactor")
@@ -46,7 +47,7 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiEnableTimePreferencePresenterImpl(interactor, obsScheduler,
+    return new WifiCustomTimePreferencePresenterImpl(interactor, obsScheduler,
         computationScheduler);
   }
 
@@ -61,7 +62,7 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new WifiDisableTimePreferencePresenterImpl(interactor, obsScheduler,
+    return new WifiCustomTimePreferencePresenterImpl(interactor, obsScheduler,
         computationScheduler);
   }
 

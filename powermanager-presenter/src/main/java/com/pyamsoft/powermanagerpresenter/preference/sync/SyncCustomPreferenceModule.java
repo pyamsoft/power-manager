@@ -32,7 +32,7 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new SyncCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_delay_interactor")
@@ -46,7 +46,7 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new SyncCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_enable_interactor")
@@ -60,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("sync_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new SyncDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new SyncCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_disable_interactor")

@@ -32,7 +32,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DozeDelayPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DozeCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_delay_interactor")
@@ -46,7 +46,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DozeEnableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DozeCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_enable_interactor")
@@ -60,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new DozeDisableTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new DozeCustomTimePreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_disable_interactor")

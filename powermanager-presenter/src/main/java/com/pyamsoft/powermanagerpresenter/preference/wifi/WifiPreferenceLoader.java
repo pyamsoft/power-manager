@@ -17,20 +17,32 @@
 package com.pyamsoft.powermanagerpresenter.preference.wifi;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagerpresenter.Injector;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-public class WifiEnablePreferenceLoader extends PersistLoader<CustomTimeInputPreferencePresenter> {
+public class WifiPreferenceLoader extends PreferenceLoader {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_custom_enable")
-  Provider<CustomTimeInputPreferencePresenter> presenterProvider;
+  Provider<CustomTimeInputPreferencePresenter> enablePresenter;
 
-  @NonNull @Override public CustomTimeInputPreferencePresenter loadPersistent() {
-    Injector.get().provideComponent().plusCustomPreferenceComponent().inject(this);
-    return presenterProvider.get();
+  @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_custom_delay")
+  Provider<CustomTimeInputPreferencePresenter> delayPresenter;
+
+  @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_custom_disable")
+  Provider<CustomTimeInputPreferencePresenter> disablePresenter;
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDelayPresenter() {
+    return delayPresenter.get();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDisablePresenter() {
+    return enablePresenter.get();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideEnablePresenter() {
+    return disablePresenter.get();
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagerpresenter.preference.wifi;
+package com.pyamsoft.powermanagerpresenter.preference.bluetooth;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,9 +23,9 @@ import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePr
 import javax.inject.Inject;
 import rx.Scheduler;
 
-class WifiEnableTimePreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
+class BluetoothCustomTimePreferencePresenterImpl extends CustomTimeInputPreferencePresenterImpl {
 
-  @Inject WifiEnableTimePreferencePresenterImpl(
+  @Inject BluetoothCustomTimePreferencePresenterImpl(
       @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(interactor, observeScheduler, subscribeScheduler);
