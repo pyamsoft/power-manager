@@ -18,6 +18,7 @@ package com.pyamsoft.powermanagerpresenter.sync;
 
 import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
 import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,6 +29,6 @@ import rx.Scheduler;
   @Provides @Named("sync_overview") OverviewPagerPresenter provideSyncOverviewPagerPresenter(
       @Named("mod_sync_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new SyncOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);
+    return new OverviewPagerPresenterImpl(obsScheduler, subScheduler, stateModifier);
   }
 }

@@ -20,7 +20,9 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
 import com.pyamsoft.powermanagerpresenter.PowerManagerPreferences;
 import com.pyamsoft.powermanagerpresenter.base.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanagerpresenter.base.PeriodPreferenceInteractorImpl;
 import com.pyamsoft.powermanagerpresenter.base.PeriodPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.base.PeriodPreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -33,13 +35,13 @@ import rx.Scheduler;
       @Named("data_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_data_periodic") BooleanInterestObserver periodicObserver) {
-    return new DataPeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+    return new PeriodPreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         periodicObserver);
   }
 
   @Provides @Named("data_period_pref_interactor")
   PeriodPreferenceInteractor provideDataManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DataPeriodPreferenceInteractorImpl(preferences);
+    return new PeriodPreferenceInteractorImpl(preferences);
   }
 }

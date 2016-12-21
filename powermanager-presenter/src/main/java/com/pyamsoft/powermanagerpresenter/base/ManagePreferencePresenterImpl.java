@@ -21,12 +21,13 @@ import com.pyamsoft.powermanagermodel.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class ManagePreferencePresenterImpl
+public class ManagePreferencePresenterImpl
     extends SchedulerPresenter<ManagePreferencePresenter.ManagePreferenceView>
     implements ManagePreferencePresenter {
 
@@ -37,7 +38,7 @@ public abstract class ManagePreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
       Subscriptions.empty();
 
-  protected ManagePreferencePresenterImpl(@NonNull ManagePreferenceInteractor manageInteractor,
+  @Inject public ManagePreferencePresenterImpl(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver) {
     super(observeScheduler, subscribeScheduler);

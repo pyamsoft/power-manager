@@ -21,7 +21,9 @@ import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
 import com.pyamsoft.powermanagermodel.PermissionObserver;
 import com.pyamsoft.powermanagerpresenter.PowerManagerPreferences;
 import com.pyamsoft.powermanagerpresenter.base.ManagePreferenceInteractor;
+import com.pyamsoft.powermanagerpresenter.base.ManagePreferenceInteractorImpl;
 import com.pyamsoft.powermanagerpresenter.base.ManagePreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.base.PermissionManagePreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -35,13 +37,13 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new DozeManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+    return new PermissionManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver, dozePermissionObserver);
   }
 
   @Provides @Named("doze_manage_pref_interactor")
   ManagePreferenceInteractor provideDozeManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeManagePreferenceInteractorImpl(preferences);
+    return new ManagePreferenceInteractorImpl(preferences);
   }
 }

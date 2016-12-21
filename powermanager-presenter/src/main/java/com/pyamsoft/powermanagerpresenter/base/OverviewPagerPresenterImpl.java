@@ -20,19 +20,20 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class OverviewPagerPresenterImpl
-    extends SchedulerPresenter<OverviewPagerPresenter.View> implements OverviewPagerPresenter {
+public class OverviewPagerPresenterImpl extends SchedulerPresenter<OverviewPagerPresenter.View>
+    implements OverviewPagerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
-  protected OverviewPagerPresenterImpl(@NonNull Scheduler observeScheduler,
+  @Inject public OverviewPagerPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
     super(observeScheduler, subscribeScheduler);
     this.modifier = modifier;

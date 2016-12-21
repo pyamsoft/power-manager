@@ -18,13 +18,14 @@ package com.pyamsoft.powermanagerpresenter.base;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagerpresenter.PowerManagerPreferences;
+import javax.inject.Inject;
 import rx.Observable;
 
-public abstract class PeriodPreferenceInteractorImpl implements PeriodPreferenceInteractor {
+public class PeriodPreferenceInteractorImpl implements PeriodPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  protected PeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject public PeriodPreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
   }
 

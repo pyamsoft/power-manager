@@ -21,20 +21,20 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagermodel.InterestObserver;
 import com.pyamsoft.powermanagermodel.PermissionObserver;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class PermissionManagePreferencePresenterImpl
-    extends ManagePreferencePresenterImpl {
+public class PermissionManagePreferencePresenterImpl extends ManagePreferencePresenterImpl {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription permissionSubscription =
       Subscriptions.empty();
 
-  protected PermissionManagePreferencePresenterImpl(
+  @Inject public PermissionManagePreferencePresenterImpl(
       @NonNull ManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver,
       @NonNull PermissionObserver permissionObserver) {

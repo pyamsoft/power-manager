@@ -18,6 +18,7 @@ package com.pyamsoft.powermanagerpresenter.airplane;
 
 import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
 import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,6 +30,6 @@ import rx.Scheduler;
   OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
       @Named("mod_airplane_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new AirplaneOverviewPresenterImpl(obsScheduler, subScheduler, stateModifier);
+    return new OverviewPagerPresenterImpl(obsScheduler, subScheduler, stateModifier);
   }
 }

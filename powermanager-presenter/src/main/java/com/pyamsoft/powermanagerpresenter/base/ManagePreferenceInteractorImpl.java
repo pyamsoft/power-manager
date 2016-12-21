@@ -18,13 +18,14 @@ package com.pyamsoft.powermanagerpresenter.base;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagerpresenter.PowerManagerPreferences;
+import javax.inject.Inject;
 import rx.Observable;
 
-public abstract class ManagePreferenceInteractorImpl implements ManagePreferenceInteractor {
+public class ManagePreferenceInteractorImpl implements ManagePreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  protected ManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject public ManagePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
   }
 

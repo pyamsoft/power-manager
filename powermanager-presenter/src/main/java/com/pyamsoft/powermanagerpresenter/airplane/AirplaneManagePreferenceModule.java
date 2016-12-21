@@ -21,7 +21,10 @@ import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
 import com.pyamsoft.powermanagermodel.PermissionObserver;
 import com.pyamsoft.powermanagerpresenter.PowerManagerPreferences;
 import com.pyamsoft.powermanagerpresenter.base.ManagePreferenceInteractor;
+import com.pyamsoft.powermanagerpresenter.base.ManagePreferenceInteractorImpl;
 import com.pyamsoft.powermanagerpresenter.base.ManagePreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.base.ManagePreferencePresenterImpl;
+import com.pyamsoft.powermanagerpresenter.base.PermissionManagePreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -35,13 +38,13 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new AirplaneManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+    return new PermissionManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
         manageObserver, rootPermissionObserver);
   }
 
   @Provides @Named("airplane_manage_pref_interactor")
   ManagePreferenceInteractor provideAirplaneManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneManagePreferenceInteractorImpl(preferences);
+    return new ManagePreferenceInteractorImpl(preferences);
   }
 }

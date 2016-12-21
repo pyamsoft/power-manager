@@ -21,12 +21,13 @@ import com.pyamsoft.powermanagermodel.InterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public abstract class PeriodPreferencePresenterImpl
+public class PeriodPreferencePresenterImpl
     extends SchedulerPresenter<PeriodPreferencePresenter.PeriodPreferenceView>
     implements PeriodPreferencePresenter {
 
@@ -37,7 +38,7 @@ public abstract class PeriodPreferencePresenterImpl
   @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
       Subscriptions.empty();
 
-  protected PeriodPreferencePresenterImpl(@NonNull PeriodPreferenceInteractor interactor,
+  @Inject public PeriodPreferencePresenterImpl(@NonNull PeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver periodObserver) {
     super(observeScheduler, subscribeScheduler);
