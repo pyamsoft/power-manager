@@ -140,9 +140,9 @@ class OverviewItem
   static class ViewHolder extends RecyclerView.ViewHolder implements OverviewItemPresenter.View {
 
     @NonNull private final AdapterItemOverviewBinding binding;
+    @NonNull private final OverviewItemPresenter presenter;
     @Nullable private AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
-    @NonNull private final OverviewItemPresenter presenter;
 
     ViewHolder(View itemView) {
       super(itemView);
