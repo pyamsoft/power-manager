@@ -17,8 +17,6 @@
 
 <resources>
 
-  <bool name="manage_wearable_default">false</bool>
-  <string name="manage_wearable_key">manage_wearable</string>
   <string name="manage_wearable_title">Manage Wearables</string>
   <string name="manage_wearable_summary_checked">Will stop managing power if a wearable device is connected</string>
   <string name="manage_wearable_summary_unchecked">Will continue to manage power even if a wearable device is connected</string>
@@ -38,8 +36,6 @@
     <item name="delay_10">10</item>
   </string-array>
 
-  <string name="wearable_time_default">3</string>
-  <string name="wearable_time_key">wearable_time</string>
   <string name="wearable_time_title">Wearable Delay</string>
   <string name="wearable_time_summary">Amount of time to look for wearables before checking connection state</string>
 

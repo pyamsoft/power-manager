@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-include ':powermanager'
+include ':powermanager', ':powermanager-presenter', ':powermanager-model'

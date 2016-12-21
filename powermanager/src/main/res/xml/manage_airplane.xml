@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.airplane.AirplaneDelayPreference
+    <com.pyamsoft.powermanager.preference.airplane.AirplaneDelayPreference
         android:key="@string/airplane_time_key"/>
 
   </PreferenceCategory>

@@ -20,7 +20,5 @@
   <string name="logger_summary_on">Logging is Enabled</string>
   <string name="logger_summary_off">Logging is Disabled</string>
   <string name="logger_title">Debug Logging</string>
-  <string name="logger_enabled">logger_enabled</string>
-  <bool name="logger_enabled_default">false</bool>
 
 </resources>

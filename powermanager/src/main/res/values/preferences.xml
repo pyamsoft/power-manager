@@ -17,15 +17,11 @@
 
 <resources>
 
-  <string name="unsuspend_when_open_key">unsuspend_when_open_key</string>
   <string name="unsuspend_when_open_summary">Start Service when Application is open</string>
   <string name="unsuspend_when_open_title">Start When Open</string>
-  <bool name="unsuspend_when_open_default">true</bool>
 
-  <string name="use_root_key">use_root</string>
-  <string name="use_root_summary">For rooted devices, allows SuperUser functions like toggling Data or Airplane mode</string>
   <string name="use_root_title">Enable Superuser</string>
-  <bool name="use_root_default">false</bool>
+  <string name="use_root_summary">For rooted devices, allows SuperUser functions like toggling Data or Airplane Mode</string>
 
   <string name="clear_db_key">clear_db</string>
   <string name="clear_db_title">Reset Database</string>

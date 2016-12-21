@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDelayPreference
+    <com.pyamsoft.powermanager.preference.bluetooth.BluetoothDelayPreference
         android:key="@string/bluetooth_time_key"/>
 
   </PreferenceCategory>

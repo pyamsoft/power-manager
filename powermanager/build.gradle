@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-buildscript {
-
-  repositories {
-    jcenter()
-  }
-
-  dependencies {
-    classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight"
-  }
-}
-
 tasks.whenTaskAdded { task ->
   if (task.name.startsWith("lint")) {
     task.enabled = false
@@ -34,7 +23,6 @@ tasks.whenTaskAdded { task ->
 apply plugin: "com.android.application"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
-apply plugin: "com.squareup.sqldelight"
 apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 
@@ -100,43 +88,16 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
-  // Super User support
-  compile "eu.chainfire:libsuperuser:$libsuperuser"
-
   // Firebase Crash
   compile "com.google.firebase:firebase-crash:$firebase"
 
-  // Google Play Services for other components
-  // Check if Android Wear is connected before handling Bluetooth/Wifi
-  compile "com.google.android.gms:play-services-wearable:$firebase"
-
-  // SQLBrite
-  compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"
-
   // Tap Target View
   compile "com.getkeepsafe.taptargetview:taptargetview:$tapTargetView"
-
-  // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
 
   // Leak Canary
   debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
   testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
-
-  // Dagger2
-  compile "com.google.dagger:dagger:$dagger"
-  annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
-
-  // Roboelectric for Android on JVM
-  testCompile "org.robolectric:robolectric:$robolectric"
-
-  // JUnit for unit tests
-  testCompile "junit:junit:$junit"
-
-  // Mockito for unit tests
-  testCompile "org.mockito:mockito-core:$mockito"
 
   // PYDroid
   compile("com.github.pyamsoft.pydroid:pydroidui:$pydroid@aar") {
@@ -145,9 +106,8 @@ dependencies {
   compile("com.github.pyamsoft.pydroid:pydroiddesign:$pydroid@aar") {
     transitive = true
   }
-  compile("com.github.pyamsoft.pydroid:pydroidrx:$pydroid@aar") {
-    transitive = true
-  }
+
+  compile project(":powermanager-presenter")
 }
 
 // AdView

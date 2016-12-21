@@ -18,28 +18,7 @@
 
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.pyamsoft.powermanager">
-
-  <!-- To call dumpsys command for Doze -->
-  <uses-permission
-      android:name="android.permission.DUMP"
-      tools:ignore="ProtectedPermissions"/>
-
-  <!-- For WiFi -->
-  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-  <!-- For Data -->
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-  <!-- For Bluetooth -->
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-  <uses-permission android:name="android.permission.BLUETOOTH"/>
-  <!-- For Sync -->
-  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-
-  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
   <!-- For Boot Receiver -->
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -52,7 +31,7 @@
 
     <!-- Main Activity -->
     <activity
-        android:name=".app.main.MainActivity"
+        android:name=".main.MainActivity"
         android:label="@string/app_name"
         android:launchMode="singleTask"
         android:theme="@style/Theme.PowerManager.Light.Splash">
@@ -64,11 +43,11 @@
 
     <!-- Service -->
     <service
-        android:name=".app.service.ForegroundService"
+        android:name=".service.ForegroundService"
         android:exported="false"/>
 
     <receiver
-        android:name=".app.receiver.BootCompletedReceiver"
+        android:name=".receiver.BootCompletedReceiver"
         android:enabled="true"
         android:exported="true">
       <intent-filter>
@@ -77,58 +56,13 @@
     </receiver>
 
     <service
-        android:name=".app.service.ActionToggleService"
+        android:name=".service.ActionToggleService"
         android:exported="false"/>
 
-    <service
-        android:name=".dagger.trigger.TriggerRunnerService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerWifiEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerWifiDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerDataEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerDataDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerBluetoothEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerBluetoothDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerSyncEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerSyncDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerAirplaneEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerAirplaneDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".dagger.queuer.QueuerDozeEnableService"
-        android:exported="false"/>
-    <service
-        android:name=".dagger.queuer.QueuerDozeDisableService"
-        android:exported="false"/>
 
     <provider
         android:name=".PowerManagerSingleInitProvider"
-        android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"
+        android:authorities="com.pyamsoft.powermanagerpresenter.PowerManagerSingleInitProvider"
         android:exported="false"
         android:syncable="false"/>
 

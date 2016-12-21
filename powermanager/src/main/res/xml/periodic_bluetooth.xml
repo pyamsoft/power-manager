@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothDisableTimePreference
+    <com.pyamsoft.powermanager.preference.bluetooth.BluetoothDisableTimePreference
         android:key="@string/periodic_bluetooth_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.app.preference.bluetooth.BluetoothEnableTimePreference
+    <com.pyamsoft.powermanager.preference.bluetooth.BluetoothEnableTimePreference
         android:key="@string/periodic_bluetooth_enable_key"/>
 
   </PreferenceCategory>

@@ -57,7 +57,7 @@
 
     </LinearLayout>
 
-    <com.pyamsoft.powermanager.app.trigger.create.CreateTriggerNonSwipePager
+    <com.pyamsoft.powermanager.trigger.create.CreateTriggerNonSwipePager
         android:id="@+id/new_trigger_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"

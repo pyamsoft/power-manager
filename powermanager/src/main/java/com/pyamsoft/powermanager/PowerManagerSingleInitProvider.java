@@ -20,10 +20,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.app.service.ForegroundService;
-import com.pyamsoft.powermanager.dagger.DaggerPowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.PowerManagerComponent;
-import com.pyamsoft.powermanager.dagger.PowerManagerModule;
+import com.pyamsoft.powermanager.main.MainActivity;
+import com.pyamsoft.powermanager.service.ActionToggleService;
+import com.pyamsoft.powermanager.service.ForegroundService;
+import com.pyamsoft.powermanagerpresenter.DaggerPowerManagerComponent;
+import com.pyamsoft.powermanagerpresenter.Injector;
+import com.pyamsoft.powermanagerpresenter.PowerManagerComponent;
+import com.pyamsoft.powermanagerpresenter.PowerManagerModule;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
@@ -51,7 +54,8 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     super.onFirstCreate(context);
 
     component = DaggerPowerManagerComponent.builder()
-        .powerManagerModule(new PowerManagerModule(context))
+        .powerManagerModule(
+            new PowerManagerModule(context, MainActivity.class, ActionToggleService.class))
         .build();
   }
 

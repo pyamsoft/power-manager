@@ -17,9 +17,6 @@
 
 <resources>
 
-  <bool name="manage_airplane_default">false</bool>
-  <string name="manage_airplane_key">manage_airplane</string>
-
   <string name="preset_delay_airplane_key">preset_delay_airplane</string>
   <string-array name="preset_delay_airplane_names">
     <item name="delay_0">No delay</item>
@@ -44,11 +41,5 @@
     <item name="delay_120">120</item>
     <item name="delay_custom">-1</item>
   </string-array>
-
-  <string name="airplane_time_default">30</string>
-  <string name="airplane_time_key">airplane_time</string>
-
-  <bool name="ignore_charging_airplane_default">false</bool>
-  <string name="ignore_charging_airplane_key">ignore_charging_airplane</string>
 
 </resources>

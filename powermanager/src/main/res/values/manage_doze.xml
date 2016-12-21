@@ -17,9 +17,6 @@
 
 <resources>
 
-  <bool name="manage_doze_default">false</bool>
-  <string name="manage_doze_key">manage_doze_root</string>
-
   <string name="preset_delay_doze_key">preset_delay_doze</string>
   <string-array name="preset_delay_doze_names">
     <item name="delay_0">No delay</item>
@@ -45,14 +42,6 @@
     <item name="delay_custom">-1</item>
   </string-array>
 
-  <string name="doze_time_default">30</string>
-  <string name="doze_time_key">doze_time</string>
-
-  <bool name="ignore_charging_doze_default">false</bool>
-  <string name="ignore_charging_doze_key">ignore_charging_doze</string>
-
-  <bool name="exclusive_doze_default">false</bool>
-  <string name="exclusive_doze_key">exclusive_doze</string>
   <string name="exclusive_doze_title">Exclusive Doze</string>
   <string name="exclusive_doze_summary_checked">All radios will be managed by Doze state instead of individually</string>
   <string name="exclusive_doze_summary_unchecked">All radios will be managed individually as normal instead of by Doze state</string>

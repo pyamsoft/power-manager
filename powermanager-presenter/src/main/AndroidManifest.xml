@@ -1,0 +1,97 @@
+<!--
+  ~ Copyright 2016 Peter Kenji Yamanaka
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.pyamsoft.powermanagerpresenter">
+
+  <!-- To call dumpsys command for Doze -->
+  <uses-permission
+      android:name="android.permission.DUMP"
+      tools:ignore="ProtectedPermissions"/>
+
+  <!-- For WiFi -->
+  <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <!-- For Data -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+  <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <!-- For Bluetooth -->
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+  <uses-permission android:name="android.permission.BLUETOOTH"/>
+  <!-- For Sync -->
+  <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+  <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+
+  <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
+  <application>
+
+    <service
+        android:name=".trigger.TriggerRunnerService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerWifiEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerWifiDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDataEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDataDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerBluetoothEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerBluetoothDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerSyncEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerSyncDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerAirplaneEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerAirplaneDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDozeEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDozeDisableService"
+        android:exported="false"/>
+
+  </application>
+</manifest>
