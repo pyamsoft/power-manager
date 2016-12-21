@@ -37,18 +37,26 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-abstract class LoggerInteractorImpl implements LoggerInteractor {
+class LoggerInteractorImpl implements LoggerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @NonNull private final String logId;
   @Nullable private File logPath;
 
-  LoggerInteractorImpl(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  @Inject LoggerInteractorImpl(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull String logId) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
+    this.logId = logId;
+  }
+
+  @Override @NonNull public String getLogId() {
+    return logId;
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult File getLogLocation() {

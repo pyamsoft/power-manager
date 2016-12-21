@@ -42,7 +42,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_manager")
   LoggerInteractor provideLoggerInteractorManager(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new ManageLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.MANAGER_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_wifi") Logger provideLoggerWifi(
@@ -59,7 +59,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_wifi")
   LoggerInteractor provideLoggerInteractorWifi(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new WifiLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.WIFI_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_data") Logger provideLoggerData(
@@ -76,7 +76,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_data")
   LoggerInteractor provideLoggerInteractorData(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new DataLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.DATA_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_bluetooth") Logger provideLoggerBluetooth(
@@ -94,7 +94,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_bluetooth")
   LoggerInteractor provideLoggerInteractorBluetooth(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.BLUETOOTH_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_sync") Logger provideLoggerSync(
@@ -111,7 +111,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_sync")
   LoggerInteractor provideLoggerInteractorSync(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.SYNC_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_airplane") Logger provideLoggerAirplane(
@@ -129,7 +129,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_airplane")
   LoggerInteractor provideLoggerInteractorAirplane(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.AIRPLANE_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_doze") Logger provideLoggerDoze(
@@ -146,7 +146,7 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_doze")
   LoggerInteractor provideLoggerInteractorDoze(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.DOZE_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_trigger") Logger provideLoggerTrigger(
@@ -164,6 +164,6 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_interactor_trigger")
   LoggerInteractor provideLoggerInteractorTrigger(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new TriggerLoggerInteractor(context, preferences);
+    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.WIFI_LOG_ID);
   }
 }

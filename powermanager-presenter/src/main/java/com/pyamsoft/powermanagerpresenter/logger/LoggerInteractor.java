@@ -22,6 +22,15 @@ import rx.Observable;
 
 interface LoggerInteractor {
 
+  @NonNull String AIRPLANE_LOG_ID = "AIRPLANE";
+  @NonNull String BLUETOOTH_LOG_ID = "BLUETOOTH";
+  @NonNull String DATA_LOG_ID = "DATA";
+  @NonNull String DOZE_LOG_ID = "DOZE";
+  @NonNull String MANAGER_LOG_ID = "MANAGER";
+  @NonNull String SYNC_LOG_ID = "SYNC";
+  @NonNull String TRIGGER_LOG_ID = "TRIGGER";
+  @NonNull String WIFI_LOG_ID = "WIFI";
+
   @NonNull @CheckResult Observable<Boolean> isLoggingEnabled();
 
   @NonNull @CheckResult Observable<Boolean> deleteLog();
