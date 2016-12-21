@@ -25,15 +25,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanagerpresenter.logger.AirplaneLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.BluetoothLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.DataLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.DozeLoggerLoader;
+import com.pyamsoft.powermanagermodel.LoggerType;
+import com.pyamsoft.powermanagerpresenter.logger.LoggerLoader;
 import com.pyamsoft.powermanagerpresenter.logger.LoggerPresenter;
-import com.pyamsoft.powermanagerpresenter.logger.ManagerLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.SyncLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.TriggerLoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.WifiLoggerLoader;
 
 public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     implements LoggerPresenter.Provider {
@@ -55,14 +49,15 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loggerWifi = new WifiLoggerLoader().loadPersistent();
-    loggerData = new DataLoggerLoader().loadPersistent();
-    loggerBluetooth = new BluetoothLoggerLoader().loadPersistent();
-    loggerSync = new SyncLoggerLoader().loadPersistent();
-    loggerAirplane = new AirplaneLoggerLoader().loadPersistent();
-    loggerDoze = new DozeLoggerLoader().loadPersistent();
-    loggerManager = new ManagerLoggerLoader().loadPersistent();
-    loggerTrigger = new TriggerLoggerLoader().loadPersistent();
+    final LoggerLoader loggerLoader = new LoggerLoader();
+    loggerWifi = loggerLoader.loadLoggerPresenter(LoggerType.WIFI);
+    loggerData = loggerLoader.loadLoggerPresenter(LoggerType.DATA);
+    loggerBluetooth = loggerLoader.loadLoggerPresenter(LoggerType.BLUETOOTH);
+    loggerSync = loggerLoader.loadLoggerPresenter(LoggerType.SYNC);
+    loggerAirplane = loggerLoader.loadLoggerPresenter(LoggerType.AIRPLANE);
+    loggerDoze = loggerLoader.loadLoggerPresenter(LoggerType.DOZE);
+    loggerManager = loggerLoader.loadLoggerPresenter(LoggerType.MANAGER);
+    loggerTrigger = loggerLoader.loadLoggerPresenter(LoggerType.TRIGGER);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

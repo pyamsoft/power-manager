@@ -20,19 +20,5 @@ import dagger.Subcomponent;
 
 @Subcomponent() public interface LoggerComponent {
 
-  void inject(ManagerLoggerLoader loader);
-
-  void inject(WifiLoggerLoader loader);
-
-  void inject(DataLoggerLoader loader);
-
-  void inject(BluetoothLoggerLoader loader);
-
-  void inject(SyncLoggerLoader loader);
-
-  void inject(DozeLoggerLoader loader);
-
-  void inject(AirplaneLoggerLoader loader);
-
-  void inject(TriggerLoggerLoader loader);
+  void inject(LoggerLoader loader);
 }

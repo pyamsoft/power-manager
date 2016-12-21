@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagerpresenter.logger;
+package com.pyamsoft.powermanagermodel;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+public enum LoggerType {
 
-public interface Logger {
-
-  void d(@NonNull String fmt, @Nullable Object... args);
-
-  void i(@NonNull String fmt, @Nullable Object... args);
-
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+  MANAGER,
+  WIFI,
+  DATA,
+  BLUETOOTH,
+  SYNC,
+  DOZE,
+  AIRPLANE,
+  TRIGGER
 }
