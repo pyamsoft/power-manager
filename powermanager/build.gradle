@@ -35,14 +35,11 @@ android {
     applicationId "com.pyamsoft.powermanager"
     minSdkVersion 19
     targetSdkVersion 25
-    versionCode 90
-    versionName "6.6.4pre1"
+    versionCode 91
+    versionName "6.6.4"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
-
-    // For instrumentation test
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
   dataBinding {
