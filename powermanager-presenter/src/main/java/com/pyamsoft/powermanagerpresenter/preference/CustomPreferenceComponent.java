@@ -17,11 +17,17 @@
 package com.pyamsoft.powermanagerpresenter.preference;
 
 import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplanePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothPreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.data.DataCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.data.DataPreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.doze.DozeCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.doze.DozePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.sync.SyncCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.sync.SyncPreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiCustomPreferenceModule;
+import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiPreferenceLoader;
 import dagger.Subcomponent;
 
 @Subcomponent(modules = {
@@ -30,5 +36,15 @@ import dagger.Subcomponent;
     AirplaneCustomPreferenceModule.class, DozeCustomPreferenceModule.class
 }) public interface CustomPreferenceComponent {
 
-  void inject(PreferenceLoader loader);
+  void inject(WifiPreferenceLoader loader);
+
+  void inject(DataPreferenceLoader loader);
+
+  void inject(BluetoothPreferenceLoader loader);
+
+  void inject(SyncPreferenceLoader loader);
+
+  void inject(DozePreferenceLoader loader);
+
+  void inject(AirplanePreferenceLoader loader);
 }

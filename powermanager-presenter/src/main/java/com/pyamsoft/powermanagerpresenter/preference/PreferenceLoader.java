@@ -19,13 +19,8 @@ package com.pyamsoft.powermanagerpresenter.preference;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagermodel.PreferenceType;
-import com.pyamsoft.powermanagerpresenter.Injector;
 
 public abstract class PreferenceLoader {
-
-  public PreferenceLoader() {
-    Injector.get().provideComponent().plusCustomPreferenceComponent().inject(this);
-  }
 
   public CustomTimeInputPreferencePresenter loadPresenter(@NonNull PreferenceType type) {
     final CustomTimeInputPreferencePresenter presenter;

@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanagerpresenter.preference.airplane;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanagerpresenter.Injector;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
 import javax.inject.Inject;
@@ -33,6 +34,10 @@ public class AirplanePreferenceLoader extends PreferenceLoader {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("airplane_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
+
+  public AirplanePreferenceLoader() {
+    Injector.get().provideComponent().plusCustomPreferenceComponent().inject(this);
+  }
 
   @NonNull @Override protected CustomTimeInputPreferencePresenter provideDelayPresenter() {
     return delayPresenter.get();
