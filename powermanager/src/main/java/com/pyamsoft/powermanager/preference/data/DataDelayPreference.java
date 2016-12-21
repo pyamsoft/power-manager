@@ -53,7 +53,7 @@ public class DataDelayPreference extends CustomTimeInputPreference {
     return presenter;
   }
 
-  @Override protected void injectPresenter(@NonNull Context context) {
+  @Override protected void injectPresenter() {
     presenter = new DataDelayPreferenceLoader().loadPersistent();
   }
 }

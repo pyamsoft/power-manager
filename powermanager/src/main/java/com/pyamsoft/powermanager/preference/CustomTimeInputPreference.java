@@ -64,7 +64,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
 
   private void init(@NonNull Context context) {
     setLayoutResource(R.layout.preference_custom_time_input);
-    injectPresenter(context);
+    injectPresenter();
     presenter = getPresenter();
   }
 
@@ -187,5 +187,5 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
 
   @CheckResult @NonNull protected abstract CustomTimeInputPreferencePresenter getPresenter();
 
-  protected abstract void injectPresenter(@NonNull Context context);
+  protected abstract void injectPresenter();
 }

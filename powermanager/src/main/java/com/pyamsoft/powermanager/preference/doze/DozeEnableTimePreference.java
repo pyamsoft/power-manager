@@ -53,7 +53,7 @@ public class DozeEnableTimePreference extends CustomTimeInputPreference {
     return presenter;
   }
 
-  @Override protected void injectPresenter(@NonNull Context context) {
+  @Override protected void injectPresenter() {
     presenter = new DozeEnablePreferenceLoader().loadPersistent();
   }
 }

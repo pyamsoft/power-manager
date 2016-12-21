@@ -56,7 +56,7 @@ public class DataDisableTimePreference extends CustomTimeInputPreference {
     return presenter;
   }
 
-  @Override protected void injectPresenter(@NonNull Context context) {
+  @Override protected void injectPresenter() {
     presenter = new DataDisablePreferenceLoader().loadPersistent();
   }
 }

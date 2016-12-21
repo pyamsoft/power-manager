@@ -38,7 +38,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
-import rx.exceptions.Exceptions;
 import timber.log.Timber;
 
 abstract class LoggerInteractorImpl implements LoggerInteractor {

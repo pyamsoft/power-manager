@@ -142,7 +142,7 @@ class OverviewItem
     @NonNull private final AdapterItemOverviewBinding binding;
     @Nullable private AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
-    private OverviewItemPresenter presenter;
+    @NonNull private final OverviewItemPresenter presenter;
 
     ViewHolder(View itemView) {
       super(itemView);

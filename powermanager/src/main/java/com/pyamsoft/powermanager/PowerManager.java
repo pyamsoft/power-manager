@@ -48,7 +48,7 @@ public class PowerManager extends PYDroidApplication {
     refWatcher = RefWatcher.DISABLED;
   }
 
-  @NonNull @CheckResult RefWatcher getWatcher() {
+  @NonNull @CheckResult private RefWatcher getWatcher() {
     if (refWatcher == null) {
       throw new IllegalStateException("RefWatcher is NULL");
     }

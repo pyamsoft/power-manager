@@ -16,25 +16,24 @@
 
 package com.pyamsoft.powermanagerpresenter.modifier.state;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
 import com.pyamsoft.powermanagerpresenter.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 
-class SyncStateModifier extends StateModifier {
+class SyncStateModifier implements BooleanInterestModifier {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject SyncStateModifier(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
+  @Inject SyncStateModifier(@NonNull DeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
   }
 
-  @Override void set(@NonNull Context context) {
+  @Override public void set() {
     wrapper.enable();
   }
 
-  @Override void unset(@NonNull Context context) {
+  @Override public void unset() {
     wrapper.disable();
   }
 }

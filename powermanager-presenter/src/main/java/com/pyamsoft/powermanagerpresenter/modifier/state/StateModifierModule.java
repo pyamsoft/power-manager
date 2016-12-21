@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanagerpresenter.modifier.state;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
 import com.pyamsoft.powermanagerpresenter.wrapper.DeviceFunctionWrapper;
@@ -28,34 +27,34 @@ import javax.inject.Singleton;
 @Module public class StateModifierModule {
 
   @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
-      @NonNull Context context, @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
-    return new WifiStateModifier(context, wrapper);
+      @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
+    return new WifiStateModifier(wrapper);
   }
 
   @Singleton @Named("mod_data_state") @Provides BooleanInterestModifier provideDataModifier(
-      @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
-    return new DataStateModifier(context, wrapper);
+      @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
+    return new DataStateModifier(wrapper);
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides
-  BooleanInterestModifier provideBluetoothModifier(@NonNull Context context,
+  BooleanInterestModifier provideBluetoothModifier(
       @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
-    return new BluetoothStateModifier(context, wrapper);
+    return new BluetoothStateModifier(wrapper);
   }
 
   @Singleton @Named("mod_sync_state") @Provides BooleanInterestModifier provideSyncModifier(
-      @NonNull Context context, @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
-    return new SyncStateModifier(context, wrapper);
+      @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
+    return new SyncStateModifier(wrapper);
   }
 
   @Singleton @Named("mod_airplane_state") @Provides
-  BooleanInterestModifier provideAirplaneModeModifier(@NonNull Context context,
+  BooleanInterestModifier provideAirplaneModeModifier(
       @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
-    return new AirplaneStateModifier(context, wrapper);
+    return new AirplaneStateModifier(wrapper);
   }
 
   @Singleton @Named("mod_doze_state") @Provides BooleanInterestModifier provideDozeModifier(
-      @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
-    return new DozeStateModifier(context, wrapper);
+      @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
+    return new DozeStateModifier(wrapper);
   }
 }

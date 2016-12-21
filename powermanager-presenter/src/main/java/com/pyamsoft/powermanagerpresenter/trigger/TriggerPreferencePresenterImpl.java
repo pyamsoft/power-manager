@@ -29,10 +29,6 @@ class TriggerPreferencePresenterImpl extends SchedulerPresenter<TriggerPreferenc
     super(observeScheduler, subscribeScheduler);
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
-  }
-
   @Override public void restartService() {
     getView(Provider::onServiceRestartRequested);
   }
