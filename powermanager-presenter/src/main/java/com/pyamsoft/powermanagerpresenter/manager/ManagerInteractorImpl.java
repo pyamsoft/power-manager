@@ -49,7 +49,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.defer(() -> {
       destroy();
-      return Observable.just(true);
+      return Observable.just(Boolean.TRUE);
     });
   }
 

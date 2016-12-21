@@ -153,7 +153,9 @@ public class ShellCommandHelper {
     SubscriptionHelper.unsubscribe(shellTimeoutSubcscription);
     shellTimeoutSubcscription = Observable.defer(() -> {
       Timber.d("Wait a bit and then close up");
-      return Observable.just(true);
+
+      // Returning just Obs.just(true) performs auto boxing. Returning the constant is more efficient
+      return Observable.just(Boolean.TRUE);
     }).delay(15, TimeUnit.SECONDS).subscribe(aBoolean -> {
           Timber.w("Closing session!");
           session.close();

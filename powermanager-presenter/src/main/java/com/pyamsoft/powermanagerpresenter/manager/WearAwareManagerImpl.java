@@ -55,7 +55,7 @@ abstract class WearAwareManagerImpl extends ManagerImpl {
           } else {
             Timber.d("%s: Wearable is not managed, but radio is managed, continue stream",
                 getJobTag());
-            return Observable.just(true);
+            return Observable.just(Boolean.TRUE);
           }
         });
   }

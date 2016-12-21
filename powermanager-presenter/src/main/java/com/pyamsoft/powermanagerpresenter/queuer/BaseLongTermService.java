@@ -126,7 +126,7 @@ public abstract class BaseLongTermService extends Service {
           .setLogger(getLogger())
           .build()
           .run();
-      return Observable.just(true);
+      return Observable.just(Boolean.TRUE);
     })
         .subscribeOn(subScheduler)
         .observeOn(subScheduler)

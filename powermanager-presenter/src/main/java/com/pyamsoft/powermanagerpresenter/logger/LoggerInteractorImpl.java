@@ -122,7 +122,9 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
       } catch (IOException e) {
         throw Exceptions.propagate(e);
       }
-      return true;
+
+      // Returning just true performs auto boxing. Returning the constant is more efficient
+      return Boolean.TRUE;
     });
   }
 

@@ -91,7 +91,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
               if (loggingEnabled) {
                 writeAppendResult = interactor.appendToLog(logMessage);
               } else {
-                writeAppendResult = Observable.just(false);
+                writeAppendResult = Observable.just(Boolean.FALSE);
               }
               return writeAppendResult;
             })
@@ -130,7 +130,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
 
   private void queueClearLogSubscription() {
     SubscriptionHelper.unsubscribe(clearLogSubscription);
-    clearLogSubscription = Observable.just(true)
+    clearLogSubscription = Observable.just(Boolean.TRUE)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

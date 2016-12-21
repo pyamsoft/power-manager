@@ -55,7 +55,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     dbOpenSubscription = Observable.timer(1, TimeUnit.MINUTES)
         .map(aLong -> {
           briteDatabase.close();
-          return true;
+          return Boolean.TRUE;
         })
         .subscribeOn(dbScheduler)
         .observeOn(dbScheduler)

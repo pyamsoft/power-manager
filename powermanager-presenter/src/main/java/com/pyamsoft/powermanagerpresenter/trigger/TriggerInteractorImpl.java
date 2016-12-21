@@ -115,7 +115,7 @@ class TriggerInteractorImpl implements TriggerInteractor {
       Timber.d("Return code for update(): %d", integer);
 
       // For now, just return true
-      return true;
+      return Boolean.TRUE;
     });
   }
 

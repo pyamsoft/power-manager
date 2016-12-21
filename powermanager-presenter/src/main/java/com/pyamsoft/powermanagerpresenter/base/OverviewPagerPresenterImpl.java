@@ -47,7 +47,9 @@ public abstract class OverviewPagerPresenterImpl
     SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.defer(() -> {
       modifier.set();
-      return Observable.just(true);
+
+      // Returning just Obs.just(true) performs auto boxing. Returning the constant is more efficient
+      return Observable.just(Boolean.TRUE);
     })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -60,7 +62,9 @@ public abstract class OverviewPagerPresenterImpl
     SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.defer(() -> {
       modifier.unset();
-      return Observable.just(true);
+
+      // Returning just Obs.just(true) performs auto boxing. Returning the constant is more efficient
+      return Observable.just(Boolean.TRUE);
     })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
