@@ -42,6 +42,11 @@ public class LoggerDialog extends DialogFragment implements LoggerPresenter.Prov
     return binding.getRoot();
   }
 
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    binding.unbind();
+  }
+
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     addOptionsPreferenceFragment();
