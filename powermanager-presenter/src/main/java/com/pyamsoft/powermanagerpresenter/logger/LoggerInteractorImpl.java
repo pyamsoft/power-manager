@@ -92,7 +92,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
           line = reader.readLine();
         }
       } catch (IOException e) {
-        throw Exceptions.propagate(e);
+        throw new IOException(e);
       }
 
       return Observable.from(fileContents);
@@ -120,7 +120,7 @@ abstract class LoggerInteractorImpl implements LoggerInteractor {
         bufferedWriter.newLine();
         bufferedWriter.flush();
       } catch (IOException e) {
-        throw Exceptions.propagate(e);
+        throw new IOException(e);
       }
 
       // Returning just true performs auto boxing. Returning the constant is more efficient

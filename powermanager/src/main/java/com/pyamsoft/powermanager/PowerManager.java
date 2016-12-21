@@ -32,7 +32,7 @@ public class PowerManager extends PYDroidApplication {
   @CheckResult @NonNull public static RefWatcher getRefWatcher(@NonNull Fragment fragment) {
     final Application application = fragment.getActivity().getApplication();
     if (application instanceof PowerManager) {
-      return ((PowerManager) application).getRefWatcher();
+      return ((PowerManager) application).getWatcher();
     } else {
       throw new IllegalStateException("Application is not Power Manager");
     }
@@ -48,7 +48,7 @@ public class PowerManager extends PYDroidApplication {
     refWatcher = RefWatcher.DISABLED;
   }
 
-  @NonNull @CheckResult RefWatcher getRefWatcher() {
+  @NonNull @CheckResult RefWatcher getWatcher() {
     if (refWatcher == null) {
       throw new IllegalStateException("RefWatcher is NULL");
     }
