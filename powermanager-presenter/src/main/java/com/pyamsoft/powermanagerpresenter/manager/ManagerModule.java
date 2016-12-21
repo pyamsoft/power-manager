@@ -32,7 +32,7 @@ import rx.Scheduler;
   @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerWifiImpl(interactor, obsScheduler, subScheduler);
+    return new WearAwareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("wifi_manager_interactor")
@@ -49,7 +49,7 @@ import rx.Scheduler;
   @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerDataImpl(interactor, obsScheduler, subScheduler);
+    return new WearUnawareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
@@ -62,7 +62,7 @@ import rx.Scheduler;
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerBluetoothImpl(interactor, obsScheduler, subScheduler);
+    return new WearAwareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_manager_interactor")
@@ -80,7 +80,7 @@ import rx.Scheduler;
   @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerSyncImpl(interactor, obsScheduler, subScheduler);
+    return new WearUnawareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
@@ -93,7 +93,7 @@ import rx.Scheduler;
   @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ExclusiveWearUnawareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerDozeImpl(interactor, obsScheduler, subScheduler);
+    return new ExclusiveWearUnawareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_manager_interactor")
@@ -107,7 +107,7 @@ import rx.Scheduler;
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
       @Named("airplane_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler, @Named("obs") Scheduler obsScheduler) {
-    return new ManagerAirplaneImpl(interactor, obsScheduler, subScheduler);
+    return new WearAwareManagerImpl(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_manager_interactor")

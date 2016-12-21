@@ -26,15 +26,15 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ManagerDozeImpl extends WearUnawareManagerImpl implements ExclusiveManager {
+class ExclusiveWearUnawareManagerImpl extends WearUnawareManagerImpl implements ExclusiveManager {
 
   @NonNull private final ExclusiveWearUnawareManagerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozeSetSubscription =
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription exclusiveSetSubscription =
       Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription dozeUnsetSubscription =
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription exclusiveUnsetSubscription =
       Subscriptions.empty();
 
-  @Inject ManagerDozeImpl(@NonNull ExclusiveWearUnawareManagerInteractor interactor,
+  @Inject ExclusiveWearUnawareManagerImpl(@NonNull ExclusiveWearUnawareManagerInteractor interactor,
       @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observerScheduler, subscribeScheduler);
     this.interactor = interactor;
@@ -44,8 +44,8 @@ class ManagerDozeImpl extends WearUnawareManagerImpl implements ExclusiveManager
   public void queueExclusiveSet(@Nullable ExclusiveManager.NonExclusiveCallback callback) {
     queueSet();
 
-    SubscriptionHelper.unsubscribe(dozeSetSubscription);
-    dozeSetSubscription = interactor.isExclusive()
+    SubscriptionHelper.unsubscribe(exclusiveSetSubscription);
+    exclusiveSetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
@@ -60,14 +60,14 @@ class ManagerDozeImpl extends WearUnawareManagerImpl implements ExclusiveManager
                 }
               }
             }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"),
-            () -> SubscriptionHelper.unsubscribe(dozeSetSubscription));
+            () -> SubscriptionHelper.unsubscribe(exclusiveSetSubscription));
   }
 
   @Override public void queueExclusiveUnset(@Nullable NonExclusiveCallback callback) {
     queueUnset();
 
-    SubscriptionHelper.unsubscribe(dozeUnsetSubscription);
-    dozeUnsetSubscription = interactor.isExclusive()
+    SubscriptionHelper.unsubscribe(exclusiveUnsetSubscription);
+    exclusiveUnsetSubscription = interactor.isExclusive()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserverScheduler())
         .subscribe(exclusive -> {
@@ -82,11 +82,11 @@ class ManagerDozeImpl extends WearUnawareManagerImpl implements ExclusiveManager
                 }
               }
             }, throwable -> Timber.e(throwable, "onError queueExclusiveSet"),
-            () -> SubscriptionHelper.unsubscribe(dozeUnsetSubscription));
+            () -> SubscriptionHelper.unsubscribe(exclusiveUnsetSubscription));
   }
 
   @Override public void cleanup() {
     super.cleanup();
-    SubscriptionHelper.unsubscribe(dozeSetSubscription, dozeUnsetSubscription);
+    SubscriptionHelper.unsubscribe(exclusiveSetSubscription, exclusiveUnsetSubscription);
   }
 }

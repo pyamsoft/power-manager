@@ -17,14 +17,15 @@
 package com.pyamsoft.powermanagerpresenter.manager;
 
 import android.support.annotation.NonNull;
+import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-abstract class WearUnawareManagerImpl extends ManagerImpl {
+class WearUnawareManagerImpl extends ManagerImpl {
 
-  WearUnawareManagerImpl(@NonNull ManagerInteractor interactor,
+  @Inject WearUnawareManagerImpl(@NonNull ManagerInteractor interactor,
       @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
     super(interactor, observerScheduler, subscribeScheduler);
   }
