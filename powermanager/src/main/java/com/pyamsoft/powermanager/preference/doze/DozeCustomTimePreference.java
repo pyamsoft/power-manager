@@ -22,38 +22,41 @@ import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDelayPreferenceLoader;
-import java.util.Locale;
+import com.pyamsoft.powermanagerpresenter.preference.doze.DozeDisablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.doze.DozeEnablePreferenceLoader;
 
-public class DozeDelayPreference extends CustomTimeInputPreference {
+public class DozeCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public DozeDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public DozeCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public DozeDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public DozeCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public DozeDelayPreference(Context context, AttributeSet attrs) {
+  public DozeCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public DozeDelayPreference(Context context) {
+  public DozeCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Doze off delay time: %d seconds", time);
+  @NonNull @Override protected String getName() {
+    return "Doze";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new DozeDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new DozeDelayPreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new DozeEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new DozeDisablePreferenceLoader().loadPersistent();
   }
 }

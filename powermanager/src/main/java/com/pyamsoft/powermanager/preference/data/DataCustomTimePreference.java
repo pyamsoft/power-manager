@@ -21,39 +21,42 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.preference.data.DataDelayPreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.data.DataDisablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.data.DataEnablePreferenceLoader;
-import java.util.Locale;
 
-public class DataEnableTimePreference extends CustomTimeInputPreference {
+public class DataCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public DataEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public DataCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public DataEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public DataCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public DataEnableTimePreference(Context context, AttributeSet attrs) {
+  public DataCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public DataEnableTimePreference(Context context) {
+  public DataCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current Data enable time period: %d seconds", time);
+  @NonNull @Override protected String getName() {
+    return "Data";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new DataDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new DataEnablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new DataEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new DataDisablePreferenceLoader().loadPersistent();
   }
 }

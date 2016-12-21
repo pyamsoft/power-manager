@@ -21,40 +21,42 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDelayPreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneDisablePreferenceLoader;
-import java.util.Locale;
+import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplaneEnablePreferenceLoader;
 
-public class AirplaneDisableTimePreference extends CustomTimeInputPreference {
+public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public AirplaneDisableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public AirplaneCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public AirplaneDisableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public AirplaneCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public AirplaneDisableTimePreference(Context context, AttributeSet attrs) {
+  public AirplaneCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public AirplaneDisableTimePreference(Context context) {
+  public AirplaneCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(),
-        "Current Airplane Mode disable time period: %d seconds", time);
+  @NonNull @Override protected String getName() {
+    return "Airplane";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new AirplaneDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new AirplaneDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new AirplaneEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new AirplaneDisablePreferenceLoader().loadPersistent();
   }
 }

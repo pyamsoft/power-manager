@@ -21,40 +21,42 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDelayPreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothDisablePreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.bluetooth.BluetoothEnablePreferenceLoader;
-import java.util.Locale;
 
-public class BluetoothEnableTimePreference extends CustomTimeInputPreference {
+public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public BluetoothEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public BluetoothCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public BluetoothEnableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public BluetoothCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public BluetoothEnableTimePreference(Context context, AttributeSet attrs) {
+  public BluetoothCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public BluetoothEnableTimePreference(Context context) {
+  public BluetoothCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current Bluetooth enable time period: %d seconds",
-        time);
+  @NonNull @Override protected String getName() {
+    return "Bluetooth";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new BluetoothDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new BluetoothEnablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new BluetoothEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new BluetoothDisablePreferenceLoader().loadPersistent();
   }
 }

@@ -21,39 +21,42 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDelayPreferenceLoader;
 import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiDisablePreferenceLoader;
-import java.util.Locale;
+import com.pyamsoft.powermanagerpresenter.preference.wifi.WifiEnablePreferenceLoader;
 
-public class WifiDisableTimePreference extends CustomTimeInputPreference {
+public class WifiCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public WifiDisableTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public WifiCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public WifiDisableTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public WifiCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public WifiDisableTimePreference(Context context, AttributeSet attrs) {
+  public WifiCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public WifiDisableTimePreference(Context context) {
+  public WifiCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Current WiFi disable time period: %d seconds", time);
+  @NonNull @Override protected String getName() {
+    return "WiFi";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new WifiDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new WifiDisablePreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new WifiEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new WifiDisablePreferenceLoader().loadPersistent();
   }
 }

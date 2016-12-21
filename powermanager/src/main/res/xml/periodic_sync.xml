@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.sync.SyncDisableTimePreference
+    <com.pyamsoft.powermanager.preference.sync.SyncCustomTimePreference
         android:key="@string/periodic_sync_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.sync.SyncEnableTimePreference
+    <com.pyamsoft.powermanager.preference.sync.SyncCustomTimePreference
         android:key="@string/periodic_sync_enable_key"/>
 
   </PreferenceCategory>

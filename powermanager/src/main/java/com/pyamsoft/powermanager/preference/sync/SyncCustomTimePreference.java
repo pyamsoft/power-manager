@@ -22,38 +22,42 @@ import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanagerpresenter.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDelayPreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.sync.SyncDisablePreferenceLoader;
+import com.pyamsoft.powermanagerpresenter.preference.sync.SyncEnablePreferenceLoader;
 import java.util.Locale;
 
-public class SyncDelayPreference extends CustomTimeInputPreference {
+public class SyncCustomTimePreference extends CustomTimeInputPreference {
 
-  private CustomTimeInputPreferencePresenter presenter;
-
-  public SyncDelayPreference(Context context, AttributeSet attrs, int defStyleAttr,
+  public SyncCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
   }
 
-  public SyncDelayPreference(Context context, AttributeSet attrs, int defStyleAttr) {
+  public SyncCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
   }
 
-  public SyncDelayPreference(Context context, AttributeSet attrs) {
+  public SyncCustomTimePreference(Context context, AttributeSet attrs) {
     super(context, attrs);
   }
 
-  public SyncDelayPreference(Context context) {
+  public SyncCustomTimePreference(Context context) {
     super(context);
   }
 
-  @NonNull @Override protected CharSequence formatSummaryStringForTime(long time) {
-    return String.format(Locale.getDefault(), "Sync off delay time: %d seconds", time);
+  @NonNull @Override protected String getName() {
+    return "Sync";
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter getPresenter() {
-    return presenter;
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getDelayPresenter() {
+    return new SyncDelayPreferenceLoader().loadPersistent();
   }
 
-  @Override protected void injectPresenter() {
-    presenter = new SyncDelayPreferenceLoader().loadPersistent();
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicEnablePresenter() {
+    return new SyncEnablePreferenceLoader().loadPersistent();
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter getPeriodicDisablePresenter() {
+    return new SyncDisablePreferenceLoader().loadPersistent();
   }
 }
