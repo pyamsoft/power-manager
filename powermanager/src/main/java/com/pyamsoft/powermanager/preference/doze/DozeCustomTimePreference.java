@@ -20,8 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.doze.DozePreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.doze.DozePreferenceLoader;
 
 public class DozeCustomTimePreference extends CustomTimeInputPreference {
 

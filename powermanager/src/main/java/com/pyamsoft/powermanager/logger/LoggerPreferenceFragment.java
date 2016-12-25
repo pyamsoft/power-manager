@@ -26,8 +26,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanagermodel.LoggerType;
-import com.pyamsoft.powermanagerpresenter.logger.LoggerLoader;
-import com.pyamsoft.powermanagerpresenter.logger.LoggerPresenter;
+import com.pyamsoft.powermanager.presenter.logger.LoggerLoader;
+import com.pyamsoft.powermanager.presenter.logger.LoggerPresenter;
 
 public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     implements LoggerPresenter.Provider {

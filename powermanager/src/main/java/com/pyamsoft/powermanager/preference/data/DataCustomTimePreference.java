@@ -20,8 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.data.DataPreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.data.DataPreferenceLoader;
 
 public class DataCustomTimePreference extends CustomTimeInputPreference {
 

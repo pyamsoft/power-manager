@@ -30,7 +30,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.base.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.presenter.base.PeriodPreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;

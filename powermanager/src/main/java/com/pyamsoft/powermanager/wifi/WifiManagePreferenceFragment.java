@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.wifi;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ManagePreferenceFragment;
-import com.pyamsoft.powermanagerpresenter.base.ManagePreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.wifi.WifiManagePresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.presenter.wifi.WifiManagePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WifiManagePreferenceFragment extends ManagePreferenceFragment {

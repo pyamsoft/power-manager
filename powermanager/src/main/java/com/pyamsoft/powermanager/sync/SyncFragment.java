@@ -23,9 +23,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanagerpresenter.sync.SyncLoader;
-import com.pyamsoft.powermanagerpresenter.sync.SyncOverviewPresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.sync.SyncLoader;
+import com.pyamsoft.powermanager.presenter.sync.SyncOverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class SyncFragment extends OverviewPagerFragment {

@@ -33,7 +33,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;

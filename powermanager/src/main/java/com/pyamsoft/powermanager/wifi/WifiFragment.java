@@ -23,9 +23,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanagerpresenter.wifi.WifiLoader;
-import com.pyamsoft.powermanagerpresenter.wifi.WifiOverviewPresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.wifi.WifiLoader;
+import com.pyamsoft.powermanager.presenter.wifi.WifiOverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WifiFragment extends OverviewPagerFragment {

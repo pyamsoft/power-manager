@@ -62,7 +62,7 @@
 
     <provider
         android:name=".PowerManagerSingleInitProvider"
-        android:authorities="com.pyamsoft.powermanagerpresenter.PowerManagerSingleInitProvider"
+        android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"
         android:exported="false"
         android:syncable="false"/>
 

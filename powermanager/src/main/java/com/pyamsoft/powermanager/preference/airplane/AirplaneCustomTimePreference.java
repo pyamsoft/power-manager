@@ -20,8 +20,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanagerpresenter.preference.PreferenceLoader;
-import com.pyamsoft.powermanagerpresenter.preference.airplane.AirplanePreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.PreferenceLoader;
+import com.pyamsoft.powermanager.presenter.preference.airplane.AirplanePreferenceLoader;
 
 public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
 

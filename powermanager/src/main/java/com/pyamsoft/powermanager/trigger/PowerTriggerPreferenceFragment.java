@@ -24,8 +24,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanagerpresenter.trigger.TriggerPreferencePresenter;
-import com.pyamsoft.powermanagerpresenter.trigger.TriggerPreferencePresenterLoader;
+import com.pyamsoft.powermanager.presenter.trigger.TriggerPreferencePresenter;
+import com.pyamsoft.powermanager.presenter.trigger.TriggerPreferencePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
 

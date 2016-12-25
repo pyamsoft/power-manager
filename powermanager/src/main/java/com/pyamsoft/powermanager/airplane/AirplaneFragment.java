@@ -23,9 +23,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.airplane.AirplaneLoader;
-import com.pyamsoft.powermanagerpresenter.airplane.AirplaneOverviewPresenterLoader;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.airplane.AirplaneLoader;
+import com.pyamsoft.powermanager.presenter.airplane.AirplaneOverviewPresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class AirplaneFragment extends OverviewPagerFragment {

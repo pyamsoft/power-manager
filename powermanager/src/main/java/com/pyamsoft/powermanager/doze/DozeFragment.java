@@ -23,9 +23,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanagerpresenter.doze.DozeLoader;
-import com.pyamsoft.powermanagerpresenter.doze.DozeOverviewPresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.doze.DozeLoader;
+import com.pyamsoft.powermanager.presenter.doze.DozeOverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class DozeFragment extends OverviewPagerFragment {

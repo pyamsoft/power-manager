@@ -17,7 +17,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.pyamsoft.powermanagerpresenter">
+    package="com.pyamsoft.powermanager.presenter">
 
   <!-- To call dumpsys command for Doze -->
   <uses-permission

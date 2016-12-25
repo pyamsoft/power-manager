@@ -23,9 +23,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagerpresenter.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanagerpresenter.bluetooth.BluetoothLoader;
-import com.pyamsoft.powermanagerpresenter.bluetooth.BluetoothOverviewPresenterLoader;
+import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.presenter.bluetooth.BluetoothLoader;
+import com.pyamsoft.powermanager.presenter.bluetooth.BluetoothOverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class BluetoothFragment extends OverviewPagerFragment {

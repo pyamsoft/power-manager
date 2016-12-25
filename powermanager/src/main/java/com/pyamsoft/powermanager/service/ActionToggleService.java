@@ -20,8 +20,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanagerpresenter.service.ActionTogglePresenter;
-import com.pyamsoft.powermanagerpresenter.service.ActionToggleServiceLoader;
+import com.pyamsoft.powermanager.presenter.service.ActionTogglePresenter;
+import com.pyamsoft.powermanager.presenter.service.ActionToggleServiceLoader;
 import timber.log.Timber;
 
 public class ActionToggleService extends Service
