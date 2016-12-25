@@ -60,11 +60,11 @@ import rx.schedulers.Schedulers;
     return preferences;
   }
 
-  @Singleton @Provides @Named("sub") Scheduler provideIOScheduler() {
-    return Schedulers.io();
+  @Singleton @Provides @Named("sub") Scheduler provideSubScheduler() {
+    return Schedulers.computation();
   }
 
-  @Singleton @Provides @Named("obs") Scheduler provideMainThreadScheduler() {
+  @Singleton @Provides @Named("obs") Scheduler provideObsScheduler() {
     return AndroidSchedulers.mainThread();
   }
 }
