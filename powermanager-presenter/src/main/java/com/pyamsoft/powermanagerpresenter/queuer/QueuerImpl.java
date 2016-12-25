@@ -157,29 +157,29 @@ abstract class QueuerImpl implements Queuer {
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
 
     logger.d("Queue short term job with delay: %d", delayTime);
-    smallTimeQueuedSubscription = Observable.defer(() -> Observable.just(Boolean.TRUE))
-        .delay(delayTime, TimeUnit.MILLISECONDS)
-        .subscribeOn(handlerScheduler)
-        .observeOn(handlerScheduler)
-        .subscribe(ignore -> {
-              if (type == null) {
-                throw new IllegalStateException("Type is unset");
-              }
+    smallTimeQueuedSubscription =
+        Observable.defer(() -> Observable.timer(delayTime, TimeUnit.MILLISECONDS, handlerScheduler))
+            .subscribeOn(handlerScheduler)
+            .observeOn(handlerScheduler)
+            .subscribe(ignore -> {
+                  if (type == null) {
+                    throw new IllegalStateException("Type is unset");
+                  }
 
-              logger.d("Run short queue job");
-              QueueRunner.builder()
-                  .setType(type)
-                  .setObserver(stateObserver)
-                  .setModifier(stateModifier)
-                  .setCharging(chargingObserver)
-                  .setIgnoreCharging(ignoreCharging)
-                  .setLogger(logger)
-                  .build()
-                  .run();
+                  logger.d("Run short queue job");
+                  QueueRunner.builder()
+                      .setType(type)
+                      .setObserver(stateObserver)
+                      .setModifier(stateModifier)
+                      .setCharging(chargingObserver)
+                      .setIgnoreCharging(ignoreCharging)
+                      .setLogger(logger)
+                      .build()
+                      .run();
 
-              requeue();
-            }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
-            () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
+                  requeue();
+                }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
+                () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
   }
 
   private void queueLong() {
