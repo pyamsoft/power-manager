@@ -39,11 +39,9 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
-  @NonNull private final Scheduler dbScheduler;
   @SuppressWarnings("WeakerAccess") @Nullable volatile Subscription dbOpenSubscription;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
-    dbScheduler = scheduler;
     openHelper = new PowerTriggerOpenHelper(context);
     briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler);
   }
@@ -52,10 +50,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     SubscriptionHelper.unsubscribe(dbOpenSubscription);
 
     // After a 1 minute timeout, close the DB
-    dbOpenSubscription = Observable.defer(() -> Observable.timer(1, TimeUnit.MINUTES, dbScheduler))
-        .subscribeOn(dbScheduler)
-        .observeOn(dbScheduler)
-        .subscribe(aLong -> {
+    dbOpenSubscription =
+        Observable.defer(() -> Observable.timer(1, TimeUnit.MINUTES)).subscribe(aLong -> {
               Timber.w("PowerTriggerDB is closed");
               briteDatabase.close();
             }, throwable -> Timber.e(throwable, "onError closing database"),
