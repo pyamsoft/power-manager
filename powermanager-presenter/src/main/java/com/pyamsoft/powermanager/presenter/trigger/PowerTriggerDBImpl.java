@@ -59,7 +59,11 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   }
 
   @Override @CheckResult @NonNull public Observable<Long> insert(@NonNull PowerTriggerEntry entry) {
-    return Observable.defer(() -> {
+    return Observable.fromCallable(() -> {
+      if (PowerTriggerEntry.isEmpty(entry)) {
+        throw new IllegalStateException("Cannot insert empty entries");
+      }
+
       Timber.i("DB: INSERT");
       openDatabase();
       final int percent = entry.percent();
@@ -107,16 +111,16 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   }
 
   @Override @CheckResult @NonNull public Observable<Integer> deleteWithPercent(int percent) {
-    return Observable.defer(() -> {
+    return Observable.fromCallable(() -> {
       Timber.i("DB: DELETE PERCENT");
       openDatabase();
       return deleteWithPercentUnguarded(percent);
     });
   }
 
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @NonNull @CheckResult
-  Observable<Integer> deleteWithPercentUnguarded(int percent) {
-    return Observable.just(PowerTriggerEntry.deleteTrigger(openHelper).executeProgram(percent));
+  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult int deleteWithPercentUnguarded(
+      int percent) {
+    return PowerTriggerEntry.deleteTrigger(openHelper).executeProgram(percent);
   }
 
   @Override @CheckResult @NonNull public Observable<Integer> deleteAll() {
