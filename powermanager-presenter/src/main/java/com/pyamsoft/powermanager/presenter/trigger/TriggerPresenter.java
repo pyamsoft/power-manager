@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.trigger;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView> {

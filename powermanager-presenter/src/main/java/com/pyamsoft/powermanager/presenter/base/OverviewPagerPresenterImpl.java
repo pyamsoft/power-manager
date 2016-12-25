@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.base;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;

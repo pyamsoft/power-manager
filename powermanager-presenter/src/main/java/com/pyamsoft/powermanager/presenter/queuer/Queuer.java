@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.queuer;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.QueuerType;
+import com.pyamsoft.powermanager.model.QueuerType;
 
 public interface Queuer {
 

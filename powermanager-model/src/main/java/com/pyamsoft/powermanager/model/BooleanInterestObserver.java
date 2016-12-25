@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
 
-public interface PermissionObserver extends InterestObserver {
+public interface BooleanInterestObserver extends InterestObserver {
 
-  @CheckResult boolean hasPermission();
+  @CheckResult boolean is();
 }

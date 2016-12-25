@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.doze;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.Injector;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import javax.inject.Inject;

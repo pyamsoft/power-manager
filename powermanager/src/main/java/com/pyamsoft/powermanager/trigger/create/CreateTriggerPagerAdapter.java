@@ -22,7 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
 class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {

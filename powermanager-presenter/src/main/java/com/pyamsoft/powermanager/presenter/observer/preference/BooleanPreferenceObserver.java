@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
 import java.util.HashMap;
 import java.util.Map;

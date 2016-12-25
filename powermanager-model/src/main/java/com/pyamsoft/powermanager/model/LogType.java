@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.CheckResult;
-
-public interface BooleanInterestObserver extends InterestObserver {
-
-  @CheckResult boolean is();
+public enum LogType {
+  DEBUG,
+  INFO,
+  WARNING,
+  ERROR
 }

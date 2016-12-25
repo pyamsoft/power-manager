@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-public enum LogType {
-  DEBUG,
-  INFO,
-  WARNING,
-  ERROR
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+public interface InterestObserver {
+
+  void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback);
+
+  void unregister(@NonNull String tag);
+
+  interface SetCallback {
+
+    void call();
+  }
+
+  interface UnsetCallback {
+
+    void call();
+  }
 }

@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-public enum PreferenceType {
-  DELAY,
-  PERIODIC_ENABLE,
-  PERIODIC_DISABLE
+public enum LoggerType {
+
+  MANAGER,
+  WIFI,
+  DATA,
+  BLUETOOTH,
+  SYNC,
+  DOZE,
+  AIRPLANE,
+  TRIGGER
 }

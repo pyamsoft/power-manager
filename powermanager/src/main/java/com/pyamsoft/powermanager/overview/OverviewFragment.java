@@ -42,7 +42,7 @@ import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.overview.OverviewPresenter;
 import com.pyamsoft.powermanager.presenter.overview.OverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;

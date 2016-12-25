@@ -28,7 +28,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentTriggerBasicBinding;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
 public class CreateTriggerBasicFragment extends Fragment {

@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.trigger;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Collections;
 import javax.inject.Inject;
 import rx.Observable;

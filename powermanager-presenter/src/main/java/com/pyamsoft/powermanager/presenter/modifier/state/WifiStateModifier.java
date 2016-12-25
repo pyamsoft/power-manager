@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.modifier.state;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.presenter.wrapper.DeviceFunctionWrapper;
 import javax.inject.Inject;
 

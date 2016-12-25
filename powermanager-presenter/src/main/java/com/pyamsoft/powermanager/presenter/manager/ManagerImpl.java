@@ -20,7 +20,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.powermanagermodel.Manager;
+import com.pyamsoft.powermanager.model.Manager;
 import com.pyamsoft.pydroidrx.SchedulerHelper;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import rx.Observable;

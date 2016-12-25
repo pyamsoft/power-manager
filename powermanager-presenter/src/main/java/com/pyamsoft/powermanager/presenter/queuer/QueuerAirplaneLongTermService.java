@@ -17,8 +17,8 @@
 package com.pyamsoft.powermanager.presenter.queuer;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.Injector;
 import com.pyamsoft.powermanager.presenter.logger.Logger;
 import javax.inject.Inject;

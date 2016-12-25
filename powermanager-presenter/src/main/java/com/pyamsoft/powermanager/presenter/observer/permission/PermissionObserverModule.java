@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.observer.permission;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.PermissionObserver;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
 import dagger.Module;
 import dagger.Provides;

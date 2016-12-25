@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.PermissionObserver;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;

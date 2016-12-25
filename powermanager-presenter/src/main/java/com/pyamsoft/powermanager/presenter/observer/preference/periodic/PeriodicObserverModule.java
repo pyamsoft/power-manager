@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.observer.preference.periodic;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
 import dagger.Module;
 import dagger.Provides;

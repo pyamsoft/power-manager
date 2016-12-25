@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-public interface Manager {
+import android.support.annotation.CheckResult;
 
-  void queueSet();
+public interface PermissionObserver extends InterestObserver {
 
-  void queueUnset();
-
-  void cleanup();
+  @CheckResult boolean hasPermission();
 }

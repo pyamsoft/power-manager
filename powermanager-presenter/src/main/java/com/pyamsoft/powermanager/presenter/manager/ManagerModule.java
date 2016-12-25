@@ -17,9 +17,9 @@
 package com.pyamsoft.powermanager.presenter.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
-import com.pyamsoft.powermanagermodel.ExclusiveManager;
-import com.pyamsoft.powermanagermodel.Manager;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.ExclusiveManager;
+import com.pyamsoft.powermanager.model.Manager;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
 import com.pyamsoft.powermanager.presenter.queuer.Queuer;
 import dagger.Module;

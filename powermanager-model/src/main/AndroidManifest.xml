@@ -15,6 +15,6 @@
   -->
 
 <manifest
-    package="com.pyamsoft.powermanagermodel">
+    package="com.pyamsoft.powermanager.model">
 
 </manifest>

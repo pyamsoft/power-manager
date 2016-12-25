@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.presenter.base;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.InterestObserver;
-import com.pyamsoft.powermanagermodel.PermissionObserver;
+import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Observable;

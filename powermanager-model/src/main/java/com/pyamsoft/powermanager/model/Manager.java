@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+public interface Manager {
 
-public interface InterestObserver {
+  void queueSet();
 
-  void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback);
+  void queueUnset();
 
-  void unregister(@NonNull String tag);
-
-  interface SetCallback {
-
-    void call();
-  }
-
-  interface UnsetCallback {
-
-    void call();
-  }
+  void cleanup();
 }

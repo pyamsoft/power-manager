@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.presenter.bluetooth;
 
-import com.pyamsoft.powermanagermodel.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
 import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenterImpl;
 import dagger.Module;

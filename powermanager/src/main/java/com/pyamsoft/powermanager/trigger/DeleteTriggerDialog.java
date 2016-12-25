@@ -26,7 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import timber.log.Timber;
 
 public class DeleteTriggerDialog extends DialogFragment {

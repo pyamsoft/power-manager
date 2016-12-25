@@ -34,7 +34,7 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.presenter.trigger.TriggerPresenter;
 import com.pyamsoft.powermanager.presenter.trigger.TriggerPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;

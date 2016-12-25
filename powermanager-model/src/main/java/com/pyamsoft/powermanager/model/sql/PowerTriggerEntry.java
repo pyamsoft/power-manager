@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel.sql;
+package com.pyamsoft.powermanager.model.sql;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;

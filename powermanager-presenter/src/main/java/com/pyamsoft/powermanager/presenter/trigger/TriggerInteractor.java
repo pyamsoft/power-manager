@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import rx.Observable;
 
 interface TriggerInteractor {

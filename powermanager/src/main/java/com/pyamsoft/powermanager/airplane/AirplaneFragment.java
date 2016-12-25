@@ -22,7 +22,7 @@ import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.ModulePagerAdapter;
 import com.pyamsoft.powermanager.base.OverviewPagerFragment;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.airplane.AirplaneLoader;
 import com.pyamsoft.powermanager.presenter.airplane.AirplaneOverviewPresenterLoader;
 import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;

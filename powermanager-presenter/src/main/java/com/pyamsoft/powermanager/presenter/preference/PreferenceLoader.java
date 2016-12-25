@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.preference;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.PreferenceType;
+import com.pyamsoft.powermanager.model.PreferenceType;
 
 public abstract class PreferenceLoader {
 

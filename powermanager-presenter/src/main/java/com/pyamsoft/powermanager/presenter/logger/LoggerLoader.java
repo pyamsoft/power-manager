@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.logger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.LoggerType;
+import com.pyamsoft.powermanager.model.LoggerType;
 import com.pyamsoft.powermanager.presenter.Injector;
 import javax.inject.Inject;
 import javax.inject.Named;

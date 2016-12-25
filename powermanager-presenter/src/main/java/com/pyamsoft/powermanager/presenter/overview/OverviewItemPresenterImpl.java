@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.presenter.overview;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.R;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;

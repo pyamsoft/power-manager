@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.overview;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
 public interface OverviewPresenter extends Presenter<OverviewPresenter.Overview> {

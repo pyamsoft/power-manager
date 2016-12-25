@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanagermodel;
+package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.Nullable;
+public interface BooleanInterestModifier {
 
-public interface ExclusiveManager extends Manager {
+  void set();
 
-  void queueExclusiveSet(@Nullable NonExclusiveCallback callback);
-
-  void queueExclusiveUnset(@Nullable NonExclusiveCallback callback);
-
-  interface NonExclusiveCallback {
-
-    void call();
-  }
+  void unset();
 }

@@ -28,7 +28,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
-import com.pyamsoft.powermanagermodel.PreferenceType;
+import com.pyamsoft.powermanager.model.PreferenceType;
 import com.pyamsoft.powermanager.presenter.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanager.presenter.preference.PreferenceLoader;
 import com.pyamsoft.pydroidui.app.BaseBoundPreference;

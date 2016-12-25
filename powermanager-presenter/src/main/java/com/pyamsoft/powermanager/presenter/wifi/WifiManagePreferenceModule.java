@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.wifi;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
 import com.pyamsoft.powermanager.presenter.base.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.presenter.base.ManagePreferenceInteractorImpl;

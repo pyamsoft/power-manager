@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.presenter.overview;
 
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanagermodel.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.pydroidrx.SchedulerPresenter;
 import com.pyamsoft.pydroidrx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
