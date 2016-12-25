@@ -33,7 +33,7 @@
         android:padding="8dp"
         >
 
-      <com.pyamsoft.pydroidui.widget.NoLeakTextView
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/create_trigger_basic_root_name_explanation"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
           android:hint="@string/hint_create_trigger_name"
           >
 
-        <com.pyamsoft.pydroiddesign.widget.NoLeakTextInputEditText
+        <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
             android:id="@+id/create_trigger_basic_name_entry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
 
       </android.support.design.widget.TextInputLayout>
 
-      <com.pyamsoft.pydroidui.widget.NoLeakTextView
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/create_trigger_basic_root_percent_explanation"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
           android:hint="@string/hint_create_trigger_percent"
           >
 
-        <com.pyamsoft.pydroiddesign.widget.NoLeakTextInputEditText
+        <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
             android:id="@+id/create_trigger_basic_percent_entry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

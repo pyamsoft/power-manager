@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;

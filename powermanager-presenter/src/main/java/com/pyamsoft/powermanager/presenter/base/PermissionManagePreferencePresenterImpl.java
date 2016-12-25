@@ -20,7 +20,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;

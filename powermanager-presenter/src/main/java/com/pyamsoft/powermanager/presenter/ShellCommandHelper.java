@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import eu.chainfire.libsuperuser.Shell;
 import java.util.Arrays;
 import java.util.List;

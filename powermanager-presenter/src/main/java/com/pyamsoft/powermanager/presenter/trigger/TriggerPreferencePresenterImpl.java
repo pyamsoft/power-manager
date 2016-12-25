@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.presenter.trigger;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroidrx.SchedulerPresenter;
+import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import javax.inject.Inject;
 import rx.Scheduler;
 

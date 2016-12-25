@@ -31,7 +31,7 @@ import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
 import com.pyamsoft.powermanager.model.PreferenceType;
 import com.pyamsoft.powermanager.presenter.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanager.presenter.preference.PreferenceLoader;
-import com.pyamsoft.pydroidui.app.BaseBoundPreference;
+import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import java.util.Locale;
 import timber.log.Timber;
 

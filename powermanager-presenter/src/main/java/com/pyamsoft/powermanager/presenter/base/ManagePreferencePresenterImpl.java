@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.presenter.base;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
-import com.pyamsoft.pydroidrx.SchedulerPresenter;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SchedulerPresenter;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Scheduler;

@@ -63,7 +63,7 @@ dependencies {
   annotationProcessor "com.google.auto.value:auto-value:$autoValue"
 
   // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroidrx:$pydroid@aar") {
+  compile("com.github.pyamsoft.pydroid:pydroid-rx:$pydroid@aar") {
     transitive = true
   }
 }

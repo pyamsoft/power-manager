@@ -20,7 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
-  <com.pyamsoft.pydroidui.widget.SquareFrameLayout
+  <com.pyamsoft.pydroid.ui.widget.SquareFrameLayout
       android:id="@+id/adapter_item_overview_color"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -54,7 +54,7 @@
         android:orientation="horizontal"
         >
 
-      <com.pyamsoft.pydroidui.widget.NoLeakTextView
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/adapter_item_overview_title"
           android:layout_width="0dp"
           android:layout_height="match_parent"
@@ -66,7 +66,7 @@
           android:textColor="@android:color/white"
           />
 
-      <com.pyamsoft.pydroidui.widget.SquareImageView
+      <com.pyamsoft.pydroid.ui.widget.SquareImageView
           android:id="@+id/adapter_item_overview_check"
           android:layout_width="24dp"
           android:layout_height="24dp"
@@ -79,6 +79,6 @@
 
     </LinearLayout>
 
-  </com.pyamsoft.pydroidui.widget.SquareFrameLayout>
+  </com.pyamsoft.pydroid.ui.widget.SquareFrameLayout>
 
 </layout>

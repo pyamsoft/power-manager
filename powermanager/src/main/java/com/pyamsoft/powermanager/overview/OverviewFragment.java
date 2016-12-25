@@ -47,7 +47,7 @@ import com.pyamsoft.powermanager.presenter.overview.OverviewPresenter;
 import com.pyamsoft.powermanager.presenter.overview.OverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroidui.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import timber.log.Timber;
 
 public class OverviewFragment extends ActionBarFragment implements OverviewPresenter.Overview {

@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
 import com.pyamsoft.powermanager.presenter.logger.Logger;
 import com.pyamsoft.powermanager.presenter.wrapper.JobQueuerWrapper;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Scheduler;

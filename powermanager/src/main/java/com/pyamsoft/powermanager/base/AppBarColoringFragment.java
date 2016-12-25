@@ -28,7 +28,7 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroidui.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 
 abstract class AppBarColoringFragment extends ActionBarFragment {
 

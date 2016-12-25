@@ -29,7 +29,7 @@ import com.pyamsoft.powermanager.model.QueuerType;
 import com.pyamsoft.powermanager.presenter.Injector;
 import com.pyamsoft.powermanager.presenter.logger.Logger;
 import com.pyamsoft.powermanager.presenter.wrapper.JobQueuerWrapper;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
 import rx.Observable;

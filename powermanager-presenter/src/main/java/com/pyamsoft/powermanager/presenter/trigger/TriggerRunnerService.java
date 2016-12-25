@@ -30,7 +30,7 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.presenter.Injector;
 import com.pyamsoft.powermanager.presenter.logger.Logger;
 import com.pyamsoft.powermanager.presenter.wrapper.JobQueuerWrapper;
-import com.pyamsoft.pydroidrx.SubscriptionHelper;
+import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;

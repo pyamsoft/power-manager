@@ -41,7 +41,7 @@
         android:orientation="vertical"
         >
 
-      <com.pyamsoft.pydroidui.widget.NoLeakTextView
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/trigger_name"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
           android:textAppearance="?android:attr/textAppearanceMedium"
           />
 
-      <com.pyamsoft.pydroidui.widget.NoLeakTextView
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
           android:id="@+id/trigger_percent"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
