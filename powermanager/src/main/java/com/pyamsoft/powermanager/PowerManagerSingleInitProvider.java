@@ -21,16 +21,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.main.MainActivity;
-import com.pyamsoft.powermanager.service.ActionToggleService;
-import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.presenter.DaggerPowerManagerComponent;
 import com.pyamsoft.powermanager.presenter.Injector;
 import com.pyamsoft.powermanager.presenter.PowerManagerComponent;
 import com.pyamsoft.powermanager.presenter.PowerManagerModule;
+import com.pyamsoft.powermanager.service.ActionToggleService;
+import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.about.Licenses;
+import com.pyamsoft.pydroid.rx.RxLicenses;
+import com.pyamsoft.pydroid.ui.UiLicenses;
 
 public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     implements IPYDroidApp<PowerManagerComponent> {
@@ -67,6 +69,8 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
+    RxLicenses.addLicenses();
+    UiLicenses.addLicenses();
   }
 
   @NonNull @Override public PowerManagerComponent provideComponent() {
