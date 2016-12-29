@@ -45,19 +45,19 @@ import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
 import com.pyamsoft.powermanager.overview.OverviewFragment;
+import com.pyamsoft.powermanager.presenter.main.MainPresenter;
+import com.pyamsoft.powermanager.presenter.main.MainPresenterLoader;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.powermanager.presenter.main.MainPresenter;
-import com.pyamsoft.powermanager.presenter.main.MainPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
+import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -240,10 +240,11 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Cleaner power trigger UI loading";
-    final String line2 = "BUGFIX: Slightly faster Airplane mode toggle";
-    final String line3 = "CHANGE: Some new settings to play with";
-    return new String[] { line1, line2, line3 };
+    final String line1 = "BUGFIX: Slightly smaller APK size";
+    final String line2 = "BUGFIX: Fix some code related to in app billing";
+    final String line3 = "BUGFIX: Smaller memory footprint";
+    final String line4 = "BUGFIX: Quicker processing of device state for power management";
+    return new String[] { line1, line2, line3, line4 };
   }
 
   @NonNull @Override protected String getVersionName() {
