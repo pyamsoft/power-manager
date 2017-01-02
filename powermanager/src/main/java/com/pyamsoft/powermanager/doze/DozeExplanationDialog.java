@@ -38,31 +38,27 @@ public class DozeExplanationDialog extends DialogFragment {
 
   @NonNull @CheckResult private Spannable createDozeMessage() {
     final String message;
-    switch (Build.VERSION.SDK_INT) {
-      case Build.VERSION_CODES.M:
-        message = "ANDROID 6 (MARSHMALLOW) ONLY!\n"
-            + "In order to allow Power Manager to control Doze on your device, \n"
-            + "you must enable a special permission. You must connect your device \n"
-            + "a computer which has the Android Debug Bridge (adb) program installed \n"
-            + "and enter the following command as one line: \n\n"
-            + "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP \n\n"
-            + "This will allow Power Manager to control the Doze state of your device.";
-        break;
-      case Build.VERSION_CODES.N:
-        message = "ANDROID 7 (NOUGAT) ONLY!\n"
-            + "In order to allow Power Manager to control Doze on your device, \n"
-            + "you must be on a rooted device and grant Power Manager root permissions to\n"
-            + "run the following command on your device: \n"
-            + "\n"
-            + " # su -c dumpsys deviceidle force-idle deep\n"
-            + " # su -c dumpsys deviceidle unforce\n\n"
-            + "This will allow Power Manager to control the Doze state of your device.";
-
-        break;
-      default:
-        throw new RuntimeException(
-            "Cannot show dialog for invalid API level: " + Build.VERSION.SDK_INT);
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+      message = "ANDROID 6 (MARSHMALLOW) ONLY!\n"
+          + "In order to allow Power Manager to control Doze on your device, \n"
+          + "you must enable a special permission. You must connect your device \n"
+          + "a computer which has the Android Debug Bridge (adb) program installed \n"
+          + "and enter the following command as one line: \n\n"
+          + "adb -d shell pm grant com.pyamsoft.powermanager android.permission.DUMP \n\n"
+          + "This will allow Power Manager to control the Doze state of your device.";
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      message = "ANDROID 7 (NOUGAT) ONLY!\n"
+          + "In order to allow Power Manager to control Doze on your device, \n"
+          + "you must be on a rooted device and grant Power Manager root permissions to\n"
+          + "run the following command on your device: \n"
+          + "\n"
+          + " # su -c dumpsys deviceidle force-idle deep\n"
+          + " # su -c dumpsys deviceidle unforce\n\n"
+          + "This will allow Power Manager to control the Doze state of your device.";
+    } else {
+      message = "This version of Android does not have Doze features";
     }
+
     final Spannable spannable = StringUtil.createBuilder(message);
     final int textSize =
         StringUtil.getTextSizeFromAppearance(getContext(), android.R.attr.textAppearanceSmall);

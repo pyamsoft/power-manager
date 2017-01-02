@@ -49,7 +49,7 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
         // API 23 can do this without root
         ShellCommandHelper.runShellCommand(command);
       }
-    } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N) {
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       if (preferences.isRootEnabled()) {
         // API 24 requires root
         command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");

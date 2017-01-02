@@ -33,18 +33,15 @@ class DozePermissionObserver extends RootPermissionObserver {
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
     final boolean hasPermission;
-    switch (Build.VERSION.SDK_INT) {
-      case Build.VERSION_CODES.M:
-        // Doze can run without root on M
-        // Doze can also run with root
-        hasPermission = hasRuntimePermission() || super.checkPermission(appContext);
-        break;
-      case Build.VERSION_CODES.N:
-        // Doze needs root on N
-        hasPermission = super.checkPermission(appContext);
-        break;
-      default:
-        hasPermission = false;
+    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+      // Doze can run without root on M
+      // Doze can also run with root
+      hasPermission = hasRuntimePermission() || super.checkPermission(appContext);
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      // Doze needs root on N
+      hasPermission = super.checkPermission(appContext);
+    } else {
+      hasPermission = false;
     }
 
     Timber.d("Has doze permission? %s", hasPermission);
