@@ -16,9 +16,9 @@
 
 package com.pyamsoft.powermanager.presenter;
 
-import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 
 public interface PowerManagerPreferences {
 
@@ -188,9 +188,9 @@ public interface PowerManagerPreferences {
 
   void setPeriodicEnableTimeSync(long time);
 
-  void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+  void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
 
-  void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+  void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
 
   @CheckResult boolean isExclusiveDoze();
 }

@@ -16,12 +16,14 @@
 
 package com.pyamsoft.powermanager.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
-import com.pyamsoft.pydroid.app.ApplicationPreferences;
+import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 import javax.inject.Inject;
 
 class PowerManagerPreferencesImpl implements PowerManagerPreferences {
@@ -36,7 +38,7 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   @NonNull private static final String ORIGINAL_SYNC = "original_sync";
   @NonNull private static final String ORIGINAL_AIRPLANE = "original_airplane";
   @NonNull private static final String ORIGINAL_DOZE = "original_doze";
-  @NonNull private final ApplicationPreferences preferences;
+  @NonNull private final SharedPreferences preferences;
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
   @NonNull private final String manageData;
@@ -126,8 +128,9 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   @NonNull private final String triggerPeriodDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
-    preferences = ApplicationPreferences.getInstance(context);
-    final Resources res = context.getApplicationContext().getResources();
+    final Context appContext = context.getApplicationContext();
+    preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+    final Resources res = appContext.getResources();
     manageWifi = res.getString(R.string.manage_wifi_key);
     manageData = res.getString(R.string.manage_data_key);
     manageBluetooth = res.getString(R.string.manage_bluetooth_key);
@@ -229,191 +232,191 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public boolean isOriginalWifi() {
-    return preferences.get(ORIGINAL_WIFI, false);
+    return preferences.getBoolean(ORIGINAL_WIFI, false);
   }
 
   @Override public void setOriginalWifi(boolean state) {
-    preferences.put(ORIGINAL_WIFI, state);
+    preferences.edit().putBoolean(ORIGINAL_WIFI, state).apply();
   }
 
   @Override public boolean isOriginalData() {
-    return preferences.get(ORIGINAL_DATA, false);
+    return preferences.getBoolean(ORIGINAL_DATA, false);
   }
 
   @Override public void setOriginalData(boolean state) {
-    preferences.put(ORIGINAL_DATA, state);
+    preferences.edit().putBoolean(ORIGINAL_DATA, state).apply();
   }
 
   @Override public boolean isOriginalBluetooh() {
-    return preferences.get(ORIGINAL_BLUETOOTH, false);
+    return preferences.getBoolean(ORIGINAL_BLUETOOTH, false);
   }
 
   @Override public boolean isOriginalSync() {
-    return preferences.get(ORIGINAL_SYNC, false);
+    return preferences.getBoolean(ORIGINAL_SYNC, false);
   }
 
   @Override public void setOriginalSync(boolean state) {
-    preferences.put(ORIGINAL_SYNC, state);
+    preferences.edit().putBoolean(ORIGINAL_SYNC, state).apply();
   }
 
   @Override public boolean isOriginalAirplane() {
-    return preferences.get(ORIGINAL_AIRPLANE, false);
+    return preferences.getBoolean(ORIGINAL_AIRPLANE, false);
   }
 
   @Override public void setOriginalAirplane(boolean state) {
-    preferences.put(ORIGINAL_AIRPLANE, state);
+    preferences.edit().putBoolean(ORIGINAL_AIRPLANE, state).apply();
   }
 
   @Override public boolean isOriginalDoze() {
-    return preferences.get(ORIGINAL_DOZE, false);
+    return preferences.getBoolean(ORIGINAL_DOZE, false);
   }
 
   @Override public void setOriginalDoze(boolean state) {
-    preferences.put(ORIGINAL_DOZE, state);
+    preferences.edit().putBoolean(ORIGINAL_DOZE, state).apply();
   }
 
   @Override public void setOriginalBluetooth(boolean state) {
-    preferences.put(ORIGINAL_BLUETOOTH, state);
+    preferences.edit().putBoolean(ORIGINAL_BLUETOOTH, state).apply();
   }
 
   @Override public boolean isServiceEnabled() {
-    return preferences.get(SERVICE_ENABLED, true);
+    return preferences.getBoolean(SERVICE_ENABLED, true);
   }
 
   @Override public void setServiceEnabled(boolean enabled) {
-    preferences.put(SERVICE_ENABLED, enabled);
+    preferences.edit().putBoolean(SERVICE_ENABLED, enabled).apply();
   }
 
   @Override public long getTriggerPeriodTime() {
-    return Long.parseLong(preferences.get(triggerPeriodKey, triggerPeriodDefault));
+    return Long.parseLong(preferences.getString(triggerPeriodKey, triggerPeriodDefault));
   }
 
   @Override public boolean isLoggerEnabled() {
-    return preferences.get(loggerEnabled, loggerEnabledDefault);
+    return preferences.getBoolean(loggerEnabled, loggerEnabledDefault);
   }
 
   @Override public boolean isRootEnabled() {
-    return preferences.get(useRoot, useRootDefault);
+    return preferences.getBoolean(useRoot, useRootDefault);
   }
 
   @Override public void resetRootEnabled() {
-    preferences.put(useRoot, useRootDefault);
+    preferences.edit().putBoolean(useRoot, useRootDefault).apply();
   }
 
   @Override public boolean isStartWhenOpen() {
-    return preferences.get(startWhenOpen, startWhenOpenDefault);
+    return preferences.getBoolean(startWhenOpen, startWhenOpenDefault);
   }
 
   @Override public boolean isPeriodicOnboardingShown() {
-    return preferences.get(PERIOD_ONBOARD, false);
+    return preferences.getBoolean(PERIOD_ONBOARD, false);
   }
 
   @Override public void setPeriodicOnboardingShown() {
-    preferences.put(PERIOD_ONBOARD, true);
+    preferences.edit().putBoolean(PERIOD_ONBOARD, true).apply();
   }
 
   @Override public boolean isManageOnboardingShown() {
-    return preferences.get(MANAGE_ONBOARD, false);
+    return preferences.getBoolean(MANAGE_ONBOARD, false);
   }
 
   @Override public void setManageOnboardingShown() {
-    preferences.put(MANAGE_ONBOARD, true);
+    preferences.edit().putBoolean(MANAGE_ONBOARD, true).apply();
   }
 
   @Override public boolean isOverviewOnboardingShown() {
-    return preferences.get(OVERVIEW_ONBOARD, false);
+    return preferences.getBoolean(OVERVIEW_ONBOARD, false);
   }
 
   @Override public void setOverviewOnboardingShown() {
-    preferences.put(OVERVIEW_ONBOARD, true);
+    preferences.edit().putBoolean(OVERVIEW_ONBOARD, true).apply();
   }
 
   @Override public long getWearableDelay() {
-    return Long.parseLong(preferences.get(wearableDelay, wearableDelayDefault));
+    return Long.parseLong(preferences.getString(wearableDelay, wearableDelayDefault));
   }
 
   @Override public long getDozeDelay() {
-    return Long.parseLong(preferences.get(delayDoze, delayDozeDefault));
+    return Long.parseLong(preferences.getString(delayDoze, delayDozeDefault));
   }
 
   @Override public void setDozeDelay(long time) {
-    preferences.put(delayDoze, Long.toString(time));
+    preferences.edit().putString(delayDoze, Long.toString(time)).apply();
   }
 
   @Override public boolean isExclusiveDoze() {
-    return preferences.get(exclusiveDoze, exclusiveDozeDefault);
+    return preferences.getBoolean(exclusiveDoze, exclusiveDozeDefault);
   }
 
   @Override public boolean isIgnoreChargingDoze() {
-    return preferences.get(ignoreChargingDoze, ignoreChargingDozeDefault);
+    return preferences.getBoolean(ignoreChargingDoze, ignoreChargingDozeDefault);
   }
 
   @Override public boolean isDozeManaged() {
-    return preferences.get(manageDoze, manageDozeDefault);
+    return preferences.getBoolean(manageDoze, manageDozeDefault);
   }
 
   @Override public boolean isAirplaneManaged() {
-    return preferences.get(manageAirplane, manageAirplaneDefault);
+    return preferences.getBoolean(manageAirplane, manageAirplaneDefault);
   }
 
   @Override public boolean isIgnoreChargingAirplane() {
-    return preferences.get(ignoreChargingAirplane, ignoreChargingAirplaneDefault);
+    return preferences.getBoolean(ignoreChargingAirplane, ignoreChargingAirplaneDefault);
   }
 
   @Override public boolean isIgnoreChargingWifi() {
-    return preferences.get(ignoreChargingWifi, ignoreChargingWifiDefault);
+    return preferences.getBoolean(ignoreChargingWifi, ignoreChargingWifiDefault);
   }
 
   @Override public boolean isIgnoreChargingData() {
-    return preferences.get(ignoreChargingData, ignoreChargingDataDefault);
+    return preferences.getBoolean(ignoreChargingData, ignoreChargingDataDefault);
   }
 
   @Override public boolean isIgnoreChargingBluetooth() {
-    return preferences.get(ignoreChargingBluetooth, ignoreChargingBluetoothDefault);
+    return preferences.getBoolean(ignoreChargingBluetooth, ignoreChargingBluetoothDefault);
   }
 
   @Override public boolean isIgnoreChargingSync() {
-    return preferences.get(ignoreChargingSync, ignoreChargingSyncDefault);
+    return preferences.getBoolean(ignoreChargingSync, ignoreChargingSyncDefault);
   }
 
   @Override public long getWifiDelay() {
-    return Long.parseLong(preferences.get(delayWifi, delayWifiDefault));
+    return Long.parseLong(preferences.getString(delayWifi, delayWifiDefault));
   }
 
   @Override public void setWifiDelay(long time) {
-    preferences.put(delayWifi, Long.toString(time));
+    preferences.edit().putString(delayWifi, Long.toString(time)).apply();
   }
 
   @Override public long getAirplaneDelay() {
-    return Long.parseLong(preferences.get(delayAirplane, delayAirplaneDefault));
+    return Long.parseLong(preferences.getString(delayAirplane, delayAirplaneDefault));
   }
 
   @Override public void setAirplaneDelay(long time) {
-    preferences.put(delayAirplane, Long.toString(time));
+    preferences.edit().putString(delayAirplane, Long.toString(time)).apply();
   }
 
   @Override public long getDataDelay() {
-    return Long.parseLong(preferences.get(delayData, delayDataDefault));
+    return Long.parseLong(preferences.getString(delayData, delayDataDefault));
   }
 
   @Override public void setDataDelay(long time) {
-    preferences.put(delayData, Long.toString(time));
+    preferences.edit().putString(delayData, Long.toString(time)).apply();
   }
 
   @Override public long getBluetoothDelay() {
-    return Long.parseLong(preferences.get(delayBluetooth, delayBluetoothDefault));
+    return Long.parseLong(preferences.getString(delayBluetooth, delayBluetoothDefault));
   }
 
   @Override public void setBluetoothDelay(long time) {
-    preferences.put(delayBluetooth, Long.toString(time));
+    preferences.edit().putString(delayBluetooth, Long.toString(time)).apply();
   }
 
   @Override public long getMasterSyncDelay() {
-    return Long.parseLong(preferences.get(delaySync, delaySyncDefault));
+    return Long.parseLong(preferences.getString(delaySync, delaySyncDefault));
   }
 
   @Override public void setMasterSyncDelay(long time) {
-    preferences.put(delaySync, Long.toString(time));
+    preferences.edit().putString(delaySync, Long.toString(time)).apply();
   }
 
   @Override public int getNotificationPriority() {
@@ -421,157 +424,158 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public boolean isBluetoothManaged() {
-    return preferences.get(manageBluetooth, manageBluetoothDefault);
+    return preferences.getBoolean(manageBluetooth, manageBluetoothDefault);
   }
 
   @Override public boolean isDataManaged() {
-    return preferences.get(manageData, manageDataDefault);
+    return preferences.getBoolean(manageData, manageDataDefault);
   }
 
   @Override public boolean isSyncManaged() {
-    return preferences.get(manageSync, manageSyncDefault);
+    return preferences.getBoolean(manageSync, manageSyncDefault);
   }
 
   @Override public boolean isWifiManaged() {
-    return preferences.get(manageWifi, manageWifiDefault);
+    return preferences.getBoolean(manageWifi, manageWifiDefault);
   }
 
   @Override public boolean isWearableManaged() {
-    return preferences.get(manageWearable, manageWearableDefault);
+    return preferences.getBoolean(manageWearable, manageWearableDefault);
   }
 
-  @Override public void clearAll() {
-    preferences.clear(true);
+  @SuppressLint("CommitPrefEdits") @Override public void clearAll() {
+    preferences.edit().clear().commit();
   }
 
   @Override public boolean isPeriodicDoze() {
-    return preferences.get(periodicDoze, periodicDozeDefault);
+    return preferences.getBoolean(periodicDoze, periodicDozeDefault);
   }
 
   @Override public boolean isPeriodicWifi() {
-    return preferences.get(periodicWifi, periodicWifiDefault);
+    return preferences.getBoolean(periodicWifi, periodicWifiDefault);
   }
 
   @Override public boolean isPeriodicData() {
-    return preferences.get(periodicData, periodicDataDefault);
+    return preferences.getBoolean(periodicData, periodicDataDefault);
   }
 
   @Override public boolean isPeriodicBluetooth() {
-    return preferences.get(periodicBluetooth, periodicBluetoothDefault);
+    return preferences.getBoolean(periodicBluetooth, periodicBluetoothDefault);
   }
 
   @Override public boolean isPeriodicSync() {
-    return preferences.get(periodicSync, periodicSyncDefault);
+    return preferences.getBoolean(periodicSync, periodicSyncDefault);
   }
 
   @Override public boolean isPeriodicAirplane() {
-    return preferences.get(periodicAirplane, periodicAirplaneDefault);
+    return preferences.getBoolean(periodicAirplane, periodicAirplaneDefault);
   }
 
   @Override public long getPeriodicDisableTimeDoze() {
-    return Long.parseLong(preferences.get(periodicDisableDoze, periodicDisableDozeDefault));
+    return Long.parseLong(preferences.getString(periodicDisableDoze, periodicDisableDozeDefault));
   }
 
   @Override public void setPeriodicDisableTimeDoze(long time) {
-    preferences.put(periodicDisableDoze, Long.toString(time));
+    preferences.edit().putString(periodicDisableDoze, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicDisableTimeAirplane() {
-    return Long.parseLong(preferences.get(periodicDisableAirplane, periodicDisableAirplaneDefault));
+    return Long.parseLong(
+        preferences.getString(periodicDisableAirplane, periodicDisableAirplaneDefault));
   }
 
   @Override public void setPeriodicDisableTimeAirplane(long time) {
-    preferences.put(periodicDisableAirplane, Long.toString(time));
+    preferences.edit().putString(periodicDisableAirplane, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicDisableTimeWifi() {
-    return Long.parseLong(preferences.get(periodicDisableWifi, periodicDisableWifiDefault));
+    return Long.parseLong(preferences.getString(periodicDisableWifi, periodicDisableWifiDefault));
   }
 
   @Override public void setPeriodicDisableTimeWifi(long time) {
-    preferences.put(periodicDisableWifi, Long.toString(time));
+    preferences.edit().putString(periodicDisableWifi, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicDisableTimeData() {
-    return Long.parseLong(preferences.get(periodicDisableData, periodicDisableDataDefault));
+    return Long.parseLong(preferences.getString(periodicDisableData, periodicDisableDataDefault));
   }
 
   @Override public void setPeriodicDisableTimeData(long time) {
-    preferences.put(periodicDisableData, Long.toString(time));
+    preferences.edit().putString(periodicDisableData, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicDisableTimeBluetooth() {
     return Long.parseLong(
-        preferences.get(periodicDisableBluetooth, periodicDisableBluetoothDefault));
+        preferences.getString(periodicDisableBluetooth, periodicDisableBluetoothDefault));
   }
 
   @Override public void setPeriodicDisableTimeBluetooth(long time) {
-    preferences.put(periodicDisableBluetooth, Long.toString(time));
+    preferences.edit().putString(periodicDisableBluetooth, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicDisableTimeSync() {
-    return Long.parseLong(preferences.get(periodicDisableSync, periodicDisableSyncDefault));
+    return Long.parseLong(preferences.getString(periodicDisableSync, periodicDisableSyncDefault));
   }
 
   @Override public void setPeriodicDisableTimeSync(long time) {
-    preferences.put(periodicDisableSync, Long.toString(time));
+    preferences.edit().putString(periodicDisableSync, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeDoze() {
-    return Long.parseLong(preferences.get(periodicEnableDoze, periodicEnableDozeDefault));
+    return Long.parseLong(preferences.getString(periodicEnableDoze, periodicEnableDozeDefault));
   }
 
   @Override public void setPeriodicEnableTimeDoze(long time) {
-    preferences.put(periodicEnableDoze, Long.toString(time));
+    preferences.edit().putString(periodicEnableDoze, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeAirplane() {
-    return Long.parseLong(preferences.get(periodicEnableAirplane, periodicEnableAirplaneDefault));
+    return Long.parseLong(
+        preferences.getString(periodicEnableAirplane, periodicEnableAirplaneDefault));
   }
 
   @Override public void setPeriodicEnableTimeAirplane(long time) {
-    preferences.put(periodicEnableAirplane, Long.toString(time));
+    preferences.edit().putString(periodicEnableAirplane, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeWifi() {
-    return Long.parseLong(preferences.get(periodicEnableWifi, periodicEnableWifiDefault));
+    return Long.parseLong(preferences.getString(periodicEnableWifi, periodicEnableWifiDefault));
   }
 
   @Override public void setPeriodicEnableTimeWifi(long time) {
-    preferences.put(periodicEnableWifi, Long.toString(time));
+    preferences.edit().putString(periodicEnableWifi, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeData() {
-    return Long.parseLong(preferences.get(periodicEnableData, periodicEnableDataDefault));
+    return Long.parseLong(preferences.getString(periodicEnableData, periodicEnableDataDefault));
   }
 
   @Override public void setPeriodicEnableTimeData(long time) {
-    preferences.put(periodicEnableData, Long.toString(time));
+    preferences.edit().putString(periodicEnableData, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeBluetooth() {
-    return Long.parseLong(preferences.get(periodicEnableBluetooth, periodicEnableBluetoothDefault));
+    return Long.parseLong(
+        preferences.getString(periodicEnableBluetooth, periodicEnableBluetoothDefault));
   }
 
   @Override public void setPeriodicEnableTimeBluetooth(long time) {
-    preferences.put(periodicEnableBluetooth, Long.toString(time));
+    preferences.edit().putString(periodicEnableBluetooth, Long.toString(time)).apply();
   }
 
   @Override public long getPeriodicEnableTimeSync() {
-    return Long.parseLong(preferences.get(periodicEnableSync, periodicEnableSyncDefault));
+    return Long.parseLong(preferences.getString(periodicEnableSync, periodicEnableSyncDefault));
   }
 
   @Override public void setPeriodicEnableTimeSync(long time) {
-    preferences.put(periodicEnableSync, Long.toString(time));
+    preferences.edit().putString(periodicEnableSync, Long.toString(time)).apply();
   }
 
-  @Override
-  public void register(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
-    preferences.register(listener);
+  @Override public void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
+    listener.register(preferences);
   }
 
-  @Override
-  public void unregister(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
-    preferences.unregister(listener);
+  @Override public void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
+    listener.unregister(preferences);
   }
 }

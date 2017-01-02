@@ -22,12 +22,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.presenter.PowerManagerPreferences;
+import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public abstract class BooleanPreferenceObserver
-    implements SharedPreferences.OnSharedPreferenceChangeListener, BooleanInterestObserver {
+public abstract class BooleanPreferenceObserver extends OnRegisteredSharedPreferenceChangeListener
+    implements BooleanInterestObserver {
 
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;

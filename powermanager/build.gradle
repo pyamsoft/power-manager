@@ -35,8 +35,8 @@ android {
     applicationId "com.pyamsoft.powermanager"
     minSdkVersion 19
     targetSdkVersion 25
-    versionCode 93
-    versionName "6.6.5"
+    versionCode 94
+    versionName "6.6.6pre1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
