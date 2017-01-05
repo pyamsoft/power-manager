@@ -240,11 +240,8 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Slightly smaller APK size";
-    final String line2 = "BUGFIX: Fix some code related to in app billing";
-    final String line3 = "BUGFIX: Smaller memory footprint";
-    final String line4 = "BUGFIX: Quicker processing of device state for power management";
-    return new String[] { line1, line2, line3, line4 };
+    final String line1 = "BUGFIX: Fix crash relating to Doze on API 25 (7.1)";
+    return new String[] { line1 };
   }
 
   @NonNull @Override protected String getVersionName() {
