@@ -14,21 +14,7 @@
  * limitations under the License.
  */
 
-include ':powermanager', ':powermanager-model', ':powermanager-base',
-    ':powermanager-trigger',
-    ':powermanager-overview',
-    ':powermanager-main',
-    ':powermanager-wear',
-    ':powermanager-doze',
-    ':powermanager-airplane',
-    ':powermanager-sync',
-    ':powermanager-sync',
-    ':powermanager-bluetooth',
-    ':powermanager-data',
-    ':powermanager-wifi',
-    ':powermanager-uicore',
-    ':powermanager-settings',
-    ':powermanager-service',
-    ':powermanager-manager',
-    ':powermanager-modifier',
-    ':powermanager-observer'
+package com.pyamsoft.powermanager.manager.queuer;
+
+public class QueuerDozeDisableService extends QueuerDozeLongTermService {
+}

@@ -15,6 +15,59 @@
   -->
 
 <manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyamsoft.powermanager.manager">
+
+  <application>
+
+    <service
+        android:name=".queuer.QueuerWifiEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerWifiDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDataEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDataDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerBluetoothEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerBluetoothDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerSyncEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerSyncDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerAirplaneEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerAirplaneDisableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDozeEnableService"
+        android:exported="false"/>
+
+    <service
+        android:name=".queuer.QueuerDozeDisableService"
+        android:exported="false"/>
+
+  </application>
 
 </manifest>

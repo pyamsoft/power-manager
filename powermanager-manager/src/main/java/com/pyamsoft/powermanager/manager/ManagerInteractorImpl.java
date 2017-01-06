@@ -23,7 +23,7 @@ import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.queuer.Queuer;
+import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {

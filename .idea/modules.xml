@@ -15,7 +15,6 @@
       <module fileurl="file://$PROJECT_DIR$/powermanager-modifier/powermanager-modifier.iml" filepath="$PROJECT_DIR$/powermanager-modifier/powermanager-modifier.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-observer/powermanager-observer.iml" filepath="$PROJECT_DIR$/powermanager-observer/powermanager-observer.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-overview/powermanager-overview.iml" filepath="$PROJECT_DIR$/powermanager-overview/powermanager-overview.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-queuer/powermanager-queuer.iml" filepath="$PROJECT_DIR$/powermanager-queuer/powermanager-queuer.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-service/powermanager-service.iml" filepath="$PROJECT_DIR$/powermanager-service/powermanager-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" filepath="$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" filepath="$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" />

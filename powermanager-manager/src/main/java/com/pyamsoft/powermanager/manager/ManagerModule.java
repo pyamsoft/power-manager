@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.ExclusiveManager;
 import com.pyamsoft.powermanager.model.Manager;
-import com.pyamsoft.powermanager.queuer.Queuer;
+import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

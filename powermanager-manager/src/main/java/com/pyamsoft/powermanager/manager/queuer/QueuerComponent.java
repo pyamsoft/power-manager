@@ -14,21 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager;
+package com.pyamsoft.powermanager.manager.queuer;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
 import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
-import com.pyamsoft.powermanager.observer.permission.PermissionObserverModule;
-import com.pyamsoft.powermanager.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.observer.state.StateObserverModule;
-import com.pyamsoft.powermanager.manager.queuer.QueuerModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
-    ManagerModule.class, QueuerModule.class, StateModifierModule.class, StateObserverModule.class,
-    ManageObserverModule.class, PermissionObserverModule.class,
-}) interface ManagerComponent {
+    QueuerModule.class, StateObserverModule.class, StateModifierModule.class
+}) interface QueuerComponent {
 
-  void inject(ScreenOnOffReceiver receiver);
+  void inject(BaseLongTermService longTermService);
+
+  void inject(QueuerAirplaneLongTermService longTermService);
+
+  void inject(QueuerBluetoothLongTermService longTermService);
+
+  void inject(QueuerDataLongTermService longTermService);
+
+  void inject(QueuerDozeLongTermService longTermService);
+
+  void inject(QueuerSyncLongTermService longTermService);
+
+  void inject(QueuerWifiLongTermService longTermService);
 }

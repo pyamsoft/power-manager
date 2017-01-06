@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.queuer.Queuer;
+import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
