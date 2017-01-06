@@ -33,13 +33,35 @@ android {
 
   defaultConfig {
     applicationId "com.pyamsoft.powermanager"
-    minSdkVersion 19
     targetSdkVersion 25
-    versionCode 95
-    versionName "6.6.6"
+    versionCode 96
+    versionName "6.6.7pre1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
+  }
+
+  productFlavors {
+    dev {
+      // Enable pre-dexing to produce an APK that can be tested on
+      // Android 5.0+ without the time-consuming DEX build processes.
+      minSdkVersion 21
+    }
+
+    prod {
+      // The actual minSdkVersion for the production version.
+      minSdkVersion 19
+    }
+  }
+
+
+  buildTypes {
+    release {
+      multiDexEnabled false
+    }
+    debug {
+      multiDexEnabled true
+    }
   }
 
   dataBinding {
@@ -104,7 +126,18 @@ dependencies {
     transitive = true
   }
 
-  compile project(":powermanager-presenter")
+  compile project(":powermanager-airplane")
+  compile project(":powermanager-bluetooth")
+  compile project(":powermanager-data")
+  compile project(":powermanager-doze")
+  compile project(":powermanager-main")
+  compile project(":powermanager-sync")
+  compile project(":powermanager-trigger")
+  compile project(":powermanager-overview")
+  compile project(":powermanager-wear")
+  compile project(":powermanager-wifi")
+  compile project(":powermanager-service")
+  compile project(":powermanager-settings")
 }
 
 // AdView

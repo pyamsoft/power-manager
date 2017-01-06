@@ -20,24 +20,22 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.pyamsoft.powermanager.base.BaseInitProvider;
+import com.pyamsoft.powermanager.base.DaggerPowerManagerComponent;
+import com.pyamsoft.powermanager.base.PowerManagerComponent;
+import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.main.MainActivity;
-import com.pyamsoft.powermanager.presenter.DaggerPowerManagerComponent;
-import com.pyamsoft.powermanager.presenter.Injector;
-import com.pyamsoft.powermanager.presenter.PowerManagerComponent;
-import com.pyamsoft.powermanager.presenter.PowerManagerModule;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
+import com.pyamsoft.powermanager.trigger.TriggerRunnerService;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.IPYDroidApp;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.rx.RxLicenses;
 import com.pyamsoft.pydroid.ui.UiLicenses;
 
-public class PowerManagerSingleInitProvider extends SingleInitContentProvider
+public class PowerManagerSingleInitProvider extends BaseInitProvider
     implements IPYDroidApp<PowerManagerComponent> {
-
-  @Nullable private PowerManagerComponent component;
 
   @NonNull @Override protected BuildConfigChecker initializeBuildConfigChecker() {
     return new BuildConfigChecker() {
@@ -48,17 +46,8 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
   }
 
   @Override protected void onInstanceCreated(@NonNull Context context) {
-    Injector.set(component);
+    super.onInstanceCreated(context);
     ForegroundService.start(context);
-  }
-
-  @Override protected void onFirstCreate(@NonNull Context context) {
-    super.onFirstCreate(context);
-
-    component = DaggerPowerManagerComponent.builder()
-        .powerManagerModule(
-            new PowerManagerModule(context, MainActivity.class, ActionToggleService.class))
-        .build();
   }
 
   @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
@@ -73,10 +62,10 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider
     UiLicenses.addLicenses();
   }
 
-  @NonNull @Override public PowerManagerComponent provideComponent() {
-    if (component == null) {
-      throw new NullPointerException("PowerManagerComponent is NULL");
-    }
-    return component;
+  @NonNull @Override protected PowerManagerComponent createModule(@NonNull Context context) {
+    final PowerManagerModule module =
+        new PowerManagerModule(context, MainActivity.class, ActionToggleService.class,
+            TriggerRunnerService.class);
+    return DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
   }
 }

@@ -73,7 +73,7 @@ public class DeleteTriggerDialog extends DialogFragment {
     final Fragment powerTriggerListFragment =
         fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);
     if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
-      ((PowerTriggerListFragment) powerTriggerListFragment).getPresenter().deleteTrigger(percent);
+      ((PowerTriggerListFragment) powerTriggerListFragment).deleteTrigger(percent);
     } else {
       throw new ClassCastException("Fragment is not PowerTriggerListFragment");
     }

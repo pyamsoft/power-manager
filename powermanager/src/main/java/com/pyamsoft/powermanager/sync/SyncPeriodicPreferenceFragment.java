@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.PeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.presenter.base.PeriodPreferencePresenter;
-import com.pyamsoft.powermanager.presenter.sync.SyncPeriodPresenterLoader;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {

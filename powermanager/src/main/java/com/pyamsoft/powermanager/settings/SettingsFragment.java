@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.OverviewSingleItemFragment;
+import com.pyamsoft.powermanager.uicore.OverviewSingleItemFragment;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 
 public class SettingsFragment extends OverviewSingleItemFragment {

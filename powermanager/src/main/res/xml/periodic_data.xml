@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.data.DataCustomTimePreference
+    <com.pyamsoft.powermanager.data.preference.DataCustomTimePreference
         android:key="@string/periodic_data_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.data.DataCustomTimePreference
+    <com.pyamsoft.powermanager.data.preference.DataCustomTimePreference
         android:key="@string/periodic_data_enable_key"/>
 
   </PreferenceCategory>

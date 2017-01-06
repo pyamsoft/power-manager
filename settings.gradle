@@ -14,4 +14,23 @@
  * limitations under the License.
  */
 
-include ':powermanager', ':powermanager-presenter', ':powermanager-model'
+include ':powermanager', ':powermanager-model', ':powermanager-base',
+    ':powermanager-trigger',
+    ':powermanager-overview',
+    ':powermanager-main',
+    ':powermanager-wear',
+    ':powermanager-doze',
+    ':powermanager-airplane',
+    ':powermanager-sync',
+    ':powermanager-sync',
+    ':powermanager-bluetooth',
+    ':powermanager-data',
+    ':powermanager-wifi',
+    ':powermanager-uicore',
+    ':powermanager-settings',
+    ':powermanager-service',
+    ':powermanager-queuer',
+    ':powermanager-logger',
+    ':powermanager-manager',
+    ':powermanager-modifier',
+    ':powermanager-observer'

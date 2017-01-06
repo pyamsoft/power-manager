@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.PeriodicPreferenceFragment;
-import com.pyamsoft.powermanager.presenter.base.PeriodPreferencePresenter;
-import com.pyamsoft.powermanager.presenter.doze.DozePeriodPresenterLoader;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {

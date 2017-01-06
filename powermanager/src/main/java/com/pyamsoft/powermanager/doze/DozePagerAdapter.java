@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import com.pyamsoft.powermanager.base.ManagePreferenceFragment;
-import com.pyamsoft.powermanager.base.ModulePagerAdapter;
-import com.pyamsoft.powermanager.base.PeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
+import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 
 class DozePagerAdapter extends ModulePagerAdapter {
 

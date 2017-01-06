@@ -68,7 +68,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.doze.DozeCustomTimePreference
+    <com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference
         android:key="@string/doze_time_key"/>
 
   </PreferenceCategory>

@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogLoggerBinding;
-import com.pyamsoft.powermanager.presenter.logger.LoggerPresenter;
 import timber.log.Timber;
 
 public class LoggerDialog extends DialogFragment implements LoggerPresenter.Provider {

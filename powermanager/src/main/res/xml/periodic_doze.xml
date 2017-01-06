@@ -42,7 +42,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.doze.DozeCustomTimePreference
+    <com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference
         android:key="@string/periodic_doze_disable_key"/>
 
     <!--suppress AndroidElementNotAllowed -->
@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.doze.DozeCustomTimePreference
+    <com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference
         android:key="@string/periodic_doze_enable_key"/>
 
   </PreferenceCategory>

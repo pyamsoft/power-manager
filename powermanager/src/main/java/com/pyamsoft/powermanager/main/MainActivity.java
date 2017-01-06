@@ -45,8 +45,6 @@ import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
 import com.pyamsoft.powermanager.overview.OverviewFragment;
-import com.pyamsoft.powermanager.presenter.main.MainPresenter;
-import com.pyamsoft.powermanager.presenter.main.MainPresenterLoader;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;

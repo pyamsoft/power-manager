@@ -57,7 +57,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <com.pyamsoft.powermanager.preference.data.DataCustomTimePreference
+    <com.pyamsoft.powermanager.data.preference.DataCustomTimePreference
         android:key="@string/data_time_key"/>
 
   </PreferenceCategory>

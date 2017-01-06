@@ -4,8 +4,26 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Power Manager.iml" filepath="$PROJECT_DIR$/Power Manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager/powermanager.iml" filepath="$PROJECT_DIR$/powermanager/powermanager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-airplane/powermanager-airplane.iml" filepath="$PROJECT_DIR$/powermanager-airplane/powermanager-airplane.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-base/powermanager-base.iml" filepath="$PROJECT_DIR$/powermanager-base/powermanager-base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-bluetooth/powermanager-bluetooth.iml" filepath="$PROJECT_DIR$/powermanager-bluetooth/powermanager-bluetooth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-data/powermanager-data.iml" filepath="$PROJECT_DIR$/powermanager-data/powermanager-data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-doze/powermanager-doze.iml" filepath="$PROJECT_DIR$/powermanager-doze/powermanager-doze.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-logger/powermanager-logger.iml" filepath="$PROJECT_DIR$/powermanager-logger/powermanager-logger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-main/powermanager-main.iml" filepath="$PROJECT_DIR$/powermanager-main/powermanager-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" filepath="$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-model/powermanager-model.iml" filepath="$PROJECT_DIR$/powermanager-model/powermanager-model.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-presenter/powermanager-presenter.iml" filepath="$PROJECT_DIR$/powermanager-presenter/powermanager-presenter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-modifier/powermanager-modifier.iml" filepath="$PROJECT_DIR$/powermanager-modifier/powermanager-modifier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-observer/powermanager-observer.iml" filepath="$PROJECT_DIR$/powermanager-observer/powermanager-observer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-overview/powermanager-overview.iml" filepath="$PROJECT_DIR$/powermanager-overview/powermanager-overview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-queuer/powermanager-queuer.iml" filepath="$PROJECT_DIR$/powermanager-queuer/powermanager-queuer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-service/powermanager-service.iml" filepath="$PROJECT_DIR$/powermanager-service/powermanager-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" filepath="$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" filepath="$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" filepath="$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" filepath="$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-wear/powermanager-wear.iml" filepath="$PROJECT_DIR$/powermanager-wear/powermanager-wear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-wifi/powermanager-wifi.iml" filepath="$PROJECT_DIR$/powermanager-wifi/powermanager-wifi.iml" />
     </modules>
   </component>
 </project>

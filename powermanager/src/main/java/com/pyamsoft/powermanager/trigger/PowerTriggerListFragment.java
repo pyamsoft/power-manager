@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.trigger;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -33,16 +32,14 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
-import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.powermanager.presenter.trigger.TriggerPresenter;
-import com.pyamsoft.powermanager.presenter.trigger.TriggerPresenterLoader;
+import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import java.util.List;
 import timber.log.Timber;
 
@@ -75,19 +72,12 @@ public class PowerTriggerListFragment extends ActionBarFragment
         });
   }
 
-  @CheckResult @NonNull public TriggerPresenter getPresenter() {
-    if (presenter == null) {
-      throw new NullPointerException("Presenter is NULL");
-    }
-    return presenter;
-  }
-
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     listIsRefreshed = false;
     dividerDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_powertrigger, container, false);
+    binding = FragmentPowertriggerBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 
@@ -276,5 +266,13 @@ public class PowerTriggerListFragment extends ActionBarFragment
   @Override public void updateViewHolder(int position, @NonNull PowerTriggerEntry entry) {
     Timber.d("update view holder at position: %d", position);
     adapter.set(position, createNewPowerTriggerListItem(entry));
+  }
+
+  public void createPowerTrigger(@NonNull PowerTriggerEntry entry) {
+    presenter.createPowerTrigger(entry);
+  }
+
+  public void deleteTrigger(int percent) {
+    presenter.deleteTrigger(percent);
   }
 }

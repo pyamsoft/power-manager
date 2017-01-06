@@ -20,9 +20,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.ManagePreferenceFragment;
-import com.pyamsoft.powermanager.presenter.base.ManagePreferencePresenter;
-import com.pyamsoft.powermanager.presenter.data.DataManagePresenterLoader;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 import timber.log.Timber;
 

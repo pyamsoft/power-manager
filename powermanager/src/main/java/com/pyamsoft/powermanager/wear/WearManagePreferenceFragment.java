@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.wear;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.ManagePreferenceFragment;
-import com.pyamsoft.powermanager.presenter.base.ManagePreferencePresenter;
-import com.pyamsoft.powermanager.presenter.wear.WearPresenterLoader;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class WearManagePreferenceFragment extends ManagePreferenceFragment {

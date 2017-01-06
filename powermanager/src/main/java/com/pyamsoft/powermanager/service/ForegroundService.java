@@ -23,9 +23,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.presenter.receiver.ScreenOnOffReceiver;
-import com.pyamsoft.powermanager.presenter.service.ForegroundPresenter;
-import com.pyamsoft.powermanager.presenter.service.ForegroundServiceLoader;
+import com.pyamsoft.powermanager.manager.ScreenOnOffReceiver;
 import timber.log.Timber;
 
 public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {

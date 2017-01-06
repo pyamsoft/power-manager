@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,17 +36,15 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.presenter.overview.OverviewPresenter;
-import com.pyamsoft.powermanager.presenter.overview.OverviewPresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
+import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class OverviewFragment extends ActionBarFragment implements OverviewPresenter.Overview {
@@ -78,7 +75,7 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     adapter = new FastItemAdapter<>();
-    binding = DataBindingUtil.inflate(inflater, R.layout.fragment_overview, container, false);
+    binding = FragmentOverviewBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
 

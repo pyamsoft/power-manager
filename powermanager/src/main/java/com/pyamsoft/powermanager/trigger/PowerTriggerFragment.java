@@ -24,7 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.OverviewSingleItemFragment;
+import com.pyamsoft.powermanager.uicore.OverviewSingleItemFragment;
 
 public class PowerTriggerFragment extends OverviewSingleItemFragment {
 

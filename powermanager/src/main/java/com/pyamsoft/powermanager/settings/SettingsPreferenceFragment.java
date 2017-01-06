@@ -29,12 +29,10 @@ import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanager.presenter.settings.SettingsPreferencePresenter;
-import com.pyamsoft.powermanager.presenter.settings.SettingsPreferencePresenterLoader;
 import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.PersistentCache;
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import timber.log.Timber;
 
 public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment

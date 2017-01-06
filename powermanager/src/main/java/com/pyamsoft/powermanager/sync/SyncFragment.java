@@ -20,12 +20,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.ModulePagerAdapter;
-import com.pyamsoft.powermanager.base.OverviewPagerFragment;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.presenter.base.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.presenter.sync.SyncLoader;
-import com.pyamsoft.powermanager.presenter.sync.SyncOverviewPresenterLoader;
+import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.app.PersistLoader;
 
 public class SyncFragment extends OverviewPagerFragment {
