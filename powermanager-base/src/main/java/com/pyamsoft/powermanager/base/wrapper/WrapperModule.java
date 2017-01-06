@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -27,32 +28,37 @@ import javax.inject.Singleton;
 @Module public class WrapperModule {
 
   @Singleton @Provides @Named("wrapper_wifi") DeviceFunctionWrapper provideWifiManagerWrapper(
-      @NonNull Context context) {
-    return new WifiManagerWrapperImpl(context);
+      @NonNull Context context, @Named("logger_wifi") Logger logger) {
+    return new WifiManagerWrapperImpl(context, logger);
   }
 
   @Singleton @Provides @Named("wrapper_bluetooth")
-  DeviceFunctionWrapper provideBluetoothAdapterWrapper(@NonNull Context context) {
-    return new BluetoothAdapterWrapperImpl(context);
+  DeviceFunctionWrapper provideBluetoothAdapterWrapper(@NonNull Context context,
+      @Named("logger_bluetooth") Logger logger) {
+    return new BluetoothAdapterWrapperImpl(context, logger);
   }
 
   @Singleton @Provides @Named("wrapper_data") DeviceFunctionWrapper provideDataConnectionWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DataConnectionWrapperImpl(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("logger_data") Logger logger) {
+    return new DataConnectionWrapperImpl(context, logger, preferences);
   }
 
-  @Singleton @Provides @Named("wrapper_sync") DeviceFunctionWrapper provideSyncConnectionWrapper() {
-    return new SyncConnectionWrapperImpl();
+  @Singleton @Provides @Named("wrapper_sync") DeviceFunctionWrapper provideSyncConnectionWrapper(
+      @Named("logger_sync") Logger logger) {
+    return new SyncConnectionWrapperImpl(logger);
   }
 
   @Singleton @Provides @Named("wrapper_airplane") DeviceFunctionWrapper provideAirplaneModeWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneModeWrapperImpl(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("logger_airplane") Logger logger) {
+    return new AirplaneModeWrapperImpl(context, logger, preferences);
   }
 
   @Singleton @Provides @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozeDeviceWrapperImpl(context, preferences);
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @Named("logger_doze") Logger logger) {
+    return new DozeDeviceWrapperImpl(context, logger, preferences);
   }
 
   @Singleton @Provides JobQueuerWrapper provideJobQueuerWrapper(@NonNull Context context) {

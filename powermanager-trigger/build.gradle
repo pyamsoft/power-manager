@@ -67,7 +67,5 @@ dependencies {
 
   compile project(":powermanager-observer")
   compile project(":powermanager-modifier")
-  compile project(":powermanager-logger")
-
 }
 

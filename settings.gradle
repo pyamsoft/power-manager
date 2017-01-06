@@ -30,7 +30,6 @@ include ':powermanager', ':powermanager-model', ':powermanager-base',
     ':powermanager-settings',
     ':powermanager-service',
     ':powermanager-queuer',
-    ':powermanager-logger',
     ':powermanager-manager',
     ':powermanager-modifier',
     ':powermanager-observer'

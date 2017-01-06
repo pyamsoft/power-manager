@@ -26,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -42,12 +43,14 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
   }
 
+  @NonNull private final Logger logger;
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject DataConnectionWrapperImpl(@NonNull Context context,
+  @Inject DataConnectionWrapperImpl(@NonNull Context context, @NonNull Logger logger,
       @NonNull PowerManagerPreferences preferences) {
+    this.logger = logger;
     this.preferences = preferences;
     connectivityManager =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -94,7 +97,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
       try {
         return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
       } catch (final Exception e) {
-        Timber.e(e, "ManagerData getMobileDataEnabled ERROR");
+        logger.e("ManagerData getMobileDataEnabled ERROR");
       }
     }
 
@@ -106,7 +109,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
       try {
         SET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager, enabled);
       } catch (final Exception e) {
-        Timber.e(e, "ManagerData setMobileDataEnabled ERROR");
+        logger.e("ManagerData setMobileDataEnabled ERROR");
       }
     }
   }
@@ -121,7 +124,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
       final String command = "svc data " + (enabled ? "enable" : "disable");
       ShellCommandHelper.runRootShellCommand(command);
     } else {
-      Timber.w("Root not enabled, cannot toggle Data");
+      logger.w("Root not enabled, cannot toggle Data");
     }
   }
 
@@ -130,7 +133,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   }
 
   private void setMobileDataEnabled(boolean enabled) {
-    Timber.i("Data: %s", enabled ? "enable" : "disable");
+    logger.i("Data: %s", enabled ? "enable" : "disable");
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledReflection(enabled);
     } else {

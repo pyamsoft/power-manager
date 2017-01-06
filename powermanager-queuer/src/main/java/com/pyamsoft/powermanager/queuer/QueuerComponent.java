@@ -17,14 +17,13 @@
 package com.pyamsoft.powermanager.queuer;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
-import com.pyamsoft.powermanager.logger.LoggerModule;
 import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.observer.state.StateObserverModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
-    QueuerModule.class, LoggerModule.class, StateObserverModule.class, StateModifierModule.class
+    QueuerModule.class, StateObserverModule.class, StateModifierModule.class
 }) interface QueuerComponent {
 
   void inject(BaseLongTermService longTermService);

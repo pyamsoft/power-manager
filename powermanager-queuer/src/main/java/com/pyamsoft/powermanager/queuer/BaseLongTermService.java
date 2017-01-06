@@ -24,7 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.powermanager.logger.Logger;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
@@ -105,7 +105,6 @@ abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    getLogger().d("Run long queue job");
     final QueuerType queuerType = QueuerType.valueOf(type);
     run(queuerType, ignoreCharging);
     requeue(queuerType, ignoreCharging, periodic, periodicEnableTime, periodicDisableTime);

@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.manager;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
-import com.pyamsoft.powermanager.logger.LoggerModule;
 import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.observer.permission.PermissionObserverModule;
 import com.pyamsoft.powermanager.observer.preference.manage.ManageObserverModule;
@@ -28,7 +27,7 @@ import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
     ManagerModule.class, QueuerModule.class, StateModifierModule.class, StateObserverModule.class,
-    LoggerModule.class, ManageObserverModule.class, PermissionObserverModule.class,
+    ManageObserverModule.class, PermissionObserverModule.class,
 }) interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.logger;
+package com.pyamsoft.powermanager.base.logger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -44,10 +44,7 @@ public class LoggerLoader {
   Provider<LoggerPresenter> triggerLogger;
 
   public LoggerLoader() {
-    DaggerLoggerComponent.builder()
-        .powerManagerComponent(Injector.get().provideComponent())
-        .build()
-        .inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @CheckResult @NonNull public LoggerPresenter loadLoggerPresenter(@NonNull LoggerType type) {

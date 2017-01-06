@@ -17,17 +17,20 @@
 package com.pyamsoft.powermanager.base.wrapper;
 
 import android.content.ContentResolver;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {
 
-  @Inject SyncConnectionWrapperImpl() {
+  @NonNull private final Logger logger;
 
+  @Inject SyncConnectionWrapperImpl(@NonNull Logger logger) {
+    this.logger = logger;
   }
 
   private void toggle(boolean state) {
-    Timber.i("Sync: %s", state ? "enable" : "disable");
+    logger.i("Sync: %s", state ? "enable" : "disable");
     ContentResolver.setMasterSyncAutomatically(state);
   }
 

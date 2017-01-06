@@ -23,15 +23,17 @@ import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
 
+  @NonNull private final Logger logger;
   @Nullable private final BluetoothAdapter adapter;
 
-  @Inject BluetoothAdapterWrapperImpl(@NonNull Context context) {
+  @Inject BluetoothAdapterWrapperImpl(@NonNull Context context, @NonNull Logger logger) {
     this.adapter = getBluetoothAdapter(context);
+    this.logger = logger;
   }
 
   @CheckResult @Nullable private BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
@@ -48,7 +50,7 @@ class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
 
   private void toggle(boolean state) {
     if (adapter != null) {
-      Timber.i("Bluetooth: %s", state ? "enable" : "disable");
+      logger.i("Bluetooth: %s", state ? "enable" : "disable");
       if (state) {
         adapter.enable();
       } else {

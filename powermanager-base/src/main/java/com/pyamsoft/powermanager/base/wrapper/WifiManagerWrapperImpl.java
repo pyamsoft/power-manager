@@ -21,21 +21,23 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
 
   @Nullable private final WifiManager wifiManager;
+  @NonNull private final Logger logger;
 
-  @Inject WifiManagerWrapperImpl(@NonNull Context context) {
+  @Inject WifiManagerWrapperImpl(@NonNull Context context, @NonNull Logger logger) {
     this.wifiManager =
         (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+    this.logger = logger;
   }
 
   private void toggle(boolean state) {
     if (wifiManager != null) {
-      Timber.i("Wifi: %s", state ? "enable" : "disable");
+      logger.i("Wifi: %s", state ? "enable" : "disable");
       wifiManager.setWifiEnabled(state);
     }
   }

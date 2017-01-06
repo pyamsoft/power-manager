@@ -27,7 +27,7 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
-import com.pyamsoft.powermanager.logger.Logger;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Constants;

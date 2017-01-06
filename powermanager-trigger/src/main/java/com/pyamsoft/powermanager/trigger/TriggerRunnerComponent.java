@@ -17,14 +17,13 @@
 package com.pyamsoft.powermanager.trigger;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
-import com.pyamsoft.powermanager.logger.LoggerModule;
 import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.observer.state.StateObserverModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
-    LoggerModule.class, StateObserverModule.class, StateModifierModule.class
+    StateObserverModule.class, StateModifierModule.class
 }) interface TriggerRunnerComponent {
 
   void inject(TriggerRunnerService runner);

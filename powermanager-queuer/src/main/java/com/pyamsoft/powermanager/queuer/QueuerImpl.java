@@ -22,7 +22,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
-import com.pyamsoft.powermanager.logger.Logger;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
@@ -80,7 +80,6 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void internalCancel() {
-    logger.d("Cancel any previous jobs");
     jobQueuerWrapper.cancel(new Intent(appContext, getScreenOnServiceClass()));
     jobQueuerWrapper.cancel(new Intent(appContext, getScreenOffServiceClass()));
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
@@ -166,7 +165,6 @@ abstract class QueuerImpl implements Queuer {
                     throw new IllegalStateException("Type is unset");
                   }
 
-                  logger.d("Run short queue job");
                   QueueRunner.builder()
                       .setType(type)
                       .setObserver(stateObserver)

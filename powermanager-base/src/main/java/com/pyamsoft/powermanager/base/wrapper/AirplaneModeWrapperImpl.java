@@ -22,8 +22,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
 
@@ -31,19 +31,20 @@ class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
       "settings put global airplane_mode_on ";
   @NonNull private static final String AIRPLANE_BROADCAST_COMMAND =
       "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state ";
-
+  @NonNull private final Logger logger;
   @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject AirplaneModeWrapperImpl(@NonNull Context context,
+  @Inject AirplaneModeWrapperImpl(@NonNull Context context, @NonNull Logger logger,
       @NonNull PowerManagerPreferences preferences) {
     this.contentResolver = context.getApplicationContext().getContentResolver();
+    this.logger = logger;
     this.preferences = preferences;
   }
 
   private void setAirplaneModeEnabled(boolean enabled) {
     if (preferences.isRootEnabled()) {
-      Timber.i("Airplane Mode: %s", enabled ? "enable" : "disable");
+      logger.i("Airplane Mode: %s", enabled ? "enable" : "disable");
       final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
       final String airplaneBroadcastCommand =
           AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");

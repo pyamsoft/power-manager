@@ -21,6 +21,10 @@ import android.app.Service;
 import android.content.Context;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDBModule;
+import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.logger.LoggerLoader;
+import com.pyamsoft.powermanager.base.logger.LoggerModule;
+import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.wrapper.WrapperModule;
@@ -29,9 +33,11 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import rx.Scheduler;
 
-@Singleton
-@Component(modules = { PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class })
-public interface PowerManagerComponent {
+@Singleton @Component(modules = {
+    PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class
+}) public interface PowerManagerComponent {
+
+  void inject(LoggerLoader loader);
 
   PowerTriggerDB providePowerTriggerDb();
 
@@ -64,4 +70,36 @@ public interface PowerManagerComponent {
   @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper();
 
   JobQueuerWrapper provideJobQueuerWrapper();
+
+  @Named("logger_manager") Logger provideLoggerManager();
+
+  @Named("logger_presenter_manager") LoggerPresenter provideLoggerPresenterManager();
+
+  @Named("logger_wifi") Logger provideLoggerWifi();
+
+  @Named("logger_presenter_wifi") LoggerPresenter provideLoggerPresenterWifi();
+
+  @Named("logger_data") Logger provideLoggerData();
+
+  @Named("logger_presenter_data") LoggerPresenter provideLoggerPresenterData();
+
+  @Named("logger_bluetooth") Logger provideLoggerBluetooth();
+
+  @Named("logger_presenter_bluetooth") LoggerPresenter provideLoggerPresenterBluetooth();
+
+  @Named("logger_sync") Logger provideLoggerSync();
+
+  @Named("logger_presenter_sync") LoggerPresenter provideLoggerPresenterSync();
+
+  @Named("logger_airplane") Logger provideLoggerAirplane();
+
+  @Named("logger_presenter_airplane") LoggerPresenter provideLoggerPresenterAirplane();
+
+  @Named("logger_doze") Logger provideLoggerDoze();
+
+  @Named("logger_presenter_doze") LoggerPresenter provideLoggerPresenterDoze();
+
+  @Named("logger_trigger") Logger provideLoggerTrigger();
+
+  @Named("logger_presenter_trigger") LoggerPresenter provideLoggerPresenterTrigger();
 }

@@ -14,18 +14,27 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.logger;
+package com.pyamsoft.powermanager.base.logger;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.model.LogType;
+import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface Logger {
+public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
 
-  void d(@NonNull String fmt, @Nullable Object... args);
+  void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
 
-  void i(@NonNull String fmt, @Nullable Object... args);
+  void deleteLog();
 
-  void w(@NonNull String fmt, @Nullable Object... args);
+  interface Provider {
 
-  void e(@NonNull String fmt, @Nullable Object... args);
+    void onPrepareLogContentRetrieval();
+
+    void onLogContentRetrieved(@NonNull String logLine);
+
+    void onAllLogContentsRetrieved();
+
+    void onLogDeleted(@NonNull String logId);
+  }
 }

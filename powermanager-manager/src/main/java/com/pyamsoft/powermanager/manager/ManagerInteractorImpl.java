@@ -47,9 +47,9 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
-    return Observable.defer(() -> {
+    return Observable.fromCallable(() -> {
       destroy();
-      return Observable.just(Boolean.TRUE);
+      return Boolean.TRUE;
     });
   }
 
@@ -106,11 +106,11 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @CallSuper @NonNull @Override public Observable<Boolean> isManaged() {
-    return Observable.defer(() -> Observable.just(manageObserver.is()));
+    return Observable.fromCallable(manageObserver::is);
   }
 
   @CallSuper @NonNull @Override public Observable<Boolean> isEnabled() {
-    return Observable.defer(() -> Observable.just(stateObserver.is()));
+    return Observable.fromCallable(stateObserver::is);
   }
 
   @CheckResult protected abstract long getDelayTime();

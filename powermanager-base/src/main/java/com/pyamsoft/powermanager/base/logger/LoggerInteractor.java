@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.logger;
+package com.pyamsoft.powermanager.base.logger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
