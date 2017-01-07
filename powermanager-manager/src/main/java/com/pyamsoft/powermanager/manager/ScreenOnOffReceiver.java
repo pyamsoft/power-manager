@@ -96,14 +96,16 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
       final String action = intent.getAction();
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
+          logger.d("Some screen off action");
           if (checkDisplayState(false)) {
-            Timber.d("Screen off event");
+            logger.i("Screen off event");
             disableManagers();
           }
           break;
         case Intent.ACTION_SCREEN_ON:
+          logger.d("Some screen on action");
           if (checkDisplayState(true)) {
-            Timber.d("Screen on event");
+            logger.i("Screen on event");
             enableManagers();
           }
           break;
@@ -114,7 +116,6 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableManagers() {
-    logger.i("Screen is ON, enable Managers");
     managerAirplane.queueSet();
     managerDoze.queueExclusiveSet(() -> {
       managerWifi.queueSet();
@@ -125,7 +126,6 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void disableManagers() {
-    logger.i("Screen is OFF, disable Managers");
     managerAirplane.queueUnset();
     managerDoze.queueExclusiveUnset(() -> {
       managerWifi.queueUnset();
