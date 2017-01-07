@@ -82,18 +82,14 @@ abstract class ManagerImpl implements Manager {
         Timber.w("%s: Is not managed, return empty", getJobTag());
         return Observable.empty();
       }
-    }).map(originalState -> {
-      if (originalState) {
-        interactor.queueEnableJob();
-        Timber.d("%s: Unset original state", getJobTag());
-        interactor.setOriginalStateEnabled(false);
-      }
-      return originalState;
     }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
           // Technically can ignore this as if we are here we are non-empty
           // If we are non empty it means we pass the test
           if (originalState) {
             Timber.d("%s: Queued up a new enable job", getJobTag());
+            interactor.queueEnableJob();
+            Timber.d("%s: Unset original state", getJobTag());
+            interactor.setOriginalStateEnabled(false);
           }
         }, throwable -> Timber.e(throwable, "%s: onError queueSet", getJobTag()),
         () -> SubscriptionHelper.unsubscribe(subscription));
@@ -105,30 +101,32 @@ abstract class ManagerImpl implements Manager {
       Timber.d("%s: Unset original state", getJobTag());
       interactor.setOriginalStateEnabled(false);
       return baseResult;
-    }).flatMap(managed -> {
-      if (managed) {
-        Timber.d("%s: Is original state enabled?", getJobTag());
-        return interactor.isEnabled();
-      } else {
-        Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Observable.empty();
-      }
-    }).map(enabled -> {
-      Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
-      interactor.setOriginalStateEnabled(enabled);
-      return enabled;
-    }).flatMap(accountForWearableBeforeDisable()).map(shouldQueue -> {
-      if (shouldQueue) {
-        interactor.queueDisableJob();
-      }
-      return shouldQueue;
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(shouldQueue -> {
-          // Only queue a disable job if the radio is not ignored
-          if (shouldQueue) {
-            Timber.d("%s: Queued up a new disable job", getJobTag());
+    })
+        .flatMap(managed -> {
+          if (managed) {
+            Timber.d("%s: Is original state enabled?", getJobTag());
+            return interactor.isEnabled();
+          } else {
+            Timber.w("%s: Is not managed, return empty", getJobTag());
+            return Observable.empty();
           }
-        }, throwable -> Timber.e(throwable, "%s: onError queueUnset", getJobTag()),
-        () -> SubscriptionHelper.unsubscribe(subscription));
+        })
+        .map(enabled -> {
+          Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
+          interactor.setOriginalStateEnabled(enabled);
+          return enabled;
+        })
+        .flatMap(accountForWearableBeforeDisable())
+        .subscribeOn(subscribeScheduler)
+        .observeOn(observerScheduler)
+        .subscribe(shouldQueue -> {
+              // Only queue a disable job if the radio is not ignored
+              if (shouldQueue) {
+                Timber.d("%s: Queued up a new disable job", getJobTag());
+                interactor.queueDisableJob();
+              }
+            }, throwable -> Timber.e(throwable, "%s: onError queueUnset", getJobTag()),
+            () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @CallSuper @Override public void cleanup() {

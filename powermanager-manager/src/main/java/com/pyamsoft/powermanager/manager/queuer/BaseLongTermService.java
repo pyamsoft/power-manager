@@ -19,7 +19,10 @@ package com.pyamsoft.powermanager.manager.queuer;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Process;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,13 +32,8 @@ import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import timber.log.Timber;
 
 abstract class BaseLongTermService extends Service {
 
@@ -44,9 +42,6 @@ abstract class BaseLongTermService extends Service {
   @NonNull private static final String EXTRA_PERIODIC = "extra_periodic";
   @NonNull private static final String EXTRA_PERIODIC_ENABLE = "extra_periodic_enable";
   @NonNull private static final String EXTRA_PERIODIC_DISABLE = "extra_periodic_disable";
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
-
-  @Inject @Named("sub") Scheduler subScheduler;
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
 
   @CheckResult @NonNull
@@ -119,25 +114,25 @@ abstract class BaseLongTermService extends Service {
   }
 
   private void run(@NonNull QueuerType queuerType, int ignoreCharging) {
-    SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = Observable.fromCallable(() -> Boolean.TRUE)
-        .subscribeOn(subScheduler)
-        .observeOn(subScheduler)
-        .subscribe(ignoreMe -> {
-          getLogger().d("Run long term job");
-          QueueRunner.builder()
-              .setType(queuerType)
-              .setObserver(getStateObserver())
-              .setModifier(getStateModifier())
-              .setCharging(chargingObserver)
-              .setIgnoreCharging(ignoreCharging)
-              .setLogger(getLogger())
-              .build()
-              .run();
-        }, throwable -> Timber.e(throwable, "onError run"), () -> {
-          SubscriptionHelper.unsubscribe(runSubscription);
-          stopSelf();
-        });
+    final HandlerThread handlerThread =
+        new HandlerThread("Long Queue: " + queuerType.name(), Process.THREAD_PRIORITY_BACKGROUND);
+    handlerThread.start();
+
+    final Handler backgroundHandler = new Handler(handlerThread.getLooper());
+    backgroundHandler.post(() -> {
+      getLogger().d("Run long term job: %s", queuerType);
+      QueueRunner.builder()
+          .setType(queuerType)
+          .setObserver(getStateObserver())
+          .setModifier(getStateModifier())
+          .setCharging(chargingObserver)
+          .setIgnoreCharging(ignoreCharging)
+          .setLogger(getLogger())
+          .build()
+          .run();
+
+      handlerThread.quitSafely();
+    });
   }
 
   private void requeue(@NonNull QueuerType queuerType, int ignoreCharging, int periodic,
@@ -162,7 +157,6 @@ abstract class BaseLongTermService extends Service {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    SubscriptionHelper.unsubscribe(runSubscription);
   }
 
   private void inject() {

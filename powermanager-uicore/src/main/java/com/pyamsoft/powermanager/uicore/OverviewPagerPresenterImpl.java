@@ -46,30 +46,19 @@ public class OverviewPagerPresenterImpl extends SchedulerPresenter<OverviewPager
 
   @Override public void wrapSet() {
     SubscriptionHelper.unsubscribe(subscription);
-    subscription = Observable.defer(() -> {
-      modifier.set();
-
-      // Returning just Obs.just(true) performs auto boxing. Returning the constant is more efficient
-      return Observable.just(Boolean.TRUE);
-    })
+    subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> Timber.d("Finished wrapped set call"),
-            throwable -> Timber.e(throwable, "onError wrapSet"),
+        .observeOn(getSubscribeScheduler())
+        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"),
             () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @Override public void wrapUnset() {
     SubscriptionHelper.unsubscribe(subscription);
-    subscription = Observable.defer(() -> {
-      modifier.unset();
-
-      // Returning just Obs.just(true) performs auto boxing. Returning the constant is more efficient
-      return Observable.just(Boolean.TRUE);
-    })
+    subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> Timber.d("Finished wrapped unset call"),
+        .observeOn(getSubscribeScheduler())
+        .subscribe(ignore -> modifier.unset(),
             throwable -> Timber.e(throwable, "onError wrapUnset"),
             () -> SubscriptionHelper.unsubscribe(subscription));
   }

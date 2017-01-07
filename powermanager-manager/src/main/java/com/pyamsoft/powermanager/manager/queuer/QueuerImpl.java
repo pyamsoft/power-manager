@@ -17,6 +17,9 @@
 package com.pyamsoft.powermanager.manager.queuer;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Process;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,11 +28,7 @@ import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.pydroid.rx.SubscriptionHelper;
-import java.util.concurrent.TimeUnit;
-import rx.Observable;
 import rx.Scheduler;
-import rx.Subscription;
 import timber.log.Timber;
 
 abstract class QueuerImpl implements Queuer {
@@ -41,12 +40,13 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @SuppressWarnings("WeakerAccess") @NonNull final Scheduler handlerScheduler;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
   @SuppressWarnings("WeakerAccess") long periodicEnableTime;
   @SuppressWarnings("WeakerAccess") long periodicDisableTime;
   @SuppressWarnings("WeakerAccess") int periodic;
+  @SuppressWarnings("WeakerAccess") @Nullable Handler backgroundHandler;
+  @SuppressWarnings("WeakerAccess") @Nullable HandlerThread handlerThread;
   private long delayTime;
 
   QueuerImpl(@NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull Scheduler handlerScheduler,
@@ -74,14 +74,16 @@ abstract class QueuerImpl implements Queuer {
   @Override public void cancel() {
     reset();
 
-    logger.d("Cancel long term alarms for %s", getScreenOnServiceClass().getName());
+    //logger.d("Cancel long term alarms for %s", getScreenOnServiceClass().getName());
     jobQueuerWrapper.cancel(getScreenOnServiceClass());
 
-    logger.d("Cancel long term alarms for %s", getScreenOffServiceClass().getName());
+    //logger.d("Cancel long term alarms for %s", getScreenOffServiceClass().getName());
     jobQueuerWrapper.cancel(getScreenOffServiceClass());
 
-    logger.d("Cancel short term subscriptions");
-    SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
+    //logger.d("Cancel short term subscriptions");
+    if (backgroundHandler != null) {
+      backgroundHandler.removeCallbacksAndMessages(null);
+    }
   }
 
   private void checkAll() {
@@ -151,32 +153,47 @@ abstract class QueuerImpl implements Queuer {
   }
 
   private void queueShort() {
-    SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
+    if (type == null) {
+      throw new IllegalStateException("Type is unset");
+    }
+
+    if (backgroundHandler != null) {
+      backgroundHandler.removeCallbacksAndMessages(null);
+      backgroundHandler = null;
+    }
+
+    if (handlerThread != null) {
+      handlerThread.quitSafely();
+      handlerThread = null;
+    }
+
+    handlerThread =
+        new HandlerThread("Short Queue: " + type.name(), Process.THREAD_PRIORITY_BACKGROUND);
+    handlerThread.start();
+
+    backgroundHandler = new Handler(handlerThread.getLooper());
+    backgroundHandler.removeCallbacksAndMessages(null);
 
     logger.d("Queue short term job with delay: %d", delayTime);
-    smallTimeQueuedSubscription =
-        Observable.defer(() -> Observable.timer(delayTime, TimeUnit.MILLISECONDS))
-            .subscribeOn(handlerScheduler)
-            .observeOn(handlerScheduler)
-            .subscribe(ignore -> {
-                  if (type == null) {
-                    throw new IllegalStateException("Type is unset");
-                  }
+    backgroundHandler.postDelayed(() -> {
+      logger.d("Run short term job: %s", type);
+      QueueRunner.builder()
+          .setType(type)
+          .setObserver(stateObserver)
+          .setModifier(stateModifier)
+          .setCharging(chargingObserver)
+          .setIgnoreCharging(ignoreCharging)
+          .setLogger(logger)
+          .build()
+          .run();
 
-                  logger.d("Run short term job");
-                  QueueRunner.builder()
-                      .setType(type)
-                      .setObserver(stateObserver)
-                      .setModifier(stateModifier)
-                      .setCharging(chargingObserver)
-                      .setIgnoreCharging(ignoreCharging)
-                      .setLogger(logger)
-                      .build()
-                      .run();
+      handlerThread.quitSafely();
+      handlerThread = null;
+      backgroundHandler.removeCallbacksAndMessages(null);
+      backgroundHandler = null;
 
-                  requeue();
-                }, throwable -> logger.e("%s onError Queuer queueShort", throwable.toString()),
-                () -> SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription));
+      requeue();
+    }, delayTime);
   }
 
   private void queueLong() {
