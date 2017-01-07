@@ -132,6 +132,7 @@ abstract class BaseLongTermService extends Service {
           .run();
 
       handlerThread.quitSafely();
+      stopSelf();
     });
   }
 
