@@ -21,8 +21,8 @@ import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
@@ -76,12 +76,14 @@ abstract class QueuerImpl implements Queuer {
 
   @Override public void cancel() {
     reset();
-    internalCancel();
-  }
 
-  private void internalCancel() {
+    logger.d("Cancel long term alarms for %s", getScreenOnServiceClass().getName());
     jobQueuerWrapper.cancel(new Intent(appContext, getScreenOnServiceClass()));
+
+    logger.d("Cancel long term alarms for %s", getScreenOffServiceClass().getName());
     jobQueuerWrapper.cancel(new Intent(appContext, getScreenOffServiceClass()));
+
+    logger.d("Cancel short term subscriptions");
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
   }
 
@@ -144,7 +146,6 @@ abstract class QueuerImpl implements Queuer {
   @Override public void queue() {
     checkAll();
 
-    internalCancel();
     if (delayTime <= LARGEST_TIME_WITHOUT_ALARM * 1000L) {
       queueShort();
     } else {

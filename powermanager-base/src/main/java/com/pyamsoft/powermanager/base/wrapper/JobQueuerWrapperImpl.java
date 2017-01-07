@@ -21,6 +21,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import java.util.Date;
 import javax.inject.Inject;
@@ -36,24 +37,26 @@ class JobQueuerWrapperImpl implements JobQueuerWrapper {
     this.alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
   }
 
+  @CheckResult @NonNull private PendingIntent createPendingIntent(@NonNull Intent intent) {
+    return PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
   @Override public void cancel(@NonNull Intent intent) {
     Timber.w("Cancel Alarm: %s", intent);
-    final PendingIntent pendingIntent =
-        PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    final PendingIntent pendingIntent = createPendingIntent(intent);
     alarmManager.cancel(pendingIntent);
     pendingIntent.cancel();
   }
 
   @Override public void set(@NonNull Intent intent, long time) {
     final Date date = new Date(time);
+    final PendingIntent pendingIntent = createPendingIntent(intent);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       Timber.i("Set and allow while idle: %s at %s", intent, date);
-      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time,
-          PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+      alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     } else {
       Timber.i("Set: %s at %s", intent, date);
-      alarmManager.set(AlarmManager.RTC_WAKEUP, time,
-          PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+      alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
   }
 }
