@@ -16,12 +16,18 @@
 
 package com.pyamsoft.powermanager.base.wrapper;
 
-import android.content.Intent;
+import android.app.Service;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface JobQueuerWrapper {
 
-  void cancel(@NonNull Intent intent);
+  @NonNull String JOB_EXTRAS = "job_queue_wrapper_extras";
 
-  void set(@NonNull Intent intent, long time);
+  void cancel(@NonNull Class<? extends Service> serviceClass);
+
+  void set(@NonNull Class<? extends Service> serviceClass, long time);
+
+  void set(@NonNull Class<? extends Service> serviceClass, long time, @Nullable Bundle extras);
 }

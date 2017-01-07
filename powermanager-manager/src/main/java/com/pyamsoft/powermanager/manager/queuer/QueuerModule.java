@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.manager.queuer;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import dagger.Module;
@@ -29,63 +28,63 @@ import rx.Scheduler;
 
 @Module public class QueuerModule {
 
-  @Provides @Named("queuer_wifi") Queuer provideWifiQueuer(@NonNull Context context,
+  @Provides @Named("queuer_wifi") Queuer provideWifiQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_wifi_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_wifi") Logger logger) {
-    return new QueuerWifiImpl(context, jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+    return new QueuerWifiImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 
-  @Provides @Named("queuer_data") Queuer provideDataQueuer(@NonNull Context context,
+  @Provides @Named("queuer_data") Queuer provideDataQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_data_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_data_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_data") Logger logger) {
-    return new QueuerDataImpl(context, jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+    return new QueuerDataImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 
-  @Provides @Named("queuer_bluetooth") Queuer provideBluetoothQueuer(@NonNull Context context,
+  @Provides @Named("queuer_bluetooth") Queuer provideBluetoothQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_bluetooth_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_bluetooth") Logger logger) {
-    return new QueuerBluetoothImpl(context, jobQueuerWrapper, subScheduler, stateObserver,
-        stateModifier, chargingObserver, logger);
+    return new QueuerBluetoothImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+        chargingObserver, logger);
   }
 
-  @Provides @Named("queuer_sync") Queuer provideSyncQueuer(@NonNull Context context,
+  @Provides @Named("queuer_sync") Queuer provideSyncQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_sync_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_sync_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_sync") Logger logger) {
-    return new QueuerSyncImpl(context, jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+    return new QueuerSyncImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 
-  @Provides @Named("queuer_doze") Queuer provideDozeQueuer(@NonNull Context context,
+  @Provides @Named("queuer_doze") Queuer provideDozeQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_doze_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_doze_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_doze") Logger logger) {
-    return new QueuerDozeImpl(context, jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+    return new QueuerDozeImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
         chargingObserver, logger);
   }
 
-  @Provides @Named("queuer_airplane") Queuer provideAirplaneQueuer(@NonNull Context context,
+  @Provides @Named("queuer_airplane") Queuer provideAirplaneQueuer(
       @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull @Named("sub") Scheduler subScheduler,
       @NonNull @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
       @NonNull @Named("mod_airplane_state") BooleanInterestModifier stateModifier,
       @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @NonNull @Named("logger_airplane") Logger logger) {
-    return new QueuerAirplaneImpl(context, jobQueuerWrapper, subScheduler, stateObserver,
-        stateModifier, chargingObserver, logger);
+    return new QueuerAirplaneImpl(jobQueuerWrapper, subScheduler, stateObserver, stateModifier,
+        chargingObserver, logger);
   }
 }

@@ -20,14 +20,15 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Constants;
@@ -292,11 +293,11 @@ public class TriggerRunnerService extends Service {
       return;
     }
 
-    final Intent newIntent = new Intent(intent);
-    intent.putExtra(Constants.TRIGGER_RUNNER_PERIOD, delay);
+    final Bundle extras = new Bundle();
+    extras.putLong(Constants.TRIGGER_RUNNER_PERIOD, delay);
 
-    jobQueuerWrapper.cancel(newIntent);
-    jobQueuerWrapper.set(newIntent, System.currentTimeMillis() + delay);
+    jobQueuerWrapper.cancel(TriggerRunnerService.class);
+    jobQueuerWrapper.set(TriggerRunnerService.class, System.currentTimeMillis() + delay, extras);
   }
 
   @Override public void onDestroy() {

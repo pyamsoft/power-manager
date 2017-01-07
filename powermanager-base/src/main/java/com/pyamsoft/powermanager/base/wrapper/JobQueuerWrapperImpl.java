@@ -18,44 +18,59 @@ package com.pyamsoft.powermanager.base.wrapper;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import java.util.Date;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class JobQueuerWrapperImpl implements JobQueuerWrapper {
 
-  @NonNull private final Context appContext;
   @NonNull private final AlarmManager alarmManager;
+  @NonNull private final Context appContext;
 
-  @Inject JobQueuerWrapperImpl(@NonNull Context appContext) {
-    this.appContext = appContext;
+  @Inject JobQueuerWrapperImpl(@NonNull Context context) {
+    appContext = context.getApplicationContext();
     this.alarmManager = (AlarmManager) appContext.getSystemService(Context.ALARM_SERVICE);
   }
 
-  @CheckResult @NonNull private PendingIntent createPendingIntent(@NonNull Intent intent) {
-    return PendingIntent.getService(appContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+  @CheckResult @NonNull
+  private PendingIntent createPendingIntent(@NonNull Class<? extends Service> serviceClass,
+      @Nullable Bundle extras) {
+    final Intent serviceIntent = new Intent(appContext, serviceClass);
+    if (extras != null) {
+      serviceIntent.putExtra(JOB_EXTRAS, extras);
+    }
+    return PendingIntent.getService(appContext, 0, serviceIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  @Override public void cancel(@NonNull Intent intent) {
-    Timber.w("Cancel Alarm: %s", intent);
-    final PendingIntent pendingIntent = createPendingIntent(intent);
+  @Override public void cancel(@NonNull Class<? extends Service> serviceClass) {
+    Timber.w("Cancel Alarm: %s", serviceClass.getName());
+    final PendingIntent pendingIntent = createPendingIntent(serviceClass, null);
     alarmManager.cancel(pendingIntent);
     pendingIntent.cancel();
   }
 
-  @Override public void set(@NonNull Intent intent, long time) {
+  @Override public void set(@NonNull Class<? extends Service> serviceClass, long time) {
+    set(serviceClass, time, null);
+  }
+
+  @Override public void set(@NonNull Class<? extends Service> serviceClass, long time,
+      @Nullable Bundle extras) {
     final Date date = new Date(time);
-    final PendingIntent pendingIntent = createPendingIntent(intent);
+    final PendingIntent pendingIntent = createPendingIntent(serviceClass, extras);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-      Timber.i("Set and allow while idle: %s at %s", intent, date);
+      Timber.i("Set and allow while idle: %s at %s", serviceClass.getName(), date);
       alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     } else {
-      Timber.i("Set: %s at %s", intent, date);
+      Timber.i("Set: %s at %s", serviceClass.getName(), date);
       alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
   }

@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.manager.queuer;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import javax.inject.Inject;
@@ -27,12 +26,12 @@ import rx.Scheduler;
 
 class QueuerDozeImpl extends QueuerImpl {
 
-  @Inject QueuerDozeImpl(@NonNull Context context, @NonNull JobQueuerWrapper jobQueuerWrapper,
+  @Inject QueuerDozeImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
       @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    super(context, jobQueuerWrapper, handlerScheduler, stateObserver, stateModifier,
-        chargingObserver, logger);
+    super(jobQueuerWrapper, handlerScheduler, stateObserver, stateModifier, chargingObserver,
+        logger);
   }
 
   @NonNull @Override Class<? extends BaseLongTermService> getScreenOnServiceClass() {

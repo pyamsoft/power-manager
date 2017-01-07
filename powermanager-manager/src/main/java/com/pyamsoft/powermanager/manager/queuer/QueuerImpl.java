@@ -16,8 +16,7 @@
 
 package com.pyamsoft.powermanager.manager.queuer;
 
-import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,7 +41,6 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuerWrapper jobQueuerWrapper;
   @SuppressWarnings("WeakerAccess") @NonNull final Scheduler handlerScheduler;
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription smallTimeQueuedSubscription;
   @SuppressWarnings("WeakerAccess") @Nullable QueuerType type;
   @SuppressWarnings("WeakerAccess") int ignoreCharging;
@@ -51,11 +49,10 @@ abstract class QueuerImpl implements Queuer {
   @SuppressWarnings("WeakerAccess") int periodic;
   private long delayTime;
 
-  QueuerImpl(@NonNull Context context, @NonNull JobQueuerWrapper jobQueuerWrapper,
-      @NonNull Scheduler handlerScheduler, @NonNull BooleanInterestObserver stateObserver,
+  QueuerImpl(@NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull Scheduler handlerScheduler,
+      @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
-    this.appContext = context.getApplicationContext();
     this.jobQueuerWrapper = jobQueuerWrapper;
     this.handlerScheduler = handlerScheduler;
     this.chargingObserver = chargingObserver;
@@ -78,10 +75,10 @@ abstract class QueuerImpl implements Queuer {
     reset();
 
     logger.d("Cancel long term alarms for %s", getScreenOnServiceClass().getName());
-    jobQueuerWrapper.cancel(new Intent(appContext, getScreenOnServiceClass()));
+    jobQueuerWrapper.cancel(getScreenOnServiceClass());
 
     logger.d("Cancel long term alarms for %s", getScreenOffServiceClass().getName());
-    jobQueuerWrapper.cancel(new Intent(appContext, getScreenOffServiceClass()));
+    jobQueuerWrapper.cancel(getScreenOffServiceClass());
 
     logger.d("Cancel short term subscriptions");
     SubscriptionHelper.unsubscribe(smallTimeQueuedSubscription);
@@ -158,7 +155,7 @@ abstract class QueuerImpl implements Queuer {
 
     logger.d("Queue short term job with delay: %d", delayTime);
     smallTimeQueuedSubscription =
-        Observable.defer(() -> Observable.timer(delayTime, TimeUnit.MILLISECONDS, handlerScheduler))
+        Observable.defer(() -> Observable.timer(delayTime, TimeUnit.MILLISECONDS))
             .subscribeOn(handlerScheduler)
             .observeOn(handlerScheduler)
             .subscribe(ignore -> {
@@ -166,6 +163,7 @@ abstract class QueuerImpl implements Queuer {
                     throw new IllegalStateException("Type is unset");
                   }
 
+                  logger.d("Run short term job");
                   QueueRunner.builder()
                       .setType(type)
                       .setObserver(stateObserver)
@@ -191,12 +189,13 @@ abstract class QueuerImpl implements Queuer {
       serviceClass = getScreenOffServiceClass();
     }
 
-    final Intent intent =
-        BaseLongTermService.buildIntent(appContext, serviceClass, type, ignoreCharging, periodic,
-            periodicEnableTime, periodicDisableTime);
     logger.d("Queue long term job with delay: %d", delayTime);
     final long triggerAtTime = System.currentTimeMillis() + delayTime;
-    jobQueuerWrapper.set(intent, triggerAtTime);
+
+    final Bundle extras =
+        BaseLongTermService.buildExtrasBundle(type, ignoreCharging, periodic, periodicEnableTime,
+            periodicDisableTime);
+    jobQueuerWrapper.set(serviceClass, triggerAtTime, extras);
   }
 
   /**
@@ -221,7 +220,6 @@ abstract class QueuerImpl implements Queuer {
       newDelayTime = periodicEnableTime * 1000L;
     }
 
-    logger.d("Requeue for periodic job. New type: %s, new delay time: %d", newType, newDelayTime);
     setType(newType);
     setDelayTime(newDelayTime);
     queue();

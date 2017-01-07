@@ -17,14 +17,15 @@
 package com.pyamsoft.powermanager.manager.queuer;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
@@ -48,16 +49,16 @@ abstract class BaseLongTermService extends Service {
   @Inject @Named("sub") Scheduler subScheduler;
   @Inject @Named("obs_charging_state") BooleanInterestObserver chargingObserver;
 
-  @CheckResult @NonNull static Intent buildIntent(@NonNull Context context,
-      @NonNull Class<? extends BaseLongTermService> serviceClass, @NonNull QueuerType type,
-      int ignoreCharging, int periodic, long periodicEnableTime, long periodicDisableTime) {
-    final Intent intent = new Intent(context.getApplicationContext(), serviceClass);
-    intent.putExtra(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
-    intent.putExtra(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
-    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC, periodic);
-    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
-    intent.putExtra(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
-    return intent;
+  @CheckResult @NonNull
+  static Bundle buildExtrasBundle(@NonNull QueuerType type, int ignoreCharging, int periodic,
+      long periodicEnableTime, long periodicDisableTime) {
+    final Bundle bundle = new Bundle();
+    bundle.putInt(BaseLongTermService.EXTRA_IGNORE_CHARGING, ignoreCharging);
+    bundle.putString(BaseLongTermService.EXTRA_JOB_TYPE, type.name());
+    bundle.putInt(BaseLongTermService.EXTRA_PERIODIC, periodic);
+    bundle.putLong(BaseLongTermService.EXTRA_PERIODIC_ENABLE, periodicEnableTime);
+    bundle.putLong(BaseLongTermService.EXTRA_PERIODIC_DISABLE, periodicDisableTime);
+    return bundle;
   }
 
   @Nullable @Override public IBinder onBind(Intent intent) {
@@ -75,31 +76,37 @@ abstract class BaseLongTermService extends Service {
       return START_NOT_STICKY;
     }
 
-    final String type = intent.getStringExtra(EXTRA_JOB_TYPE);
+    final Bundle extras = intent.getBundleExtra(JobQueuerWrapper.JOB_EXTRAS);
+    if (extras == null) {
+      getLogger().e("No extras passed with intent");
+      return START_NOT_STICKY;
+    }
+
+    final String type = extras.getString(EXTRA_JOB_TYPE);
     if (type == null) {
       getLogger().e("QueuerType extra is unset. Skip");
       return START_NOT_STICKY;
     }
 
-    final int ignoreCharging = intent.getIntExtra(EXTRA_IGNORE_CHARGING, -1);
+    final int ignoreCharging = extras.getInt(EXTRA_IGNORE_CHARGING, -1);
     if (ignoreCharging < 0) {
       getLogger().e("Ignore Charging was not passed with Intent. Skip");
       return START_NOT_STICKY;
     }
 
-    final int periodic = intent.getIntExtra(EXTRA_PERIODIC, -1);
+    final int periodic = extras.getInt(EXTRA_PERIODIC, -1);
     if (periodic < 0) {
       getLogger().e("Periodic was not passed with Intent. Skip");
       return START_NOT_STICKY;
     }
 
-    final long periodicEnableTime = intent.getLongExtra(EXTRA_PERIODIC_ENABLE, -1);
+    final long periodicEnableTime = extras.getLong(EXTRA_PERIODIC_ENABLE, -1);
     if (periodicEnableTime < 60) {
       getLogger().e("Periodic Enable time was not passed with Intent. Skip");
       return START_NOT_STICKY;
     }
 
-    final long periodicDisableTime = intent.getLongExtra(EXTRA_PERIODIC_DISABLE, -1);
+    final long periodicDisableTime = extras.getLong(EXTRA_PERIODIC_DISABLE, -1);
     if (periodicDisableTime < 60) {
       getLogger().e("Periodic Disable time was not passed with Intent. Skip");
       return START_NOT_STICKY;
@@ -113,25 +120,24 @@ abstract class BaseLongTermService extends Service {
 
   private void run(@NonNull QueuerType queuerType, int ignoreCharging) {
     SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = Observable.defer(() -> {
-      QueueRunner.builder()
-          .setType(queuerType)
-          .setObserver(getStateObserver())
-          .setModifier(getStateModifier())
-          .setCharging(chargingObserver)
-          .setIgnoreCharging(ignoreCharging)
-          .setLogger(getLogger())
-          .build()
-          .run();
-      return Observable.just(Boolean.TRUE);
-    })
+    runSubscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(subScheduler)
         .observeOn(subScheduler)
-        .subscribe(ignore -> Timber.d("Finished running long job"),
-            throwable -> Timber.e(throwable, "onError run"), () -> {
-              SubscriptionHelper.unsubscribe(runSubscription);
-              stopSelf();
-            });
+        .subscribe(ignoreMe -> {
+          getLogger().d("Run long term job");
+          QueueRunner.builder()
+              .setType(queuerType)
+              .setObserver(getStateObserver())
+              .setModifier(getStateModifier())
+              .setCharging(chargingObserver)
+              .setIgnoreCharging(ignoreCharging)
+              .setLogger(getLogger())
+              .build()
+              .run();
+        }, throwable -> Timber.e(throwable, "onError run"), () -> {
+          SubscriptionHelper.unsubscribe(runSubscription);
+          stopSelf();
+        });
   }
 
   private void requeue(@NonNull QueuerType queuerType, int ignoreCharging, int periodic,
@@ -145,8 +151,6 @@ abstract class BaseLongTermService extends Service {
     }
 
     getQueuer().cancel();
-    getLogger().d("Requeue for periodic job. New type: %s, new delay time: %d", newType,
-        newDelayTime);
     getQueuer().setType(newType)
         .setDelayTime(newDelayTime)
         .setIgnoreCharging(ignoreCharging == 1)
