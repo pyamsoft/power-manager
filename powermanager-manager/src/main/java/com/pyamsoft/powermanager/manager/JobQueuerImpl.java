@@ -19,16 +19,10 @@ package com.pyamsoft.powermanager.manager;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
 import com.birbit.android.jobqueue.TagConstraint;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
-import com.pyamsoft.powermanager.model.QueuerType;
 import javax.inject.Inject;
 
 class JobQueuerImpl implements JobQueuer {
@@ -57,42 +51,14 @@ class JobQueuerImpl implements JobQueuer {
   }
 
   @CheckResult @NonNull private Job createJobForEntry(JobQueuerEntry entry) {
+    final Job job;
+    if (entry.repeating()) {
+      // TODO
+      job = null;
+    } else {
+      job = Jobs.NoRepeatJob.create(entry.tag(), entry.delay(), entry.ignoreIfCharging(),
+          entry.observer(), entry.modifier(), entry.chargingObserver(), entry.type());
+    }
     return null;
-  }
-
-  static class DeviceJob extends Job {
-
-    @NonNull private final BooleanInterestObserver observer;
-    @NonNull private final BooleanInterestModifier modifier;
-    @NonNull private final QueuerType type;
-
-    private DeviceJob(@NonNull Params params, @NonNull BooleanInterestObserver observer,
-        @NonNull BooleanInterestModifier modifier, @NonNull QueuerType type) {
-      super(params.addTags(ManagerInteractor.ALL_JOB_TAG)
-          .setRequiresNetwork(false)
-          .setRequiresUnmeteredNetwork(false));
-
-      this.observer = observer;
-      this.modifier = modifier;
-      this.type = type;
-    }
-
-    @Override public void onAdded() {
-
-    }
-
-    @Override public void onRun() throws Throwable {
-
-    }
-
-    @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-
-    }
-
-    @Override
-    protected RetryConstraint shouldReRunOnThrowable(@NonNull Throwable throwable, int runCount,
-        int maxRunCount) {
-      return null;
-    }
   }
 }

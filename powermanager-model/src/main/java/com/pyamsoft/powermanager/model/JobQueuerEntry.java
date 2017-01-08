@@ -26,7 +26,7 @@ import com.google.auto.value.AutoValue;
     return new AutoValue_JobQueuerEntry.Builder().tag(tag);
   }
 
-  abstract String tag();
+  public abstract String tag();
 
   public abstract QueuerType type();
 
@@ -41,6 +41,8 @@ import com.google.auto.value.AutoValue;
   public abstract boolean ignoreIfCharging();
 
   public abstract BooleanInterestObserver observer();
+
+  public abstract BooleanInterestObserver chargingObserver();
 
   public abstract BooleanInterestModifier modifier();
 
@@ -61,6 +63,8 @@ import com.google.auto.value.AutoValue;
     public abstract Builder ignoreIfCharging(boolean ignore);
 
     public abstract Builder observer(BooleanInterestObserver observer);
+
+    public abstract Builder chargingObserver(BooleanInterestObserver observer);
 
     public abstract Builder modifier(BooleanInterestModifier modifier);
 

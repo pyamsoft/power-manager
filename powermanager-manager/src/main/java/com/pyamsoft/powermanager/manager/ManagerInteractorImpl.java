@@ -34,16 +34,19 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @NonNull private final BooleanInterestModifier stateModifier;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final JobQueuer jobQueuer;
+  @NonNull private final BooleanInterestObserver chargingObserver;
 
   ManagerInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier) {
+      @NonNull BooleanInterestModifier stateModifier,
+      @NonNull BooleanInterestObserver chargingObserver) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
     this.stateModifier = stateModifier;
+    this.chargingObserver = chargingObserver;
   }
 
   @Override public void destroy() {
@@ -80,6 +83,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         .repeatingOffWindow(0L)
         .repeatingOnWindow(0L)
         .ignoreIfCharging(false)
+        .chargingObserver(chargingObserver)
         .observer(stateObserver)
         .modifier(stateModifier)
         .build());
@@ -108,6 +112,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         .repeatingOffWindow(getPeriodicDisableTime())
         .repeatingOnWindow(getPeriodicEnableTime())
         .ignoreIfCharging(isIgnoreWhileCharging())
+        .chargingObserver(chargingObserver)
         .observer(stateObserver)
         .modifier(stateModifier)
         .build());

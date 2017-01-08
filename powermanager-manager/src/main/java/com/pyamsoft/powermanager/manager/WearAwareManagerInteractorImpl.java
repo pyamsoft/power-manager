@@ -33,9 +33,10 @@ abstract class WearAwareManagerInteractorImpl extends ManagerInteractorImpl
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
+      @NonNull BooleanInterestObserver chargingObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier);
+    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier, chargingObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
   }

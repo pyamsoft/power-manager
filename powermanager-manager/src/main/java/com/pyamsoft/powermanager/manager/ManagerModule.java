@@ -39,12 +39,13 @@ import rx.Scheduler;
   WearAwareManagerInteractor provideManagerWifiInteractor(
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("obs_wifi_state") BooleanInterestObserver stateObserver,
       @Named("mod_wifi_state") BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
     return new ManagerWifiInteractorImpl(preferences, manageObserver, stateObserver, stateModifier,
-        jobQueuer, wearManageObserver, wearStateObserver);
+        jobQueuer, chargingObserver, wearManageObserver, wearStateObserver);
   }
 
   @Provides @Named("data_manager") Manager provideManagerData(
@@ -57,9 +58,10 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("mod_data_state") BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("obs_data_state") BooleanInterestObserver stateObserver) {
-    return new ManagerDataInteractorImpl(preferences, manageObserver, stateObserver, stateModifier,
-        jobQueuer);
+    return new ManagerDataInteractorImpl(preferences, manageObserver, stateObserver,
+        chargingObserver, stateModifier, jobQueuer);
   }
 
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
@@ -77,9 +79,10 @@ import rx.Scheduler;
       @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier,
       @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
     return new ManagerBluetoothInteractorImpl(preferences, manageObserver, stateObserver,
-        stateModifier, jobQueuer, wearManageObserver, wearStateObserver);
+        stateModifier, jobQueuer, chargingObserver, wearManageObserver, wearStateObserver);
   }
 
   @Provides @Named("sync_manager") Manager provideManagerSync(
@@ -92,9 +95,10 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences,
       @Named("mod_sync_state") BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
-    return new ManagerSyncInteractorImpl(preferences, manageObserver, stateObserver, stateModifier,
-        jobQueuer);
+    return new ManagerSyncInteractorImpl(preferences, manageObserver, stateObserver,
+        chargingObserver, stateModifier, jobQueuer);
   }
 
   @Provides @Named("doze_manager") ExclusiveManager provideManagerDoze(
@@ -107,10 +111,11 @@ import rx.Scheduler;
   ExclusiveWearUnawareManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences,
       @Named("mod_doze_state") BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("obs_doze_manage") BooleanInterestObserver manageObserver,
       @Named("obs_doze_state") BooleanInterestObserver stateObserver) {
-    return new ManagerDozeInteractorImpl(preferences, manageObserver, stateObserver, stateModifier,
-        jobQueuer);
+    return new ManagerDozeInteractorImpl(preferences, manageObserver, stateObserver,
+        chargingObserver, stateModifier, jobQueuer);
   }
 
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
@@ -124,11 +129,12 @@ import rx.Scheduler;
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_airplane_state") BooleanInterestObserver stateObserver,
+      @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
       @Named("mod_airplane_state") BooleanInterestModifier stateModifier,
       @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
     return new ManagerAirplaneInteractorImpl(preferences, manageObserver, stateObserver,
-        stateModifier, jobQueuer, wearManageObserver, wearStateObserver);
+        stateModifier, jobQueuer, chargingObserver, wearManageObserver, wearStateObserver);
   }
 }
