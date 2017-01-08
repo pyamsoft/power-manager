@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -28,8 +28,9 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
 
   @Inject ManagerSyncInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -52,8 +53,8 @@ class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
     return SYNC_JOB_TAG;
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingSync();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingSync();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

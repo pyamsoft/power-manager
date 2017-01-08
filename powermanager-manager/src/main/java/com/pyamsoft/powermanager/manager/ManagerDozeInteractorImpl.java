@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -30,8 +30,9 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
 
   @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -63,8 +64,8 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     getPreferences().setOriginalDoze(enabled);
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingDoze();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingDoze();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

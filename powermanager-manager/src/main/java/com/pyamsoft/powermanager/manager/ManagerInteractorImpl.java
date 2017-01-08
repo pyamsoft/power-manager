@@ -21,25 +21,33 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
 import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @NonNull final BooleanInterestObserver manageObserver;
+  @NonNull final BooleanInterestObserver stateObserver;
+  @NonNull private final BooleanInterestModifier stateModifier;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final JobQueuer jobQueuer;
 
-  ManagerInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  ManagerInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier) {
+    this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
+    this.stateModifier = stateModifier;
   }
 
   @Override public void destroy() {
+    jobQueuer.cancel(getJobTag(), ALL_JOB_TAG);
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
@@ -51,7 +59,8 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {
     final QueuerType queuerType;
-    switch (getJobTag()) {
+    final String jobTag = getJobTag();
+    switch (jobTag) {
       case AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_ON_DISABLE;
         break;
@@ -63,19 +72,23 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up an enable job
-    //queuer.cancel();
-    //queuer.setType(queuerType)
-    //    .setDelayTime(100L)
-    //    .setPeriodic(false)
-    //    .setPeriodicEnableTime(0L)
-    //    .setPeriodicDisableTime(0L)
-    //    .setIgnoreCharging(false)
-    //    .queue();
+    jobQueuer.cancel(jobTag);
+    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
+        .type(queuerType)
+        .delay(100L)
+        .repeating(false)
+        .repeatingOffWindow(0L)
+        .repeatingOnWindow(0L)
+        .ignoreIfCharging(false)
+        .observer(stateObserver)
+        .modifier(stateModifier)
+        .build());
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
     final QueuerType queuerType;
-    switch (getJobTag()) {
+    final String jobTag = getJobTag();
+    switch (jobTag) {
       case AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_OFF_ENABLE;
         break;
@@ -87,14 +100,17 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up a disable job
-    //queuer.cancel();
-    //queuer.setType(queuerType)
-    //    .setDelayTime(getDelayTime() * 1000L)
-    //    .setPeriodic(isPeriodic())
-    //    .setPeriodicEnableTime(getPeriodicEnableTime())
-    //    .setPeriodicDisableTime(getPeriodicDisableTime())
-    //    .setIgnoreCharging(isIgnoreWhileCharging().call())
-    //    .qeue();
+    jobQueuer.cancel(jobTag);
+    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
+        .type(queuerType)
+        .delay(getDelayTime() * 1000L)
+        .repeating(isPeriodic())
+        .repeatingOffWindow(getPeriodicDisableTime())
+        .repeatingOnWindow(getPeriodicEnableTime())
+        .ignoreIfCharging(isIgnoreWhileCharging())
+        .observer(stateObserver)
+        .modifier(stateModifier)
+        .build());
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {

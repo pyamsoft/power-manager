@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -29,9 +29,11 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
   @Inject ManagerAirplaneInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver);
+    super(preferences, manageObserver, stateObserver, stateModifier, jobQueuer, wearManageObserver,
+        wearStateObserver);
   }
 
   @Override protected long getDelayTime() {
@@ -63,8 +65,8 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
     getPreferences().setOriginalAirplane(enabled);
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingAirplane();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingAirplane();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -29,9 +29,11 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
   @Inject ManagerWifiInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver);
+    super(preferences, manageObserver, stateObserver, stateModifier, jobQueuer, wearManageObserver,
+        wearStateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -54,8 +56,8 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
     return WIFI_JOB_TAG;
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingWifi();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingWifi();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

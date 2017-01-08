@@ -17,11 +17,24 @@
 package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.JobQueuerEntry;
+import android.support.annotation.Nullable;
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
+import com.pyamsoft.powermanager.base.Injector;
+import javax.inject.Inject;
 
-interface JobQueuer {
+public class GCMJobService extends GcmJobSchedulerService {
 
-  void cancel(@NonNull String... tags);
+  @Nullable @Inject JobManager jobManager;
 
-  void queue(@NonNull JobQueuerEntry entry);
+  @NonNull @Override protected JobManager getJobManager() {
+    if (jobManager == null) {
+      DaggerJobComponent.builder()
+          .powerManagerComponent(Injector.get().provideComponent())
+          .build()
+          .inject(this);
+    }
+
+    return jobManager;
+  }
 }

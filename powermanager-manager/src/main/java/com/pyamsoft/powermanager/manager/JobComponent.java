@@ -16,12 +16,14 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.JobQueuerEntry;
+import com.pyamsoft.powermanager.base.PowerManagerComponent;
+import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
+import dagger.Component;
 
-interface JobQueuer {
+@ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = JobModule.class)
+interface JobComponent {
 
-  void cancel(@NonNull String... tags);
+  void inject(GCMJobService service);
 
-  void queue(@NonNull JobQueuerEntry entry);
+  void inject(FrameworkJobService service);
 }
