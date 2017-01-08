@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.birbit.android.jobqueue.JobManager;
-import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
-import com.pyamsoft.powermanager.base.Injector;
-import javax.inject.Inject;
 
-public class FrameworkJobService extends FrameworkJobSchedulerService {
+public interface Logger {
 
-  @Nullable @Inject JobManager jobManager;
+  void d(@NonNull String fmt, @Nullable Object... args);
 
-  @NonNull @Override protected JobManager getJobManager() {
-    if (jobManager == null) {
-      DaggerJobComponent.builder()
-          .powerManagerComponent(Injector.get().provideComponent())
-          .build()
-          .inject(this);
-    }
+  void i(@NonNull String fmt, @Nullable Object... args);
 
-    return jobManager;
-  }
+  void w(@NonNull String fmt, @Nullable Object... args);
+
+  void e(@NonNull String fmt, @Nullable Object... args);
 }

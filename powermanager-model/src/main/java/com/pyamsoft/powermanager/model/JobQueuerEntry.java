@@ -30,6 +30,8 @@ import com.google.auto.value.AutoValue;
 
   public abstract QueuerType type();
 
+  public abstract Logger logger();
+
   public abstract long delay();
 
   public abstract boolean repeating();
@@ -51,6 +53,8 @@ import com.google.auto.value.AutoValue;
     abstract Builder tag(String tag);
 
     public abstract Builder type(QueuerType type);
+
+    public abstract Builder logger(Logger logger);
 
     public abstract Builder delay(long delay);
 

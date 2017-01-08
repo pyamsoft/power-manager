@@ -19,8 +19,10 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.jobs.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -30,8 +32,9 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier, chargingObserver);
+      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer, Logger logger) {
+    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier, chargingObserver,
+        logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -51,7 +54,7 @@ class ManagerDataInteractorImpl extends ManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return DATA_JOB_TAG;
+    return JobQueuer.DATA_JOB_TAG;
   }
 
   @Override public boolean isIgnoreWhileCharging() {

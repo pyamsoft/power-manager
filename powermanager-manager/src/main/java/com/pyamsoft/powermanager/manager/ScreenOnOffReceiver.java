@@ -27,7 +27,7 @@ import android.support.annotation.NonNull;
 import android.view.Display;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.ExclusiveManager;
 import com.pyamsoft.powermanager.model.Manager;
 import javax.inject.Inject;

@@ -22,13 +22,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.Constants;
+import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
+import com.pyamsoft.powermanager.base.jobs.JobQueuer;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -40,19 +43,46 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final Class<? extends Service> toggleServiceClass;
-  @NonNull private final Class<? extends Service> triggerRunnerServiceClass;
-  @NonNull private final JobQueuerWrapper jobQueuerWrapper;
+  @NonNull private final PowerTriggerDB powerTriggerDB;
+  @NonNull private final BooleanInterestObserver chargingObserver;
+  @NonNull private final JobQueuer jobQueuer;
+  @NonNull private final Logger triggerLogger;
+  @NonNull private final BooleanInterestObserver wifiObserver;
+  @NonNull private final BooleanInterestObserver dataObserver;
+  @NonNull private final BooleanInterestObserver bluetoothObserver;
+  @NonNull private final BooleanInterestObserver syncObserver;
+  @NonNull private final BooleanInterestModifier wifiModifier;
+  @NonNull private final BooleanInterestModifier dataModifier;
+  @NonNull private final BooleanInterestModifier bluetoothModifier;
+  @NonNull private final BooleanInterestModifier syncModifier;
 
-  @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject ForegroundInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull Class<? extends Activity> mainActivityClass,
       @NonNull Class<? extends Service> toggleServiceClass,
-      @NonNull Class<? extends Service> triggerRunnerServiceClass) {
+      @NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger triggerLogger,
+      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
+      @NonNull BooleanInterestObserver bluetoothObserver,
+      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
+      @NonNull BooleanInterestModifier dataModifier,
+      @NonNull BooleanInterestModifier bluetoothModifier,
+      @NonNull BooleanInterestModifier syncModifier) {
     super(preferences);
-    this.jobQueuerWrapper = jobQueuerWrapper;
+    this.jobQueuer = jobQueuer;
     appContext = context.getApplicationContext();
     this.toggleServiceClass = toggleServiceClass;
-    this.triggerRunnerServiceClass = triggerRunnerServiceClass;
+    this.powerTriggerDB = powerTriggerDB;
+    this.chargingObserver = chargingObserver;
+    this.triggerLogger = triggerLogger;
+    this.wifiObserver = wifiObserver;
+    this.dataObserver = dataObserver;
+    this.bluetoothObserver = bluetoothObserver;
+    this.syncObserver = syncObserver;
+    this.wifiModifier = wifiModifier;
+    this.dataModifier = dataModifier;
+    this.bluetoothModifier = bluetoothModifier;
+    this.syncModifier = syncModifier;
 
     final Intent intent =
         new Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -73,18 +103,15 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @Override public void create() {
     final long delayTime = getPreferences().getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
-    final Bundle extras = new Bundle();
-    extras.putLong(Constants.TRIGGER_RUNNER_PERIOD, triggerPeriod);
-
-    Timber.d("Trigger period: %d", triggerPeriod);
-
-    jobQueuerWrapper.cancel(triggerRunnerServiceClass);
-    jobQueuerWrapper.set(triggerRunnerServiceClass, System.currentTimeMillis() + triggerPeriod);
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.queueTrigger(triggerPeriod, triggerLogger, powerTriggerDB, wifiObserver, dataObserver,
+        bluetoothObserver, syncObserver, wifiModifier, dataModifier, bluetoothModifier,
+        syncModifier, chargingObserver);
   }
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobQueuerWrapper.cancel(triggerRunnerServiceClass);
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

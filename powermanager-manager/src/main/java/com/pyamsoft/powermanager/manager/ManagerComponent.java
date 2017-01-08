@@ -25,7 +25,7 @@ import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
-    JobModule.class, ManagerModule.class, StateModifierModule.class, StateObserverModule.class,
+    ManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PermissionObserverModule.class,
 }) interface ManagerComponent {
 

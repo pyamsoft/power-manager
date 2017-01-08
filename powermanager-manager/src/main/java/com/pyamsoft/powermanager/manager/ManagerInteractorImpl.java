@@ -21,9 +21,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.jobs.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
+import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
 import rx.Observable;
 
@@ -35,22 +37,24 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final JobQueuer jobQueuer;
   @NonNull private final BooleanInterestObserver chargingObserver;
+  @NonNull private final Logger logger;
 
   ManagerInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver chargingObserver) {
+      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
     this.stateModifier = stateModifier;
     this.chargingObserver = chargingObserver;
+    this.logger = logger;
   }
 
   @Override public void destroy() {
-    jobQueuer.cancel(getJobTag(), ALL_JOB_TAG);
+    jobQueuer.cancel(getJobTag(), JobQueuer.ALL_JOB_TAG);
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
@@ -64,10 +68,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final QueuerType queuerType;
     final String jobTag = getJobTag();
     switch (jobTag) {
-      case AIRPLANE_JOB_TAG:
+      case JobQueuer.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_ON_DISABLE;
         break;
-      case DOZE_JOB_TAG:
+      case JobQueuer.DOZE_JOB_TAG:
         queuerType = QueuerType.SCREEN_ON_DISABLE;
         break;
       default:
@@ -83,6 +87,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
         .repeatingOffWindow(0L)
         .repeatingOnWindow(0L)
         .ignoreIfCharging(false)
+        .logger(logger)
         .chargingObserver(chargingObserver)
         .observer(stateObserver)
         .modifier(stateModifier)
@@ -93,10 +98,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     final QueuerType queuerType;
     final String jobTag = getJobTag();
     switch (jobTag) {
-      case AIRPLANE_JOB_TAG:
+      case JobQueuer.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_OFF_ENABLE;
         break;
-      case DOZE_JOB_TAG:
+      case JobQueuer.DOZE_JOB_TAG:
         queuerType = QueuerType.SCREEN_OFF_ENABLE;
         break;
       default:
@@ -108,6 +113,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     jobQueuer.queue(JobQueuerEntry.builder(jobTag)
         .type(queuerType)
         .delay(getDelayTime() * 1000L)
+        .logger(logger)
         .repeating(isPeriodic())
         .repeatingOffWindow(getPeriodicDisableTime())
         .repeatingOnWindow(getPeriodicEnableTime())

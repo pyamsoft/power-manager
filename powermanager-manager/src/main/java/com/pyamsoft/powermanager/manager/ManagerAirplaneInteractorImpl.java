@@ -18,8 +18,10 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.jobs.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -32,9 +34,9 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver chargingObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
+      @NonNull BooleanInterestObserver wearStateObserver, Logger logger) {
     super(preferences, manageObserver, stateObserver, stateModifier, jobQueuer, chargingObserver,
-        wearManageObserver, wearStateObserver);
+        wearManageObserver, wearStateObserver, logger);
   }
 
   @Override protected long getDelayTime() {
@@ -54,7 +56,7 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return AIRPLANE_JOB_TAG;
+    return JobQueuer.AIRPLANE_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {

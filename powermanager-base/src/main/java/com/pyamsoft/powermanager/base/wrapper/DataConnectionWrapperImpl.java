@@ -26,7 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.ShellCommandHelper;
-import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.Logger;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;

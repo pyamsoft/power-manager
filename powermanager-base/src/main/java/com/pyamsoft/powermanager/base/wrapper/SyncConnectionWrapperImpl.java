@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 
 class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {

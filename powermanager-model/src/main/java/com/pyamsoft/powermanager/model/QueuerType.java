@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 
 public enum QueuerType {
 
+  POWER_TRIGGER,
   SCREEN_OFF_ENABLE,
   SCREEN_OFF_DISABLE,
   SCREEN_ON_ENABLE,

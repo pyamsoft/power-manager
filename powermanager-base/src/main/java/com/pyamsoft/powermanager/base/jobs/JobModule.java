@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager;
+package com.pyamsoft.powermanager.base.jobs;
 
 import android.content.Context;
 import android.os.Build;
@@ -27,14 +27,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import dagger.Module;
 import dagger.Provides;
+import javax.inject.Singleton;
 
-@Module class JobModule {
+@Module public class JobModule {
 
-  @Provides JobQueuer provideJobQueuer(@NonNull JobManager jobManager) {
+  @Singleton @Provides JobQueuer provideJobQueuer(@NonNull JobManager jobManager) {
     return new JobQueuerImpl(jobManager);
   }
 
-  @Provides JobManager provideJobManager(@NonNull Context context) {
+  @Singleton @Provides JobManager provideJobManager(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     final Configuration.Builder builder = new Configuration.Builder(appContext);
 

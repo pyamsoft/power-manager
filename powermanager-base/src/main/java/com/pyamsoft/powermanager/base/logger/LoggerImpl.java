@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.logger;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.LogType;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 
 class LoggerImpl implements Logger {

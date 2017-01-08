@@ -27,7 +27,6 @@ import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanager.trigger.TriggerRunnerService;
 import com.pyamsoft.pydroid.BuildConfigChecker;
 import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.about.Licenses;
@@ -64,8 +63,7 @@ public class PowerManagerSingleInitProvider extends BaseInitProvider
 
   @NonNull @Override protected PowerManagerComponent createModule(@NonNull Context context) {
     final PowerManagerModule module =
-        new PowerManagerModule(context, MainActivity.class, ActionToggleService.class,
-            TriggerRunnerService.class);
+        new PowerManagerModule(context, MainActivity.class, ActionToggleService.class);
     return DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
   }
 }

@@ -19,8 +19,10 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.jobs.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import rx.Observable;
 
@@ -32,9 +34,9 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
       @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver chargingObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
+      @NonNull BooleanInterestObserver wearStateObserver, Logger logger) {
     super(preferences, manageObserver, stateObserver, stateModifier, jobQueuer, chargingObserver,
-        wearManageObserver, wearStateObserver);
+        wearManageObserver, wearStateObserver, logger);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -54,7 +56,7 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return BLUETOOTH_JOB_TAG;
+    return JobQueuer.BLUETOOTH_JOB_TAG;
   }
 
   @Override public boolean isIgnoreWhileCharging() {

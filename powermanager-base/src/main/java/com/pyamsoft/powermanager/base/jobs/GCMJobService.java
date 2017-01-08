@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.logger;
+package com.pyamsoft.powermanager.base.jobs;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.birbit.android.jobqueue.JobManager;
+import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
+import com.pyamsoft.powermanager.base.Injector;
+import javax.inject.Inject;
 
-public interface Logger {
+public class GCMJobService extends GcmJobSchedulerService {
 
-  void d(@NonNull String fmt, @Nullable Object... args);
+  @Nullable @Inject JobManager jobManager;
 
-  void i(@NonNull String fmt, @Nullable Object... args);
+  @NonNull @Override protected JobManager getJobManager() {
+    if (jobManager == null) {
+      Injector.get().provideComponent().inject(this);
+    }
 
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+    return jobManager;
+  }
 }

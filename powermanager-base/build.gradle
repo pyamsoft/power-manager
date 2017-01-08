@@ -61,6 +61,10 @@ dependencies {
   // Check if Android Wear is connected before handling Bluetooth/Wifi
   compile "com.google.android.gms:play-services-wearable:$firebase"
 
+  // Android Job
+  compile "com.google.android.gms:play-services-gcm:$firebase"
+  compile "com.birbit:android-priority-jobqueue:$androidPJQ"
+
   // SQLBrite
   compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"
 
