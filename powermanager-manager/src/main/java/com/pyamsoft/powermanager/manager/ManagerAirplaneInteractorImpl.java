@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
@@ -27,13 +26,12 @@ import timber.log.Timber;
 
 class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerAirplaneInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+  @Inject ManagerAirplaneInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
-        wearStateObserver);
+    super(preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver);
   }
 
   @Override protected long getDelayTime() {

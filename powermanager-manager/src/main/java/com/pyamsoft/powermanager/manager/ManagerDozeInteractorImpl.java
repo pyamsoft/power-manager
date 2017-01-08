@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
@@ -29,10 +28,10 @@ import timber.log.Timber;
 class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     implements ExclusiveWearUnawareManagerInteractor {
 
-  @Inject ManagerDozeInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+  @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver);
+    super(preferences, manageObserver, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {

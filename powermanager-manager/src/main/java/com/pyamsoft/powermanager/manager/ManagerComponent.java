@@ -21,12 +21,11 @@ import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
 import com.pyamsoft.powermanager.observer.permission.PermissionObserverModule;
 import com.pyamsoft.powermanager.observer.preference.manage.ManageObserverModule;
 import com.pyamsoft.powermanager.observer.state.StateObserverModule;
-import com.pyamsoft.powermanager.manager.queuer.QueuerModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
 @ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
-    ManagerModule.class, QueuerModule.class, StateModifierModule.class, StateObserverModule.class,
+    ManagerModule.class, StateModifierModule.class, StateObserverModule.class,
     ManageObserverModule.class, PermissionObserverModule.class,
 }) interface ManagerComponent {
 

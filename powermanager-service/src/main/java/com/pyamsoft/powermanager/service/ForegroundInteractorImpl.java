@@ -28,7 +28,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.model.Constants;
 import javax.inject.Inject;
 import rx.Observable;

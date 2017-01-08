@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.base.logger.LoggerLoader;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import com.pyamsoft.powermanager.base.wrapper.WrapperModule;
 import dagger.Component;
 import javax.inject.Named;
@@ -68,8 +67,6 @@ import rx.Scheduler;
   @Named("wrapper_airplane") DeviceFunctionWrapper provideAirplaneModeWrapper();
 
   @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper();
-
-  JobQueuerWrapper provideJobQueuerWrapper();
 
   @Named("logger_manager") Logger provideLoggerManager();
 

@@ -54,6 +54,10 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
+  // Android Job
+  compile "com.google.android.gms:play-services-gcm:$firebase"
+  compile "com.birbit:android-priority-jobqueue:$androidPJQ"
+
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   // Roboelectric for Android on JVM

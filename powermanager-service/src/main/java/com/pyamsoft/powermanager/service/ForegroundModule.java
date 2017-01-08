@@ -21,7 +21,6 @@ import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

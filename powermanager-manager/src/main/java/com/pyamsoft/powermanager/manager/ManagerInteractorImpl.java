@@ -23,27 +23,23 @@ import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final Queuer queuer;
   @NonNull private final PowerManagerPreferences preferences;
 
-  ManagerInteractorImpl(@NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
+  ManagerInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    this.queuer = queuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
   }
 
   @Override public void destroy() {
-    queuer.cancel();
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
@@ -67,14 +63,14 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up an enable job
-    queuer.cancel();
-    queuer.setType(queuerType)
-        .setDelayTime(100L)
-        .setPeriodic(false)
-        .setPeriodicEnableTime(0L)
-        .setPeriodicDisableTime(0L)
-        .setIgnoreCharging(false)
-        .queue();
+    //queuer.cancel();
+    //queuer.setType(queuerType)
+    //    .setDelayTime(100L)
+    //    .setPeriodic(false)
+    //    .setPeriodicEnableTime(0L)
+    //    .setPeriodicDisableTime(0L)
+    //    .setIgnoreCharging(false)
+    //    .queue();
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
@@ -91,14 +87,14 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up a disable job
-    queuer.cancel();
-    queuer.setType(queuerType)
-        .setDelayTime(getDelayTime() * 1000L)
-        .setPeriodic(isPeriodic())
-        .setPeriodicEnableTime(getPeriodicEnableTime())
-        .setPeriodicDisableTime(getPeriodicDisableTime())
-        .setIgnoreCharging(isIgnoreWhileCharging().call())
-        .queue();
+    //queuer.cancel();
+    //queuer.setType(queuerType)
+    //    .setDelayTime(getDelayTime() * 1000L)
+    //    .setPeriodic(isPeriodic())
+    //    .setPeriodicEnableTime(getPeriodicEnableTime())
+    //    .setPeriodicDisableTime(getPeriodicDisableTime())
+    //    .setIgnoreCharging(isIgnoreWhileCharging().call())
+    //    .qeue();
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {

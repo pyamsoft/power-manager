@@ -20,20 +20,18 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerBluetoothInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+  @Inject ManagerBluetoothInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
-        wearStateObserver);
+    super(preferences, manageObserver, stateObserver, wearManageObserver, wearStateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {

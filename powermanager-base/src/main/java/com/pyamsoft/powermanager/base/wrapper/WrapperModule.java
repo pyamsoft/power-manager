@@ -60,8 +60,4 @@ import javax.inject.Singleton;
       @Named("logger_doze") Logger logger) {
     return new DozeDeviceWrapperImpl(context, logger, preferences);
   }
-
-  @Singleton @Provides JobQueuerWrapper provideJobQueuerWrapper(@NonNull Context context) {
-    return new JobQueuerWrapperImpl(context);
-  }
 }

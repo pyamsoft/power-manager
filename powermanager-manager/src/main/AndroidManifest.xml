@@ -25,14 +25,6 @@
         android:exported="false"/>
 
     <service
-        android:name=".queuer.QueuerWifiDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".queuer.QueuerDataEnableService"
-        android:exported="false"/>
-
-    <service
         android:name=".queuer.QueuerDataDisableService"
         android:exported="false"/>
 
@@ -58,14 +50,6 @@
 
     <service
         android:name=".queuer.QueuerAirplaneDisableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".queuer.QueuerDozeEnableService"
-        android:exported="false"/>
-
-    <service
-        android:name=".queuer.QueuerDozeDisableService"
         android:exported="false"/>
 
   </application>
