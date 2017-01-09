@@ -123,12 +123,12 @@ final class Jobs {
     }
 
     @CallSuper @Override public void onAdded() {
-      getLogger().d("Added job with tags: %s, delay: %d, type: %s", getJobTagString(),
+      getLogger().i("[%s] Added job with tags: %s, delay: %d, type: %s", getId(), getJobTagString(),
           getDelayInMs(), type);
     }
 
     @CallSuper @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-      getLogger().w("Cancelled job with tags: %s, type: %s", getJobTagString(), type);
+      getLogger().w("[%s] Cancelled job with tags: %s, type: %s", getId(), getJobTagString(), type);
     }
 
     @Override
@@ -158,6 +158,7 @@ final class Jobs {
         }
       }
 
+      getLogger().i("Run job: %s", type);
       if (type == QueuerType.SCREEN_ON_ENABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
         set();
       } else {
@@ -214,11 +215,12 @@ final class Jobs {
           .delay(newDelayTime)
           .repeating(true)
           .repeatingOffWindow(offWindowTime)
-          .repeatingOffWindow(onWindowTime)
+          .repeatingOnWindow(onWindowTime)
           .logger(getLogger())
           .type(newType)
           .build();
 
+      getLogger().d("Requeue job with new type: %s", newType);
       jobQueuer.cancel(getSpecificTag());
       jobQueuer.queue(entry);
     }

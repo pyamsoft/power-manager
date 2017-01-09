@@ -26,14 +26,14 @@ import timber.log.Timber;
 class WearUnawareManagerImpl extends ManagerImpl {
 
   @Inject WearUnawareManagerImpl(@NonNull ManagerInteractor interactor,
-      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(interactor, observerScheduler, subscribeScheduler);
+      @NonNull Scheduler scheduler) {
+    super(interactor, scheduler);
   }
 
   @NonNull @Override
   protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
     return originalStateEnabled -> {
-      Timber.d("%s: Unaware of wearables,just pass through", getJobTag());
+      Timber.d("%s: Unaware of wearables,just pass through", interactor.getJobTag());
       return Observable.just(originalStateEnabled);
     };
   }

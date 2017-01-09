@@ -33,40 +33,27 @@ import timber.log.Timber;
 abstract class ManagerImpl implements Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler observerScheduler;
+  @NonNull private final Scheduler scheduler;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
-  ManagerImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  ManagerImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
     this.interactor = interactor;
-    this.observerScheduler = observerScheduler;
-    this.subscribeScheduler = subscribeScheduler;
-
-    SchedulerHelper.enforceObserveScheduler(observerScheduler);
-    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler);
+    this.scheduler = scheduler;
+    SchedulerHelper.enforceSubscribeScheduler(scheduler);
   }
 
-  @NonNull @CheckResult Scheduler getSubscribeScheduler() {
-    return subscribeScheduler;
-  }
-
-  @NonNull @CheckResult Scheduler getObserverScheduler() {
-    return observerScheduler;
-  }
-
-  @NonNull @CheckResult String getJobTag() {
-    return interactor.getJobTag();
+  @NonNull @CheckResult Scheduler getScheduler() {
+    return scheduler;
   }
 
   @VisibleForTesting @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
   Observable<Boolean> baseObservable() {
     return interactor.cancelJobs().flatMap(cancelled -> {
       if (cancelled) {
-        Timber.d("%s: Is Managed?", getJobTag());
+        Timber.d("%s: Is Managed?", interactor.getJobTag());
         return interactor.isManaged();
       } else {
-        Timber.w("%s: Cancel jobs failed, return empty", getJobTag());
+        Timber.w("%s: Cancel jobs failed, return empty", interactor.getJobTag());
         return Observable.empty();
       }
     });
@@ -76,56 +63,56 @@ abstract class ManagerImpl implements Manager {
     SubscriptionHelper.unsubscribe(subscription);
     subscription = baseObservable().flatMap(managed -> {
       if (managed) {
-        Timber.d("%s: Is original state enabled?", getJobTag());
+        Timber.d("%s: Is original state enabled?", interactor.getJobTag());
         return interactor.isOriginalStateEnabled();
       } else {
-        Timber.w("%s: Is not managed, return empty", getJobTag());
+        Timber.w("%s: Is not managed, return empty", interactor.getJobTag());
         return Observable.empty();
       }
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
+    }).subscribeOn(scheduler).observeOn(scheduler).subscribe(originalState -> {
           // Technically can ignore this as if we are here we are non-empty
           // If we are non empty it means we pass the test
           if (originalState) {
-            Timber.d("%s: Queued up a new enable job", getJobTag());
+            Timber.d("%s: Queued up a new enable job", interactor.getJobTag());
             interactor.queueEnableJob();
-            Timber.d("%s: Unset original state", getJobTag());
+            Timber.d("%s: Unset original state", interactor.getJobTag());
             interactor.setOriginalStateEnabled(false);
           }
-        }, throwable -> Timber.e(throwable, "%s: onError queueSet", getJobTag()),
+        }, throwable -> Timber.e(throwable, "%s: onError queueSet", interactor.getJobTag()),
         () -> SubscriptionHelper.unsubscribe(subscription));
   }
 
   @Override public void queueUnset() {
     SubscriptionHelper.unsubscribe(subscription);
     subscription = baseObservable().map(baseResult -> {
-      Timber.d("%s: Unset original state", getJobTag());
+      Timber.d("%s: Unset original state", interactor.getJobTag());
       interactor.setOriginalStateEnabled(false);
       return baseResult;
     })
         .flatMap(managed -> {
           if (managed) {
-            Timber.d("%s: Is original state enabled?", getJobTag());
+            Timber.d("%s: Is original state enabled?", interactor.getJobTag());
             return interactor.isEnabled();
           } else {
-            Timber.w("%s: Is not managed, return empty", getJobTag());
+            Timber.w("%s: Is not managed, return empty", interactor.getJobTag());
             return Observable.empty();
           }
         })
         .map(enabled -> {
-          Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
+          Timber.d("%s: Set original state enabled: %s", interactor.getJobTag(), enabled);
           interactor.setOriginalStateEnabled(enabled);
           return enabled;
         })
         .flatMap(accountForWearableBeforeDisable())
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observerScheduler)
+        .subscribeOn(scheduler)
+        .observeOn(scheduler)
         .subscribe(shouldQueue -> {
               // Only queue a disable job if the radio is not ignored
               if (shouldQueue) {
-                Timber.d("%s: Queued up a new disable job", getJobTag());
+                Timber.d("%s: Queued up a new disable job", interactor.getJobTag());
                 interactor.queueDisableJob();
               }
-            }, throwable -> Timber.e(throwable, "%s: onError queueUnset", getJobTag()),
+            }, throwable -> Timber.e(throwable, "%s: onError queueUnset", interactor.getJobTag()),
             () -> SubscriptionHelper.unsubscribe(subscription));
   }
 

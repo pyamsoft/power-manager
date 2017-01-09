@@ -36,6 +36,8 @@ public interface JobQueuer {
 
   void cancel(@NonNull String... tags);
 
+  void destroy(@NonNull String... tags);
+
   void queue(@NonNull JobQueuerEntry entry);
 
   void queueTrigger(long delayTime, @NonNull Logger logger, @NonNull PowerTriggerDB powerTriggerDB,

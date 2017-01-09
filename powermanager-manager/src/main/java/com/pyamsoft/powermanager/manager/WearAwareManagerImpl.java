@@ -29,33 +29,31 @@ class WearAwareManagerImpl extends ManagerImpl {
       wearAwareManagerInteractor;
 
   @Inject WearAwareManagerImpl(@NonNull WearAwareManagerInteractor interactor,
-      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(interactor, observerScheduler, subscribeScheduler);
+      @NonNull Scheduler scheduler) {
+    super(interactor, scheduler);
     this.wearAwareManagerInteractor = interactor;
   }
 
   @NonNull @Override
   protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
-    return originalStateEnabled -> Observable.just(originalStateEnabled)
-        .flatMap(new Func1<Boolean, Observable<Boolean>>() {
-          @Override public Observable<Boolean> call(Boolean originalStateEnabled) {
-            if (originalStateEnabled) {
-              Timber.d("%s: Original state is enabled, is wearable managed?", getJobTag());
-              return wearAwareManagerInteractor.isWearManaged();
-            } else {
-              Timber.w("%s: Original state not enabled, return empty", getJobTag());
-              return Observable.empty();
-            }
+    return originalState -> Observable.fromCallable(() -> originalState)
+        .flatMap(originalStateEnabled -> {
+          if (originalStateEnabled) {
+            Timber.d("%s: Original state is enabled, is wearable managed?", interactor.getJobTag());
+            return wearAwareManagerInteractor.isWearManaged();
+          } else {
+            Timber.w("%s: Original state not enabled, return empty", interactor.getJobTag());
+            return Observable.empty();
           }
         })
         .flatMap(wearManaged -> {
           if (wearManaged) {
-            Timber.d("%s: Is wearable not enabled?", getJobTag());
+            Timber.d("%s: Is wearable not enabled?", interactor.getJobTag());
             // Invert the result
             return wearAwareManagerInteractor.isWearEnabled().map(wearEnabled -> !wearEnabled);
           } else {
             Timber.d("%s: Wearable is not managed, but radio is managed, continue stream",
-                getJobTag());
+                interactor.getJobTag());
             return Observable.just(Boolean.TRUE);
           }
         });

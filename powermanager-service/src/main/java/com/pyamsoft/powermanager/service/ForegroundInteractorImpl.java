@@ -59,8 +59,7 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @Inject ForegroundInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @NonNull Class<? extends Activity> mainActivityClass,
-      @NonNull Class<? extends Service> toggleServiceClass,
-      @NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull Class<? extends Service> toggleServiceClass, @NonNull PowerTriggerDB powerTriggerDB,
       @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger triggerLogger,
       @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
       @NonNull BooleanInterestObserver bluetoothObserver,
@@ -111,7 +110,7 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.destroy(JobQueuer.TRIGGER_JOB_TAG);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

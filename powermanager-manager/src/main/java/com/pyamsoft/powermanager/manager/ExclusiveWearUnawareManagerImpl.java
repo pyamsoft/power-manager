@@ -35,8 +35,8 @@ class ExclusiveWearUnawareManagerImpl extends WearUnawareManagerImpl implements 
       Subscriptions.empty();
 
   @Inject ExclusiveWearUnawareManagerImpl(@NonNull ExclusiveWearUnawareManagerInteractor interactor,
-      @NonNull Scheduler observerScheduler, @NonNull Scheduler subscribeScheduler) {
-    super(interactor, observerScheduler, subscribeScheduler);
+      @NonNull Scheduler scheduler) {
+    super(interactor, scheduler);
     this.interactor = interactor;
   }
 
@@ -46,8 +46,8 @@ class ExclusiveWearUnawareManagerImpl extends WearUnawareManagerImpl implements 
 
     SubscriptionHelper.unsubscribe(exclusiveSetSubscription);
     exclusiveSetSubscription = interactor.isExclusive()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserverScheduler())
+        .subscribeOn(getScheduler())
+        .observeOn(getScheduler())
         .subscribe(exclusive -> {
               if (exclusive) {
                 Timber.d("ManagerDoze is exclusive");
@@ -68,8 +68,8 @@ class ExclusiveWearUnawareManagerImpl extends WearUnawareManagerImpl implements 
 
     SubscriptionHelper.unsubscribe(exclusiveUnsetSubscription);
     exclusiveUnsetSubscription = interactor.isExclusive()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserverScheduler())
+        .subscribeOn(getScheduler())
+        .observeOn(getScheduler())
         .subscribe(exclusive -> {
               if (exclusive) {
                 Timber.d("ManagerDoze is exclusive");

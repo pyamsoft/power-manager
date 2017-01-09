@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.jobs;
 
-import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -27,7 +26,9 @@ import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
+import java.util.Arrays;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class JobQueuerImpl implements JobQueuer {
 
@@ -38,20 +39,18 @@ class JobQueuerImpl implements JobQueuer {
   }
 
   @Override public void cancel(@NonNull String... tags) {
-    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-      jobManager.cancelJobsInBackground(null, TagConstraint.ANY, tags);
-    } else {
-      jobManager.cancelJobs(TagConstraint.ANY, tags);
-    }
+    Timber.d("Cancel jobs with tag: %s", Arrays.toString(tags));
+    jobManager.cancelJobs(TagConstraint.ANY, tags);
+  }
+
+  @Override public void destroy(@NonNull String... tags) {
+    Timber.d("Destroy jobs with tag: %s", Arrays.toString(tags));
+    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, tags);
   }
 
   @Override public void queue(@NonNull JobQueuerEntry entry) {
-    final Job job = createJobForEntry(entry);
-    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-      jobManager.addJobInBackground(job);
-    } else {
-      jobManager.addJob(job);
-    }
+    Timber.d("Queue new job with tag: %s", entry.tag());
+    jobManager.addJob(createJobForEntry(entry));
   }
 
   @Override public void queueTrigger(long delayTime, @NonNull Logger logger,
@@ -67,11 +66,7 @@ class JobQueuerImpl implements JobQueuer {
         new TriggerJob(delayTime, this, logger, powerTriggerDB, wifiObserver, dataObserver,
             bluetoothObserver, syncObserver, wifiModifier, dataModifier, bluetoothModifier,
             syncModifier, chargingObserver);
-    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
-      jobManager.addJobInBackground(job);
-    } else {
-      jobManager.addJob(job);
-    }
+    jobManager.addJob(job);
   }
 
   @CheckResult @NonNull private Job createJobForEntry(JobQueuerEntry entry) {

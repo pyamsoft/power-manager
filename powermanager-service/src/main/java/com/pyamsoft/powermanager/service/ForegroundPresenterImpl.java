@@ -17,10 +17,12 @@
 package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
 import javax.inject.Named;
+import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -29,9 +31,10 @@ import timber.log.Timber;
 class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
     implements ForegroundPresenter {
 
-  @NonNull private final ForegroundInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription notificationSubscription =
       Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription createSubscription;
 
   @Inject ForegroundPresenterImpl(@NonNull ForegroundInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
@@ -41,13 +44,21 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
 
   @Override protected void onBind() {
     super.onBind();
-    interactor.create();
+    createSubscription = Observable.fromCallable(() -> {
+      interactor.create();
+      return Boolean.TRUE;
+    })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(success -> Timber.d("Interactor was created"),
+            throwable -> Timber.e(throwable, "Error creating interactor"),
+            () -> SubscriptionHelper.unsubscribe(createSubscription));
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    SubscriptionHelper.unsubscribe(notificationSubscription);
+    SubscriptionHelper.unsubscribe(notificationSubscription, createSubscription);
   }
 
   @Override public void onStartNotification() {

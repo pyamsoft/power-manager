@@ -31,8 +31,8 @@ import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
-  @NonNull final BooleanInterestObserver manageObserver;
-  @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @NonNull private final BooleanInterestModifier stateModifier;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final JobQueuer jobQueuer;
@@ -54,7 +54,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   }
 
   @Override public void destroy() {
-    jobQueuer.cancel(getJobTag(), JobQueuer.ALL_JOB_TAG);
+    jobQueuer.destroy(getJobTag(), JobQueuer.ALL_JOB_TAG);
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
