@@ -54,16 +54,15 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
+  // Android Job
+  compile "com.evernote:android-job:$androidJob"
+
   // Super User support
   compile "eu.chainfire:libsuperuser:$libsuperuser"
 
   // Google Play Services for other components
   // Check if Android Wear is connected before handling Bluetooth/Wifi
   compile "com.google.android.gms:play-services-wearable:$firebase"
-
-  // Android Job
-  compile "com.google.android.gms:play-services-gcm:$firebase"
-  compile "com.birbit:android-priority-jobqueue:$androidPJQ"
 
   // SQLBrite
   compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"

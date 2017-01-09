@@ -21,10 +21,6 @@ import android.app.Service;
 import android.content.Context;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDBModule;
-import com.pyamsoft.powermanager.base.jobs.FrameworkJobService;
-import com.pyamsoft.powermanager.base.jobs.GCMJobService;
-import com.pyamsoft.powermanager.base.jobs.JobModule;
-import com.pyamsoft.powermanager.base.jobs.JobQueuer;
 import com.pyamsoft.powermanager.base.logger.LoggerLoader;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
@@ -37,14 +33,7 @@ import rx.Scheduler;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
-    JobModule.class
 }) public interface PowerManagerComponent {
-
-  JobQueuer provideJobQueuer();
-
-  void inject(GCMJobService service);
-
-  void inject(FrameworkJobService service);
 
   void inject(LoggerLoader loader);
 

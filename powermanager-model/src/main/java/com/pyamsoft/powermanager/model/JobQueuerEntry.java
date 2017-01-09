@@ -30,8 +30,6 @@ import com.google.auto.value.AutoValue;
 
   public abstract QueuerType type();
 
-  public abstract Logger logger();
-
   public abstract long delay();
 
   public abstract boolean repeating();
@@ -42,19 +40,11 @@ import com.google.auto.value.AutoValue;
 
   public abstract boolean ignoreIfCharging();
 
-  public abstract BooleanInterestObserver observer();
-
-  public abstract BooleanInterestObserver chargingObserver();
-
-  public abstract BooleanInterestModifier modifier();
-
   @AutoValue.Builder public static abstract class Builder {
 
     abstract Builder tag(String tag);
 
     public abstract Builder type(QueuerType type);
-
-    public abstract Builder logger(Logger logger);
 
     public abstract Builder delay(long delay);
 
@@ -65,12 +55,6 @@ import com.google.auto.value.AutoValue;
     public abstract Builder repeatingOffWindow(long window);
 
     public abstract Builder ignoreIfCharging(boolean ignore);
-
-    public abstract Builder observer(BooleanInterestObserver observer);
-
-    public abstract Builder chargingObserver(BooleanInterestObserver observer);
-
-    public abstract Builder modifier(BooleanInterestModifier modifier);
 
     public abstract JobQueuerEntry build();
   }

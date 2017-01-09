@@ -21,11 +21,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.jobs.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
-import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
 import rx.Observable;
 
@@ -34,27 +32,19 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
-  @NonNull private final BooleanInterestModifier stateModifier;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final BooleanInterestObserver chargingObserver;
-  @NonNull private final Logger logger;
 
   ManagerInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier,
-      @NonNull BooleanInterestObserver chargingObserver, @NonNull Logger logger) {
+      @NonNull BooleanInterestObserver stateObserver) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
-    this.stateModifier = stateModifier;
-    this.chargingObserver = chargingObserver;
-    this.logger = logger;
   }
 
   @Override public void destroy() {
-    jobQueuer.destroy(getJobTag(), JobQueuer.ALL_JOB_TAG);
+    jobQueuer.cancel(getJobTag());
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
@@ -82,15 +72,11 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     jobQueuer.cancel(jobTag);
     jobQueuer.queue(JobQueuerEntry.builder(jobTag)
         .type(queuerType)
-        .delay(100L)
+        .delay(0)
         .repeating(false)
         .repeatingOffWindow(0L)
         .repeatingOnWindow(0L)
         .ignoreIfCharging(false)
-        .logger(logger)
-        .chargingObserver(chargingObserver)
-        .observer(stateObserver)
-        .modifier(stateModifier)
         .build());
   }
 
@@ -113,14 +99,10 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     jobQueuer.queue(JobQueuerEntry.builder(jobTag)
         .type(queuerType)
         .delay(getDelayTime() * 1000L)
-        .logger(logger)
         .repeating(isPeriodic())
         .repeatingOffWindow(getPeriodicDisableTime())
         .repeatingOnWindow(getPeriodicEnableTime())
         .ignoreIfCharging(isIgnoreWhileCharging())
-        .chargingObserver(chargingObserver)
-        .observer(stateObserver)
-        .modifier(stateModifier)
         .build());
   }
 

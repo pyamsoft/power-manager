@@ -16,11 +16,16 @@
 
 package com.pyamsoft.powermanager.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 public interface Manager {
 
-  void queueSet();
+  void cancel(@NonNull Runnable onCancel);
 
-  void queueUnset();
+  void queueSet(@Nullable Runnable onSet);
+
+  void queueUnset(@Nullable Runnable onUnset);
 
   void cleanup();
 }

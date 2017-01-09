@@ -14,75 +14,57 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.jobs;
+package com.pyamsoft.powermanager.job;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.support.annotation.CallSuper;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
-import com.birbit.android.jobqueue.Job;
-import com.birbit.android.jobqueue.Params;
-import com.birbit.android.jobqueue.RetryConstraint;
+import com.evernote.android.job.Job;
+import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.QueuerType;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
 import rx.Subscription;
 import timber.log.Timber;
 
 class TriggerJob extends Job {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver chargingObserver;
-  @NonNull private final JobQueuer jobQueuer;
-  @NonNull private final Logger logger;
-  @NonNull private final BooleanInterestObserver wifiObserver;
-  @NonNull private final BooleanInterestObserver dataObserver;
-  @NonNull private final BooleanInterestObserver bluetoothObserver;
-  @NonNull private final BooleanInterestObserver syncObserver;
-  @NonNull private final BooleanInterestModifier wifiModifier;
-  @NonNull private final BooleanInterestModifier dataModifier;
-  @NonNull private final BooleanInterestModifier bluetoothModifier;
-  @NonNull private final BooleanInterestModifier syncModifier;
+  @Inject @SuppressWarnings("WeakerAccess") PowerTriggerDB powerTriggerDB;
+  @Inject @SuppressWarnings("WeakerAccess") @Named("obs_charging_state") BooleanInterestObserver
+      chargingObserver;
+  @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") BooleanInterestObserver
+      wifiObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") BooleanInterestObserver
+      dataObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") BooleanInterestObserver
+      bluetoothObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") BooleanInterestObserver
+      syncObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") BooleanInterestModifier
+      wifiModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") BooleanInterestModifier
+      dataModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_bluetooth_state") BooleanInterestModifier
+      bluetoothModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") BooleanInterestModifier
+      syncModifier;
   @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
-
-  TriggerJob(long delayTime, @NonNull JobQueuer jobQueuer, @NonNull Logger logger,
-      @NonNull PowerTriggerDB powerTriggerDB, @NonNull BooleanInterestObserver wifiObserver,
-      @NonNull BooleanInterestObserver dataObserver,
-      @NonNull BooleanInterestObserver bluetoothObserver,
-      @NonNull BooleanInterestObserver syncObserver, @NonNull BooleanInterestModifier wifiModifier,
-      @NonNull BooleanInterestModifier dataModifier,
-      @NonNull BooleanInterestModifier bluetoothModifier,
-      @NonNull BooleanInterestModifier syncModifier,
-      @NonNull BooleanInterestObserver chargingObserver) {
-    super(new Params(2).setDelayMs(delayTime)
-        .addTags(JobQueuer.ALL_JOB_TAG, JobQueuer.TRIGGER_JOB_TAG)
-        .setRequiresNetwork(false)
-        .setRequiresUnmeteredNetwork(false));
-    this.jobQueuer = jobQueuer;
-    this.logger = logger;
-    this.powerTriggerDB = powerTriggerDB;
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.wifiModifier = wifiModifier;
-    this.dataModifier = dataModifier;
-    this.bluetoothModifier = bluetoothModifier;
-    this.syncModifier = syncModifier;
-    this.chargingObserver = chargingObserver;
-  }
 
   private void runTriggerForPercent(int percent) {
     final Observable<List<PowerTriggerEntry>> triggerQuery =
@@ -183,18 +165,19 @@ class TriggerJob extends Job {
           } else if (PowerTriggerEntry.isEmpty(entry)) {
             Timber.w("Do not run Trigger because entry specified is EMPTY");
           } else {
-            onTriggerRun(entry);
+            onTriggerRun(getContext(), entry);
           }
         }, throwable -> Timber.e(throwable, "onError"),
         () -> SubscriptionHelper.unsubscribe(runSubscription));
   }
 
-  @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull PowerTriggerEntry entry) {
+  @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull Context context,
+      @NonNull PowerTriggerEntry entry) {
     logger.d("Run trigger for entry name: %s", entry.name());
     logger.d("Run trigger for entry percent: %d", entry.percent());
     final String formatted =
         String.format(Locale.getDefault(), "Run trigger: %s [%d]", entry.name(), entry.percent());
-    Toast.makeText(getApplicationContext(), formatted, Toast.LENGTH_SHORT).show();
+    Toast.makeText(context.getApplicationContext(), formatted, Toast.LENGTH_SHORT).show();
 
     if (entry.toggleWifi()) {
       Timber.d("Wifi should toggle");
@@ -265,24 +248,24 @@ class TriggerJob extends Job {
     }
   }
 
-  @CheckResult @NonNull private String getJobTagString() {
-    final String tagString;
-    final Set<String> tags = getTags();
-    if (tags == null) {
-      tagString = "[NO TAGS]";
-    } else {
-      tagString = Arrays.toString(tags.toArray());
-    }
-    return tagString;
+  private void requeueJob() {
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.queue(JobQueuerEntry.builder(getParams().getTag())
+        .repeatingOnWindow(0)
+        .repeating(true)
+        .repeatingOffWindow(0)
+        .delay(getParams().getStartMs())
+        .ignoreIfCharging(true)
+        .type(QueuerType.POWER_TRIGGER)
+        .build());
   }
 
-  @CallSuper @Override public void onAdded() {
-    logger.d("Added job with tags: %s, delay: %d", getJobTagString(), getDelayInMs());
-  }
+  @NonNull @Override protected Result onRunJob(Params params) {
+    inject();
 
-  @Override public void onRun() throws Throwable {
     final IntentFilter batteryFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-    final Intent batteryIntent = getApplicationContext().registerReceiver(null, batteryFilter);
+    final Intent batteryIntent =
+        getContext().getApplicationContext().registerReceiver(null, batteryFilter);
 
     // Get battery level
     final int percent;
@@ -297,22 +280,13 @@ class TriggerJob extends Job {
     logger.d("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent);
     requeueJob();
+    return Result.SUCCESS;
   }
 
-  private void requeueJob() {
-    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
-    jobQueuer.queueTrigger(getDelayInMs(), logger, powerTriggerDB, wifiObserver, dataObserver,
-        bluetoothObserver, syncObserver, wifiModifier, dataModifier, bluetoothModifier,
-        syncModifier, chargingObserver);
-  }
-
-  @Override protected void onCancel(int cancelReason, @Nullable Throwable throwable) {
-    SubscriptionHelper.unsubscribe(runSubscription);
-  }
-
-  @Override
-  protected RetryConstraint shouldReRunOnThrowable(@NonNull Throwable throwable, int runCount,
-      int maxRunCount) {
-    return RetryConstraint.CANCEL;
+  private void inject() {
+    DaggerJobComponent.builder()
+        .powerManagerComponent(Injector.get().provideComponent())
+        .build()
+        .inject(this);
   }
 }

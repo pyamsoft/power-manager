@@ -21,11 +21,7 @@ import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
-import com.pyamsoft.powermanager.base.jobs.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -41,21 +37,8 @@ import rx.Scheduler;
   @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
       @NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @Named("main") Class<? extends Activity> mainActivityClass,
-      @Named("toggle") Class<? extends Service> toggleServiceClass,
-      @NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull @Named("obs_charging_state") BooleanInterestObserver chargingObserver,
-      @Named("logger_trigger") @NonNull Logger triggerLogger,
-      @NonNull @Named("obs_wifi_state") BooleanInterestObserver wifiObserver,
-      @Named("obs_data_state") @NonNull BooleanInterestObserver dataObserver,
-      @NonNull @Named("obs_bluetooth_state") BooleanInterestObserver bluetoothObserver,
-      @NonNull @Named("obs_sync_state") BooleanInterestObserver syncObserver,
-      @Named("mod_wifi_state") @NonNull BooleanInterestModifier wifiModifier,
-      @NonNull @Named("mod_data_state") BooleanInterestModifier dataModifier,
-      @NonNull @Named("mod_bluetooth_state") BooleanInterestModifier bluetoothModifier,
-      @NonNull @Named("mod_sync_state") BooleanInterestModifier syncModifier) {
+      @Named("toggle") Class<? extends Service> toggleServiceClass) {
     return new ForegroundInteractorImpl(jobQueuer, context, preferences, mainActivityClass,
-        toggleServiceClass, powerTriggerDB, chargingObserver, triggerLogger, wifiObserver,
-        dataObserver, bluetoothObserver, syncObserver, wifiModifier, dataModifier,
-        bluetoothModifier, syncModifier);
+        toggleServiceClass);
   }
 }

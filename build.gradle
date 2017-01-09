@@ -46,7 +46,7 @@ buildscript {
     junit = "4.12"
     mockito = "2.3.10"
     libsuperuser = "1.0.0.201608240809"
-    androidPJQ = "2.0.1"
+    androidJob = "1.1.4"
   }
 
   dependencies {

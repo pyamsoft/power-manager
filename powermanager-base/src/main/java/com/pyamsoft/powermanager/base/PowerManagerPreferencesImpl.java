@@ -114,8 +114,6 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
 
   @NonNull private final String manageWearable;
   private final boolean manageWearableDefault;
-  @NonNull private final String exclusiveDoze;
-  private final boolean exclusiveDozeDefault;
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
@@ -211,9 +209,6 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
 
     manageWearable = res.getString(R.string.manage_wearable_key);
     manageWearableDefault = res.getBoolean(R.bool.manage_wearable_default);
-
-    exclusiveDoze = res.getString(R.string.exclusive_doze_key);
-    exclusiveDozeDefault = res.getBoolean(R.bool.exclusive_doze_default);
 
     wearableDelay = res.getString(R.string.wearable_time_key);
     wearableDelayDefault = res.getString(R.string.wearable_time_default);
@@ -341,10 +336,6 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
 
   @Override public void setDozeDelay(long time) {
     preferences.edit().putString(delayDoze, Long.toString(time)).apply();
-  }
-
-  @Override public boolean isExclusiveDoze() {
-    return preferences.getBoolean(exclusiveDoze, exclusiveDozeDefault);
   }
 
   @Override public boolean isIgnoreChargingDoze() {

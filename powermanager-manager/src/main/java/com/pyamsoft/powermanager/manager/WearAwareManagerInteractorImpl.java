@@ -18,10 +18,8 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.jobs.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.model.Logger;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -33,13 +31,10 @@ abstract class WearAwareManagerInteractorImpl extends ManagerInteractorImpl
 
   WearAwareManagerInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer,
-      @NonNull BooleanInterestObserver chargingObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver, @NonNull Logger logger) {
-    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier, chargingObserver,
-        logger);
+      @NonNull BooleanInterestObserver wearStateObserver) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
   }

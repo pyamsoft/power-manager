@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright 2016 Peter Kenji Yamanaka
   ~
@@ -15,15 +14,7 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<manifest
+    package="com.pyamsoft.powermanager.job">
 
-  <bool name="manage_doze_default">false</bool>
-  <string name="manage_doze_key">manage_doze_root</string>
-
-  <string name="doze_time_default">30</string>
-  <string name="doze_time_key">doze_time</string>
-
-  <bool name="ignore_charging_doze_default">false</bool>
-  <string name="ignore_charging_doze_key">ignore_charging_doze</string>
-
-</resources>
+</manifest>

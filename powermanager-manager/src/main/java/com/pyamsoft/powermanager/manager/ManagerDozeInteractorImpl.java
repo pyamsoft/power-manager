@@ -19,24 +19,18 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.jobs.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-class ManagerDozeInteractorImpl extends ManagerInteractorImpl
-    implements ExclusiveWearUnawareManagerInteractor {
+class ManagerDozeInteractorImpl extends ManagerInteractorImpl {
 
   @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestObserver chargingObserver,
-      @NonNull BooleanInterestModifier stateModifier, @NonNull JobQueuer jobQueuer, Logger logger) {
-    super(jobQueuer, preferences, manageObserver, stateObserver, stateModifier, chargingObserver,
-        logger);
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -74,13 +68,5 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
     return Observable.defer(() -> Observable.just(getPreferences().isOriginalDoze()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isExclusive() {
-    return Observable.defer(() -> {
-      final boolean preference =
-          getPreferences().isExclusiveDoze() && getPreferences().isDozeManaged();
-      return Observable.just(preference);
-    });
   }
 }

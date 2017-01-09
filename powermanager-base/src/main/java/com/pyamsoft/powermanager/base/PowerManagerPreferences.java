@@ -191,6 +191,4 @@ public interface PowerManagerPreferences {
   void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
 
   void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
-
-  @CheckResult boolean isExclusiveDoze();
 }

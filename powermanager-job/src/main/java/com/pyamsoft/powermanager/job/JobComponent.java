@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.jobs;
+package com.pyamsoft.powermanager.job;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
+import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
+import com.pyamsoft.powermanager.observer.state.StateObserverModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
-@ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = JobModule.class)
-interface JobComponent {
+@ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
+    JobModule.class, StateObserverModule.class, StateModifierModule.class
+}) interface JobComponent {
 
+  void inject(WifiJob job);
+
+  void inject(DataJob job);
+
+  void inject(BluetoothJob job);
+
+  void inject(SyncJob job);
+
+  void inject(AirplaneJob job);
+
+  void inject(DozeJob job);
+
+  void inject(TriggerJob job);
 }
