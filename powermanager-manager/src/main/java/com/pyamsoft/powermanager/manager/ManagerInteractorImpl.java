@@ -33,9 +33,9 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
   @NonNull private final BooleanInterestModifier stateModifier;
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final JobQueuer jobQueuer;
   @NonNull private final BooleanInterestObserver chargingObserver;
   @NonNull private final Logger logger;
 
@@ -59,7 +59,7 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.fromCallable(() -> {
-      destroy();
+      jobQueuer.cancel(getJobTag());
       return Boolean.TRUE;
     });
   }

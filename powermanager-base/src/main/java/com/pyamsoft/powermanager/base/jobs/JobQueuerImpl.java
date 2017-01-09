@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.base.jobs;
 
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.birbit.android.jobqueue.Job;
@@ -45,7 +46,11 @@ class JobQueuerImpl implements JobQueuer {
 
   @Override public void destroy(@NonNull String... tags) {
     Timber.d("Destroy jobs with tag: %s", Arrays.toString(tags));
-    jobManager.cancelJobsInBackground(null, TagConstraint.ANY, tags);
+    if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+      jobManager.cancelJobsInBackground(null, TagConstraint.ANY, tags);
+    } else {
+      jobManager.cancelJobs(TagConstraint.ANY, tags);
+    }
   }
 
   @Override public void queue(@NonNull JobQueuerEntry entry) {
