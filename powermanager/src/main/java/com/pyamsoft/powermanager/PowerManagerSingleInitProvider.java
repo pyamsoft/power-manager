@@ -56,6 +56,8 @@ public class PowerManagerSingleInitProvider extends BaseInitProvider
   @Override public void insertCustomLicensesIntoMap() {
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
+    Licenses.create("TapTargetView", "https://github.com/KeepSafe/TapTargetView", "licenses/taptargetview");
+    Licenses.create("Android-Job", "https://github.com/evernote/android-job", "licenses/androidjob");
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
     RxLicenses.addLicenses();
     UiLicenses.addLicenses();
