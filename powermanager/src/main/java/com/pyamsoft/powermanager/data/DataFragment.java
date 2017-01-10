@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.data;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.pydroid.FuncNone;
 
 public class DataFragment extends OverviewPagerFragment {

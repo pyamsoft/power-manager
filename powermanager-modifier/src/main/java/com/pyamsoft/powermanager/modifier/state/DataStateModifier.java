@@ -17,8 +17,8 @@
 package com.pyamsoft.powermanager.modifier.state;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import javax.inject.Inject;
 
 class DataStateModifier implements BooleanInterestModifier {

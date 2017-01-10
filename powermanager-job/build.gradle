@@ -52,6 +52,9 @@ android {
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
+  // Android Job
+  compile "com.evernote:android-job:$androidJob"
+
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
 
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"

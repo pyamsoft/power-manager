@@ -21,7 +21,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.evernote.android.job.JobManager;
 import com.pyamsoft.pydroid.IPYDroidApp;
 import com.pyamsoft.pydroid.SingleInitContentProvider;
 
@@ -37,7 +36,6 @@ public abstract class BaseInitProvider extends SingleInitContentProvider
   @CallSuper @Override protected void onFirstCreate(@NonNull Context context) {
     super.onFirstCreate(context);
     component = createModule(context);
-    JobManager.create(context);
   }
 
   @NonNull @Override public final PowerManagerComponent provideComponent() {

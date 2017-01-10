@@ -26,7 +26,8 @@ import rx.Scheduler;
 
 @Module class AirplaneOverviewModule {
 
-  @Provides @Named("airplane_overview") OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
+  @Provides @Named("airplane_overview")
+  OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
       @Named("mod_airplane_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new OverviewPagerPresenterImpl(obsScheduler, subScheduler, stateModifier);

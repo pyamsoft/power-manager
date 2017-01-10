@@ -24,7 +24,6 @@ import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
-import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import javax.inject.Named;
 

@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.job;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
@@ -29,8 +30,8 @@ import dagger.Provides;
     return new JobQueuerImpl(jobManager);
   }
 
-  @Provides JobManager provideJobManager(@NonNull JobCreator jobCreator) {
-    JobManager.instance().addJobCreator(jobCreator);
+  @Provides JobManager provideJobManager(@NonNull Context context, @NonNull JobCreator jobCreator) {
+    JobManager.create(context.getApplicationContext()).addJobCreator(jobCreator);
     return JobManager.instance();
   }
 

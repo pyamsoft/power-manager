@@ -68,6 +68,5 @@ dependencies {
   compile project(":powermanager-uicore")
   compile project(":powermanager-observer")
   compile project(":powermanager-modifier")
-
 }
 
