@@ -18,21 +18,20 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
 class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerAirplaneInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
+  @Inject ManagerAirplaneInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }
 
@@ -53,7 +52,7 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return AIRPLANE_JOB_TAG;
+    return JobQueuer.AIRPLANE_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
@@ -65,8 +64,8 @@ class ManagerAirplaneInteractorImpl extends WearAwareManagerInteractorImpl {
     getPreferences().setOriginalAirplane(enabled);
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingAirplane();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingAirplane();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

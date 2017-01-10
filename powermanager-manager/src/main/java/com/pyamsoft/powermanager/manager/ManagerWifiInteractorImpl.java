@@ -19,20 +19,19 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerWifiInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
+  @Inject ManagerWifiInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }
 
@@ -53,11 +52,11 @@ class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return WIFI_JOB_TAG;
+    return JobQueuer.WIFI_JOB_TAG;
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingWifi();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingWifi();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {

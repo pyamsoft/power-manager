@@ -19,17 +19,9 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.pydroid.FuncNone;
 import rx.Observable;
 
 interface ManagerInteractor {
-
-  @NonNull String DOZE_JOB_TAG = "doze_job";
-  @NonNull String AIRPLANE_JOB_TAG = "airplane_job";
-  @NonNull String WIFI_JOB_TAG = "wifi_job";
-  @NonNull String DATA_JOB_TAG = "data_job";
-  @NonNull String BLUETOOTH_JOB_TAG = "bluetooth_job";
-  @NonNull String SYNC_JOB_TAG = "sync_job";
 
   void destroy();
 
@@ -37,7 +29,7 @@ interface ManagerInteractor {
 
   @NonNull @CheckResult Observable<Boolean> isManaged();
 
-  @NonNull @CheckResult FuncNone<Boolean> isIgnoreWhileCharging();
+  @CheckResult boolean isIgnoreWhileCharging();
 
   @NonNull @CheckResult Observable<Boolean> isOriginalStateEnabled();
 

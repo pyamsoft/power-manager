@@ -34,16 +34,13 @@ import rx.schedulers.Schedulers;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Class<? extends Activity> mainActivityClass;
   @NonNull private final Class<? extends Service> toggleServiceClass;
-  @NonNull private final Class<? extends Service> triggerRunnerServiceClass;
 
   public PowerManagerModule(@NonNull Context context,
       @NonNull Class<? extends Activity> mainActivityClass,
-      @NonNull Class<? extends Service> toggleServiceClass,
-      @NonNull Class<? extends Service> triggerRunnerServiceClass) {
+      @NonNull Class<? extends Service> toggleServiceClass) {
     appContext = context.getApplicationContext();
     this.mainActivityClass = mainActivityClass;
     this.toggleServiceClass = toggleServiceClass;
-    this.triggerRunnerServiceClass = triggerRunnerServiceClass;
     preferences = new PowerManagerPreferencesImpl(appContext);
   }
 
@@ -53,11 +50,6 @@ import rx.schedulers.Schedulers;
 
   @Singleton @Provides @Named("toggle") Class<? extends Service> provideToggleServiceClass() {
     return toggleServiceClass;
-  }
-
-  @Singleton @Provides @Named("triggerrunner")
-  Class<? extends Service> provideTriggerRunnerServiceClass() {
-    return triggerRunnerServiceClass;
   }
 
   @Singleton @Provides Context provideContext() {

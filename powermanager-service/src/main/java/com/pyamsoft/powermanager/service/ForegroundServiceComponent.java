@@ -17,12 +17,15 @@
 package com.pyamsoft.powermanager.service;
 
 import com.pyamsoft.powermanager.base.PowerManagerComponent;
+import com.pyamsoft.powermanager.job.JobModule;
+import com.pyamsoft.powermanager.modifier.state.StateModifierModule;
+import com.pyamsoft.powermanager.observer.state.StateObserverModule;
 import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Component;
 
-@ServiceScope
-@Component(dependencies = PowerManagerComponent.class, modules = ForegroundModule.class)
-interface ForegroundServiceComponent {
+@ServiceScope @Component(dependencies = PowerManagerComponent.class, modules = {
+    ForegroundModule.class, JobModule.class, StateObserverModule.class, StateModifierModule.class
+}) interface ForegroundServiceComponent {
 
   void inject(ForegroundServiceLoader loader);
 }

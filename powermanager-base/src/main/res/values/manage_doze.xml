@@ -26,7 +26,4 @@
   <bool name="ignore_charging_doze_default">false</bool>
   <string name="ignore_charging_doze_key">ignore_charging_doze</string>
 
-  <bool name="exclusive_doze_default">false</bool>
-  <string name="exclusive_doze_key">exclusive_doze</string>
-
 </resources>

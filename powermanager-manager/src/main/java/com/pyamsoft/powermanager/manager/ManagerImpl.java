@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.Manager;
 import com.pyamsoft.pydroid.rx.SchedulerHelper;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
@@ -27,114 +27,111 @@ import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.functions.Func1;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 abstract class ManagerImpl implements Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
-  @NonNull private final Scheduler subscribeScheduler;
-  @NonNull private final Scheduler observerScheduler;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
+  @NonNull private final Scheduler scheduler;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription cancelSubscription;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription setSubscription;
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription unsetSubscription;
 
-  ManagerImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler observerScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  ManagerImpl(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
     this.interactor = interactor;
-    this.observerScheduler = observerScheduler;
-    this.subscribeScheduler = subscribeScheduler;
-
-    SchedulerHelper.enforceObserveScheduler(observerScheduler);
-    SchedulerHelper.enforceSubscribeScheduler(subscribeScheduler);
+    this.scheduler = scheduler;
+    SchedulerHelper.enforceSubscribeScheduler(scheduler);
   }
 
-  @NonNull @CheckResult Scheduler getSubscribeScheduler() {
-    return subscribeScheduler;
+  @NonNull @CheckResult Scheduler getScheduler() {
+    return scheduler;
   }
 
-  @NonNull @CheckResult Scheduler getObserverScheduler() {
-    return observerScheduler;
+  @Override public void cancel(@NonNull Runnable onCancel) {
+    SubscriptionHelper.unsubscribe(cancelSubscription);
+    cancelSubscription = interactor.cancelJobs()
+        .subscribeOn(getScheduler())
+        .observeOn(getScheduler())
+        .subscribe(cancelled -> Timber.d("Job cancelled: %s", interactor.getJobTag()),
+            throwable -> Timber.e(throwable, "onError cancelling manager"), () -> {
+              onCancel.run();
+              SubscriptionHelper.unsubscribe(cancelSubscription);
+            });
   }
 
-  @NonNull @CheckResult String getJobTag() {
-    return interactor.getJobTag();
-  }
-
-  @VisibleForTesting @SuppressWarnings("WeakerAccess") @CheckResult @NonNull
-  Observable<Boolean> baseObservable() {
-    return interactor.cancelJobs().flatMap(cancelled -> {
-      if (cancelled) {
-        Timber.d("%s: Is Managed?", getJobTag());
-        return interactor.isManaged();
+  @Override public void queueSet(@Nullable Runnable onSet) {
+    SubscriptionHelper.unsubscribe(setSubscription);
+    setSubscription = interactor.isManaged().flatMap(managed -> {
+      if (managed) {
+        Timber.d("%s: Is original state enabled?", interactor.getJobTag());
+        return interactor.isOriginalStateEnabled();
       } else {
-        Timber.w("%s: Cancel jobs failed, return empty", getJobTag());
+        Timber.w("%s: Is not managed, return empty", interactor.getJobTag());
         return Observable.empty();
       }
+    }).subscribeOn(scheduler).observeOn(scheduler).subscribe(originalState -> {
+      // Technically can ignore this as if we are here we are non-empty
+      // If we are non empty it means we pass the test
+      if (originalState) {
+        Timber.d("%s: Queued up a new enable job", interactor.getJobTag());
+        interactor.queueEnableJob();
+        Timber.d("%s: Unset original state", interactor.getJobTag());
+        interactor.setOriginalStateEnabled(false);
+      }
+    }, throwable -> Timber.e(throwable, "%s: onError queueSet", interactor.getJobTag()), () -> {
+      if (onSet != null) {
+        onSet.run();
+      }
+      SubscriptionHelper.unsubscribe(setSubscription);
     });
   }
 
-  @Override public void queueSet() {
-    SubscriptionHelper.unsubscribe(subscription);
-    subscription = baseObservable().flatMap(managed -> {
-      if (managed) {
-        Timber.d("%s: Is original state enabled?", getJobTag());
-        return interactor.isOriginalStateEnabled();
-      } else {
-        Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Observable.empty();
-      }
-    }).subscribeOn(subscribeScheduler).observeOn(observerScheduler).subscribe(originalState -> {
-          // Technically can ignore this as if we are here we are non-empty
-          // If we are non empty it means we pass the test
-          if (originalState) {
-            Timber.d("%s: Queued up a new enable job", getJobTag());
-            interactor.queueEnableJob();
-            Timber.d("%s: Unset original state", getJobTag());
-            interactor.setOriginalStateEnabled(false);
-          }
-        }, throwable -> Timber.e(throwable, "%s: onError queueSet", getJobTag()),
-        () -> SubscriptionHelper.unsubscribe(subscription));
-  }
-
-  @Override public void queueUnset() {
-    SubscriptionHelper.unsubscribe(subscription);
-    subscription = baseObservable().map(baseResult -> {
-      Timber.d("%s: Unset original state", getJobTag());
-      interactor.setOriginalStateEnabled(false);
-      return baseResult;
-    })
+  @Override public void queueUnset(@Nullable Runnable onUnset) {
+    SubscriptionHelper.unsubscribe(unsetSubscription);
+    unsetSubscription = interactor.isManaged()
+        .map(baseResult -> {
+          Timber.d("%s: Unset original state", interactor.getJobTag());
+          interactor.setOriginalStateEnabled(false);
+          return baseResult;
+        })
         .flatMap(managed -> {
           if (managed) {
-            Timber.d("%s: Is original state enabled?", getJobTag());
+            Timber.d("%s: Is original state enabled?", interactor.getJobTag());
             return interactor.isEnabled();
           } else {
-            Timber.w("%s: Is not managed, return empty", getJobTag());
+            Timber.w("%s: Is not managed, return empty", interactor.getJobTag());
             return Observable.empty();
           }
         })
         .map(enabled -> {
-          Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
+          Timber.d("%s: Set original state enabled: %s", interactor.getJobTag(), enabled);
           interactor.setOriginalStateEnabled(enabled);
           return enabled;
         })
         .flatMap(accountForWearableBeforeDisable())
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observerScheduler)
+        .subscribeOn(scheduler)
+        .observeOn(scheduler)
         .subscribe(shouldQueue -> {
               // Only queue a disable job if the radio is not ignored
               if (shouldQueue) {
-                Timber.d("%s: Queued up a new disable job", getJobTag());
+                Timber.d("%s: Queued up a new disable job", interactor.getJobTag());
                 interactor.queueDisableJob();
               }
-            }, throwable -> Timber.e(throwable, "%s: onError queueUnset", getJobTag()),
-            () -> SubscriptionHelper.unsubscribe(subscription));
+            }, throwable -> Timber.e(throwable, "%s: onError queueUnset", interactor.getJobTag()),
+            () -> {
+              if (onUnset != null) {
+                onUnset.run();
+              }
+              SubscriptionHelper.unsubscribe(unsetSubscription);
+            });
   }
 
   @CallSuper @Override public void cleanup() {
     interactor.destroy();
-    SubscriptionHelper.unsubscribe(subscription);
+    SubscriptionHelper.unsubscribe(cancelSubscription, setSubscription, unsetSubscription);
 
     // Reset the device back to its original state when the Service is cleaned up
-    queueSet();
+    queueSet(null);
   }
 
   @CheckResult @NonNull

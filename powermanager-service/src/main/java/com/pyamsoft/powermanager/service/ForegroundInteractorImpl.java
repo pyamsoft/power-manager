@@ -22,14 +22,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
-import com.pyamsoft.powermanager.model.Constants;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.JobQueuerEntry;
+import com.pyamsoft.powermanager.model.QueuerType;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -41,19 +41,16 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final Class<? extends Service> toggleServiceClass;
-  @NonNull private final Class<? extends Service> triggerRunnerServiceClass;
-  @NonNull private final JobQueuerWrapper jobQueuerWrapper;
+  @NonNull private final JobQueuer jobQueuer;
 
-  @Inject ForegroundInteractorImpl(@NonNull JobQueuerWrapper jobQueuerWrapper,
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject ForegroundInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
       @NonNull Class<? extends Activity> mainActivityClass,
-      @NonNull Class<? extends Service> toggleServiceClass,
-      @NonNull Class<? extends Service> triggerRunnerServiceClass) {
+      @NonNull Class<? extends Service> toggleServiceClass) {
     super(preferences);
-    this.jobQueuerWrapper = jobQueuerWrapper;
+    this.jobQueuer = jobQueuer;
     appContext = context.getApplicationContext();
     this.toggleServiceClass = toggleServiceClass;
-    this.triggerRunnerServiceClass = triggerRunnerServiceClass;
 
     final Intent intent =
         new Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -74,18 +71,20 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
   @Override public void create() {
     final long delayTime = getPreferences().getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
-    final Bundle extras = new Bundle();
-    extras.putLong(Constants.TRIGGER_RUNNER_PERIOD, triggerPeriod);
-
-    Timber.d("Trigger period: %d", triggerPeriod);
-
-    jobQueuerWrapper.cancel(triggerRunnerServiceClass);
-    jobQueuerWrapper.set(triggerRunnerServiceClass, System.currentTimeMillis() + triggerPeriod);
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.queue(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
+        .repeatingOnWindow(0)
+        .repeating(true)
+        .repeatingOffWindow(0)
+        .delay(triggerPeriod)
+        .ignoreIfCharging(true)
+        .type(QueuerType.POWER_TRIGGER)
+        .build());
   }
 
   @Override public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobQueuerWrapper.cancel(triggerRunnerServiceClass);
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

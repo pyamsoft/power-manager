@@ -21,7 +21,7 @@ import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.JobQueuerWrapper;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -35,11 +35,10 @@ import rx.Scheduler;
   }
 
   @Provides ForegroundInteractor provideForegroundInteractor(@NonNull Context context,
-      @NonNull JobQueuerWrapper jobQueuerWrapper, @NonNull PowerManagerPreferences preferences,
+      @NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @Named("main") Class<? extends Activity> mainActivityClass,
-      @Named("toggle") Class<? extends Service> toggleServiceClass,
-      @Named("triggerrunner") Class<? extends Service> triggerRunnerServiceClass) {
-    return new ForegroundInteractorImpl(jobQueuerWrapper, context, preferences, mainActivityClass,
-        toggleServiceClass, triggerRunnerServiceClass);
+      @Named("toggle") Class<? extends Service> toggleServiceClass) {
+    return new ForegroundInteractorImpl(jobQueuer, context, preferences, mainActivityClass,
+        toggleServiceClass);
   }
 }

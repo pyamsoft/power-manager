@@ -9,6 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/powermanager-bluetooth/powermanager-bluetooth.iml" filepath="$PROJECT_DIR$/powermanager-bluetooth/powermanager-bluetooth.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-data/powermanager-data.iml" filepath="$PROJECT_DIR$/powermanager-data/powermanager-data.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-doze/powermanager-doze.iml" filepath="$PROJECT_DIR$/powermanager-doze/powermanager-doze.iml" />
+      <module fileurl="file://$PROJECT_DIR$/powermanager-job/powermanager-job.iml" filepath="$PROJECT_DIR$/powermanager-job/powermanager-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-main/powermanager-main.iml" filepath="$PROJECT_DIR$/powermanager-main/powermanager-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" filepath="$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-model/powermanager-model.iml" filepath="$PROJECT_DIR$/powermanager-model/powermanager-model.iml" />

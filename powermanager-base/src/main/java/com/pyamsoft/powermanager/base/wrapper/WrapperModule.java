@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.Logger;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -59,9 +59,5 @@ import javax.inject.Singleton;
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @Named("logger_doze") Logger logger) {
     return new DozeDeviceWrapperImpl(context, logger, preferences);
-  }
-
-  @Singleton @Provides JobQueuerWrapper provideJobQueuerWrapper(@NonNull Context context) {
-    return new JobQueuerWrapperImpl(context);
   }
 }

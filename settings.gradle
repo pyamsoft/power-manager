@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-include ':powermanager', ':powermanager-model', ':powermanager-base',
+include ':powermanager', ':powermanager-model', ':powermanager-base', ':powermanager-job',
     ':powermanager-trigger',
     ':powermanager-overview',
     ':powermanager-main',

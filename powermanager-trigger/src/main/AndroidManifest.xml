@@ -20,7 +20,7 @@
   <application>
 
     <service
-        android:name=".TriggerRunnerService"
+        android:name="com.pyamsoft.powermanager.base.jobs.TriggerJob"
         android:exported="false"/>
 
   </application>

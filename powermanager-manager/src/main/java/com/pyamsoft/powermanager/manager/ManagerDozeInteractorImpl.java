@@ -19,20 +19,18 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-class ManagerDozeInteractorImpl extends ManagerInteractorImpl
-    implements ExclusiveWearUnawareManagerInteractor {
+class ManagerDozeInteractorImpl extends ManagerInteractorImpl {
 
-  @Inject ManagerDozeInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver);
+  @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -52,7 +50,7 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
   }
 
   @NonNull @Override public String getJobTag() {
-    return DOZE_JOB_TAG;
+    return JobQueuer.DOZE_JOB_TAG;
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
@@ -64,19 +62,11 @@ class ManagerDozeInteractorImpl extends ManagerInteractorImpl
     getPreferences().setOriginalDoze(enabled);
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingDoze();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingDoze();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
     return Observable.defer(() -> Observable.just(getPreferences().isOriginalDoze()));
-  }
-
-  @NonNull @Override public Observable<Boolean> isExclusive() {
-    return Observable.defer(() -> {
-      final boolean preference =
-          getPreferences().isExclusiveDoze() && getPreferences().isDozeManaged();
-      return Observable.just(preference);
-    });
   }
 }

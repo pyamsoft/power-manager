@@ -21,45 +21,47 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
 import rx.Observable;
 
 abstract class ManagerInteractorImpl implements ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final Queuer queuer;
+  @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
   @NonNull private final PowerManagerPreferences preferences;
 
-  ManagerInteractorImpl(@NonNull Queuer queuer, @NonNull PowerManagerPreferences preferences,
+  ManagerInteractorImpl(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver) {
-    this.queuer = queuer;
+    this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;
     this.preferences = preferences;
   }
 
   @Override public void destroy() {
-    queuer.cancel();
+    jobQueuer.cancel(getJobTag());
   }
 
   @Override @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
     return Observable.fromCallable(() -> {
-      destroy();
+      jobQueuer.cancel(getJobTag());
       return Boolean.TRUE;
     });
   }
 
   @WorkerThread @CallSuper @Override public void queueEnableJob() {
     final QueuerType queuerType;
-    switch (getJobTag()) {
-      case AIRPLANE_JOB_TAG:
+    final String jobTag = getJobTag();
+    switch (jobTag) {
+      case JobQueuer.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_ON_DISABLE;
         break;
-      case DOZE_JOB_TAG:
+      case JobQueuer.DOZE_JOB_TAG:
         queuerType = QueuerType.SCREEN_ON_DISABLE;
         break;
       default:
@@ -67,23 +69,25 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up an enable job
-    queuer.cancel();
-    queuer.setType(queuerType)
-        .setDelayTime(100L)
-        .setPeriodic(false)
-        .setPeriodicEnableTime(0L)
-        .setPeriodicDisableTime(0L)
-        .setIgnoreCharging(false)
-        .queue();
+    jobQueuer.cancel(jobTag);
+    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
+        .type(queuerType)
+        .delay(0)
+        .repeating(false)
+        .repeatingOffWindow(0L)
+        .repeatingOnWindow(0L)
+        .ignoreIfCharging(false)
+        .build());
   }
 
   @WorkerThread @CallSuper @Override public void queueDisableJob() {
     final QueuerType queuerType;
-    switch (getJobTag()) {
-      case AIRPLANE_JOB_TAG:
+    final String jobTag = getJobTag();
+    switch (jobTag) {
+      case JobQueuer.AIRPLANE_JOB_TAG:
         queuerType = QueuerType.SCREEN_OFF_ENABLE;
         break;
-      case DOZE_JOB_TAG:
+      case JobQueuer.DOZE_JOB_TAG:
         queuerType = QueuerType.SCREEN_OFF_ENABLE;
         break;
       default:
@@ -91,14 +95,15 @@ abstract class ManagerInteractorImpl implements ManagerInteractor {
     }
 
     // Queue up a disable job
-    queuer.cancel();
-    queuer.setType(queuerType)
-        .setDelayTime(getDelayTime() * 1000L)
-        .setPeriodic(isPeriodic())
-        .setPeriodicEnableTime(getPeriodicEnableTime())
-        .setPeriodicDisableTime(getPeriodicDisableTime())
-        .setIgnoreCharging(isIgnoreWhileCharging().call())
-        .queue();
+    jobQueuer.cancel(jobTag);
+    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
+        .type(queuerType)
+        .delay(getDelayTime() * 1000L)
+        .repeating(isPeriodic())
+        .repeatingOffWindow(getPeriodicDisableTime())
+        .repeatingOnWindow(getPeriodicEnableTime())
+        .ignoreIfCharging(isIgnoreWhileCharging())
+        .build());
   }
 
   @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {

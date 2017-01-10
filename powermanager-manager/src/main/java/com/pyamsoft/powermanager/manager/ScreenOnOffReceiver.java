@@ -27,8 +27,7 @@ import android.support.annotation.NonNull;
 import android.view.Display;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.powermanager.base.logger.Logger;
-import com.pyamsoft.powermanager.model.ExclusiveManager;
+import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.Manager;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,7 +49,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   @Inject @Named("data_manager") Manager managerData;
   @Inject @Named("bluetooth_manager") Manager managerBluetooth;
   @Inject @Named("sync_manager") Manager managerSync;
-  @Inject @Named("doze_manager") ExclusiveManager managerDoze;
+  @Inject @Named("doze_manager") Manager managerDoze;
   @Inject @Named("airplane_manager") Manager managerAirplane;
   @Inject @Named("logger_manager") Logger logger;
   private boolean isRegistered;
@@ -96,14 +95,16 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
       final String action = intent.getAction();
       switch (action) {
         case Intent.ACTION_SCREEN_OFF:
+          logger.d("Some screen off action");
           if (checkDisplayState(false)) {
-            Timber.d("Screen off event");
+            logger.i("Screen off event");
             disableManagers();
           }
           break;
         case Intent.ACTION_SCREEN_ON:
+          logger.d("Some screen on action");
           if (checkDisplayState(true)) {
-            Timber.d("Screen on event");
+            logger.i("Screen on event");
             enableManagers();
           }
           break;
@@ -114,24 +115,23 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableManagers() {
-    logger.i("Screen is ON, enable Managers");
-    managerAirplane.queueSet();
-    managerDoze.queueExclusiveSet(() -> {
-      managerWifi.queueSet();
-      managerData.queueSet();
-      managerBluetooth.queueSet();
-      managerSync.queueSet();
-    });
+    managerDoze.cancel(() -> managerDoze.queueSet(() -> {
+      managerAirplane.cancel(() -> managerAirplane.queueSet(null));
+      managerWifi.cancel(() -> managerWifi.queueSet(null));
+      managerData.cancel(() -> managerData.queueSet(null));
+      managerBluetooth.cancel(() -> managerBluetooth.queueSet(null));
+      managerSync.cancel(() -> managerSync.queueSet(null));
+    }));
   }
 
   private void disableManagers() {
-    logger.i("Screen is OFF, disable Managers");
-    managerAirplane.queueUnset();
-    managerDoze.queueExclusiveUnset(() -> {
-      managerWifi.queueUnset();
-      managerData.queueUnset();
-      managerBluetooth.queueUnset();
-      managerSync.queueUnset();
+    managerDoze.cancel(() -> {
+      managerAirplane.cancel(() -> managerAirplane.queueUnset(null));
+      managerWifi.cancel(() -> managerWifi.queueUnset(null));
+      managerData.cancel(() -> managerData.queueUnset(null));
+      managerBluetooth.cancel(() -> managerBluetooth.queueUnset(null));
+      managerSync.cancel(() -> managerSync.queueUnset(null));
+      managerDoze.queueUnset(null);
     });
   }
 

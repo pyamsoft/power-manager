@@ -19,20 +19,19 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.manager.queuer.Queuer;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import rx.Observable;
 
 class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
 
-  @Inject ManagerBluetoothInteractorImpl(@NonNull Queuer queuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver,
+  @Inject ManagerBluetoothInteractorImpl(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
-    super(queuer, preferences, manageObserver, stateObserver, wearManageObserver,
+    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }
 
@@ -53,11 +52,11 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
   }
 
   @NonNull @Override public String getJobTag() {
-    return BLUETOOTH_JOB_TAG;
+    return JobQueuer.BLUETOOTH_JOB_TAG;
   }
 
-  @NonNull @Override public FuncNone<Boolean> isIgnoreWhileCharging() {
-    return () -> getPreferences().isIgnoreChargingBluetooth();
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingBluetooth();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
