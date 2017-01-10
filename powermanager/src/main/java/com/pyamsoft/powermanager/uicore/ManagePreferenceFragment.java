@@ -32,15 +32,17 @@ import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.FuncNone;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
     implements ManagePreferencePresenter.ManagePreferenceView, PagerItem {
 
-  @NonNull private static final String KEY_PRESENTER = "key_base_manage_presenter";
+  @NonNull private static final String TAG = "ManagePreferenceFragment";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
@@ -54,7 +56,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
-  private long loadedKey;
   private boolean showOnboardingOnBind = false;
 
   @Override public void onSelected() {
@@ -94,17 +95,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<ManagePreferencePresenter>() {
-              @NonNull @Override public PersistLoader<ManagePreferencePresenter> createLoader() {
-                return createPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull ManagePreferencePresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, createPresenterLoader());
   }
 
   @Override void resolvePreferences() {
@@ -205,17 +196,9 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     presenter.unbindView();
   }
 
-  @CallSuper @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_PRESENTER, loadedKey, ManagePreferencePresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @CallSuper @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
+    PowerManager.getRefWatcher(this).watch(this);
   }
 
   @CallSuper @Override public void onDestroyView() {
@@ -401,7 +384,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @CheckResult @NonNull
-  protected abstract PersistLoader<ManagePreferencePresenter> createPresenterLoader();
+  protected abstract FuncNone<ManagePreferencePresenter> createPresenterLoader();
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
 

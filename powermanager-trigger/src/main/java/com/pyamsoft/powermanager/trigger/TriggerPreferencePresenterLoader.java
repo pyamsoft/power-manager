@@ -18,15 +18,15 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-class TriggerPreferencePresenterLoader extends PersistLoader<TriggerPreferencePresenter> {
+class TriggerPreferencePresenterLoader implements FuncNone<TriggerPreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<TriggerPreferencePresenter> presenterProvider;
 
-  @NonNull @Override public TriggerPreferencePresenter loadPersistent() {
+  @NonNull @Override public TriggerPreferencePresenter call() {
     DaggerTriggerComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

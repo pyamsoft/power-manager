@@ -34,12 +34,11 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.List;
 import timber.log.Timber;
 
@@ -47,7 +46,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
     implements TriggerPresenter.TriggerView {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
-  @NonNull private static final String KEY_PRESENTER = "key_trigger_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_trigger_presenter";
   @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
 
   @SuppressWarnings("WeakerAccess") TriggerPresenter presenter;
@@ -60,16 +59,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedPresenterKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<TriggerPresenter>() {
-          @NonNull @Override public PersistLoader<TriggerPresenter> createLoader() {
-            return new TriggerPresenterLoader();
-          }
-
-          @Override public void onPersistentLoaded(@NonNull TriggerPresenter persist) {
-            presenter = persist;
-          }
-        });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, new TriggerPresenterLoader());
   }
 
   @Nullable @Override
@@ -164,16 +154,7 @@ public class PowerTriggerListFragment extends ActionBarFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedPresenterKey);
-    }
     PowerManager.getRefWatcher(this).watch(this);
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_PRESENTER, loadedPresenterKey, TriggerPresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

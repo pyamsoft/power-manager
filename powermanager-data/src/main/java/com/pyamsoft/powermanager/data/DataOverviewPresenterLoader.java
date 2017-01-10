@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.data;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class DataOverviewPresenterLoader extends PersistLoader<OverviewPagerPresenter> {
+class DataOverviewPresenterLoader implements FuncNone<OverviewPagerPresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("data_overview") Provider<OverviewPagerPresenter>
       presenterProvider;
 
-  @NonNull @Override public OverviewPagerPresenter loadPersistent() {
+  @NonNull @Override public OverviewPagerPresenter call() {
     DaggerDataScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

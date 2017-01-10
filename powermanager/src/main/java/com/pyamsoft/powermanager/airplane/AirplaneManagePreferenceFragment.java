@@ -21,12 +21,12 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import timber.log.Timber;
 
 public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new AirplaneManagePresenterLoader();
   }
 

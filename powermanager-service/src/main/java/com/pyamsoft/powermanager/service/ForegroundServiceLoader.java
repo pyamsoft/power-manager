@@ -18,15 +18,15 @@ package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-class ForegroundServiceLoader extends PersistLoader<ForegroundPresenter> {
+class ForegroundServiceLoader implements FuncNone<ForegroundPresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<ForegroundPresenter> presenterProvider;
 
-  @NonNull @Override public ForegroundPresenter loadPersistent() {
+  @NonNull @Override public ForegroundPresenter call() {
     DaggerForegroundServiceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

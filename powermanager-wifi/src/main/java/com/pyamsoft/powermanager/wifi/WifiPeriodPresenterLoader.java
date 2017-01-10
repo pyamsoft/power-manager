@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.wifi;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class WifiPeriodPresenterLoader extends PersistLoader<PeriodPreferencePresenter> {
+class WifiPeriodPresenterLoader implements FuncNone<PeriodPreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_period_pref")
   Provider<PeriodPreferencePresenter> presenterProvider;
 
-  @NonNull @Override public PeriodPreferencePresenter loadPersistent() {
+  @NonNull @Override public PeriodPreferencePresenter call() {
     DaggerWifiScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

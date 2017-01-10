@@ -18,15 +18,15 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-class OverviewPresenterLoader extends PersistLoader<OverviewPresenter> {
+class OverviewPresenterLoader implements FuncNone<OverviewPresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<OverviewPresenter> presenterProvider;
 
-  @NonNull @Override public OverviewPresenter loadPersistent() {
+  @NonNull @Override public OverviewPresenter call() {
     DaggerOverviewComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

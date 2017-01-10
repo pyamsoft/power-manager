@@ -81,7 +81,7 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
       screenOnOffReceiver = new ScreenOnOffReceiver(this);
     }
     if (presenter == null) {
-      presenter = new ForegroundServiceLoader().loadPersistent();
+      presenter = new ForegroundServiceLoader().call();
     }
     presenter.bindView(this);
   }

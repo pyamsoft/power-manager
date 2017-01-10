@@ -18,15 +18,15 @@ package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-class ActionToggleServiceLoader extends PersistLoader<ActionTogglePresenter> {
+class ActionToggleServiceLoader implements FuncNone<ActionTogglePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<ActionTogglePresenter> presenterProvider;
 
-  @NonNull @Override public ActionTogglePresenter loadPersistent() {
+  @NonNull @Override public ActionTogglePresenter call() {
     DaggerActionToggleServiceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

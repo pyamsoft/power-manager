@@ -35,7 +35,7 @@ class SyncPreferenceLoader extends PreferenceLoader {
   @SuppressWarnings("WeakerAccess") @Inject @Named("sync_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
 
-  public SyncPreferenceLoader() {
+  SyncPreferenceLoader() {
     DaggerSyncPreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

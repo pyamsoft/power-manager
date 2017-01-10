@@ -145,7 +145,7 @@ class OverviewItem
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
-      presenter = new OverviewItemPresenterLoader().loadPersistent();
+      presenter = new OverviewItemPresenterLoader().call();
     }
 
     @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {

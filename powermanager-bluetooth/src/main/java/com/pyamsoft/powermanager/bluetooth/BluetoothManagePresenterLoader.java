@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.bluetooth;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class BluetoothManagePresenterLoader extends PersistLoader<ManagePreferencePresenter> {
+class BluetoothManagePresenterLoader implements FuncNone<ManagePreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_manage_pref")
   Provider<ManagePreferencePresenter> presenterProvider;
 
-  @NonNull @Override public ManagePreferencePresenter loadPersistent() {
+  @NonNull @Override public ManagePreferencePresenter call() {
     DaggerBluetoothScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

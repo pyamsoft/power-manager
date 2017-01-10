@@ -33,7 +33,7 @@ public class ActionToggleService extends Service
 
   @Override public void onCreate() {
     super.onCreate();
-    presenter = new ActionToggleServiceLoader().loadPersistent();
+    presenter = new ActionToggleServiceLoader().call();
     presenter.bindView(this);
   }
 

@@ -22,13 +22,13 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import com.pyamsoft.pydroid.util.AppUtil;
 import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new DozeManagePresenterLoader();
   }
 

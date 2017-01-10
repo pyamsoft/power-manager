@@ -22,50 +22,31 @@ import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 
 public class PowerTriggerPreferenceFragment extends PreferenceFragmentCompat
     implements TriggerPreferencePresenter.Provider {
 
   @NonNull public static final String TAG = "PowerTriggerPreferenceFragment";
-  @NonNull private static final String KEY_PRESENTER = "key_trigger_pref_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_trigger_pref_presenter";
   @SuppressWarnings("WeakerAccess") TriggerPreferencePresenter presenter;
-  private long loadedKey;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<TriggerPreferencePresenter>() {
-              @NonNull @Override public PersistLoader<TriggerPreferencePresenter> createLoader() {
-                return new TriggerPreferencePresenterLoader();
-              }
-
-              @Override
-              public void onPersistentLoaded(@NonNull TriggerPreferencePresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter =
+        PersistentCache.load(getActivity(), KEY_PRESENTER, new TriggerPreferencePresenterLoader());
   }
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(R.xml.power_trigger_options);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_PRESENTER, loadedKey, TriggerPreferencePresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
+    PowerManager.getRefWatcher(this).watch(this);
   }
 
   @Override public void onStart() {

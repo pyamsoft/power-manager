@@ -22,7 +22,8 @@ import com.pyamsoft.powermanager.model.PreferenceType;
 
 public abstract class PreferenceLoader {
 
-  public CustomTimeInputPreferencePresenter loadPresenter(@NonNull PreferenceType type) {
+  @CheckResult @NonNull CustomTimeInputPreferencePresenter loadPresenter(
+      @NonNull PreferenceType type) {
     final CustomTimeInputPreferencePresenter presenter;
     switch (type) {
       case DELAY:

@@ -35,7 +35,7 @@ class DozePreferenceLoader extends PreferenceLoader {
   @SuppressWarnings("WeakerAccess") @Inject @Named("doze_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
 
-  public DozePreferenceLoader() {
+  DozePreferenceLoader() {
     DaggerDozePreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

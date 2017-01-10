@@ -36,8 +36,8 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
@@ -50,12 +50,11 @@ import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
@@ -74,7 +73,6 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   @ColorInt private int oldStatusBarColor;
   @Nullable private ValueAnimator appBarAnimator;
   @Nullable private ValueAnimator statusBarAnimator;
-  private long loadedKey;
 
   @SuppressWarnings("WeakerAccess") @CheckResult @ColorInt
   static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
@@ -100,16 +98,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
       loadOverviewFragment();
     }
 
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<MainPresenter>() {
-          @NonNull @Override public PersistLoader<MainPresenter> createLoader() {
-            return new MainPresenterLoader();
-          }
-
-          @Override public void onPersistentLoaded(@NonNull MainPresenter persist) {
-            presenter = persist;
-          }
-        });
+    presenter = PersistentCache.load(this, KEY_PRESENTER, new MainPresenterLoader());
   }
 
   @Override protected int bindActivityToView() {
@@ -130,10 +119,6 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
     //noinspection Convert2streamapi
     for (final String key : addedViewMap.keySet()) {
       removeViewFromAppBar(key);
-    }
-
-    if (!isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
     }
 
     addedViewMap.clear();
@@ -345,11 +330,6 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
   @Override protected void onStop() {
     super.onStop();
     presenter.unbindView();
-  }
-
-  @Override protected void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, MainPresenter.class);
-    super.onSaveInstanceState(outState);
   }
 
   // https://github.com/mozilla/gecko-dev/blob/master/mobile/android/base/java/org/mozilla/gecko/BrowserApp.java

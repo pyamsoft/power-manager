@@ -28,44 +28,35 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment
     implements OverviewPagerPresenter.View {
 
+  @NonNull private static final String TAG = "OverviewPagerFragment";
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
-  @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_overview_presenter";
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   private FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
-  private long loadedKey;
   @Nullable private AsyncMap.Entry subscription;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<OverviewPagerPresenter>() {
-              @NonNull @Override public PersistLoader<OverviewPagerPresenter> createLoader() {
-                return getPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull OverviewPagerPresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, getPresenterLoader());
   }
 
   @Nullable @Override
@@ -124,15 +115,12 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     if (tabLayout != null) {
       outState.putInt(CURRENT_TAB_KEY, tabLayout.getSelectedTabPosition());
     }
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, OverviewPagerPresenter.class);
     super.onSaveInstanceState(outState);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
+    PowerManager.getRefWatcher(this).watch(this);
   }
 
   private void addTabLayout(@NonNull TabLayout tabLayout) {
@@ -232,8 +220,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
 
   @CheckResult @NonNull protected abstract BooleanInterestObserver getObserver();
 
-  @CheckResult @NonNull
-  protected abstract PersistLoader<OverviewPagerPresenter> getPresenterLoader();
+  @CheckResult @NonNull protected abstract FuncNone<OverviewPagerPresenter> getPresenterLoader();
 
   @CheckResult @DrawableRes protected abstract int getFabSetIcon();
 

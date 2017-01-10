@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.doze;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class DozeLoader extends PersistLoader<BooleanInterestObserver> {
+class DozeLoader implements FuncNone<BooleanInterestObserver> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_doze_state")
   Provider<BooleanInterestObserver> observerProvider;
 
-  @NonNull @Override public BooleanInterestObserver loadPersistent() {
+  @NonNull @Override public BooleanInterestObserver call() {
     DaggerDozeScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

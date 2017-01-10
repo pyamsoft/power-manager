@@ -35,7 +35,7 @@ class WifiPreferenceLoader extends PreferenceLoader {
   @SuppressWarnings("WeakerAccess") @Inject @Named("wifi_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
 
-  public WifiPreferenceLoader() {
+  WifiPreferenceLoader() {
     DaggerWifiPreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
@@ -42,33 +43,22 @@ import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.util.PersistentCache;
 import timber.log.Timber;
 
 public class OverviewFragment extends ActionBarFragment implements OverviewPresenter.Overview {
 
   @NonNull public static final String TAG = "Overview";
-  @NonNull private static final String KEY_PRESENTER = "key_overview_presenter";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_overview_presenter";
   @SuppressWarnings("WeakerAccess") OverviewPresenter presenter;
   private FastItemAdapter<OverviewItem> adapter;
   private FragmentOverviewBinding binding;
-  private long loadedKey;
   @Nullable private TapTargetSequence sequence;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState, new PersistLoader.Callback<OverviewPresenter>() {
-          @NonNull @Override public PersistLoader<OverviewPresenter> createLoader() {
-            return new OverviewPresenterLoader();
-          }
-
-          @Override public void onPersistentLoaded(@NonNull OverviewPresenter persist) {
-            presenter = persist;
-          }
-        });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, new OverviewPresenterLoader());
   }
 
   @Nullable @Override
@@ -112,16 +102,9 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
     setActionBarUpEnabled(false);
   }
 
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get().saveKey(outState, KEY_PRESENTER, loadedKey, OverviewPresenter.class);
-    super.onSaveInstanceState(outState);
-  }
-
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
+    PowerManager.getRefWatcher(this).watch(this);
   }
 
   private void populateAdapter(@NonNull View view) {

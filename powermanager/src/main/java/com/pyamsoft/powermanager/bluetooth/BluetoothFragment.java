@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 
 public class BluetoothFragment extends OverviewPagerFragment {
 
@@ -39,14 +39,14 @@ public class BluetoothFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    observer = new BluetoothLoader().loadPersistent();
+    observer = new BluetoothLoader().call();
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {
     return observer;
   }
 
-  @NonNull @Override protected PersistLoader<OverviewPagerPresenter> getPresenterLoader() {
+  @NonNull @Override protected FuncNone<OverviewPagerPresenter> getPresenterLoader() {
     return new BluetoothOverviewPresenterLoader();
   }
 

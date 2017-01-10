@@ -19,12 +19,12 @@ package com.pyamsoft.powermanager.data;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.FuncNone;
 
 public class DataFragment extends OverviewPagerFragment {
 
@@ -39,14 +39,14 @@ public class DataFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectObserverModifier() {
-    observer = new DataLoader().loadPersistent();
+    observer = new DataLoader().call();
   }
 
   @NonNull @Override protected BooleanInterestObserver getObserver() {
     return observer;
   }
 
-  @NonNull @Override protected PersistLoader<OverviewPagerPresenter> getPresenterLoader() {
+  @NonNull @Override protected FuncNone<OverviewPagerPresenter> getPresenterLoader() {
     return new DataOverviewPresenterLoader();
   }
 

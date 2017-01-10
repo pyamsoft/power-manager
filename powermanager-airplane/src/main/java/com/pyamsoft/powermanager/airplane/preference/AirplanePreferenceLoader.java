@@ -35,7 +35,7 @@ class AirplanePreferenceLoader extends PreferenceLoader {
   @SuppressWarnings("WeakerAccess") @Inject @Named("airplane_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
 
-  public AirplanePreferenceLoader() {
+  AirplanePreferenceLoader() {
     DaggerAirplanePreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

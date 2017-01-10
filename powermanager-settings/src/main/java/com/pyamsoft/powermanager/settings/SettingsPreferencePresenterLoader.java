@@ -18,15 +18,15 @@ package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-class SettingsPreferencePresenterLoader extends PersistLoader<SettingsPreferencePresenter> {
+class SettingsPreferencePresenterLoader implements FuncNone<SettingsPreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject Provider<SettingsPreferencePresenter> presenterProvider;
 
-  @NonNull @Override public SettingsPreferencePresenter loadPersistent() {
+  @NonNull @Override public SettingsPreferencePresenter call() {
     DaggerSettingsPreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

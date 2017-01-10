@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.sync;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class SyncLoader extends PersistLoader<BooleanInterestObserver> {
+class SyncLoader implements FuncNone<BooleanInterestObserver> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state")
   Provider<BooleanInterestObserver> observerProvider;
 
-  @NonNull @Override public BooleanInterestObserver loadPersistent() {
+  @NonNull @Override public BooleanInterestObserver call() {
     DaggerSyncScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

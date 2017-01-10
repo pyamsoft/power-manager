@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.wear;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class WearPresenterLoader extends PersistLoader<ManagePreferencePresenter> {
+class WearPresenterLoader implements FuncNone<ManagePreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("wear_manage_pref")
   Provider<ManagePreferencePresenter> presenterProvider;
 
-  @NonNull @Override public ManagePreferencePresenter loadPersistent() {
+  @NonNull @Override public ManagePreferencePresenter call() {
     DaggerWearScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

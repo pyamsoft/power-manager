@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 
 public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
@@ -48,7 +48,7 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
     return R.string.periodic_data_disable_key;
   }
 
-  @NonNull @Override protected PersistLoader<PeriodPreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new DataPeriodPresenterLoader();
   }
 

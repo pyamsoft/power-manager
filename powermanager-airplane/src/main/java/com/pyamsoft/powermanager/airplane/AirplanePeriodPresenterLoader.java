@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.airplane;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class AirplanePeriodPresenterLoader extends PersistLoader<PeriodPreferencePresenter> {
+class AirplanePeriodPresenterLoader implements FuncNone<PeriodPreferencePresenter> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("airplane_period_pref")
   Provider<PeriodPreferencePresenter> presenterProvider;
 
-  @NonNull @Override public PeriodPreferencePresenter loadPersistent() {
+  @NonNull @Override public PeriodPreferencePresenter call() {
     DaggerAirplaneScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

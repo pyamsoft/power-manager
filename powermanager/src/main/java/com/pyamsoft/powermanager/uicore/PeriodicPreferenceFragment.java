@@ -29,15 +29,17 @@ import android.view.View;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.pyamsoft.powermanager.R;
 import com.getkeepsafe.taptargetview.TapTargetView;
+import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.app.PersistLoader;
-import com.pyamsoft.pydroid.util.PersistentCache;
+import com.pyamsoft.pydroid.FuncNone;
+import com.pyamsoft.pydroid.cache.PersistentCache;
 import timber.log.Timber;
 
 public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
     implements PeriodPreferencePresenter.PeriodPreferenceView, PagerItem {
 
-  @NonNull private static final String KEY_PRESENTER = "key_base_period_presenter";
+  @NonNull private static final String TAG = "PeriodicPreferenceFragment";
+  @NonNull private static final String KEY_PRESENTER = TAG + "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
@@ -51,7 +53,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   private String periodicKey;
   private String enableTimeKey;
   private String disableTimeKey;
-  private long loadedKey;
   private boolean showOnboardingOnBind = false;
   @Nullable private TapTargetView periodicTapTarget;
 
@@ -82,17 +83,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    loadedKey = PersistentCache.get()
-        .load(KEY_PRESENTER, savedInstanceState,
-            new PersistLoader.Callback<PeriodPreferencePresenter>() {
-              @NonNull @Override public PersistLoader<PeriodPreferencePresenter> createLoader() {
-                return createPresenterLoader();
-              }
-
-              @Override public void onPersistentLoaded(@NonNull PeriodPreferencePresenter persist) {
-                presenter = persist;
-              }
-            });
+    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, createPresenterLoader());
   }
 
   @Override void resolvePreferences() {
@@ -214,15 +205,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (!getActivity().isChangingConfigurations()) {
-      PersistentCache.get().unload(loadedKey);
-    }
-  }
-
-  @Override public void onSaveInstanceState(Bundle outState) {
-    PersistentCache.get()
-        .saveKey(outState, KEY_PRESENTER, loadedKey, PeriodPreferencePresenter.class);
-    super.onSaveInstanceState(outState);
+    PowerManager.getRefWatcher(this).watch(this);
   }
 
   @Override public final void onDestroyView() {
@@ -372,5 +355,5 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
 
   @CheckResult @NonNull
-  protected abstract PersistLoader<PeriodPreferencePresenter> createPresenterLoader();
+  protected abstract FuncNone<PeriodPreferencePresenter> createPresenterLoader();
 }

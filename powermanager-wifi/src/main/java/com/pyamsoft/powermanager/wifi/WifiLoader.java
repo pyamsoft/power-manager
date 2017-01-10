@@ -19,17 +19,17 @@ package com.pyamsoft.powermanager.wifi;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 
-class WifiLoader extends PersistLoader<BooleanInterestObserver> {
+class WifiLoader implements FuncNone<BooleanInterestObserver> {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state")
   Provider<BooleanInterestObserver> observerProvider;
 
-  @NonNull @Override public BooleanInterestObserver loadPersistent() {
+  @NonNull @Override public BooleanInterestObserver call() {
     DaggerWifiScreenComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()

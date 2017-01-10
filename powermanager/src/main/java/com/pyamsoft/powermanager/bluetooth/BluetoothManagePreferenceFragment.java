@@ -17,14 +17,14 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.app.PersistLoader;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.FuncNone;
 
 public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull @Override protected PersistLoader<ManagePreferencePresenter> createPresenterLoader() {
+  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new BluetoothManagePresenterLoader();
   }
 

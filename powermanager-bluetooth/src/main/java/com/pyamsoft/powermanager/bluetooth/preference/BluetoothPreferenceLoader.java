@@ -35,7 +35,7 @@ class BluetoothPreferenceLoader extends PreferenceLoader {
   @SuppressWarnings("WeakerAccess") @Inject @Named("bluetooth_custom_disable")
   Provider<CustomTimeInputPreferencePresenter> disablePresenter;
 
-  public BluetoothPreferenceLoader() {
+  BluetoothPreferenceLoader() {
     DaggerBluetoothPreferenceComponent.builder()
         .powerManagerComponent(Injector.get().provideComponent())
         .build()
