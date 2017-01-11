@@ -114,25 +114,21 @@ abstract class BaseJob {
   }
 
   private void set() {
-    if (!getObserver().is()) {
-      if (isStopped()) {
-        getLogger().w("Stop job early");
-        return;
-      }
-
-      getModifier().set();
+    if (isStopped()) {
+      getLogger().w("Stop job early");
+      return;
     }
+
+    getModifier().set();
   }
 
   private void unset() {
-    if (getObserver().is()) {
-      if (isStopped()) {
-        getLogger().w("Stop job early");
-        return;
-      }
-
-      getModifier().unset();
+    if (isStopped()) {
+      getLogger().w("Stop job early");
+      return;
     }
+
+    getModifier().unset();
   }
 
   /**
