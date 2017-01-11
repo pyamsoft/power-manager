@@ -36,7 +36,7 @@ import timber.log.Timber;
 public abstract class CustomTimeInputPreference extends BaseBoundPreference
     implements CustomTimeInputPreferencePresenter.View {
 
-  @SuppressWarnings("WeakerAccess") @Nullable CustomTimeInputPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
@@ -72,19 +72,15 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     isDetaching = true;
     super.onDetached();
     Timber.d("onDetached");
-    if (presenter != null) {
-      presenter.unbindView();
-      presenter.destroy();
-    }
+    presenter.unbindView();
+    presenter.destroy();
   }
 
   @Override public void onAttached() {
     super.onAttached();
     isDetaching = false;
     Timber.d("onAttached");
-    if (presenter != null) {
-      presenter.bindView(this);
-    }
+    presenter.bindView(this);
   }
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
@@ -108,10 +104,8 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
 
         @Override public void afterTextChanged(Editable s) {
           Timber.d("After text changed");
-          if (presenter != null) {
-            final String text = s.toString();
-            presenter.updateCustomTime(text);
-          }
+          final String text = s.toString();
+          presenter.updateCustomTime(text);
         }
       };
 
@@ -119,9 +113,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
       editText.addTextChangedListener(watcher);
     }
 
-    if (presenter != null) {
-      presenter.initializeCustomTime();
-    }
+    presenter.initializeCustomTime();
   }
 
   @Override protected void onUnbindViewHolder() {
@@ -134,11 +126,9 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
         editText.setOnEditorActionListener(null);
 
         if (isDetaching) {
-          if (presenter != null) {
-            // Save the last entered value to preferences
-            final String text = editText.getText().toString();
-            presenter.updateCustomTime(text, 0, false);
-          }
+          // Save the last entered value to preferences
+          final String text = editText.getText().toString();
+          presenter.updateCustomTime(text, 0, false);
         }
       }
 
@@ -173,10 +163,8 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
   }
 
   public void updatePresetDelay(@NonNull String presetDelay) {
-    if (presenter != null) {
-      Timber.d("Update time with preset delay of: %s", presetDelay);
-      presenter.updateCustomTime(presetDelay, 0);
-    }
+    Timber.d("Update time with preset delay of: %s", presetDelay);
+    presenter.updateCustomTime(presetDelay, 0);
   }
 
   @CheckResult @NonNull private CharSequence formatSummaryStringForTime(long time) {

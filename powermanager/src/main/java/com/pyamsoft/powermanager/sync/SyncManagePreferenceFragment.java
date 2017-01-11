@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @NonNull private static final String TAG = "SyncManagePreferenceFragment";
+
   @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new SyncManagePresenterLoader();
   }
@@ -46,6 +48,10 @@ public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_sync;
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @NonNull @Override protected String getModuleName() {

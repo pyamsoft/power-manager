@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
+  @NonNull private static final String TAG = "DataPeriodicPreferenceFragment";
+
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_data;
   }
@@ -50,6 +52,10 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new DataPeriodPresenterLoader();
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @NonNull @Override protected String getModuleName() {

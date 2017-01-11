@@ -28,6 +28,8 @@ import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @NonNull private static final String TAG = "DozeManagePreferenceFragment";
+
   @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new DozeManagePresenterLoader();
   }
@@ -50,6 +52,10 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_doze;
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @Override protected boolean checkManagePermission() {

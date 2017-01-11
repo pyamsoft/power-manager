@@ -38,8 +38,6 @@ import timber.log.Timber;
 public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
     implements PeriodPreferencePresenter.PeriodPreferenceView, PagerItem {
 
-  @NonNull private static final String TAG = "PeriodicPreferenceFragment";
-  @NonNull private static final String KEY_PRESENTER = TAG + "key_base_period_presenter";
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
@@ -83,7 +81,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, createPresenterLoader());
+    presenter = PersistentCache.load(getActivity(), getPresenterKey(), createPresenterLoader());
   }
 
   @Override void resolvePreferences() {
@@ -356,4 +354,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @CheckResult @NonNull
   protected abstract FuncNone<PeriodPreferencePresenter> createPresenterLoader();
+
+  @CheckResult @NonNull protected abstract String getPresenterKey();
 }

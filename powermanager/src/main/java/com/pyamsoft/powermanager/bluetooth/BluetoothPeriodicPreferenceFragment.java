@@ -24,8 +24,14 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class BluetoothPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
+  @NonNull private static final String TAG = "BluetoothPeriodicPreferenceFragment";
+
   @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new BluetoothPeriodPresenterLoader();
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "key_presenter";
   }
 
   @Override protected int getPreferencesResId() {

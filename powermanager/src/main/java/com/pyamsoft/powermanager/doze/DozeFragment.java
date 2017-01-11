@@ -62,6 +62,10 @@ public class DozeFragment extends OverviewPagerFragment {
     return new DozePagerAdapter(getChildFragmentManager());
   }
 
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
+  }
+
   @Override protected int provideAppBarColor() {
     return R.color.purple500;
   }

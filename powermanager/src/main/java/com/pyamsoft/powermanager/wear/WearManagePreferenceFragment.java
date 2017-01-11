@@ -56,6 +56,10 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
     return R.xml.manage_wear;
   }
 
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
+  }
+
   @NonNull @Override protected String getModuleName() {
     return "Wearable";
   }

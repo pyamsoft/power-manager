@@ -41,8 +41,6 @@ import timber.log.Timber;
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
     implements ManagePreferencePresenter.ManagePreferenceView, PagerItem {
 
-  @NonNull private static final String TAG = "ManagePreferenceFragment";
-  @NonNull private static final String KEY_PRESENTER = TAG + "key_base_manage_presenter";
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
@@ -95,7 +93,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, createPresenterLoader());
+    presenter = PersistentCache.load(getActivity(), getPresenterKey(), createPresenterLoader());
   }
 
   @Override void resolvePreferences() {
@@ -395,4 +393,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @StringRes @CheckResult protected abstract int getIgnoreChargingKey();
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
+
+  @CheckResult @NonNull protected abstract String getPresenterKey();
 }

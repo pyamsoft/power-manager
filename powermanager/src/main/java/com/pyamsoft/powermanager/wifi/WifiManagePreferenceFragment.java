@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @NonNull private static final String TAG = "WifiManagePreferenceFragment";
+
   @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new WifiManagePresenterLoader();
   }
@@ -46,6 +48,10 @@ public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_wifi;
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @NonNull @Override protected String getModuleName() {

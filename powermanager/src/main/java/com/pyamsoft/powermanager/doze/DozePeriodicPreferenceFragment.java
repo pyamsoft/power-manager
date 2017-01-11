@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
+  @NonNull private static final String TAG = "DozePeriodicPreferenceFragment";
+
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_doze;
   }
@@ -50,6 +52,10 @@ public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new DozePeriodPresenterLoader();
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @NonNull @Override protected String getModuleName() {

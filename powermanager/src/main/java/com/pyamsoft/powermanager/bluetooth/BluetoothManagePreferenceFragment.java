@@ -24,6 +24,12 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @NonNull private static final String TAG = "BluetoothManagePreferenceFragment";
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "key_presenter";
+  }
+
   @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new BluetoothManagePresenterLoader();
   }

@@ -62,6 +62,10 @@ public class AirplaneFragment extends OverviewPagerFragment {
     return new AirplanePagerAdapter(getChildFragmentManager());
   }
 
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
+  }
+
   @Override protected int provideAppBarColor() {
     return R.color.cyan500;
   }

@@ -24,8 +24,14 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
+  @NonNull private static final String TAG = "WifiPeriodicPreferenceFragment";
+
   @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new WifiPeriodPresenterLoader();
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
   }
 
   @Override protected int getPreferencesResId() {

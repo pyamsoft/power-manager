@@ -43,11 +43,10 @@ import timber.log.Timber;
 public abstract class OverviewPagerFragment extends AppBarColoringFragment
     implements OverviewPagerPresenter.View {
 
-  @NonNull private static final String TAG = "OverviewPagerFragment";
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
-  @NonNull private static final String KEY_PRESENTER = TAG + "key_overview_presenter";
+
   @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   private FragmentPreferenceContainerPagerBinding binding;
@@ -56,7 +55,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, getPresenterLoader());
+    presenter = PersistentCache.load(getActivity(), getPresenterKey(), getPresenterLoader());
   }
 
   @Nullable @Override
@@ -227,4 +226,6 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   @CheckResult @DrawableRes protected abstract int getFabUnsetIcon();
 
   @CheckResult @NonNull protected abstract ModulePagerAdapter getPagerAdapter();
+
+  @CheckResult @NonNull protected abstract String getPresenterKey();
 }

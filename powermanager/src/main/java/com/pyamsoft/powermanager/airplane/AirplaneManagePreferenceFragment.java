@@ -26,6 +26,8 @@ import timber.log.Timber;
 
 public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @NonNull private static final String TAG = "AirplaneManagePreferenceFragment";
+
   @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
     return new AirplaneManagePresenterLoader();
   }
@@ -48,6 +50,10 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected int getPreferencesResId() {
     return R.xml.manage_airplane;
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "key_presenter";
   }
 
   @Override protected boolean checkManagePermission() {

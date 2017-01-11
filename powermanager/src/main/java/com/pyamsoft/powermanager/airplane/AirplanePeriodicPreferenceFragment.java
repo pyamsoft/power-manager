@@ -24,6 +24,8 @@ import com.pyamsoft.pydroid.FuncNone;
 
 public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
+  @NonNull private static final String TAG = "AirplanePeriodicPreferenceFragment";
+
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_airplane;
   }
@@ -50,6 +52,10 @@ public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragme
 
   @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
     return new AirplanePeriodPresenterLoader();
+  }
+
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "key_presenter";
   }
 
   @NonNull @Override protected String getModuleName() {

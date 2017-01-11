@@ -62,6 +62,10 @@ public class WifiFragment extends OverviewPagerFragment {
     return new WifiPagerAdapter(getChildFragmentManager());
   }
 
+  @NonNull @Override protected String getPresenterKey() {
+    return TAG + "presenter_key";
+  }
+
   @Override protected int provideAppBarColor() {
     return R.color.green500;
   }
