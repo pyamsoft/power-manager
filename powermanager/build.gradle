@@ -27,13 +27,13 @@ apply plugin: "net.ltgt.errorprone"
 apply plugin: "me.tatarka.retrolambda"
 
 android {
-
-  compileSdkVersion 25
+  compileSdkVersion rootProject.ext.maxSdk
   buildToolsVersion "$buildTools"
 
+  //noinspection GroovyMissingReturnStatement
   defaultConfig {
     applicationId "com.pyamsoft.powermanager"
-    targetSdkVersion 25
+    targetSdkVersion rootProject.ext.maxSdk
     versionCode 96
     versionName "6.6.7pre1"
 
@@ -42,15 +42,18 @@ android {
   }
 
   productFlavors {
+
+    //noinspection GroovyMissingReturnStatement
     dev {
       // Enable pre-dexing to produce an APK that can be tested on
       // Android 5.0+ without the time-consuming DEX build processes.
-      minSdkVersion 21
+      minSdkVersion rootProject.ext.devSdk
     }
 
+    //noinspection GroovyMissingReturnStatement
     prod {
       // The actual minSdkVersion for the production version.
-      minSdkVersion 19
+      minSdkVersion rootProject.ext.minSdk
     }
   }
 
@@ -105,7 +108,7 @@ android {
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
-  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:2.3.0"
+  retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
   // Firebase Crash
   compile "com.google.firebase:firebase-crash:$firebase"
