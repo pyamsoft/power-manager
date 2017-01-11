@@ -135,7 +135,14 @@ abstract class BaseJob {
     }
   }
 
-  @CheckResult abstract boolean isStopped();
+  /**
+   * Override in the actual ManagedJobs to call Job.isCancelled();
+   *
+   * If it is not a managed job it never isStopped, always run to completion
+   */
+  @CheckResult boolean isStopped() {
+    return false;
+  }
 
   @CheckResult @NonNull abstract Logger getLogger();
 
