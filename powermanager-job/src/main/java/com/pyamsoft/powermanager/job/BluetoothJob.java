@@ -55,7 +55,11 @@ class BluetoothJob extends BaseJob {
   static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new BluetoothJob().run(params.getTag(), params.getExtras());
+      new BluetoothJob() {
+        @Override boolean isStopped() {
+          return isCanceled();
+        }
+      }.run(params.getTag(), params.getExtras());
       return Result.SUCCESS;
     }
   }

@@ -55,7 +55,11 @@ class WifiJob extends BaseJob {
   static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new WifiJob().run(params.getTag(), params.getExtras());
+      new WifiJob() {
+        @Override boolean isStopped() {
+          return isCanceled();
+        }
+      }.run(params.getTag(), params.getExtras());
       return Result.SUCCESS;
     }
   }

@@ -55,7 +55,11 @@ class DozeJob extends BaseJob {
   static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new DozeJob().run(params.getTag(), params.getExtras());
+      new DozeJob() {
+        @Override boolean isStopped() {
+          return isCanceled();
+        }
+      }.run(params.getTag(), params.getExtras());
       return Result.SUCCESS;
     }
   }

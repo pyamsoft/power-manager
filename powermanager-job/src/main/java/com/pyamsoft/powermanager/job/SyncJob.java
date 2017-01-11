@@ -55,7 +55,11 @@ class SyncJob extends BaseJob {
   static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new SyncJob().run(params.getTag(), params.getExtras());
+      new SyncJob() {
+        @Override boolean isStopped() {
+          return isCanceled();
+        }
+      }.run(params.getTag(), params.getExtras());
       return Result.SUCCESS;
     }
   }

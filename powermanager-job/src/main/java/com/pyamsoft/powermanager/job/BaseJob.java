@@ -50,6 +50,11 @@ abstract class BaseJob {
   }
 
   void run(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+    if (isStopped()) {
+      getLogger().w("Stop job early");
+      return;
+    }
+
     initialize(tag, extras);
     if (type == QueuerType.SCREEN_OFF_DISABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       if (ignoreWhenCharging) {
@@ -60,6 +65,11 @@ abstract class BaseJob {
       }
     }
 
+    if (isStopped()) {
+      getLogger().w("Stop job early");
+      return;
+    }
+
     getLogger().i("Run job: %s [%s]", type, jobTag);
     if (type == QueuerType.SCREEN_ON_ENABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       set();
@@ -67,6 +77,10 @@ abstract class BaseJob {
       unset();
     }
 
+    if (isStopped()) {
+      getLogger().w("Stop job early");
+      return;
+    }
     repeatIfRequired();
   }
 
@@ -101,15 +115,27 @@ abstract class BaseJob {
 
   private void set() {
     if (!getObserver().is()) {
+      if (isStopped()) {
+        getLogger().w("Stop job early");
+        return;
+      }
+
       getModifier().set();
     }
   }
 
   private void unset() {
     if (getObserver().is()) {
+      if (isStopped()) {
+        getLogger().w("Stop job early");
+        return;
+      }
+
       getModifier().unset();
     }
   }
+
+  @CheckResult abstract boolean isStopped();
 
   @CheckResult @NonNull abstract Logger getLogger();
 

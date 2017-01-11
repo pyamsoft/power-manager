@@ -55,7 +55,11 @@ class AirplaneJob extends BaseJob {
   static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new AirplaneJob().run(params.getTag(), params.getExtras());
+      new AirplaneJob() {
+        @Override boolean isStopped() {
+          return isCanceled();
+        }
+      }.run(params.getTag(), params.getExtras());
       return Result.SUCCESS;
     }
   }
