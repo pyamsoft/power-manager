@@ -20,28 +20,31 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class RootPermissionObserver extends PermissionObserverImpl {
 
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ShellCommandHelper shellCommandHelper;
 
   @Inject RootPermissionObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    this(context, preferences, null);
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
+    this(context, preferences, shellCommandHelper, null);
   }
 
   RootPermissionObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @Nullable String permission) {
+      @NonNull ShellCommandHelper shellCommandHelper, @Nullable String permission) {
     super(context, permission);
     this.preferences = preferences;
+    this.shellCommandHelper = shellCommandHelper;
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
     if (preferences.isRootEnabled()) {
-      final boolean hasPermission = ShellCommandHelper.isSUAvailable();
+      final boolean hasPermission = shellCommandHelper.isSUAvailable();
       Timber.d("Has root permission? %s", hasPermission);
       return hasPermission;
     } else {

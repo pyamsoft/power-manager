@@ -18,21 +18,24 @@ package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.ShellCommandHelper;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
 class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
 
+  @SuppressWarnings("WeakerAccess") @NonNull final ShellCommandHelper shellCommandHelper;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
 
   @Inject SettingsPrefrenceInteractorImpl(@NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
+    this.shellCommandHelper = shellCommandHelper;
   }
 
   @NonNull @Override public Observable<Boolean> isRootEnabled() {
@@ -43,7 +46,7 @@ class SettingsPrefrenceInteractorImpl implements SettingsPreferenceInteractor {
     return Observable.defer(() -> {
       // If we are enabling root, check SU available
       // If we are not enabling root, then everything is ok
-      final boolean result = !rootEnable || ShellCommandHelper.isSUAvailable();
+      final boolean result = !rootEnable || shellCommandHelper.isSUAvailable();
       return Observable.just(result);
     });
   }

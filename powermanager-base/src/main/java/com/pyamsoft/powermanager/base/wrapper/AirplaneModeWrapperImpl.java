@@ -21,7 +21,7 @@ import android.content.Context;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 
@@ -34,12 +34,15 @@ class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
   @NonNull private final Logger logger;
   @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ShellCommandHelper shellCommandHelper;
 
   @Inject AirplaneModeWrapperImpl(@NonNull Context context, @NonNull Logger logger,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
     this.contentResolver = context.getApplicationContext().getContentResolver();
     this.logger = logger;
     this.preferences = preferences;
+    this.shellCommandHelper = shellCommandHelper;
   }
 
   private void setAirplaneModeEnabled(boolean enabled) {
@@ -48,7 +51,7 @@ class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
       final String airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + (enabled ? "1" : "0");
       final String airplaneBroadcastCommand =
           AIRPLANE_BROADCAST_COMMAND + (enabled ? "true" : "false");
-      ShellCommandHelper.runRootShellCommand(airplaneSettingsCommand, airplaneBroadcastCommand);
+      shellCommandHelper.runSUCommand(airplaneSettingsCommand, airplaneBroadcastCommand);
     }
   }
 

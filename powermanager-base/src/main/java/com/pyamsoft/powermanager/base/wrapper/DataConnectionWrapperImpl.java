@@ -25,7 +25,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
@@ -43,13 +43,16 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     SET_MOBILE_DATA_ENABLED_METHOD = reflectSetMethod();
   }
 
+  @NonNull private final ShellCommandHelper shellCommandHelper;
   @NonNull private final Logger logger;
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
 
-  @Inject DataConnectionWrapperImpl(@NonNull Context context, @NonNull Logger logger,
+  @Inject DataConnectionWrapperImpl(@NonNull Context context,
+      @NonNull ShellCommandHelper shellCommandHelper, @NonNull Logger logger,
       @NonNull PowerManagerPreferences preferences) {
+    this.shellCommandHelper = shellCommandHelper;
     this.logger = logger;
     this.preferences = preferences;
     connectivityManager =
@@ -122,7 +125,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   private void setMobileDataEnabledRoot(boolean enabled) {
     if (preferences.isRootEnabled()) {
       final String command = "svc data " + (enabled ? "enable" : "disable");
-      ShellCommandHelper.runRootShellCommand(command);
+      shellCommandHelper.runSUCommand(command);
     } else {
       logger.w("Root not enabled, cannot toggle Data");
     }

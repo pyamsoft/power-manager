@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.observer.permission;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -27,13 +28,15 @@ import javax.inject.Named;
 @Module public class PermissionObserverModule {
 
   @Named("obs_root_permission") @Provides PermissionObserver provideRootPermissionObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new RootPermissionObserver(context, preferences);
+      @NonNull ShellCommandHelper shellCommandHelper, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    return new RootPermissionObserver(context, preferences, shellCommandHelper);
   }
 
   @Named("obs_doze_permission") @Provides PermissionObserver provideDozePermissionObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozePermissionObserver(context, preferences);
+      @NonNull ShellCommandHelper shellCommandHelper, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences) {
+    return new DozePermissionObserver(context, preferences, shellCommandHelper);
   }
 
   @Named("obs_write_permission") @Provides PermissionObserver provideSystemWritePermissionObserver(

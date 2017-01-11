@@ -23,6 +23,8 @@ import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.base.logger.LoggerLoader;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.ShellCommandModule;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.base.wrapper.WrapperModule;
 import com.pyamsoft.powermanager.model.Logger;
@@ -33,6 +35,7 @@ import rx.Scheduler;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
+    ShellCommandModule.class
 }) public interface PowerManagerComponent {
 
   void inject(LoggerLoader loader);
@@ -46,6 +49,8 @@ import rx.Scheduler;
   Context provideContext();
 
   PowerManagerPreferences providePreferences();
+
+  ShellCommandHelper provideShellCommandHelper();
 
   @Named("sub") Scheduler provideSubScheduler();
 

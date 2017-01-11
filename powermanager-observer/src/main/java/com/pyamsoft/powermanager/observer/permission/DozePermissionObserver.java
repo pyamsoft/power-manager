@@ -21,14 +21,16 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class DozePermissionObserver extends RootPermissionObserver {
 
   @Inject DozePermissionObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
-    super(context, preferences, Manifest.permission.DUMP);
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
+    super(context, preferences, shellCommandHelper, Manifest.permission.DUMP);
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {
@@ -41,6 +43,7 @@ class DozePermissionObserver extends RootPermissionObserver {
       // Doze needs root on N
       hasPermission = super.checkPermission(appContext);
     } else {
+      Timber.e("This API level cannot run Doze");
       hasPermission = false;
     }
 

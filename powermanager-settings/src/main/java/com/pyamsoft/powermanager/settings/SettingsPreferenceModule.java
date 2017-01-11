@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -27,13 +28,14 @@ import rx.Scheduler;
 @Module class SettingsPreferenceModule {
 
   @Provides SettingsPreferencePresenter provideSettingsPresenter(
-      final @NonNull SettingsPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @NonNull SettingsPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
     return new SettingsPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
   }
 
-  @Provides SettingsPreferenceInteractor provideSettingsInteractor(PowerTriggerDB powerTriggerDB,
-      PowerManagerPreferences preferences) {
-    return new SettingsPrefrenceInteractorImpl(powerTriggerDB, preferences);
+  @Provides SettingsPreferenceInteractor provideSettingsInteractor(
+      @NonNull PowerTriggerDB powerTriggerDB, @NonNull ShellCommandHelper shellCommandHelper,
+      @NonNull PowerManagerPreferences preferences) {
+    return new SettingsPrefrenceInteractorImpl(powerTriggerDB, preferences, shellCommandHelper);
   }
 }

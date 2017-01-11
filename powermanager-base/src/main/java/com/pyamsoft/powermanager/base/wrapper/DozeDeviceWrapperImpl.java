@@ -21,7 +21,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 
@@ -30,13 +30,16 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
   @NonNull private final Logger logger;
   @NonNull private final android.os.PowerManager androidPowerManager;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final ShellCommandHelper shellCommandHelper;
 
   @Inject DozeDeviceWrapperImpl(@NonNull Context context, @NonNull Logger logger,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
     this.logger = logger;
     this.preferences = preferences;
     androidPowerManager =
         (PowerManager) context.getApplicationContext().getSystemService(Context.POWER_SERVICE);
+    this.shellCommandHelper = shellCommandHelper;
   }
 
   private void setDozeEnabled(boolean enabled) {
@@ -46,16 +49,16 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
       command = "dumpsys deviceidle " + (enabled ? "force-idle" : "step");
       if (preferences.isRootEnabled()) {
         // If root is enabled, we attempt with root
-        ShellCommandHelper.runRootShellCommand(command);
+        shellCommandHelper.runSUCommand(command);
       } else {
         // API 23 can do this without root
-        ShellCommandHelper.runShellCommand(command);
+        shellCommandHelper.runSHCommand(command);
       }
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       if (preferences.isRootEnabled()) {
         // API 24 requires root
         command = "dumpsys deviceidle " + (enabled ? "force-idle deep" : "unforce");
-        ShellCommandHelper.runRootShellCommand(command);
+        shellCommandHelper.runSUCommand(command);
       } else {
         logger.w("Root not enabled, cannot toggle Doze");
       }

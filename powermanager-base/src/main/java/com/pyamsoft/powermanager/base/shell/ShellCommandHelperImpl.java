@@ -14,51 +14,28 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base;
+package com.pyamsoft.powermanager.base.shell;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.annotation.WorkerThread;
 import eu.chainfire.libsuperuser.Shell;
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ShellCommandHelper {
+class ShellCommandHelperImpl implements ShellCommandHelper {
 
   private static final int SHELL_TYPE_ROOT = 0;
   private static final int SHELL_TYPE_NORMAL = 1;
-  @NonNull private static final ShellCommandHelper INSTANCE = createInstance();
   @NonNull private Shell.Interactive shellSession;
   @NonNull private Shell.Interactive rootSession;
 
-  private ShellCommandHelper() {
+  @Inject ShellCommandHelperImpl() {
     shellSession = openShellSession(false);
     rootSession = openShellSession(true);
-  }
-
-  @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult @NonNull
-  static ShellCommandHelper createInstance() {
-    return new ShellCommandHelper();
-  }
-
-  @WorkerThread @CheckResult public static boolean isSUAvailable() {
-    final boolean available = Shell.SU.available();
-    Timber.d("Is SU available: %s", available);
-    return available;
-  }
-
-  /**
-   * Requires ROOT for su binary
-   */
-  @WorkerThread public static void runRootShellCommand(@NonNull String... commands) {
-    INSTANCE.runSUCommand(commands);
-  }
-
-  @WorkerThread public static void runShellCommand(@NonNull String... commands) {
-    INSTANCE.runSHCommand(commands);
   }
 
   @CheckResult @NonNull private Shell.Interactive openShellSession(boolean useRoot) {
@@ -142,17 +119,23 @@ public class ShellCommandHelper {
     return recreate;
   }
 
-  @WorkerThread private void runSUCommand(@NonNull String... commands) {
+  @Override @WorkerThread public void runSUCommand(@NonNull String... commands) {
     Timber.d("Run command '%s' in SU session", Arrays.toString(commands));
     rootSession.addCommand(commands, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
       parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
     });
   }
 
-  @WorkerThread private void runSHCommand(@NonNull String... commands) {
+  @Override @WorkerThread public void runSHCommand(@NonNull String... commands) {
     Timber.d("Run command '%s' in Shell session", Arrays.toString(commands));
     shellSession.addCommand(commands, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
       parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
     });
+  }
+
+  @Override @WorkerThread @CheckResult public boolean isSUAvailable() {
+    final boolean available = Shell.SU.available();
+    Timber.d("Is SU available: %s", available);
+    return available;
   }
 }
