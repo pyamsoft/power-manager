@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class BluetoothFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Bluetooth";
-  @Inject @Named("obs_bluetooth_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_bluetooth_state") BooleanInterestObserver observer;
   @Inject @Named("bluetooth_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull

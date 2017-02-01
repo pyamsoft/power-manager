@@ -32,7 +32,7 @@ import javax.inject.Named;
 public class DozeFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Doze";
-  @Inject @Named("obs_doze_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_doze_state") BooleanInterestObserver observer;
   @Inject @Named("doze_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull

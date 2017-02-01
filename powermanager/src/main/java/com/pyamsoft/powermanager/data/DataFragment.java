@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class DataFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Data";
-  @Inject @Named("obs_data_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_data_state") BooleanInterestObserver observer;
   @Inject @Named("data_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull

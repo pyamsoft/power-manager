@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class AirplaneFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Airplane Mode";
-  @Inject @Named("obs_airplane_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_airplane_state") BooleanInterestObserver observer;
   @Inject @Named("airplane_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull

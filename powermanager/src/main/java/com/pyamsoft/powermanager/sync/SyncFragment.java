@@ -32,7 +32,7 @@ import javax.inject.Named;
 public class SyncFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Sync";
-  @Inject @Named("obs_sync_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_sync_state") BooleanInterestObserver observer;
   @Inject @Named("sync_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull

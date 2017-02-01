@@ -32,7 +32,7 @@ import javax.inject.Named;
 public class WifiFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Wifi";
-  @Inject @Named("obs_wifi_manage") BooleanInterestObserver observer;
+  @Inject @Named("obs_wifi_state") BooleanInterestObserver observer;
   @Inject @Named("wifi_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
