@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class SyncManagePreferenceModule {
+@Module public class SyncManagePreferenceModule {
 
   @Provides @Named("sync_manage_pref")
   ManagePreferencePresenter provideSyncManagePreferencePresenter(

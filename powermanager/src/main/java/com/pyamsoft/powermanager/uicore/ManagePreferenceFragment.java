@@ -34,12 +34,11 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.FuncNone;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
-    implements ManagePreferencePresenter.ManagePreferenceView, PagerItem {
+    implements PagerItem, OnboardingPresenter.OnboardingCallback,
+    ManagePreferencePresenter.ManagePermissionCallback {
 
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
@@ -60,7 +59,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     Timber.d("Select ManagePreferenceFragment");
     showOnboardingOnBind = (presenter == null);
     if (presenter != null) {
-      presenter.showOnboardingIfNeeded();
+      presenter.showOnboardingIfNeeded(this);
     }
   }
 
@@ -93,7 +92,8 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), getPresenterKey(), createPresenterLoader());
+    injectDependencies();
+    presenter = providePresenter();
   }
 
   @Override void resolvePreferences() {
@@ -135,7 +135,15 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
           final boolean checkPermission = checkManagePermission();
           if (checkPermission) {
             Timber.d("We need to check manage permission, do not toggle preference just yet");
-            presenter.checkManagePermission();
+            presenter.checkManagePermission(hasPermission -> {
+              Timber.d("Has manage permission: %s", hasPermission);
+              // Set based on permission state
+              managePreference.setChecked(hasPermission);
+
+              if (!hasPermission) {
+                onShowManagePermissionNeededMessage();
+              }
+            });
             return false;
           }
         }
@@ -178,14 +186,23 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
+    presenter.registerObserver(new ManagePreferencePresenter.ManageCallback() {
+      @Override public void onManageSet() {
+        managePreference.setChecked(true);
+      }
+
+      @Override public void onManageUnset() {
+        managePreference.setChecked(false);
+      }
+    });
 
     if (checkManagePermission() && managePreference.isChecked()) {
-      presenter.checkManagePermission();
+      presenter.checkManagePermission(this);
     }
 
     if (showOnboardingOnBind) {
-      presenter.showOnboardingIfNeeded();
+      presenter.showOnboardingIfNeeded(this);
     }
   }
 
@@ -238,15 +255,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     }
   }
 
-  @CallSuper @Override public void onManageSet() {
-    managePreference.setChecked(true);
-  }
-
-  @CallSuper @Override public void onManageUnset() {
-    managePreference.setChecked(false);
-  }
-
-  @CallSuper @Override public void showOnBoarding() {
+  @Override public void onShowOnboarding() {
     Timber.d("Show manage onboarding");
     if (manageTapTarget == null) {
       Timber.d("Create Manage TapTarget");
@@ -365,13 +374,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @Override public void onManagePermissionCallback(boolean hasPermission) {
-    Timber.d("Has manage permission: %s", hasPermission);
-    // Set based on permission state
-    managePreference.setChecked(hasPermission);
-
-    if (!hasPermission) {
-      onShowManagePermissionNeededMessage();
-    }
   }
 
   /**
@@ -381,8 +383,9 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   }
 
-  @CheckResult @NonNull
-  protected abstract FuncNone<ManagePreferencePresenter> createPresenterLoader();
+  @CheckResult @NonNull protected abstract ManagePreferencePresenter providePresenter();
+
+  protected abstract void injectDependencies();
 
   @StringRes @CheckResult protected abstract int getManageKeyResId();
 

@@ -18,19 +18,18 @@ package com.pyamsoft.powermanager.airplane;
 
 import android.support.annotation.NonNull;
 import android.widget.Toast;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull private static final String TAG = "AirplaneManagePreferenceFragment";
-
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new AirplaneManagePresenterLoader();
-  }
+  @Inject @Named("airplane_manage_pref") ManagePreferencePresenter presenter;
 
   @Override protected int getManageKeyResId() {
     return R.string.manage_airplane_key;
@@ -65,6 +64,14 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
     Toast.makeText(getContext(),
         "Enable SuperUser from the Settings module to manage Airplane Mode", Toast.LENGTH_SHORT)
         .show();
+  }
+
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusAirplaneScreenComponent().inject(this);
   }
 
   @NonNull @Override protected String getModuleName() {

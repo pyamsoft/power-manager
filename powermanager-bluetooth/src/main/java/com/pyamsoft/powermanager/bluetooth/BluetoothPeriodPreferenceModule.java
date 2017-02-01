@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class BluetoothPeriodPreferenceModule {
+@Module public class BluetoothPeriodPreferenceModule {
 
   @Provides @Named("bluetooth_period_pref")
   PeriodPreferencePresenter provideBluetoothManagePreferencePresenter(

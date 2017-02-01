@@ -26,7 +26,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class AirplaneCustomPreferenceModule {
+@Module public class AirplaneCustomPreferenceModule {
 
   @Provides @Named("airplane_custom_delay")
   CustomTimeInputPreferencePresenter provideAirplaneCustomDelayPresenter(

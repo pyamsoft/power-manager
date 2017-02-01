@@ -26,7 +26,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DozeCustomPreferenceModule {
+@Module public class DozeCustomPreferenceModule {
 
   @Provides @Named("doze_custom_delay")
   CustomTimeInputPreferencePresenter provideDozeCustomDelayPresenter(

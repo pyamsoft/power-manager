@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class WifiOverviewModule {
+@Module public class WifiOverviewModule {
 
   @Provides @Named("wifi_overview") OverviewPagerPresenter provideWifiOverviewPagerPresenter(
       @Named("mod_wifi_state") BooleanInterestModifier stateModifier,

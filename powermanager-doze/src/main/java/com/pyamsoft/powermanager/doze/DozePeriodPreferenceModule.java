@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DozePeriodPreferenceModule {
+@Module public class DozePeriodPreferenceModule {
 
   @Provides @Named("doze_period_pref")
   PeriodPreferencePresenter provideDozeManagePreferencePresenter(

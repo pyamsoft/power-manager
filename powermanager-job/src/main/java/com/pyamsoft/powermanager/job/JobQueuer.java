@@ -32,4 +32,6 @@ public interface JobQueuer {
   void cancel(@NonNull String tag);
 
   void queue(@NonNull JobQueuerEntry entry);
+
+  void queueRepeating(@NonNull JobQueuerEntry entry);
 }

@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DataOverviewModule {
+@Module public class DataOverviewModule {
 
   @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
       @Named("mod_data_state") BooleanInterestModifier stateModifier,

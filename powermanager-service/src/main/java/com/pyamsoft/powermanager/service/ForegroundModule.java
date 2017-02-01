@@ -27,7 +27,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class ForegroundModule {
+@Module public class ForegroundModule {
 
   @Provides ForegroundPresenter provideForegroundPresenter(@NonNull ForegroundInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {

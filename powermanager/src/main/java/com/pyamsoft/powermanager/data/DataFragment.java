@@ -19,17 +19,20 @@ package com.pyamsoft.powermanager.data;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DataFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Data";
-  private BooleanInterestObserver observer;
+  @Inject @Named("obs_data_manage") BooleanInterestObserver observer;
+  @Inject @Named("data_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
   public static DataFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -38,16 +41,16 @@ public class DataFragment extends OverviewPagerFragment {
     return fragment;
   }
 
-  @Override protected void injectObserverModifier() {
-    observer = new DataLoader().call();
+  @NonNull @Override protected OverviewPagerPresenter providePresenter() {
+    return presenter;
   }
 
-  @NonNull @Override protected BooleanInterestObserver getObserver() {
+  @NonNull @Override protected BooleanInterestObserver provideObserver() {
     return observer;
   }
 
-  @NonNull @Override protected FuncNone<OverviewPagerPresenter> getPresenterLoader() {
-    return new DataOverviewPresenterLoader();
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusDataScreenComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

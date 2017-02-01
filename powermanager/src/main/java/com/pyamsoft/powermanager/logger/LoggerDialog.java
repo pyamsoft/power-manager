@@ -31,7 +31,8 @@ import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
 import com.pyamsoft.powermanager.databinding.DialogLoggerBinding;
 import timber.log.Timber;
 
-public class LoggerDialog extends DialogFragment implements LoggerPresenter.Provider {
+public class LoggerDialog extends DialogFragment
+    implements LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
 
   private DialogLoggerBinding binding;
 

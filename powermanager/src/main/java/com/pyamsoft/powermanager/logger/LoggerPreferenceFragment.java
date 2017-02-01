@@ -26,22 +26,21 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.logger.LoggerLoader;
 import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
-import com.pyamsoft.powermanager.model.LoggerType;
+import javax.inject.Inject;
 
 public class LoggerPreferenceFragment extends PreferenceFragmentCompat
-    implements LoggerPresenter.Provider {
+    implements LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
 
   @NonNull public static final String TAG = "LoggerPreferenceFragment";
-  private LoggerPresenter loggerWifi;
-  private LoggerPresenter loggerData;
-  private LoggerPresenter loggerBluetooth;
-  private LoggerPresenter loggerSync;
-  private LoggerPresenter loggerAirplane;
-  private LoggerPresenter loggerDoze;
-  private LoggerPresenter loggerTrigger;
-  private LoggerPresenter loggerManager;
+  @Inject LoggerPresenter loggerWifi;
+  @Inject LoggerPresenter loggerData;
+  @Inject LoggerPresenter loggerBluetooth;
+  @Inject LoggerPresenter loggerSync;
+  @Inject LoggerPresenter loggerAirplane;
+  @Inject LoggerPresenter loggerDoze;
+  @Inject LoggerPresenter loggerTrigger;
+  @Inject LoggerPresenter loggerManager;
   @Nullable private Preference loggingEnabled;
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -50,15 +49,6 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    final LoggerLoader loggerLoader = new LoggerLoader();
-    loggerWifi = loggerLoader.loadLoggerPresenter(LoggerType.WIFI);
-    loggerData = loggerLoader.loadLoggerPresenter(LoggerType.DATA);
-    loggerBluetooth = loggerLoader.loadLoggerPresenter(LoggerType.BLUETOOTH);
-    loggerSync = loggerLoader.loadLoggerPresenter(LoggerType.SYNC);
-    loggerAirplane = loggerLoader.loadLoggerPresenter(LoggerType.AIRPLANE);
-    loggerDoze = loggerLoader.loadLoggerPresenter(LoggerType.DOZE);
-    loggerManager = loggerLoader.loadLoggerPresenter(LoggerType.MANAGER);
-    loggerTrigger = loggerLoader.loadLoggerPresenter(LoggerType.TRIGGER);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -78,14 +68,14 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
   }
 
   @SuppressWarnings("WeakerAccess") void deleteAllPreviousLogs() {
-    loggerWifi.deleteLog();
-    loggerData.deleteLog();
-    loggerBluetooth.deleteLog();
-    loggerSync.deleteLog();
-    loggerAirplane.deleteLog();
-    loggerDoze.deleteLog();
-    loggerManager.deleteLog();
-    loggerTrigger.deleteLog();
+    loggerWifi.deleteLog(this);
+    loggerData.deleteLog(this);
+    loggerBluetooth.deleteLog(this);
+    loggerSync.deleteLog(this);
+    loggerAirplane.deleteLog(this);
+    loggerDoze.deleteLog(this);
+    loggerManager.deleteLog(this);
+    loggerTrigger.deleteLog(this);
   }
 
   @Override public void onDestroyView() {
@@ -97,14 +87,23 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onStart() {
     super.onStart();
-    loggerWifi.bindView(this);
-    loggerData.bindView(this);
-    loggerBluetooth.bindView(this);
-    loggerSync.bindView(this);
-    loggerAirplane.bindView(this);
-    loggerDoze.bindView(this);
-    loggerManager.bindView(this);
-    loggerTrigger.bindView(this);
+    loggerWifi.bindView(null);
+    loggerData.bindView(null);
+    loggerBluetooth.bindView(null);
+    loggerSync.bindView(null);
+    loggerAirplane.bindView(null);
+    loggerDoze.bindView(null);
+    loggerManager.bindView(null);
+    loggerTrigger.bindView(null);
+
+    loggerWifi.retrieveLogContents(this);
+    loggerData.retrieveLogContents(this);
+    loggerBluetooth.retrieveLogContents(this);
+    loggerSync.retrieveLogContents(this);
+    loggerAirplane.retrieveLogContents(this);
+    loggerDoze.retrieveLogContents(this);
+    loggerManager.retrieveLogContents(this);
+    loggerTrigger.retrieveLogContents(this);
   }
 
   @Override public void onStop() {
@@ -121,14 +120,6 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onDestroy() {
     super.onDestroy();
-    loggerWifi.destroy();
-    loggerData.destroy();
-    loggerBluetooth.destroy();
-    loggerSync.destroy();
-    loggerAirplane.destroy();
-    loggerDoze.destroy();
-    loggerManager.destroy();
-    loggerTrigger.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

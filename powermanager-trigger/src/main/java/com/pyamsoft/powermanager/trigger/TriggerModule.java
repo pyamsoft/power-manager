@@ -23,7 +23,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class TriggerModule {
+@Module public class TriggerModule {
 
   @Provides TriggerPresenter provideTriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
@@ -32,11 +32,5 @@ import rx.Scheduler;
 
   @Provides TriggerInteractor provideTriggerInteractor(PowerTriggerDB powerTriggerDB) {
     return new TriggerInteractorImpl(powerTriggerDB);
-  }
-
-  @Provides TriggerPreferencePresenter provideTriggerPreferencePresenter(
-      @NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler) {
-    return new TriggerPreferencePresenterImpl(obsScheduler, subScheduler);
   }
 }

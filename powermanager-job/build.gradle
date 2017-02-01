@@ -68,7 +68,6 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  compile project(":powermanager-observer")
-  compile project(":powermanager-modifier")
+  compile project(":powermanager-base")
 }
 

@@ -23,7 +23,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class ActionToggleModule {
+@Module public class ActionToggleModule {
 
   @Provides ActionTogglePresenter provideActionTogglePresenter(
       @NonNull ActionToggleInteractor interactor, @Named("obs") Scheduler obsScheduler,

@@ -31,14 +31,14 @@ public abstract class CustomTimeInputPreferenceInteractorImpl
   }
 
   @NonNull @Override public Observable<Long> saveTime(long time) {
-    return Observable.defer(() -> {
+    return Observable.fromCallable(() -> {
       saveTimeToPreferences(preferences, time);
-      return Observable.just(time);
+      return time;
     });
   }
 
   @NonNull @Override public Observable<Long> getTime() {
-    return Observable.defer(() -> Observable.just(getTimeFromPreferences(preferences)));
+    return Observable.fromCallable(() -> getTimeFromPreferences(preferences));
   }
 
   protected abstract void saveTimeToPreferences(PowerManagerPreferences preferences, long time);

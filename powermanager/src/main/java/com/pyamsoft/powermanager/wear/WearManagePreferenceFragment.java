@@ -17,17 +17,24 @@
 package com.pyamsoft.powermanager.wear;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class WearManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull static final String TAG = "WearManagePreferenceFragment";
+  @Inject @Named("wear_manage_pref") ManagePreferencePresenter presenter;
 
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new WearPresenterLoader();
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusWearScreenComponent().inject(this);
   }
 
   @Override protected int getManageKeyResId() {

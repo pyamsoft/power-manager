@@ -17,15 +17,17 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface OverviewItemPresenter extends Presenter<OverviewItemPresenter.View> {
+interface OverviewItemPresenter extends Presenter<Presenter.Empty> {
 
-  void decideManageState(@Nullable BooleanInterestObserver observer);
+  void decideManageState(@Nullable BooleanInterestObserver observer,
+      @NonNull ManageStateCallback callback);
 
-  interface View {
+  interface ManageStateCallback {
 
     void onManageStateDecided(@DrawableRes int icon);
 

@@ -16,27 +16,35 @@
 
 package com.pyamsoft.powermanager.settings;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface SettingsPreferencePresenter
-    extends Presenter<SettingsPreferencePresenter.SettingsPreferenceView> {
+interface SettingsPreferencePresenter extends Presenter<Presenter.Empty> {
 
-  void processClearRequest(int type);
+  void processClearRequest(int type, @NonNull ClearRequestCallback callback);
 
-  void requestClearAll();
+  void requestClearAll(@NonNull ConfirmDialogCallback callback);
 
-  void requestClearDatabase();
+  void requestClearDatabase(@NonNull ConfirmDialogCallback callback);
 
-  void checkRoot(boolean causedByUser, boolean rootEnable);
+  void checkRootEnabled(@NonNull RootCallback callback);
 
-  interface SettingsPreferenceView {
+  void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback);
+
+  interface RootCallback {
+
+    void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable);
+  }
+
+  interface ConfirmDialogCallback {
 
     void showConfirmDialog(int type);
+  }
+
+  interface ClearRequestCallback {
 
     void onClearAll();
 
     void onClearDatabase();
-
-    void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable);
   }
 }

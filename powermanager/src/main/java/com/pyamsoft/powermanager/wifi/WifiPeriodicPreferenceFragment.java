@@ -17,21 +17,29 @@
 package com.pyamsoft.powermanager.wifi;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull private static final String TAG = "WifiPeriodicPreferenceFragment";
-
-  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
-    return new WifiPeriodPresenterLoader();
-  }
+  @Inject @Named("wifi_period_pref") PeriodPreferencePresenter presenter;
 
   @NonNull @Override protected String getPresenterKey() {
     return TAG + "presenter_key";
+  }
+
+  @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
   }
 
   @Override protected int getPreferencesResId() {

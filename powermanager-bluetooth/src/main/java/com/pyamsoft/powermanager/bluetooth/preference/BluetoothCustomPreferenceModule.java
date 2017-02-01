@@ -26,7 +26,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class BluetoothCustomPreferenceModule {
+@Module public class BluetoothCustomPreferenceModule {
 
   @Provides @Named("bluetooth_custom_delay")
   CustomTimeInputPreferencePresenter provideBluetoothCustomDelayPresenter(

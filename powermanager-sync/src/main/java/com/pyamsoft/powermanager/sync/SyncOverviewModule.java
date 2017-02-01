@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class SyncOverviewModule {
+@Module public class SyncOverviewModule {
 
   @Provides @Named("sync_overview") OverviewPagerPresenter provideSyncOverviewPagerPresenter(
       @Named("mod_sync_state") BooleanInterestModifier stateModifier,

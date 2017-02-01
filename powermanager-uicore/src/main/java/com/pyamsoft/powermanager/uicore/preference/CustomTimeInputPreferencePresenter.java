@@ -19,20 +19,22 @@ package com.pyamsoft.powermanager.uicore.preference;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface CustomTimeInputPreferencePresenter
-    extends Presenter<CustomTimeInputPreferencePresenter.View> {
+public interface CustomTimeInputPreferencePresenter extends Presenter<Presenter.Empty> {
 
-  void updateCustomTime(@NonNull String time);
+  void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback);
 
-  void updateCustomTime(@NonNull String time, long delay);
+  void updateCustomTime(@NonNull String time, long delay,
+      @NonNull OnCustomTimeUpdateCallback callback);
 
-  void updateCustomTime(@NonNull String time, boolean updateView);
+  void updateCustomTime(@NonNull String time, boolean updateView,
+      @NonNull OnCustomTimeUpdateCallback callback);
 
-  void updateCustomTime(@NonNull String time, long delay, boolean updateView);
+  void updateCustomTime(@NonNull String time, long delay, boolean updateView,
+      @NonNull OnCustomTimeUpdateCallback callback);
 
-  void initializeCustomTime();
+  void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback);
 
-  interface View {
+  interface OnCustomTimeUpdateCallback {
 
     void onCustomTimeUpdate(long time);
 

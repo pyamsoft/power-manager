@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class BluetoothOverviewModule {
+@Module public class BluetoothOverviewModule {
 
   @Provides @Named("bluetooth_overview")
   OverviewPagerPresenter provideBluetoothOverviewPagerPresenter(

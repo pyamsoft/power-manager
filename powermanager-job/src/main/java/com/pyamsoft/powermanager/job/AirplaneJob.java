@@ -18,20 +18,22 @@ package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
-import com.pyamsoft.powermanager.base.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 class AirplaneJob extends BaseJob {
 
-  @SuppressWarnings("WeakerAccess") @Inject @Named("logger_airplane") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_airplane_state") BooleanInterestObserver
-      stateObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_airplane_state") BooleanInterestModifier
-      stateModifier;
+  @NonNull private final Logger logger;
+  @NonNull private final BooleanInterestObserver stateObserver;
+  @NonNull private final BooleanInterestModifier stateModifier;
+
+  AirplaneJob(@NonNull Logger logger, @NonNull BooleanInterestObserver stateObserver,
+      @NonNull BooleanInterestModifier stateModifier) {
+    this.logger = logger;
+    this.stateObserver = stateObserver;
+    this.stateModifier = stateModifier;
+  }
 
   @NonNull @Override Logger getLogger() {
     return logger;
@@ -46,16 +48,23 @@ class AirplaneJob extends BaseJob {
   }
 
   @Override void inject() {
-    DaggerJobComponent.builder()
-        .powerManagerComponent(Injector.get().provideComponent())
-        .build()
-        .inject(this);
   }
 
   static class ManagedJob extends Job {
 
+    @NonNull private final Logger logger;
+    @NonNull private final BooleanInterestObserver stateObserver;
+    @NonNull private final BooleanInterestModifier stateModifier;
+
+    ManagedJob(@NonNull Logger logger, @NonNull BooleanInterestObserver stateObserver,
+        @NonNull BooleanInterestModifier stateModifier) {
+      this.logger = logger;
+      this.stateObserver = stateObserver;
+      this.stateModifier = stateModifier;
+    }
+
     @NonNull @Override protected Result onRunJob(Params params) {
-      new AirplaneJob() {
+      new AirplaneJob(logger, stateObserver, stateModifier) {
         @Override boolean isStopped() {
           return isCanceled();
         }

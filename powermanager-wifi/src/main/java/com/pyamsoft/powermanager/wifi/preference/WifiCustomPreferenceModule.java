@@ -26,7 +26,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class WifiCustomPreferenceModule {
+@Module public class WifiCustomPreferenceModule {
 
   @Provides @Named("wifi_custom_delay")
   CustomTimeInputPreferencePresenter provideWifiCustomDelayPresenter(

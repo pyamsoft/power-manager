@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DozeOverviewModule {
+@Module public class DozeOverviewModule {
 
   @Provides @Named("doze_overview") OverviewPagerPresenter provideDozeOverviewPagerPresenter(
       @Named("mod_doze_state") BooleanInterestModifier stateModifier,

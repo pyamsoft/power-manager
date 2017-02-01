@@ -16,13 +16,14 @@
 
 package com.pyamsoft.powermanager.service;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface ActionTogglePresenter extends Presenter<ActionTogglePresenter.ActionToggleProvider> {
+interface ActionTogglePresenter extends Presenter<Presenter.Empty> {
 
-  void toggleForegroundState();
+  void toggleForegroundState(@NonNull ForegroundStateCallback callback);
 
-  interface ActionToggleProvider {
+  interface ForegroundStateCallback {
 
     void onForegroundStateToggled(boolean state);
   }

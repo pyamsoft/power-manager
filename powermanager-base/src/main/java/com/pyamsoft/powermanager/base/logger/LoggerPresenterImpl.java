@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.logger;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.LogType;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.Locale;
@@ -31,8 +32,7 @@ import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
-    implements LoggerPresenter {
+class LoggerPresenterImpl extends SchedulerPresenter<Presenter.Empty> implements LoggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final CompositeSubscription logSubscriptions =
@@ -50,21 +50,16 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
     this.interactor = interactor;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    retrieveLogContents();
-  }
-
-  private void retrieveLogContents() {
-    getView(Provider::onPrepareLogContentRetrieval);
+  @Override public void retrieveLogContents(@NonNull LogCallback callback) {
+    callback.onPrepareLogContentRetrieval();
     SubscriptionHelper.unsubscribe(logContenSubscription);
     logContenSubscription = interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(logLine -> getView(view -> view.onLogContentRetrieved(logLine)),
+        .subscribe(callback::onLogContentRetrieved,
             throwable -> Timber.e(throwable, "onError: Failed to retrieve log contents: %s",
                 interactor.getLogId()), () -> {
-              getView(Provider::onAllLogContentsRetrieved);
+              callback.onAllLogContentsRetrieved();
               SubscriptionHelper.unsubscribe(logContenSubscription);
             });
   }
@@ -139,7 +134,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
             () -> SubscriptionHelper.unsubscribe(clearLogSubscription));
   }
 
-  @Override public void deleteLog() {
+  @Override public void deleteLog(@NonNull DeleteCallback callback) {
     // Stop everything before we delete the log
     logSubscriptions.clear();
     SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,
@@ -150,7 +145,7 @@ class LoggerPresenterImpl extends SchedulerPresenter<LoggerPresenter.Provider>
         .observeOn(getObserveScheduler())
         .subscribe(deleted -> {
               if (deleted) {
-                getView(view -> view.onLogDeleted(interactor.getLogId()));
+                callback.onLogDeleted(interactor.getLogId());
               }
             }, throwable -> Timber.e(throwable, "onError deleteLog"),
             () -> SubscriptionHelper.unsubscribe(deleteLogSubscription));

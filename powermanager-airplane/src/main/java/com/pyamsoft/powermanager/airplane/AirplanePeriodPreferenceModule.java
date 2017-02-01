@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class AirplanePeriodPreferenceModule {
+@Module public class AirplanePeriodPreferenceModule {
 
   @Provides @Named("airplane_period_pref")
   PeriodPreferencePresenter provideAirplaneManagePreferencePresenter(

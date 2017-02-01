@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class PeriodPreferencePresenterImpl
-    extends SchedulerPresenter<PeriodPreferencePresenter.PeriodPreferenceView>
+public class PeriodPreferencePresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements PeriodPreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull static final String OBS_TAG =
@@ -46,10 +46,8 @@ public class PeriodPreferencePresenterImpl
     this.observer = periodObserver;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    getView(periodPreferenceView -> observer.register(OBS_TAG, periodPreferenceView::onPeriodicSet,
-        periodPreferenceView::onPeriodicUnset));
+  @Override public void registerObserver(@NonNull PeriodicCallback callback) {
+    observer.register(OBS_TAG, callback::onPeriodicSet, callback::onPeriodicUnset);
   }
 
   @Override protected void onUnbind() {
@@ -62,7 +60,7 @@ public class PeriodPreferencePresenterImpl
     interactor.setOnboarding();
   }
 
-  @Override public void showOnboardingIfNeeded() {
+  @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
     SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
@@ -70,9 +68,9 @@ public class PeriodPreferencePresenterImpl
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
               if (!onboard) {
-                getView(PeriodPreferenceView::showOnBoarding);
+                callback.onShowOnboarding();
               }
-            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
             () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 

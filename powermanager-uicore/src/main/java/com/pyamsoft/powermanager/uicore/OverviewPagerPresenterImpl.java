@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class OverviewPagerPresenterImpl extends SchedulerPresenter<OverviewPagerPresenter.View>
+public class OverviewPagerPresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements OverviewPagerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;

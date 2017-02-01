@@ -20,12 +20,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.Injector;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ActionToggleService extends Service
-    implements ActionTogglePresenter.ActionToggleProvider {
+public class ActionToggleService extends Service {
 
-  private ActionTogglePresenter presenter;
+  @Inject ActionTogglePresenter presenter;
 
   @Nullable @Override public IBinder onBind(Intent intent) {
     return null;
@@ -33,30 +34,27 @@ public class ActionToggleService extends Service
 
   @Override public void onCreate() {
     super.onCreate();
-    presenter = new ActionToggleServiceLoader().call();
-    presenter.bindView(this);
+    Injector.get().provideComponent().plusActionToggleServiceComponent().inject(this);
+    presenter.bindView(null);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    presenter.toggleForegroundState();
+    presenter.toggleForegroundState(state -> {
+      Timber.d("Foreground state toggled: %s", state);
+      if (state) {
+        ForegroundService.start(getApplicationContext());
+      } else {
+        ForegroundService.stop(getApplicationContext());
+      }
+
+      Timber.d("Kill Action Toggle service");
+      stopSelf();
+    });
     return START_STICKY;
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     presenter.unbindView();
-    presenter.destroy();
-  }
-
-  @Override public void onForegroundStateToggled(boolean state) {
-    Timber.d("Foreground state toggled: %s", state);
-    if (state) {
-      ForegroundService.start(getApplicationContext());
-    } else {
-      ForegroundService.stop(getApplicationContext());
-    }
-
-    Timber.d("Kill Action Toggle service");
-    stopSelf();
   }
 }

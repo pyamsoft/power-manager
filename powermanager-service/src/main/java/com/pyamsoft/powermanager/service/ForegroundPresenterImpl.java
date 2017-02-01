@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.ForegroundProvider>
+class ForegroundPresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements ForegroundPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
@@ -42,8 +43,9 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     this.interactor = interactor;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
+  @Override protected void onBind(@Nullable Empty view) {
+    super.onBind(view);
+    SubscriptionHelper.unsubscribe(createSubscription);
     createSubscription = Observable.fromCallable(() -> {
       interactor.create();
       return Boolean.TRUE;
@@ -61,17 +63,15 @@ class ForegroundPresenterImpl extends SchedulerPresenter<ForegroundPresenter.For
     SubscriptionHelper.unsubscribe(notificationSubscription, createSubscription);
   }
 
-  @Override public void onStartNotification() {
+  @Override public void startNotification(@NonNull NotificationCallback callback) {
     SubscriptionHelper.unsubscribe(notificationSubscription);
     notificationSubscription = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(notification -> getView(
-            foregroundProvider -> foregroundProvider.startNotificationInForeground(notification)),
-            throwable -> {
-              Timber.e(throwable, "onError");
-              // TODO handle error
-            }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
+        .subscribe(callback::onStartNotificationInForeground, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO handle error
+        }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
   }
 
   /**

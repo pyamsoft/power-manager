@@ -31,12 +31,10 @@ import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.FuncNone;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import timber.log.Timber;
 
 public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
-    implements PeriodPreferencePresenter.PeriodPreferenceView, PagerItem {
+    implements PeriodPreferencePresenter.OnboardingCallback, PagerItem {
 
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
@@ -58,7 +56,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     Timber.d("Select PeriodicPreferenceFragment");
     showOnboardingOnBind = (presenter == null);
     if (presenter != null) {
-      presenter.showOnboardingIfNeeded();
+      presenter.showOnboardingIfNeeded(this);
     }
   }
 
@@ -81,7 +79,8 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), getPresenterKey(), createPresenterLoader());
+    injectDependencies();
+    presenter = providePresenter();
   }
 
   @Override void resolvePreferences() {
@@ -189,10 +188,19 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
+    presenter.registerObserver(new PeriodPreferencePresenter.PeriodicCallback() {
+      @Override public void onPeriodicSet() {
+        periodicPreference.setChecked(true);
+      }
+
+      @Override public void onPeriodicUnset() {
+        periodicPreference.setChecked(false);
+      }
+    });
 
     if (showOnboardingOnBind) {
-      presenter.showOnboardingIfNeeded();
+      presenter.showOnboardingIfNeeded(this);
     }
   }
 
@@ -245,15 +253,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     periodicEnableTapTarget = null;
   }
 
-  @Override public void onPeriodicSet() {
-    periodicPreference.setChecked(true);
-  }
-
-  @Override public void onPeriodicUnset() {
-    periodicPreference.setChecked(false);
-  }
-
-  @Override public void showOnBoarding() {
+  @Override public void onShowOnboarding() {
     Timber.d("Show periodic onboarding");
     if (periodicTapTarget == null) {
       Timber.d("Create Periodic TapTarget");
@@ -340,6 +340,10 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
         });
   }
 
+  @CheckResult @NonNull protected abstract PeriodPreferencePresenter providePresenter();
+
+  protected abstract void injectDependencies();
+
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
 
   @CheckResult @StringRes protected abstract int getPeriodicKeyResId();
@@ -351,9 +355,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @CheckResult @StringRes protected abstract int getEnableTimeKeyResId();
 
   @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
-
-  @CheckResult @NonNull
-  protected abstract FuncNone<PeriodPreferencePresenter> createPresenterLoader();
 
   @CheckResult @NonNull protected abstract String getPresenterKey();
 }

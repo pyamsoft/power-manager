@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class WearManagePreferenceModule {
+@Module public class WearManagePreferenceModule {
 
   @Provides @Named("wear_manage_pref")
   ManagePreferencePresenter provideDozeManagePreferencePresenter(

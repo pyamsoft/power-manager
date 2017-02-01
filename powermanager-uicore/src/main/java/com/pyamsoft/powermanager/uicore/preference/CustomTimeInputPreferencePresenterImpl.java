@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.uicore.preference;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class CustomTimeInputPreferencePresenterImpl
-    extends SchedulerPresenter<CustomTimeInputPreferencePresenter.View>
+public class CustomTimeInputPreferencePresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements CustomTimeInputPreferencePresenter {
 
   // Max time 10 minutes
@@ -51,19 +51,23 @@ public class CustomTimeInputPreferencePresenterImpl
     SubscriptionHelper.unsubscribe(customTimeSubscription);
   }
 
-  @Override public void updateCustomTime(@NonNull String time) {
-    updateCustomTime(time, true);
+  @Override
+  public void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
+    updateCustomTime(time, true, callback);
   }
 
-  @Override public void updateCustomTime(@NonNull String time, long delay) {
-    updateCustomTime(time, delay, true);
+  @Override public void updateCustomTime(@NonNull String time, long delay,
+      @NonNull OnCustomTimeUpdateCallback callback) {
+    updateCustomTime(time, delay, true, callback);
   }
 
-  @Override public void updateCustomTime(@NonNull String time, boolean updateView) {
-    updateCustomTime(time, 600L, updateView);
+  @Override public void updateCustomTime(@NonNull String time, boolean updateView,
+      @NonNull OnCustomTimeUpdateCallback callback) {
+    updateCustomTime(time, 600L, updateView, callback);
   }
 
-  @Override public void updateCustomTime(@NonNull String time, long delay, boolean updateView) {
+  @Override public void updateCustomTime(@NonNull String time, long delay, boolean updateView,
+      @NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
       long longTime;
       if (time.isEmpty()) {
@@ -82,34 +86,31 @@ public class CustomTimeInputPreferencePresenterImpl
           .delay(delay, TimeUnit.MILLISECONDS)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
-          .subscribe(customTime -> getView(view -> {
+          .subscribe(customTime -> {
             if (updateView) {
-              view.onCustomTimeUpdate(customTime);
+              callback.onCustomTimeUpdate(customTime);
             }
-          }), throwable -> {
+          }, throwable -> {
             Timber.e(throwable, "onError updateCustomTime");
-            getView(view -> {
-              if (updateView) {
-                view.onCustomTimeError();
-              }
-            });
+            if (updateView) {
+              callback.onCustomTimeError();
+            }
           }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
     } else {
       Timber.e("NULL interactor");
     }
   }
 
-  @Override public void initializeCustomTime() {
+  @Override public void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
       SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
-          .subscribe(customTime -> getView(view -> view.onCustomTimeUpdate(customTime)),
-              throwable -> {
-                Timber.e(throwable, "onError updateCustomTime");
-                getView(View::onCustomTimeError);
-              }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
+          .subscribe(callback::onCustomTimeUpdate, throwable -> {
+            Timber.e(throwable, "onError updateCustomTime");
+            callback.onCustomTimeError();
+          }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
     } else {
       Timber.e("NULL interactor");
     }

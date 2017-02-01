@@ -34,7 +34,7 @@ import java.util.Locale;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends BaseBoundPreference
-    implements CustomTimeInputPreferencePresenter.View {
+    implements CustomTimeInputPreferencePresenter.OnCustomTimeUpdateCallback {
 
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
@@ -65,7 +65,8 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
 
   private void init() {
     setLayoutResource(R.layout.preference_custom_time_input);
-    presenter = getPreferenceLoader().loadPresenter(getPreferenceType());
+    injectDependencies();
+    presenter = providePresenter();
   }
 
   @Override public void onDetached() {
@@ -73,14 +74,13 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     super.onDetached();
     Timber.d("onDetached");
     presenter.unbindView();
-    presenter.destroy();
   }
 
   @Override public void onAttached() {
     super.onAttached();
     isDetaching = false;
     Timber.d("onAttached");
-    presenter.bindView(this);
+    presenter.bindView(null);
   }
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {
@@ -105,7 +105,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
         @Override public void afterTextChanged(Editable s) {
           Timber.d("After text changed");
           final String text = s.toString();
-          presenter.updateCustomTime(text);
+          presenter.updateCustomTime(text, CustomTimeInputPreference.this);
         }
       };
 
@@ -113,7 +113,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
       editText.addTextChangedListener(watcher);
     }
 
-    presenter.initializeCustomTime();
+    presenter.initializeCustomTime(this);
   }
 
   @Override protected void onUnbindViewHolder() {
@@ -128,7 +128,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
         if (isDetaching) {
           // Save the last entered value to preferences
           final String text = editText.getText().toString();
-          presenter.updateCustomTime(text, 0, false);
+          presenter.updateCustomTime(text, 0, false, this);
         }
       }
 
@@ -162,9 +162,13 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     }
   }
 
+  @Override public void onCustomTimeError() {
+    // TODO
+  }
+
   public void updatePresetDelay(@NonNull String presetDelay) {
     Timber.d("Update time with preset delay of: %s", presetDelay);
-    presenter.updateCustomTime(presetDelay, 0);
+    presenter.updateCustomTime(presetDelay, 0, this);
   }
 
   @CheckResult @NonNull private CharSequence formatSummaryStringForTime(long time) {
@@ -185,10 +189,6 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     }
     return String.format(Locale.getDefault(), "Current %s %s time period: %d seconds", getName(),
         deviceType, time);
-  }
-
-  @Override public void onCustomTimeError() {
-    // TODO can this ever happen
   }
 
   @CheckResult @NonNull protected abstract String getName();
@@ -216,5 +216,32 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     return type;
   }
 
-  @CheckResult @NonNull protected abstract PreferenceLoader getPreferenceLoader();
+  @NonNull @CheckResult private CustomTimeInputPreferencePresenter providePresenter() {
+    final CustomTimeInputPreferencePresenter presenter;
+    switch (getPreferenceType()) {
+      case DELAY:
+        presenter = provideDelayPresenter();
+        break;
+      case PERIODIC_DISABLE:
+        presenter = provideDisablePresenter();
+        break;
+      case PERIODIC_ENABLE:
+        presenter = provideEnablePresenter();
+        break;
+      default:
+        throw new IllegalStateException("Illegal preference type: " + getPreferenceType());
+    }
+    return presenter;
+  }
+
+  protected abstract void injectDependencies();
+
+  @CheckResult @NonNull
+  protected abstract CustomTimeInputPreferencePresenter provideEnablePresenter();
+
+  @CheckResult @NonNull
+  protected abstract CustomTimeInputPreferencePresenter provideDisablePresenter();
+
+  @CheckResult @NonNull
+  protected abstract CustomTimeInputPreferencePresenter provideDelayPresenter();
 }

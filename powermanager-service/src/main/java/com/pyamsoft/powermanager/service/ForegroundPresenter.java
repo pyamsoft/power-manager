@@ -20,16 +20,16 @@ import android.app.Notification;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface ForegroundPresenter extends Presenter<ForegroundPresenter.ForegroundProvider> {
+interface ForegroundPresenter extends Presenter<Presenter.Empty> {
 
-  void onStartNotification();
+  void startNotification(@NonNull NotificationCallback callback);
 
   void restartTriggerAlarm();
 
   void setForegroundState(boolean enable);
 
-  interface ForegroundProvider {
+  interface NotificationCallback {
 
-    void startNotificationInForeground(@NonNull Notification notification);
+    void onStartNotificationInForeground(@NonNull Notification notification);
   }
 }

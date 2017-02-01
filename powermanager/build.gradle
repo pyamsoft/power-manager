@@ -64,6 +64,7 @@ android {
     }
     debug {
       multiDexEnabled true
+      multiDexKeepFile new File('multidex-config.txt')
     }
   }
 
@@ -109,6 +110,9 @@ dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
+
+  // Dagger
+  annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   // Firebase Crash
   compile "com.google.firebase:firebase-crash:$firebase"

@@ -17,21 +17,29 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @Inject @Named("bluetooth_manage_pref") ManagePreferencePresenter presenter;
   @NonNull private static final String TAG = "BluetoothManagePreferenceFragment";
 
   @NonNull @Override protected String getPresenterKey() {
     return TAG + "key_presenter";
   }
 
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new BluetoothManagePresenterLoader();
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
   }
 
   @Override protected int getManageKeyResId() {

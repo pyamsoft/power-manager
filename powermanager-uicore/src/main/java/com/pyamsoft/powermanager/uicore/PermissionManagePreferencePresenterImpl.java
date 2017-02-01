@@ -47,7 +47,8 @@ public class PermissionManagePreferencePresenterImpl extends ManagePreferencePre
     SubscriptionHelper.unsubscribe(permissionSubscription);
   }
 
-  @CallSuper @Override public void checkManagePermission() {
+  @CallSuper @Override
+  public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
     SubscriptionHelper.unsubscribe(permissionSubscription);
     permissionSubscription =
         Observable.defer(() -> Observable.just(permissionObserver.hasPermission()))
@@ -55,10 +56,10 @@ public class PermissionManagePreferencePresenterImpl extends ManagePreferencePre
             .observeOn(getObserveScheduler())
             .subscribe(hasPermission -> {
               Timber.d("Permission granted? %s", hasPermission);
-              getView(view -> view.onManagePermissionCallback(hasPermission));
+              callback.onManagePermissionCallback(hasPermission);
             }, throwable -> {
               Timber.e(throwable, "onError checkManagePermission");
-              getView(view -> view.onManagePermissionCallback(false));
+              callback.onManagePermissionCallback(false);
             }, () -> SubscriptionHelper.unsubscribe(permissionSubscription));
   }
 }

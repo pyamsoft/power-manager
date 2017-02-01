@@ -19,19 +19,19 @@ package com.pyamsoft.powermanager.data;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class DataManagePreferenceFragment extends ManagePreferenceFragment {
 
+  @Inject @Named("data_manage_pref") ManagePreferencePresenter presenter;
   @NonNull private static final String TAG = "DataManagePreferenceFragment";
-
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new DataManagePresenterLoader();
-  }
 
   @Override protected int getManageKeyResId() {
     return R.string.manage_data_key;
@@ -65,6 +65,14 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   @Override protected void onShowManagePermissionNeededMessage() {
     Toast.makeText(getContext(), "Enable SuperUser from the Settings module to manage Mobile Data",
         Toast.LENGTH_SHORT).show();
+  }
+
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusDataScreenComponent().inject(this);
   }
 
   @NonNull @Override protected String getModuleName() {

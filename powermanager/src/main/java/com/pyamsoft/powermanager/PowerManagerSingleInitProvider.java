@@ -20,21 +20,17 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.pyamsoft.powermanager.base.BaseInitProvider;
-import com.pyamsoft.powermanager.base.DaggerPowerManagerComponent;
-import com.pyamsoft.powermanager.base.PowerManagerComponent;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.IPYDroidApp;
+import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.rx.RxLicenses;
 import com.pyamsoft.pydroid.ui.UiLicenses;
 
-public class PowerManagerSingleInitProvider extends BaseInitProvider
-    implements IPYDroidApp<PowerManagerComponent> {
+public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
 
   @NonNull @Override protected BuildConfigChecker initializeBuildConfigChecker() {
     return new BuildConfigChecker() {
@@ -45,7 +41,12 @@ public class PowerManagerSingleInitProvider extends BaseInitProvider
   }
 
   @Override protected void onInstanceCreated(@NonNull Context context) {
-    super.onInstanceCreated(context);
+    final PowerManagerModule module =
+        new PowerManagerModule(context, MainActivity.class, ActionToggleService.class);
+    final PowerManagerComponent component =
+        DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
+    Injector.set(component);
+
     ForegroundService.start(context);
   }
 
@@ -64,11 +65,5 @@ public class PowerManagerSingleInitProvider extends BaseInitProvider
     Licenses.create("Dagger", "https://github.com/google/dagger", "licenses/dagger2");
     RxLicenses.addLicenses();
     UiLicenses.addLicenses();
-  }
-
-  @NonNull @Override protected PowerManagerComponent createModule(@NonNull Context context) {
-    final PowerManagerModule module =
-        new PowerManagerModule(context, MainActivity.class, ActionToggleService.class);
-    return DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
   }
 }

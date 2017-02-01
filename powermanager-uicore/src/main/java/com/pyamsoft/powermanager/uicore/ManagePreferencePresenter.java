@@ -16,26 +16,22 @@
 
 package com.pyamsoft.powermanager.uicore;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.NonNull;
 
-public interface ManagePreferencePresenter
-    extends Presenter<ManagePreferencePresenter.ManagePreferenceView> {
+public interface ManagePreferencePresenter extends OnboardingPresenter {
 
-  void setShownOnBoarding();
+  void registerObserver(@NonNull ManageCallback callback);
 
-  void showOnboardingIfNeeded();
+  void checkManagePermission(@NonNull ManagePermissionCallback callback);
 
-  void dismissOnboarding();
-
-  void checkManagePermission();
-
-  interface ManagePreferenceView {
+  interface ManageCallback {
 
     void onManageSet();
 
     void onManageUnset();
+  }
 
-    void showOnBoarding();
+  interface ManagePermissionCallback {
 
     void onManagePermissionCallback(boolean hasPermission);
   }

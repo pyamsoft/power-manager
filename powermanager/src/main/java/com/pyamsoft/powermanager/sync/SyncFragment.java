@@ -19,17 +19,21 @@ package com.pyamsoft.powermanager.sync;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.view.View;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class SyncFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Sync";
-  private BooleanInterestObserver observer;
+  @Inject @Named("obs_sync_manage") BooleanInterestObserver observer;
+  @Inject @Named("sync_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
   public static SyncFragment newInstance(@NonNull View from, @NonNull View container) {
@@ -38,16 +42,16 @@ public class SyncFragment extends OverviewPagerFragment {
     return fragment;
   }
 
-  @Override protected void injectObserverModifier() {
-    observer = new SyncLoader().call();
+  @NonNull @Override protected OverviewPagerPresenter providePresenter() {
+    return presenter;
   }
 
-  @NonNull @Override protected BooleanInterestObserver getObserver() {
+  @NonNull @Override protected BooleanInterestObserver provideObserver() {
     return observer;
   }
 
-  @NonNull @Override protected FuncNone<OverviewPagerPresenter> getPresenterLoader() {
-    return new SyncOverviewPresenterLoader();
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

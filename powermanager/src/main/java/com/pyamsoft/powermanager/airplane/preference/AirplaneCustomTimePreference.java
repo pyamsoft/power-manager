@@ -19,10 +19,20 @@ package com.pyamsoft.powermanager.airplane.preference;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.uicore.preference.PreferenceLoader;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
+
+  @SuppressWarnings("WeakerAccess") @Named("airplane_custom_delay") @Inject
+  CustomTimeInputPreferencePresenter delayPresenter;
+  @SuppressWarnings("WeakerAccess") @Named("airplane_custom_enable") @Inject
+  CustomTimeInputPreferencePresenter enablePresenter;
+  @SuppressWarnings("WeakerAccess") @Named("airplane_custom_disable") @Inject
+  CustomTimeInputPreferencePresenter disablePresenter;
 
   public AirplaneCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -45,7 +55,19 @@ public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
     return "Airplane";
   }
 
-  @NonNull @Override protected PreferenceLoader getPreferenceLoader() {
-    return new AirplanePreferenceLoader();
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusAirplanePreferenceComponent().inject(this);
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideEnablePresenter() {
+    return enablePresenter;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDisablePresenter() {
+    return disablePresenter;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDelayPresenter() {
+    return delayPresenter;
   }
 }

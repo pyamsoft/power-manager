@@ -16,23 +16,24 @@
 
 package com.pyamsoft.powermanager.service;
 
-import android.app.Notification;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.manager.ScreenOnOffReceiver;
+import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ForegroundService extends Service implements ForegroundPresenter.ForegroundProvider {
+public class ForegroundService extends Service {
 
   @NonNull private static final String EXTRA_SERVICE_ENABLED = "EXTRA_SERVICE_ENABLED";
   @NonNull private static final String EXTRA_RESTART_TRIGGERS = "EXTRA_RESTART_TRIGGERS";
   private static final int NOTIFICATION_ID = 1000;
-  @Nullable private ForegroundPresenter presenter;
-  @Nullable private ScreenOnOffReceiver screenOnOffReceiver;
+  @Inject ForegroundPresenter presenter;
+  private ScreenOnOffReceiver screenOnOffReceiver;
 
   /**
    * Force the service into a state
@@ -77,34 +78,20 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
 
   @Override public void onCreate() {
     super.onCreate();
-    if (screenOnOffReceiver == null) {
-      screenOnOffReceiver = new ScreenOnOffReceiver(this);
-    }
-    if (presenter == null) {
-      presenter = new ForegroundServiceLoader().call();
-    }
-    presenter.bindView(this);
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
+
+    Injector.get().provideComponent().plusForegroundServiceComponent().inject(this);
+    presenter.bindView(null);
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
-    if (screenOnOffReceiver != null) {
-      screenOnOffReceiver.unregister();
-    }
-
-    if (presenter != null) {
-      presenter.unbindView();
-      presenter.destroy();
-    }
-
+    screenOnOffReceiver.unregister();
+    presenter.unbindView();
     stopForeground(true);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
-    if (presenter == null) {
-      throw new IllegalStateException("Presenter is NULL, cannot onStartCommand");
-    }
-
     if (intent != null) {
       if (intent.hasExtra(EXTRA_SERVICE_ENABLED)) {
         final boolean enable = intent.getBooleanExtra(EXTRA_SERVICE_ENABLED, true);
@@ -114,29 +101,17 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
         processTriggerRestartCommand(restart);
       }
     }
-    presenter.onStartNotification();
+    presenter.startNotification(notification -> startForeground(NOTIFICATION_ID, notification));
     return START_STICKY;
   }
 
   private void processTriggerRestartCommand(boolean restart) {
-    if (presenter == null) {
-      throw new IllegalStateException("Presenter is NULL, cannot process restart command");
-    }
-
     if (restart) {
       presenter.restartTriggerAlarm();
     }
   }
 
   private void processServiceEnableCommand(boolean enable) {
-    if (presenter == null) {
-      throw new IllegalStateException("Presenter is NULL, cannot process service enable command");
-    }
-
-    if (screenOnOffReceiver == null) {
-      throw new IllegalStateException("Screen receiver is null, cannot register");
-    }
-
     presenter.setForegroundState(enable);
     if (enable) {
       Timber.i("Register SCREEN receiver");
@@ -145,9 +120,5 @@ public class ForegroundService extends Service implements ForegroundPresenter.Fo
       Timber.w("Unregister SCREEN receiver");
       screenOnOffReceiver.unregister();
     }
-  }
-
-  @Override public void startNotificationInForeground(@NonNull Notification notification) {
-    startForeground(NOTIFICATION_ID, notification);
   }
 }

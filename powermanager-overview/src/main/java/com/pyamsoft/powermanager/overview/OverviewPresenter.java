@@ -17,45 +17,36 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface OverviewPresenter extends Presenter<OverviewPresenter.Overview> {
+interface OverviewPresenter extends Presenter<Presenter.Empty> {
+
+  void showOnBoarding(@NonNull OnboardingCallback callback);
 
   void setShownOnBoarding();
 
-  void getWifiObserver(@NonNull View view);
+  void getWifiObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getDataObserver(@NonNull View view);
+  void getDataObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getBluetoothObserver(@NonNull View view);
+  void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getSyncObserver(@NonNull View view);
+  void getSyncObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getAirplaneObserver(@NonNull View view);
+  void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getDozeObserver(@NonNull View view);
+  void getDozeObserver(@NonNull ObserverRetrieveCallback callback);
 
-  void getWearObserver(@NonNull View view);
+  void getWearObserver(@NonNull ObserverRetrieveCallback callback);
 
-  interface Overview {
+  interface OnboardingCallback {
 
-    void showOnBoarding();
+    void onShowOnBoarding();
+  }
 
-    void onWifiObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
+  interface ObserverRetrieveCallback {
 
-    void onDataObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
-
-    void onBluetoothObserverRetrieved(@NonNull View view,
-        @NonNull BooleanInterestObserver observer);
-
-    void onSyncObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
-
-    void onAirplaneObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
-
-    void onDozeObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
-
-    void onWearObserverRetrieved(@NonNull View view, @NonNull BooleanInterestObserver observer);
+    void onObserverRetrieved(@NonNull BooleanInterestObserver observer);
   }
 }

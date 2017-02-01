@@ -16,23 +16,16 @@
 
 package com.pyamsoft.powermanager.uicore;
 
-import com.pyamsoft.pydroid.presenter.Presenter;
+import android.support.annotation.NonNull;
 
-public interface PeriodPreferencePresenter
-    extends Presenter<PeriodPreferencePresenter.PeriodPreferenceView> {
+public interface PeriodPreferencePresenter extends OnboardingPresenter {
 
-  void setShownOnBoarding();
+  void registerObserver(@NonNull PeriodicCallback callback);
 
-  void showOnboardingIfNeeded();
-
-  void dismissOnboarding();
-
-  interface PeriodPreferenceView {
+  interface PeriodicCallback {
 
     void onPeriodicSet();
 
     void onPeriodicUnset();
-
-    void showOnBoarding();
   }
 }

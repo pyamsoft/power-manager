@@ -72,12 +72,12 @@ class ForegroundInteractorImpl extends ActionToggleInteractorImpl implements For
     final long delayTime = getPreferences().getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
     jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
-    jobQueuer.queue(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
+    jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
         .repeatingOnWindow(0)
         .repeating(true)
         .repeatingOffWindow(0)
         .delay(triggerPeriod)
-        .ignoreIfCharging(true)
+        .ignoreIfCharging(false)
         .type(QueuerType.POWER_TRIGGER)
         .build());
   }

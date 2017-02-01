@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implements MainPresenter {
+class MainPresenterImpl extends SchedulerPresenter<Presenter.Empty> implements MainPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
@@ -41,15 +42,14 @@ class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implement
     this.rootPermissionObserver = rootPermissionObserver;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
+  @Override public void runStartupHooks(@NonNull StartupCallback callback) {
     SubscriptionHelper.unsubscribe(subscription);
     subscription = interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(start -> {
               if (start) {
-                getView(View::onServiceEnabledWhenOpen);
+                callback.onServiceEnabledWhenOpen();
               }
             }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"),
             () -> SubscriptionHelper.unsubscribe(subscription));
@@ -62,7 +62,7 @@ class MainPresenterImpl extends SchedulerPresenter<MainPresenter.View> implement
             .subscribe(hasPermission -> {
                   if (!hasPermission) {
                     interactor.missingRootPermission();
-                    getView(View::explainRootRequirement);
+                    callback.explainRootRequirement();
                   }
                 }, throwable -> Timber.e(throwable, "onError checking root permission"),
                 () -> SubscriptionHelper.unsubscribe(rootSubscription));

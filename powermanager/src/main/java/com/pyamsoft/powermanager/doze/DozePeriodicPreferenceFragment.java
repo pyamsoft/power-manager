@@ -17,14 +17,26 @@
 package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull private static final String TAG = "DozePeriodicPreferenceFragment";
+  @Inject @Named("doze_period_pref") PeriodPreferencePresenter presenter;
+
+  @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
+  }
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_doze;
@@ -48,10 +60,6 @@ public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @Override protected int getDisableTimeKeyResId() {
     return R.string.periodic_doze_disable_key;
-  }
-
-  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
-    return new DozePeriodPresenterLoader();
   }
 
   @NonNull @Override protected String getPresenterKey() {

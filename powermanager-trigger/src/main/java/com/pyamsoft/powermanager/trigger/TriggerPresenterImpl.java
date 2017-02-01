@@ -19,22 +19,18 @@ package com.pyamsoft.powermanager.trigger;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
-import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
-import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerView>
-    implements TriggerPresenter {
+class TriggerPresenterImpl extends SchedulerPresenter<Presenter.Empty> implements TriggerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull final List<PowerTriggerEntry> powerTriggerEntryCached;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
       Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription viewSubscription = Subscriptions.empty();
@@ -42,142 +38,87 @@ class TriggerPresenterImpl extends SchedulerPresenter<TriggerPresenter.TriggerVi
       Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription updateSubscription =
       Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") boolean refreshing;
 
   @Inject TriggerPresenterImpl(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-    powerTriggerEntryCached = new ArrayList<>();
-    refreshing = false;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(deleteSubscription, createSubscription, updateSubscription);
+    SubscriptionHelper.unsubscribe(deleteSubscription, createSubscription, updateSubscription,
+        viewSubscription);
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-    refreshing = false;
+  @Override public void loadTriggerView(@NonNull TriggerLoadCallback callback) {
     SubscriptionHelper.unsubscribe(viewSubscription);
-    powerTriggerEntryCached.clear();
-  }
-
-  @Override public void loadTriggerView() {
-    if (refreshing) {
-      Timber.d("List is currently refreshing, do nothing");
-      return;
-    }
-
-    refreshing = true;
-    final Observable<PowerTriggerEntry> freshData = interactor.queryAll().map(entry -> {
-      powerTriggerEntryCached.add(entry);
-      return entry;
-    });
-
-    final Observable<PowerTriggerEntry> dataSource;
-    if (powerTriggerEntryCached.isEmpty()) {
-      dataSource = freshData;
-    } else {
-      dataSource = Observable.defer(() -> Observable.from(powerTriggerEntryCached));
-    }
-
-    SubscriptionHelper.unsubscribe(viewSubscription);
-    viewSubscription = dataSource.subscribeOn(getSubscribeScheduler())
+    viewSubscription = interactor.queryAll()
+        .sorted((entry, entry2) -> {
+          if (entry.percent() == entry2.percent()) {
+            return 0;
+          } else if (entry.percent() < entry2.percent()) {
+            return -1;
+          } else {
+            return 1;
+          }
+        })
+        .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(entry -> getView(triggerView -> triggerView.onTriggerLoaded(entry)),
-            throwable -> {
-              // Todo
-              Timber.e(throwable, "onError");
-            }, () -> getView(view -> {
-              refreshing = false;
-              view.onTriggerLoadFinished();
-              SubscriptionHelper.unsubscribe(viewSubscription);
-            }));
+        .subscribe(callback::onTriggerLoaded, throwable -> {
+          // Todo
+          Timber.e(throwable, "onError");
+        }, () -> {
+          callback.onTriggerLoadFinished();
+          SubscriptionHelper.unsubscribe(viewSubscription);
+        });
   }
 
-  @Override public void showNewTriggerDialog() {
-    // TODO is there anything else we have to do?
-    getView(TriggerView::onShowNewTriggerDialog);
+  @Override public void showNewTriggerDialog(@NonNull ShowTriggerDialogCallback callback) {
+    callback.onShowNewTriggerDialog();
   }
 
-  @Override public void createPowerTrigger(@NonNull PowerTriggerEntry entry) {
+  @Override public void createPowerTrigger(@NonNull PowerTriggerEntry entry,
+      @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
     SubscriptionHelper.unsubscribe(createSubscription);
     createSubscription = interactor.put(entry)
-        .map(entry12 -> {
-          powerTriggerEntryCached.add(entry12);
-          return entry12;
-        })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(entry1 -> getView(triggerView -> triggerView.onNewTriggerAdded(entry1)),
-            throwable -> {
-              Timber.e(throwable, "onError");
-              if (throwable instanceof SQLiteConstraintException) {
-                Timber.e("Error inserting into DB");
-                getView(TriggerView::onNewTriggerInsertError);
-              } else {
-                Timber.e("Issue creating trigger");
-                getView(TriggerView::onNewTriggerCreateError);
-              }
-            }, () -> SubscriptionHelper.unsubscribe(createSubscription));
+        .subscribe(callback::onNewTriggerAdded, throwable -> {
+          Timber.e(throwable, "onError");
+          if (throwable instanceof SQLiteConstraintException) {
+            Timber.e("Error inserting into DB");
+            callback.onNewTriggerInsertError();
+          } else {
+            Timber.e("Issue creating trigger");
+            callback.onNewTriggerCreateError();
+          }
+        }, () -> SubscriptionHelper.unsubscribe(createSubscription));
   }
 
-  @Override public void deleteTrigger(int percent) {
+  @Override public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
     SubscriptionHelper.unsubscribe(deleteSubscription);
     deleteSubscription = interactor.delete(percent)
-        .map(result -> {
-          PowerTriggerEntry removeMe = null;
-          for (final PowerTriggerEntry entry : powerTriggerEntryCached) {
-            if (entry.percent() == percent) {
-              removeMe = entry;
-              break;
-            }
-          }
-          if (removeMe != null) {
-            powerTriggerEntryCached.remove(removeMe);
-          }
-          return result;
-        })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(position -> getView(triggerView -> triggerView.onTriggerDeleted(position)),
-            throwable -> {
-              // TODO
-              Timber.e(throwable, "onError");
-            }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
+        .subscribe(callback::onTriggerDeleted, throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
   }
 
   @Override
-  public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled) {
+  public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
+      @NonNull TriggerToggleCallback callback) {
     SubscriptionHelper.unsubscribe(updateSubscription);
     updateSubscription = interactor.update(entry, enabled)
         .flatMap(updated -> interactor.get(entry.percent()))
-        .map(newEntry -> {
-          int updateIndex = -1;
-          final int size = powerTriggerEntryCached.size();
-          for (int i = 0; i < size; ++i) {
-            final PowerTriggerEntry checkEntry = powerTriggerEntryCached.get(i);
-            if (checkEntry.percent() == newEntry.percent()) {
-              updateIndex = i;
-              break;
-            }
-          }
-          if (updateIndex != -1) {
-            powerTriggerEntryCached.set(updateIndex, newEntry);
-          }
-
-          return newEntry;
-        })
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(result -> getView(
-            triggerListAdapterView -> triggerListAdapterView.updateViewHolder(position, result)),
-            throwable -> {
-              // TODO
-              Timber.e(throwable, "onError");
-            }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
+        .subscribe(result -> callback.updateViewHolder(position, result), throwable -> {
+          // TODO
+          Timber.e(throwable, "onError");
+        }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
   }
 }

@@ -21,20 +21,25 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.LogType;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface LoggerPresenter extends Presenter<LoggerPresenter.Provider> {
+public interface LoggerPresenter extends Presenter<Presenter.Empty> {
 
   void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args);
 
-  void deleteLog();
+  void deleteLog(@NonNull DeleteCallback callback);
 
-  interface Provider {
+  void retrieveLogContents(@NonNull LogCallback callback);
+
+  interface DeleteCallback {
+
+    void onLogDeleted(@NonNull String logId);
+  }
+
+  interface LogCallback {
 
     void onPrepareLogContentRetrieval();
 
     void onLogContentRetrieved(@NonNull String logLine);
 
     void onAllLogContentsRetrieved();
-
-    void onLogDeleted(@NonNull String logId);
   }
 }

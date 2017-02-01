@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class OverviewModule {
+@Module public class OverviewModule {
 
   @Provides OverviewItemPresenter provideOverviewItemPresenter(@Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {

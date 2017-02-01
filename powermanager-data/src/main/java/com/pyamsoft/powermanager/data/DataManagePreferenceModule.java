@@ -29,7 +29,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DataManagePreferenceModule {
+@Module public class DataManagePreferenceModule {
 
   @Provides @Named("data_manage_pref")
   ManagePreferencePresenter provideDataManagePreferencePresenter(

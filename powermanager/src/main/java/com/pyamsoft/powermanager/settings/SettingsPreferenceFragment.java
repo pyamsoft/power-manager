@@ -16,9 +16,6 @@
 
 package com.pyamsoft.powermanager.settings;
 
-import android.app.ActivityManager;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
@@ -27,20 +24,20 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
 import android.widget.Toast;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import javax.inject.Inject;
 import timber.log.Timber;
 
 public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
-    implements SettingsPreferencePresenter.SettingsPreferenceView {
+    implements SettingsPreferencePresenter.RootCallback,
+    SettingsPreferencePresenter.ConfirmDialogCallback {
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
-  @NonNull private static final String KEY_PRESENTER = TAG + "key_settings_presenter";
-  @SuppressWarnings("WeakerAccess") SettingsPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") @Inject SettingsPreferencePresenter presenter;
   private SwitchPreferenceCompat useRoot;
 
   @CheckResult @NonNull SettingsPreferencePresenter getPresenter() {
@@ -52,8 +49,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter =
-        PersistentCache.load(getActivity(), KEY_PRESENTER, new SettingsPreferencePresenterLoader());
+    Injector.get().provideComponent().plusSettingsPreferenceComponent().inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -62,7 +58,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
-      presenter.requestClearDatabase();
+      presenter.requestClearDatabase(this);
       return true;
     });
 
@@ -71,7 +67,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         if (b) {
-          presenter.checkRoot(true, true);
+          presenter.checkRoot(true, true, this);
           return false;
         } else {
           return true;
@@ -82,26 +78,14 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   }
 
   @Override public void showConfirmDialog(int type) {
-    AppUtil.guaranteeSingleDialogFragment(getFragmentManager(),
-        ConfirmationDialog.newInstance(type), "confirm_dialog");
-  }
-
-  @Override public void onClearAll() {
-    Timber.d("Everything is cleared, kill self");
-    getActivity().getApplicationContext()
-        .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
-    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
-        .getSystemService(Context.ACTIVITY_SERVICE);
-    activityManager.clearApplicationUserData();
-  }
-
-  @Override public void onClearDatabase() {
-    Timber.d("Cleared the trigger database");
+    AppUtil.guaranteeSingleDialogFragment(getActivity(), ConfirmationDialog.newInstance(type),
+        "confirm_dialog");
   }
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
+    presenter.checkRootEnabled(this);
   }
 
   @Override public void onStop() {
@@ -141,7 +125,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   }
 
   @Override protected boolean onClearAllPreferenceClicked() {
-    presenter.requestClearAll();
+    presenter.requestClearAll(this);
     return true;
   }
 }

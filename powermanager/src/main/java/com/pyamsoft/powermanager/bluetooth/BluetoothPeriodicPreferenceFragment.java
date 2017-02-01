@@ -17,21 +17,29 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class BluetoothPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull private static final String TAG = "BluetoothPeriodicPreferenceFragment";
-
-  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
-    return new BluetoothPeriodPresenterLoader();
-  }
+  @Inject @Named("bluetooth_period_pref") PeriodPreferencePresenter presenter;
 
   @NonNull @Override protected String getPresenterKey() {
     return TAG + "key_presenter";
+  }
+
+  @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
   }
 
   @Override protected int getPreferencesResId() {

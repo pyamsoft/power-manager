@@ -17,14 +17,26 @@
 package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull private static final String TAG = "SyncPeriodicPreferenceFragment";
+  @Inject @Named("sync_period_pref") PeriodPreferencePresenter presenter;
+
+  @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
+  }
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_sync;
@@ -48,10 +60,6 @@ public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @Override protected int getDisableTimeKeyResId() {
     return R.string.periodic_sync_disable_key;
-  }
-
-  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
-    return new SyncPeriodPresenterLoader();
   }
 
   @NonNull @Override protected String getPresenterKey() {

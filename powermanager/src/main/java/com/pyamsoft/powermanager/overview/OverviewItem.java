@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
@@ -45,8 +46,9 @@ import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import java.util.List;
+import javax.inject.Inject;
 
-class OverviewItem
+public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
@@ -135,17 +137,17 @@ class OverviewItem
     }
   }
 
-  static class ViewHolder extends RecyclerView.ViewHolder implements OverviewItemPresenter.View {
+  public static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull private final AdapterItemOverviewBinding binding;
-    @NonNull private final OverviewItemPresenter presenter;
-    @Nullable private AsyncMap.Entry checkTask;
+    @NonNull final AdapterItemOverviewBinding binding;
+    @Inject OverviewItemPresenter presenter;
+    @Nullable AsyncMap.Entry checkTask;
     @Nullable private AsyncMap.Entry titleTask;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
-      presenter = new OverviewItemPresenterLoader().call();
+      Injector.get().provideComponent().plusOverviewComponent().inject(this);
     }
 
     @NonNull @CheckResult AdapterItemOverviewBinding getBinding() {
@@ -153,7 +155,7 @@ class OverviewItem
     }
 
     void bind(@NonNull OverviewModel model) {
-      presenter.bindView(this);
+      presenter.bindView(null);
 
       binding.adapterItemOverviewColor.setBackgroundColor(
           ContextCompat.getColor(itemView.getContext(), model.background()));
@@ -164,7 +166,19 @@ class OverviewItem
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
 
-      presenter.decideManageState(model.observer());
+      presenter.decideManageState(model.observer(),
+          new OverviewItemPresenter.ManageStateCallback() {
+            @Override public void onManageStateDecided(@DrawableRes int icon) {
+              AsyncMapHelper.unsubscribe(checkTask);
+              checkTask = AsyncDrawable.load(icon)
+                  .tint(android.R.color.white)
+                  .into(binding.adapterItemOverviewCheck);
+            }
+
+            @Override public void onManageStateNone() {
+              binding.adapterItemOverviewCheck.setImageDrawable(null);
+            }
+          });
     }
 
     void unbind() {
@@ -173,18 +187,6 @@ class OverviewItem
       binding.adapterItemOverviewTitle.setText(null);
 
       presenter.unbindView();
-      presenter.destroy();
-    }
-
-    @Override public void onManageStateDecided(@DrawableRes int icon) {
-      AsyncMapHelper.unsubscribe(checkTask);
-      checkTask = AsyncDrawable.load(icon)
-          .tint(android.R.color.white)
-          .into(binding.adapterItemOverviewCheck);
-    }
-
-    @Override public void onManageStateNone() {
-      binding.adapterItemOverviewCheck.setImageDrawable(null);
     }
   }
 }

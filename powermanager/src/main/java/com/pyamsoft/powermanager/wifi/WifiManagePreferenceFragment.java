@@ -17,17 +17,24 @@
 package com.pyamsoft.powermanager.wifi;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull private static final String TAG = "WifiManagePreferenceFragment";
+  @Inject @Named("wifi_manage_pref") ManagePreferencePresenter presenter;
 
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new WifiManagePresenterLoader();
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
   }
 
   @Override protected int getManageKeyResId() {

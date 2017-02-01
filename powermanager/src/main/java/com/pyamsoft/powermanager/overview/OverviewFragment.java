@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
@@ -37,28 +38,26 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class OverviewFragment extends ActionBarFragment implements OverviewPresenter.Overview {
+public class OverviewFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "Overview";
-  @NonNull private static final String KEY_PRESENTER = TAG + "key_overview_presenter";
-  @SuppressWarnings("WeakerAccess") OverviewPresenter presenter;
-  private FastItemAdapter<OverviewItem> adapter;
-  private FragmentOverviewBinding binding;
-  @Nullable private TapTargetSequence sequence;
+  @SuppressWarnings("WeakerAccess") @Inject OverviewPresenter presenter;
+  FragmentOverviewBinding binding;
+  @Nullable TapTargetSequence sequence;
+  FastItemAdapter<OverviewItem> adapter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), KEY_PRESENTER, new OverviewPresenterLoader());
+    Injector.get().provideComponent().plusOverviewComponent().inject(this);
   }
 
   @Nullable @Override
@@ -77,7 +76,41 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
+    presenter.showOnBoarding(() -> {
+      Timber.d("Show onboarding");
+      // Hold a ref to the sequence or Activity will recycle bitmaps and crash
+      if (sequence == null) {
+
+        // If we use the first item we get a weird location, try a different item
+        final OverviewItem.ViewHolder tapTargetView =
+            (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
+        final TapTarget overview =
+            TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewImage,
+                getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
+                .cancelable(false);
+
+        final TapTarget manageTarget =
+            TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewCheck,
+                getString(R.string.onboard_title_module_manage),
+                getString(R.string.onboard_desc_module_manage)).cancelable(false);
+
+        sequence = new TapTargetSequence(getActivity()).targets(overview, manageTarget)
+            .listener(new TapTargetSequence.Listener() {
+              @Override public void onSequenceFinish() {
+                if (presenter != null) {
+                  presenter.setShownOnBoarding();
+                }
+              }
+
+              @Override public void onSequenceCanceled(TapTarget lastTarget) {
+
+              }
+            });
+      }
+
+      sequence.start();
+    });
 
     if (adapter.getAdapterItems().isEmpty()) {
       final View view = getView();
@@ -108,18 +141,32 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
   }
 
   private void populateAdapter(@NonNull View view) {
-    presenter.getWifiObserver(view);
-    presenter.getDataObserver(view);
-    presenter.getBluetoothObserver(view);
-    presenter.getSyncObserver(view);
+    presenter.getWifiObserver(observer -> adapter.add(
+        new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
+            observer)));
+    presenter.getDataObserver(observer -> adapter.add(
+        new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
+            observer)));
+    presenter.getBluetoothObserver(observer -> adapter.add(
+        new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
+            observer)));
+    presenter.getSyncObserver(observer -> adapter.add(
+        new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
+            observer)));
 
     adapter.add(
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
             null));
 
-    presenter.getAirplaneObserver(view);
-    presenter.getDozeObserver(view);
-    presenter.getWearObserver(view);
+    presenter.getAirplaneObserver(observer -> adapter.add(
+        new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
+            R.color.cyan500, observer)));
+    presenter.getDozeObserver(observer -> adapter.add(
+        new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
+            observer)));
+    presenter.getWearObserver(observer -> adapter.add(
+        new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
+            observer)));
 
     adapter.add(
         new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
@@ -162,86 +209,5 @@ public class OverviewFragment extends ActionBarFragment implements OverviewPrese
     binding.overviewRecycler.setLayoutManager(layoutManager);
     binding.overviewRecycler.setHasFixedSize(true);
     binding.overviewRecycler.setAdapter(adapter);
-  }
-
-  @Override public void showOnBoarding() {
-    Timber.d("Show onboarding");
-    // Hold a ref to the sequence or Activity will recycle bitmaps and crash
-    if (sequence == null) {
-
-      // If we use the first item we get a weird location, try a different item
-      final OverviewItem.ViewHolder tapTargetView =
-          (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
-      final TapTarget overview =
-          TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewImage,
-              getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
-              .cancelable(false);
-
-      final TapTarget manageTarget =
-          TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewCheck,
-              getString(R.string.onboard_title_module_manage),
-              getString(R.string.onboard_desc_module_manage)).cancelable(false);
-
-      sequence = new TapTargetSequence(getActivity()).targets(overview, manageTarget)
-          .listener(new TapTargetSequence.Listener() {
-            @Override public void onSequenceFinish() {
-              if (presenter != null) {
-                presenter.setShownOnBoarding();
-              }
-            }
-
-            @Override public void onSequenceCanceled(TapTarget lastTarget) {
-
-            }
-          });
-    }
-
-    sequence.start();
-  }
-
-  @Override public void onWifiObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(
-        new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
-            observer));
-  }
-
-  @Override public void onDataObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(
-        new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
-            observer));
-  }
-
-  @Override public void onBluetoothObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(
-        new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
-            observer));
-  }
-
-  @Override public void onSyncObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
-        observer));
-  }
-
-  @Override public void onAirplaneObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
-        R.color.cyan500, observer));
-  }
-
-  @Override public void onDozeObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
-        observer));
-  }
-
-  @Override public void onWearObserverRetrieved(@NonNull View view,
-      @NonNull BooleanInterestObserver observer) {
-    adapter.add(
-        new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
-            observer));
   }
 }

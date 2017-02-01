@@ -26,7 +26,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class DataCustomPreferenceModule {
+@Module public class DataCustomPreferenceModule {
 
   @Provides @Named("data_custom_delay")
   CustomTimeInputPreferencePresenter provideDataCustomDelayPresenter(

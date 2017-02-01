@@ -20,6 +20,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-class OverviewItemPresenterImpl extends SchedulerPresenter<OverviewItemPresenter.View>
+class OverviewItemPresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements OverviewItemPresenter {
 
   @SuppressWarnings("WeakerAccess") @Nullable Subscription iconSubscription;
@@ -43,7 +44,8 @@ class OverviewItemPresenterImpl extends SchedulerPresenter<OverviewItemPresenter
     SubscriptionHelper.unsubscribe(iconSubscription);
   }
 
-  @Override public void decideManageState(@Nullable BooleanInterestObserver observer) {
+  @Override public void decideManageState(@Nullable BooleanInterestObserver observer,
+      @NonNull ManageStateCallback callback) {
     SubscriptionHelper.unsubscribe(iconSubscription);
     iconSubscription = Observable.fromCallable(() -> {
       @DrawableRes final int icon;
@@ -57,16 +59,13 @@ class OverviewItemPresenterImpl extends SchedulerPresenter<OverviewItemPresenter
         }
       }
       return icon;
-    })
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(icon -> getView(view -> {
-              if (icon == 0) {
-                view.onManageStateNone();
-              } else {
-                view.onManageStateDecided(icon);
-              }
-            }), throwable -> Timber.e(throwable, "onError"),
-            () -> SubscriptionHelper.unsubscribe(iconSubscription));
+    }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(icon -> {
+          if (icon == 0) {
+            callback.onManageStateNone();
+          } else {
+            callback.onManageStateDecided(icon);
+          }
+        }, throwable -> Timber.e(throwable, "onError"),
+        () -> SubscriptionHelper.unsubscribe(iconSubscription));
   }
 }

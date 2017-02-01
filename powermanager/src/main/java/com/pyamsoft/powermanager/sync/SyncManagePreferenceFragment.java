@@ -17,17 +17,25 @@
 package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull private static final String TAG = "SyncManagePreferenceFragment";
+  @Inject @Named("sync_manage_pref") ManagePreferencePresenter presenter;
 
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new SyncManagePresenterLoader();
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
   }
 
   @Override protected int getManageKeyResId() {

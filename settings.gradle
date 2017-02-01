@@ -29,6 +29,5 @@ include ':powermanager', ':powermanager-model', ':powermanager-base', ':powerman
     ':powermanager-uicore',
     ':powermanager-settings',
     ':powermanager-service',
-    ':powermanager-manager',
-    ':powermanager-modifier',
-    ':powermanager-observer'
+    ':powermanager-manager'
+

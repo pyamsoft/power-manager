@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class AirplaneOverviewModule {
+@Module public class AirplaneOverviewModule {
 
   @Provides @Named("airplane_overview")
   OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(

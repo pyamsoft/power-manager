@@ -19,20 +19,20 @@ package com.pyamsoft.powermanager.doze;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.pydroid.FuncNone;
 import com.pyamsoft.pydroid.util.AppUtil;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
   @NonNull private static final String TAG = "DozeManagePreferenceFragment";
-
-  @NonNull @Override protected FuncNone<ManagePreferencePresenter> createPresenterLoader() {
-    return new DozeManagePresenterLoader();
-  }
+  @Inject @Named("doze_manage_pref") ManagePreferencePresenter presenter;
 
   @Override protected int getManageKeyResId() {
     return R.string.manage_doze_key;
@@ -65,12 +65,20 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void onShowManagePermissionNeededMessage() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      AppUtil.guaranteeSingleDialogFragment(getFragmentManager(), new DozeExplanationDialog(),
+      AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeExplanationDialog(),
           "doze_explain");
     } else {
       Toast.makeText(getContext(), "Doze is only available on Android M (23) and higher",
           Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @NonNull @Override protected ManagePreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
   }
 
   @NonNull @Override protected String getModuleName() {

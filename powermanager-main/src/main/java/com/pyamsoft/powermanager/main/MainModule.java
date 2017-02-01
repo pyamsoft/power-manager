@@ -24,7 +24,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class MainModule {
+@Module public class MainModule {
 
   @Provides MainPresenter provideMainPresenter(@NonNull MainInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,

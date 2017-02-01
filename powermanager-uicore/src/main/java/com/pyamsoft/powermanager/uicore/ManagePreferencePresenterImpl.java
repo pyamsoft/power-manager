@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
@@ -27,8 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class ManagePreferencePresenterImpl
-    extends SchedulerPresenter<ManagePreferencePresenter.ManagePreferenceView>
+public class ManagePreferencePresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements ManagePreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull static final String OBS_TAG =
@@ -46,11 +46,8 @@ public class ManagePreferencePresenterImpl
     this.manageObserver = manageObserver;
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    getView(
-        managePreferenceView -> manageObserver.register(OBS_TAG, managePreferenceView::onManageSet,
-            managePreferenceView::onManageUnset));
+  @Override public void registerObserver(@NonNull ManageCallback callback) {
+    manageObserver.register(OBS_TAG, callback::onManageSet, callback::onManageUnset);
   }
 
   @Override protected void onUnbind() {
@@ -63,7 +60,7 @@ public class ManagePreferencePresenterImpl
     interactor.setOnboarding();
   }
 
-  @Override public void showOnboardingIfNeeded() {
+  @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
     SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
@@ -71,9 +68,9 @@ public class ManagePreferencePresenterImpl
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
               if (!onboard) {
-                getView(ManagePreferenceView::showOnBoarding);
+                callback.onShowOnboarding();
               }
-            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
             () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
@@ -81,7 +78,7 @@ public class ManagePreferencePresenterImpl
     SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
-  @Override public void checkManagePermission() {
+  @Override public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
     // Override if you need to check permissions
   }
 }

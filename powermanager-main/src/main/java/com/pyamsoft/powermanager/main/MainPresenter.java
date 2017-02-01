@@ -16,11 +16,14 @@
 
 package com.pyamsoft.powermanager.main;
 
+import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface MainPresenter extends Presenter<MainPresenter.View> {
+interface MainPresenter extends Presenter<Presenter.Empty> {
 
-  interface View {
+  void runStartupHooks(@NonNull StartupCallback callback);
+
+  interface StartupCallback {
 
     void onServiceEnabledWhenOpen();
 

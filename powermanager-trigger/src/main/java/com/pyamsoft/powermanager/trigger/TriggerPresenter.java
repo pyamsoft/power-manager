@@ -20,33 +20,46 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface TriggerPresenter extends Presenter<TriggerPresenter.TriggerView> {
+interface TriggerPresenter extends Presenter<Presenter.Empty> {
 
-  void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled);
+  void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
+      @NonNull TriggerToggleCallback callback);
 
-  void loadTriggerView();
+  void loadTriggerView(@NonNull TriggerLoadCallback callback);
 
-  void showNewTriggerDialog();
+  void showNewTriggerDialog(@NonNull ShowTriggerDialogCallback callback);
 
-  void deleteTrigger(int percent);
+  void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback);
 
-  void createPowerTrigger(@NonNull PowerTriggerEntry entry);
+  void createPowerTrigger(@NonNull PowerTriggerEntry entry,
+      @NonNull TriggerCreateCallback callback);
 
-  interface TriggerView {
+  interface TriggerLoadCallback {
 
+    void onTriggerLoaded(@NonNull PowerTriggerEntry entry);
+
+    void onTriggerLoadFinished();
+  }
+
+  interface ShowTriggerDialogCallback {
     void onShowNewTriggerDialog();
+  }
+
+  interface TriggerDeleteCallback {
 
     void onTriggerDeleted(int position);
+  }
+
+  interface TriggerCreateCallback {
 
     void onNewTriggerAdded(@NonNull PowerTriggerEntry entry);
 
     void onNewTriggerCreateError();
 
     void onNewTriggerInsertError();
+  }
 
-    void onTriggerLoaded(@NonNull PowerTriggerEntry entry);
-
-    void onTriggerLoadFinished();
+  interface TriggerToggleCallback {
 
     void updateViewHolder(int position, @NonNull PowerTriggerEntry entry);
   }

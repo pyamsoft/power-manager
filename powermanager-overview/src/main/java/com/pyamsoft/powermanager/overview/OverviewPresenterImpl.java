@@ -17,8 +17,8 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.rx.SchedulerPresenter;
 import com.pyamsoft.pydroid.rx.SubscriptionHelper;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +28,7 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.Overview>
+class OverviewPresenterImpl extends SchedulerPresenter<Presenter.Empty>
     implements OverviewPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wifiObserver;
@@ -66,12 +66,7 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.Overvie
     SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
-  @Override protected void onBind() {
-    super.onBind();
-    showOnBoarding();
-  }
-
-  @SuppressWarnings("WeakerAccess") void showOnBoarding() {
+  @Override public void showOnBoarding(@NonNull OnboardingCallback callback) {
     SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .delay(1, TimeUnit.SECONDS)
@@ -79,9 +74,9 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.Overvie
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
               if (!onboard) {
-                getView(Overview::showOnBoarding);
+                callback.onShowOnBoarding();
               }
-            }, throwable -> Timber.e(throwable, "onError showOnBoarding"),
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
             () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
@@ -89,31 +84,31 @@ class OverviewPresenterImpl extends SchedulerPresenter<OverviewPresenter.Overvie
     interactor.setShownOnboarding();
   }
 
-  @Override public void getWifiObserver(@NonNull View view) {
-    getView(overview -> overview.onWifiObserverRetrieved(view, wifiObserver));
+  @Override public void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(wifiObserver);
   }
 
-  @Override public void getDataObserver(@NonNull View view) {
-    getView(overview -> overview.onDataObserverRetrieved(view, dataObserver));
+  @Override public void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(dataObserver);
   }
 
-  @Override public void getBluetoothObserver(@NonNull View view) {
-    getView(overview -> overview.onBluetoothObserverRetrieved(view, bluetoothObserver));
+  @Override public void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(bluetoothObserver);
   }
 
-  @Override public void getSyncObserver(@NonNull View view) {
-    getView(overview -> overview.onSyncObserverRetrieved(view, syncObserver));
+  @Override public void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(syncObserver);
   }
 
-  @Override public void getAirplaneObserver(@NonNull View view) {
-    getView(overview -> overview.onAirplaneObserverRetrieved(view, airplaneObserver));
+  @Override public void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(airplaneObserver);
   }
 
-  @Override public void getDozeObserver(@NonNull View view) {
-    getView(overview -> overview.onDozeObserverRetrieved(view, dozeObserver));
+  @Override public void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(dozeObserver);
   }
 
-  @Override public void getWearObserver(@NonNull View view) {
-    getView(overview -> overview.onWearObserverRetrieved(view, wearObserver));
+  @Override public void getWearObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(wearObserver);
   }
 }

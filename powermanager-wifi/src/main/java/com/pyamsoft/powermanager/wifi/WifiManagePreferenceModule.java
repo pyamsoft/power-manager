@@ -28,7 +28,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module class WifiManagePreferenceModule {
+@Module public class WifiManagePreferenceModule {
 
   @Provides @Named("wifi_manage_pref")
   ManagePreferencePresenter provideWifiManagePreferencePresenter(

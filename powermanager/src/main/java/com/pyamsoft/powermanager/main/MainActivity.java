@@ -37,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
@@ -50,24 +51,23 @@ import com.pyamsoft.powermanager.settings.SettingsFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Inject;
 import timber.log.Timber;
 
-public class MainActivity extends TamperActivity implements MainPresenter.View {
+public class MainActivity extends TamperActivity {
 
-  @NonNull private static final String KEY_PRESENTER = "key_main_presenter";
   @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
   @Nullable private final Runnable longPressBackRunnable =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : this::handleBackLongPress;
   @Nullable private final Handler mainHandler =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : new Handler(Looper.getMainLooper());
-  @SuppressWarnings("WeakerAccess") MainPresenter presenter;
+  @SuppressWarnings("WeakerAccess") @Inject MainPresenter presenter;
   private ActivityMainBinding binding;
   @ColorInt private int oldAppBarColor;
   @ColorInt private int oldStatusBarColor;
@@ -98,7 +98,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
       loadOverviewFragment();
     }
 
-    presenter = PersistentCache.load(this, KEY_PRESENTER, new MainPresenterLoader());
+    Injector.get().provideComponent().plusMainComponent().inject(this);
   }
 
   @Override protected int bindActivityToView() {
@@ -190,7 +190,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
 
   @Override protected void onPostResume() {
     super.onPostResume();
-    RatingDialog.showRatingDialog(this, this);
+    RatingDialog.showRatingDialog(this, this, false);
   }
 
   @NonNull @Override protected String getSafePackageName() {
@@ -310,21 +310,22 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
     statusBarAnimator.setDuration(duration).start();
   }
 
-  @Override public void onServiceEnabledWhenOpen() {
-    Timber.d("Should refresh service when opened");
-    ForegroundService.start(getApplicationContext());
-  }
-
-  @Override public void explainRootRequirement() {
-    // TODO explain with dialog
-    Toast.makeText(getApplicationContext(),
-        "Root is required for certain functions like Doze and Airplane mode", Toast.LENGTH_SHORT)
-        .show();
-  }
-
   @Override protected void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
+    presenter.runStartupHooks(new MainPresenter.StartupCallback() {
+      @Override public void onServiceEnabledWhenOpen() {
+        Timber.d("Should refresh service when opened");
+        ForegroundService.start(getApplicationContext());
+      }
+
+      @Override public void explainRootRequirement() {
+        // TODO explain with dialog
+        Toast.makeText(getApplicationContext(),
+            "Root is required for certain functions like Doze and Airplane mode",
+            Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   @Override protected void onStop() {
@@ -369,7 +370,7 @@ public class MainActivity extends TamperActivity implements MainPresenter.View {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(tag) == null) {
       Timber.d("Show logger dialog");
-      AppUtil.guaranteeSingleDialogFragment(getSupportFragmentManager(), new LoggerDialog(), tag);
+      AppUtil.guaranteeSingleDialogFragment(this, new LoggerDialog(), tag);
       return true;
     } else {
       Timber.w("Logger dialog is already shown");

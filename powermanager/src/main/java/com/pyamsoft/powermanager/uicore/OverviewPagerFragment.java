@@ -32,16 +32,13 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.FuncNone;
-import com.pyamsoft.pydroid.cache.PersistentCache;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import timber.log.Timber;
 
-public abstract class OverviewPagerFragment extends AppBarColoringFragment
-    implements OverviewPagerPresenter.View {
+public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
   @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
@@ -55,13 +52,14 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter = PersistentCache.load(getActivity(), getPresenterKey(), getPresenterLoader());
+    injectDependencies();
+    observer = provideObserver();
+    presenter = providePresenter();
   }
 
   @Nullable @Override
   public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    injectObserverModifier();
     binding = FragmentPreferenceContainerPagerBinding.inflate(inflater, container, false);
     return binding.getRoot();
   }
@@ -77,7 +75,6 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
-    observer = getObserver();
     addPreferenceFragments();
     addTabLayoutToAppBar();
     selectCurrentTab(savedInstanceState);
@@ -86,7 +83,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(this);
+    presenter.bindView(null);
     observer.register(FAB_TAG, this::setFab, this::unsetFab);
   }
 
@@ -215,11 +212,11 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment
     }
   }
 
-  protected abstract void injectObserverModifier();
+  @CheckResult @NonNull protected abstract OverviewPagerPresenter providePresenter();
 
-  @CheckResult @NonNull protected abstract BooleanInterestObserver getObserver();
+  @CheckResult @NonNull protected abstract BooleanInterestObserver provideObserver();
 
-  @CheckResult @NonNull protected abstract FuncNone<OverviewPagerPresenter> getPresenterLoader();
+  protected abstract void injectDependencies();
 
   @CheckResult @DrawableRes protected abstract int getFabSetIcon();
 

@@ -21,20 +21,47 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
 class TriggerInteractorImpl implements TriggerInteractor {
 
+  @SuppressWarnings("WeakerAccess") @NonNull static final Object lock = new Object();
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
+  @SuppressWarnings("WeakerAccess") @NonNull final Set<PowerTriggerEntry> powerTriggerEntryCached;
+  @SuppressWarnings("WeakerAccess") boolean refreshing;
 
   @Inject TriggerInteractorImpl(@NonNull PowerTriggerDB powerTriggerDB) {
     this.powerTriggerDB = powerTriggerDB;
+    powerTriggerEntryCached = new HashSet<>();
+    refreshing = false;
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> queryAll() {
-    return powerTriggerDB.queryAll().first().concatMap(Observable::from);
+    return Observable.defer(() -> {
+      synchronized (lock) {
+        while (refreshing) {
+          // wait
+        }
+
+        refreshing = true;
+      }
+
+      final Observable<PowerTriggerEntry> result;
+      if (powerTriggerEntryCached.isEmpty()) {
+        result = powerTriggerDB.queryAll()
+            .first()
+            .flatMap(Observable::from)
+            .doOnNext(powerTriggerEntryCached::add);
+      } else {
+        result = Observable.from(powerTriggerEntryCached);
+      }
+
+      return result.doOnUnsubscribe(() -> refreshing = false);
+    });
   }
 
   @NonNull @Override public Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
@@ -62,7 +89,7 @@ class TriggerInteractorImpl implements TriggerInteractor {
         Timber.d("new trigger created");
         return entry;
       }
-    });
+    }).doOnNext(powerTriggerEntryCached::add);
   }
 
   @NonNull @Override public Observable<Integer> delete(int percent) {
@@ -98,6 +125,17 @@ class TriggerInteractorImpl implements TriggerInteractor {
       return foundEntry;
     }).flatMap(position -> {
       Timber.d("Delete trigger with percent: %d", percent);
+      PowerTriggerEntry removeMe = null;
+      for (final PowerTriggerEntry entry : powerTriggerEntryCached) {
+        if (entry.percent() == percent) {
+          removeMe = entry;
+          break;
+        }
+      }
+      if (removeMe != null) {
+        powerTriggerEntryCached.remove(removeMe);
+      }
+
       return powerTriggerDB.deleteWithPercent(percent).map(integer -> {
         Timber.d("Return the position");
         return position;
@@ -112,6 +150,16 @@ class TriggerInteractorImpl implements TriggerInteractor {
       Timber.d("Update enabled state with percent: %d", percent);
       Timber.d("Update entry to enabled state: %s", enabled);
       return powerTriggerDB.updateEnabled(enabled, percent);
+    }).map(integer -> {
+      for (final PowerTriggerEntry checkEntry : powerTriggerEntryCached) {
+        if (checkEntry.percent() == entry.percent()) {
+          Timber.d("Update trigger: %s", checkEntry);
+          powerTriggerEntryCached.remove(checkEntry);
+          powerTriggerEntryCached.add(entry);
+          break;
+        }
+      }
+      return integer;
     }).map(integer -> {
       Timber.d("Return code for update(): %d", integer);
 

@@ -17,14 +17,26 @@
 package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.pydroid.FuncNone;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @NonNull private static final String TAG = "DataPeriodicPreferenceFragment";
+  @Inject @Named("data_period_pref") PeriodPreferencePresenter presenter;
+
+  @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
+    return presenter;
+  }
+
+  @Override protected void injectDependencies() {
+    Injector.get().provideComponent().plusDataScreenComponent().inject(this);
+  }
 
   @Override protected int getPreferencesResId() {
     return R.xml.periodic_data;
@@ -48,10 +60,6 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
   @Override protected int getDisableTimeKeyResId() {
     return R.string.periodic_data_disable_key;
-  }
-
-  @NonNull @Override protected FuncNone<PeriodPreferencePresenter> createPresenterLoader() {
-    return new DataPeriodPresenterLoader();
   }
 
   @NonNull @Override protected String getPresenterKey() {

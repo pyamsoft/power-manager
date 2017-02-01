@@ -18,12 +18,9 @@ package com.pyamsoft.powermanager.uicore;
 
 import com.pyamsoft.pydroid.presenter.Presenter;
 
-public interface OverviewPagerPresenter extends Presenter<OverviewPagerPresenter.View> {
+public interface OverviewPagerPresenter extends Presenter<Presenter.Empty> {
 
   void wrapSet();
 
   void wrapUnset();
-
-  interface View {
-  }
 }

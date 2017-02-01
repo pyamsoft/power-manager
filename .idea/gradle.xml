@@ -18,8 +18,6 @@
             <option value="$PROJECT_DIR$/powermanager-main" />
             <option value="$PROJECT_DIR$/powermanager-manager" />
             <option value="$PROJECT_DIR$/powermanager-model" />
-            <option value="$PROJECT_DIR$/powermanager-modifier" />
-            <option value="$PROJECT_DIR$/powermanager-observer" />
             <option value="$PROJECT_DIR$/powermanager-overview" />
             <option value="$PROJECT_DIR$/powermanager-service" />
             <option value="$PROJECT_DIR$/powermanager-settings" />
