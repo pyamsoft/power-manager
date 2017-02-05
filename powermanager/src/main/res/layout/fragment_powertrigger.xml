@@ -79,7 +79,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         app:elevation="6dp"
-        app:fabSize="auto"
+        app:fabSize="normal"
         app:pressedTranslationZ="12dp"
         app:useCompatPadding="true"
         />
