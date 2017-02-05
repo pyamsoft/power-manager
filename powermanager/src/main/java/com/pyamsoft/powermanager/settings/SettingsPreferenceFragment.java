@@ -20,8 +20,10 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
@@ -30,12 +32,12 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
+public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
     implements SettingsPreferencePresenter.RootCallback,
     SettingsPreferencePresenter.ClearRequestCallback,
     SettingsPreferencePresenter.ConfirmDialogCallback {
@@ -44,6 +46,12 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @SuppressWarnings("WeakerAccess") @Inject SettingsPreferencePresenter presenter;
   private SwitchPreferenceCompat useRoot;
 
+  @CheckResult @NonNull public static Fragment newInstance(View view, View rootView) {
+    Fragment fragment = new SettingsPreferenceFragment();
+    fragment.setArguments(bundleArguments(view, rootView));
+    return fragment;
+  }
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Injector.get().provideComponent().plusSettingsPreferenceComponent().inject(this);
@@ -51,6 +59,7 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
 
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
@@ -90,6 +99,11 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
     presenter.unbindView();
   }
 
+  @Override public void onResume() {
+    super.onResume();
+    setActionBarUpEnabled(true);
+  }
+
   @Override protected int getRootViewContainer() {
     return R.id.main_container;
   }
@@ -105,6 +119,14 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override public void onDestroy() {
     super.onDestroy();
     PowerManager.getRefWatcher(this).watch(this);
+  }
+
+  @Override protected int provideAppBarColor() {
+    return R.color.pink500;
+  }
+
+  @Override protected int provideStatusBarColor() {
+    return R.color.pink700;
   }
 
   @Override

@@ -38,7 +38,7 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
-import com.pyamsoft.powermanager.settings.SettingsFragment;
+import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
@@ -173,7 +173,7 @@ public class OverviewFragment extends ActionBarFragment {
             observer)));
 
     adapter.add(
-        new OverviewItem(view, SettingsFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
+        new OverviewItem(view, SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
             null));
   }
 

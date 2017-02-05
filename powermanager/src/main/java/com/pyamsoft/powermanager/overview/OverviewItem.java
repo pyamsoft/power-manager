@@ -37,7 +37,7 @@ import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.OverviewModel;
-import com.pyamsoft.powermanager.settings.SettingsFragment;
+import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
@@ -108,8 +108,8 @@ public class OverviewItem
       case WearFragment.TAG:
         fragment = WearFragment.newInstance(view, rootView);
         break;
-      case SettingsFragment.TAG:
-        fragment = SettingsFragment.newInstance(view, rootView);
+      case SettingsPreferenceFragment.TAG:
+        fragment = SettingsPreferenceFragment.newInstance(view, rootView);
         break;
       case AirplaneFragment.TAG:
         fragment = AirplaneFragment.newInstance(view, rootView);

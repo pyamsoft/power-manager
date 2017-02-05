@@ -95,9 +95,11 @@ abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
     applyFormattedStrings(getModuleName());
   }
 
-  @Override public void onDestroyView() {
-    super.onDestroyView();
-    dismissOnboarding();
+  @Override public void onStop() {
+    super.onStop();
+    if (isRemoving()) {
+      dismissOnboarding();
+    }
   }
 
   abstract void dismissOnboarding();

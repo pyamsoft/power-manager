@@ -47,7 +47,7 @@ import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
 import com.pyamsoft.powermanager.overview.OverviewFragment;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanager.settings.SettingsFragment;
+import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
@@ -175,7 +175,7 @@ public class MainActivity extends TamperActivity {
         && fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null
         && fragmentManager.findFragmentByTag(DozeFragment.TAG) == null
         && fragmentManager.findFragmentByTag(AirplaneFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(SettingsFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(SettingsPreferenceFragment.TAG) == null
         && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null;
   }
 

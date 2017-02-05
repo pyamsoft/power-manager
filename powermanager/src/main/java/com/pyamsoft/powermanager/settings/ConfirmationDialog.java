@@ -54,7 +54,6 @@ public class ConfirmationDialog extends DialogFragment {
         ? "Really clear entire database?\n\nYou will have to re-configure all triggers again"
         : "Really clear all application settings?")
         .setPositiveButton("Yes", (dialogInterface, i) -> {
-          dialogInterface.dismiss();
           sendConfirmationEvent(which);
         })
         .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
