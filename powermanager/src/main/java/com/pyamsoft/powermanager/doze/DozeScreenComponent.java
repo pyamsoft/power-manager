@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.doze;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     DozeOverviewModule.class, DozeManagePreferenceModule.class, DozePeriodPreferenceModule.class,
 }) public interface DozeScreenComponent {
 

@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.data.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = DataCustomPreferenceModule.class)
-public interface DataPreferenceComponent {
+@Subcomponent(modules = DataCustomPreferenceModule.class) public interface DataPreferenceComponent {
 
   void inject(DataCustomTimePreference preference);
 }

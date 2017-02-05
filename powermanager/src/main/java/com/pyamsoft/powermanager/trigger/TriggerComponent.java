@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.trigger;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = TriggerModule.class) public interface TriggerComponent {
+@Subcomponent(modules = TriggerModule.class) public interface TriggerComponent {
 
   void inject(PowerTriggerListFragment fragment);
 }

@@ -17,10 +17,9 @@
 package com.pyamsoft.powermanager.service;
 
 import com.pyamsoft.powermanager.job.JobModule;
-import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Subcomponent;
 
-@ServiceScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     ForegroundModule.class, JobModule.class
 }) public interface ForegroundServiceComponent {
 

@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.wifi;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     WifiOverviewModule.class, WifiManagePreferenceModule.class, WifiPeriodPreferenceModule.class,
 }) public interface WifiScreenComponent {
 

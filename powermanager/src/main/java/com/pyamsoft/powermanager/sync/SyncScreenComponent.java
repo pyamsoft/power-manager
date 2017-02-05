@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.sync;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     SyncOverviewModule.class, SyncManagePreferenceModule.class, SyncPeriodPreferenceModule.class
 }) public interface SyncScreenComponent {
 

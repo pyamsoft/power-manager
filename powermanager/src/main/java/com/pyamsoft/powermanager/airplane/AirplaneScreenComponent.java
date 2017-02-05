@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.airplane;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     AirplaneOverviewModule.class, AirplaneManagePreferenceModule.class,
     AirplanePeriodPreferenceModule.class
 }) public interface AirplaneScreenComponent {

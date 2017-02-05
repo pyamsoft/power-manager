@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.airplane.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = AirplaneCustomPreferenceModule.class)
+@Subcomponent(modules = AirplaneCustomPreferenceModule.class)
 public interface AirplanePreferenceComponent {
 
   void inject(AirplaneCustomTimePreference preference);

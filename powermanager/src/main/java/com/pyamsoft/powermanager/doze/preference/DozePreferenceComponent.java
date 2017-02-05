@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.doze.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = DozeCustomPreferenceModule.class)
-public interface DozePreferenceComponent {
+@Subcomponent(modules = DozeCustomPreferenceModule.class) public interface DozePreferenceComponent {
 
   void inject(DozeCustomTimePreference preference);
 }

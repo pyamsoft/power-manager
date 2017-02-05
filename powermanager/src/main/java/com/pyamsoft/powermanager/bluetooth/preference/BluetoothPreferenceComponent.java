@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.bluetooth.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = BluetoothCustomPreferenceModule.class)
+@Subcomponent(modules = BluetoothCustomPreferenceModule.class)
 public interface BluetoothPreferenceComponent {
 
   void inject(BluetoothCustomTimePreference preference);

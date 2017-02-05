@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.main;
 
-import com.pyamsoft.pydroid.rx.scopes.ActivityScope;
 import dagger.Subcomponent;
 
-@ActivityScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     MainModule.class,
 }) public interface MainComponent {
 

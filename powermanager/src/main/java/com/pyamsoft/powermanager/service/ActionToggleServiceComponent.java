@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.service;
 
-import com.pyamsoft.pydroid.rx.scopes.ServiceScope;
 import dagger.Subcomponent;
 
-@ServiceScope @Subcomponent(modules = ActionToggleModule.class)
-public interface ActionToggleServiceComponent {
+@Subcomponent(modules = ActionToggleModule.class) public interface ActionToggleServiceComponent {
 
   void inject(ActionToggleService service);
 }

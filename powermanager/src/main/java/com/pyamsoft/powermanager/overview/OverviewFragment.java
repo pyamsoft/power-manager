@@ -103,6 +103,10 @@ public class OverviewFragment extends ActionBarFragment {
                 }
               }
 
+              @Override public void onSequenceStep(TapTarget lastTarget) {
+
+              }
+
               @Override public void onSequenceCanceled(TapTarget lastTarget) {
 
               }

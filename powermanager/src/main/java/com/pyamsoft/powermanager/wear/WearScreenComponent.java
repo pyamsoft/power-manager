@@ -16,12 +16,9 @@
 
 package com.pyamsoft.powermanager.wear;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
-    WearManagePreferenceModule.class
-}) public interface WearScreenComponent {
+@Subcomponent(modules = WearManagePreferenceModule.class) public interface WearScreenComponent {
 
   void inject(WearManagePreferenceFragment fragment);
 }

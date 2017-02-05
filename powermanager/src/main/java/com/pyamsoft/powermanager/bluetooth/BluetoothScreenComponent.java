@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.bluetooth;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     BluetoothOverviewModule.class, BluetoothManagePreferenceModule.class,
     BluetoothPeriodPreferenceModule.class
 }) public interface BluetoothScreenComponent {

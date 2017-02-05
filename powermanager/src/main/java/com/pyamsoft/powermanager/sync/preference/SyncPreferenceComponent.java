@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.sync.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = SyncCustomPreferenceModule.class)
-public interface SyncPreferenceComponent {
+@Subcomponent(modules = SyncCustomPreferenceModule.class) public interface SyncPreferenceComponent {
 
   void inject(SyncCustomTimePreference preference);
 }

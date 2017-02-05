@@ -16,10 +16,9 @@
 
 package com.pyamsoft.powermanager.data;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
+@Subcomponent(modules = {
     DataOverviewModule.class, DataManagePreferenceModule.class, DataPeriodPreferenceModule.class,
 }) public interface DataScreenComponent {
 

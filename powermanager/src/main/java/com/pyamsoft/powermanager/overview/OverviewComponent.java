@@ -16,12 +16,9 @@
 
 package com.pyamsoft.powermanager.overview;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = {
-    OverviewModule.class,
-}) public interface OverviewComponent {
+@Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
 
   void inject(OverviewFragment fragment);
 

@@ -16,11 +16,9 @@
 
 package com.pyamsoft.powermanager.wifi.preference;
 
-import com.pyamsoft.pydroid.rx.scopes.FragmentScope;
 import dagger.Subcomponent;
 
-@FragmentScope @Subcomponent(modules = WifiCustomPreferenceModule.class)
-public interface WifiPreferenceComponent {
+@Subcomponent(modules = WifiCustomPreferenceModule.class) public interface WifiPreferenceComponent {
 
   void inject(WifiCustomTimePreference preference);
 }
