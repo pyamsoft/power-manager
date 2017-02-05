@@ -35,6 +35,8 @@ android {
   defaultConfig {
     minSdkVersion rootProject.ext.minSdk
     targetSdkVersion rootProject.ext.maxSdk
+
+    publishNonDefault true
   }
 
   compileOptions {
@@ -65,6 +67,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  compile project(":powermanager-manager")
+  debugCompile project(path: ":powermanager-manager", configuration: "debug")
+  releaseCompile project(path: ":powermanager-manager", configuration: "release")
 }
 
