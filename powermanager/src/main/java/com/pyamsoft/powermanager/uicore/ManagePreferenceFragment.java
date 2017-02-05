@@ -67,7 +67,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     Timber.d("Unselect ManagePreferenceFragment");
     showOnboardingOnBind = false;
     if (presenter != null) {
-      presenter.dismissOnboarding();
+      presenter.dismissOnboarding(this::dismissOnboarding);
     }
   }
 

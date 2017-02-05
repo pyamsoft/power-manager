@@ -74,7 +74,8 @@ public class PeriodPreferencePresenterImpl extends SchedulerPresenter<Presenter.
             () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
   }
 
-  @Override public void dismissOnboarding() {
+  @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
     SubscriptionHelper.unsubscribe(onboardingSubscription);
+    callback.onDismissOnboarding();
   }
 }

@@ -25,7 +25,12 @@ interface OnboardingPresenter extends Presenter<Presenter.Empty> {
 
   void showOnboardingIfNeeded(@NonNull OnboardingCallback callback);
 
-  void dismissOnboarding();
+  void dismissOnboarding(@NonNull OnboardingDismissCallback callback);
+
+  interface OnboardingDismissCallback {
+
+    void onDismissOnboarding();
+  }
 
   interface OnboardingCallback {
 

@@ -16,10 +16,7 @@
 
 package com.pyamsoft.powermanager.settings;
 
-import android.app.ActivityManager;
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,8 +25,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.service.ForegroundService;
-import timber.log.Timber;
 
 public class ConfirmationDialog extends DialogFragment {
   @NonNull private static final String WHICH = "which_type";
@@ -71,23 +66,7 @@ public class ConfirmationDialog extends DialogFragment {
     final Fragment settingsPreferenceFragment =
         fragmentManager.findFragmentByTag(SettingsPreferenceFragment.TAG);
     if (settingsPreferenceFragment instanceof SettingsPreferenceFragment) {
-      ((SettingsPreferenceFragment) settingsPreferenceFragment).getPresenter()
-          .processClearRequest(which, new SettingsPreferencePresenter.ClearRequestCallback() {
-            @Override public void onClearAll() {
-              Timber.d("Everything is cleared, kill self");
-              getActivity().getApplicationContext()
-                  .stopService(
-                      new Intent(getContext().getApplicationContext(), ForegroundService.class));
-              final ActivityManager activityManager =
-                  (ActivityManager) getContext().getApplicationContext()
-                      .getSystemService(Context.ACTIVITY_SERVICE);
-              activityManager.clearApplicationUserData();
-            }
-
-            @Override public void onClearDatabase() {
-              Timber.d("Cleared the trigger database");
-            }
-          });
+      ((SettingsPreferenceFragment) settingsPreferenceFragment).processClearRequest(which);
     } else {
       throw new ClassCastException("Fragment is not SettingsPreferenceFragment");
     }

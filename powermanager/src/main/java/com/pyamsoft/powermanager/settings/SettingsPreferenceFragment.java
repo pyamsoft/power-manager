@@ -16,8 +16,10 @@
 
 package com.pyamsoft.powermanager.settings;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.preference.Preference;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
@@ -34,18 +37,12 @@ import timber.log.Timber;
 
 public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragment
     implements SettingsPreferencePresenter.RootCallback,
+    SettingsPreferencePresenter.ClearRequestCallback,
     SettingsPreferencePresenter.ConfirmDialogCallback {
 
   @NonNull public static final String TAG = "SettingsPreferenceFragment";
   @SuppressWarnings("WeakerAccess") @Inject SettingsPreferencePresenter presenter;
   private SwitchPreferenceCompat useRoot;
-
-  @CheckResult @NonNull SettingsPreferencePresenter getPresenter() {
-    if (presenter == null) {
-      throw new NullPointerException("Presenter is NULL");
-    }
-    return presenter;
-  }
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -127,5 +124,22 @@ public class SettingsPreferenceFragment extends ActionBarSettingsPreferenceFragm
   @Override protected boolean onClearAllPreferenceClicked() {
     presenter.requestClearAll(this);
     return true;
+  }
+
+  @Override public void onClearAll() {
+    Timber.d("Everything is cleared, kill self");
+    getActivity().getApplicationContext()
+        .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
+    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
+        .getSystemService(Context.ACTIVITY_SERVICE);
+    activityManager.clearApplicationUserData();
+  }
+
+  @Override public void onClearDatabase() {
+    Timber.d("Cleared the trigger database");
+  }
+
+  public void processClearRequest(int which) {
+    presenter.processClearRequest(which, this);
   }
 }

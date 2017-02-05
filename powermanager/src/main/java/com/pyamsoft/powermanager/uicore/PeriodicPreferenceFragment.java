@@ -64,7 +64,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     Timber.d("Unselect PeriodicPreferenceFragment");
     showOnboardingOnBind = false;
     if (presenter != null) {
-      presenter.dismissOnboarding();
+      presenter.dismissOnboarding(this::dismissOnboarding);
     }
   }
 
