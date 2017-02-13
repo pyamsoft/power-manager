@@ -16,11 +16,67 @@
 
 package com.pyamsoft.powermanager.uicore;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public interface PeriodPreferencePresenter extends OnboardingPresenter {
+public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empty>
+    implements OnboardingPresenter {
 
-  void registerObserver(@NonNull PeriodicCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull static final String OBS_TAG =
+      "BasePeriodPreferencePresenter";
+  @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver observer;
+  @NonNull private final PeriodPreferenceInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
+
+  @Inject public PeriodPreferencePresenter(@NonNull PeriodPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver periodObserver) {
+    super(observeScheduler, subscribeScheduler);
+    this.interactor = interactor;
+    this.observer = periodObserver;
+  }
+
+  @CallSuper @Override protected void onUnbind() {
+    super.onUnbind();
+    observer.unregister(OBS_TAG);
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+  }
+
+  public void registerObserver(@NonNull PeriodicCallback callback) {
+    observer.register(OBS_TAG, callback::onPeriodicSet, callback::onPeriodicUnset);
+  }
+
+  @Override public void setShownOnBoarding() {
+    interactor.setOnboarding();
+  }
+
+  @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = interactor.hasShownOnboarding()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(onboard -> {
+              if (!onboard) {
+                callback.onShowOnboarding();
+              }
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
+  }
+
+  @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    callback.onDismissOnboarding();
+  }
 
   interface PeriodicCallback {
 

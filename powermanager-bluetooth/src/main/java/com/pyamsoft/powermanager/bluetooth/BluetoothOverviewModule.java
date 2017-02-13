@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.bluetooth;
 
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -30,6 +29,6 @@ import rx.Scheduler;
   OverviewPagerPresenter provideBluetoothOverviewPagerPresenter(
       @Named("mod_bluetooth_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new OverviewPagerPresenterImpl(obsScheduler, subScheduler, stateModifier);
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
   }
 }

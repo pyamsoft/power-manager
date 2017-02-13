@@ -17,9 +17,7 @@
 package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -32,7 +30,7 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler,
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler,
         computationScheduler);
   }
 
@@ -47,7 +45,7 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler,
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler,
         computationScheduler);
   }
 
@@ -62,7 +60,7 @@ import rx.Scheduler;
       @NonNull @Named("wifi_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler computationScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler,
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler,
         computationScheduler);
   }
 

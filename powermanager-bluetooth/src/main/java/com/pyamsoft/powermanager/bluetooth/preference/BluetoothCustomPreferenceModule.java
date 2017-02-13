@@ -17,9 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -32,7 +30,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler) {
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler) {
     };
   }
 
@@ -47,7 +45,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_enable_interactor")
@@ -61,7 +59,7 @@ import rx.Scheduler;
       @NonNull @Named("bluetooth_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_disable_interactor")

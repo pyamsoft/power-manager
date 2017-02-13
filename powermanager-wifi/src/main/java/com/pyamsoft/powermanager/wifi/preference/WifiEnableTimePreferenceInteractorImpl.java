@@ -17,10 +17,10 @@
 package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class WifiEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
+class WifiEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractor {
 
   @Inject WifiEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

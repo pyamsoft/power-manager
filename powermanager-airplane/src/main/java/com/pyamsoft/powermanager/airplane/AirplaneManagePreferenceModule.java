@@ -17,12 +17,11 @@
 package com.pyamsoft.powermanager.airplane;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
-import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractorImpl;
-import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.powermanager.uicore.PermissionManagePreferencePresenterImpl;
+import com.pyamsoft.powermanager.uicore.PermissionManagePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -36,13 +35,13 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new PermissionManagePreferencePresenterImpl(interactor, obsScheduler, subScheduler,
+    return new PermissionManagePreferencePresenter(interactor, obsScheduler, subScheduler,
         manageObserver, rootPermissionObserver);
   }
 
   @Provides @Named("airplane_manage_pref_interactor")
   ManagePreferenceInteractor provideAirplaneManagePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new ManagePreferenceInteractorImpl(preferences);
+    return new ManagePreferenceInteractor(preferences);
   }
 }

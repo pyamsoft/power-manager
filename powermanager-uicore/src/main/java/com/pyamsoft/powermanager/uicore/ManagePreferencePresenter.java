@@ -16,13 +16,71 @@
 
 package com.pyamsoft.powermanager.uicore;
 
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public interface ManagePreferencePresenter extends OnboardingPresenter {
+public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empty>
+    implements OnboardingPresenter {
 
-  void registerObserver(@NonNull ManageCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull static final String OBS_TAG =
+      "BaseManagePreferencePresenter";
+  @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver manageObserver;
+  @NonNull private final ManagePreferenceInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
 
-  void checkManagePermission(@NonNull ManagePermissionCallback callback);
+  @Inject public ManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver manageObserver) {
+    super(observeScheduler, subscribeScheduler);
+    this.interactor = manageInteractor;
+    this.manageObserver = manageObserver;
+  }
+
+  @CallSuper @Override protected void onUnbind() {
+    super.onUnbind();
+    manageObserver.unregister(OBS_TAG);
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+  }
+
+  public void registerObserver(@NonNull ManageCallback callback) {
+    manageObserver.register(OBS_TAG, callback::onManageSet, callback::onManageUnset);
+  }
+
+  public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
+    // Override if you need to check permissions
+  }
+
+  @Override public void setShownOnBoarding() {
+    interactor.setOnboarding();
+  }
+
+  @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = interactor.hasShownOnboarding()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(onboard -> {
+              if (!onboard) {
+                callback.onShowOnboarding();
+              }
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
+  }
+
+  @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    callback.onDismissOnboarding();
+  }
 
   interface ManageCallback {
 

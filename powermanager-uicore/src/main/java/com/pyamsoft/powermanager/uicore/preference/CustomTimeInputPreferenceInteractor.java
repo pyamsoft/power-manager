@@ -18,11 +18,30 @@ package com.pyamsoft.powermanager.uicore.preference;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import java.util.concurrent.TimeUnit;
 import rx.Observable;
 
-public interface CustomTimeInputPreferenceInteractor {
+public abstract class CustomTimeInputPreferenceInteractor {
 
-  @NonNull @CheckResult Observable<Long> saveTime(long time);
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  @NonNull @CheckResult Observable<Long> getTime();
+  protected CustomTimeInputPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @CheckResult public Observable<Long> saveTime(long time, long delay) {
+    return Observable.fromCallable(() -> {
+      saveTimeToPreferences(preferences, time);
+      return time;
+    }).delay(delay, TimeUnit.MILLISECONDS);
+  }
+
+  @NonNull @CheckResult public Observable<Long> getTime() {
+    return Observable.fromCallable(() -> getTimeFromPreferences(preferences));
+  }
+
+  protected abstract void saveTimeToPreferences(PowerManagerPreferences preferences, long time);
+
+  @CheckResult protected abstract long getTimeFromPreferences(PowerManagerPreferences preferences);
 }

@@ -17,10 +17,10 @@
 package com.pyamsoft.powermanager.doze.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class DozeEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
+class DozeEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractor {
 
   @Inject DozeEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

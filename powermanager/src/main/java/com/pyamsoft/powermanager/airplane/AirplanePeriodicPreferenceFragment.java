@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.airplane;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import javax.inject.Inject;
 import javax.inject.Named;

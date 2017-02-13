@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 

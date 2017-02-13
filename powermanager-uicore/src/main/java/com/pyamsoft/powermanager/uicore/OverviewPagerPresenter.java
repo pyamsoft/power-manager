@@ -16,11 +16,51 @@
 
 package com.pyamsoft.powermanager.uicore;
 
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-public interface OverviewPagerPresenter extends Presenter<Presenter.Empty> {
+public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  void wrapSet();
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
 
-  void wrapUnset();
+  @Inject public OverviewPagerPresenter(@NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
+    super(observeScheduler, subscribeScheduler);
+    this.modifier = modifier;
+  }
+
+  @CallSuper @Override protected void onUnbind() {
+    super.onUnbind();
+    SubscriptionHelper.unsubscribe(subscription);
+  }
+
+  public void wrapSet() {
+    SubscriptionHelper.unsubscribe(subscription);
+    subscription = Observable.fromCallable(() -> Boolean.TRUE)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getSubscribeScheduler())
+        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
+  }
+
+  public void wrapUnset() {
+    SubscriptionHelper.unsubscribe(subscription);
+    subscription = Observable.fromCallable(() -> Boolean.TRUE)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getSubscribeScheduler())
+        .subscribe(ignore -> modifier.unset(),
+            throwable -> Timber.e(throwable, "onError wrapUnset"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
+  }
 }

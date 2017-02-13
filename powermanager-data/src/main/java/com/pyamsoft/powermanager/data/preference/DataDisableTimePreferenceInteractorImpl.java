@@ -17,10 +17,10 @@
 package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class DataDisableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
+class DataDisableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractor {
 
   @Inject DataDisableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

@@ -17,12 +17,13 @@
 package com.pyamsoft.powermanager.airplane.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractorImpl;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractorImpl {
+class AirplaneEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
 
-  @Inject AirplaneEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject AirplaneEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 

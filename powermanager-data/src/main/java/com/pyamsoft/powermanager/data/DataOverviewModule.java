@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.data;
 
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,6 +28,6 @@ import rx.Scheduler;
   @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
       @Named("mod_data_state") BooleanInterestModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new OverviewPagerPresenterImpl(obsScheduler, subScheduler, stateModifier);
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
   }
 }

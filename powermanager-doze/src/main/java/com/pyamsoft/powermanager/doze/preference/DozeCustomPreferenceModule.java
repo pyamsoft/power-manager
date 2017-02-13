@@ -17,9 +17,7 @@
 package com.pyamsoft.powermanager.doze.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenterImpl;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -32,7 +30,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_delay_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_delay_interactor")
@@ -46,7 +44,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_enable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_enable_interactor")
@@ -60,7 +58,7 @@ import rx.Scheduler;
       @NonNull @Named("doze_custom_disable_interactor")
           CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenterImpl(interactor, obsScheduler, subScheduler);
+    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_disable_interactor")

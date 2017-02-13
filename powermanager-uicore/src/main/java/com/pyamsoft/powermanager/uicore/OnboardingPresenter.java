@@ -17,9 +17,8 @@
 package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.Presenter;
 
-interface OnboardingPresenter extends Presenter<Presenter.Empty> {
+interface OnboardingPresenter {
 
   void setShownOnBoarding();
 

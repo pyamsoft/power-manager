@@ -24,8 +24,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import com.pyamsoft.pydroid.FuncNone;
 import javax.inject.Inject;
 import javax.inject.Named;
 

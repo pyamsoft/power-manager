@@ -20,7 +20,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.pydroid.rx.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
@@ -28,16 +28,16 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class PermissionManagePreferencePresenterImpl extends ManagePreferencePresenterImpl {
+public class PermissionManagePreferencePresenter extends ManagePreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription permissionSubscription =
       Subscriptions.empty();
 
-  @Inject public PermissionManagePreferencePresenterImpl(
-      @NonNull ManagePreferenceInteractor manageInteractor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull InterestObserver manageObserver,
-      @NonNull PermissionObserver permissionObserver) {
+  @Inject
+  public PermissionManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull InterestObserver manageObserver, @NonNull PermissionObserver permissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
     this.permissionObserver = permissionObserver;
   }
