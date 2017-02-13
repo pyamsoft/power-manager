@@ -18,11 +18,60 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import rx.Observable;
+import timber.log.Timber;
 
-interface WearAwareManagerInteractor extends ManagerInteractor {
+abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> isWearManaged();
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearManageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearStateObserver;
 
-  @CheckResult @NonNull Observable<Boolean> isWearEnabled();
+  WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull BooleanInterestObserver wearManageObserver,
+      @NonNull BooleanInterestObserver wearStateObserver) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
+    this.wearManageObserver = wearManageObserver;
+    this.wearStateObserver = wearStateObserver;
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> isWearEnabled() {
+    return Observable.fromCallable(wearStateObserver::is);
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
+    return Observable.fromCallable(wearManageObserver::is);
+  }
+
+  @Override public void destroy() {
+    super.destroy();
+    Timber.d("Unregsiter wear state observer");
+    wearStateObserver.unregister(getClass().getName());
+  }
+
+  @NonNull @Override
+  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+    return Observable.fromCallable(() -> originalState).flatMap(originalStateEnabled -> {
+      if (originalStateEnabled) {
+        Timber.d("%s: Original state is enabled, is wearable managed?", getJobTag());
+        return isWearManaged();
+      } else {
+        Timber.w("%s: Original state not enabled, return empty", getJobTag());
+        return Observable.empty();
+      }
+    }).flatMap(wearManaged -> {
+      if (wearManaged) {
+        Timber.d("%s: Is wearable not enabled?", getJobTag());
+        // Invert the result
+        return isWearEnabled().map(wearEnabled -> !wearEnabled);
+      } else {
+        Timber.d("%s: Wearable is not managed, but radio is managed, continue stream", getJobTag());
+        return Observable.just(Boolean.TRUE);
+      }
+    });
+  }
 }

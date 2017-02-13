@@ -17,24 +17,25 @@
 package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
-import javax.inject.Inject;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import rx.Observable;
-import rx.Scheduler;
-import rx.functions.Func1;
 import timber.log.Timber;
 
-class WearUnawareManagerImpl extends ManagerImpl {
+abstract class WearUnawareManagerInteractor extends ManagerInteractor {
 
-  @Inject WearUnawareManagerImpl(@NonNull ManagerInteractor interactor,
-      @NonNull Scheduler scheduler) {
-    super(interactor, scheduler);
+  WearUnawareManagerInteractor(@NonNull JobQueuer jobQueuer,
+      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
+      @NonNull BooleanInterestObserver stateObserver) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
   }
 
   @NonNull @Override
-  protected Func1<Boolean, Observable<Boolean>> accountForWearableBeforeDisable() {
-    return originalStateEnabled -> {
-      Timber.d("%s: Unaware of wearables,just pass through", interactor.getJobTag());
-      return Observable.just(originalStateEnabled);
-    };
+  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+    return Observable.fromCallable(() -> {
+      Timber.d("%s: Unaware of wearables,just pass through", getJobTag());
+      return originalState;
+    });
   }
 }

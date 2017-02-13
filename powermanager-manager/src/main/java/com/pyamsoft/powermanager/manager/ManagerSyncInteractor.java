@@ -18,51 +18,49 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerWifiInteractorImpl extends WearAwareManagerInteractorImpl {
+class ManagerSyncInteractor extends WearUnawareManagerInteractor {
 
-  @Inject ManagerWifiInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  @Inject ManagerSyncInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
-        wearStateObserver);
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, manageObserver, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getWifiDelay();
+    return getPreferences().getMasterSyncDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicWifi();
+    return getPreferences().isPeriodicSync();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeWifi();
+    return getPreferences().getPeriodicEnableTimeSync();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeWifi();
+    return getPreferences().getPeriodicDisableTimeSync();
   }
 
   @NonNull @Override public String getJobTag() {
-    return JobQueuer.WIFI_JOB_TAG;
+    return JobQueuer.SYNC_JOB_TAG;
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingWifi();
+    return getPreferences().isIgnoreChargingSync();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalWifi()));
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalSync()));
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalWifi(enabled);
+    getPreferences().setOriginalSync(enabled);
   }
 }

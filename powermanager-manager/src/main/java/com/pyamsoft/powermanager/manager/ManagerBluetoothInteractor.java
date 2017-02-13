@@ -18,48 +18,52 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerSyncInteractorImpl extends ManagerInteractorImpl {
+class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
-  @Inject ManagerSyncInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  @Inject ManagerBluetoothInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
+      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull BooleanInterestObserver wearManageObserver,
+      @NonNull BooleanInterestObserver wearStateObserver) {
+    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
+        wearStateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getMasterSyncDelay();
+    return getPreferences().getBluetoothDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicSync();
+    return getPreferences().isPeriodicBluetooth();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeSync();
+    return getPreferences().getPeriodicEnableTimeBluetooth();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeSync();
+    return getPreferences().getPeriodicDisableTimeBluetooth();
   }
 
   @NonNull @Override public String getJobTag() {
-    return JobQueuer.SYNC_JOB_TAG;
+    return JobQueuer.BLUETOOTH_JOB_TAG;
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingSync();
+    return getPreferences().isIgnoreChargingBluetooth();
   }
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalSync()));
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalBluetooh()));
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalSync(enabled);
+    getPreferences().setOriginalBluetooth(enabled);
   }
 }

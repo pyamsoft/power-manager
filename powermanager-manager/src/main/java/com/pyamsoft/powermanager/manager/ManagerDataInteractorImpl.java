@@ -18,12 +18,13 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import javax.inject.Inject;
 import rx.Observable;
 
-class ManagerDataInteractorImpl extends ManagerInteractorImpl {
+class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
 
   @Inject ManagerDataInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,

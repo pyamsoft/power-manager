@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.powermanager.model.Manager;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -30,7 +29,7 @@ import rx.Scheduler;
   @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManagerImpl(interactor, subScheduler);
+    return new WearAwareManager(interactor, subScheduler);
   }
 
   @Provides @Named("wifi_manager_interactor")
@@ -40,14 +39,14 @@ import rx.Scheduler;
       @Named("obs_wifi_state") BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
-    return new ManagerWifiInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer,
+    return new ManagerWifiInteractor(preferences, manageObserver, stateObserver, jobQueuer,
         wearManageObserver, wearStateObserver);
   }
 
   @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManagerImpl(interactor, subScheduler);
+    return new WearUnawareManager(interactor, subScheduler);
   }
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
@@ -61,7 +60,7 @@ import rx.Scheduler;
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManagerImpl(interactor, subScheduler);
+    return new WearAwareManager(interactor, subScheduler);
   }
 
   @Provides @Named("bluetooth_manager_interactor")
@@ -72,27 +71,27 @@ import rx.Scheduler;
       @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
-    return new ManagerBluetoothInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer,
+    return new ManagerBluetoothInteractor(preferences, manageObserver, stateObserver, jobQueuer,
         wearManageObserver, wearStateObserver);
   }
 
   @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManagerImpl(interactor, subScheduler);
+    return new WearUnawareManager(interactor, subScheduler);
   }
 
   @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobQueuer jobQueuer,
       @Named("obs_sync_manage") BooleanInterestObserver manageObserver,
       @Named("obs_sync_state") BooleanInterestObserver stateObserver) {
-    return new ManagerSyncInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer);
+    return new ManagerSyncInteractor(preferences, manageObserver, stateObserver, jobQueuer);
   }
 
   @Provides @Named("doze_manager") Manager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManagerImpl(interactor, subScheduler);
+    return new WearUnawareManager(interactor, subScheduler);
   }
 
   @Provides @Named("doze_manager_interactor") ManagerInteractor provideManagerDozeInteractor(
@@ -105,7 +104,7 @@ import rx.Scheduler;
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
       @Named("airplane_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManagerImpl(interactor, subScheduler);
+    return new WearAwareManager(interactor, subScheduler);
   }
 
   @Provides @Named("airplane_manager_interactor")
@@ -116,7 +115,7 @@ import rx.Scheduler;
       @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") BooleanInterestObserver wearManageObserver,
       @Named("obs_wear_state") BooleanInterestObserver wearStateObserver) {
-    return new ManagerAirplaneInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer,
+    return new ManagerAirplaneInteractor(preferences, manageObserver, stateObserver, jobQueuer,
         wearManageObserver, wearStateObserver);
   }
 }

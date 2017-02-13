@@ -16,16 +16,17 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
-class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
+class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
-  @Inject ManagerBluetoothInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
@@ -34,35 +35,40 @@ class ManagerBluetoothInteractorImpl extends WearAwareManagerInteractorImpl {
         wearStateObserver);
   }
 
-  @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getBluetoothDelay();
+  @Override protected long getDelayTime() {
+    return getPreferences().getAirplaneDelay();
   }
 
-  @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicBluetooth();
+  @Override protected boolean isPeriodic() {
+    return getPreferences().isPeriodicAirplane();
   }
 
-  @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeBluetooth();
+  @Override protected long getPeriodicEnableTime() {
+    return getPreferences().getPeriodicEnableTimeAirplane();
   }
 
-  @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeBluetooth();
+  @Override protected long getPeriodicDisableTime() {
+    return getPreferences().getPeriodicDisableTimeAirplane();
   }
 
   @NonNull @Override public String getJobTag() {
-    return JobQueuer.BLUETOOTH_JOB_TAG;
+    return JobQueuer.AIRPLANE_JOB_TAG;
   }
 
-  @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingBluetooth();
-  }
-
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalBluetooh()));
+  @NonNull @Override public Observable<Boolean> isEnabled() {
+    Timber.d("Invert isEnabled for Airplane");
+    return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalBluetooth(enabled);
+    getPreferences().setOriginalAirplane(enabled);
+  }
+
+  @Override public boolean isIgnoreWhileCharging() {
+    return getPreferences().isIgnoreChargingAirplane();
+  }
+
+  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
+    return Observable.defer(() -> Observable.just(getPreferences().isOriginalAirplane()));
   }
 }
