@@ -16,16 +16,101 @@
 
 package com.pyamsoft.powermanager.service;
 
+import android.app.Activity;
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.JobQueuerEntry;
+import com.pyamsoft.powermanager.model.QueuerType;
+import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
-interface ForegroundInteractor extends ActionToggleInteractor {
+class ForegroundInteractor extends ActionToggleInteractor {
 
-  void create();
+  private static final int PENDING_RC = 1004;
+  private static final int TOGGLE_RC = 421;
+  @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
+  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @SuppressWarnings("WeakerAccess") @NonNull final Class<? extends Service> toggleServiceClass;
+  @NonNull private final JobQueuer jobQueuer;
 
-  void destroy();
+  @Inject ForegroundInteractor(@NonNull JobQueuer jobQueuer, @NonNull Context context,
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull Class<? extends Activity> mainActivityClass,
+      @NonNull Class<? extends Service> toggleServiceClass) {
+    super(preferences);
+    this.jobQueuer = jobQueuer;
+    appContext = context.getApplicationContext();
+    this.toggleServiceClass = toggleServiceClass;
 
-  @CheckResult @NonNull Observable<Notification> createNotification();
+    final Intent intent =
+        new Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    final PendingIntent pendingIntent =
+        PendingIntent.getActivity(appContext, PENDING_RC, intent, 0);
+
+    builder = new NotificationCompat.Builder(appContext).setContentTitle(
+        context.getString(R.string.app_name))
+        .setSmallIcon(R.drawable.ic_notification)
+        .setColor(ContextCompat.getColor(context, R.color.amber500))
+        .setWhen(0)
+        .setOngoing(true)
+        .setAutoCancel(false)
+        .setNumber(0)
+        .setContentIntent(pendingIntent);
+  }
+
+  public void create() {
+    final long delayTime = getPreferences().getTriggerPeriodTime();
+    final long triggerPeriod = delayTime * 60 * 1000L;
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
+        .repeatingOnWindow(0)
+        .repeating(true)
+        .repeatingOffWindow(0)
+        .delay(triggerPeriod)
+        .ignoreIfCharging(false)
+        .type(QueuerType.POWER_TRIGGER)
+        .build());
+  }
+
+  public void destroy() {
+    Timber.d("Cancel all trigger jobs");
+    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+  }
+
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  Observable<Integer> getNotificationPriority() {
+    return Observable.fromCallable(() -> getPreferences().getNotificationPriority());
+  }
+
+  @NonNull public Observable<Notification> createNotification() {
+    return isServiceEnabled().flatMap(serviceEnabled -> {
+      final String actionName = serviceEnabled ? "Suspend" : "Start";
+      final Intent toggleService = new Intent(appContext, toggleServiceClass);
+      final PendingIntent actionToggleService =
+          PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
+              PendingIntent.FLAG_UPDATE_CURRENT);
+
+      final String title =
+          serviceEnabled ? "Managing Device Power..." : "Power Management Suspended...";
+
+      return getNotificationPriority().map(priority -> {
+        // Clear all of the Actions
+        builder.mActions.clear();
+        return builder.setPriority(priority)
+            .setContentText(title)
+            .addAction(R.drawable.ic_notification, actionName, actionToggleService)
+            .build();
+      });
+    });
+  }
 }

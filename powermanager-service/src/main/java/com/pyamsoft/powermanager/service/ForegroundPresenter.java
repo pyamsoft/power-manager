@@ -18,15 +18,75 @@ package com.pyamsoft.powermanager.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import javax.inject.Named;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-interface ForegroundPresenter extends Presenter<Presenter.Empty> {
+class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  void startNotification(@NonNull NotificationCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription notificationSubscription =
+      Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @Nullable Subscription createSubscription;
 
-  void restartTriggerAlarm();
+  @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
+    super(obsScheduler, subScheduler);
+    this.interactor = interactor;
+  }
 
-  void setForegroundState(boolean enable);
+  @Override protected void onBind(@Nullable Empty view) {
+    super.onBind(view);
+    SubscriptionHelper.unsubscribe(createSubscription);
+    createSubscription = Observable.fromCallable(() -> {
+      interactor.create();
+      return Boolean.TRUE;
+    })
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(success -> Timber.d("Interactor was created"),
+            throwable -> Timber.e(throwable, "Error creating interactor"),
+            () -> SubscriptionHelper.unsubscribe(createSubscription));
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    interactor.destroy();
+    SubscriptionHelper.unsubscribe(notificationSubscription, createSubscription);
+  }
+
+  public void startNotification(@NonNull NotificationCallback callback) {
+    SubscriptionHelper.unsubscribe(notificationSubscription);
+    notificationSubscription = interactor.createNotification()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(callback::onStartNotificationInForeground, throwable -> {
+          Timber.e(throwable, "onError");
+          // TODO handle error
+        }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
+  }
+
+  /**
+   * Trigger interval is only read on interactor.create()
+   *
+   * Restart it by destroying and then re-creating the interactor
+   */
+  public void restartTriggerAlarm() {
+    interactor.destroy();
+    interactor.create();
+  }
+
+  public void setForegroundState(boolean enable) {
+    interactor.setServiceEnabled(enable);
+  }
 
   interface NotificationCallback {
 
