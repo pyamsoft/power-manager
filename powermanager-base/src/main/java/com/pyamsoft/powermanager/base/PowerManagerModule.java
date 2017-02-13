@@ -41,7 +41,7 @@ import rx.schedulers.Schedulers;
     appContext = context.getApplicationContext();
     this.mainActivityClass = mainActivityClass;
     this.toggleServiceClass = toggleServiceClass;
-    preferences = new PowerManagerPreferences(appContext);
+    preferences = new PowerManagerPreferencesImpl(appContext);
   }
 
   @Singleton @Provides @Named("main") Class<? extends Activity> provideMainClass() {

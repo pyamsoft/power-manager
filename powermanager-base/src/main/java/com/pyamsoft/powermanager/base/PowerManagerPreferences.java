@@ -1,7 +1,7 @@
 /*
  * Copyright 2016 Peter Kenji Yamanaka
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License");;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,558 +16,179 @@
 
 package com.pyamsoft.powermanager.base;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.v7.app.NotificationCompat;
-import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
-import javax.inject.Inject;
-
-public class PowerManagerPreferences {
-
-  @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
-  @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
-  @NonNull private static final String PERIOD_ONBOARD = "period_onboard";
-  @NonNull private static final String SERVICE_ENABLED = "service_enabled";
-  @NonNull private static final String ORIGINAL_WIFI = "original_wifi";
-  @NonNull private static final String ORIGINAL_DATA = "original_data";
-  @NonNull private static final String ORIGINAL_BLUETOOTH = "original_bluetooth";
-  @NonNull private static final String ORIGINAL_SYNC = "original_sync";
-  @NonNull private static final String ORIGINAL_AIRPLANE = "original_airplane";
-  @NonNull private static final String ORIGINAL_DOZE = "original_doze";
-  @NonNull private final SharedPreferences preferences;
-  @NonNull private final String manageAirplane;
-  @NonNull private final String manageWifi;
-  @NonNull private final String manageData;
-  @NonNull private final String manageBluetooth;
-  @NonNull private final String manageSync;
-  @NonNull private final String manageDoze;
-  private final boolean manageAirplaneDefault;
-  private final boolean manageWifiDefault;
-  private final boolean manageDataDefault;
-  private final boolean manageBluetoothDefault;
-  private final boolean manageSyncDefault;
-  private final boolean manageDozeDefault;
-  @NonNull private final String delayAirplane;
-  @NonNull private final String delayWifi;
-  @NonNull private final String delayData;
-  @NonNull private final String delayBluetooth;
-  @NonNull private final String delaySync;
-  @NonNull private final String delayDoze;
-  @NonNull private final String delayAirplaneDefault;
-  @NonNull private final String delayWifiDefault;
-  @NonNull private final String delayDataDefault;
-  @NonNull private final String delayBluetoothDefault;
-  @NonNull private final String delaySyncDefault;
-  @NonNull private final String delayDozeDefault;
-  @NonNull private final String periodicDoze;
-  @NonNull private final String periodicAirplane;
-  @NonNull private final String periodicWifi;
-  @NonNull private final String periodicData;
-  @NonNull private final String periodicBluetooth;
-  @NonNull private final String periodicSync;
-  private final boolean periodicDozeDefault;
-  private final boolean periodicAirplaneDefault;
-  private final boolean periodicWifiDefault;
-  private final boolean periodicDataDefault;
-  private final boolean periodicBluetoothDefault;
-  private final boolean periodicSyncDefault;
-  @NonNull private final String periodicDisableDoze;
-  @NonNull private final String periodicDisableAirplane;
-  @NonNull private final String periodicDisableWifi;
-  @NonNull private final String periodicDisableData;
-  @NonNull private final String periodicDisableBluetooth;
-  @NonNull private final String periodicDisableSync;
-  @NonNull private final String periodicDisableDozeDefault;
-  @NonNull private final String periodicDisableAirplaneDefault;
-  @NonNull private final String periodicDisableWifiDefault;
-  @NonNull private final String periodicDisableDataDefault;
-  @NonNull private final String periodicDisableBluetoothDefault;
-  @NonNull private final String periodicDisableSyncDefault;
-  @NonNull private final String periodicEnableDoze;
-  @NonNull private final String periodicEnableAirplane;
-  @NonNull private final String periodicEnableWifi;
-  @NonNull private final String periodicEnableData;
-  @NonNull private final String periodicEnableBluetooth;
-  @NonNull private final String periodicEnableSync;
-  @NonNull private final String periodicEnableDozeDefault;
-  @NonNull private final String periodicEnableAirplaneDefault;
-  @NonNull private final String periodicEnableWifiDefault;
-  @NonNull private final String periodicEnableDataDefault;
-  @NonNull private final String periodicEnableBluetoothDefault;
-  @NonNull private final String periodicEnableSyncDefault;
-  @NonNull private final String ignoreChargingDoze;
-  @NonNull private final String ignoreChargingAirplane;
-  @NonNull private final String ignoreChargingWifi;
-  @NonNull private final String ignoreChargingData;
-  @NonNull private final String ignoreChargingBluetooth;
-  @NonNull private final String ignoreChargingSync;
-  private final boolean ignoreChargingDozeDefault;
-  private final boolean ignoreChargingAirplaneDefault;
-  private final boolean ignoreChargingWifiDefault;
-  private final boolean ignoreChargingDataDefault;
-  private final boolean ignoreChargingBluetoothDefault;
-  private final boolean ignoreChargingSyncDefault;
-
-  @NonNull private final String manageWearable;
-  private final boolean manageWearableDefault;
-  @NonNull private final String wearableDelay;
-  @NonNull private final String wearableDelayDefault;
-  @NonNull private final String startWhenOpen;
-  private final boolean startWhenOpenDefault;
-  @NonNull private final String useRoot;
-  private final boolean useRootDefault;
-  @NonNull private final String loggerEnabled;
-  private final boolean loggerEnabledDefault;
-  @NonNull private final String triggerPeriodKey;
-  @NonNull private final String triggerPeriodDefault;
-
-  @Inject PowerManagerPreferences(@NonNull Context context) {
-    final Context appContext = context.getApplicationContext();
-    preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
-    final Resources res = appContext.getResources();
-    manageWifi = res.getString(R.string.manage_wifi_key);
-    manageData = res.getString(R.string.manage_data_key);
-    manageBluetooth = res.getString(R.string.manage_bluetooth_key);
-    manageSync = res.getString(R.string.manage_sync_key);
-    manageAirplane = res.getString(R.string.manage_airplane_key);
-    manageDoze = res.getString(R.string.manage_doze_key);
-    manageWifiDefault = res.getBoolean(R.bool.manage_wifi_default);
-    manageDataDefault = res.getBoolean(R.bool.manage_data_default);
-    manageBluetoothDefault = res.getBoolean(R.bool.manage_bluetooth_default);
-    manageSyncDefault = res.getBoolean(R.bool.manage_sync_default);
-    manageAirplaneDefault = res.getBoolean(R.bool.manage_airplane_default);
-    manageDozeDefault = res.getBoolean(R.bool.manage_doze_default);
-
-    delayDoze = res.getString(R.string.doze_time_key);
-    delayAirplane = res.getString(R.string.airplane_time_key);
-    delayWifi = res.getString(R.string.wifi_time_key);
-    delayData = res.getString(R.string.data_time_key);
-    delayBluetooth = res.getString(R.string.bluetooth_time_key);
-    delaySync = res.getString(R.string.sync_time_key);
-    delayDozeDefault = res.getString(R.string.doze_time_default);
-    delayAirplaneDefault = res.getString(R.string.airplane_time_default);
-    delayWifiDefault = res.getString(R.string.wifi_time_default);
-    delayDataDefault = res.getString(R.string.data_time_default);
-    delayBluetoothDefault = res.getString(R.string.bluetooth_time_default);
-    delaySyncDefault = res.getString(R.string.sync_time_default);
-
-    periodicDoze = res.getString(R.string.periodic_doze_key);
-    periodicAirplane = res.getString(R.string.periodic_airplane_key);
-    periodicWifi = res.getString(R.string.periodic_wifi_key);
-    periodicData = res.getString(R.string.periodic_data_key);
-    periodicBluetooth = res.getString(R.string.periodic_bluetooth_key);
-    periodicSync = res.getString(R.string.periodic_sync_key);
-    periodicDozeDefault = res.getBoolean(R.bool.periodic_doze_default);
-    periodicAirplaneDefault = res.getBoolean(R.bool.periodic_airplane_default);
-    periodicWifiDefault = res.getBoolean(R.bool.periodic_wifi_default);
-    periodicDataDefault = res.getBoolean(R.bool.periodic_data_default);
-    periodicBluetoothDefault = res.getBoolean(R.bool.periodic_bluetooth_default);
-    periodicSyncDefault = res.getBoolean(R.bool.periodic_sync_default);
-
-    periodicDisableDoze = res.getString(R.string.periodic_doze_disable_key);
-    periodicDisableAirplane = res.getString(R.string.periodic_airplane_disable_key);
-    periodicDisableWifi = res.getString(R.string.periodic_wifi_disable_key);
-    periodicDisableData = res.getString(R.string.periodic_data_disable_key);
-    periodicDisableBluetooth = res.getString(R.string.periodic_bluetooth_disable_key);
-    periodicDisableSync = res.getString(R.string.periodic_sync_disable_key);
-    periodicDisableDozeDefault = res.getString(R.string.periodic_doze_disable_default);
-    periodicDisableAirplaneDefault = res.getString(R.string.periodic_airplane_disable_default);
-    periodicDisableWifiDefault = res.getString(R.string.periodic_wifi_disable_default);
-    periodicDisableDataDefault = res.getString(R.string.periodic_data_disable_default);
-    periodicDisableBluetoothDefault = res.getString(R.string.periodic_bluetooth_disable_default);
-    periodicDisableSyncDefault = res.getString(R.string.periodic_sync_disable_default);
-
-    periodicEnableDoze = res.getString(R.string.periodic_doze_enable_key);
-    periodicEnableAirplane = res.getString(R.string.periodic_airplane_enable_key);
-    periodicEnableWifi = res.getString(R.string.periodic_wifi_enable_key);
-    periodicEnableData = res.getString(R.string.periodic_data_enable_key);
-    periodicEnableBluetooth = res.getString(R.string.periodic_bluetooth_enable_key);
-    periodicEnableSync = res.getString(R.string.periodic_sync_enable_key);
-    periodicEnableDozeDefault = res.getString(R.string.periodic_doze_enable_default);
-    periodicEnableAirplaneDefault = res.getString(R.string.periodic_airplane_enable_default);
-    periodicEnableWifiDefault = res.getString(R.string.periodic_wifi_enable_default);
-    periodicEnableDataDefault = res.getString(R.string.periodic_data_enable_default);
-    periodicEnableBluetoothDefault = res.getString(R.string.periodic_bluetooth_enable_default);
-    periodicEnableSyncDefault = res.getString(R.string.periodic_sync_enable_default);
-
-    ignoreChargingDoze = res.getString(R.string.ignore_charging_doze_key);
-    ignoreChargingAirplane = res.getString(R.string.ignore_charging_airplane_key);
-    ignoreChargingWifi = res.getString(R.string.ignore_charging_wifi_key);
-    ignoreChargingData = res.getString(R.string.ignore_charging_data_key);
-    ignoreChargingBluetooth = res.getString(R.string.ignore_charging_bluetooth_key);
-    ignoreChargingSync = res.getString(R.string.ignore_charging_sync_key);
-    ignoreChargingDozeDefault = res.getBoolean(R.bool.ignore_charging_doze_default);
-    ignoreChargingAirplaneDefault = res.getBoolean(R.bool.ignore_charging_airplane_default);
-    ignoreChargingWifiDefault = res.getBoolean(R.bool.ignore_charging_wifi_default);
-    ignoreChargingDataDefault = res.getBoolean(R.bool.ignore_charging_data_default);
-    ignoreChargingBluetoothDefault = res.getBoolean(R.bool.ignore_charging_bluetooth_default);
-    ignoreChargingSyncDefault = res.getBoolean(R.bool.ignore_charging_sync_default);
-
-    manageWearable = res.getString(R.string.manage_wearable_key);
-    manageWearableDefault = res.getBoolean(R.bool.manage_wearable_default);
-
-    wearableDelay = res.getString(R.string.wearable_time_key);
-    wearableDelayDefault = res.getString(R.string.wearable_time_default);
-
-    startWhenOpen = res.getString(R.string.unsuspend_when_open_key);
-    startWhenOpenDefault = res.getBoolean(R.bool.unsuspend_when_open_default);
-
-    useRoot = res.getString(R.string.use_root_key);
-    useRootDefault = res.getBoolean(R.bool.use_root_default);
-
-    loggerEnabled = res.getString(R.string.logger_enabled);
-    loggerEnabledDefault = res.getBoolean(R.bool.logger_enabled_default);
-
-    triggerPeriodKey = res.getString(R.string.trigger_period_key);
-    triggerPeriodDefault = res.getString(R.string.trigger_period_default);
-  }
-
-  @CheckResult public boolean isOriginalWifi() {
-    return preferences.getBoolean(ORIGINAL_WIFI, false);
-  }
-
-  public void setOriginalWifi(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_WIFI, state).apply();
-  }
-
-  @CheckResult public boolean isOriginalData() {
-    return preferences.getBoolean(ORIGINAL_DATA, false);
-  }
-
-  public void setOriginalData(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_DATA, state).apply();
-  }
-
-  @CheckResult public boolean isOriginalBluetooh() {
-    return preferences.getBoolean(ORIGINAL_BLUETOOTH, false);
-  }
-
-  @CheckResult public boolean isOriginalSync() {
-    return preferences.getBoolean(ORIGINAL_SYNC, false);
-  }
-
-  public void setOriginalSync(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_SYNC, state).apply();
-  }
-
-  @CheckResult public boolean isOriginalAirplane() {
-    return preferences.getBoolean(ORIGINAL_AIRPLANE, false);
-  }
-
-  public void setOriginalAirplane(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_AIRPLANE, state).apply();
-  }
-
-  @CheckResult public boolean isOriginalDoze() {
-    return preferences.getBoolean(ORIGINAL_DOZE, false);
-  }
-
-  public void setOriginalDoze(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_DOZE, state).apply();
-  }
-
-  public void setOriginalBluetooth(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_BLUETOOTH, state).apply();
-  }
-
-  @CheckResult public boolean isServiceEnabled() {
-    return preferences.getBoolean(SERVICE_ENABLED, true);
-  }
-
-  public void setServiceEnabled(boolean enabled) {
-    preferences.edit().putBoolean(SERVICE_ENABLED, enabled).apply();
-  }
-
-  @CheckResult public long getTriggerPeriodTime() {
-    return Long.parseLong(preferences.getString(triggerPeriodKey, triggerPeriodDefault));
-  }
-
-  @CheckResult public boolean isLoggerEnabled() {
-    return preferences.getBoolean(loggerEnabled, loggerEnabledDefault);
-  }
-
-  @CheckResult public boolean isRootEnabled() {
-    return preferences.getBoolean(useRoot, useRootDefault);
-  }
-
-  public void resetRootEnabled() {
-    preferences.edit().putBoolean(useRoot, useRootDefault).apply();
-  }
-
-  @CheckResult public boolean isStartWhenOpen() {
-    return preferences.getBoolean(startWhenOpen, startWhenOpenDefault);
-  }
-
-  @CheckResult public boolean isPeriodicOnboardingShown() {
-    return preferences.getBoolean(PERIOD_ONBOARD, false);
-  }
-
-  public void setPeriodicOnboardingShown() {
-    preferences.edit().putBoolean(PERIOD_ONBOARD, true).apply();
-  }
-
-  @CheckResult public boolean isManageOnboardingShown() {
-    return preferences.getBoolean(MANAGE_ONBOARD, false);
-  }
-
-  public void setManageOnboardingShown() {
-    preferences.edit().putBoolean(MANAGE_ONBOARD, true).apply();
-  }
-
-  @CheckResult public boolean isOverviewOnboardingShown() {
-    return preferences.getBoolean(OVERVIEW_ONBOARD, false);
-  }
-
-  public void setOverviewOnboardingShown() {
-    preferences.edit().putBoolean(OVERVIEW_ONBOARD, true).apply();
-  }
-
-  public long getWearableDelay() {
-    return Long.parseLong(preferences.getString(wearableDelay, wearableDelayDefault));
-  }
-
-  @CheckResult public long getDozeDelay() {
-    return Long.parseLong(preferences.getString(delayDoze, delayDozeDefault));
-  }
-
-  public void setDozeDelay(long time) {
-    preferences.edit().putString(delayDoze, Long.toString(time)).apply();
-  }
-
-  @CheckResult public boolean isIgnoreChargingDoze() {
-    return preferences.getBoolean(ignoreChargingDoze, ignoreChargingDozeDefault);
-  }
-
-  @CheckResult public boolean isDozeManaged() {
-    return preferences.getBoolean(manageDoze, manageDozeDefault);
-  }
-
-  @CheckResult public boolean isAirplaneManaged() {
-    return preferences.getBoolean(manageAirplane, manageAirplaneDefault);
-  }
-
-  @CheckResult public boolean isIgnoreChargingAirplane() {
-    return preferences.getBoolean(ignoreChargingAirplane, ignoreChargingAirplaneDefault);
-  }
-
-  @CheckResult public boolean isIgnoreChargingWifi() {
-    return preferences.getBoolean(ignoreChargingWifi, ignoreChargingWifiDefault);
-  }
-
-  @CheckResult public boolean isIgnoreChargingData() {
-    return preferences.getBoolean(ignoreChargingData, ignoreChargingDataDefault);
-  }
-
-  @CheckResult public boolean isIgnoreChargingBluetooth() {
-    return preferences.getBoolean(ignoreChargingBluetooth, ignoreChargingBluetoothDefault);
-  }
-
-  @CheckResult public boolean isIgnoreChargingSync() {
-    return preferences.getBoolean(ignoreChargingSync, ignoreChargingSyncDefault);
-  }
-
-  @CheckResult public long getWifiDelay() {
-    return Long.parseLong(preferences.getString(delayWifi, delayWifiDefault));
-  }
-
-  public void setWifiDelay(long time) {
-    preferences.edit().putString(delayWifi, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getAirplaneDelay() {
-    return Long.parseLong(preferences.getString(delayAirplane, delayAirplaneDefault));
-  }
-
-  public void setAirplaneDelay(long time) {
-    preferences.edit().putString(delayAirplane, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getDataDelay() {
-    return Long.parseLong(preferences.getString(delayData, delayDataDefault));
-  }
-
-  public void setDataDelay(long time) {
-    preferences.edit().putString(delayData, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getBluetoothDelay() {
-    return Long.parseLong(preferences.getString(delayBluetooth, delayBluetoothDefault));
-  }
-
-  public void setBluetoothDelay(long time) {
-    preferences.edit().putString(delayBluetooth, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getMasterSyncDelay() {
-    return Long.parseLong(preferences.getString(delaySync, delaySyncDefault));
-  }
-
-  public void setMasterSyncDelay(long time) {
-    preferences.edit().putString(delaySync, Long.toString(time)).apply();
-  }
-
-  @CheckResult public int getNotificationPriority() {
-    return NotificationCompat.PRIORITY_MIN;
-  }
-
-  @CheckResult public boolean isBluetoothManaged() {
-    return preferences.getBoolean(manageBluetooth, manageBluetoothDefault);
-  }
-
-  @CheckResult public boolean isDataManaged() {
-    return preferences.getBoolean(manageData, manageDataDefault);
-  }
-
-  @CheckResult public boolean isSyncManaged() {
-    return preferences.getBoolean(manageSync, manageSyncDefault);
-  }
-
-  @CheckResult public boolean isWifiManaged() {
-    return preferences.getBoolean(manageWifi, manageWifiDefault);
-  }
-
-  @CheckResult public boolean isWearableManaged() {
-    return preferences.getBoolean(manageWearable, manageWearableDefault);
-  }
-
-  @SuppressLint("CommitPrefEdits") public void clearAll() {
-    preferences.edit().clear().commit();
-  }
-
-  @CheckResult public boolean isPeriodicDoze() {
-    return preferences.getBoolean(periodicDoze, periodicDozeDefault);
-  }
-
-  @CheckResult public boolean isPeriodicWifi() {
-    return preferences.getBoolean(periodicWifi, periodicWifiDefault);
-  }
-
-  @CheckResult public boolean isPeriodicData() {
-    return preferences.getBoolean(periodicData, periodicDataDefault);
-  }
-
-  @CheckResult public boolean isPeriodicBluetooth() {
-    return preferences.getBoolean(periodicBluetooth, periodicBluetoothDefault);
-  }
-
-  @CheckResult public boolean isPeriodicSync() {
-    return preferences.getBoolean(periodicSync, periodicSyncDefault);
-  }
-
-  @CheckResult public boolean isPeriodicAirplane() {
-    return preferences.getBoolean(periodicAirplane, periodicAirplaneDefault);
-  }
-
-  @CheckResult public long getPeriodicDisableTimeDoze() {
-    return Long.parseLong(preferences.getString(periodicDisableDoze, periodicDisableDozeDefault));
-  }
-
-  public void setPeriodicDisableTimeDoze(long time) {
-    preferences.edit().putString(periodicDisableDoze, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicDisableTimeAirplane() {
-    return Long.parseLong(
-        preferences.getString(periodicDisableAirplane, periodicDisableAirplaneDefault));
-  }
-
-  public void setPeriodicDisableTimeAirplane(long time) {
-    preferences.edit().putString(periodicDisableAirplane, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicDisableTimeWifi() {
-    return Long.parseLong(preferences.getString(periodicDisableWifi, periodicDisableWifiDefault));
-  }
-
-  public void setPeriodicDisableTimeWifi(long time) {
-    preferences.edit().putString(periodicDisableWifi, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicDisableTimeData() {
-    return Long.parseLong(preferences.getString(periodicDisableData, periodicDisableDataDefault));
-  }
-
-  public void setPeriodicDisableTimeData(long time) {
-    preferences.edit().putString(periodicDisableData, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicDisableTimeBluetooth() {
-    return Long.parseLong(
-        preferences.getString(periodicDisableBluetooth, periodicDisableBluetoothDefault));
-  }
-
-  public void setPeriodicDisableTimeBluetooth(long time) {
-    preferences.edit().putString(periodicDisableBluetooth, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicDisableTimeSync() {
-    return Long.parseLong(preferences.getString(periodicDisableSync, periodicDisableSyncDefault));
-  }
-
-  public void setPeriodicDisableTimeSync(long time) {
-    preferences.edit().putString(periodicDisableSync, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeDoze() {
-    return Long.parseLong(preferences.getString(periodicEnableDoze, periodicEnableDozeDefault));
-  }
-
-  public void setPeriodicEnableTimeDoze(long time) {
-    preferences.edit().putString(periodicEnableDoze, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeAirplane() {
-    return Long.parseLong(
-        preferences.getString(periodicEnableAirplane, periodicEnableAirplaneDefault));
-  }
-
-  public void setPeriodicEnableTimeAirplane(long time) {
-    preferences.edit().putString(periodicEnableAirplane, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeWifi() {
-    return Long.parseLong(preferences.getString(periodicEnableWifi, periodicEnableWifiDefault));
-  }
-
-  public void setPeriodicEnableTimeWifi(long time) {
-    preferences.edit().putString(periodicEnableWifi, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeData() {
-    return Long.parseLong(preferences.getString(periodicEnableData, periodicEnableDataDefault));
-  }
-
-  public void setPeriodicEnableTimeData(long time) {
-    preferences.edit().putString(periodicEnableData, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeBluetooth() {
-    return Long.parseLong(
-        preferences.getString(periodicEnableBluetooth, periodicEnableBluetoothDefault));
-  }
-
-  public void setPeriodicEnableTimeBluetooth(long time) {
-    preferences.edit().putString(periodicEnableBluetooth, Long.toString(time)).apply();
-  }
-
-  @CheckResult public long getPeriodicEnableTimeSync() {
-    return Long.parseLong(preferences.getString(periodicEnableSync, periodicEnableSyncDefault));
-  }
-
-  public void setPeriodicEnableTimeSync(long time) {
-    preferences.edit().putString(periodicEnableSync, Long.toString(time)).apply();
-  }
-
-  public void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
-    listener.register(preferences);
-  }
-
-  public void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
-    listener.unregister(preferences);
-  }
+
+public interface PowerManagerPreferences {
+
+  @CheckResult boolean isOriginalWifi();
+
+  void setOriginalWifi(boolean state);
+
+  @CheckResult boolean isOriginalData();
+
+  void setOriginalData(boolean state);
+
+  @CheckResult boolean isOriginalBluetooh();
+
+  @CheckResult boolean isOriginalSync();
+
+  void setOriginalSync(boolean state);
+
+  @CheckResult boolean isOriginalAirplane();
+
+  void setOriginalAirplane(boolean state);
+
+  @CheckResult boolean isOriginalDoze();
+
+  void setOriginalDoze(boolean state);
+
+  void setOriginalBluetooth(boolean state);
+
+  @CheckResult boolean isServiceEnabled();
+
+  void setServiceEnabled(boolean enabled);
+
+  @CheckResult long getTriggerPeriodTime();
+
+  @CheckResult boolean isLoggerEnabled();
+
+  @CheckResult boolean isRootEnabled();
+
+  void resetRootEnabled();
+
+  @CheckResult boolean isStartWhenOpen();
+
+  @CheckResult boolean isPeriodicOnboardingShown();
+
+  void setPeriodicOnboardingShown();
+
+  @CheckResult boolean isManageOnboardingShown();
+
+  void setManageOnboardingShown();
+
+  @CheckResult boolean isOverviewOnboardingShown();
+
+  void setOverviewOnboardingShown();
+
+  long getWearableDelay();
+
+  @CheckResult long getDozeDelay();
+
+  void setDozeDelay(long time);
+
+  @CheckResult boolean isIgnoreChargingDoze();
+
+  @CheckResult boolean isDozeManaged();
+
+  @CheckResult boolean isAirplaneManaged();
+
+  @CheckResult boolean isIgnoreChargingAirplane();
+
+  @CheckResult boolean isIgnoreChargingWifi();
+
+  @CheckResult boolean isIgnoreChargingData();
+
+  @CheckResult boolean isIgnoreChargingBluetooth();
+
+  @CheckResult boolean isIgnoreChargingSync();
+
+  @CheckResult long getWifiDelay();
+
+  void setWifiDelay(long time);
+
+  @CheckResult long getAirplaneDelay();
+
+  void setAirplaneDelay(long time);
+
+  @CheckResult long getDataDelay();
+
+  void setDataDelay(long time);
+
+  @CheckResult long getBluetoothDelay();
+
+  void setBluetoothDelay(long time);
+
+  @CheckResult long getMasterSyncDelay();
+
+  void setMasterSyncDelay(long time);
+
+  @CheckResult int getNotificationPriority();
+
+  @CheckResult boolean isBluetoothManaged();
+
+  @CheckResult boolean isDataManaged();
+
+  @CheckResult boolean isSyncManaged();
+
+  @CheckResult boolean isWifiManaged();
+
+  @CheckResult boolean isWearableManaged();
+
+  void clearAll();
+
+  @CheckResult boolean isPeriodicDoze();
+
+  @CheckResult boolean isPeriodicWifi();
+
+  @CheckResult boolean isPeriodicData();
+
+  @CheckResult boolean isPeriodicBluetooth();
+
+  @CheckResult boolean isPeriodicSync();
+
+  @CheckResult boolean isPeriodicAirplane();
+
+  @CheckResult long getPeriodicDisableTimeDoze();
+
+  void setPeriodicDisableTimeDoze(long time);
+
+  @CheckResult long getPeriodicDisableTimeAirplane();
+
+  void setPeriodicDisableTimeAirplane(long time);
+
+  @CheckResult long getPeriodicDisableTimeWifi();
+
+  void setPeriodicDisableTimeWifi(long time);
+
+  @CheckResult long getPeriodicDisableTimeData();
+
+  void setPeriodicDisableTimeData(long time);
+
+  @CheckResult long getPeriodicDisableTimeBluetooth();
+
+  void setPeriodicDisableTimeBluetooth(long time);
+
+  @CheckResult long getPeriodicDisableTimeSync();
+
+  void setPeriodicDisableTimeSync(long time);
+
+  @CheckResult long getPeriodicEnableTimeDoze();
+
+  void setPeriodicEnableTimeDoze(long time);
+
+  @CheckResult long getPeriodicEnableTimeAirplane();
+
+  void setPeriodicEnableTimeAirplane(long time);
+
+  @CheckResult long getPeriodicEnableTimeWifi();
+
+  void setPeriodicEnableTimeWifi(long time);
+
+  @CheckResult long getPeriodicEnableTimeData();
+
+  void setPeriodicEnableTimeData(long time);
+
+  @CheckResult long getPeriodicEnableTimeBluetooth();
+
+  void setPeriodicEnableTimeBluetooth(long time);
+
+  @CheckResult long getPeriodicEnableTimeSync();
+
+  void setPeriodicEnableTimeSync(long time);
+
+  void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
+
+  void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
 }
