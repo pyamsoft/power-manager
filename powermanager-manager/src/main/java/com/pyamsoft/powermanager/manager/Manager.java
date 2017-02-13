@@ -26,7 +26,7 @@ import rx.Scheduler;
 import rx.Subscription;
 import timber.log.Timber;
 
-abstract class Manager {
+public abstract class Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
   @NonNull private final Scheduler scheduler;
