@@ -17,12 +17,13 @@
 package com.pyamsoft.powermanager.sync.preference;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractor {
+class SyncEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
 
-  @Inject SyncEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject SyncEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
