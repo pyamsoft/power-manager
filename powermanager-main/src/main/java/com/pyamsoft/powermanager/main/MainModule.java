@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -28,10 +29,10 @@ import rx.Scheduler;
   @Provides MainPresenter provideMainPresenter(@NonNull MainInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new MainPresenterImpl(interactor, obsScheduler, subScheduler, rootPermissionObserver);
+    return new MainPresenter(interactor, obsScheduler, subScheduler, rootPermissionObserver);
   }
 
   @Provides MainInteractor provideMainInteractor(@NonNull PowerManagerPreferences preferences) {
-    return new MainInteractorImpl(preferences);
+    return new MainInteractor(preferences);
   }
 }

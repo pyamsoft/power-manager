@@ -18,11 +18,22 @@ package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import rx.Observable;
 
-interface MainInteractor {
+class MainInteractor {
 
-  void missingRootPermission();
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen();
+  MainInteractor(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  public void missingRootPermission() {
+    preferences.resetRootEnabled();
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> isStartWhenOpen() {
+    return Observable.fromCallable(preferences::isStartWhenOpen);
+  }
 }

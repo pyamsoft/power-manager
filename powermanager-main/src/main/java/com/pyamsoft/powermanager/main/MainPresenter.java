@@ -17,11 +17,68 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import rx.Observable;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-interface MainPresenter extends Presenter<Presenter.Empty> {
+class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  void runStartupHooks(@NonNull StartupCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
+
+  @Inject MainPresenter(@NonNull MainInteractor interactor, @NonNull Scheduler observeScheduler,
+      @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver rootPermissionObserver) {
+    super(observeScheduler, subscribeScheduler);
+    this.interactor = interactor;
+    this.rootPermissionObserver = rootPermissionObserver;
+  }
+
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    SubscriptionHelper.unsubscribe(subscription, rootSubscription);
+  }
+
+  public void runStartupHooks(@NonNull StartupCallback callback) {
+    startServiceWhenOpen(callback);
+    checkForRoot(callback);
+  }
+
+  private void startServiceWhenOpen(@NonNull StartupCallback callback) {
+    SubscriptionHelper.unsubscribe(subscription);
+    subscription = interactor.isStartWhenOpen()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(start -> {
+              if (start) {
+                callback.onServiceEnabledWhenOpen();
+              }
+            }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"),
+            () -> SubscriptionHelper.unsubscribe(subscription));
+  }
+
+  private void checkForRoot(@NonNull StartupCallback callback) {
+    SubscriptionHelper.unsubscribe(rootSubscription);
+    rootSubscription =
+        Observable.defer(() -> Observable.just(rootPermissionObserver.hasPermission()))
+            .subscribeOn(getSubscribeScheduler())
+            .observeOn(getObserveScheduler())
+            .subscribe(hasPermission -> {
+                  if (!hasPermission) {
+                    interactor.missingRootPermission();
+                    callback.explainRootRequirement();
+                  }
+                }, throwable -> Timber.e(throwable, "onError checking root permission"),
+                () -> SubscriptionHelper.unsubscribe(rootSubscription));
+  }
 
   interface StartupCallback {
 
