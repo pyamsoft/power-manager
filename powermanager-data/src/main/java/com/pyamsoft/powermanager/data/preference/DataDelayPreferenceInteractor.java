@@ -17,20 +17,21 @@
 package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import javax.inject.Inject;
 
-class DataEnableTimePreferenceInteractorImpl extends CustomTimeInputPreferenceInteractor {
+class DataDelayPreferenceInteractor extends CustomTimeInputPreferenceInteractor {
 
-  @Inject DataEnableTimePreferenceInteractorImpl(@NonNull PowerManagerPreferences preferences) {
+  @Inject DataDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicEnableTimeData(time);
+    preferences.setDataDelay(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicEnableTimeData();
+    return preferences.getDataDelay();
   }
 }

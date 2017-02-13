@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
