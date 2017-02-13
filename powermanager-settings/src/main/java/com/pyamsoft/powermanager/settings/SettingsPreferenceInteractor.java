@@ -18,15 +18,57 @@ package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
+import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import javax.inject.Inject;
 import rx.Observable;
+import timber.log.Timber;
 
-interface SettingsPreferenceInteractor {
+class SettingsPreferenceInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> isRootEnabled();
+  @SuppressWarnings("WeakerAccess") @NonNull final ShellCommandHelper shellCommandHelper;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
 
-  @CheckResult @NonNull Observable<Boolean> checkRoot(boolean rootEnable);
+  @Inject SettingsPreferenceInteractor(@NonNull PowerTriggerDB powerTriggerDB,
+      @NonNull PowerManagerPreferences preferences,
+      @NonNull ShellCommandHelper shellCommandHelper) {
+    this.powerTriggerDB = powerTriggerDB;
+    this.preferences = preferences;
+    this.shellCommandHelper = shellCommandHelper;
+  }
 
-  @CheckResult @NonNull Observable<Boolean> clearDatabase();
+  @CheckResult @NonNull public Observable<Boolean> isRootEnabled() {
+    return Observable.fromCallable(preferences::isRootEnabled);
+  }
 
-  @CheckResult @NonNull Observable<Boolean> clearAll();
+  @NonNull @CheckResult public Observable<Boolean> checkRoot(boolean rootEnable) {
+    return Observable.fromCallable(() -> {
+      // If we are enabling root, check SU available
+      // If we are not enabling root, then everything is ok
+      return !rootEnable || shellCommandHelper.isSUAvailable();
+    });
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> clearDatabase() {
+    return Observable.defer(() -> {
+      Timber.d("Clear database of all entries");
+      return powerTriggerDB.deleteAll();
+    }).map(result -> {
+      Timber.d("Database is cleared: %s", result);
+      powerTriggerDB.deleteDatabase();
+
+      // TODO just return something valid
+      return Boolean.TRUE;
+    });
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> clearAll() {
+    return clearDatabase().map(aBoolean -> {
+      Timber.d("Clear all preferences");
+      preferences.clearAll();
+      return Boolean.TRUE;
+    });
+  }
 }
