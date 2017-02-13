@@ -37,13 +37,13 @@ import rx.Scheduler;
   LoggerPresenter provideLoggerPresenterManager(
       @NonNull @Named("logger_interactor_manager") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_manager")
   LoggerInteractor provideLoggerInteractorManager(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.MANAGER_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.MANAGER_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_wifi") Logger provideLoggerWifi(
@@ -54,13 +54,13 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_presenter_wifi") LoggerPresenter provideLoggerPresenterWifi(
       @NonNull @Named("logger_interactor_wifi") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_wifi")
   LoggerInteractor provideLoggerInteractorWifi(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.WIFI_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.WIFI_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_data") Logger provideLoggerData(
@@ -71,13 +71,13 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_presenter_data") LoggerPresenter provideLoggerPresenterData(
       @NonNull @Named("logger_interactor_data") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_data")
   LoggerInteractor provideLoggerInteractorData(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.DATA_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.DATA_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_bluetooth") Logger provideLoggerBluetooth(
@@ -89,13 +89,13 @@ import rx.Scheduler;
   LoggerPresenter provideLoggerPresenterBluetooth(
       @NonNull @Named("logger_interactor_bluetooth") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_bluetooth")
   LoggerInteractor provideLoggerInteractorBluetooth(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.BLUETOOTH_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.BLUETOOTH_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_sync") Logger provideLoggerSync(
@@ -106,13 +106,13 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_presenter_sync") LoggerPresenter provideLoggerPresenterSync(
       @NonNull @Named("logger_interactor_sync") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_sync")
   LoggerInteractor provideLoggerInteractorSync(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.SYNC_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.SYNC_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_airplane") Logger provideLoggerAirplane(
@@ -124,13 +124,13 @@ import rx.Scheduler;
   LoggerPresenter provideLoggerPresenterAirplane(
       @NonNull @Named("logger_interactor_airplane") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_airplane")
   LoggerInteractor provideLoggerInteractorAirplane(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.AIRPLANE_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.AIRPLANE_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_doze") Logger provideLoggerDoze(
@@ -141,13 +141,13 @@ import rx.Scheduler;
   @Singleton @Provides @Named("logger_presenter_doze") LoggerPresenter provideLoggerPresenterDoze(
       @NonNull @Named("logger_interactor_doze") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_doze")
   LoggerInteractor provideLoggerInteractorDoze(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.DOZE_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.DOZE_LOG_ID);
   }
 
   @Singleton @Provides @Named("logger_trigger") Logger provideLoggerTrigger(
@@ -159,12 +159,12 @@ import rx.Scheduler;
   LoggerPresenter provideLoggerPresenterTrigger(
       @NonNull @Named("logger_interactor_trigger") LoggerInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new LoggerPresenterImpl(interactor, obsScheduler, subScheduler);
+    return new LoggerPresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Singleton @Provides @Named("logger_interactor_trigger")
   LoggerInteractor provideLoggerInteractorTrigger(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    return new LoggerInteractorImpl(context, preferences, LoggerInteractor.TRIGGER_LOG_ID);
+    return new LoggerInteractor(context, preferences, LoggerInteractor.TRIGGER_LOG_ID);
   }
 }

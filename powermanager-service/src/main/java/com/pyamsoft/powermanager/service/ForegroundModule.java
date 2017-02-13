@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import dagger.Module;
 import dagger.Provides;

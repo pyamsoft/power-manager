@@ -70,11 +70,6 @@ dependencies {
   compile "com.google.dagger:dagger:$dagger"
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
-  // PYDroid
-  compile("com.github.pyamsoft.pydroid:pydroid:$pydroid@aar") {
-    transitive = true
-  }
-
   // Roboelectric for Android on JVM
   testCompile "org.robolectric:robolectric:$robolectric"
 

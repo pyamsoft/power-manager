@@ -23,27 +23,24 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
 
-  @NonNull public static final String EMPTY_NAME =
+  @NonNull private static final String EMPTY_NAME =
       PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
-  public static final int EMPTY_PERCENT = -1;
-
+  private static final int EMPTY_PERCENT = -1;
+  @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
+  public static final PowerTriggerEntry EMPTY =
+      new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
+          false, false, false, false, false);
   @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
   private static final Factory<PowerTriggerEntry> FACTORY =
       new Factory<>(AutoValue_PowerTriggerEntry::new);
-
   @NonNull public static final Creator<PowerTriggerEntry> CREATOR = FACTORY.creator;
   @NonNull public static final Mapper<PowerTriggerEntry> ALL_ENTRIES_MAPPER =
       FACTORY.all_entriesMapper();
   @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER =
       FACTORY.with_percentMapper();
 
-  @CheckResult @NonNull public static PowerTriggerEntry empty() {
-    return new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
-        false, false, false, false, false, false);
-  }
-
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
-    return entry.percent() == EMPTY_PERCENT || EMPTY_NAME.equals(entry.name());
+    return EMPTY == entry;
   }
 
   @CheckResult @NonNull

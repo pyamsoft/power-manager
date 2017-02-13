@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import javax.inject.Inject;
 import rx.Observable;
 

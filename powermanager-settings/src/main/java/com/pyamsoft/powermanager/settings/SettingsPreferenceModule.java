@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import dagger.Module;

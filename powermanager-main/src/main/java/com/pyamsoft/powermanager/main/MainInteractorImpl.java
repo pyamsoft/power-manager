@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import rx.Observable;
 
 class MainInteractorImpl implements MainInteractor {

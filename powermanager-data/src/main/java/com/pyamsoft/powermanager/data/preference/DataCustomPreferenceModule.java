@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenterImpl;

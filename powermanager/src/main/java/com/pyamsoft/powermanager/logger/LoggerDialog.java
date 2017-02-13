@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
 import com.pyamsoft.powermanager.databinding.DialogLoggerBinding;
 import timber.log.Timber;
 

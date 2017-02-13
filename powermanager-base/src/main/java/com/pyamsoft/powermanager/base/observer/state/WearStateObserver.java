@@ -26,7 +26,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import timber.log.Timber;

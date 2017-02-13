@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
