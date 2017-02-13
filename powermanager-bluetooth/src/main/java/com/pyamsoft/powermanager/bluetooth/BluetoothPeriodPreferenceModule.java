@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
@@ -32,8 +33,7 @@ import rx.Scheduler;
       @Named("bluetooth_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_bluetooth_periodic") BooleanInterestObserver periodicObserver) {
-    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler,
-        periodicObserver);
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler, periodicObserver);
   }
 
   @Provides @Named("bluetooth_period_pref_interactor")

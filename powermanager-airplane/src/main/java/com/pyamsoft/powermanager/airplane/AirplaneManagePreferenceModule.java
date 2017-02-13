@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionManagePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;

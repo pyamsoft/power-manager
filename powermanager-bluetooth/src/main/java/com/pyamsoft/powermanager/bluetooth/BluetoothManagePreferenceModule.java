@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
@@ -32,8 +33,7 @@ import rx.Scheduler;
       @Named("bluetooth_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_bluetooth_manage") BooleanInterestObserver manageObserver) {
-    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler,
-        manageObserver);
+    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver);
   }
 
   @Provides @Named("bluetooth_manage_pref_interactor")
