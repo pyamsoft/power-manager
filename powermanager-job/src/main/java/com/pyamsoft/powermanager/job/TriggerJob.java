@@ -29,7 +29,7 @@ import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.rx.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import java.util.List;
 import java.util.Locale;
 import rx.Observable;
@@ -112,12 +112,12 @@ class TriggerJob extends Job {
       }).toList().first().map(integers -> {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
-        return PowerTriggerEntry.empty();
+        return PowerTriggerEntry.EMPTY;
       });
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
-        PowerTriggerEntry best = PowerTriggerEntry.empty();
+        PowerTriggerEntry best = PowerTriggerEntry.EMPTY;
 
         for (final PowerTriggerEntry entry : powerTriggerEntries) {
           Timber.d("Current entry: %s %d", entry.name(), entry.percent());
