@@ -69,13 +69,17 @@ public class DeleteTriggerDialog extends DialogFragment {
   }
 
   @SuppressWarnings("WeakerAccess") void sendDeleteEvent(int percent) {
-    final FragmentManager fragmentManager = getFragmentManager();
-    final Fragment powerTriggerListFragment =
-        fragmentManager.findFragmentByTag(PowerTriggerListFragment.TAG);
-    if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
-      ((PowerTriggerListFragment) powerTriggerListFragment).deleteTrigger(percent);
+    Fragment powerTriggerFragment = getFragmentManager().findFragmentByTag(PowerTriggerFragment.TAG);
+    if (powerTriggerFragment instanceof PowerTriggerFragment) {
+      Fragment powerTriggerListFragment = powerTriggerFragment.getChildFragmentManager()
+          .findFragmentByTag(PowerTriggerListFragment.TAG);
+      if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
+        ((PowerTriggerListFragment) powerTriggerListFragment).deleteTrigger(percent);
+      } else {
+        throw new ClassCastException("Fragment is not PowerTriggerListFragment");
+      }
     } else {
-      throw new ClassCastException("Fragment is not PowerTriggerListFragment");
+      throw new ClassCastException("Fragment is not PowerTriggerFragment");
     }
   }
 
