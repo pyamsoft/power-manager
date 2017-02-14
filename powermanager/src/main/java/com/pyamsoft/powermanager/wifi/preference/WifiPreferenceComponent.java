@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.wifi.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = WifiCustomPreferenceModule.class) public interface WifiPreferenceComponent {
+@Subcomponent(modules = WifiPreferenceModule.class) public interface WifiPreferenceComponent {
 
   void inject(WifiCustomTimePreference preference);
 }

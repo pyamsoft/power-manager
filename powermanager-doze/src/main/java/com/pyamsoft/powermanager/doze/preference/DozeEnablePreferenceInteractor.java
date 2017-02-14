@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.bluetooth.preference;
+package com.pyamsoft.powermanager.doze.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class BluetoothDisableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class DozeEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject BluetoothDisableTimePreferenceInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject DozeEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicDisableTimeBluetooth(time);
+    preferences.setPeriodicEnableTimeDoze(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicDisableTimeBluetooth();
+    return preferences.getPeriodicEnableTimeDoze();
   }
 }

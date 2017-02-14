@@ -18,54 +18,52 @@ package com.pyamsoft.powermanager.airplane.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class AirplaneCustomPreferenceModule {
+@Module public class AirplanePreferenceModule {
 
   @Provides @Named("airplane_custom_delay")
-  CustomTimeInputPreferencePresenter provideAirplaneCustomDelayPresenter(
-      @NonNull @Named("airplane_custom_delay_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideAirplaneCustomDelayPresenter(
+      @NonNull @Named("airplane_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_delay_interactor")
-  CustomTimeInputPreferenceInteractor provideAirplaneCustomDelayInteractor(
+  CustomTimePreferenceInteractor provideAirplaneCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new AirplaneDelayPreferenceInteractor(preferences);
   }
 
   @Provides @Named("airplane_custom_enable")
-  CustomTimeInputPreferencePresenter provideAirplaneCustomEnablePresenter(
-      @NonNull @Named("airplane_custom_enable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideAirplaneCustomEnablePresenter(
+      @NonNull @Named("airplane_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_enable_interactor")
-  CustomTimeInputPreferenceInteractor provideAirplaneCustomEnableInteractor(
+  CustomTimePreferenceInteractor provideAirplaneCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneEnableTimePreferenceInteractor(preferences);
+    return new AirplaneEnablePreferenceInteractor(preferences);
   }
 
   @Provides @Named("airplane_custom_disable")
-  CustomTimeInputPreferencePresenter provideAirplaneCustomDisablePresenter(
+  CustomTimePreferencePresenter provideAirplaneCustomDisablePresenter(
       @NonNull @Named("airplane_custom_disable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+          CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_custom_disable_interactor")
-  CustomTimeInputPreferenceInteractor provideAirplaneCustomDisableInteractor(
+  CustomTimePreferenceInteractor provideAirplaneCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new AirplaneDisableTimePreferenceInteractor(preferences);
+    return new AirplaneDisablePreferenceInteractor(preferences);
   }
 }

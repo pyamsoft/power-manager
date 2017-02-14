@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 

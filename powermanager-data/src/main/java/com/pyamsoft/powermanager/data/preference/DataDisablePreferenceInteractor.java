@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncDisableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class DataDisablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject SyncDisableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject DataDisablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicDisableTimeSync(time);
+    preferences.setPeriodicDisableTimeData(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicDisableTimeSync();
+    return preferences.getPeriodicDisableTimeData();
   }
 }

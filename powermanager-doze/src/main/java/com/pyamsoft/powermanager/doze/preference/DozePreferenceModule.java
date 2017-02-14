@@ -18,54 +18,51 @@ package com.pyamsoft.powermanager.doze.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class DozeCustomPreferenceModule {
+@Module public class DozePreferenceModule {
 
   @Provides @Named("doze_custom_delay")
-  CustomTimeInputPreferencePresenter provideDozeCustomDelayPresenter(
-      @NonNull @Named("doze_custom_delay_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideDozeCustomDelayPresenter(
+      @NonNull @Named("doze_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_delay_interactor")
-  CustomTimeInputPreferenceInteractor provideDozeCustomDelayInteractor(
+  CustomTimePreferenceInteractor provideDozeCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new DozeDelayPreferenceInteractor(preferences);
   }
 
   @Provides @Named("doze_custom_enable")
-  CustomTimeInputPreferencePresenter provideDozeCustomEnablePresenter(
-      @NonNull @Named("doze_custom_enable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideDozeCustomEnablePresenter(
+      @NonNull @Named("doze_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_enable_interactor")
-  CustomTimeInputPreferenceInteractor provideDozeCustomEnableInteractor(
+  CustomTimePreferenceInteractor provideDozeCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeEnableTimePreferenceInteractor(preferences);
+    return new DozeEnablePreferenceInteractor(preferences);
   }
 
   @Provides @Named("doze_custom_disable")
-  CustomTimeInputPreferencePresenter provideDozeCustomDisablePresenter(
-      @NonNull @Named("doze_custom_disable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideDozeCustomDisablePresenter(
+      @NonNull @Named("doze_custom_disable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("doze_custom_disable_interactor")
-  CustomTimeInputPreferenceInteractor provideDozeCustomDisableInteractor(
+  CustomTimePreferenceInteractor provideDozeCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new DozeDisableTimePreferenceInteractor(preferences);
+    return new DozeDisablePreferenceInteractor(preferences);
   }
 }

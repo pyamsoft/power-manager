@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import dagger.Module;
@@ -29,7 +30,7 @@ import rx.Scheduler;
   @Provides @Named("wifi_manager") Manager provideManagerWifi(
       @Named("wifi_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("wifi_manager_interactor")
@@ -46,7 +47,7 @@ import rx.Scheduler;
   @Provides @Named("data_manager") Manager provideManagerData(
       @Named("data_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
@@ -60,7 +61,7 @@ import rx.Scheduler;
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
       @Named("bluetooth_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("bluetooth_manager_interactor")
@@ -78,7 +79,7 @@ import rx.Scheduler;
   @Provides @Named("sync_manager") Manager provideManagerSync(
       @Named("sync_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
@@ -91,7 +92,7 @@ import rx.Scheduler;
   @Provides @Named("doze_manager") Manager provideManagerDoze(
       @Named("doze_manager_interactor") @NonNull ManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearUnawareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("doze_manager_interactor") ManagerInteractor provideManagerDozeInteractor(
@@ -104,7 +105,7 @@ import rx.Scheduler;
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
       @Named("airplane_manager_interactor") @NonNull WearAwareManagerInteractor interactor,
       @Named("sub") Scheduler subScheduler) {
-    return new WearAwareManager(interactor, subScheduler);
+    return new Manager(interactor, subScheduler);
   }
 
   @Provides @Named("airplane_manager_interactor")

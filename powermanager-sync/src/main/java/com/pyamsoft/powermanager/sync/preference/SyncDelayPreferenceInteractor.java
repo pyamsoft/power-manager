@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.sync.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncDelayPreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class SyncDelayPreferenceInteractor extends CustomTimePreferenceInteractor {
 
   @Inject SyncDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

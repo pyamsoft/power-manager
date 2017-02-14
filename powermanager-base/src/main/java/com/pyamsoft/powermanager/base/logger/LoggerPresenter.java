@@ -31,7 +31,7 @@ import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
+public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final CompositeSubscription logSubscriptions =
@@ -113,12 +113,12 @@ class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
             () -> SubscriptionHelper.unsubscribe(deleteLogSubscription));
   }
 
-  interface DeleteCallback {
+  public interface DeleteCallback {
 
     void onLogDeleted(@NonNull String logId);
   }
 
-  interface LogCallback {
+  public interface LogCallback {
 
     void onPrepareLogContentRetrieval();
 

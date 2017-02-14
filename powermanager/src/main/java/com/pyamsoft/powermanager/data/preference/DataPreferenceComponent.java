@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.data.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = DataCustomPreferenceModule.class) public interface DataPreferenceComponent {
+@Subcomponent(modules = DataPreferenceModule.class) public interface DataPreferenceComponent {
 
   void inject(DataCustomTimePreference preference);
 }

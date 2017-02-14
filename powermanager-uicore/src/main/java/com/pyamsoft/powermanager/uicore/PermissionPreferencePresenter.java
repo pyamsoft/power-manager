@@ -28,14 +28,14 @@ import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class PermissionManagePreferencePresenter extends ManagePreferencePresenter {
+public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription permissionSubscription =
       Subscriptions.empty();
 
   @Inject
-  public PermissionManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
+  public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver, @NonNull PermissionObserver permissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);

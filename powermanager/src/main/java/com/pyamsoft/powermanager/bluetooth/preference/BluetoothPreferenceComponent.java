@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.bluetooth.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = BluetoothCustomPreferenceModule.class)
+@Subcomponent(modules = BluetoothPreferenceModule.class)
 public interface BluetoothPreferenceComponent {
 
   void inject(BluetoothCustomTimePreference preference);

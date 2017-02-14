@@ -21,25 +21,24 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-public class CustomTimeInputPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
+public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   // Max time 10 minutes
   private static final long MAX_TIME_SECONDS = 30 * 60;
   private static final int MAX_CUSTOM_LENGTH = 6;
 
-  @Nullable private final CustomTimeInputPreferenceInteractor interactor;
+  @Nullable private final CustomTimePreferenceInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription customTimeSubscription =
       Subscriptions.empty();
 
-  @Inject public CustomTimeInputPreferencePresenter(
-      @Nullable CustomTimeInputPreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
+  @Inject public CustomTimePreferencePresenter(
+      @Nullable CustomTimePreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;

@@ -34,9 +34,9 @@ import java.util.Locale;
 import timber.log.Timber;
 
 public abstract class CustomTimeInputPreference extends BaseBoundPreference
-    implements CustomTimeInputPreferencePresenter.OnCustomTimeUpdateCallback {
+    implements CustomTimePreferencePresenter.OnCustomTimeUpdateCallback {
 
-  @SuppressWarnings("WeakerAccess") CustomTimeInputPreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") CustomTimePreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
@@ -216,8 +216,8 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     return type;
   }
 
-  @NonNull @CheckResult private CustomTimeInputPreferencePresenter providePresenter() {
-    final CustomTimeInputPreferencePresenter presenter;
+  @NonNull @CheckResult private CustomTimePreferencePresenter providePresenter() {
+    final CustomTimePreferencePresenter presenter;
     switch (getPreferenceType()) {
       case DELAY:
         presenter = provideDelayPresenter();
@@ -237,11 +237,11 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
   protected abstract void injectDependencies();
 
   @CheckResult @NonNull
-  protected abstract CustomTimeInputPreferencePresenter provideEnablePresenter();
+  protected abstract CustomTimePreferencePresenter provideEnablePresenter();
 
   @CheckResult @NonNull
-  protected abstract CustomTimeInputPreferencePresenter provideDisablePresenter();
+  protected abstract CustomTimePreferencePresenter provideDisablePresenter();
 
   @CheckResult @NonNull
-  protected abstract CustomTimeInputPreferencePresenter provideDelayPresenter();
+  protected abstract CustomTimePreferencePresenter provideDelayPresenter();
 }

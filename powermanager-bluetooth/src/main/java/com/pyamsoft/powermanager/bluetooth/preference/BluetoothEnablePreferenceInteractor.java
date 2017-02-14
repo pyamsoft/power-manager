@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.data.preference;
+package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class DataEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class BluetoothEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject DataEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject BluetoothEnablePreferenceInteractor(
+      @NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicEnableTimeData(time);
+    preferences.setPeriodicEnableTimeBluetooth(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicEnableTimeData();
+    return preferences.getPeriodicEnableTimeBluetooth();
   }
 }

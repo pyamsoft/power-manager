@@ -22,11 +22,11 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
 
-public abstract class CustomTimeInputPreferenceInteractor {
+public abstract class CustomTimePreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  protected CustomTimeInputPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  protected CustomTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
   }
 

@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.airplane.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = AirplaneCustomPreferenceModule.class)
+@Subcomponent(modules = AirplanePreferenceModule.class)
 public interface AirplanePreferenceComponent {
 
   void inject(AirplaneCustomTimePreference preference);

@@ -25,10 +25,8 @@ import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.BuildConfigChecker;
-import com.pyamsoft.pydroid.SingleInitContentProvider;
 import com.pyamsoft.pydroid.about.Licenses;
-import com.pyamsoft.pydroid.rx.RxLicenses;
-import com.pyamsoft.pydroid.ui.UiLicenses;
+import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
 
 public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
 
@@ -55,6 +53,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
   }
 
   @Override public void insertCustomLicensesIntoMap() {
+    super.insertCustomLicensesIntoMap();
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
     Licenses.create("TapTargetView", "https://github.com/KeepSafe/TapTargetView",
@@ -63,7 +62,5 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
         "licenses/androidjob");
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
     Licenses.create("Dagger", "https://github.com/google/dagger", "licenses/dagger2");
-    RxLicenses.addLicenses();
-    UiLicenses.addLicenses();
   }
 }

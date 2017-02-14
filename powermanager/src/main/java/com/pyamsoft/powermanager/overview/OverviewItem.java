@@ -42,9 +42,9 @@ import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
+import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import java.util.List;
 import javax.inject.Inject;
 

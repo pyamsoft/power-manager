@@ -18,54 +18,51 @@ package com.pyamsoft.powermanager.sync.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import rx.Scheduler;
 
-@Module public class SyncCustomPreferenceModule {
+@Module public class SyncPreferenceModule {
 
   @Provides @Named("sync_custom_delay")
-  CustomTimeInputPreferencePresenter provideSyncCustomDelayPresenter(
-      @NonNull @Named("sync_custom_delay_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideSyncCustomDelayPresenter(
+      @NonNull @Named("sync_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_delay_interactor")
-  CustomTimeInputPreferenceInteractor provideSyncCustomDelayInteractor(
+  CustomTimePreferenceInteractor provideSyncCustomDelayInteractor(
       @NonNull PowerManagerPreferences preferences) {
     return new SyncDelayPreferenceInteractor(preferences);
   }
 
   @Provides @Named("sync_custom_enable")
-  CustomTimeInputPreferencePresenter provideSyncCustomEnablePresenter(
-      @NonNull @Named("sync_custom_enable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideSyncCustomEnablePresenter(
+      @NonNull @Named("sync_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_enable_interactor")
-  CustomTimeInputPreferenceInteractor provideSyncCustomEnableInteractor(
+  CustomTimePreferenceInteractor provideSyncCustomEnableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncEnableTimePreferenceInteractor(preferences);
+    return new SyncEnablePreferenceInteractor(preferences);
   }
 
   @Provides @Named("sync_custom_disable")
-  CustomTimeInputPreferencePresenter provideSyncCustomDisablePresenter(
-      @NonNull @Named("sync_custom_disable_interactor")
-          CustomTimeInputPreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+  CustomTimePreferencePresenter provideSyncCustomDisablePresenter(
+      @NonNull @Named("sync_custom_disable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimeInputPreferencePresenter(interactor, obsScheduler, subScheduler);
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("sync_custom_disable_interactor")
-  CustomTimeInputPreferenceInteractor provideSyncCustomDisableInteractor(
+  CustomTimePreferenceInteractor provideSyncCustomDisableInteractor(
       @NonNull PowerManagerPreferences preferences) {
-    return new SyncDisableTimePreferenceInteractor(preferences);
+    return new SyncDisablePreferenceInteractor(preferences);
   }
 }

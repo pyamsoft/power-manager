@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class WifiEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject SyncEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject WifiEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicEnableTimeSync(time);
+    preferences.setPeriodicEnableTimeWifi(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicEnableTimeSync();
+    return preferences.getPeriodicEnableTimeWifi();
   }
 }

@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.base.observer.state;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import dagger.Module;

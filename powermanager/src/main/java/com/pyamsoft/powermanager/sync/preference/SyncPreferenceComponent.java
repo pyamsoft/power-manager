@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.sync.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = SyncCustomPreferenceModule.class) public interface SyncPreferenceComponent {
+@Subcomponent(modules = SyncPreferenceModule.class) public interface SyncPreferenceComponent {
 
   void inject(SyncCustomTimePreference preference);
 }

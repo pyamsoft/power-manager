@@ -21,17 +21,18 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class DozeCustomTimePreference extends CustomTimeInputPreference {
 
   @SuppressWarnings("WeakerAccess") @Named("doze_custom_delay") @Inject
-  CustomTimeInputPreferencePresenter delayPresenter;
+  CustomTimePreferencePresenter delayPresenter;
   @SuppressWarnings("WeakerAccess") @Named("doze_custom_enable") @Inject
-  CustomTimeInputPreferencePresenter enablePresenter;
+  CustomTimePreferencePresenter enablePresenter;
   @SuppressWarnings("WeakerAccess") @Named("doze_custom_disable") @Inject
-  CustomTimeInputPreferencePresenter disablePresenter;
+  CustomTimePreferencePresenter disablePresenter;
 
   public DozeCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
       int defStyleRes) {
@@ -58,15 +59,15 @@ public class DozeCustomTimePreference extends CustomTimeInputPreference {
     Injector.get().provideComponent().plusDozePreferenceComponent().inject(this);
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter provideEnablePresenter() {
+  @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {
     return enablePresenter;
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDisablePresenter() {
+  @NonNull @Override protected CustomTimePreferencePresenter provideDisablePresenter() {
     return disablePresenter;
   }
 
-  @NonNull @Override protected CustomTimeInputPreferencePresenter provideDelayPresenter() {
+  @NonNull @Override protected CustomTimePreferencePresenter provideDelayPresenter() {
     return delayPresenter;
   }
 }

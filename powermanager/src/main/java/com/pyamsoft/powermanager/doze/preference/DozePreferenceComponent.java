@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.doze.preference;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = DozeCustomPreferenceModule.class) public interface DozePreferenceComponent {
+@Subcomponent(modules = DozePreferenceModule.class) public interface DozePreferenceComponent {
 
   void inject(DozeCustomTimePreference preference);
 }

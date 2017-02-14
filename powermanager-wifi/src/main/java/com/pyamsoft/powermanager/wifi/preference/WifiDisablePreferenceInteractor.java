@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneEnableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class WifiDisablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject AirplaneEnableTimePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject WifiDisablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicEnableTimeAirplane(time);
+    preferences.setPeriodicDisableTimeWifi(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicEnableTimeAirplane();
+    return preferences.getPeriodicDisableTimeWifi();
   }
 }

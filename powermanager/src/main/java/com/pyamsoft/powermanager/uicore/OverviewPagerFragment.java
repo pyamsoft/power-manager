@@ -32,9 +32,9 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import com.pyamsoft.pydroid.tool.AsyncDrawable;
 import com.pyamsoft.pydroid.tool.AsyncMap;
-import com.pyamsoft.pydroid.tool.AsyncMapHelper;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import timber.log.Timber;
 

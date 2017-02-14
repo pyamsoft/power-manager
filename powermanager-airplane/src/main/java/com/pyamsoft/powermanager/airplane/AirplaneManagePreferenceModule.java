@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
-import com.pyamsoft.powermanager.uicore.PermissionManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -36,7 +36,7 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new PermissionManagePreferencePresenter(interactor, obsScheduler, subScheduler,
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler,
         manageObserver, rootPermissionObserver);
   }
 

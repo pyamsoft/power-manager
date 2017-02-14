@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneDisableTimePreferenceInteractor extends CustomTimeInputPreferenceInteractor {
+class BluetoothDisablePreferenceInteractor extends CustomTimePreferenceInteractor {
 
-  @Inject AirplaneDisableTimePreferenceInteractor(
+  @Inject BluetoothDisablePreferenceInteractor(
       @NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
-    preferences.setPeriodicDisableTimeAirplane(time);
+    preferences.setPeriodicDisableTimeBluetooth(time);
   }
 
   @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
-    return preferences.getPeriodicDisableTimeAirplane();
+    return preferences.getPeriodicDisableTimeBluetooth();
   }
 }

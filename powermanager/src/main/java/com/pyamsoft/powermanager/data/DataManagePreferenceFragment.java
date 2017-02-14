@@ -22,14 +22,15 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
 public class DataManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @Inject @Named("data_manage_pref") ManagePreferencePresenter presenter;
   @NonNull private static final String TAG = "DataManagePreferenceFragment";
+  @Inject @Named("data_manage_pref") ManagePreferencePresenter presenter;
 
   @Override protected int getManageKeyResId() {
     return R.string.manage_data_key;

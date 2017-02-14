@@ -23,9 +23,9 @@ import com.google.auto.value.AutoValue;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
 
-  @NonNull private static final String EMPTY_NAME =
+  @NonNull public static final String EMPTY_NAME =
       PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
-  private static final int EMPTY_PERCENT = -1;
+  public static final int EMPTY_PERCENT = -1;
   @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
   public static final PowerTriggerEntry EMPTY =
       new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
