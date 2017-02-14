@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -27,7 +28,7 @@ import rx.Scheduler;
 
   @Provides OverviewItemPresenter provideOverviewItemPresenter(@Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new OverviewItemPresenterImpl(obsScheduler, subScheduler);
+    return new OverviewItemPresenter(obsScheduler, subScheduler);
   }
 
   @Provides OverviewPresenter provideOverviewPresenter(@NonNull OverviewInteractor interactor,
@@ -39,12 +40,11 @@ import rx.Scheduler;
       @Named("obs_airplane_manage") BooleanInterestObserver airplaneObserver,
       @Named("obs_doze_manage") BooleanInterestObserver dozeObserver,
       @Named("obs_wear_manage") BooleanInterestObserver wearObserver) {
-    return new OverviewPresenterImpl(interactor, obsScheduler, subScheduler, wifiObserver,
-        dataObserver, bluetoothObserver, syncObserver, airplaneObserver, dozeObserver,
-        wearObserver);
+    return new OverviewPresenter(interactor, obsScheduler, subScheduler, wifiObserver, dataObserver,
+        bluetoothObserver, syncObserver, airplaneObserver, dozeObserver, wearObserver);
   }
 
   @Provides OverviewInteractor provideInteractor(@NonNull PowerManagerPreferences preferences) {
-    return new OverviewInteractorImpl(preferences);
+    return new OverviewInteractor(preferences);
   }
 }

@@ -18,11 +18,25 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import rx.Observable;
 
-interface OverviewInteractor {
+class OverviewInteractor {
 
-  @CheckResult @NonNull Observable<Boolean> hasShownOnboarding();
+  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  void setShownOnboarding();
+  @Inject OverviewInteractor(@NonNull PowerManagerPreferences preferences) {
+    this.preferences = preferences;
+  }
+
+  @NonNull @CheckResult public Observable<Boolean> hasShownOnboarding() {
+    return Observable.fromCallable(preferences::isOverviewOnboardingShown)
+        .delay(1, TimeUnit.SECONDS);
+  }
+
+  public void setShownOnboarding() {
+    preferences.setOverviewOnboardingShown();
+  }
 }

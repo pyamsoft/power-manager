@@ -27,10 +27,10 @@ import rx.Scheduler;
 
   @Provides TriggerPresenter provideTriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
-    return new TriggerPresenterImpl(obsScheduler, subScheduler, interactor);
+    return new TriggerPresenter(obsScheduler, subScheduler, interactor);
   }
 
   @Provides TriggerInteractor provideTriggerInteractor(PowerTriggerDB powerTriggerDB) {
-    return new TriggerInteractorImpl(powerTriggerDB);
+    return new TriggerInteractor(powerTriggerDB);
   }
 }

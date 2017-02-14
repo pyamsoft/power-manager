@@ -18,27 +18,96 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import javax.inject.Inject;
+import rx.Scheduler;
+import rx.Subscription;
+import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
-interface OverviewPresenter extends Presenter<Presenter.Empty> {
+class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  void showOnBoarding(@NonNull OnboardingCallback callback);
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wifiObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver dataObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver bluetoothObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver syncObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver airplaneObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver dozeObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearObserver;
+  @NonNull private final OverviewInteractor interactor;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
+      Subscriptions.empty();
 
-  void setShownOnBoarding();
+  @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
+      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
+      @NonNull BooleanInterestObserver bluetoothObserver,
+      @NonNull BooleanInterestObserver syncObserver,
+      @NonNull BooleanInterestObserver airplaneObserver,
+      @NonNull BooleanInterestObserver dozeObserver,
+      @NonNull BooleanInterestObserver wearObserver) {
+    super(observeScheduler, subscribeScheduler);
+    this.interactor = interactor;
+    this.wifiObserver = wifiObserver;
+    this.dataObserver = dataObserver;
+    this.bluetoothObserver = bluetoothObserver;
+    this.syncObserver = syncObserver;
+    this.airplaneObserver = airplaneObserver;
+    this.dozeObserver = dozeObserver;
+    this.wearObserver = wearObserver;
+  }
 
-  void getWifiObserver(@NonNull ObserverRetrieveCallback callback);
+  @Override protected void onUnbind() {
+    super.onUnbind();
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+  }
 
-  void getDataObserver(@NonNull ObserverRetrieveCallback callback);
+  public void showOnBoarding(@NonNull OnboardingCallback callback) {
+    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = interactor.hasShownOnboarding()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(onboard -> {
+              if (!onboard) {
+                callback.onShowOnBoarding();
+              }
+            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
+            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
+  }
 
-  void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback);
+  public void setShownOnBoarding() {
+    interactor.setShownOnboarding();
+  }
 
-  void getSyncObserver(@NonNull ObserverRetrieveCallback callback);
+  public void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(wifiObserver);
+  }
 
-  void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback);
+  public void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(dataObserver);
+  }
 
-  void getDozeObserver(@NonNull ObserverRetrieveCallback callback);
+  public void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(bluetoothObserver);
+  }
 
-  void getWearObserver(@NonNull ObserverRetrieveCallback callback);
+  public void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(syncObserver);
+  }
+
+  public void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(airplaneObserver);
+  }
+
+  public void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(dozeObserver);
+  }
+
+  public void getWearObserver(@NonNull ObserverRetrieveCallback callback) {
+    callback.onObserverRetrieved(wearObserver);
+  }
 
   interface OnboardingCallback {
 
