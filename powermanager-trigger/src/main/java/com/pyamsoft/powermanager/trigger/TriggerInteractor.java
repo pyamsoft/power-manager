@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.helper.Locker;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,44 +31,32 @@ import timber.log.Timber;
 
 class TriggerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull static final Object lock = new Object();
+  @SuppressWarnings("WeakerAccess") @NonNull final Locker locker = Locker.newLock();
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @NonNull final Set<PowerTriggerEntry> powerTriggerEntryCached;
-  @SuppressWarnings("WeakerAccess") boolean refreshing;
 
   @Inject TriggerInteractor(@NonNull PowerTriggerDB powerTriggerDB) {
     this.powerTriggerDB = powerTriggerDB;
     powerTriggerEntryCached = new HashSet<>();
-    refreshing = false;
   }
 
   @CheckResult @NonNull public Observable<PowerTriggerEntry> queryAll() {
     return Observable.defer(() -> {
-      synchronized (lock) {
-        while (refreshing) {
-          // wait
-        }
-
-        refreshing = true;
-      }
-
+      locker.waitForUnlock();
       final Observable<PowerTriggerEntry> result;
       if (powerTriggerEntryCached.isEmpty()) {
+        locker.prepareLock();
         result = powerTriggerDB.queryAll()
             .first()
             .flatMap(Observable::from)
-            .doOnNext(powerTriggerEntryCached::add);
+            .doOnNext(powerTriggerEntryCached::add)
+            .doOnTerminate(locker::unlock)
+            .doOnUnsubscribe(locker::unlock);
       } else {
         result = Observable.from(powerTriggerEntryCached);
       }
 
-      return result.doOnUnsubscribe(() -> {
-        while (refreshing) {
-          synchronized (lock) {
-            refreshing = false;
-          }
-        }
-      });
+      return result;
     }).sorted((entry, entry2) -> {
       if (entry.percent() == entry2.percent()) {
         return 0;
