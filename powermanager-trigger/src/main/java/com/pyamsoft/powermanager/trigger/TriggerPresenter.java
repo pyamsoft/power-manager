@@ -56,8 +56,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
     viewSubscription = interactor.queryAll(false)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribeOn(getObserveScheduler())
-        .doOnTerminate(callback::onTriggerLoadFinished)
+        .doAfterTerminate(callback::onTriggerLoadFinished)
         .subscribe(callback::onTriggerLoaded, throwable -> {
           Timber.e(throwable, "onError");
         }, () -> SubscriptionHelper.unsubscribe(viewSubscription));
