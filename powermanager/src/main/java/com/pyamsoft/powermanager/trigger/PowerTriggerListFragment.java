@@ -52,8 +52,8 @@ public class PowerTriggerListFragment extends ActionBarFragment {
 
   @SuppressWarnings("WeakerAccess") FastItemAdapter<PowerTriggerListItem> adapter;
   boolean listIsRefreshed;
-  private RecyclerView.ItemDecoration dividerDecoration;
   FragmentPowertriggerBinding binding;
+  private RecyclerView.ItemDecoration dividerDecoration;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -152,7 +152,7 @@ public class PowerTriggerListFragment extends ActionBarFragment {
             loadListView();
           }
         }
-      });
+      }, false);
     }
   }
 

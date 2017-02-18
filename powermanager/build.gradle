@@ -147,8 +147,6 @@ dependencies {
   releaseCompile project(path: ":powermanager-main", configuration: "release")
   debugCompile project(path: ":powermanager-sync", configuration: "debug")
   releaseCompile project(path: ":powermanager-sync", configuration: "release")
-  debugCompile project(path: ":powermanager-trigger", configuration: "debug")
-  releaseCompile project(path: ":powermanager-trigger", configuration: "release")
   debugCompile project(path: ":powermanager-overview", configuration: "debug")
   releaseCompile project(path: ":powermanager-overview", configuration: "release")
   debugCompile project(path: ":powermanager-wear", configuration: "debug")

@@ -28,7 +28,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
 
-class TriggerInteractor {
+public class TriggerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @Nullable volatile Observable<List<PowerTriggerEntry>>
@@ -36,6 +36,10 @@ class TriggerInteractor {
 
   @Inject TriggerInteractor(@NonNull PowerTriggerDB powerTriggerDB) {
     this.powerTriggerDB = powerTriggerDB;
+  }
+
+  public void clearCached() {
+    cachedPowerTriggerEntryObservable = null;
   }
 
   @CheckResult @NonNull public Observable<PowerTriggerEntry> queryAll(boolean forceRefresh) {

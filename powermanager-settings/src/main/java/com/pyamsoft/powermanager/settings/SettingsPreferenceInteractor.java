@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import javax.inject.Inject;
 import rx.Observable;
 import timber.log.Timber;
@@ -30,13 +31,15 @@ class SettingsPreferenceInteractor {
   @SuppressWarnings("WeakerAccess") @NonNull final ShellCommandHelper shellCommandHelper;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
+  @NonNull final TriggerInteractor triggerInteractor;
 
   @Inject SettingsPreferenceInteractor(@NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull PowerManagerPreferences preferences,
-      @NonNull ShellCommandHelper shellCommandHelper) {
+      @NonNull PowerManagerPreferences preferences, @NonNull ShellCommandHelper shellCommandHelper,
+      @NonNull TriggerInteractor triggerInteractor) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
     this.shellCommandHelper = shellCommandHelper;
+    this.triggerInteractor = triggerInteractor;
   }
 
   @CheckResult @NonNull public Observable<Boolean> isRootEnabled() {
@@ -58,6 +61,7 @@ class SettingsPreferenceInteractor {
     }).map(result -> {
       Timber.d("Database is cleared: %s", result);
       powerTriggerDB.deleteDatabase();
+      triggerInteractor.clearCached();
 
       // TODO just return something valid
       return Boolean.TRUE;

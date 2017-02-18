@@ -69,7 +69,7 @@ dependencies {
   // Mockito for unit tests
   testCompile "org.mockito:mockito-core:$mockito"
 
-  debugCompile project(path: ":powermanager-base", configuration: "debug")
-  releaseCompile project(path: ":powermanager-base", configuration: "release")
+  debugCompile project(path: ":powermanager-trigger", configuration: "debug")
+  releaseCompile project(path: ":powermanager-trigger", configuration: "release")
 }
 

@@ -51,9 +51,9 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
         viewSubscription);
   }
 
-  public void loadTriggerView(@NonNull TriggerLoadCallback callback) {
+  public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
     SubscriptionHelper.unsubscribe(viewSubscription);
-    viewSubscription = interactor.queryAll(false)
+    viewSubscription = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onTriggerLoadFinished)
