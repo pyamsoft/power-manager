@@ -53,14 +53,13 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
     callback.onPrepareLogContentRetrieval();
     SubscriptionHelper.unsubscribe(logContenSubscription);
     logContenSubscription = interactor.getLogContents()
+        .doOnTerminate(callback::onAllLogContentsRetrieved)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onLogContentRetrieved,
             throwable -> Timber.e(throwable, "onError: Failed to retrieve log contents: %s",
-                interactor.getLogId()), () -> {
-              callback.onAllLogContentsRetrieved();
-              SubscriptionHelper.unsubscribe(logContenSubscription);
-            });
+                interactor.getLogId()),
+            () -> SubscriptionHelper.unsubscribe(logContenSubscription));
   }
 
   @Override protected void onUnbind() {
