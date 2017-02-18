@@ -16,16 +16,14 @@
 
 package com.pyamsoft.powermanager.trigger;
 
-import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import javax.inject.Singleton;
 
-@Module public class TriggerModule {
+@Module public class TriggerInteractorModule {
 
-  @Provides TriggerPresenter provideTriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
-    return new TriggerPresenter(obsScheduler, subScheduler, interactor);
+  @Singleton @Provides TriggerInteractor provideTriggerInteractor(PowerTriggerDB powerTriggerDB) {
+    return new TriggerInteractor(powerTriggerDB);
   }
 }

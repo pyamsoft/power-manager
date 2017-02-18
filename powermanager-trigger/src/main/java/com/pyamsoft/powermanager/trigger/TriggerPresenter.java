@@ -31,7 +31,6 @@ import timber.log.Timber;
 class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") boolean needsRefresh;
   @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
       Subscriptions.empty();
   @SuppressWarnings("WeakerAccess") @NonNull Subscription viewSubscription = Subscriptions.empty();
@@ -44,7 +43,6 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
       @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-    needsRefresh = true;
   }
 
   @Override protected void onUnbind() {
@@ -55,16 +53,14 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void loadTriggerView(@NonNull TriggerLoadCallback callback) {
     SubscriptionHelper.unsubscribe(viewSubscription);
-    viewSubscription = interactor.queryAll(needsRefresh)
-        .doOnTerminate(callback::onTriggerLoadFinished)
+    viewSubscription = interactor.queryAll(false)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .subscribeOn(getObserveScheduler())
+        .doOnTerminate(callback::onTriggerLoadFinished)
         .subscribe(callback::onTriggerLoaded, throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> {
-          needsRefresh = false;
-          SubscriptionHelper.unsubscribe(viewSubscription);
-        });
+        }, () -> SubscriptionHelper.unsubscribe(viewSubscription));
   }
 
   public void showNewTriggerDialog(@NonNull ShowTriggerDialogCallback callback) {
@@ -87,10 +83,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
             Timber.e("Issue creating trigger");
             callback.onNewTriggerCreateError();
           }
-        }, () -> {
-          needsRefresh = true;
-          SubscriptionHelper.unsubscribe(createSubscription);
-        });
+        }, () -> SubscriptionHelper.unsubscribe(createSubscription));
   }
 
   public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
@@ -100,10 +93,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
         .observeOn(getObserveScheduler())
         .subscribe(callback::onTriggerDeleted, throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> {
-          needsRefresh = true;
-          SubscriptionHelper.unsubscribe(deleteSubscription);
-        });
+        }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
   }
 
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
@@ -114,10 +104,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
         .observeOn(getObserveScheduler())
         .subscribe(result -> callback.updateViewHolder(position, result), throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> {
-          needsRefresh = true;
-          SubscriptionHelper.unsubscribe(updateSubscription);
-        });
+        }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
   }
 
   interface TriggerLoadCallback {

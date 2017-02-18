@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger;
+package com.pyamsoft.powermanager.logger;
 
-import android.support.annotation.NonNull;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import rx.Scheduler;
+import dagger.Subcomponent;
 
-@Module public class TriggerModule {
 
-  @Provides TriggerPresenter provideTriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
-      @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
-    return new TriggerPresenter(obsScheduler, subScheduler, interactor);
-  }
+@Subcomponent public interface LoggerComponent {
+  void inject(LoggerPreferenceFragment loggerPreferenceFragment);
 }

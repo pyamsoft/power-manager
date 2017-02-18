@@ -34,6 +34,7 @@ import com.pyamsoft.powermanager.data.DataScreenComponent;
 import com.pyamsoft.powermanager.data.preference.DataPreferenceComponent;
 import com.pyamsoft.powermanager.doze.DozeScreenComponent;
 import com.pyamsoft.powermanager.doze.preference.DozePreferenceComponent;
+import com.pyamsoft.powermanager.logger.LoggerComponent;
 import com.pyamsoft.powermanager.main.MainComponent;
 import com.pyamsoft.powermanager.manager.ManagerComponent;
 import com.pyamsoft.powermanager.overview.OverviewComponent;
@@ -43,6 +44,7 @@ import com.pyamsoft.powermanager.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.sync.preference.SyncPreferenceComponent;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.trigger.TriggerInteractorModule;
 import com.pyamsoft.powermanager.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.wifi.preference.WifiPreferenceComponent;
@@ -52,7 +54,8 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, ManageObserverModule.class,
-    PeriodicObserverModule.class, StateObserverModule.class, StateModifierModule.class
+    PeriodicObserverModule.class, StateObserverModule.class, StateModifierModule.class,
+    TriggerInteractorModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneScreenComponent plusAirplaneScreenComponent();
@@ -94,4 +97,6 @@ import javax.inject.Singleton;
   WearScreenComponent plusWearScreenComponent();
 
   TriggerComponent plusTriggerComponent();
+
+  LoggerComponent plusLoggerComponent();
 }

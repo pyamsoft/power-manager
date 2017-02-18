@@ -24,23 +24,25 @@ import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.View;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.base.logger.LoggerPresenter;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     implements LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
 
   @NonNull public static final String TAG = "LoggerPreferenceFragment";
-  @Inject LoggerPresenter loggerWifi;
-  @Inject LoggerPresenter loggerData;
-  @Inject LoggerPresenter loggerBluetooth;
-  @Inject LoggerPresenter loggerSync;
-  @Inject LoggerPresenter loggerAirplane;
-  @Inject LoggerPresenter loggerDoze;
-  @Inject LoggerPresenter loggerTrigger;
-  @Inject LoggerPresenter loggerManager;
+  @Inject @Named("logger_presenter_wifi") LoggerPresenter loggerWifi;
+  @Inject @Named("logger_presenter_data") LoggerPresenter loggerData;
+  @Inject @Named("logger_presenter_bluetooth") LoggerPresenter loggerBluetooth;
+  @Inject @Named("logger_presenter_sync") LoggerPresenter loggerSync;
+  @Inject @Named("logger_presenter_airplane") LoggerPresenter loggerAirplane;
+  @Inject @Named("logger_presenter_doze") LoggerPresenter loggerDoze;
+  @Inject @Named("logger_presenter_trigger") LoggerPresenter loggerTrigger;
+  @Inject @Named("logger_presenter_manager") LoggerPresenter loggerManager;
   @Nullable private Preference loggingEnabled;
 
   @Override public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -49,6 +51,7 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    Injector.get().provideComponent().plusLoggerComponent().inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
