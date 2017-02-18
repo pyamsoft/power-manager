@@ -34,6 +34,8 @@ import com.pyamsoft.powermanager.data.DataScreenComponent;
 import com.pyamsoft.powermanager.data.preference.DataPreferenceComponent;
 import com.pyamsoft.powermanager.doze.DozeScreenComponent;
 import com.pyamsoft.powermanager.doze.preference.DozePreferenceComponent;
+import com.pyamsoft.powermanager.job.JobComponent;
+import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerComponent;
 import com.pyamsoft.powermanager.main.MainComponent;
 import com.pyamsoft.powermanager.manager.ManagerComponent;
@@ -55,7 +57,7 @@ import javax.inject.Singleton;
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, ManageObserverModule.class,
     PeriodicObserverModule.class, StateObserverModule.class, StateModifierModule.class,
-    TriggerInteractorModule.class
+    TriggerInteractorModule.class, JobModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneScreenComponent plusAirplaneScreenComponent();
@@ -99,4 +101,6 @@ import javax.inject.Singleton;
   TriggerComponent plusTriggerComponent();
 
   LoggerComponent plusLoggerComponent();
+
+  JobComponent plusJobComponent();
 }

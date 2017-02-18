@@ -16,13 +16,10 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
 import dagger.Subcomponent;
 
-@Subcomponent(modules = {
-    ManagerModule.class, JobModule.class,
-}) public interface ManagerComponent {
+@Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
 
   void inject(ScreenOnOffReceiver receiver);
 }

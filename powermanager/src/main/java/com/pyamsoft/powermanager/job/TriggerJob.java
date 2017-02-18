@@ -21,9 +21,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.evernote.android.job.Job;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
@@ -32,41 +32,42 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
-class TriggerJob extends Job {
+public class TriggerJob extends Job {
 
-  @SuppressWarnings("WeakerAccess") final PowerTriggerDB powerTriggerDB;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestObserver chargingObserver;
-  @SuppressWarnings("WeakerAccess") final Logger logger;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestObserver wifiObserver;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestObserver dataObserver;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestObserver bluetoothObserver;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestObserver syncObserver;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestModifier wifiModifier;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestModifier dataModifier;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestModifier bluetoothModifier;
-  @SuppressWarnings("WeakerAccess") final BooleanInterestModifier syncModifier;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription runSubscription;
+  @SuppressWarnings("WeakerAccess") @Inject PowerTriggerDB powerTriggerDB;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") BooleanInterestObserver
+      chargingObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") BooleanInterestObserver
+      wifiObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") BooleanInterestObserver
+      dataObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") BooleanInterestObserver
+      bluetoothObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") BooleanInterestObserver
+      syncObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") BooleanInterestModifier
+      wifiModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") BooleanInterestModifier
+      dataModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_bluetooth_state") BooleanInterestModifier
+      bluetoothModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") BooleanInterestModifier
+      syncModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("sub") Scheduler subScheduler;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs") Scheduler obsScheduler;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
 
-  TriggerJob(PowerTriggerDB powerTriggerDB, BooleanInterestObserver chargingObserver, Logger logger,
-      BooleanInterestObserver wifiObserver, BooleanInterestObserver dataObserver,
-      BooleanInterestObserver bluetoothObserver, BooleanInterestObserver syncObserver,
-      BooleanInterestModifier wifiModifier, BooleanInterestModifier dataModifier,
-      BooleanInterestModifier bluetoothModifier, BooleanInterestModifier syncModifier) {
-    this.powerTriggerDB = powerTriggerDB;
-    this.chargingObserver = chargingObserver;
-    this.logger = logger;
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.wifiModifier = wifiModifier;
-    this.dataModifier = dataModifier;
-    this.bluetoothModifier = bluetoothModifier;
-    this.syncModifier = syncModifier;
+  public TriggerJob() {
+    Injector.get().provideComponent().plusJobComponent().inject(this);
   }
 
   private void runTriggerForPercent(int percent) {
@@ -161,17 +162,19 @@ class TriggerJob extends Job {
       });
     }
 
-    SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = powerTriggerEntryObservable.subscribe(entry -> {
-          if (chargingObserver.is()) {
-            Timber.w("Do not run Trigger because device is charging");
-          } else if (PowerTriggerEntry.isEmpty(entry)) {
-            Timber.w("Do not run Trigger because entry specified is EMPTY");
-          } else {
-            onTriggerRun(getContext(), entry);
-          }
-        }, throwable -> Timber.e(throwable, "onError"),
-        () -> SubscriptionHelper.unsubscribe(runSubscription));
+    runSubscription = SubscriptionHelper.unsubscribe(runSubscription);
+    runSubscription = powerTriggerEntryObservable.subscribeOn(subScheduler)
+        .observeOn(obsScheduler)
+        .subscribe(entry -> {
+              if (chargingObserver.is()) {
+                Timber.w("Do not run Trigger because device is charging");
+              } else if (PowerTriggerEntry.isEmpty(entry)) {
+                Timber.w("Do not run Trigger because entry specified is EMPTY");
+              } else {
+                onTriggerRun(getContext(), entry);
+              }
+            }, throwable -> Timber.e(throwable, "onError"),
+            () -> runSubscription = SubscriptionHelper.unsubscribe(runSubscription));
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull Context context,

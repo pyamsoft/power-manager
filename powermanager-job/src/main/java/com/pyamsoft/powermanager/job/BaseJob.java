@@ -27,7 +27,7 @@ import com.pyamsoft.powermanager.model.QueuerType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-abstract class BaseJob {
+public abstract class BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") BooleanInterestObserver
@@ -140,11 +140,11 @@ abstract class BaseJob {
     return false;
   }
 
+  abstract void inject();
+
   @CheckResult @NonNull abstract Logger getLogger();
 
   @CheckResult @NonNull abstract BooleanInterestObserver getObserver();
 
   @CheckResult @NonNull abstract BooleanInterestModifier getModifier();
-
-  abstract void inject();
 }

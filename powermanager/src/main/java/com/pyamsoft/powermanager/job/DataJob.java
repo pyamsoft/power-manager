@@ -18,21 +18,23 @@ package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-class DataJob extends BaseJob {
+public class DataJob extends BaseJob {
 
-  @NonNull private final Logger logger;
-  @NonNull private final BooleanInterestObserver stateObserver;
-  @NonNull private final BooleanInterestModifier stateModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("logger_data") Logger logger;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") BooleanInterestObserver
+      stateObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") BooleanInterestModifier
+      stateModifier;
 
-  DataJob(@NonNull Logger logger, @NonNull BooleanInterestObserver stateObserver,
-      @NonNull BooleanInterestModifier stateModifier) {
-    this.logger = logger;
-    this.stateObserver = stateObserver;
-    this.stateModifier = stateModifier;
+  @Override void inject() {
+    Injector.get().provideComponent().plusJobComponent().inject(this);
   }
 
   @NonNull @Override Logger getLogger() {
@@ -47,24 +49,10 @@ class DataJob extends BaseJob {
     return stateModifier;
   }
 
-  @Override void inject() {
-  }
-
-  static class ManagedJob extends Job {
-
-    @NonNull private final Logger logger;
-    @NonNull private final BooleanInterestObserver stateObserver;
-    @NonNull private final BooleanInterestModifier stateModifier;
-
-    ManagedJob(@NonNull Logger logger, @NonNull BooleanInterestObserver stateObserver,
-        @NonNull BooleanInterestModifier stateModifier) {
-      this.logger = logger;
-      this.stateObserver = stateObserver;
-      this.stateModifier = stateModifier;
-    }
+  public static class ManagedJob extends Job {
 
     @NonNull @Override protected Result onRunJob(Params params) {
-      new DataJob(logger, stateObserver, stateModifier) {
+      new DataJob() {
         @Override boolean isStopped() {
           return isCanceled();
         }

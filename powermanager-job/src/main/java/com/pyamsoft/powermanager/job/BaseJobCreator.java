@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.service;
+package com.pyamsoft.powermanager.job;
 
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
-@Subcomponent(modules = ForegroundModule.class) public interface ForegroundServiceComponent {
+public interface BaseJobCreator {
 
-  void inject(ForegroundService service);
+  @NonNull @CheckResult BaseJob create(@NonNull String tag);
 }

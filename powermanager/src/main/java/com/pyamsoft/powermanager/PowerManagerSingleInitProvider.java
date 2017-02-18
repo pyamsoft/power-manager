@@ -19,8 +19,19 @@ package com.pyamsoft.powermanager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.evernote.android.job.Job;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
+import com.pyamsoft.powermanager.job.AirplaneJob;
+import com.pyamsoft.powermanager.job.BaseJob;
+import com.pyamsoft.powermanager.job.BluetoothJob;
+import com.pyamsoft.powermanager.job.DataJob;
+import com.pyamsoft.powermanager.job.DozeJob;
+import com.pyamsoft.powermanager.job.JobModule;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.job.SyncJob;
+import com.pyamsoft.powermanager.job.TriggerJob;
+import com.pyamsoft.powermanager.job.WifiJob;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
@@ -41,8 +52,64 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
   @Override protected void onInstanceCreated(@NonNull Context context) {
     final PowerManagerModule module =
         new PowerManagerModule(context, MainActivity.class, ActionToggleService.class);
-    final PowerManagerComponent component =
-        DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
+    final JobModule jobModule = new JobModule(tag -> {
+      BaseJob job;
+      switch (tag) {
+        case JobQueuer.AIRPLANE_JOB_TAG:
+          job = new AirplaneJob();
+          break;
+        case JobQueuer.BLUETOOTH_JOB_TAG:
+          job = new BluetoothJob();
+          break;
+        case JobQueuer.DATA_JOB_TAG:
+          job = new DataJob();
+          break;
+        case JobQueuer.WIFI_JOB_TAG:
+          job = new WifiJob();
+          break;
+        case JobQueuer.SYNC_JOB_TAG:
+          job = new SyncJob();
+          break;
+        case JobQueuer.DOZE_JOB_TAG:
+          job = new DozeJob();
+          break;
+        default:
+          throw new IllegalArgumentException("Cannot create BaseJob for tag: " + tag);
+      }
+      return job;
+    }, tag -> {
+      Job job;
+      switch (tag) {
+        case JobQueuer.AIRPLANE_JOB_TAG:
+          job = new AirplaneJob.ManagedJob();
+          break;
+        case JobQueuer.BLUETOOTH_JOB_TAG:
+          job = new BluetoothJob.ManagedJob();
+          break;
+        case JobQueuer.DATA_JOB_TAG:
+          job = new DataJob.ManagedJob();
+          break;
+        case JobQueuer.WIFI_JOB_TAG:
+          job = new WifiJob.ManagedJob();
+          break;
+        case JobQueuer.SYNC_JOB_TAG:
+          job = new SyncJob.ManagedJob();
+          break;
+        case JobQueuer.DOZE_JOB_TAG:
+          job = new DozeJob.ManagedJob();
+          break;
+        case JobQueuer.TRIGGER_JOB_TAG:
+          job = new TriggerJob();
+          break;
+        default:
+          throw new IllegalArgumentException("Cannot create Managed Job for tag: " + tag);
+      }
+      return job;
+    });
+    final PowerManagerComponent component = DaggerPowerManagerComponent.builder()
+        .powerManagerModule(module)
+        .jobModule(jobModule)
+        .build();
     Injector.set(component);
 
     ForegroundService.start(context);

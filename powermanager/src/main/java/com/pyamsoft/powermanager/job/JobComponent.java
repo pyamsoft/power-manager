@@ -14,11 +14,23 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.service;
+package com.pyamsoft.powermanager.job;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = ForegroundModule.class) public interface ForegroundServiceComponent {
+@Subcomponent public interface JobComponent {
 
-  void inject(ForegroundService service);
+  void inject(AirplaneJob airplaneJob);
+
+  void inject(BluetoothJob bluetoothJob);
+
+  void inject(DataJob dataJob);
+
+  void inject(DozeJob dozeJob);
+
+  void inject(SyncJob syncJob);
+
+  void inject(TriggerJob job);
+
+  void inject(WifiJob wifiJob);
 }
