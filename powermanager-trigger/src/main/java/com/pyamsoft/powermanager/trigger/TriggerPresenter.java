@@ -44,7 +44,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
       @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-    needsRefresh = false;
+    needsRefresh = true;
   }
 
   @Override protected void onUnbind() {
