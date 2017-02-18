@@ -36,12 +36,9 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final CompositeSubscription logSubscriptions =
       new CompositeSubscription();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription logContenSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription clearLogSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteLogSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription logContenSubscription = Subscriptions.empty();
+  @NonNull private Subscription clearLogSubscription = Subscriptions.empty();
+  @NonNull private Subscription deleteLogSubscription = Subscriptions.empty();
 
   @Inject LoggerPresenter(@NonNull LoggerInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -51,22 +48,19 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void retrieveLogContents(@NonNull LogCallback callback) {
     callback.onPrepareLogContentRetrieval();
-    SubscriptionHelper.unsubscribe(logContenSubscription);
+    logContenSubscription = SubscriptionHelper.unsubscribe(logContenSubscription);
     logContenSubscription = interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onAllLogContentsRetrieved)
         .subscribe(callback::onLogContentRetrieved,
             throwable -> Timber.e(throwable, "onError: Failed to retrieve log contents: %s",
-                interactor.getLogId()),
-            () -> SubscriptionHelper.unsubscribe(logContenSubscription));
+                interactor.getLogId()));
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    logSubscriptions.clear();
-    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,
-        deleteLogSubscription);
+    clearLogs();
   }
 
   public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
@@ -85,31 +79,33 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void queueClearLogSubscription() {
-    SubscriptionHelper.unsubscribe(clearLogSubscription);
+    clearLogSubscription = SubscriptionHelper.unsubscribe(clearLogSubscription);
     clearLogSubscription = Observable.just(Boolean.TRUE)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> logSubscriptions.clear(),
-            throwable -> Timber.e(throwable, "onError clearing composite subscription"),
-            () -> SubscriptionHelper.unsubscribe(clearLogSubscription));
+            throwable -> Timber.e(throwable, "onError clearing composite subscription"));
   }
 
   public void deleteLog(@NonNull DeleteCallback callback) {
     // Stop everything before we delete the log
-    logSubscriptions.clear();
-    SubscriptionHelper.unsubscribe(logContenSubscription, clearLogSubscription,
-        deleteLogSubscription);
-
+    clearLogs();
     deleteLogSubscription = interactor.deleteLog()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(deleted -> {
-              if (deleted) {
-                callback.onLogDeleted(interactor.getLogId());
-              }
-            }, throwable -> Timber.e(throwable, "onError deleteLog"),
-            () -> SubscriptionHelper.unsubscribe(deleteLogSubscription));
+          if (deleted) {
+            callback.onLogDeleted(interactor.getLogId());
+          }
+        }, throwable -> Timber.e(throwable, "onError deleteLog"), this::clearLogs);
+  }
+
+  @SuppressWarnings("WeakerAccess") void clearLogs() {
+    logSubscriptions.clear();
+    logContenSubscription = SubscriptionHelper.unsubscribe(logContenSubscription);
+    clearLogSubscription = SubscriptionHelper.unsubscribe(clearLogSubscription);
+    deleteLogSubscription = SubscriptionHelper.unsubscribe(deleteLogSubscription);
   }
 
   public interface DeleteCallback {

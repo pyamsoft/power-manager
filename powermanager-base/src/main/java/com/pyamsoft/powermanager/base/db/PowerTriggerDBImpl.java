@@ -21,7 +21,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
@@ -33,13 +32,15 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
-  @SuppressWarnings("WeakerAccess") @Nullable volatile Subscription dbOpenSubscription;
+  @SuppressWarnings("WeakerAccess") @NonNull Subscription dbOpenSubscription =
+      Subscriptions.empty();
 
   @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
     openHelper = new PowerTriggerOpenHelper(context);
@@ -47,15 +48,14 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    SubscriptionHelper.unsubscribe(dbOpenSubscription);
+    dbOpenSubscription = SubscriptionHelper.unsubscribe(dbOpenSubscription);
 
     // After a 1 minute timeout, close the DB
     dbOpenSubscription =
         Observable.defer(() -> Observable.timer(1, TimeUnit.MINUTES)).subscribe(aLong -> {
-              Timber.w("PowerTriggerDB is closed");
-              briteDatabase.close();
-            }, throwable -> Timber.e(throwable, "onError closing database"),
-            () -> SubscriptionHelper.unsubscribe(dbOpenSubscription));
+          Timber.w("PowerTriggerDB is closed");
+          briteDatabase.close();
+        }, throwable -> Timber.e(throwable, "onError closing database"));
   }
 
   @Override @CheckResult @NonNull public Observable<Long> insert(@NonNull PowerTriggerEntry entry) {
@@ -127,7 +127,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.fromCallable(() -> {
       Timber.i("DB: DELETE ALL");
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
-      SubscriptionHelper.unsubscribe(dbOpenSubscription);
+      dbOpenSubscription = SubscriptionHelper.unsubscribe(dbOpenSubscription);
       briteDatabase.close();
       deleteDatabase();
       return 1;

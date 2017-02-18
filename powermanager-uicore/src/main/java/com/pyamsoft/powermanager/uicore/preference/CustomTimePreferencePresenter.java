@@ -34,19 +34,17 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimePreferenceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription customTimeSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
 
-  @Inject public CustomTimePreferencePresenter(
-      @Nullable CustomTimePreferenceInteractor interactor, @NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler) {
+  @Inject public CustomTimePreferencePresenter(@Nullable CustomTimePreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(customTimeSubscription);
+    customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
   }
 
   public void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
@@ -78,7 +76,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
       // Set the time to a max of 30 minutes
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
 
-      SubscriptionHelper.unsubscribe(customTimeSubscription);
+      customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.saveTime(longTime, delay)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
@@ -91,7 +89,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
             if (updateView) {
               callback.onCustomTimeError();
             }
-          }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
+          });
     } else {
       Timber.e("NULL interactor");
     }
@@ -99,14 +97,14 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   public void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
-      SubscriptionHelper.unsubscribe(customTimeSubscription);
+      customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
       customTimeSubscription = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(callback::onCustomTimeUpdate, throwable -> {
             Timber.e(throwable, "onError updateCustomTime");
             callback.onCustomTimeError();
-          }, () -> SubscriptionHelper.unsubscribe(customTimeSubscription));
+          });
     } else {
       Timber.e("NULL interactor");
     }

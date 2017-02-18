@@ -24,15 +24,16 @@ import com.pyamsoft.pydroid.helper.SchedulerHelper;
 import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
   @NonNull private final Scheduler scheduler;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription cancelSubscription;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription setSubscription;
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription unsetSubscription;
+  @NonNull private Subscription cancelSubscription = Subscriptions.empty();
+  @NonNull private Subscription setSubscription = Subscriptions.empty();
+  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
 
   Manager(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
     this.interactor = interactor;
@@ -45,19 +46,16 @@ public class Manager {
   }
 
   public void cancel(@NonNull Runnable onCancel) {
-    SubscriptionHelper.unsubscribe(cancelSubscription);
+    cancelSubscription = SubscriptionHelper.unsubscribe(cancelSubscription);
     cancelSubscription = interactor.cancelJobs()
         .subscribeOn(getScheduler())
         .observeOn(getScheduler())
         .subscribe(cancelled -> Timber.d("Job cancelled: %s", interactor.getJobTag()),
-            throwable -> Timber.e(throwable, "onError cancelling manager"), () -> {
-              SubscriptionHelper.unsubscribe(cancelSubscription);
-              onCancel.run();
-            });
+            throwable -> Timber.e(throwable, "onError cancelling manager"), onCancel::run);
   }
 
   public void queueSet(@Nullable Runnable onSet) {
-    SubscriptionHelper.unsubscribe(setSubscription);
+    setSubscription = SubscriptionHelper.unsubscribe(setSubscription);
     setSubscription = interactor.queueSet()
         .subscribeOn(scheduler)
         .observeOn(scheduler)
@@ -71,12 +69,11 @@ public class Manager {
           if (onSet != null) {
             onSet.run();
           }
-          SubscriptionHelper.unsubscribe(setSubscription);
         });
   }
 
   public void queueUnset(@Nullable Runnable onUnset) {
-    SubscriptionHelper.unsubscribe(unsetSubscription);
+    unsetSubscription = SubscriptionHelper.unsubscribe(unsetSubscription);
     unsetSubscription = interactor.queueUnset().
         subscribeOn(scheduler).observeOn(scheduler).subscribe(shouldQueue -> {
       // Only queue a disable job if the radio is not ignored
@@ -87,13 +84,14 @@ public class Manager {
       if (onUnset != null) {
         onUnset.run();
       }
-      SubscriptionHelper.unsubscribe(unsetSubscription);
     });
   }
 
   @CallSuper public void cleanup() {
     interactor.destroy();
-    SubscriptionHelper.unsubscribe(cancelSubscription, setSubscription, unsetSubscription);
+    cancelSubscription = SubscriptionHelper.unsubscribe(cancelSubscription);
+    setSubscription = SubscriptionHelper.unsubscribe(setSubscription);
+    unsetSubscription = SubscriptionHelper.unsubscribe(unsetSubscription);
 
     // Reset the device back to its original state when the Service is cleaned up
     queueSet(null);

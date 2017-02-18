@@ -28,8 +28,8 @@ import timber.log.Timber;
 
 class ActionTogglePresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final ActionToggleInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
+  @NonNull private final ActionToggleInteractor interactor;
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
   @Inject ActionTogglePresenter(@NonNull ActionToggleInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -39,17 +39,16 @@ class ActionTogglePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
   }
 
   public void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
     subscription = interactor.toggleEnabledState()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onForegroundStateToggled,
-            throwable -> Timber.e(throwable, "onError toggleForegroundState"),
-            () -> SubscriptionHelper.unsubscribe(subscription));
+            throwable -> Timber.e(throwable, "onError toggleForegroundState"));
   }
 
   public interface ForegroundStateCallback {

@@ -35,8 +35,9 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
 import java.util.List;
@@ -46,7 +47,7 @@ import timber.log.Timber;
 public class PowerTriggerListFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
-  @NonNull private final AsyncDrawable.Mapper drawableMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncMap drawableMap = new AsyncMap();
 
   @SuppressWarnings("WeakerAccess") @Inject TriggerPresenter presenter;
 
@@ -178,7 +179,7 @@ public class PowerTriggerListFragment extends ActionBarFragment {
   }
 
   private void setupFab() {
-    final AsyncMap.Entry subscription = AsyncDrawable.load(R.drawable.ic_add_24dp)
+    final AsyncMapEntry subscription = AsyncDrawable.load(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
         .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);

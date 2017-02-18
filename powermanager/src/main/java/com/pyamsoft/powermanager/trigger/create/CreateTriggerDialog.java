@@ -31,14 +31,15 @@ import android.view.WindowManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
-  @NonNull private final AsyncDrawable.Mapper taskMap = new AsyncDrawable.Mapper();
+  @NonNull private final AsyncMap taskMap = new AsyncMap();
   @SuppressWarnings("WeakerAccess") DialogNewTriggerBinding binding;
   private CreateTriggerPagerAdapter adapter;
   private ViewPager.OnPageChangeListener pageChangeListener;
@@ -136,7 +137,7 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final AsyncMap.Entry continueTask =
+    final AsyncMapEntry continueTask =
         AsyncDrawable.load(R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
   }
@@ -152,11 +153,11 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final AsyncMap.Entry backTask =
+    final AsyncMapEntry backTask =
         AsyncDrawable.load(R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
-    final AsyncMap.Entry closeTask =
+    final AsyncMapEntry closeTask =
         AsyncDrawable.load(R.drawable.ic_close_24dp).into(binding.newTriggerClose);
     taskMap.put("close", closeTask);
   }

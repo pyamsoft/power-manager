@@ -31,11 +31,9 @@ import timber.log.Timber;
 public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription permissionSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription permissionSubscription = Subscriptions.empty();
 
-  @Inject
-  public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
+  @Inject public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
       @NonNull InterestObserver manageObserver, @NonNull PermissionObserver permissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
@@ -44,22 +42,21 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(permissionSubscription);
+    permissionSubscription = SubscriptionHelper.unsubscribe(permissionSubscription);
   }
 
   @CallSuper @Override
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
-    SubscriptionHelper.unsubscribe(permissionSubscription);
-    permissionSubscription =
-        Observable.defer(() -> Observable.just(permissionObserver.hasPermission()))
-            .subscribeOn(getSubscribeScheduler())
-            .observeOn(getObserveScheduler())
-            .subscribe(hasPermission -> {
-              Timber.d("Permission granted? %s", hasPermission);
-              callback.onManagePermissionCallback(hasPermission);
-            }, throwable -> {
-              Timber.e(throwable, "onError checkManagePermission");
-              callback.onManagePermissionCallback(false);
-            }, () -> SubscriptionHelper.unsubscribe(permissionSubscription));
+    permissionSubscription = SubscriptionHelper.unsubscribe(permissionSubscription);
+    permissionSubscription = Observable.fromCallable(permissionObserver::hasPermission)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+          Timber.d("Permission granted? %s", hasPermission);
+          callback.onManagePermissionCallback(hasPermission);
+        }, throwable -> {
+          Timber.e(throwable, "onError checkManagePermission");
+          callback.onManagePermissionCallback(false);
+        });
   }
 }

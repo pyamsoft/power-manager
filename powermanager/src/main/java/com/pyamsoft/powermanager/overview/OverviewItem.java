@@ -42,9 +42,10 @@ import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wear.WearFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -141,8 +142,8 @@ public class OverviewItem
 
     @NonNull final AdapterItemOverviewBinding binding;
     @Inject OverviewItemPresenter presenter;
-    @Nullable AsyncMap.Entry checkTask;
-    @Nullable private AsyncMap.Entry titleTask;
+    @NonNull AsyncMapEntry checkTask = AsyncMap.emptyEntry();
+    @NonNull private AsyncMapEntry titleTask = AsyncMap.emptyEntry();
 
     ViewHolder(View itemView) {
       super(itemView);
@@ -161,7 +162,7 @@ public class OverviewItem
           ContextCompat.getColor(itemView.getContext(), model.background()));
       binding.adapterItemOverviewTitle.setText(model.title());
 
-      AsyncMapHelper.unsubscribe(titleTask);
+      titleTask = AsyncMapHelper.unsubscribe(titleTask);
       titleTask = AsyncDrawable.load(model.image())
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
@@ -169,7 +170,7 @@ public class OverviewItem
       presenter.decideManageState(model.observer(),
           new OverviewItemPresenter.ManageStateCallback() {
             @Override public void onManageStateDecided(@DrawableRes int icon) {
-              AsyncMapHelper.unsubscribe(checkTask);
+              checkTask = AsyncMapHelper.unsubscribe(checkTask);
               checkTask = AsyncDrawable.load(icon)
                   .tint(android.R.color.white)
                   .into(binding.adapterItemOverviewCheck);
@@ -182,7 +183,8 @@ public class OverviewItem
     }
 
     void unbind() {
-      AsyncMapHelper.unsubscribe(checkTask, titleTask);
+      checkTask = AsyncMapHelper.unsubscribe(checkTask);
+      titleTask = AsyncMapHelper.unsubscribe(titleTask);
       binding.adapterItemOverviewImage.setImageDrawable(null);
       binding.adapterItemOverviewTitle.setText(null);
 

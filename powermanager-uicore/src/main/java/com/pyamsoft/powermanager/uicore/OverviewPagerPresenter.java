@@ -32,7 +32,7 @@ import timber.log.Timber;
 public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
+  @NonNull private Subscription subscription = Subscriptions.empty();
 
   @Inject public OverviewPagerPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
@@ -42,25 +42,23 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
   }
 
   public void wrapSet() {
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
-        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"),
-            () -> SubscriptionHelper.unsubscribe(subscription));
+        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"));
   }
 
   public void wrapUnset() {
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
         .subscribe(ignore -> modifier.unset(),
-            throwable -> Timber.e(throwable, "onError wrapUnset"),
-            () -> SubscriptionHelper.unsubscribe(subscription));
+            throwable -> Timber.e(throwable, "onError wrapUnset"));
   }
 }

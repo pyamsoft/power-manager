@@ -27,11 +27,12 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
+import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription iconSubscription;
+  @NonNull private Subscription iconSubscription = Subscriptions.empty();
 
   @Inject OverviewItemPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -40,12 +41,12 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(iconSubscription);
+    iconSubscription = SubscriptionHelper.unsubscribe(iconSubscription);
   }
 
   public void decideManageState(@Nullable BooleanInterestObserver observer,
       @NonNull ManageStateCallback callback) {
-    SubscriptionHelper.unsubscribe(iconSubscription);
+    iconSubscription = SubscriptionHelper.unsubscribe(iconSubscription);
     iconSubscription = Observable.fromCallable(() -> {
       @DrawableRes final int icon;
       if (observer == null) {
@@ -59,13 +60,12 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
       }
       return icon;
     }).subscribeOn(getSubscribeScheduler()).observeOn(getObserveScheduler()).subscribe(icon -> {
-          if (icon == 0) {
-            callback.onManageStateNone();
-          } else {
-            callback.onManageStateDecided(icon);
-          }
-        }, throwable -> Timber.e(throwable, "onError"),
-        () -> SubscriptionHelper.unsubscribe(iconSubscription));
+      if (icon == 0) {
+        callback.onManageStateNone();
+      } else {
+        callback.onManageStateDecided(icon);
+      }
+    }, throwable -> Timber.e(throwable, "onError"));
   }
 
   interface ManageStateCallback {

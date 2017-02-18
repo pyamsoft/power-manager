@@ -31,12 +31,10 @@ import timber.log.Timber;
 public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empty>
     implements OnboardingPresenter {
 
-  @SuppressWarnings("WeakerAccess") @NonNull static final String OBS_TAG =
-      "BasePeriodPreferencePresenter";
-  @SuppressWarnings("WeakerAccess") @NonNull final InterestObserver observer;
+  @NonNull private static final String OBS_TAG = "PeriodPreferencePresenter";
+  @NonNull private final InterestObserver observer;
   @NonNull private final PeriodPreferenceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
 
   @Inject public PeriodPreferencePresenter(@NonNull PeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -49,7 +47,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
     observer.unregister(OBS_TAG);
-    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
   public void registerObserver(@NonNull PeriodicCallback callback) {
@@ -61,20 +59,19 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   }
 
   @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
-    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
-              if (!onboard) {
-                callback.onShowOnboarding();
-              }
-            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
-            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
+          if (!onboard) {
+            callback.onShowOnboarding();
+          }
+        }, throwable -> Timber.e(throwable, "onError onShowOnboarding"));
   }
 
   @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
-    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
     callback.onDismissOnboarding();
   }
 

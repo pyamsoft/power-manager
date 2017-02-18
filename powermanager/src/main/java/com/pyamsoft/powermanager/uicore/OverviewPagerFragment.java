@@ -32,9 +32,10 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.drawable.AsyncDrawable;
+import com.pyamsoft.pydroid.drawable.AsyncMap;
+import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
-import com.pyamsoft.pydroid.tool.AsyncDrawable;
-import com.pyamsoft.pydroid.tool.AsyncMap;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import timber.log.Timber;
 
@@ -48,7 +49,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   private FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
-  @Nullable private AsyncMap.Entry subscription;
+  @NonNull private AsyncMapEntry subscription = AsyncMap.emptyEntry();
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -68,7 +69,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
     super.onDestroyView();
     removeTabLayout();
     setActionBarUpEnabled(false);
-    AsyncMapHelper.unsubscribe(subscription);
+    subscription = AsyncMapHelper.unsubscribe(subscription);
     binding.unbind();
   }
 
@@ -192,7 +193,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
       Timber.w("Icon is 0, hiding FAB");
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
-      AsyncMapHelper.unsubscribe(subscription);
+      subscription = AsyncMapHelper.unsubscribe(subscription);
       subscription = AsyncDrawable.load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);

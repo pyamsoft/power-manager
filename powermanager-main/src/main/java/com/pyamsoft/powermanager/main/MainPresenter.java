@@ -32,8 +32,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription subscription = Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
+  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Subscription rootSubscription = Subscriptions.empty();
 
   @Inject MainPresenter(@NonNull MainInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull PermissionObserver rootPermissionObserver) {
@@ -44,7 +44,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(subscription, rootSubscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
+    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
   }
 
   public void runStartupHooks(@NonNull StartupCallback callback) {
@@ -53,31 +54,28 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void startServiceWhenOpen(@NonNull StartupCallback callback) {
-    SubscriptionHelper.unsubscribe(subscription);
+    subscription = SubscriptionHelper.unsubscribe(subscription);
     subscription = interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(start -> {
-              if (start) {
-                callback.onServiceEnabledWhenOpen();
-              }
-            }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"),
-            () -> SubscriptionHelper.unsubscribe(subscription));
+          if (start) {
+            callback.onServiceEnabledWhenOpen();
+          }
+        }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"));
   }
 
   private void checkForRoot(@NonNull StartupCallback callback) {
-    SubscriptionHelper.unsubscribe(rootSubscription);
-    rootSubscription =
-        Observable.defer(() -> Observable.just(rootPermissionObserver.hasPermission()))
-            .subscribeOn(getSubscribeScheduler())
-            .observeOn(getObserveScheduler())
-            .subscribe(hasPermission -> {
-                  if (!hasPermission) {
-                    interactor.missingRootPermission();
-                    callback.explainRootRequirement();
-                  }
-                }, throwable -> Timber.e(throwable, "onError checking root permission"),
-                () -> SubscriptionHelper.unsubscribe(rootSubscription));
+    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
+    rootSubscription = Observable.fromCallable(rootPermissionObserver::hasPermission)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(hasPermission -> {
+          if (!hasPermission) {
+            interactor.missingRootPermission();
+            callback.explainRootRequirement();
+          }
+        }, throwable -> Timber.e(throwable, "onError checking root permission"));
   }
 
   interface StartupCallback {

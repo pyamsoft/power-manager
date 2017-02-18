@@ -23,7 +23,6 @@ import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import javax.inject.Inject;
-import javax.inject.Named;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscription;
@@ -33,19 +32,18 @@ import timber.log.Timber;
 class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription notificationSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @Nullable Subscription createSubscription;
+  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
+  @NonNull private Subscription createSubscription = Subscriptions.empty();
 
   @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
-      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("io") Scheduler subScheduler) {
+      @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
 
   @Override protected void onBind(@Nullable Empty view) {
     super.onBind(view);
-    SubscriptionHelper.unsubscribe(createSubscription);
+    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
     createSubscription = Observable.fromCallable(() -> {
       interactor.create();
       return Boolean.TRUE;
@@ -53,25 +51,25 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(success -> Timber.d("Interactor was created"),
-            throwable -> Timber.e(throwable, "Error creating interactor"),
-            () -> SubscriptionHelper.unsubscribe(createSubscription));
+            throwable -> Timber.e(throwable, "Error creating interactor"));
   }
 
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    SubscriptionHelper.unsubscribe(notificationSubscription, createSubscription);
+    notificationSubscription = SubscriptionHelper.unsubscribe(notificationSubscription);
+    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
   }
 
   public void startNotification(@NonNull NotificationCallback callback) {
-    SubscriptionHelper.unsubscribe(notificationSubscription);
+    notificationSubscription = SubscriptionHelper.unsubscribe(notificationSubscription);
     notificationSubscription = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onStartNotificationInForeground, throwable -> {
           Timber.e(throwable, "onError");
           // TODO handle error
-        }, () -> SubscriptionHelper.unsubscribe(notificationSubscription));
+        });
   }
 
   /**

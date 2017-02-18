@@ -28,14 +28,12 @@ import timber.log.Timber;
 
 class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") static final int CONFIRM_DATABASE = 0;
-  @SuppressWarnings("WeakerAccess") static final int CONFIRM_ALL = 1;
+  private static final int CONFIRM_DATABASE = 0;
+  private static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsPreferenceInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription confirmedSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription rootSubscription = Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription bindCheckRootSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
+  @NonNull private Subscription rootSubscription = Subscriptions.empty();
+  @NonNull private Subscription bindCheckRootSubscription = Subscriptions.empty();
 
   @Inject SettingsPreferencePresenter(@NonNull SettingsPreferenceInteractor interactor,
       @NonNull Scheduler obsScheduler, @NonNull Scheduler subScheduler) {
@@ -45,18 +43,18 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(confirmedSubscription, rootSubscription,
-        bindCheckRootSubscription);
+    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
+    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
+    bindCheckRootSubscription = SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
   }
 
   public void checkRootEnabled(@NonNull RootCallback callback) {
-    SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
+    bindCheckRootSubscription = SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
     bindCheckRootSubscription = interactor.isRootEnabled()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(rootEnabled -> checkRoot(false, rootEnabled, callback),
-            throwable -> Timber.e(throwable, "onError bindCheckRoot"),
-            () -> SubscriptionHelper.unsubscribe(bindCheckRootSubscription));
+            throwable -> Timber.e(throwable, "onError bindCheckRoot"));
   }
 
   public void requestClearDatabase(@NonNull ConfirmDialogCallback callback) {
@@ -68,7 +66,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
-    SubscriptionHelper.unsubscribe(rootSubscription);
+    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
     rootSubscription = interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -76,7 +74,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
             throwable -> {
               Timber.e(throwable, "onError checking root");
               callback.onRootCallback(causedByUser, false, rootEnable);
-            }, () -> SubscriptionHelper.unsubscribe(rootSubscription));
+            });
   }
 
   public void processClearRequest(int type, @NonNull ClearRequestCallback callback) {
@@ -93,22 +91,20 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void clearAll(ClearRequestCallback callback) {
-    SubscriptionHelper.unsubscribe(confirmedSubscription);
+    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
     confirmedSubscription = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError"),
-            () -> SubscriptionHelper.unsubscribe(confirmedSubscription));
+        .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError"));
   }
 
   private void clearDatabase(ClearRequestCallback callback) {
-    SubscriptionHelper.unsubscribe(confirmedSubscription);
+    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
     confirmedSubscription = interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearDatabase(),
-            throwable -> Timber.e(throwable, "onError"),
-            () -> SubscriptionHelper.unsubscribe(confirmedSubscription));
+            throwable -> Timber.e(throwable, "onError"));
   }
 
   interface RootCallback {

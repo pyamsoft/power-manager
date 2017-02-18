@@ -30,14 +30,11 @@ import timber.log.Timber;
 
 class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription deleteSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription viewSubscription = Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription createSubscription =
-      Subscriptions.empty();
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription updateSubscription =
-      Subscriptions.empty();
+  @NonNull private final TriggerInteractor interactor;
+  @NonNull private Subscription deleteSubscription = Subscriptions.empty();
+  @NonNull private Subscription viewSubscription = Subscriptions.empty();
+  @NonNull private Subscription createSubscription = Subscriptions.empty();
+  @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
   @Inject TriggerPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
@@ -47,19 +44,21 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(deleteSubscription, createSubscription, updateSubscription,
-        viewSubscription);
+    deleteSubscription = SubscriptionHelper.unsubscribe(deleteSubscription);
+    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
+    updateSubscription = SubscriptionHelper.unsubscribe(updateSubscription);
+    viewSubscription = SubscriptionHelper.unsubscribe(viewSubscription);
   }
 
   public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
-    SubscriptionHelper.unsubscribe(viewSubscription);
+    viewSubscription = SubscriptionHelper.unsubscribe(viewSubscription);
     viewSubscription = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onTriggerLoadFinished)
         .subscribe(callback::onTriggerLoaded, throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> SubscriptionHelper.unsubscribe(viewSubscription));
+        });
   }
 
   public void showNewTriggerDialog(@NonNull ShowTriggerDialogCallback callback) {
@@ -69,7 +68,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   public void createPowerTrigger(@NonNull PowerTriggerEntry entry,
       @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
-    SubscriptionHelper.unsubscribe(createSubscription);
+    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
     createSubscription = interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -82,28 +81,28 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
             Timber.e("Issue creating trigger");
             callback.onNewTriggerCreateError();
           }
-        }, () -> SubscriptionHelper.unsubscribe(createSubscription));
+        });
   }
 
   public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
-    SubscriptionHelper.unsubscribe(deleteSubscription);
+    deleteSubscription = SubscriptionHelper.unsubscribe(deleteSubscription);
     deleteSubscription = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onTriggerDeleted, throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> SubscriptionHelper.unsubscribe(deleteSubscription));
+        });
   }
 
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
       @NonNull TriggerToggleCallback callback) {
-    SubscriptionHelper.unsubscribe(updateSubscription);
+    updateSubscription = SubscriptionHelper.unsubscribe(updateSubscription);
     updateSubscription = interactor.update(entry, enabled)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(result -> callback.updateViewHolder(position, result), throwable -> {
           Timber.e(throwable, "onError");
-        }, () -> SubscriptionHelper.unsubscribe(updateSubscription));
+        });
   }
 
   interface TriggerLoadCallback {

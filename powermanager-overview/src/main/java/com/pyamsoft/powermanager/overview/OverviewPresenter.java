@@ -29,16 +29,15 @@ import timber.log.Timber;
 
 class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wifiObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver dataObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver bluetoothObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver syncObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver airplaneObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver dozeObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver wearObserver;
+  @NonNull private final BooleanInterestObserver wifiObserver;
+  @NonNull private final BooleanInterestObserver dataObserver;
+  @NonNull private final BooleanInterestObserver bluetoothObserver;
+  @NonNull private final BooleanInterestObserver syncObserver;
+  @NonNull private final BooleanInterestObserver airplaneObserver;
+  @NonNull private final BooleanInterestObserver dozeObserver;
+  @NonNull private final BooleanInterestObserver wearObserver;
   @NonNull private final OverviewInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription onboardingSubscription =
-      Subscriptions.empty();
+  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -61,20 +60,19 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
   }
 
   public void showOnBoarding(@NonNull OnboardingCallback callback) {
-    SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
     onboardingSubscription = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
-              if (!onboard) {
-                callback.onShowOnBoarding();
-              }
-            }, throwable -> Timber.e(throwable, "onError onShowOnboarding"),
-            () -> SubscriptionHelper.unsubscribe(onboardingSubscription));
+          if (!onboard) {
+            callback.onShowOnBoarding();
+          }
+        }, throwable -> Timber.e(throwable, "onError onShowOnboarding"));
   }
 
   public void setShownOnBoarding() {
