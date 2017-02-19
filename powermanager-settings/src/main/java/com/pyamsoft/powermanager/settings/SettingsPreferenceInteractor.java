@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import javax.inject.Inject;
 import rx.Observable;
@@ -28,17 +28,17 @@ import timber.log.Timber;
 
 class SettingsPreferenceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final ShellCommandHelper shellCommandHelper;
+  @SuppressWarnings("WeakerAccess") @NonNull final RootChecker rootChecker;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
-  @NonNull final TriggerInteractor triggerInteractor;
+  @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor triggerInteractor;
 
   @Inject SettingsPreferenceInteractor(@NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull PowerManagerPreferences preferences, @NonNull ShellCommandHelper shellCommandHelper,
+      @NonNull PowerManagerPreferences preferences, @NonNull RootChecker rootChecker,
       @NonNull TriggerInteractor triggerInteractor) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
-    this.shellCommandHelper = shellCommandHelper;
+    this.rootChecker = rootChecker;
     this.triggerInteractor = triggerInteractor;
   }
 
@@ -50,7 +50,7 @@ class SettingsPreferenceInteractor {
     return Observable.fromCallable(() -> {
       // If we are enabling root, check SU available
       // If we are not enabling root, then everything is ok
-      return !rootEnable || shellCommandHelper.isSUAvailable();
+      return !rootEnable || rootChecker.isSUAvailable();
     });
   }
 
