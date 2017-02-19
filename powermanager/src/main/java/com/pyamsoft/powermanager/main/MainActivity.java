@@ -223,8 +223,10 @@ public class MainActivity extends TamperActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Fix crash relating to Doze on API 25 (7.1)";
-    return new String[] { line1 };
+    final String line1 = "BUGFIX: Faster performance for automatic management";
+    final String line2 = "BUGFIX: Better periodic timing for reoccuring automatic events";
+    final String line3 = "BUGFIX: Faster power trigger list loading";
+    return new String[] { line1, line2, line3 };
   }
 
   @NonNull @Override protected String getVersionName() {
