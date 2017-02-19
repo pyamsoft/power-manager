@@ -26,14 +26,14 @@ import java.util.List;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class ShellCommandHelperImpl implements ShellCommandHelper {
+class ShellHandlerImpl implements ShellCommandHelper, RootChecker {
 
   private static final int SHELL_TYPE_ROOT = 0;
   private static final int SHELL_TYPE_NORMAL = 1;
   @NonNull private Shell.Interactive shellSession;
   @NonNull private Shell.Interactive rootSession;
 
-  @Inject ShellCommandHelperImpl() {
+  @Inject ShellHandlerImpl() {
     shellSession = openShellSession(false);
     rootSession = openShellSession(true);
   }

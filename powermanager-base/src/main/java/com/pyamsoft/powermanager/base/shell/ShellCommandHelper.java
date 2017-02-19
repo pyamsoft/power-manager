@@ -22,8 +22,6 @@ import android.support.annotation.WorkerThread;
 
 public interface ShellCommandHelper {
 
-  @WorkerThread @CheckResult boolean isSUAvailable();
-
   @WorkerThread void runSUCommand(@NonNull String... commands);
 
   @WorkerThread void runSHCommand(@NonNull String... commands);
