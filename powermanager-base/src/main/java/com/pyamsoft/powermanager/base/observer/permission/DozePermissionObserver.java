@@ -21,16 +21,15 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.RootChecker;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class DozePermissionObserver extends RootPermissionObserver {
 
   @Inject DozePermissionObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
-      @NonNull ShellCommandHelper shellCommandHelper) {
-    super(context, preferences, shellCommandHelper, Manifest.permission.DUMP);
+      @NonNull PowerManagerPreferences preferences, @NonNull RootChecker rootChecker) {
+    super(context, preferences, rootChecker, Manifest.permission.DUMP);
   }
 
   @Override protected boolean checkPermission(@NonNull Context appContext) {

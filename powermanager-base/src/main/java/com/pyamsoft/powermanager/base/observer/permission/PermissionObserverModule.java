@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.observer.permission;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -29,15 +29,15 @@ import javax.inject.Singleton;
 @Module public class PermissionObserverModule {
 
   @Singleton @Named("obs_root_permission") @Provides
-  PermissionObserver provideRootPermissionObserver(@NonNull ShellCommandHelper shellCommandHelper,
+  PermissionObserver provideRootPermissionObserver(@NonNull RootChecker rootChecker,
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new RootPermissionObserver(context, preferences, shellCommandHelper);
+    return new RootPermissionObserver(context, preferences, rootChecker);
   }
 
   @Singleton @Named("obs_doze_permission") @Provides
-  PermissionObserver provideDozePermissionObserver(@NonNull ShellCommandHelper shellCommandHelper,
+  PermissionObserver provideDozePermissionObserver(@NonNull RootChecker rootChecker,
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozePermissionObserver(context, preferences, shellCommandHelper);
+    return new DozePermissionObserver(context, preferences, rootChecker);
   }
 
   @Singleton @Named("obs_write_permission") @Provides
