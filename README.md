@@ -2,7 +2,7 @@
 
 Power Manager Android application by pyamsoft
 
-[![Get it on Google Play](art/google-play-badge.png)][1]
+[![Get it on Google Play](https://raw.githubusercontent.com/pyamsoft/power-manager/master/art/google-play-badge.png)][1]
 
 ## What is Power Manager
 
