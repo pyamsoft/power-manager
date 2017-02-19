@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
+import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -35,9 +35,9 @@ import rx.Scheduler;
   }
 
   @Provides SettingsPreferenceInteractor provideSettingsInteractor(
-      @NonNull PowerTriggerDB powerTriggerDB, @NonNull ShellCommandHelper shellCommandHelper,
+      @NonNull PowerTriggerDB powerTriggerDB, @NonNull RootChecker rootChecker,
       @NonNull PowerManagerPreferences preferences, @NonNull TriggerInteractor triggerInteractor) {
-    return new SettingsPreferenceInteractor(powerTriggerDB, preferences, shellCommandHelper,
+    return new SettingsPreferenceInteractor(powerTriggerDB, preferences, rootChecker,
         triggerInteractor);
   }
 }

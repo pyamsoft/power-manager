@@ -16,24 +16,10 @@
 
 package com.pyamsoft.powermanager.base.shell;
 
-import android.support.annotation.NonNull;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
+import android.support.annotation.CheckResult;
+import android.support.annotation.WorkerThread;
 
-@Module public class ShellCommandModule {
+public interface RootChecker {
 
-  @NonNull private final ShellHandlerImpl impl;
-
-  public ShellCommandModule() {
-    impl = new ShellHandlerImpl();
-  }
-
-  @Singleton @Provides ShellCommandHelper provideShellCommandHelper() {
-    return impl;
-  }
-
-  @Singleton @Provides RootChecker provideRootChecker() {
-    return impl;
-  }
+  @WorkerThread @CheckResult boolean isSUAvailable();
 }
