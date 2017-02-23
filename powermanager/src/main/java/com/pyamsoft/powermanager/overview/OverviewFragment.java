@@ -27,8 +27,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
@@ -52,7 +50,6 @@ public class OverviewFragment extends ActionBarFragment {
   @NonNull public static final String TAG = "Overview";
   @SuppressWarnings("WeakerAccess") @Inject OverviewPresenter presenter;
   FragmentOverviewBinding binding;
-  @Nullable TapTargetSequence sequence;
   FastItemAdapter<OverviewItem> adapter;
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,40 +77,6 @@ public class OverviewFragment extends ActionBarFragment {
     presenter.showOnBoarding(() -> {
       Timber.d("Show onboarding");
       // Hold a ref to the sequence or Activity will recycle bitmaps and crash
-      if (sequence == null) {
-
-        // If we use the first item we get a weird location, try a different item
-        final OverviewItem.ViewHolder tapTargetView =
-            (OverviewItem.ViewHolder) binding.overviewRecycler.findViewHolderForAdapterPosition(1);
-        final TapTarget overview =
-            TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewImage,
-                getString(R.string.onboard_title_module), getString(R.string.onboard_desc_module))
-                .cancelable(false);
-
-        final TapTarget manageTarget =
-            TapTarget.forView(tapTargetView.getBinding().adapterItemOverviewCheck,
-                getString(R.string.onboard_title_module_manage),
-                getString(R.string.onboard_desc_module_manage)).cancelable(false);
-
-        sequence = new TapTargetSequence(getActivity()).targets(overview, manageTarget)
-            .listener(new TapTargetSequence.Listener() {
-              @Override public void onSequenceFinish() {
-                if (presenter != null) {
-                  presenter.setShownOnBoarding();
-                }
-              }
-
-              @Override public void onSequenceStep(TapTarget lastTarget) {
-
-              }
-
-              @Override public void onSequenceCanceled(TapTarget lastTarget) {
-
-              }
-            });
-      }
-
-      sequence.start();
     });
 
     if (adapter.getAdapterItems().isEmpty()) {
@@ -172,9 +135,8 @@ public class OverviewFragment extends ActionBarFragment {
         new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
             observer)));
 
-    adapter.add(
-        new OverviewItem(view, SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp, R.color.pink500,
-            null));
+    adapter.add(new OverviewItem(view, SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp,
+        R.color.pink500, null));
   }
 
   @SuppressWarnings("WeakerAccess") void loadFragment(@NonNull String title,

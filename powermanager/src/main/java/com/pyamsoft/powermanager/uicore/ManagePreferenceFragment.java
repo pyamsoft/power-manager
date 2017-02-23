@@ -23,16 +23,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
-import android.support.v4.app.Fragment;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import timber.log.Timber;
 
@@ -44,12 +39,8 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
-  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView presetTapTarget;
-  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView customTimeTapTarget;
-  @Nullable @SuppressWarnings("WeakerAccess") TapTargetView fabTapTarget;
   @SuppressWarnings("WeakerAccess") String presetTimeKey;
   @SuppressWarnings("WeakerAccess") @Nullable String customTimeKey;
-  @Nullable private TapTargetView manageTapTarget;
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
@@ -235,14 +226,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @Override void dismissOnboarding() {
-    dismissOnboarding(manageTapTarget);
-    manageTapTarget = null;
-    dismissOnboarding(presetTapTarget);
-    presetTapTarget = null;
-    dismissOnboarding(customTimeTapTarget);
-    customTimeTapTarget = null;
-    dismissOnboarding(fabTapTarget);
-    fabTapTarget = null;
   }
 
   @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed,
@@ -257,120 +240,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @Override public void onShowOnboarding() {
     Timber.d("Show manage onboarding");
-    if (manageTapTarget == null) {
-      Timber.d("Create Manage TapTarget");
-      final PreferenceViewHolder manageViewHolder = findViewForPreference(manageKey);
-      if (manageViewHolder != null) {
-        Timber.d("Find switch view in view holder");
-        final View switchView = manageViewHolder.findViewById(R.id.switchWidget);
-        if (switchView != null) {
-          Timber.d("Create tap target on switch view");
-          createManageTapTarget(switchView);
-        }
-      }
-    }
-  }
-
-  private void createManageTapTarget(@NonNull View switchView) {
-    final TapTarget manageTarget =
-        TapTarget.forView(switchView, getString(R.string.onboard_title_manage_manage),
-            getString(R.string.onboard_desc_manage_manage)).tintTarget(false).cancelable(false);
-    manageTapTarget =
-        TapTargetView.showFor(getActivity(), manageTarget, new TapTargetView.Listener() {
-
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Manage clicked");
-            presetTapTarget = null;
-
-            Timber.d("Attempt to find list view holder");
-            final PreferenceViewHolder listViewHolder = findViewForPreference(presetTimeKey);
-            if (listViewHolder != null) {
-              createPresetTimeTapTarget(listViewHolder.itemView);
-            } else {
-              Timber.w("Cannot find Preset TapTarget.");
-              endOnboarding();
-            }
-          }
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void createPresetTimeTapTarget(@NonNull View presetView) {
-    final TapTarget presetListTarget =
-        TapTarget.forView(presetView, getString(R.string.onboard_title_manage_preset),
-            getString(R.string.onboard_desc_manage_preset)).tintTarget(false).cancelable(false);
-    presetTapTarget =
-        TapTargetView.showFor(getActivity(), presetListTarget, new TapTargetView.Listener() {
-
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Preset clicked");
-            customTimeTapTarget = null;
-
-            Timber.d("Attempt to find custom view holder");
-            final PreferenceViewHolder customViewHolder = findViewForPreference(customTimeKey);
-            if (customViewHolder != null) {
-              createCustomTimeTapTarget(customViewHolder.itemView);
-            } else {
-              Timber.w("Cannot find Custom TapTarget.");
-              endOnboarding();
-            }
-          }
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void createCustomTimeTapTarget(@NonNull View customTimeView) {
-    final TapTarget customTimeTarget =
-        TapTarget.forView(customTimeView, getString(R.string.onboard_title_manage_custom),
-            getString(R.string.onboard_desc_manage_custom)).tintTarget(false).cancelable(false);
-
-    customTimeTapTarget =
-        TapTargetView.showFor(getActivity(), customTimeTarget, new TapTargetView.Listener() {
-
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Custom clicked");
-            fabTapTarget = null;
-
-            Timber.d("Attempt to find fab");
-            final Fragment parentFragment = getParentFragment();
-            if (parentFragment instanceof OverviewPagerFragment) {
-              final OverviewPagerFragment overviewPagerFragment =
-                  (OverviewPagerFragment) parentFragment;
-              final View fab = overviewPagerFragment.getFabTarget();
-              if (fab != null) {
-                createFabTapTarget(fab);
-              } else {
-                Timber.w("Cannot find Custom TapTarget.");
-                endOnboarding();
-              }
-            } else {
-              throw new IllegalStateException("Parent fragment is not OverviewPagerFragment");
-            }
-          }
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void createFabTapTarget(@NonNull View fab) {
-    final TapTarget fabTarget =
-        TapTarget.forView(fab, getString(R.string.onboard_title_overview_fab),
-            getString(R.string.onboard_desc_overview_fab)).tintTarget(false).cancelable(false);
-    fabTapTarget = TapTargetView.showFor(getActivity(), fabTarget, new TapTargetView.Listener() {
-
-      @Override public void onTargetClick(TapTargetView view) {
-        super.onTargetClick(view);
-        Timber.d("FAB clicked");
-
-        endOnboarding();
-      }
-    });
-  }
-
-  @SuppressWarnings("WeakerAccess") void endOnboarding() {
-    if (presenter != null) {
-      Timber.d("End manage onboarding");
-      presenter.setShownOnBoarding();
-    }
   }
 
   @Override public void onManagePermissionCallback(boolean hasPermission) {

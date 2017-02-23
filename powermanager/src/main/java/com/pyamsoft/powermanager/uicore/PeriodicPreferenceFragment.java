@@ -23,13 +23,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.XmlRes;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import timber.log.Timber;
 
@@ -43,14 +39,11 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customDisableTimePreference;
   @SuppressWarnings("WeakerAccess") String presetDisableTimeKey;
-  @SuppressWarnings("WeakerAccess") @Nullable TapTargetView periodicDisableTapTarget;
-  @SuppressWarnings("WeakerAccess") @Nullable TapTargetView periodicEnableTapTarget;
   @SuppressWarnings("WeakerAccess") String presetEnableTimeKey;
   private String periodicKey;
   private String enableTimeKey;
   private String disableTimeKey;
   private boolean showOnboardingOnBind = false;
-  @Nullable private TapTargetView periodicTapTarget;
 
   @Override public void onSelected() {
     Timber.d("Select PeriodicPreferenceFragment");
@@ -243,101 +236,10 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   }
 
   @Override void dismissOnboarding() {
-    dismissOnboarding(periodicTapTarget);
-    periodicTapTarget = null;
-
-    dismissOnboarding(periodicDisableTapTarget);
-    periodicDisableTapTarget = null;
-
-    dismissOnboarding(periodicEnableTapTarget);
-    periodicEnableTapTarget = null;
   }
 
   @Override public void onShowOnboarding() {
     Timber.d("Show periodic onboarding");
-    if (periodicTapTarget == null) {
-      Timber.d("Create Periodic TapTarget");
-      final PreferenceViewHolder manageViewHolder = findViewForPreference(periodicKey);
-      if (manageViewHolder != null) {
-        Timber.d("Find switch view in view holder");
-        final View switchView =
-            manageViewHolder.findViewById(com.pyamsoft.powermanager.base.R.id.switchWidget);
-        if (switchView != null) {
-          Timber.d("Create tap target on switch view");
-          createPeriodicTarget(switchView);
-        }
-      }
-    }
-  }
-
-  private void createPeriodicTarget(@NonNull View switchView) {
-    final TapTarget periodicTarget =
-        TapTarget.forView(switchView, getString(R.string.onboard_title_period_period),
-            getString(R.string.onboard_desc_period_period)).tintTarget(false).cancelable(false);
-    periodicTapTarget =
-        TapTargetView.showFor(getActivity(), periodicTarget, new TapTargetView.Listener() {
-
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Periodic clicked");
-            periodicDisableTapTarget = null;
-
-            Timber.d("Attempt to find preset disable view holder");
-            final PreferenceViewHolder listViewHolder = findViewForPreference(presetDisableTimeKey);
-            if (listViewHolder != null) {
-              createPresetDisableTapTarget(listViewHolder.itemView);
-            } else {
-              Timber.w("Cannot find Preset Disable TapTarget.");
-              endOnboarding();
-            }
-          }
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void endOnboarding() {
-    if (presenter != null) {
-      Timber.d("End manage onboarding");
-      presenter.setShownOnBoarding();
-    }
-  }
-
-  @SuppressWarnings("WeakerAccess") void createPresetDisableTapTarget(@NonNull View itemView) {
-    final TapTarget periodicDisable =
-        TapTarget.forView(itemView, getString(R.string.onboard_title_period_disable),
-            getString(R.string.onboard_desc_period_disable)).tintTarget(false).cancelable(false);
-    periodicDisableTapTarget =
-        TapTargetView.showFor(getActivity(), periodicDisable, new TapTargetView.Listener() {
-
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Periodic Disable clicked");
-            periodicEnableTapTarget = null;
-
-            Timber.d("Attempt to find preset enable view holder");
-            final PreferenceViewHolder listViewHolder = findViewForPreference(presetEnableTimeKey);
-            if (listViewHolder != null) {
-              createPresetEnableTapTarget(listViewHolder.itemView);
-            } else {
-              Timber.w("Cannot find Preset Enable TapTarget.");
-              endOnboarding();
-            }
-          }
-        });
-  }
-
-  @SuppressWarnings("WeakerAccess") void createPresetEnableTapTarget(@NonNull View itemView) {
-    final TapTarget periodicEnable =
-        TapTarget.forView(itemView, getString(R.string.onboard_title_period_enable),
-            getString(R.string.onboard_desc_period_enable)).tintTarget(false).cancelable(false);
-
-    periodicEnableTapTarget =
-        TapTargetView.showFor(getActivity(), periodicEnable, new TapTargetView.Listener() {
-          @Override public void onTargetClick(TapTargetView view) {
-            super.onTargetClick(view);
-            Timber.d("Periodic Enable clicked");
-            endOnboarding();
-          }
-        });
   }
 
   @CheckResult @NonNull protected abstract PeriodPreferencePresenter providePresenter();
