@@ -28,21 +28,9 @@ import android.support.v7.preference.PreferenceViewHolder;
 import android.support.v7.preference.TwoStatePreference;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import timber.log.Timber;
 
 abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
-
-  final void dismissOnboarding(@Nullable TapTargetView targetView) {
-    if (targetView == null) {
-      Timber.w("NULL TargetView");
-      return;
-    }
-
-    if (targetView.isVisible()) {
-      targetView.dismiss(false);
-    }
-  }
 
   final void applyFormattedStrings(@NonNull Preference preference, @NonNull String name) {
     final String replaceString = "REPLACE_ME";
