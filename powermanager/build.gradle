@@ -119,9 +119,6 @@ dependencies {
   // Firebase Crash
   compile "com.google.firebase:firebase-crash:$firebase"
 
-  // Tap Target View
-  compile "com.getkeepsafe.taptargetview:taptargetview:$tapTargetView"
-
   // Leak Canary
   debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"

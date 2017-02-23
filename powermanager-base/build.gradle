@@ -72,15 +72,6 @@ dependencies {
   compile "com.google.dagger:dagger:$dagger"
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
-  // Roboelectric for Android on JVM
-  testCompile "org.robolectric:robolectric:$robolectric"
-
-  // JUnit for unit tests
-  testCompile "junit:junit:$junit"
-
-  // Mockito for unit tests
-  testCompile "org.mockito:mockito-core:$mockito"
-
   debugCompile project(path: ":powermanager-model", configuration: "debug")
   releaseCompile project(path: ":powermanager-model", configuration: "release")
 }
