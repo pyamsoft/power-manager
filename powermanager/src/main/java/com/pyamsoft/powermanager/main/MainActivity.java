@@ -379,4 +379,10 @@ public class MainActivity extends TamperActivity {
       return false;
     }
   }
+
+  @Nullable @Override protected AdSource provideOnlineAdSource() {
+    OnlineAdSource source =  new OnlineAdSource(R.string.banner_main_ad_id);
+    source.addTestAdIds("E1241303FDC266381AD6C9FF6FAD056B");
+    return source;
+  }
 }
