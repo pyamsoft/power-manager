@@ -2,5 +2,5 @@
 
 # These directories are reported missing for some reason, most likely build tools error
 
-mkdir -p ./powermanager/build/intermediates/data-binding-info/androidTest/debug
-mkdir -p ./powermanager/build/intermediates/data-binding-layout-out/androidTest/debug
+mkdir -p ./powermanager/build/intermediates/data-binding-info/androidTest/dev/debug
+mkdir -p ./powermanager/build/intermediates/data-binding-layout-out/androidTest/dev/debug

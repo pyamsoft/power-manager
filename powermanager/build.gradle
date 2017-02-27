@@ -34,8 +34,8 @@ android {
   defaultConfig {
     applicationId "com.pyamsoft.powermanager"
     targetSdkVersion rootProject.ext.maxSdk
-    versionCode 100
-    versionName "6.6.9"
+    versionCode 101
+    versionName "6.6.10"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
