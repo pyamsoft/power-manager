@@ -46,7 +46,6 @@ import com.pyamsoft.powermanager.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.sync.preference.SyncPreferenceComponent;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
-import com.pyamsoft.powermanager.trigger.TriggerInteractorModule;
 import com.pyamsoft.powermanager.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.wifi.preference.WifiPreferenceComponent;
@@ -57,7 +56,7 @@ import javax.inject.Singleton;
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, ManageObserverModule.class,
     PeriodicObserverModule.class, StateObserverModule.class, StateModifierModule.class,
-    TriggerInteractorModule.class, JobModule.class
+    JobModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneScreenComponent plusAirplaneScreenComponent();

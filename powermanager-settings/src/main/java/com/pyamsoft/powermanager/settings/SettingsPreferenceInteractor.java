@@ -23,10 +23,11 @@ import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 import timber.log.Timber;
 
-class SettingsPreferenceInteractor {
+@Singleton class SettingsPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final RootChecker rootChecker;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;

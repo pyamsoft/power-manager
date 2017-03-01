@@ -22,6 +22,7 @@ import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -40,14 +41,15 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
   @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull BooleanInterestObserver wifiObserver, @NonNull BooleanInterestObserver dataObserver,
-      @NonNull BooleanInterestObserver bluetoothObserver,
-      @NonNull BooleanInterestObserver syncObserver,
-      @NonNull BooleanInterestObserver airplaneObserver,
-      @NonNull BooleanInterestObserver dozeObserver,
-      @NonNull BooleanInterestObserver wearObserver) {
-    super(observeScheduler, subscribeScheduler);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
+      @NonNull @Named("obs_wifi_manage") BooleanInterestObserver wifiObserver,
+      @NonNull @Named("obs_data_manage") BooleanInterestObserver dataObserver,
+      @NonNull @Named("obs_bluetooth_manage") BooleanInterestObserver bluetoothObserver,
+      @NonNull @Named("obs_sync_manage") BooleanInterestObserver syncObserver,
+      @NonNull @Named("obs_airplane_manage") BooleanInterestObserver airplaneObserver,
+      @NonNull @Named("obs_doze_manage") BooleanInterestObserver dozeObserver,
+      @NonNull @Named("obs_wear_manage") BooleanInterestObserver wearObserver) {
+    super(obsScheduler, subScheduler);
     this.interactor = interactor;
     this.wifiObserver = wifiObserver;
     this.dataObserver = dataObserver;

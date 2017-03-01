@@ -18,8 +18,7 @@ package com.pyamsoft.powermanager.settings;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = SettingsPreferenceModule.class)
-public interface SettingsPreferenceComponent {
+@Subcomponent public interface SettingsPreferenceComponent {
 
   void inject(SettingsPreferenceFragment fragment);
 }

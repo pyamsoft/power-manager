@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.service;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = ActionToggleModule.class) public interface ActionToggleServiceComponent {
+@Subcomponent public interface ActionToggleServiceComponent {
 
   void inject(ActionToggleService service);
 }

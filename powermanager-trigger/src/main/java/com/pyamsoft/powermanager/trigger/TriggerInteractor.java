@@ -25,10 +25,11 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 import timber.log.Timber;
 
-public class TriggerInteractor {
+@Singleton public class TriggerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @Nullable volatile Observable<List<PowerTriggerEntry>>

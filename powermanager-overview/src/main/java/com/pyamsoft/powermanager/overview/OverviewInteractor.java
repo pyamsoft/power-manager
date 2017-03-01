@@ -21,9 +21,10 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 
-class OverviewInteractor {
+@Singleton class OverviewInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 

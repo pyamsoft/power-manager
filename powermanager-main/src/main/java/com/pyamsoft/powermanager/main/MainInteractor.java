@@ -19,13 +19,15 @@ package com.pyamsoft.powermanager.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 
-class MainInteractor {
+@Singleton class MainInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
 
-  MainInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject MainInteractor(@NonNull PowerManagerPreferences preferences) {
     this.preferences = preferences;
   }
 

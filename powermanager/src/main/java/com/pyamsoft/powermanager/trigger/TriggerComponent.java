@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.trigger;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = TriggerModule.class) public interface TriggerComponent {
+@Subcomponent public interface TriggerComponent {
 
   void inject(PowerTriggerListFragment fragment);
 }

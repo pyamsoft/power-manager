@@ -31,10 +31,12 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import rx.Observable;
 import timber.log.Timber;
 
-class ForegroundInteractor extends ActionToggleInteractor {
+@Singleton class ForegroundInteractor extends ActionToggleInteractor {
 
   private static final int PENDING_RC = 1004;
   private static final int TOGGLE_RC = 421;
@@ -45,8 +47,8 @@ class ForegroundInteractor extends ActionToggleInteractor {
 
   @Inject ForegroundInteractor(@NonNull JobQueuer jobQueuer, @NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
-      @NonNull Class<? extends Activity> mainActivityClass,
-      @NonNull Class<? extends Service> toggleServiceClass) {
+      @NonNull @Named("main") Class<? extends Activity> mainActivityClass,
+      @NonNull @Named("toggle") Class<? extends Service> toggleServiceClass) {
     super(preferences);
     this.jobQueuer = jobQueuer;
     appContext = context.getApplicationContext();

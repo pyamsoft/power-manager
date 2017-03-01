@@ -20,9 +20,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import rx.Observable;
 
-class ActionToggleInteractor {
+@Singleton class ActionToggleInteractor {
 
   @NonNull private final PowerManagerPreferences preferences;
 

@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.overview;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = OverviewModule.class) public interface OverviewComponent {
+@Subcomponent public interface OverviewComponent {
 
   void inject(OverviewFragment fragment);
 

@@ -23,6 +23,7 @@ import com.pyamsoft.pydroid.helper.SubscriptionHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import javax.inject.Inject;
+import javax.inject.Named;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.subscriptions.Subscriptions;
@@ -36,9 +37,9 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   @NonNull private Subscription createSubscription = Subscriptions.empty();
   @NonNull private Subscription updateSubscription = Subscriptions.empty();
 
-  @Inject TriggerPresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull TriggerInteractor interactor) {
-    super(observeScheduler, subscribeScheduler);
+  @Inject TriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
+    super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
 
