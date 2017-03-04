@@ -35,7 +35,7 @@ android {
     applicationId "com.pyamsoft.powermanager"
     targetSdkVersion rootProject.ext.maxSdk
     versionCode 102
-    versionName "6.6.11pre1"
+    versionName "6.6.11"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -49,6 +49,7 @@ android {
     dev {
       // Enable pre-dexing to produce an APK that can be tested on
       // Android 5.0+ without the time-consuming DEX build processes.
+      versionNameSuffix "-dev"
       minSdkVersion rootProject.ext.devSdk
     }
 
@@ -58,7 +59,6 @@ android {
       minSdkVersion rootProject.ext.minSdk
     }
   }
-
 
   buildTypes {
     release {
