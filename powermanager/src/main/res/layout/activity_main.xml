@@ -49,6 +49,18 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             />
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@android:color/white"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextColor="@color/grey500"
+            />
+
       </android.support.design.widget.AppBarLayout>
 
       <FrameLayout

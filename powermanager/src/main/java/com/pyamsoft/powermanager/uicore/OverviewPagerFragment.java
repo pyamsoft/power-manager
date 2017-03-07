@@ -21,10 +21,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +34,12 @@ import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.util.AnimUtil;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
-  @NonNull private static final String TABS_TAG = "tablayout";
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
 
@@ -67,8 +65,8 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
   @Override public final void onDestroyView() {
     super.onDestroyView();
-    removeTabLayout();
     setActionBarUpEnabled(false);
+    tabLayout.setVisibility(View.GONE);
     subscription = AsyncMapHelper.unsubscribe(subscription);
     binding.unbind();
   }
@@ -97,6 +95,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @Override public final void onResume() {
     super.onResume();
     setActionBarUpEnabled(true);
+    AnimUtil.popShow(binding.preferenceContainerFab, 300, 600);
   }
 
   @CheckResult @NonNull private MainActivity getMainActivity() {
@@ -120,14 +119,6 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
     PowerManager.getRefWatcher(this).watch(this);
   }
 
-  private void addTabLayout(@NonNull TabLayout tabLayout) {
-    getMainActivity().addViewToAppBar(TABS_TAG, tabLayout);
-  }
-
-  private void removeTabLayout() {
-    getMainActivity().removeViewFromAppBar(TABS_TAG);
-  }
-
   private void addPreferenceFragments() {
     final ModulePagerAdapter adapter = getPagerAdapter();
     binding.preferenceContainerPager.setAdapter(adapter);
@@ -135,18 +126,8 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   }
 
   private void addTabLayoutToAppBar() {
-    tabLayout = new TabLayout(getActivity());
-    tabLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        ViewGroup.LayoutParams.WRAP_CONTENT));
-    tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-    tabLayout.setTabTextColors(
-        ContextCompat.getColor(getContext(), com.pyamsoft.powermanager.base.R.color.grey500),
-        ContextCompat.getColor(getContext(), android.R.color.white));
-    tabLayout.setSelectedTabIndicatorColor(
-        ContextCompat.getColor(getContext(), android.R.color.white));
-    tabLayout.setTabMode(TabLayout.MODE_FIXED);
-
-    addTabLayout(tabLayout);
+    tabLayout = getMainActivity().getTabLayout();
+    tabLayout.setVisibility(View.VISIBLE);
     tabLayout.setupWithViewPager(binding.preferenceContainerPager);
   }
 
@@ -180,11 +161,11 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
     });
   }
 
-  private void setFab() {
+  void setFab() {
     loadDrawableIntoFab(getFabSetIcon());
   }
 
-  private void unsetFab() {
+  void unsetFab() {
     loadDrawableIntoFab(getFabUnsetIcon());
   }
 
@@ -197,19 +178,6 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
       subscription = AsyncDrawable.load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
-    }
-  }
-
-  @CheckResult @Nullable FloatingActionButton getFabTarget() {
-    if (binding == null) {
-      throw new NullPointerException("Binding is NULL");
-    }
-
-    if (binding.preferenceContainerFab.getVisibility() == View.GONE) {
-      Timber.d("FAB is hidden, no target");
-      return null;
-    } else {
-      return binding.preferenceContainerFab;
     }
   }
 

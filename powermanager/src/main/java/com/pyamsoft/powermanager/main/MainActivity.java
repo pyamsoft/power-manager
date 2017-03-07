@@ -29,12 +29,12 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.Injector;
@@ -57,14 +57,11 @@ import com.pyamsoft.pydroid.ui.ads.OnlineAdSource;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.AppUtil;
-import java.util.HashMap;
-import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class MainActivity extends TamperActivity {
 
-  @NonNull private final Map<String, View> addedViewMap = new HashMap<>();
   @Nullable private final Runnable longPressBackRunnable =
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : this::handleBackLongPress;
   @Nullable private final Handler mainHandler =
@@ -118,12 +115,6 @@ public class MainActivity extends TamperActivity {
       appBarAnimator.cancel();
     }
 
-    //noinspection Convert2streamapi
-    for (final String key : addedViewMap.keySet()) {
-      removeViewFromAppBar(key);
-    }
-
-    addedViewMap.clear();
     binding.unbind();
   }
 
@@ -192,31 +183,6 @@ public class MainActivity extends TamperActivity {
 
   @NonNull @Override protected String getSafePackageName() {
     return "com.pyamsoft.powermanager";
-  }
-
-  public void addViewToAppBar(@NonNull String tag, @NonNull View view) {
-    if (addedViewMap.containsKey(tag)) {
-      Timber.w("AppBar already has view with this tag: %s", tag);
-      removeViewFromAppBar(tag);
-    }
-
-    Timber.d("Add view to map with tag: %s", tag);
-    addedViewMap.put(tag, view);
-    binding.mainAppbar.addView(view);
-  }
-
-  public void removeViewFromAppBar(@NonNull String tag) {
-    if (addedViewMap.containsKey(tag)) {
-      Timber.d("Remove tag from map: %s", tag);
-      final View viewToRemove = addedViewMap.remove(tag);
-      if (viewToRemove == null) {
-        Timber.e("View to remove was NULL for tag: %s", tag);
-      } else {
-        binding.mainAppbar.removeView(viewToRemove);
-      }
-    } else {
-      Timber.e("Viewmap does not contain a view for tag: %s", tag);
-    }
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
@@ -381,5 +347,12 @@ public class MainActivity extends TamperActivity {
     OnlineAdSource source = new OnlineAdSource(R.string.banner_main_ad_id);
     source.addTestAdIds("E1241303FDC266381AD6C9FF6FAD056B");
     return source;
+  }
+
+  @CheckResult @NonNull public TabLayout getTabLayout() {
+    if (binding == null || binding.tabLayout == null) {
+      throw new IllegalStateException("TabLayout is NULL");
+    }
+    return binding.tabLayout;
   }
 }
