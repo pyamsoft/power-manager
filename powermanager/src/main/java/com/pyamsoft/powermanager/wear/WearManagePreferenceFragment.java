@@ -37,25 +37,25 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
     Injector.get().provideComponent().plusWearScreenComponent().inject(this);
   }
 
-  @Override protected int getManageKeyResId() {
+  @Override protected int provideManageKeyResId() {
     return R.string.manage_wearable_key;
   }
 
   /**
    * Because this module has no Custom time ability, these are reversed so that the logic stays put
    */
-  @Override protected int getPresetTimeKeyResId() {
+  @Override protected int providePresetTimeKeyResId() {
     return R.string.wearable_time_key;
   }
 
   /**
    * Because this module has no Custom time ability, these are reversed so that the logic stays put
    */
-  @Override protected int getTimeKeyResId() {
+  @Override protected int provideTimeKeyResId() {
     return R.string.preset_delay_wearable_key;
   }
 
-  @Override protected int getIgnoreChargingKey() {
+  @Override protected int provideIgnoreChargingKey() {
     return 0;
   }
 

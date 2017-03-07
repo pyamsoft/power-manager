@@ -32,19 +32,19 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   @NonNull private static final String TAG = "DataManagePreferenceFragment";
   @Inject @Named("data_manage_pref") ManagePreferencePresenter presenter;
 
-  @Override protected int getManageKeyResId() {
+  @Override protected int provideManageKeyResId() {
     return R.string.manage_data_key;
   }
 
-  @Override protected int getPresetTimeKeyResId() {
+  @Override protected int providePresetTimeKeyResId() {
     return R.string.preset_delay_data_key;
   }
 
-  @Override protected int getTimeKeyResId() {
+  @Override protected int provideTimeKeyResId() {
     return R.string.data_time_key;
   }
 
-  @Override protected int getIgnoreChargingKey() {
+  @Override protected int provideIgnoreChargingKey() {
     return R.string.ignore_charging_data_key;
   }
 

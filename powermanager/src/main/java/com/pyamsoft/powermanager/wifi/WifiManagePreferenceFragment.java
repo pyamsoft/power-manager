@@ -37,19 +37,19 @@ public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
     Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
   }
 
-  @Override protected int getManageKeyResId() {
+  @Override protected int provideManageKeyResId() {
     return R.string.manage_wifi_key;
   }
 
-  @Override protected int getPresetTimeKeyResId() {
+  @Override protected int providePresetTimeKeyResId() {
     return R.string.preset_delay_wifi_key;
   }
 
-  @Override protected int getTimeKeyResId() {
+  @Override protected int provideTimeKeyResId() {
     return R.string.wifi_time_key;
   }
 
-  @Override protected int getIgnoreChargingKey() {
+  @Override protected int provideIgnoreChargingKey() {
     return R.string.ignore_charging_wifi_key;
   }
 

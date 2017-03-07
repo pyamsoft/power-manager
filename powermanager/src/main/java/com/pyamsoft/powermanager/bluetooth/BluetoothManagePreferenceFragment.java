@@ -41,19 +41,19 @@ public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment 
     Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
   }
 
-  @Override protected int getManageKeyResId() {
+  @Override protected int provideManageKeyResId() {
     return R.string.manage_bluetooth_key;
   }
 
-  @Override protected int getPresetTimeKeyResId() {
+  @Override protected int providePresetTimeKeyResId() {
     return R.string.preset_delay_bluetooth_key;
   }
 
-  @Override protected int getTimeKeyResId() {
+  @Override protected int provideTimeKeyResId() {
     return R.string.bluetooth_time_key;
   }
 
-  @Override protected int getIgnoreChargingKey() {
+  @Override protected int provideIgnoreChargingKey() {
     return R.string.ignore_charging_bluetooth_key;
   }
 

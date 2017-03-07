@@ -64,16 +64,16 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     addPreferencesFromResource(getPreferencesResId());
-    manageKey = getString(getManageKeyResId());
-    presetTimeKey = getString(getPresetTimeKeyResId());
+    manageKey = getString(provideManageKeyResId());
+    presetTimeKey = getString(providePresetTimeKeyResId());
 
-    @StringRes final int ignoreKeyRes = getIgnoreChargingKey();
+    @StringRes final int ignoreKeyRes = provideIgnoreChargingKey();
     if (ignoreKeyRes != 0) {
       ignoreChargingKey = getString(ignoreKeyRes);
     } else {
       ignoreChargingKey = null;
     }
-    @StringRes final int timeResId = getTimeKeyResId();
+    @StringRes final int timeResId = provideTimeKeyResId();
     if (timeResId != 0) {
       customTimeKey = getString(timeResId);
     } else {
@@ -256,13 +256,13 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   protected abstract void injectDependencies();
 
-  @StringRes @CheckResult protected abstract int getManageKeyResId();
+  @StringRes @CheckResult protected abstract int provideManageKeyResId();
 
-  @StringRes @CheckResult protected abstract int getPresetTimeKeyResId();
+  @StringRes @CheckResult protected abstract int providePresetTimeKeyResId();
 
-  @StringRes @CheckResult protected abstract int getTimeKeyResId();
+  @StringRes @CheckResult protected abstract int provideTimeKeyResId();
 
-  @StringRes @CheckResult protected abstract int getIgnoreChargingKey();
+  @StringRes @CheckResult protected abstract int provideIgnoreChargingKey();
 
   @XmlRes @CheckResult protected abstract int getPreferencesResId();
 
