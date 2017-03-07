@@ -18,11 +18,14 @@ package com.pyamsoft.powermanager.doze;
 
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.util.AppUtil;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,24 +40,36 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
     return R.string.manage_doze_key;
   }
 
+  @Override protected int provideManageDefaultValueResId() {
+    return R.bool.manage_doze_default;
+  }
+
   @Override protected int providePresetTimeKeyResId() {
     return R.string.preset_delay_doze_key;
   }
 
-  @Override protected int provideTimeKeyResId() {
-    return R.string.doze_time_key;
+  @Override protected int providePresetTimeDefaultResId() {
+    return R.string.doze_time_default;
+  }
+
+  @Override protected int providePresetEntriesResId() {
+    return R.array.preset_delay_doze_names;
+  }
+
+  @Override protected int providePresetValuesResId() {
+    return R.array.preset_delay_doze_values;
+  }
+
+  @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
+    return new DozeCustomTimePreference(getActivity());
   }
 
   @Override protected int provideIgnoreChargingKey() {
     return R.string.ignore_charging_doze_key;
   }
 
-  @Override protected int getPreferencesResId() {
-    return R.xml.manage_doze;
-  }
-
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "presenter_key";
+  @Override protected int provideIgnoreChargingDefaultResId() {
+    return R.bool.ignore_charging_doze_default;
   }
 
   @Override protected boolean checkManagePermission() {

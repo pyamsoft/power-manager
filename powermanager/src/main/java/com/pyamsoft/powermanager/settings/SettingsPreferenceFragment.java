@@ -42,7 +42,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
     SettingsPreferencePresenter.ClearRequestCallback,
     SettingsPreferencePresenter.ConfirmDialogCallback {
 
-  @NonNull public static final String TAG = "SettingsPreferenceFragment";
+  @NonNull public static final String TAG = "Settings";
   @SuppressWarnings("WeakerAccess") @Inject SettingsPreferencePresenter presenter;
   private SwitchPreferenceCompat useRoot;
 

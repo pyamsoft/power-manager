@@ -49,9 +49,12 @@ abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
       summaryOff = summaryOff.replace(replaceString, name);
       twoStatePreference.setSummaryOff(summaryOff);
     } else {
-      String summary = preference.getSummary().toString();
-      summary = summary.replace(replaceString, name);
-      preference.setSummary(summary);
+      CharSequence nullableSummary = preference.getSummary();
+      if (nullableSummary != null) {
+        String summary = nullableSummary.toString();
+        summary = summary.replace(replaceString, name);
+        preference.setSummary(summary);
+      }
     }
   }
 

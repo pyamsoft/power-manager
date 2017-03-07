@@ -17,17 +17,20 @@
 package com.pyamsoft.powermanager.uicore;
 
 import android.os.Bundle;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.BoolRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.annotation.XmlRes;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.SwitchPreferenceCompat;
+import android.support.v7.preference.PreferenceCategory;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import timber.log.Timber;
 
@@ -36,15 +39,16 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     ManagePreferencePresenter.ManagePermissionCallback {
 
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
-  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat managePreference;
+  @SuppressWarnings("WeakerAccess") SwitchPreference managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
   @SuppressWarnings("WeakerAccess") String presetTimeKey;
-  @SuppressWarnings("WeakerAccess") @Nullable String customTimeKey;
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
   private boolean showOnboardingOnBind = false;
+  private PreferenceCategory manageCategory;
+  private PreferenceCategory delayCategory;
 
   @Override public void onSelected() {
     Timber.d("Select ManagePreferenceFragment");
@@ -63,7 +67,15 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    addPreferencesFromResource(getPreferencesResId());
+    setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getActivity()));
+    initPreferenceKeys();
+
+    addPreferenceCategories();
+    addManagePreferences();
+    addDelayPreferences();
+  }
+
+  private void initPreferenceKeys() {
     manageKey = getString(provideManageKeyResId());
     presetTimeKey = getString(providePresetTimeKeyResId());
 
@@ -73,11 +85,58 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     } else {
       ignoreChargingKey = null;
     }
-    @StringRes final int timeResId = provideTimeKeyResId();
-    if (timeResId != 0) {
-      customTimeKey = getString(timeResId);
-    } else {
-      customTimeKey = null;
+  }
+
+  private void addPreferenceCategories() {
+    manageCategory = new PreferenceCategory(getActivity());
+    manageCategory.setTitle("REPLACE_ME Settings");
+    getPreferenceScreen().addPreference(manageCategory);
+
+    delayCategory = new PreferenceCategory(getActivity());
+    delayCategory.setTitle("REPLACE_ME Delay");
+    getPreferenceScreen().addPreference(delayCategory);
+  }
+
+  private void addManagePreferences() {
+    managePreference = new SwitchPreference(getActivity());
+    managePreference.setKey(manageKey);
+    managePreference.setDefaultValue(getResources().getBoolean(provideManageDefaultValueResId()));
+    managePreference.setTitle(R.string.manage_pref_title);
+    managePreference.setSummaryOn(R.string.manage_pref_summary_checked);
+    managePreference.setSummaryOff(R.string.manage_pref_summary_unchecked);
+    manageCategory.addPreference(managePreference);
+
+    if (ignoreChargingKey != null) {
+      ignoreChargingPreference = new CheckBoxPreference(getActivity());
+      ignoreChargingPreference.setKey(ignoreChargingKey);
+      ignoreChargingPreference.setDefaultValue(
+          getResources().getBoolean(provideIgnoreChargingDefaultResId()));
+      ignoreChargingPreference.setTitle(R.string.ignore_charging_pref_title);
+      ignoreChargingPreference.setSummaryOn(R.string.ignore_charging_pref_summary_checked);
+      ignoreChargingPreference.setSummaryOff(R.string.ignore_charging_pref_summary_unchecked);
+      manageCategory.addPreference(ignoreChargingPreference);
+
+      // Can only add deps after adding to View
+      ignoreChargingPreference.setDependency(manageKey);
+    }
+  }
+
+  private void addDelayPreferences() {
+    presetTimePreference = new ListPreference(getActivity());
+    presetTimePreference.setKey(presetTimeKey);
+    presetTimePreference.setDefaultValue(getString(providePresetTimeDefaultResId()));
+    presetTimePreference.setEntries(providePresetEntriesResId());
+    presetTimePreference.setEntryValues(providePresetValuesResId());
+    presetTimePreference.setTitle(R.string.pref_time_title);
+    presetTimePreference.setSummary(R.string.pref_time_summary);
+    delayCategory.addPreference(presetTimePreference);
+
+    // Can only add deps after adding to View
+    presetTimePreference.setDependency(manageKey);
+
+    customTimePreference = provideCustomTimePreference();
+    if (customTimePreference != null) {
+      delayCategory.addPreference(customTimePreference);
     }
   }
 
@@ -88,27 +147,11 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   }
 
   @Override void resolvePreferences() {
-    managePreference = (SwitchPreferenceCompat) findPreference(manageKey);
-    presetTimePreference = (ListPreference) findPreference(presetTimeKey);
-
-    if (customTimeKey != null) {
-      customTimePreference = (CustomTimeInputPreference) findPreference(customTimeKey);
-    }
-
-    if (ignoreChargingKey != null) {
-      ignoreChargingPreference = (CheckBoxPreference) findPreference(ignoreChargingKey);
-    }
-
-    if (managePreference == null) {
-      throw new NullPointerException("Manage Preference is NULL");
-    }
-
-    if (presetTimePreference == null) {
-      throw new NullPointerException("Preset Time Preference is NULL");
-    }
   }
 
   @Override void applyFormattedStrings(@NonNull String name) {
+    applyFormattedStrings(manageCategory, name);
+    applyFormattedStrings(delayCategory, name);
     applyFormattedStrings(managePreference, name);
     applyFormattedStrings(presetTimePreference, name);
     if (ignoreChargingPreference != null) {
@@ -258,13 +301,19 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @StringRes @CheckResult protected abstract int provideManageKeyResId();
 
-  @StringRes @CheckResult protected abstract int providePresetTimeKeyResId();
-
-  @StringRes @CheckResult protected abstract int provideTimeKeyResId();
+  @BoolRes @CheckResult protected abstract int provideManageDefaultValueResId();
 
   @StringRes @CheckResult protected abstract int provideIgnoreChargingKey();
 
-  @XmlRes @CheckResult protected abstract int getPreferencesResId();
+  @BoolRes @CheckResult protected abstract int provideIgnoreChargingDefaultResId();
 
-  @CheckResult @NonNull protected abstract String getPresenterKey();
+  @StringRes @CheckResult protected abstract int providePresetTimeKeyResId();
+
+  @StringRes @CheckResult protected abstract int providePresetTimeDefaultResId();
+
+  @ArrayRes @CheckResult protected abstract int providePresetEntriesResId();
+
+  @ArrayRes @CheckResult protected abstract int providePresetValuesResId();
+
+  @CheckResult @Nullable protected abstract CustomTimeInputPreference provideCustomTimePreference();
 }

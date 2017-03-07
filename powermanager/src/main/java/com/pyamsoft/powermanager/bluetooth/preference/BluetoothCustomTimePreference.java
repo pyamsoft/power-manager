@@ -20,6 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import javax.inject.Inject;
@@ -57,6 +58,7 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
 
   @Override protected void injectDependencies() {
     Injector.get().provideComponent().plusBluetoothPreferenceComponent().inject(this);
+    setKey(getContext().getString(R.string.bluetooth_time_key));
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {
