@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.AttributeSet;
+import android.support.annotation.StringRes;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import javax.inject.Inject;
@@ -35,21 +34,8 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("bluetooth_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public BluetoothCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
-
-  public BluetoothCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
-  public BluetoothCustomTimePreference(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public BluetoothCustomTimePreference(Context context) {
-    super(context);
+  public BluetoothCustomTimePreference(Context context, @StringRes int keyResId) {
+    super(context, keyResId);
   }
 
   @NonNull @Override protected String getName() {
@@ -58,7 +44,6 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
 
   @Override protected void injectDependencies() {
     Injector.get().provideComponent().plusBluetoothPreferenceComponent().inject(this);
-    setKey(getContext().getString(R.string.bluetooth_time_key));
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

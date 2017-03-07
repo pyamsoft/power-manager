@@ -33,7 +33,6 @@ import timber.log.Timber;
 
 public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull private static final String TAG = "DozeManagePreferenceFragment";
   @Inject @Named("doze_manage_pref") ManagePreferencePresenter presenter;
 
   @Override protected int provideManageKeyResId() {
@@ -61,7 +60,7 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new DozeCustomTimePreference(getActivity());
+    return new DozeCustomTimePreference(getActivity(), R.string.doze_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

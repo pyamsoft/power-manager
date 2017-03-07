@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.data.preference;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.AttributeSet;
+import android.support.annotation.StringRes;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import javax.inject.Inject;
@@ -35,21 +34,8 @@ public class DataCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("data_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public DataCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-  }
-
-  public DataCustomTimePreference(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-  }
-
-  public DataCustomTimePreference(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
-
-  public DataCustomTimePreference(Context context) {
-    super(context);
+  public DataCustomTimePreference(Context context, @StringRes int keyResId) {
+    super(context, keyResId);
   }
 
   @NonNull @Override protected String getName() {
@@ -58,7 +44,6 @@ public class DataCustomTimePreference extends CustomTimeInputPreference {
 
   @Override protected void injectDependencies() {
     Injector.get().provideComponent().plusDataPreferenceComponent().inject(this);
-    setKey(getContext().getString(R.string.data_time_key));
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

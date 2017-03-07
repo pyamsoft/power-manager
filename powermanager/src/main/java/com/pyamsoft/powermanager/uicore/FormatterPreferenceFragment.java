@@ -60,20 +60,8 @@ abstract class FormatterPreferenceFragment extends PreferenceFragmentCompat {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    resolvePreferences();
     applyFormattedStrings(getModuleName());
   }
-
-  @Override public void onStop() {
-    super.onStop();
-    if (isRemoving()) {
-      dismissOnboarding();
-    }
-  }
-
-  abstract void dismissOnboarding();
-
-  abstract void resolvePreferences();
 
   abstract void applyFormattedStrings(@NonNull String name);
 

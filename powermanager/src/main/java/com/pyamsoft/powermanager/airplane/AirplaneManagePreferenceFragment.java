@@ -58,7 +58,7 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new AirplaneCustomTimePreference(getActivity());
+    return new AirplaneCustomTimePreference(getActivity(), R.string.airplane_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

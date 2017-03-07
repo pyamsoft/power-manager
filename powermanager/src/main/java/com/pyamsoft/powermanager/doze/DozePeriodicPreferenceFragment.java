@@ -19,14 +19,15 @@ package com.pyamsoft.powermanager.doze;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
-  @NonNull private static final String TAG = "DozePeriodicPreferenceFragment";
   @Inject @Named("doze_period_pref") PeriodPreferencePresenter presenter;
 
   @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
@@ -37,32 +38,44 @@ public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
     Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
   }
 
-  @Override protected int getPreferencesResId() {
-    return R.xml.periodic_doze;
-  }
-
-  @Override protected int getPeriodicKeyResId() {
+  @Override protected int providePeriodicKeyResId() {
     return R.string.periodic_doze_key;
   }
 
-  @Override protected int getPresetDisableTimeKeyResId() {
-    return R.string.preset_periodic_doze_disable_key;
+  @Override protected int providePeriodicDefaultResId() {
+    return R.bool.periodic_doze_default;
   }
 
-  @Override protected int getPresetEnableTimeKeyResId() {
+  @Override protected int providePresetEnableTimeKeyResId() {
     return R.string.preset_periodic_doze_enable_key;
   }
 
-  @Override protected int getEnableTimeKeyResId() {
-    return R.string.periodic_doze_enable_key;
+  @Override protected int provideEnableDefaultResId() {
+    return R.string.periodic_doze_enable_default;
   }
 
-  @Override protected int getDisableTimeKeyResId() {
-    return R.string.periodic_doze_disable_key;
+  @NonNull @Override protected CustomTimeInputPreference provideCustomEnableTimePreference() {
+    return new DozeCustomTimePreference(getActivity(), R.string.periodic_doze_enable_key);
   }
 
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "presenter_key";
+  @Override protected int providePresetDisableTimeKeyResId() {
+    return R.string.preset_periodic_doze_disable_key;
+  }
+
+  @Override protected int provideDisableDefaultResId() {
+    return R.string.preset_periodic_doze_disable_key;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {
+    return new DozeCustomTimePreference(getActivity(), R.string.periodic_doze_disable_key);
+  }
+
+  @Override protected int providePresetNamesResId() {
+    return R.array.preset_periodic_doze_names;
+  }
+
+  @Override protected int providePresetValuesResId() {
+    return R.array.preset_periodic_doze_values;
   }
 
   @NonNull @Override protected String getModuleName() {

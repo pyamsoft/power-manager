@@ -95,7 +95,10 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @Override public final void onResume() {
     super.onResume();
     setActionBarUpEnabled(true);
-    AnimUtil.popShow(binding.preferenceContainerFab, 300, 600);
+
+    if (getFabSetIcon() != 0 && getFabUnsetIcon() != 0) {
+      AnimUtil.popShow(binding.preferenceContainerFab, 300, 600);
+    }
   }
 
   @CheckResult @NonNull private MainActivity getMainActivity() {

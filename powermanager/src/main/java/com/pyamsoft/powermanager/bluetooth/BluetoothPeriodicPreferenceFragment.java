@@ -19,19 +19,16 @@ package com.pyamsoft.powermanager.bluetooth;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.bluetooth.preference.BluetoothCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class BluetoothPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
-  @NonNull private static final String TAG = "BluetoothPeriodicPreferenceFragment";
   @Inject @Named("bluetooth_period_pref") PeriodPreferencePresenter presenter;
-
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "key_presenter";
-  }
 
   @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
     return presenter;
@@ -41,28 +38,45 @@ public class BluetoothPeriodicPreferenceFragment extends PeriodicPreferenceFragm
     Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
   }
 
-  @Override protected int getPreferencesResId() {
-    return R.xml.periodic_bluetooth;
-  }
-
-  @Override protected int getPeriodicKeyResId() {
+  @Override protected int providePeriodicKeyResId() {
     return R.string.periodic_bluetooth_key;
   }
 
-  @Override protected int getPresetDisableTimeKeyResId() {
-    return R.string.preset_periodic_bluetooth_disable_key;
+  @Override protected int providePeriodicDefaultResId() {
+    return R.bool.periodic_bluetooth_default;
   }
 
-  @Override protected int getPresetEnableTimeKeyResId() {
+  @Override protected int providePresetEnableTimeKeyResId() {
     return R.string.preset_periodic_bluetooth_enable_key;
   }
 
-  @Override protected int getEnableTimeKeyResId() {
-    return R.string.periodic_bluetooth_enable_key;
+  @Override protected int provideEnableDefaultResId() {
+    return R.string.periodic_bluetooth_enable_default;
   }
 
-  @Override protected int getDisableTimeKeyResId() {
-    return R.string.periodic_bluetooth_disable_key;
+  @NonNull @Override protected CustomTimeInputPreference provideCustomEnableTimePreference() {
+    return new BluetoothCustomTimePreference(getActivity(), R.string.periodic_bluetooth_enable_key);
+  }
+
+  @Override protected int providePresetDisableTimeKeyResId() {
+    return R.string.preset_periodic_bluetooth_disable_key;
+  }
+
+  @Override protected int provideDisableDefaultResId() {
+    return R.string.preset_periodic_bluetooth_disable_key;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {
+    return new BluetoothCustomTimePreference(getActivity(),
+        R.string.periodic_bluetooth_disable_key);
+  }
+
+  @Override protected int providePresetNamesResId() {
+    return R.array.preset_periodic_bluetooth_names;
+  }
+
+  @Override protected int providePresetValuesResId() {
+    return R.array.preset_periodic_bluetooth_values;
   }
 
   @NonNull @Override protected String getModuleName() {

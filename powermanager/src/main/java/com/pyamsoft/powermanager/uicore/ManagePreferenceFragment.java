@@ -46,24 +46,13 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
-  private boolean showOnboardingOnBind = false;
   private PreferenceCategory manageCategory;
   private PreferenceCategory delayCategory;
 
   @Override public void onSelected() {
-    Timber.d("Select ManagePreferenceFragment");
-    showOnboardingOnBind = (presenter == null);
-    if (presenter != null) {
-      presenter.showOnboardingIfNeeded(this);
-    }
   }
 
   @Override public void onUnselected() {
-    Timber.d("Unselect ManagePreferenceFragment");
-    showOnboardingOnBind = false;
-    if (presenter != null) {
-      presenter.dismissOnboarding(this::dismissOnboarding);
-    }
   }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -144,9 +133,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     super.onCreate(savedInstanceState);
     injectDependencies();
     presenter = providePresenter();
-  }
-
-  @Override void resolvePreferences() {
   }
 
   @Override void applyFormattedStrings(@NonNull String name) {
@@ -235,9 +221,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       presenter.checkManagePermission(this);
     }
 
-    if (showOnboardingOnBind) {
-      presenter.showOnboardingIfNeeded(this);
-    }
+    presenter.showOnboardingIfNeeded(this);
   }
 
   @CallSuper @Override public void onStop() {
@@ -266,9 +250,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       presetTimePreference.setOnPreferenceChangeListener(null);
       presetTimePreference.setOnPreferenceClickListener(null);
     }
-  }
-
-  @Override void dismissOnboarding() {
   }
 
   @SuppressWarnings("WeakerAccess") void setCustomTimePreferenceEnabled(boolean managed,

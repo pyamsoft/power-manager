@@ -64,7 +64,7 @@ public class WifiManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new WifiCustomTimePreference(getActivity());
+    return new WifiCustomTimePreference(getActivity(), R.string.wifi_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

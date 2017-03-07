@@ -17,15 +17,18 @@
 package com.pyamsoft.powermanager.uicore;
 
 import android.os.Bundle;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.BoolRes;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.annotation.XmlRes;
+import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.SwitchPreferenceCompat;
+import android.support.v7.preference.PreferenceCategory;
 import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import timber.log.Timber;
 
@@ -33,7 +36,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     implements PeriodPreferencePresenter.OnboardingCallback, PagerItem {
 
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
-  @SuppressWarnings("WeakerAccess") SwitchPreferenceCompat periodicPreference;
+  @SuppressWarnings("WeakerAccess") SwitchPreference periodicPreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetEnableTimePreference;
   @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customEnableTimePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetDisableTimePreference;
@@ -41,33 +44,90 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @SuppressWarnings("WeakerAccess") String presetDisableTimeKey;
   @SuppressWarnings("WeakerAccess") String presetEnableTimeKey;
   private String periodicKey;
-  private String enableTimeKey;
-  private String disableTimeKey;
-  private boolean showOnboardingOnBind = false;
+  private PreferenceCategory enableCategory;
+  private PreferenceCategory disableCategory;
+  private PreferenceCategory periodicCategory;
 
   @Override public void onSelected() {
-    Timber.d("Select PeriodicPreferenceFragment");
-    showOnboardingOnBind = (presenter == null);
-    if (presenter != null) {
-      presenter.showOnboardingIfNeeded(this);
-    }
   }
 
   @Override public void onUnselected() {
-    Timber.d("Unselect PeriodicPreferenceFragment");
-    showOnboardingOnBind = false;
-    if (presenter != null) {
-      presenter.dismissOnboarding(this::dismissOnboarding);
-    }
   }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-    addPreferencesFromResource(getPreferencesResId());
-    periodicKey = getString(getPeriodicKeyResId());
-    presetEnableTimeKey = getString(getPresetEnableTimeKeyResId());
-    presetDisableTimeKey = getString(getPresetDisableTimeKeyResId());
-    enableTimeKey = getString(getEnableTimeKeyResId());
-    disableTimeKey = getString(getDisableTimeKeyResId());
+    setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getActivity()));
+    initPreferenceKeys();
+
+    addPreferenceCategories();
+    addPeriodicPreferences();
+    addEnablePreferences();
+    addDisablePreferences();
+  }
+
+  private void addPreferenceCategories() {
+    periodicCategory = new PreferenceCategory(getActivity());
+    periodicCategory.setTitle("Recurring REPLACE_ME Settings");
+    getPreferenceScreen().addPreference(periodicCategory);
+
+    enableCategory = new PreferenceCategory(getActivity());
+    enableCategory.setTitle("Recurring REPLACE_ME Enable");
+    getPreferenceScreen().addPreference(enableCategory);
+
+    disableCategory = new PreferenceCategory(getActivity());
+    disableCategory.setTitle("Recurring REPLACE_ME Disable");
+    getPreferenceScreen().addPreference(disableCategory);
+  }
+
+  private void addPeriodicPreferences() {
+    periodicPreference = new SwitchPreference(getActivity());
+    periodicPreference.setKey(periodicKey);
+    periodicPreference.setSummaryOn(R.string.periodic_pref_summary_checked);
+    periodicPreference.setSummaryOff(R.string.periodic_pref_summary_unchecked);
+    periodicPreference.setTitle(R.string.periodic_pref_title);
+    periodicPreference.setDefaultValue(getResources().getBoolean(providePeriodicDefaultResId()));
+    periodicCategory.addPreference(periodicPreference);
+  }
+
+  private void addEnablePreferences() {
+    presetEnableTimePreference = new ListPreference(getActivity());
+    presetEnableTimePreference.setKey(presetEnableTimeKey);
+    presetEnableTimePreference.setTitle(R.string.periodic_pref_enable_title);
+    presetEnableTimePreference.setSummary(R.string.periodic_pref_enable_summary);
+    presetEnableTimePreference.setEntries(providePresetNamesResId());
+    presetEnableTimePreference.setEntryValues(providePresetValuesResId());
+    presetEnableTimePreference.setDefaultValue(getString(provideEnableDefaultResId()));
+
+    enableCategory.addPreference(presetEnableTimePreference);
+
+    // Deps after add
+    presetEnableTimePreference.setDependency(periodicKey);
+
+    customEnableTimePreference = provideCustomEnableTimePreference();
+    enableCategory.addPreference(customEnableTimePreference);
+  }
+
+  private void addDisablePreferences() {
+    presetDisableTimePreference = new ListPreference(getActivity());
+    presetDisableTimePreference.setKey(presetDisableTimeKey);
+    presetDisableTimePreference.setTitle(R.string.periodic_pref_disable_title);
+    presetDisableTimePreference.setSummary(R.string.periodic_pref_disable_summary);
+    presetDisableTimePreference.setEntries(providePresetNamesResId());
+    presetDisableTimePreference.setEntryValues(providePresetValuesResId());
+    presetDisableTimePreference.setDefaultValue(getString(provideDisableDefaultResId()));
+
+    disableCategory.addPreference(presetDisableTimePreference);
+
+    // Deps after add
+    presetDisableTimePreference.setDependency(periodicKey);
+
+    customDisableTimePreference = provideCustomDisableTimePreference();
+    disableCategory.addPreference(customDisableTimePreference);
+  }
+
+  private void initPreferenceKeys() {
+    periodicKey = getString(providePeriodicKeyResId());
+    presetEnableTimeKey = getString(providePresetEnableTimeKeyResId());
+    presetDisableTimeKey = getString(providePresetDisableTimeKeyResId());
   }
 
   @Override public void onCreate(Bundle savedInstanceState) {
@@ -76,30 +136,13 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     presenter = providePresenter();
   }
 
-  @Override void resolvePreferences() {
-    periodicPreference = (SwitchPreferenceCompat) findPreference(periodicKey);
-    presetEnableTimePreference = (ListPreference) findPreference(presetEnableTimeKey);
-    presetDisableTimePreference = (ListPreference) findPreference(presetDisableTimeKey);
-    customEnableTimePreference = (CustomTimeInputPreference) findPreference(enableTimeKey);
-    customDisableTimePreference = (CustomTimeInputPreference) findPreference(disableTimeKey);
-
-    if (periodicPreference == null) {
-      throw new NullPointerException("Periodic Preference is NULL");
-    }
-
-    if (presetEnableTimePreference == null) {
-      throw new NullPointerException("Preset Enable Time Preference is NULL");
-    }
-
-    if (presetDisableTimePreference == null) {
-      throw new NullPointerException("Preset Disable Time Preference is NULL");
-    }
-  }
-
   @Override void applyFormattedStrings(@NonNull String name) {
     applyFormattedStrings(periodicPreference, name);
     applyFormattedStrings(presetEnableTimePreference, name);
     applyFormattedStrings(presetDisableTimePreference, name);
+    applyFormattedStrings(periodicCategory, name);
+    applyFormattedStrings(enableCategory, name);
+    applyFormattedStrings(disableCategory, name);
   }
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -192,9 +235,7 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
       }
     });
 
-    if (showOnboardingOnBind) {
-      presenter.showOnboardingIfNeeded(this);
-    }
+    presenter.showOnboardingIfNeeded(this);
   }
 
   @Override public void onStop() {
@@ -235,9 +276,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
     }
   }
 
-  @Override void dismissOnboarding() {
-  }
-
   @Override public void onShowOnboarding() {
     Timber.d("Show periodic onboarding");
   }
@@ -246,17 +284,25 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   protected abstract void injectDependencies();
 
-  @XmlRes @CheckResult protected abstract int getPreferencesResId();
+  @CheckResult @StringRes protected abstract int providePeriodicKeyResId();
 
-  @CheckResult @StringRes protected abstract int getPeriodicKeyResId();
+  @BoolRes @CheckResult protected abstract int providePeriodicDefaultResId();
 
-  @CheckResult @StringRes protected abstract int getPresetDisableTimeKeyResId();
+  @CheckResult @StringRes protected abstract int providePresetEnableTimeKeyResId();
 
-  @CheckResult @StringRes protected abstract int getPresetEnableTimeKeyResId();
+  @StringRes @CheckResult protected abstract int provideEnableDefaultResId();
 
-  @CheckResult @StringRes protected abstract int getEnableTimeKeyResId();
+  @CheckResult @NonNull
+  protected abstract CustomTimeInputPreference provideCustomEnableTimePreference();
 
-  @CheckResult @StringRes protected abstract int getDisableTimeKeyResId();
+  @CheckResult @StringRes protected abstract int providePresetDisableTimeKeyResId();
 
-  @CheckResult @NonNull protected abstract String getPresenterKey();
+  @StringRes @CheckResult protected abstract int provideDisableDefaultResId();
+
+  @CheckResult @NonNull
+  protected abstract CustomTimeInputPreference provideCustomDisableTimePreference();
+
+  @ArrayRes @CheckResult protected abstract int providePresetNamesResId();
+
+  @ArrayRes @CheckResult protected abstract int providePresetValuesResId();
 }

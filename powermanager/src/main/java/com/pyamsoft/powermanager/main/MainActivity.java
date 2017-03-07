@@ -87,11 +87,10 @@ public class MainActivity extends TamperActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
     super.onCreate(savedInstanceState);
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
     oldAppBarColor = ContextCompat.getColor(this, R.color.amber500);
     oldStatusBarColor = ContextCompat.getColor(this, R.color.amber700);
-
-    setupPreferenceDefaults();
     setupAppBar();
     if (hasNoActiveFragment()) {
       loadOverviewFragment();
@@ -125,14 +124,6 @@ public class MainActivity extends TamperActivity {
     } else {
       super.onBackPressed();
     }
-  }
-
-  private void setupPreferenceDefaults() {
-    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-    PreferenceManager.setDefaultValues(this, R.xml.periodic_wifi, false);
-    PreferenceManager.setDefaultValues(this, R.xml.periodic_data, false);
-    PreferenceManager.setDefaultValues(this, R.xml.periodic_bluetooth, false);
-    PreferenceManager.setDefaultValues(this, R.xml.periodic_sync, false);
   }
 
   @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {

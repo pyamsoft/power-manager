@@ -59,7 +59,7 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new DataCustomTimePreference(getActivity());
+    return new DataCustomTimePreference(getActivity(), R.string.data_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

@@ -21,10 +21,10 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.preference.PreferenceViewHolder;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
@@ -36,34 +36,15 @@ import timber.log.Timber;
 public abstract class CustomTimeInputPreference extends BaseBoundPreference
     implements CustomTimePreferencePresenter.OnCustomTimeUpdateCallback {
 
-  @SuppressWarnings("WeakerAccess") CustomTimePreferencePresenter presenter;
+  @SuppressWarnings("WeakerAccess") final CustomTimePreferencePresenter presenter;
   @Nullable private TextWatcher watcher;
   @Nullable private EditText editText;
   @Nullable private PreferenceCustomTimeInputBinding binding;
   private boolean isDetaching;
 
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr,
-      int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    init();
-  }
-
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs, int defStyleAttr) {
-    super(context, attrs, defStyleAttr);
-    init();
-  }
-
-  protected CustomTimeInputPreference(Context context, AttributeSet attrs) {
-    super(context, attrs);
-    init();
-  }
-
-  protected CustomTimeInputPreference(Context context) {
+  protected CustomTimeInputPreference(Context context, @StringRes int keyResId) {
     super(context);
-    init();
-  }
-
-  private void init() {
+    setKey(getContext().getString(keyResId));
     setLayoutResource(R.layout.preference_custom_time_input);
     injectDependencies();
     presenter = providePresenter();
@@ -236,12 +217,9 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
 
   protected abstract void injectDependencies();
 
-  @CheckResult @NonNull
-  protected abstract CustomTimePreferencePresenter provideEnablePresenter();
+  @CheckResult @NonNull protected abstract CustomTimePreferencePresenter provideEnablePresenter();
 
-  @CheckResult @NonNull
-  protected abstract CustomTimePreferencePresenter provideDisablePresenter();
+  @CheckResult @NonNull protected abstract CustomTimePreferencePresenter provideDisablePresenter();
 
-  @CheckResult @NonNull
-  protected abstract CustomTimePreferencePresenter provideDelayPresenter();
+  @CheckResult @NonNull protected abstract CustomTimePreferencePresenter provideDelayPresenter();
 }

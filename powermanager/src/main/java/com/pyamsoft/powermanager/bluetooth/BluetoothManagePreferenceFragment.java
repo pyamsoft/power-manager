@@ -64,7 +64,7 @@ public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment 
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new BluetoothCustomTimePreference(getActivity());
+    return new BluetoothCustomTimePreference(getActivity(), R.string.bluetooth_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

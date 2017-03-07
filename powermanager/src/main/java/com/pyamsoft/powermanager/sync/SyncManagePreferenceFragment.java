@@ -64,7 +64,7 @@ public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Nullable @Override protected CustomTimeInputPreference provideCustomTimePreference() {
-    return new SyncCustomTimePreference(getActivity());
+    return new SyncCustomTimePreference(getActivity(), R.string.sync_time_key);
   }
 
   @Override protected int provideIgnoreChargingKey() {

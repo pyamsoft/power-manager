@@ -21,17 +21,14 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
+import com.pyamsoft.powermanager.wifi.preference.WifiCustomTimePreference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
 
-  @NonNull private static final String TAG = "WifiPeriodicPreferenceFragment";
   @Inject @Named("wifi_period_pref") PeriodPreferencePresenter presenter;
-
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "presenter_key";
-  }
 
   @NonNull @Override protected PeriodPreferencePresenter providePresenter() {
     return presenter;
@@ -41,28 +38,44 @@ public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
     Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
   }
 
-  @Override protected int getPreferencesResId() {
-    return R.xml.periodic_wifi;
-  }
-
-  @Override protected int getPeriodicKeyResId() {
+  @Override protected int providePeriodicKeyResId() {
     return R.string.periodic_wifi_key;
   }
 
-  @Override protected int getPresetDisableTimeKeyResId() {
-    return R.string.preset_periodic_wifi_disable_key;
+  @Override protected int providePeriodicDefaultResId() {
+    return R.bool.periodic_wifi_default;
   }
 
-  @Override protected int getPresetEnableTimeKeyResId() {
+  @Override protected int providePresetEnableTimeKeyResId() {
     return R.string.preset_periodic_wifi_enable_key;
   }
 
-  @Override protected int getEnableTimeKeyResId() {
-    return R.string.periodic_wifi_enable_key;
+  @Override protected int providePresetNamesResId() {
+    return R.array.preset_periodic_wifi_names;
   }
 
-  @Override protected int getDisableTimeKeyResId() {
-    return R.string.periodic_wifi_disable_key;
+  @Override protected int providePresetValuesResId() {
+    return R.array.preset_periodic_wifi_values;
+  }
+
+  @Override protected int provideEnableDefaultResId() {
+    return R.string.periodic_wifi_enable_default;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreference provideCustomEnableTimePreference() {
+    return new WifiCustomTimePreference(getActivity(), R.string.periodic_wifi_enable_key);
+  }
+
+  @Override protected int providePresetDisableTimeKeyResId() {
+    return R.string.preset_periodic_wifi_disable_key;
+  }
+
+  @Override protected int provideDisableDefaultResId() {
+    return R.string.periodic_wifi_disable_default;
+  }
+
+  @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {
+    return new WifiCustomTimePreference(getActivity(), R.string.periodic_wifi_disable_key);
   }
 
   @NonNull @Override protected String getModuleName() {
