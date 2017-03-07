@@ -36,8 +36,8 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.BuildConfig;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.airplane.AirplaneFragment;
 import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
@@ -138,15 +138,10 @@ public class MainActivity extends TamperActivity {
 
   private void setupPreferenceDefaults() {
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-    PreferenceManager.setDefaultValues(this, R.xml.manage_wifi, false);
-    PreferenceManager.setDefaultValues(this, R.xml.manage_data, false);
-    PreferenceManager.setDefaultValues(this, R.xml.manage_bluetooth, false);
-    PreferenceManager.setDefaultValues(this, R.xml.manage_sync, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_wifi, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_data, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_bluetooth, false);
     PreferenceManager.setDefaultValues(this, R.xml.periodic_sync, false);
-    PreferenceManager.setDefaultValues(this, R.xml.manage_doze, false);
   }
 
   @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
