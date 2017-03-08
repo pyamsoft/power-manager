@@ -63,7 +63,7 @@ public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragme
   }
 
   @Override protected int provideDisableDefaultResId() {
-    return R.string.preset_periodic_airplane_disable_key;
+    return R.string.periodic_airplane_disable_default;
   }
 
   @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {

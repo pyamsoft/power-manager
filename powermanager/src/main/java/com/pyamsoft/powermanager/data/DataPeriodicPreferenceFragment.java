@@ -63,7 +63,7 @@ public class DataPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   }
 
   @Override protected int provideDisableDefaultResId() {
-    return R.string.preset_periodic_data_disable_key;
+    return R.string.periodic_data_disable_default;
   }
 
   @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {

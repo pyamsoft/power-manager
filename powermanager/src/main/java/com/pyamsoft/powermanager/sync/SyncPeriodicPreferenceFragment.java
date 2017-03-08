@@ -63,7 +63,7 @@ public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   }
 
   @Override protected int provideDisableDefaultResId() {
-    return R.string.preset_periodic_sync_disable_key;
+    return R.string.periodic_sync_disable_default;
   }
 
   @NonNull @Override protected CustomTimeInputPreference provideCustomDisableTimePreference() {
