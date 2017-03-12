@@ -43,6 +43,10 @@ android {
     resConfigs "en"
   }
 
+  packagingOptions {
+    exclude 'META-INF/rxjava.properties'
+  }
+
   productFlavors {
 
     //noinspection GroovyMissingReturnStatement
