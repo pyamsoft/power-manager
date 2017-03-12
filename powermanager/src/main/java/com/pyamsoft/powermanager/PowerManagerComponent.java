@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager;
 import com.pyamsoft.powermanager.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.airplane.preference.AirplanePreferenceComponent;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
-import com.pyamsoft.powermanager.base.db.PowerTriggerDBModule;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.modifier.StateModifierModule;
 import com.pyamsoft.powermanager.base.observer.permission.PermissionObserverModule;

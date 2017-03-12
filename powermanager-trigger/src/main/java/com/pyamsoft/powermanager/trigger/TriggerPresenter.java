@@ -19,23 +19,23 @@ package com.pyamsoft.powermanager.trigger;
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final TriggerInteractor interactor;
-  @NonNull private Subscription deleteSubscription = Subscriptions.empty();
-  @NonNull private Subscription viewSubscription = Subscriptions.empty();
-  @NonNull private Subscription createSubscription = Subscriptions.empty();
-  @NonNull private Subscription updateSubscription = Subscriptions.empty();
+  @NonNull private Disposable deleteDisposable = Disposables.empty();
+  @NonNull private Disposable viewDisposable = Disposables.empty();
+  @NonNull private Disposable createDisposable = Disposables.empty();
+  @NonNull private Disposable updateDisposable = Disposables.empty();
 
   @Inject TriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
@@ -45,15 +45,15 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    deleteSubscription = SubscriptionHelper.unsubscribe(deleteSubscription);
-    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
-    updateSubscription = SubscriptionHelper.unsubscribe(updateSubscription);
-    viewSubscription = SubscriptionHelper.unsubscribe(viewSubscription);
+    deleteDisposable = DisposableHelper.unsubscribe(deleteDisposable);
+    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    updateDisposable = DisposableHelper.unsubscribe(updateDisposable);
+    viewDisposable = DisposableHelper.unsubscribe(viewDisposable);
   }
 
   public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
-    viewSubscription = SubscriptionHelper.unsubscribe(viewSubscription);
-    viewSubscription = interactor.queryAll(forceRefresh)
+    viewDisposable = DisposableHelper.unsubscribe(viewDisposable);
+    viewDisposable = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onTriggerLoadFinished)
@@ -69,8 +69,8 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   public void createPowerTrigger(@NonNull PowerTriggerEntry entry,
       @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
-    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
-    createSubscription = interactor.put(entry)
+    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    createDisposable = interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onNewTriggerAdded, throwable -> {
@@ -86,8 +86,8 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
-    deleteSubscription = SubscriptionHelper.unsubscribe(deleteSubscription);
-    deleteSubscription = interactor.delete(percent)
+    deleteDisposable = DisposableHelper.unsubscribe(deleteDisposable);
+    deleteDisposable = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onTriggerDeleted, throwable -> {
@@ -97,8 +97,8 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
       @NonNull TriggerToggleCallback callback) {
-    updateSubscription = SubscriptionHelper.unsubscribe(updateSubscription);
-    updateSubscription = interactor.update(entry, enabled)
+    updateDisposable = DisposableHelper.unsubscribe(updateDisposable);
+    updateDisposable = interactor.update(entry, enabled)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(result -> callback.updateViewHolder(position, result), throwable -> {

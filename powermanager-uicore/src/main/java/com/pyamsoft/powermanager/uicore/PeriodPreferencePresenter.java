@@ -19,13 +19,13 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empty>
@@ -34,7 +34,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   @NonNull private static final String OBS_TAG = "PeriodPreferencePresenter";
   @NonNull private final InterestObserver observer;
   @NonNull private final PeriodPreferenceInteractor interactor;
-  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
+  @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject public PeriodPreferencePresenter(@NonNull PeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -47,7 +47,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
     observer.unregister(OBS_TAG);
-    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
   }
 
   public void registerObserver(@NonNull PeriodicCallback callback) {
@@ -59,8 +59,8 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   }
 
   @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
-    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
-    onboardingSubscription = interactor.hasShownOnboarding()
+    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
@@ -71,7 +71,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   }
 
   @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
-    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
     callback.onDismissOnboarding();
   }
 

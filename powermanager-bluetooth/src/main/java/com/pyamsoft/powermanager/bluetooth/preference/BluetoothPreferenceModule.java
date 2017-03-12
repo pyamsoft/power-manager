@@ -22,14 +22,15 @@ import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteracto
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class BluetoothPreferenceModule {
 
   @Provides @Named("bluetooth_custom_delay")
   CustomTimePreferencePresenter provideBluetoothCustomDelayPresenter(
-      @NonNull @Named("bluetooth_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("bluetooth_custom_delay_interactor")
+          CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler) {
     };

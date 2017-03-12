@@ -58,6 +58,14 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
+  // SQLBrite
+  compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"
+
+  //For RxJava1 (SQLBrite)
+  compile "com.github.akarnokd:rxjava2-interop:0.9.3"
+  compile 'io.reactivex:rxjava:1.2.7'
+  compile 'com.artemzin.rxjava:proguard-rules:1.2.7.0'
+
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   debugCompile project(path: ":powermanager-base", configuration: "debug")

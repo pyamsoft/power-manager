@@ -22,15 +22,15 @@ import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteracto
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class WifiPreferenceModule {
 
   @Provides @Named("wifi_custom_delay")
   CustomTimePreferencePresenter provideWifiCustomDelayPresenter(
-      @NonNull @Named("wifi_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler computationScheduler) {
+      @NonNull @Named("wifi_custom_delay_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler computationScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
@@ -42,8 +42,8 @@ import rx.Scheduler;
 
   @Provides @Named("wifi_custom_enable")
   CustomTimePreferencePresenter provideWifiCustomEnablePresenter(
-      @NonNull @Named("wifi_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler computationScheduler) {
+      @NonNull @Named("wifi_custom_enable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler computationScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 
@@ -55,8 +55,8 @@ import rx.Scheduler;
 
   @Provides @Named("wifi_custom_disable")
   CustomTimePreferencePresenter provideWifiCustomDisablePresenter(
-      @NonNull @Named("wifi_custom_disable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler computationScheduler) {
+      @NonNull @Named("wifi_custom_disable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler computationScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, computationScheduler);
   }
 

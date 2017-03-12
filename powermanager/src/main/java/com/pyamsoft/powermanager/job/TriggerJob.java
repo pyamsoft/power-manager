@@ -24,20 +24,21 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class TriggerJob extends Job {
@@ -64,21 +65,25 @@ public class TriggerJob extends Job {
       syncModifier;
   @SuppressWarnings("WeakerAccess") @Inject @Named("sub") Scheduler subScheduler;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs") Scheduler obsScheduler;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription runSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Disposable runDisposable = Disposables.empty();
 
   public TriggerJob() {
     Injector.get().provideComponent().plusJobComponent().inject(this);
   }
 
   private void runTriggerForPercent(int percent) {
-    final Observable<List<PowerTriggerEntry>> triggerQuery =
-        powerTriggerDB.queryAll().first().flatMap(powerTriggerEntries -> {
+    final Observable<List<PowerTriggerEntry>> triggerQuery = powerTriggerDB.queryAll()
+        .first(Collections.emptyList())
+        .toObservable()
+        .flatMap(powerTriggerEntries -> {
           Timber.d("Flatten power triggers");
-          return Observable.from(powerTriggerEntries);
-        }).filter(entry -> {
+          return Observable.fromIterable(powerTriggerEntries);
+        })
+        .filter(entry -> {
           Timber.d("Filter empty power triggers");
           return !PowerTriggerEntry.isEmpty(entry);
-        }).toSortedList((entry, entry2) -> {
+        })
+        .toSortedList((entry, entry2) -> {
           Timber.d("Sort entries");
           final int p1 = entry.percent();
           final int p2 = entry2.percent();
@@ -90,7 +95,8 @@ public class TriggerJob extends Job {
           } else {
             return 0;
           }
-        });
+        })
+        .toObservable();
 
     final Observable<PowerTriggerEntry> powerTriggerEntryObservable;
     if (chargingObserver.is()) {
@@ -110,11 +116,11 @@ public class TriggerJob extends Job {
 
         return updateTriggerResult;
         // Convert to list so that we iterate over all the triggers we have found instead of just first
-      }).toList().first().map(integers -> {
+      }).toList().map(integers -> {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
         return PowerTriggerEntry.EMPTY;
-      });
+      }).toObservable();
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
@@ -162,8 +168,8 @@ public class TriggerJob extends Job {
       });
     }
 
-    runSubscription = SubscriptionHelper.unsubscribe(runSubscription);
-    runSubscription = powerTriggerEntryObservable.subscribeOn(subScheduler)
+    runDisposable = DisposableHelper.unsubscribe(runDisposable);
+    runDisposable = powerTriggerEntryObservable.subscribeOn(subScheduler)
         .observeOn(obsScheduler)
         .subscribe(entry -> {
               if (chargingObserver.is()) {
@@ -174,7 +180,7 @@ public class TriggerJob extends Job {
                 onTriggerRun(getContext(), entry);
               }
             }, throwable -> Timber.e(throwable, "onError"),
-            () -> runSubscription = SubscriptionHelper.unsubscribe(runSubscription));
+            () -> runDisposable = DisposableHelper.unsubscribe(runDisposable));
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull Context context,

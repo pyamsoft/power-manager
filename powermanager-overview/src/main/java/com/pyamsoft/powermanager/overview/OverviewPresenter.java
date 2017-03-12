@@ -18,14 +18,14 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
@@ -38,7 +38,7 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
   @NonNull private final BooleanInterestObserver dozeObserver;
   @NonNull private final BooleanInterestObserver wearObserver;
   @NonNull private final OverviewInteractor interactor;
-  @NonNull private Subscription onboardingSubscription = Subscriptions.empty();
+  @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
@@ -62,12 +62,12 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
+    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
   }
 
   public void showOnBoarding(@NonNull OnboardingCallback callback) {
-    onboardingSubscription = SubscriptionHelper.unsubscribe(onboardingSubscription);
-    onboardingSubscription = interactor.hasShownOnboarding()
+    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {

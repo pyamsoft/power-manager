@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
-import rx.Observable;
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class ManagerInteractor {

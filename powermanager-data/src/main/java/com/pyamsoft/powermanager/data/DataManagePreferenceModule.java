@@ -25,8 +25,8 @@ import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class DataManagePreferenceModule {
 
@@ -36,8 +36,8 @@ import rx.Scheduler;
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_data_manage") BooleanInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler,
-        manageObserver, rootPermissionObserver);
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver,
+        rootPermissionObserver);
   }
 
   @Provides @Named("data_manage_pref_interactor")

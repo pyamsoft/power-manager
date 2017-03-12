@@ -17,14 +17,14 @@
 package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
@@ -32,9 +32,9 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   private static final int CONFIRM_DATABASE = 0;
   private static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsPreferenceInteractor interactor;
-  @NonNull private Subscription confirmedSubscription = Subscriptions.empty();
-  @NonNull private Subscription rootSubscription = Subscriptions.empty();
-  @NonNull private Subscription bindCheckRootSubscription = Subscriptions.empty();
+  @NonNull private Disposable confirmedDisposable = Disposables.empty();
+  @NonNull private Disposable rootDisposable = Disposables.empty();
+  @NonNull private Disposable bindCheckRootDisposable = Disposables.empty();
 
   @Inject SettingsPreferencePresenter(@NonNull SettingsPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -44,14 +44,14 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
-    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
-    bindCheckRootSubscription = SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
+    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
+    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    bindCheckRootDisposable = DisposableHelper.unsubscribe(bindCheckRootDisposable);
   }
 
   public void checkRootEnabled(@NonNull RootCallback callback) {
-    bindCheckRootSubscription = SubscriptionHelper.unsubscribe(bindCheckRootSubscription);
-    bindCheckRootSubscription = interactor.isRootEnabled()
+    bindCheckRootDisposable = DisposableHelper.unsubscribe(bindCheckRootDisposable);
+    bindCheckRootDisposable = interactor.isRootEnabled()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(rootEnabled -> checkRoot(false, rootEnabled, callback),
@@ -67,8 +67,8 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
-    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
-    rootSubscription = interactor.checkRoot(rootEnable)
+    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    rootDisposable = interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasRoot -> callback.onRootCallback(causedByUser, hasRoot, rootEnable),
@@ -92,16 +92,16 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void clearAll(ClearRequestCallback callback) {
-    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
-    confirmedSubscription = interactor.clearAll()
+    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
+    confirmedDisposable = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError"));
   }
 
   private void clearDatabase(ClearRequestCallback callback) {
-    confirmedSubscription = SubscriptionHelper.unsubscribe(confirmedSubscription);
-    confirmedSubscription = interactor.clearDatabase()
+    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
+    confirmedDisposable = interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearDatabase(),

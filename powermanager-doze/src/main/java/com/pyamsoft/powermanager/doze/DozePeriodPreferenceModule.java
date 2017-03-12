@@ -23,8 +23,8 @@ import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class DozePeriodPreferenceModule {
 
@@ -33,8 +33,7 @@ import rx.Scheduler;
       @Named("doze_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
       @Named("obs_doze_periodic") BooleanInterestObserver periodicObserver) {
-    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler,
-        periodicObserver);
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler, periodicObserver);
   }
 
   @Provides @Named("doze_period_pref_interactor")

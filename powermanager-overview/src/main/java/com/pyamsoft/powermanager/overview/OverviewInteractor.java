@@ -19,10 +19,10 @@ package com.pyamsoft.powermanager.overview;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 
 @Singleton class OverviewInteractor {
 

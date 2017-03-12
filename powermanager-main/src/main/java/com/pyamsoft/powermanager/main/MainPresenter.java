@@ -18,23 +18,23 @@ package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
-  @NonNull private Subscription subscription = Subscriptions.empty();
-  @NonNull private Subscription rootSubscription = Subscriptions.empty();
+  @NonNull private Disposable subscription = Disposables.empty();
+  @NonNull private Disposable rootDisposable = Disposables.empty();
 
   @Inject MainPresenter(@NonNull MainInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
@@ -46,8 +46,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = SubscriptionHelper.unsubscribe(subscription);
-    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
+    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
   }
 
   public void runStartupHooks(@NonNull StartupCallback callback) {
@@ -56,7 +56,7 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void startServiceWhenOpen(@NonNull StartupCallback callback) {
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
     subscription = interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -68,8 +68,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void checkForRoot(@NonNull StartupCallback callback) {
-    rootSubscription = SubscriptionHelper.unsubscribe(rootSubscription);
-    rootSubscription = Observable.fromCallable(rootPermissionObserver::hasPermission)
+    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    rootDisposable = Observable.fromCallable(rootPermissionObserver::hasPermission)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {

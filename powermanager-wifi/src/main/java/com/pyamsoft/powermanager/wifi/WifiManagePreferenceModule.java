@@ -23,8 +23,8 @@ import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class WifiManagePreferenceModule {
 

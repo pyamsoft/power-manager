@@ -20,20 +20,20 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @NonNull private Subscription iconSubscription = Subscriptions.empty();
+  @NonNull private Disposable iconDisposable = Disposables.empty();
 
   @Inject OverviewItemPresenter(@Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
@@ -42,13 +42,13 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    iconSubscription = SubscriptionHelper.unsubscribe(iconSubscription);
+    iconDisposable = DisposableHelper.unsubscribe(iconDisposable);
   }
 
   public void decideManageState(@Nullable BooleanInterestObserver observer,
       @NonNull ManageStateCallback callback) {
-    iconSubscription = SubscriptionHelper.unsubscribe(iconSubscription);
-    iconSubscription = Observable.fromCallable(() -> {
+    iconDisposable = DisposableHelper.unsubscribe(iconDisposable);
+    iconDisposable = Observable.fromCallable(() -> {
       @DrawableRes final int icon;
       if (observer == null) {
         icon = 0;

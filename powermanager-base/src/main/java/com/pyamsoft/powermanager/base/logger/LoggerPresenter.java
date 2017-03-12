@@ -19,26 +19,26 @@ package com.pyamsoft.powermanager.base.logger;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.LogType;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull final CompositeSubscription logSubscriptions =
-      new CompositeSubscription();
-  @NonNull private Subscription logContenSubscription = Subscriptions.empty();
-  @NonNull private Subscription clearLogSubscription = Subscriptions.empty();
-  @NonNull private Subscription deleteLogSubscription = Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable logDisposables =
+      new CompositeDisposable();
+  @NonNull private Disposable logContenDisposable = Disposables.empty();
+  @NonNull private Disposable clearLogDisposable = Disposables.empty();
+  @NonNull private Disposable deleteLogDisposable = Disposables.empty();
 
   @Inject LoggerPresenter(@NonNull LoggerInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
@@ -48,8 +48,8 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void retrieveLogContents(@NonNull LogCallback callback) {
     callback.onPrepareLogContentRetrieval();
-    logContenSubscription = SubscriptionHelper.unsubscribe(logContenSubscription);
-    logContenSubscription = interactor.getLogContents()
+    logContenDisposable = DisposableHelper.unsubscribe(logContenDisposable);
+    logContenDisposable = interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onAllLogContentsRetrieved)
@@ -64,7 +64,7 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
-    final Subscription logSubscription = interactor.log(logType, fmt, args)
+    final Disposable logDisposable = interactor.log(logType, fmt, args)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(success -> {
@@ -74,24 +74,24 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
           // TODO Any other error handling?
         });
 
-    queueClearLogSubscription();
-    logSubscriptions.add(logSubscription);
+    queueClearLogDisposable();
+    logDisposables.add(logDisposable);
   }
 
-  private void queueClearLogSubscription() {
-    clearLogSubscription = SubscriptionHelper.unsubscribe(clearLogSubscription);
-    clearLogSubscription = Observable.just(Boolean.TRUE)
+  private void queueClearLogDisposable() {
+    clearLogDisposable = DisposableHelper.unsubscribe(clearLogDisposable);
+    clearLogDisposable = Observable.just(Boolean.TRUE)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> logSubscriptions.clear(),
+        .subscribe(aBoolean -> logDisposables.clear(),
             throwable -> Timber.e(throwable, "onError clearing composite subscription"));
   }
 
   public void deleteLog(@NonNull DeleteCallback callback) {
     // Stop everything before we delete the log
     clearLogs();
-    deleteLogSubscription = interactor.deleteLog()
+    deleteLogDisposable = interactor.deleteLog()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(deleted -> {
@@ -102,10 +102,10 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   @SuppressWarnings("WeakerAccess") void clearLogs() {
-    logSubscriptions.clear();
-    logContenSubscription = SubscriptionHelper.unsubscribe(logContenSubscription);
-    clearLogSubscription = SubscriptionHelper.unsubscribe(clearLogSubscription);
-    deleteLogSubscription = SubscriptionHelper.unsubscribe(deleteLogSubscription);
+    logDisposables.clear();
+    logContenDisposable = DisposableHelper.unsubscribe(logContenDisposable);
+    clearLogDisposable = DisposableHelper.unsubscribe(clearLogDisposable);
+    deleteLogDisposable = DisposableHelper.unsubscribe(deleteLogDisposable);
   }
 
   public interface DeleteCallback {

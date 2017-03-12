@@ -22,8 +22,8 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class ManagerModule {
 

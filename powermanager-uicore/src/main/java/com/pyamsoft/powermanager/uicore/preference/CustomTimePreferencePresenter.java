@@ -18,13 +18,13 @@ package com.pyamsoft.powermanager.uicore.preference;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
@@ -34,7 +34,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimePreferenceInteractor interactor;
-  @NonNull private Subscription customTimeSubscription = Subscriptions.empty();
+  @NonNull private Disposable customTimeDisposable = Disposables.empty();
 
   @Inject public CustomTimePreferencePresenter(@Nullable CustomTimePreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -44,7 +44,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
+    customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
   }
 
   public void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
@@ -76,8 +76,8 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
       // Set the time to a max of 30 minutes
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
 
-      customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
-      customTimeSubscription = interactor.saveTime(longTime, delay)
+      customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
+      customTimeDisposable = interactor.saveTime(longTime, delay)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(customTime -> {
@@ -97,8 +97,8 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   public void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
-      customTimeSubscription = SubscriptionHelper.unsubscribe(customTimeSubscription);
-      customTimeSubscription = interactor.getTime()
+      customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
+      customTimeDisposable = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(callback::onCustomTimeUpdate, throwable -> {

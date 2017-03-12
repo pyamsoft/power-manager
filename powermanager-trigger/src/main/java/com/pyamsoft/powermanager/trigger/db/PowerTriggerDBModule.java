@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.db;
+package com.pyamsoft.powermanager.trigger.db;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
-import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Scheduler;
 
 @Module public class PowerTriggerDBModule {
 
-  @Singleton @Provides PowerTriggerDB providePowerTriggerDB(@NonNull Context context,
-      @Named("io") Scheduler scheduler) {
-    return new PowerTriggerDBImpl(context.getApplicationContext(), scheduler);
+  @Singleton @Provides PowerTriggerDB providePowerTriggerDB(@NonNull Context context) {
+    return new PowerTriggerDBImpl(context.getApplicationContext());
   }
 }

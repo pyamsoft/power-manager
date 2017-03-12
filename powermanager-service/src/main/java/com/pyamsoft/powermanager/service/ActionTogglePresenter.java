@@ -17,20 +17,20 @@
 package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class ActionTogglePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @NonNull private final ActionToggleInteractor interactor;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Disposable subscription = Disposables.empty();
 
   @Inject ActionTogglePresenter(@NonNull ActionToggleInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -40,11 +40,11 @@ class ActionTogglePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
   }
 
   public void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
     subscription = interactor.toggleEnabledState()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

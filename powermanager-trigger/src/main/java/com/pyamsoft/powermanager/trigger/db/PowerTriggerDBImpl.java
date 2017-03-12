@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.db;
+package com.pyamsoft.powermanager.trigger.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,35 +23,35 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
-  @SuppressWarnings("WeakerAccess") @NonNull Subscription dbOpenSubscription =
-      Subscriptions.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull Disposable dbOpenDisposable = Disposables.empty();
 
-  @Inject PowerTriggerDBImpl(@NonNull Context context, @NonNull Scheduler scheduler) {
+  @Inject PowerTriggerDBImpl(@NonNull Context context) {
     openHelper = new PowerTriggerOpenHelper(context);
-    briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler);
+    briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, Schedulers.io());
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    dbOpenSubscription = SubscriptionHelper.unsubscribe(dbOpenSubscription);
+    dbOpenDisposable = DisposableHelper.unsubscribe(dbOpenDisposable);
 
     // After a 1 minute timeout, close the DB
-    dbOpenSubscription =
+    dbOpenDisposable =
         Observable.defer(() -> Observable.timer(1, TimeUnit.MINUTES)).subscribe(aLong -> {
           Timber.w("PowerTriggerDB is closed");
           briteDatabase.close();
@@ -94,8 +94,9 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY ALL");
       openDatabase();
-      return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
-          .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map);
+      return RxJavaInterop.toV2Observable(
+          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
+              .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map));
     });
   }
 
@@ -104,9 +105,11 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY PERCENT");
       openDatabase();
-      return briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-          Integer.toString(percent))
-          .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map, PowerTriggerEntry.EMPTY);
+      return RxJavaInterop.toV2Observable(
+          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
+              Integer.toString(percent))
+              .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map,
+                  PowerTriggerEntry.EMPTY));
     });
   }
 
@@ -127,7 +130,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.fromCallable(() -> {
       Timber.i("DB: DELETE ALL");
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
-      dbOpenSubscription = SubscriptionHelper.unsubscribe(dbOpenSubscription);
+      dbOpenDisposable = DisposableHelper.unsubscribe(dbOpenDisposable);
       briteDatabase.close();
       deleteDatabase();
       return 1;

@@ -19,12 +19,12 @@ package com.pyamsoft.powermanager.settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import rx.Observable;
 import timber.log.Timber;
 
 @Singleton class SettingsPreferenceInteractor {

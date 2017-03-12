@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
-import rx.Observable;
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class WearUnawareManagerInteractor extends ManagerInteractor {

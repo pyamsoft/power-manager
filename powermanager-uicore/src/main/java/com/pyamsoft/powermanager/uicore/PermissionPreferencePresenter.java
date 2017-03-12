@@ -20,18 +20,18 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
-  @NonNull private Subscription permissionSubscription = Subscriptions.empty();
+  @NonNull private Disposable permissionDisposable = Disposables.empty();
 
   @Inject public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
@@ -42,13 +42,13 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    permissionSubscription = SubscriptionHelper.unsubscribe(permissionSubscription);
+    permissionDisposable = DisposableHelper.unsubscribe(permissionDisposable);
   }
 
   @CallSuper @Override
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
-    permissionSubscription = SubscriptionHelper.unsubscribe(permissionSubscription);
-    permissionSubscription = Observable.fromCallable(permissionObserver::hasPermission)
+    permissionDisposable = DisposableHelper.unsubscribe(permissionDisposable);
+    permissionDisposable = Observable.fromCallable(permissionObserver::hasPermission)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {

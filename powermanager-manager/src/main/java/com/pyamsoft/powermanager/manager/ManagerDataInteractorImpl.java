@@ -21,8 +21,8 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import io.reactivex.Observable;
 import javax.inject.Inject;
-import rx.Observable;
 
 class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
 

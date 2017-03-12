@@ -28,7 +28,7 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.ActionSingle;
+import com.pyamsoft.pydroid.function.ActionSingle;
 import java.util.List;
 import java.util.Locale;
 import timber.log.Timber;

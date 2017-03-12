@@ -22,9 +22,9 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.Logger;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Scheduler;
 
 @Module public class LoggerModule {
 

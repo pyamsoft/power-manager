@@ -20,20 +20,20 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.helper.SchedulerHelper;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import timber.log.Timber;
 
 public class Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
   @NonNull private final Scheduler scheduler;
-  @NonNull private Subscription cancelSubscription = Subscriptions.empty();
-  @NonNull private Subscription setSubscription = Subscriptions.empty();
-  @NonNull private Subscription unsetSubscription = Subscriptions.empty();
+  @NonNull private Disposable cancelDisposable = Disposables.empty();
+  @NonNull private Disposable setDisposable = Disposables.empty();
+  @NonNull private Disposable unsetDisposable = Disposables.empty();
 
   Manager(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
     this.interactor = interactor;
@@ -46,8 +46,8 @@ public class Manager {
   }
 
   public void cancel(@NonNull Runnable onCancel) {
-    cancelSubscription = SubscriptionHelper.unsubscribe(cancelSubscription);
-    cancelSubscription = interactor.cancelJobs()
+    cancelDisposable = DisposableHelper.unsubscribe(cancelDisposable);
+    cancelDisposable = interactor.cancelJobs()
         .subscribeOn(getScheduler())
         .observeOn(getScheduler())
         .subscribe(cancelled -> Timber.d("Job cancelled: %s", interactor.getJobTag()),
@@ -55,8 +55,8 @@ public class Manager {
   }
 
   public void queueSet(@Nullable Runnable onSet) {
-    setSubscription = SubscriptionHelper.unsubscribe(setSubscription);
-    setSubscription = interactor.queueSet()
+    setDisposable = DisposableHelper.unsubscribe(setDisposable);
+    setDisposable = interactor.queueSet()
         .subscribeOn(scheduler)
         .observeOn(scheduler)
         .subscribe(originalState -> {
@@ -73,8 +73,8 @@ public class Manager {
   }
 
   public void queueUnset(@Nullable Runnable onUnset) {
-    unsetSubscription = SubscriptionHelper.unsubscribe(unsetSubscription);
-    unsetSubscription = interactor.queueUnset().
+    unsetDisposable = DisposableHelper.unsubscribe(unsetDisposable);
+    unsetDisposable = interactor.queueUnset().
         subscribeOn(scheduler).observeOn(scheduler).subscribe(shouldQueue -> {
       // Only queue a disable job if the radio is not ignored
       if (shouldQueue) {
@@ -89,9 +89,9 @@ public class Manager {
 
   @CallSuper public void cleanup() {
     interactor.destroy();
-    cancelSubscription = SubscriptionHelper.unsubscribe(cancelSubscription);
-    setSubscription = SubscriptionHelper.unsubscribe(setSubscription);
-    unsetSubscription = SubscriptionHelper.unsubscribe(unsetSubscription);
+    cancelDisposable = DisposableHelper.unsubscribe(cancelDisposable);
+    setDisposable = DisposableHelper.unsubscribe(setDisposable);
+    unsetDisposable = DisposableHelper.unsubscribe(unsetDisposable);
 
     // Reset the device back to its original state when the Service is cleaned up
     queueSet(null);

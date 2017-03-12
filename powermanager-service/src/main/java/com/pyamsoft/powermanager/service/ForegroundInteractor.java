@@ -30,10 +30,10 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
+import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import rx.Observable;
 import timber.log.Timber;
 
 @Singleton class ForegroundInteractor extends ActionToggleInteractor {

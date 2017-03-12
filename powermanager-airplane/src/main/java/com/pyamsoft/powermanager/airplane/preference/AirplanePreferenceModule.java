@@ -22,15 +22,15 @@ import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteracto
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class AirplanePreferenceModule {
 
   @Provides @Named("airplane_custom_delay")
   CustomTimePreferencePresenter provideAirplaneCustomDelayPresenter(
-      @NonNull @Named("airplane_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
+      @NonNull @Named("airplane_custom_delay_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
@@ -42,7 +42,8 @@ import rx.Scheduler;
 
   @Provides @Named("airplane_custom_enable")
   CustomTimePreferencePresenter provideAirplaneCustomEnablePresenter(
-      @NonNull @Named("airplane_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("airplane_custom_enable_interactor")
+          CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }

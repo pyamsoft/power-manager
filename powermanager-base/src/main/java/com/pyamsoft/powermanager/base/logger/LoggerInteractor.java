@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.LogType;
+import io.reactivex.Observable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -39,7 +40,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
-import rx.Observable;
 import timber.log.Timber;
 
 class LoggerInteractor {
@@ -151,7 +151,7 @@ class LoggerInteractor {
         throw new IllegalStateException(e);
       }
 
-      return Observable.from(fileContents);
+      return Observable.fromIterable(fileContents);
     });
   }
 

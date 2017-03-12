@@ -22,15 +22,15 @@ import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteracto
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
 import javax.inject.Named;
-import rx.Scheduler;
 
 @Module public class DozePreferenceModule {
 
   @Provides @Named("doze_custom_delay")
   CustomTimePreferencePresenter provideDozeCustomDelayPresenter(
-      @NonNull @Named("doze_custom_delay_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
+      @NonNull @Named("doze_custom_delay_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
@@ -42,8 +42,8 @@ import rx.Scheduler;
 
   @Provides @Named("doze_custom_enable")
   CustomTimePreferencePresenter provideDozeCustomEnablePresenter(
-      @NonNull @Named("doze_custom_enable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
+      @NonNull @Named("doze_custom_enable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
@@ -55,8 +55,8 @@ import rx.Scheduler;
 
   @Provides @Named("doze_custom_disable")
   CustomTimePreferencePresenter provideDozeCustomDisablePresenter(
-      @NonNull @Named("doze_custom_disable_interactor") CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
+      @NonNull @Named("doze_custom_disable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 

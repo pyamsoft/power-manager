@@ -19,22 +19,22 @@ package com.pyamsoft.powermanager.service;
 import android.app.Notification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
-  @NonNull private Subscription notificationSubscription = Subscriptions.empty();
-  @NonNull private Subscription createSubscription = Subscriptions.empty();
+  @NonNull private Disposable notificationDisposable = Disposables.empty();
+  @NonNull private Disposable createDisposable = Disposables.empty();
 
   @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -44,8 +44,8 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onBind(@Nullable Empty view) {
     super.onBind(view);
-    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
-    createSubscription = Observable.fromCallable(() -> {
+    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    createDisposable = Observable.fromCallable(() -> {
       interactor.create();
       return Boolean.TRUE;
     })
@@ -58,13 +58,13 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    notificationSubscription = SubscriptionHelper.unsubscribe(notificationSubscription);
-    createSubscription = SubscriptionHelper.unsubscribe(createSubscription);
+    notificationDisposable = DisposableHelper.unsubscribe(notificationDisposable);
+    createDisposable = DisposableHelper.unsubscribe(createDisposable);
   }
 
   public void startNotification(@NonNull NotificationCallback callback) {
-    notificationSubscription = SubscriptionHelper.unsubscribe(notificationSubscription);
-    notificationSubscription = interactor.createNotification()
+    notificationDisposable = DisposableHelper.unsubscribe(notificationDisposable);
+    notificationDisposable = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onStartNotificationInForeground, throwable -> {

@@ -19,20 +19,20 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.pydroid.helper.SubscriptionHelper;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
-import rx.Observable;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.subscriptions.Subscriptions;
 import timber.log.Timber;
 
 public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
-  @NonNull private Subscription subscription = Subscriptions.empty();
+  @NonNull private Disposable subscription = Disposables.empty();
 
   @Inject public OverviewPagerPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
@@ -42,11 +42,11 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
   }
 
   public void wrapSet() {
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
@@ -54,7 +54,7 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
   }
 
   public void wrapUnset() {
-    subscription = SubscriptionHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.unsubscribe(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
