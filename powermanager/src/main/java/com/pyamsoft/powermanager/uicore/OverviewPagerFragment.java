@@ -67,6 +67,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
     super.onDestroyView();
     setActionBarUpEnabled(false);
     tabLayout.setVisibility(View.GONE);
+    tabLayout.setupWithViewPager(null);
     subscription = AsyncMapHelper.unsubscribe(subscription);
     binding.unbind();
   }
