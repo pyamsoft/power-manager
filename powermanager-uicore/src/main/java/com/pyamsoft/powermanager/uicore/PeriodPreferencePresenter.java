@@ -47,7 +47,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
     observer.unregister(OBS_TAG);
-    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
   }
 
   public void registerObserver(@NonNull PeriodicCallback callback) {
@@ -59,7 +59,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   }
 
   @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
-    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
     onboardingDisposable = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -71,7 +71,7 @@ public class PeriodPreferencePresenter extends SchedulerPresenter<Presenter.Empt
   }
 
   @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
-    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
     callback.onDismissOnboarding();
   }
 

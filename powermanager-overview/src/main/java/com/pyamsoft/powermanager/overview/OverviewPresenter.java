@@ -62,11 +62,11 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
   }
 
   public void showOnBoarding(@NonNull OnboardingCallback callback) {
-    onboardingDisposable = DisposableHelper.unsubscribe(onboardingDisposable);
+    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
     onboardingDisposable = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

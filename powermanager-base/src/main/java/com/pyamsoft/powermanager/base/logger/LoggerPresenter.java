@@ -48,7 +48,7 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void retrieveLogContents(@NonNull LogCallback callback) {
     callback.onPrepareLogContentRetrieval();
-    logContenDisposable = DisposableHelper.unsubscribe(logContenDisposable);
+    logContenDisposable = DisposableHelper.dispose(logContenDisposable);
     logContenDisposable = interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -79,7 +79,7 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void queueClearLogDisposable() {
-    clearLogDisposable = DisposableHelper.unsubscribe(clearLogDisposable);
+    clearLogDisposable = DisposableHelper.dispose(clearLogDisposable);
     clearLogDisposable = Observable.just(Boolean.TRUE)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
@@ -103,9 +103,9 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @SuppressWarnings("WeakerAccess") void clearLogs() {
     logDisposables.clear();
-    logContenDisposable = DisposableHelper.unsubscribe(logContenDisposable);
-    clearLogDisposable = DisposableHelper.unsubscribe(clearLogDisposable);
-    deleteLogDisposable = DisposableHelper.unsubscribe(deleteLogDisposable);
+    logContenDisposable = DisposableHelper.dispose(logContenDisposable);
+    clearLogDisposable = DisposableHelper.dispose(clearLogDisposable);
+    deleteLogDisposable = DisposableHelper.dispose(deleteLogDisposable);
   }
 
   public interface DeleteCallback {

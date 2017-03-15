@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
+import com.squareup.sqldelight.SqlDelightStatement;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
 
@@ -41,6 +42,14 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
     return EMPTY == entry;
+  }
+
+  @CheckResult @NonNull public static SqlDelightStatement queryAll() {
+    return FACTORY.all_entries();
+  }
+
+  @CheckResult @NonNull public static SqlDelightStatement withPercent(int percent) {
+    return FACTORY.with_percent(percent);
   }
 
   @CheckResult @NonNull

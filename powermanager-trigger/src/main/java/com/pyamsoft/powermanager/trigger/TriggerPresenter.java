@@ -45,14 +45,14 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    deleteDisposable = DisposableHelper.unsubscribe(deleteDisposable);
-    createDisposable = DisposableHelper.unsubscribe(createDisposable);
-    updateDisposable = DisposableHelper.unsubscribe(updateDisposable);
-    viewDisposable = DisposableHelper.unsubscribe(viewDisposable);
+    deleteDisposable = DisposableHelper.dispose(deleteDisposable);
+    createDisposable = DisposableHelper.dispose(createDisposable);
+    updateDisposable = DisposableHelper.dispose(updateDisposable);
+    viewDisposable = DisposableHelper.dispose(viewDisposable);
   }
 
   public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
-    viewDisposable = DisposableHelper.unsubscribe(viewDisposable);
+    viewDisposable = DisposableHelper.dispose(viewDisposable);
     viewDisposable = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -69,7 +69,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   public void createPowerTrigger(@NonNull PowerTriggerEntry entry,
       @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
-    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    createDisposable = DisposableHelper.dispose(createDisposable);
     createDisposable = interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -86,7 +86,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
-    deleteDisposable = DisposableHelper.unsubscribe(deleteDisposable);
+    deleteDisposable = DisposableHelper.dispose(deleteDisposable);
     deleteDisposable = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -97,7 +97,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
       @NonNull TriggerToggleCallback callback) {
-    updateDisposable = DisposableHelper.unsubscribe(updateDisposable);
+    updateDisposable = DisposableHelper.dispose(updateDisposable);
     updateDisposable = interactor.update(entry, enabled)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

@@ -42,12 +42,12 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    permissionDisposable = DisposableHelper.unsubscribe(permissionDisposable);
+    permissionDisposable = DisposableHelper.dispose(permissionDisposable);
   }
 
   @CallSuper @Override
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
-    permissionDisposable = DisposableHelper.unsubscribe(permissionDisposable);
+    permissionDisposable = DisposableHelper.dispose(permissionDisposable);
     permissionDisposable = Observable.fromCallable(permissionObserver::hasPermission)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

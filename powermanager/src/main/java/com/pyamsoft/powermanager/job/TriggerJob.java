@@ -168,19 +168,18 @@ public class TriggerJob extends Job {
       });
     }
 
-    runDisposable = DisposableHelper.unsubscribe(runDisposable);
+    runDisposable = DisposableHelper.dispose(runDisposable);
     runDisposable = powerTriggerEntryObservable.subscribeOn(subScheduler)
         .observeOn(obsScheduler)
         .subscribe(entry -> {
-              if (chargingObserver.is()) {
-                Timber.w("Do not run Trigger because device is charging");
-              } else if (PowerTriggerEntry.isEmpty(entry)) {
-                Timber.w("Do not run Trigger because entry specified is EMPTY");
-              } else {
-                onTriggerRun(getContext(), entry);
-              }
-            }, throwable -> Timber.e(throwable, "onError"),
-            () -> runDisposable = DisposableHelper.unsubscribe(runDisposable));
+          if (chargingObserver.is()) {
+            Timber.w("Do not run Trigger because device is charging");
+          } else if (PowerTriggerEntry.isEmpty(entry)) {
+            Timber.w("Do not run Trigger because entry specified is EMPTY");
+          } else {
+            onTriggerRun(getContext(), entry);
+          }
+        }, throwable -> Timber.e(throwable, "onError"));
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull Context context,

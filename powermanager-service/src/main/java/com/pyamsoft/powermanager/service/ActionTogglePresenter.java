@@ -40,11 +40,11 @@ class ActionTogglePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
   }
 
   public void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
     subscription = interactor.toggleEnabledState()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

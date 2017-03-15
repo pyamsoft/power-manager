@@ -38,5 +38,5 @@ public interface PowerTriggerDB {
 
   @CheckResult @NonNull Observable<Integer> deleteAll();
 
-  void deleteDatabase();
+  @CheckResult @NonNull Observable<Boolean> deleteDatabase();
 }

@@ -44,13 +44,13 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
-    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
-    bindCheckRootDisposable = DisposableHelper.unsubscribe(bindCheckRootDisposable);
+    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
+    rootDisposable = DisposableHelper.dispose(rootDisposable);
+    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
   }
 
   public void checkRootEnabled(@NonNull RootCallback callback) {
-    bindCheckRootDisposable = DisposableHelper.unsubscribe(bindCheckRootDisposable);
+    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
     bindCheckRootDisposable = interactor.isRootEnabled()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -67,7 +67,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
-    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    rootDisposable = DisposableHelper.dispose(rootDisposable);
     rootDisposable = interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -92,7 +92,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void clearAll(ClearRequestCallback callback) {
-    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
+    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
     confirmedDisposable = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -100,7 +100,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void clearDatabase(ClearRequestCallback callback) {
-    confirmedDisposable = DisposableHelper.unsubscribe(confirmedDisposable);
+    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
     confirmedDisposable = interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

@@ -42,11 +42,11 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
   }
 
   public void wrapSet() {
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
@@ -54,7 +54,7 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
   }
 
   public void wrapUnset() {
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())

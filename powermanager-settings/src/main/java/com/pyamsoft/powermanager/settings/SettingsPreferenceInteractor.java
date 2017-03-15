@@ -56,17 +56,12 @@ import timber.log.Timber;
   }
 
   @NonNull @CheckResult public Observable<Boolean> clearDatabase() {
-    return Observable.defer(() -> {
-      Timber.d("Clear database of all entries");
-      return powerTriggerDB.deleteAll();
-    }).map(result -> {
-      Timber.d("Database is cleared: %s", result);
-      powerTriggerDB.deleteDatabase();
-      triggerInteractor.clearCached();
-
-      // TODO just return something valid
-      return Boolean.TRUE;
-    });
+    return powerTriggerDB.deleteAll()
+        .flatMap(result -> powerTriggerDB.deleteDatabase())
+        .map(whocares -> {
+          triggerInteractor.clearCached();
+          return Boolean.TRUE;
+        });
   }
 
   @NonNull @CheckResult public Observable<Boolean> clearAll() {

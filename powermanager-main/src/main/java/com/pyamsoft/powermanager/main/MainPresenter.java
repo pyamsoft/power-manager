@@ -46,8 +46,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    subscription = DisposableHelper.unsubscribe(subscription);
-    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    subscription = DisposableHelper.dispose(subscription);
+    rootDisposable = DisposableHelper.dispose(rootDisposable);
   }
 
   public void runStartupHooks(@NonNull StartupCallback callback) {
@@ -56,7 +56,7 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void startServiceWhenOpen(@NonNull StartupCallback callback) {
-    subscription = DisposableHelper.unsubscribe(subscription);
+    subscription = DisposableHelper.dispose(subscription);
     subscription = interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -68,7 +68,7 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   private void checkForRoot(@NonNull StartupCallback callback) {
-    rootDisposable = DisposableHelper.unsubscribe(rootDisposable);
+    rootDisposable = DisposableHelper.dispose(rootDisposable);
     rootDisposable = Observable.fromCallable(rootPermissionObserver::hasPermission)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

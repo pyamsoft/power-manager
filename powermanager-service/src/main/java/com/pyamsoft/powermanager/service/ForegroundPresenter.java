@@ -44,7 +44,7 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onBind(@Nullable Empty view) {
     super.onBind(view);
-    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    createDisposable = DisposableHelper.dispose(createDisposable);
     createDisposable = Observable.fromCallable(() -> {
       interactor.create();
       return Boolean.TRUE;
@@ -58,12 +58,12 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
   @Override protected void onUnbind() {
     super.onUnbind();
     interactor.destroy();
-    notificationDisposable = DisposableHelper.unsubscribe(notificationDisposable);
-    createDisposable = DisposableHelper.unsubscribe(createDisposable);
+    notificationDisposable = DisposableHelper.dispose(notificationDisposable);
+    createDisposable = DisposableHelper.dispose(createDisposable);
   }
 
   public void startNotification(@NonNull NotificationCallback callback) {
-    notificationDisposable = DisposableHelper.unsubscribe(notificationDisposable);
+    notificationDisposable = DisposableHelper.dispose(notificationDisposable);
     notificationDisposable = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())

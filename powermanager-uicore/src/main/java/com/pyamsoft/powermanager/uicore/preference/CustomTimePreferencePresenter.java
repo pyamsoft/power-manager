@@ -44,7 +44,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
+    customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
   }
 
   public void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
@@ -76,7 +76,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
       // Set the time to a max of 30 minutes
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
 
-      customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
+      customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
       customTimeDisposable = interactor.saveTime(longTime, delay)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
@@ -97,7 +97,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   public void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
-      customTimeDisposable = DisposableHelper.unsubscribe(customTimeDisposable);
+      customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
       customTimeDisposable = interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())

@@ -42,12 +42,12 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   @Override protected void onUnbind() {
     super.onUnbind();
-    iconDisposable = DisposableHelper.unsubscribe(iconDisposable);
+    iconDisposable = DisposableHelper.dispose(iconDisposable);
   }
 
   public void decideManageState(@Nullable BooleanInterestObserver observer,
       @NonNull ManageStateCallback callback) {
-    iconDisposable = DisposableHelper.unsubscribe(iconDisposable);
+    iconDisposable = DisposableHelper.dispose(iconDisposable);
     iconDisposable = Observable.fromCallable(() -> {
       @DrawableRes final int icon;
       if (observer == null) {

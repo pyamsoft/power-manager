@@ -26,6 +26,7 @@ import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
+import com.squareup.sqldelight.SqlDelightStatement;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
@@ -48,7 +49,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    dbOpenDisposable = DisposableHelper.unsubscribe(dbOpenDisposable);
+    dbOpenDisposable = DisposableHelper.dispose(dbOpenDisposable);
 
     // After a 1 minute timeout, close the DB
     dbOpenDisposable =
@@ -94,8 +95,10 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY ALL");
       openDatabase();
+
+      SqlDelightStatement statement = PowerTriggerEntry.queryAll();
       return RxJavaInterop.toV2Observable(
-          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.ALL_ENTRIES)
+          briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
               .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map));
     });
   }
@@ -105,9 +108,10 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.defer(() -> {
       Timber.i("DB: QUERY PERCENT");
       openDatabase();
+
+      SqlDelightStatement statement = PowerTriggerEntry.withPercent(percent);
       return RxJavaInterop.toV2Observable(
-          briteDatabase.createQuery(PowerTriggerEntry.TABLE_NAME, PowerTriggerEntry.WITH_PERCENT,
-              Integer.toString(percent))
+          briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
               .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map,
                   PowerTriggerEntry.EMPTY));
     });
@@ -130,15 +134,18 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Observable.fromCallable(() -> {
       Timber.i("DB: DELETE ALL");
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
-      dbOpenDisposable = DisposableHelper.unsubscribe(dbOpenDisposable);
+      dbOpenDisposable = DisposableHelper.dispose(dbOpenDisposable);
       briteDatabase.close();
       deleteDatabase();
       return 1;
     });
   }
 
-  @Override public void deleteDatabase() {
-    openHelper.deleteDatabase();
+  @NonNull @Override public Observable<Boolean> deleteDatabase() {
+    return Observable.fromCallable(() -> {
+      openHelper.deleteDatabase();
+      return Boolean.TRUE;
+    });
   }
 
   @SuppressWarnings("WeakerAccess") static class PowerTriggerOpenHelper extends SQLiteOpenHelper {

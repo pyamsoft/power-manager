@@ -46,7 +46,7 @@ public class Manager {
   }
 
   public void cancel(@NonNull Runnable onCancel) {
-    cancelDisposable = DisposableHelper.unsubscribe(cancelDisposable);
+    cancelDisposable = DisposableHelper.dispose(cancelDisposable);
     cancelDisposable = interactor.cancelJobs()
         .subscribeOn(getScheduler())
         .observeOn(getScheduler())
@@ -55,7 +55,7 @@ public class Manager {
   }
 
   public void queueSet(@Nullable Runnable onSet) {
-    setDisposable = DisposableHelper.unsubscribe(setDisposable);
+    setDisposable = DisposableHelper.dispose(setDisposable);
     setDisposable = interactor.queueSet()
         .subscribeOn(scheduler)
         .observeOn(scheduler)
@@ -73,7 +73,7 @@ public class Manager {
   }
 
   public void queueUnset(@Nullable Runnable onUnset) {
-    unsetDisposable = DisposableHelper.unsubscribe(unsetDisposable);
+    unsetDisposable = DisposableHelper.dispose(unsetDisposable);
     unsetDisposable = interactor.queueUnset().
         subscribeOn(scheduler).observeOn(scheduler).subscribe(shouldQueue -> {
       // Only queue a disable job if the radio is not ignored
@@ -89,9 +89,9 @@ public class Manager {
 
   @CallSuper public void cleanup() {
     interactor.destroy();
-    cancelDisposable = DisposableHelper.unsubscribe(cancelDisposable);
-    setDisposable = DisposableHelper.unsubscribe(setDisposable);
-    unsetDisposable = DisposableHelper.unsubscribe(unsetDisposable);
+    cancelDisposable = DisposableHelper.dispose(cancelDisposable);
+    setDisposable = DisposableHelper.dispose(setDisposable);
+    unsetDisposable = DisposableHelper.dispose(unsetDisposable);
 
     // Reset the device back to its original state when the Service is cleaned up
     queueSet(null);
