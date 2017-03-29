@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.base.modifier;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import dagger.Module;
@@ -27,7 +28,7 @@ import javax.inject.Singleton;
 @Module public class StateModifierModule {
 
   @Singleton @Named("mod_wifi_state") @Provides BooleanInterestModifier provideWifiModifier(
-      @NonNull @Named("wrapper_wifi") DeviceFunctionWrapper wrapper) {
+      @NonNull @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper) {
     return new WifiStateModifier(wrapper);
   }
 

@@ -28,8 +28,9 @@ import javax.inject.Singleton;
 
 @Module public class WrapperModule {
 
-  @Singleton @Provides @Named("wrapper_wifi") DeviceFunctionWrapper provideWifiManagerWrapper(
-      @NonNull Context context, @Named("logger_wifi") Logger logger) {
+  @Singleton @Provides @Named("wrapper_wifi")
+  ConnectedDeviceFunctionWrapper provideWifiManagerWrapper(@NonNull Context context,
+      @Named("logger_wifi") Logger logger) {
     return new WifiManagerWrapperImpl(context, logger);
   }
 
