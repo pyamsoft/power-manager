@@ -69,7 +69,7 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
     return R.bool.ignore_charging_airplane_default;
   }
 
-  @Override protected boolean checkManagePermission() {
+  @Override protected boolean shouldCheckManagePermission() {
     Timber.d("Airplane checks manage permission");
     return true;
   }

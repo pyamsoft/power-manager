@@ -20,6 +20,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.InterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -47,16 +48,20 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @CallSuper @Override
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
+    ManagePermissionCallback permissionCallback = Checker.checkNonNull(callback);
+
+    permissionCallback.onBegin();
     permissionDisposable = DisposableHelper.dispose(permissionDisposable);
     permissionDisposable = Observable.fromCallable(permissionObserver::hasPermission)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
         .subscribe(hasPermission -> {
           Timber.d("Permission granted? %s", hasPermission);
-          callback.onManagePermissionCallback(hasPermission);
+          permissionCallback.onManagePermissionCallback(hasPermission);
         }, throwable -> {
           Timber.e(throwable, "onError checkManagePermission");
-          callback.onManagePermissionCallback(false);
+          permissionCallback.onManagePermissionCallback(false);
         });
   }
 }

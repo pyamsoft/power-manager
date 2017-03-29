@@ -32,19 +32,18 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
+import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
-    implements SettingsPreferencePresenter.RootCallback,
-    SettingsPreferencePresenter.ClearRequestCallback,
-    SettingsPreferencePresenter.ConfirmDialogCallback {
+public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @NonNull public static final String TAG = "Settings";
   @SuppressWarnings("WeakerAccess") @Inject SettingsPreferencePresenter presenter;
-  private SwitchPreferenceCompat useRoot;
+  SwitchPreferenceCompat useRoot;
+  @NonNull ProgressOverlay overlay = ProgressOverlay.empty();
 
   @CheckResult @NonNull public static Fragment newInstance(View view, View rootView) {
     Fragment fragment = new SettingsPreferenceFragment();
@@ -64,7 +63,8 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
-      presenter.requestClearDatabase(this);
+      presenter.requestClearDatabase(type -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
+          ConfirmationDialog.newInstance(type), "confirm_dialog"));
       return true;
     });
 
@@ -73,7 +73,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         if (b) {
-          presenter.checkRoot(true, true, this);
+          checkRoot(false);
           return false;
         } else {
           return true;
@@ -83,15 +83,67 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
     });
   }
 
-  @Override public void showConfirmDialog(int type) {
-    AppUtil.guaranteeSingleDialogFragment(getActivity(), ConfirmationDialog.newInstance(type),
-        "confirm_dialog");
-  }
-
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(null);
-    presenter.checkRootEnabled(this);
+    presenter.registerOnBus(type -> presenter.processClearRequest(type,
+        new SettingsPreferencePresenter.ClearRequestCallback() {
+          @Override public void onClearAll() {
+            Timber.d("Everything is cleared, kill self");
+            getActivity().getApplicationContext()
+                .stopService(
+                    new Intent(getContext().getApplicationContext(), ForegroundService.class));
+            final ActivityManager activityManager =
+                (ActivityManager) getContext().getApplicationContext()
+                    .getSystemService(Context.ACTIVITY_SERVICE);
+            activityManager.clearApplicationUserData();
+          }
+
+          @Override public void onClearDatabase() {
+            Timber.d("Cleared the trigger database");
+          }
+        }));
+    checkRoot(true);
+  }
+
+  void checkRoot(boolean enabled) {
+    SettingsPreferencePresenter.RootCallback callback =
+        new SettingsPreferencePresenter.RootCallback() {
+
+          @Override public void onBegin() {
+            overlay = ProgressOverlay.Helper.dispose(overlay);
+            overlay =
+                new ProgressOverlay.Builder().setRootResId(R.id.main_root).build(getActivity());
+          }
+
+          @Override public void onRootCallback(boolean causedByUser, boolean hasPermission,
+              boolean rootEnable) {
+            if (rootEnable) {
+              useRoot.setChecked(hasPermission);
+
+              if (causedByUser && !hasPermission) {
+                Toast.makeText(getContext(), "Must grant root permission via SuperUser application",
+                    Toast.LENGTH_SHORT).show();
+              }
+            } else {
+              useRoot.setChecked(false);
+            }
+          }
+
+          @Override public void onComplete() {
+            overlay = ProgressOverlay.Helper.dispose(overlay);
+          }
+        };
+    if (enabled) {
+      presenter.checkRootEnabled(callback);
+    } else {
+      presenter.checkRoot(true, true, callback);
+    }
+  }
+
+  @Override public void onDestroyView() {
+    super.onDestroyView();
+    overlay = ProgressOverlay.Helper.dispose(overlay);
   }
 
   @Override public void onStop() {
@@ -129,39 +181,9 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment
     return R.color.pink700;
   }
 
-  @Override
-  public void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable) {
-    if (rootEnable) {
-      useRoot.setChecked(hasPermission);
-
-      if (causedByUser && !hasPermission) {
-        Toast.makeText(getContext(), "Must grant root permission via SuperUser application",
-            Toast.LENGTH_SHORT).show();
-      }
-    } else {
-      useRoot.setChecked(false);
-    }
-  }
-
   @Override protected boolean onClearAllPreferenceClicked() {
-    presenter.requestClearAll(this);
+    presenter.requestClearAll(type -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
+        ConfirmationDialog.newInstance(type), "confirm_dialog"));
     return true;
-  }
-
-  @Override public void onClearAll() {
-    Timber.d("Everything is cleared, kill self");
-    getActivity().getApplicationContext()
-        .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
-    final ActivityManager activityManager = (ActivityManager) getContext().getApplicationContext()
-        .getSystemService(Context.ACTIVITY_SERVICE);
-    activityManager.clearApplicationUserData();
-  }
-
-  @Override public void onClearDatabase() {
-    Timber.d("Cleared the trigger database");
-  }
-
-  public void processClearRequest(int which) {
-    presenter.processClearRequest(which, this);
   }
 }

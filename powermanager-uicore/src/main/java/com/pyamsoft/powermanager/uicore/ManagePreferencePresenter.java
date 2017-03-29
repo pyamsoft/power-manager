@@ -88,6 +88,10 @@ public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empt
 
   interface ManagePermissionCallback {
 
+    void onBegin();
+
     void onManagePermissionCallback(boolean hasPermission);
+
+    void onComplete();
   }
 }

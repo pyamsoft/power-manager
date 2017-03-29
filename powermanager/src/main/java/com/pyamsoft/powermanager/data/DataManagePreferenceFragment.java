@@ -70,7 +70,7 @@ public class DataManagePreferenceFragment extends ManagePreferenceFragment {
     return R.bool.ignore_charging_data_default;
   }
 
-  @Override protected boolean checkManagePermission() {
+  @Override protected boolean shouldCheckManagePermission() {
     Timber.d("Data checks manage permission on API > 19");
     return Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT;
   }

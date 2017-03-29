@@ -71,7 +71,7 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
     return R.bool.ignore_charging_doze_default;
   }
 
-  @Override protected boolean checkManagePermission() {
+  @Override protected boolean shouldCheckManagePermission() {
     Timber.d("Doze checks manage permission");
     return true;
   }

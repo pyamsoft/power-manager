@@ -32,17 +32,18 @@ import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
+import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
-    implements PagerItem, OnboardingPresenter.OnboardingCallback,
-    ManagePreferencePresenter.ManagePermissionCallback {
+    implements PagerItem, OnboardingPresenter.OnboardingCallback {
 
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreference managePreference;
   @SuppressWarnings("WeakerAccess") ListPreference presetTimePreference;
   @Nullable @SuppressWarnings("WeakerAccess") CustomTimeInputPreference customTimePreference;
   @SuppressWarnings("WeakerAccess") String presetTimeKey;
+  @NonNull ProgressOverlay overlay = ProgressOverlay.empty();
   @Nullable private CheckBoxPreference ignoreChargingPreference;
   private String manageKey;
   @Nullable private String ignoreChargingKey;
@@ -152,18 +153,9 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       if (newValue instanceof Boolean) {
         final boolean b = (boolean) newValue;
         if (b) {
-          final boolean checkPermission = checkManagePermission();
-          if (checkPermission) {
+          if (shouldCheckManagePermission()) {
             Timber.d("We need to check manage permission, do not toggle preference just yet");
-            presenter.checkManagePermission(hasPermission -> {
-              Timber.d("Has manage permission: %s", hasPermission);
-              // Set based on permission state
-              managePreference.setChecked(hasPermission);
-
-              if (!hasPermission) {
-                onShowManagePermissionNeededMessage();
-              }
-            });
+            checkManagePermission(true);
             return false;
           }
         }
@@ -200,7 +192,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   /**
    * Override if you need to implement a permission based check
    */
-  @CheckResult protected boolean checkManagePermission() {
+  @CheckResult protected boolean shouldCheckManagePermission() {
     return false;
   }
 
@@ -217,11 +209,34 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       }
     });
 
-    if (checkManagePermission() && managePreference.isChecked()) {
-      presenter.checkManagePermission(this);
+    if (shouldCheckManagePermission() && managePreference.isChecked()) {
+      checkManagePermission(false);
     }
 
     presenter.showOnboardingIfNeeded(this);
+  }
+
+  final void checkManagePermission(boolean showMessage) {
+    presenter.checkManagePermission(new ManagePreferencePresenter.ManagePermissionCallback() {
+      @Override public void onBegin() {
+        overlay = ProgressOverlay.Helper.dispose(overlay);
+        overlay = new ProgressOverlay.Builder().setRootResId(R.id.main_root).build(getActivity());
+      }
+
+      @Override public void onManagePermissionCallback(boolean hasPermission) {
+        Timber.d("Has manage permission: %s", hasPermission);
+        // Set based on permission state
+        managePreference.setChecked(hasPermission);
+
+        if (!hasPermission && showMessage) {
+          onShowManagePermissionNeededMessage();
+        }
+      }
+
+      @Override public void onComplete() {
+        overlay = ProgressOverlay.Helper.dispose(overlay);
+      }
+    });
   }
 
   @CallSuper @Override public void onStop() {
@@ -236,6 +251,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
+    overlay = ProgressOverlay.Helper.dispose(overlay);
     if (customTimePreference != null) {
       customTimePreference.setOnPreferenceChangeListener(null);
       customTimePreference.setOnPreferenceClickListener(null);
@@ -264,9 +280,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @Override public void onShowOnboarding() {
     Timber.d("Show manage onboarding");
-  }
-
-  @Override public void onManagePermissionCallback(boolean hasPermission) {
   }
 
   /**

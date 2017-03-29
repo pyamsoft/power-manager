@@ -17,6 +17,9 @@
 package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.ConfirmEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -35,6 +38,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
   @NonNull private Disposable confirmedDisposable = Disposables.empty();
   @NonNull private Disposable rootDisposable = Disposables.empty();
   @NonNull private Disposable bindCheckRootDisposable = Disposables.empty();
+  @NonNull private Disposable bus = Disposables.empty();
 
   @Inject SettingsPreferencePresenter(@NonNull SettingsPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -47,6 +51,18 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
     confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
     rootDisposable = DisposableHelper.dispose(rootDisposable);
     bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
+    bus = DisposableHelper.dispose(bus);
+  }
+
+  public void registerOnBus(@NonNull BusCallback callback) {
+    BusCallback busCallback = Checker.checkNonNull(callback);
+    bus = DisposableHelper.dispose(bus);
+    bus = EventBus.get()
+        .listen(ConfirmEvent.class)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(confirmEvent -> busCallback.onProcessClearRequest(confirmEvent.type()),
+            throwable -> Timber.e(throwable, "confirm bus error"));
   }
 
   public void checkRootEnabled(@NonNull RootCallback callback) {
@@ -108,9 +124,18 @@ class SettingsPreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
             throwable -> Timber.e(throwable, "onError"));
   }
 
+  public interface BusCallback {
+
+    void onProcessClearRequest(int type);
+  }
+
   interface RootCallback {
 
+    void onBegin();
+
     void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable);
+
+    void onComplete();
   }
 
   interface ConfirmDialogCallback {
