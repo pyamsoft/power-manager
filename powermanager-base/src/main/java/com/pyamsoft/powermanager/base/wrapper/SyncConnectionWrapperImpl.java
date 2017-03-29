@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
 class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {
@@ -42,7 +43,7 @@ class SyncConnectionWrapperImpl implements DeviceFunctionWrapper {
     toggle(false);
   }
 
-  @Override public boolean isEnabled() {
-    return ContentResolver.getMasterSyncAutomatically();
+  @NonNull @Override public States getState() {
+    return ContentResolver.getMasterSyncAutomatically() ? States.ENABLED : States.DISABLED;
   }
 }

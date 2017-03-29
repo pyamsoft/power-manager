@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.observer.state;
 import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -31,7 +32,7 @@ class ChargingStateObserver extends BroadcastStateObserver {
     setFilterActions(Intent.ACTION_BATTERY_CHANGED);
   }
 
-  @Override public boolean is() {
+  @CheckResult private int getStatus() {
     final Intent batteryStatus = getAppContext().registerReceiver(null, getFilter());
     int status;
     if (batteryStatus == null) {
@@ -43,7 +44,20 @@ class ChargingStateObserver extends BroadcastStateObserver {
           BatteryManager.BATTERY_STATUS_UNKNOWN);
     }
 
+    return status;
+  }
+
+  @CheckResult private boolean isCharging() {
+    int status = getStatus();
     return status == BatteryManager.BATTERY_STATUS_CHARGING
         || status == BatteryManager.BATTERY_STATUS_FULL;
+  }
+
+  @Override public boolean is() {
+    return isCharging();
+  }
+
+  @Override public boolean unknown() {
+    return getStatus() == BatteryManager.BATTERY_STATUS_UNKNOWN;
   }
 }

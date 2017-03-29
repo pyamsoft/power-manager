@@ -21,12 +21,12 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
+import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.powermanager.base.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataManageObserver extends BooleanPreferenceObserver {
+class DataManageObserver extends StatePreferenceObserver {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
 

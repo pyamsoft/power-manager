@@ -38,7 +38,7 @@ import com.google.auto.value.AutoValue;
 
   @ColorRes public abstract int background();
 
-  @Nullable public abstract BooleanInterestObserver observer();
+  @Nullable public abstract StateInterestObserver observer();
 
   @AutoValue.Builder public static abstract class Builder {
 
@@ -50,7 +50,7 @@ import com.google.auto.value.AutoValue;
 
     public abstract Builder background(@ColorRes int i);
 
-    public abstract Builder observer(@Nullable BooleanInterestObserver observer);
+    public abstract Builder observer(@Nullable StateInterestObserver observer);
 
     public abstract OverviewModel build();
   }

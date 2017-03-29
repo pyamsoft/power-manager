@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -27,10 +27,10 @@ import timber.log.Timber;
 class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
   @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
+      @NonNull StateInterestObserver manageObserver,
+      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateInterestObserver wearManageObserver,
+      @NonNull StateInterestObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }
@@ -56,7 +56,7 @@ class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
   }
 
   @NonNull @Override public Observable<Boolean> isEnabled() {
-    Timber.d("Invert isEnabled for Airplane");
+    Timber.d("Invert getState for Airplane");
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 

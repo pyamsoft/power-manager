@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.helper.Checker;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
@@ -100,10 +101,11 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     return null;
   }
 
-  @CheckResult private boolean getMobileDataEnabledReflection() {
+  @NonNull @CheckResult private States getMobileDataEnabledReflection() {
     if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
       try {
-        return (boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager);
+        return (Boolean) GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager) ? States.ENABLED
+            : States.DISABLED;
       } catch (final Exception e) {
         logger.e("ManagerData getMobileDataEnabled ERROR");
       }
@@ -136,8 +138,9 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     }
   }
 
-  @CheckResult private boolean getMobileDataEnabledSettings() {
-    return Settings.Global.getInt(contentResolver, dataUri, 0) == 1;
+  @NonNull @CheckResult private States getMobileDataEnabledSettings() {
+    return (Settings.Global.getInt(contentResolver, dataUri, 0) == 1) ? States.ENABLED
+        : States.DISABLED;
   }
 
   private void setMobileDataEnabled(boolean enabled) {
@@ -157,7 +160,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
     setMobileDataEnabled(false);
   }
 
-  @Override public boolean isEnabled() {
+  @NonNull @Override public States getState() {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       return getMobileDataEnabledReflection();
     } else {

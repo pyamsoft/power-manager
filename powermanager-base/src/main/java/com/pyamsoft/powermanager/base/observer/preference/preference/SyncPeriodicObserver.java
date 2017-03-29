@@ -20,10 +20,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
-import com.pyamsoft.powermanager.base.observer.preference.BooleanPreferenceObserver;
+import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import javax.inject.Inject;
 
-class SyncPeriodicObserver extends BooleanPreferenceObserver {
+class SyncPeriodicObserver extends StatePreferenceObserver {
 
   @Inject SyncPeriodicObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

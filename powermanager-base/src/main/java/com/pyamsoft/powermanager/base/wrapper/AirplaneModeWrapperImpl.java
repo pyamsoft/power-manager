@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
 class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
@@ -63,7 +64,8 @@ class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {
     setAirplaneModeEnabled(false);
   }
 
-  @Override public boolean isEnabled() {
-    return Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1;
+  @NonNull @Override public States getState() {
+    return (Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1)
+        ? States.ENABLED : States.DISABLED;
   }
 }

@@ -21,10 +21,10 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.powermanager.base.observer.preference.BooleanPreferenceObserver;
+import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import javax.inject.Inject;
 
-class DozeManageObserver extends BooleanPreferenceObserver {
+class DozeManageObserver extends StatePreferenceObserver {
 
   @NonNull private final PermissionObserver dozePermissionObserver;
 

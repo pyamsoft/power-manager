@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class DozeFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Doze";
-  @Inject @Named("obs_doze_state") BooleanInterestObserver observer;
+  @Inject @Named("obs_doze_state") StateInterestObserver observer;
   @Inject @Named("doze_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
@@ -45,7 +45,7 @@ public class DozeFragment extends OverviewPagerFragment {
     return presenter;
   }
 
-  @NonNull @Override protected BooleanInterestObserver provideObserver() {
+  @NonNull @Override protected StateInterestObserver provideObserver() {
     return observer;
   }
 

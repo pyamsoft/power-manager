@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
 class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
@@ -75,7 +76,11 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
     setDozeEnabled(false);
   }
 
-  @Override public boolean isEnabled() {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && androidPowerManager.isDeviceIdleMode();
+  @NonNull @Override public States getState() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      return States.UNKNOWN;
+    } else {
+      return androidPowerManager.isDeviceIdleMode() ? States.ENABLED : States.DISABLED;
+    }
   }
 }

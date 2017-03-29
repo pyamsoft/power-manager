@@ -23,6 +23,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -57,8 +58,14 @@ class DozeStateObserver extends BroadcastStateObserver {
   }
 
   @Override public boolean is() {
-    final boolean enabled = wrapper.isEnabled();
-    Timber.d("Is doze enabled?: %s", enabled);
+    final boolean enabled = wrapper.getState() == States.ENABLED;
+    Timber.d("Enabled: %s", enabled);
     return enabled;
+  }
+
+  @Override public boolean unknown() {
+    final boolean unknown = wrapper.getState() == States.UNKNOWN;
+    Timber.d("Unknown: %s", unknown);
+    return unknown;
   }
 }

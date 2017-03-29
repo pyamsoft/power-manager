@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.pydroid.drawable.AsyncDrawable;
 import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
@@ -43,7 +43,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @NonNull private static final String CURRENT_TAB_KEY = "current_tab";
   @NonNull private static final String FAB_TAG = "fab_tag";
 
-  @SuppressWarnings("WeakerAccess") BooleanInterestObserver observer;
+  @SuppressWarnings("WeakerAccess") StateInterestObserver observer;
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   private FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
@@ -187,7 +187,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
   @CheckResult @NonNull protected abstract OverviewPagerPresenter providePresenter();
 
-  @CheckResult @NonNull protected abstract BooleanInterestObserver provideObserver();
+  @CheckResult @NonNull protected abstract StateInterestObserver provideObserver();
 
   protected abstract void injectDependencies();
 

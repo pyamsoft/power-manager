@@ -20,11 +20,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
+import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.powermanager.base.observer.preference.BooleanPreferenceObserver;
 import javax.inject.Inject;
 
-class AirplaneManageObserver extends BooleanPreferenceObserver {
+class AirplaneManageObserver extends StatePreferenceObserver {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
 

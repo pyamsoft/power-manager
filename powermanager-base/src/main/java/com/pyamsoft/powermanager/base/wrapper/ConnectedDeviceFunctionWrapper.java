@@ -17,14 +17,8 @@
 package com.pyamsoft.powermanager.base.wrapper;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
 
-public interface DeviceFunctionWrapper {
+public interface ConnectedDeviceFunctionWrapper extends DeviceFunctionWrapper {
 
-  void enable();
-
-  void disable();
-
-  @NonNull @CheckResult States getState();
+  @CheckResult boolean isConnected();
 }

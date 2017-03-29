@@ -76,7 +76,7 @@ class WearStateObserver extends BroadcastStateObserver {
   /**
    * Return if a wearable is connected
    */
-  @WorkerThread @Override public boolean is() {
+  @WorkerThread @CheckResult private boolean isConnected() {
     Timber.d("Check if wearable is connected");
     final long waitTime = preferences.getWearableDelay();
     Timber.d("Wait for connection for %d seconds", waitTime);
@@ -109,5 +109,13 @@ class WearStateObserver extends BroadcastStateObserver {
   @Override public void unregister(@NonNull String tag) {
     Timber.w("Cannot monitor for state changes on Wearables");
     disconnectGoogleApiClient();
+  }
+
+  @Override public boolean is() {
+    return isConnected();
+  }
+
+  @Override public boolean unknown() {
+    return !googleApiClient.isConnected();
   }
 }

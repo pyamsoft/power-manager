@@ -18,13 +18,13 @@ package com.pyamsoft.powermanager.base.wrapper;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
-class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
+class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
 
   @Nullable private final WifiManager wifiManager;
   @NonNull private final Logger logger;
@@ -50,7 +50,18 @@ class WifiManagerWrapperImpl implements DeviceFunctionWrapper {
     toggle(false);
   }
 
-  @Override @CheckResult public boolean isEnabled() {
-    return wifiManager != null && wifiManager.isWifiEnabled();
+  @NonNull @Override public States getState() {
+    if (wifiManager == null) {
+      return States.UNKNOWN;
+    } else {
+      return wifiManager.isWifiEnabled() ? States.ENABLED : States.DISABLED;
+    }
+  }
+
+  @Override public boolean isConnected() {
+    if (wifiManager == null) {
+      return false;
+    }
+    return false;
   }
 }

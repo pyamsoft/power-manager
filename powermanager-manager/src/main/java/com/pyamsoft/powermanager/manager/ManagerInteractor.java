@@ -22,22 +22,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.QueuerType;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver manageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver manageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
   @NonNull private final PowerManagerPreferences preferences;
 
   ManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver) {
+      @NonNull StateInterestObserver manageObserver, @NonNull StateInterestObserver stateObserver) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
     this.manageObserver = manageObserver;

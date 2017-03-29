@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
@@ -34,7 +34,7 @@ import javax.inject.Named;
   ManagePreferencePresenter provideAirplaneManagePreferencePresenter(
       @Named("airplane_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_airplane_manage") BooleanInterestObserver manageObserver,
+      @Named("obs_airplane_manage") StateInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver,
         rootPermissionObserver);

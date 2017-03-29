@@ -20,17 +20,17 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
 class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
   @Inject ManagerBluetoothInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver manageObserver,
-      @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull BooleanInterestObserver wearManageObserver,
-      @NonNull BooleanInterestObserver wearStateObserver) {
+      @NonNull StateInterestObserver manageObserver,
+      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateInterestObserver wearManageObserver,
+      @NonNull StateInterestObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }

@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +28,7 @@ import javax.inject.Named;
 public class DozeJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_doze") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_doze_state") BooleanInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_doze_state") StateInterestObserver
       stateObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_doze_state") BooleanInterestModifier
       stateModifier;
@@ -41,7 +41,7 @@ public class DozeJob extends BaseJob {
     return logger;
   }
 
-  @NonNull @Override BooleanInterestObserver getObserver() {
+  @NonNull @Override StateInterestObserver getObserver() {
     return stateObserver;
   }
 

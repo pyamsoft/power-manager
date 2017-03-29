@@ -24,13 +24,13 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
 abstract class ContentObserverStateObserver extends ContentObserver
-    implements BooleanInterestObserver {
+    implements StateInterestObserver {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;
@@ -96,6 +96,10 @@ abstract class ContentObserverStateObserver extends ContentObserver
 
   @Override public void onChange(boolean selfChange) {
     super.onChange(selfChange);
+    if (unknown()) {
+      Timber.w("Current state is unknown for URI: %s", uri);
+      return;
+    }
     if (is()) {
       //noinspection Convert2streamapi
       for (final SetCallback setCallback : setMap.values()) {

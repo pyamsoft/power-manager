@@ -16,9 +16,6 @@
 
 package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.CheckResult;
-
-public interface BooleanInterestObserver extends InterestObserver {
-
-  @CheckResult boolean is();
+public enum States {
+  ENABLED, DISABLED, UNKNOWN
 }

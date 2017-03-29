@@ -21,13 +21,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.States;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class SyncStateObserver implements BooleanInterestObserver {
+class SyncStateObserver implements StateInterestObserver {
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;
   @NonNull private final DeviceFunctionWrapper wrapper;
@@ -46,6 +47,11 @@ class SyncStateObserver implements BooleanInterestObserver {
   @CheckResult @NonNull private Object addStatusChangeListener() {
     return ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_SETTINGS,
         i -> {
+          if (unknown()) {
+            Timber.w("Sync state is unknown");
+            return;
+          }
+
           if (is()) {
             //noinspection Convert2streamapi
             for (final SetCallback setCallback : setMap.values()) {
@@ -88,12 +94,6 @@ class SyncStateObserver implements BooleanInterestObserver {
     }
   }
 
-  @Override public boolean is() {
-    final boolean enabled = wrapper.isEnabled();
-    Timber.d("Is sync enabled?: %s", enabled);
-    return enabled;
-  }
-
   @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback) {
     if (!setMap.containsKey(tag) && !unsetMap.containsKey(tag)) {
@@ -115,5 +115,17 @@ class SyncStateObserver implements BooleanInterestObserver {
     } else {
       Timber.e("Already unregistered with tag: %s", tag);
     }
+  }
+
+  @Override public boolean is() {
+    final boolean enabled = wrapper.getState() == States.ENABLED;
+    Timber.d("Enabled: %s", enabled);
+    return enabled;
+  }
+
+  @Override public boolean unknown() {
+    final boolean unknown = wrapper.getState() == States.UNKNOWN;
+    Timber.d("Unknown: %s", unknown);
+    return unknown;
   }
 }

@@ -23,12 +23,12 @@ import android.content.IntentFilter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class BroadcastStateObserver extends BroadcastReceiver implements BooleanInterestObserver {
+abstract class BroadcastStateObserver extends BroadcastReceiver implements StateInterestObserver {
 
   // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
@@ -121,6 +121,11 @@ abstract class BroadcastStateObserver extends BroadcastReceiver implements Boole
 
     final String action = intent.getAction();
     Timber.d("Received event for action: %s", action);
+
+    if (unknown()) {
+      Timber.w("Current state is unknown for action: %s", action);
+      return;
+    }
 
     if (is()) {
       //noinspection Convert2streamapi

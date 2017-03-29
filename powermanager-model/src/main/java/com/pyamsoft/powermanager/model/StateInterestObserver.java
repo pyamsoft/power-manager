@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.wrapper;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
 
-public interface DeviceFunctionWrapper {
+public interface StateInterestObserver extends InterestObserver {
 
-  void enable();
+  @CheckResult boolean is();
 
-  void disable();
-
-  @NonNull @CheckResult States getState();
+  @CheckResult boolean unknown();
 }

@@ -21,14 +21,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-public abstract class BooleanPreferenceObserver extends OnRegisteredSharedPreferenceChangeListener
-    implements BooleanInterestObserver {
+public abstract class StatePreferenceObserver extends OnRegisteredSharedPreferenceChangeListener
+    implements StateInterestObserver {
 
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;
@@ -36,7 +36,7 @@ public abstract class BooleanPreferenceObserver extends OnRegisteredSharedPrefer
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
-  protected BooleanPreferenceObserver(@NonNull PowerManagerPreferences preferences,
+  protected StatePreferenceObserver(@NonNull PowerManagerPreferences preferences,
       @NonNull String key) {
     Timber.d("New PreferenceObserver with key: %s", key);
     this.preferences = preferences;
@@ -50,6 +50,11 @@ public abstract class BooleanPreferenceObserver extends OnRegisteredSharedPrefer
   @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
     if (key.equals(s)) {
       Timber.d("Received preference change for key: %s", s);
+      if (unknown()) {
+        Timber.w("Current state is unknown for key: %s", s);
+        return;
+      }
+
       if (is()) {
         //noinspection Convert2streamapi
         for (final SetCallback setCallback : setMap.values()) {
@@ -112,8 +117,12 @@ public abstract class BooleanPreferenceObserver extends OnRegisteredSharedPrefer
     }
   }
 
-  @Override public final boolean is() {
+  @Override public boolean is() {
     return is(preferences);
+  }
+
+  @Override public boolean unknown() {
+    return false;
   }
 
   @CheckResult protected abstract boolean is(@NonNull PowerManagerPreferences preferences);

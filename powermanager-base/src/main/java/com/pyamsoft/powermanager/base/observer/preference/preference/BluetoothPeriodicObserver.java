@@ -20,10 +20,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
-import com.pyamsoft.powermanager.base.observer.preference.BooleanPreferenceObserver;
+import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import javax.inject.Inject;
 
-class BluetoothPeriodicObserver extends BooleanPreferenceObserver {
+class BluetoothPeriodicObserver extends StatePreferenceObserver {
 
   @Inject BluetoothPeriodicObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {

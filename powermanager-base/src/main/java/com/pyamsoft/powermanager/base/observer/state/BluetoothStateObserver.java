@@ -20,6 +20,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -36,6 +37,14 @@ class BluetoothStateObserver extends BroadcastStateObserver {
   }
 
   @Override public boolean is() {
-    return wrapper.isEnabled();
+    final boolean enabled = wrapper.getState() == States.ENABLED;
+    Timber.d("Enabled: %s", enabled);
+    return enabled;
+  }
+
+  @Override public boolean unknown() {
+    final boolean unknown = wrapper.getState() == States.UNKNOWN;
+    Timber.d("Unknown: %s", unknown);
+    return unknown;
   }
 }

@@ -20,17 +20,17 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.powermanager.model.BooleanInterestObserver;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
+import com.pyamsoft.powermanager.model.StateInterestObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public abstract class BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") BooleanInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateInterestObserver
       chargingObserver;
   private QueuerType type;
   private boolean ignoreWhenCharging;
@@ -144,7 +144,7 @@ public abstract class BaseJob {
 
   @CheckResult @NonNull abstract Logger getLogger();
 
-  @CheckResult @NonNull abstract BooleanInterestObserver getObserver();
+  @CheckResult @NonNull abstract StateInterestObserver getObserver();
 
   @CheckResult @NonNull abstract BooleanInterestModifier getModifier();
 }
