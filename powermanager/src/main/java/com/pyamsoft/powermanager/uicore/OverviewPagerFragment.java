@@ -196,6 +196,4 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @CheckResult @DrawableRes protected abstract int getFabUnsetIcon();
 
   @CheckResult @NonNull protected abstract ModulePagerAdapter getPagerAdapter();
-
-  @CheckResult @NonNull protected abstract String getPresenterKey();
 }

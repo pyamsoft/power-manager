@@ -28,7 +28,6 @@ import javax.inject.Named;
 
 public class WearManagePreferenceFragment extends ManagePreferenceFragment {
 
-  @NonNull static final String TAG = "WearManagePreferenceFragment";
   @Inject @Named("wear_manage_pref") ManagePreferencePresenter presenter;
 
   @NonNull @Override protected ManagePreferencePresenter providePresenter() {

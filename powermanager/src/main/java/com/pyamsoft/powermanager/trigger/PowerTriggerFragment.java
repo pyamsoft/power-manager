@@ -41,10 +41,6 @@ public class PowerTriggerFragment extends OverviewSingleItemFragment {
     return new PowerTriggerListFragment();
   }
 
-  @NonNull @Override protected String getPreferenceTag() {
-    return PowerTriggerListFragment.TAG;
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.red500;
   }
@@ -60,10 +56,10 @@ public class PowerTriggerFragment extends OverviewSingleItemFragment {
 
   private void addTriggerOptionsFragment() {
     final FragmentManager fragmentManager = getChildFragmentManager();
-    if (fragmentManager.findFragmentByTag(getPreferenceTag()) == null) {
+    if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
           .replace(R.id.power_trigger_preference_container, new PowerTriggerPreferenceFragment(),
-              PowerTriggerPreferenceFragment.TAG)
+              TAG)
           .commit();
     }
   }

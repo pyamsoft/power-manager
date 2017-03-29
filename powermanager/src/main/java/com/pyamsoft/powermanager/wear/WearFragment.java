@@ -38,10 +38,6 @@ public class WearFragment extends OverviewSingleItemFragment {
     return new WearManagePreferenceFragment();
   }
 
-  @NonNull @Override protected String getPreferenceTag() {
-    return WearManagePreferenceFragment.TAG;
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.lightgreen500;
   }

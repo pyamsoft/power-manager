@@ -16,23 +16,28 @@
 
 package com.pyamsoft.powermanager.manager;
 
+import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.BooleanInterestObserver;
+import com.pyamsoft.pydroid.util.NetworkUtil;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @Inject ManagerWifiInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull BooleanInterestObserver manageObserver,
+  @NonNull final Context appContext;
+
+  @Inject ManagerWifiInteractor(@NonNull Context context,
+      @NonNull PowerManagerPreferences preferences, @NonNull BooleanInterestObserver manageObserver,
       @NonNull BooleanInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull BooleanInterestObserver wearManageObserver,
       @NonNull BooleanInterestObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
+    appContext = context.getApplicationContext();
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -61,6 +66,19 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
   @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
     return Observable.fromCallable(() -> getPreferences().isOriginalWifi());
+  }
+
+  @NonNull @Override
+  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+    return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
+      // TODO check preferences
+      // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
+      if (NetworkUtil.hasConnection(appContext)) {
+        return Boolean.TRUE;
+      } else {
+        return originalResult;
+      }
+    });
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {

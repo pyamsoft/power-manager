@@ -65,10 +65,6 @@ public class DataFragment extends OverviewPagerFragment {
     return new DataPagerAdapter(getChildFragmentManager());
   }
 
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "key_presenter";
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.orange500;
   }

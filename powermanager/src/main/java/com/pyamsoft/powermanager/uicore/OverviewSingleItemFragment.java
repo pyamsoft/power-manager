@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 
 public abstract class OverviewSingleItemFragment extends AppBarColoringFragment {
 
+  @NonNull private static final String TAG = "OverlaySingle";
   private FragmentPreferenceContainerSingleBinding binding;
 
   @Nullable @Override
@@ -59,14 +60,12 @@ public abstract class OverviewSingleItemFragment extends AppBarColoringFragment 
 
   private void addPreferenceFragment() {
     final FragmentManager fragmentManager = getChildFragmentManager();
-    if (fragmentManager.findFragmentByTag(getPreferenceTag()) == null) {
+    if (fragmentManager.findFragmentByTag(TAG) == null) {
       fragmentManager.beginTransaction()
-          .replace(R.id.preference_container_single, getPreferenceFragment(), getPreferenceTag())
-          .commit();
+          .replace(R.id.preference_container_single, getPreferenceFragment(), TAG)
+          .commitNow();
     }
   }
 
   @CheckResult @NonNull protected abstract Fragment getPreferenceFragment();
-
-  @CheckResult @NonNull protected abstract String getPreferenceTag();
 }

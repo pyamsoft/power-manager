@@ -65,10 +65,6 @@ public class BluetoothFragment extends OverviewPagerFragment {
     return new BluetoothPagerAdapter(getChildFragmentManager());
   }
 
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "presenter_key";
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.blue500;
   }

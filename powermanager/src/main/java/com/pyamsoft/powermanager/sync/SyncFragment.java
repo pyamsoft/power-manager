@@ -65,10 +65,6 @@ public class SyncFragment extends OverviewPagerFragment {
     return new SyncPagerAdapter(getChildFragmentManager());
   }
 
-  @NonNull @Override protected String getPresenterKey() {
-    return TAG + "presenter_key";
-  }
-
   @Override protected int provideAppBarColor() {
     return R.color.yellow500;
   }
