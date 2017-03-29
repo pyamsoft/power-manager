@@ -65,9 +65,6 @@ dependencies {
   // Check if Android Wear is connected before handling Bluetooth/Wifi
   compile "com.google.android.gms:play-services-wearable:$firebase"
 
-  // SQLBrite
-  compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"
-
   // Dagger2
   compile "com.google.dagger:dagger:$dagger"
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
