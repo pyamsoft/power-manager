@@ -26,8 +26,9 @@ class DataStateObserver extends ContentObserverStateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject DataStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context, DeviceFunctionWrapper.SETTINGS_URI_MOBILE_DATA);
+  @Inject DataStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper,
+      @NonNull String dataUri) {
+    super(context, dataUri);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Data");
   }

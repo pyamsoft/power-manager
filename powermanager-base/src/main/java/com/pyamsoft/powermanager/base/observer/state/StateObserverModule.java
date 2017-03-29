@@ -34,8 +34,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_data_state") @Provides BooleanInterestObserver provideDataObserver(
-      @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
-    return new DataStateObserver(context, wrapper);
+      @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper,
+      @Named("data_uri") String dataUri) {
+    return new DataStateObserver(context, wrapper, dataUri);
   }
 
   @Singleton @Named("obs_bluetooth_state") @Provides

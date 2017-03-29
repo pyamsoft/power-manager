@@ -27,6 +27,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.pydroid.helper.Checker;
 import java.lang.reflect.Method;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -48,16 +49,20 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
   @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final String dataUri;
 
   @Inject DataConnectionWrapperImpl(@NonNull Context context,
       @NonNull ShellCommandHelper shellCommandHelper, @NonNull Logger logger,
-      @NonNull PowerManagerPreferences preferences) {
-    this.shellCommandHelper = shellCommandHelper;
-    this.logger = logger;
-    this.preferences = preferences;
+      @NonNull PowerManagerPreferences preferences, @NonNull String dataUri) {
+    this.shellCommandHelper = Checker.checkNonNull(shellCommandHelper);
+    this.logger = Checker.checkNonNull(logger);
+    this.preferences = Checker.checkNonNull(preferences);
+    this.dataUri = Checker.checkNonNull(dataUri);
+
+    context = Checker.checkNonNull(context).getApplicationContext();
     connectivityManager =
         (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-    contentResolver = context.getApplicationContext().getContentResolver();
+    contentResolver = context.getContentResolver();
   }
 
   @CheckResult @Nullable private static Method reflectGetMethod() {
@@ -132,7 +137,7 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   }
 
   @CheckResult private boolean getMobileDataEnabledSettings() {
-    return Settings.Global.getInt(contentResolver, SETTINGS_URI_MOBILE_DATA, 0) == 1;
+    return Settings.Global.getInt(contentResolver, dataUri, 0) == 1;
   }
 
   private void setMobileDataEnabled(boolean enabled) {

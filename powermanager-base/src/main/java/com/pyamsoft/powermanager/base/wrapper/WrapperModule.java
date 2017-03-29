@@ -41,8 +41,9 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("wrapper_data") DeviceFunctionWrapper provideDataConnectionWrapper(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
-      @NonNull ShellCommandHelper shellCommandHelper, @Named("logger_data") Logger logger) {
-    return new DataConnectionWrapperImpl(context, shellCommandHelper, logger, preferences);
+      @NonNull ShellCommandHelper shellCommandHelper, @Named("logger_data") Logger logger,
+      @Named("data_uri") String dataUri) {
+    return new DataConnectionWrapperImpl(context, shellCommandHelper, logger, preferences, dataUri);
   }
 
   @Singleton @Provides @Named("wrapper_sync") DeviceFunctionWrapper provideSyncConnectionWrapper(

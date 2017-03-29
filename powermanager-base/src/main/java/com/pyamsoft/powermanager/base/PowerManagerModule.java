@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 
 @Module public class PowerManagerModule {
 
+  @NonNull private static final String SETTINGS_URI_MOBILE_DATA = "mobile_data";
   @NonNull private final Context appContext;
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final Class<? extends Activity> mainActivityClass;
@@ -42,6 +43,10 @@ import javax.inject.Singleton;
     this.mainActivityClass = mainActivityClass;
     this.toggleServiceClass = toggleServiceClass;
     preferences = new PowerManagerPreferencesImpl(appContext);
+  }
+
+  @Singleton @Provides @Named("data_uri") String provideMobileDataUri() {
+    return SETTINGS_URI_MOBILE_DATA;
   }
 
   @Singleton @Provides @Named("main") Class<? extends Activity> provideMainClass() {

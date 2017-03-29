@@ -17,11 +17,8 @@
 package com.pyamsoft.powermanager.base.wrapper;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 
 public interface DeviceFunctionWrapper {
-
-  @NonNull String SETTINGS_URI_MOBILE_DATA = "mobile_data";
 
   void enable();
 
