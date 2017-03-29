@@ -16,28 +16,27 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateInterestObserver;
-import com.pyamsoft.pydroid.util.NetworkUtil;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @NonNull final Context appContext;
+  @NonNull final ConnectedDeviceFunctionWrapper wrapper;
 
-  @Inject ManagerWifiInteractor(@NonNull Context context,
+  @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
       @NonNull PowerManagerPreferences preferences, @NonNull StateInterestObserver manageObserver,
       @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateInterestObserver wearManageObserver,
       @NonNull StateInterestObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
-    appContext = context.getApplicationContext();
+    this.wrapper = wrapper;
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -73,7 +72,7 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
       // TODO check preferences
       // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
-      if (NetworkUtil.hasConnection(appContext)) {
+      if (wrapper.isConnected()) {
         return Boolean.TRUE;
       } else {
         return originalResult;

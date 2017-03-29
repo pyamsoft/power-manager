@@ -16,9 +16,9 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateInterestObserver;
 import dagger.Module;
@@ -35,13 +35,14 @@ import javax.inject.Named;
   }
 
   @Provides @Named("wifi_manager_interactor")
-  WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull Context context,
+  WearAwareManagerInteractor provideManagerWifiInteractor(
+      @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_manage") StateInterestObserver manageObserver,
       @Named("obs_wifi_state") StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_manage") StateInterestObserver wearManageObserver,
       @Named("obs_wear_state") StateInterestObserver wearStateObserver) {
-    return new ManagerWifiInteractor(context, preferences, manageObserver, stateObserver, jobQueuer,
+    return new ManagerWifiInteractor(wrapper, preferences, manageObserver, stateObserver, jobQueuer,
         wearManageObserver, wearStateObserver);
   }
 
@@ -53,8 +54,7 @@ import javax.inject.Named;
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_data_manage") StateInterestObserver manageObserver,
-      @NonNull JobQueuer jobQueuer,
+      @Named("obs_data_manage") StateInterestObserver manageObserver, @NonNull JobQueuer jobQueuer,
       @Named("obs_data_state") StateInterestObserver stateObserver) {
     return new ManagerDataInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer);
   }

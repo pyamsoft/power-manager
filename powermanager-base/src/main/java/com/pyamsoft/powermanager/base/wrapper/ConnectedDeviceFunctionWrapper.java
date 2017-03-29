@@ -21,4 +21,6 @@ import android.support.annotation.CheckResult;
 public interface ConnectedDeviceFunctionWrapper extends DeviceFunctionWrapper {
 
   @CheckResult boolean isConnected();
+
+  @CheckResult boolean isConnectionUnknown();
 }

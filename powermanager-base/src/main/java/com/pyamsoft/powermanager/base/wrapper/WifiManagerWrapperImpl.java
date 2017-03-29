@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.Logger;
@@ -58,10 +59,19 @@ class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
     }
   }
 
-  @Override public boolean isConnected() {
+  @CheckResult @NonNull private States getConnectionState() {
     if (wifiManager == null) {
-      return false;
+      return States.UNKNOWN;
+    } else {
+      return wifiManager.getConnectionInfo() == null ? States.DISABLED : States.ENABLED;
     }
-    return false;
+  }
+
+  @Override public boolean isConnected() {
+    return getConnectionState() == States.ENABLED;
+  }
+
+  @Override public boolean isConnectionUnknown() {
+    return getConnectionState() == States.UNKNOWN;
   }
 }
