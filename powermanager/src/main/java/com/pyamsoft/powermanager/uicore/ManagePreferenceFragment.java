@@ -220,7 +220,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
     presenter.checkManagePermission(new ManagePreferencePresenter.ManagePermissionCallback() {
       @Override public void onBegin() {
         overlay = ProgressOverlay.Helper.dispose(overlay);
-        overlay = new ProgressOverlay.Builder().setRootResId(R.id.main_root).build(getActivity());
+        overlay = new ProgressOverlay.Builder().build(getActivity());
       }
 
       @Override public void onManagePermissionCallback(boolean hasPermission) {

@@ -113,7 +113,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
           @Override public void onBegin() {
             overlay = ProgressOverlay.Helper.dispose(overlay);
             overlay =
-                new ProgressOverlay.Builder().setRootResId(R.id.main_root).build(getActivity());
+                new ProgressOverlay.Builder().build(getActivity());
           }
 
           @Override public void onRootCallback(boolean causedByUser, boolean hasPermission,
