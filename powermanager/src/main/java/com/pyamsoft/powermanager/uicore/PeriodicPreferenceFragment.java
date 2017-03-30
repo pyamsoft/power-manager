@@ -32,8 +32,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import timber.log.Timber;
 
-public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment
-    implements PeriodPreferencePresenter.OnboardingCallback, PagerItem {
+public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFragment {
 
   @SuppressWarnings("WeakerAccess") PeriodPreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreference periodicPreference;
@@ -47,12 +46,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   private PreferenceCategory enableCategory;
   private PreferenceCategory disableCategory;
   private PreferenceCategory periodicCategory;
-
-  @Override public void onSelected() {
-  }
-
-  @Override public void onUnselected() {
-  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getActivity()));
@@ -225,7 +218,9 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(null);
-    presenter.showOnboardingIfNeeded(this);
+    presenter.showOnboardingIfNeeded(() -> {
+      // TODO
+    });
   }
 
   @Override public void onStop() {
@@ -264,10 +259,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
       presetDisableTimePreference.setOnPreferenceChangeListener(null);
       presetDisableTimePreference.setOnPreferenceClickListener(null);
     }
-  }
-
-  @Override public void onShowOnboarding() {
-    Timber.d("Show periodic onboarding");
   }
 
   @CheckResult @NonNull protected abstract PeriodPreferencePresenter providePresenter();

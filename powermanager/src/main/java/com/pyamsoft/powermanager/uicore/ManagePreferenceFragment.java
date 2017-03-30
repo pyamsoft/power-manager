@@ -35,8 +35,7 @@ import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
 import timber.log.Timber;
 
-public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment
-    implements PagerItem, OnboardingPresenter.OnboardingCallback {
+public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment {
 
   @SuppressWarnings("WeakerAccess") ManagePreferencePresenter presenter;
   @SuppressWarnings("WeakerAccess") SwitchPreference managePreference;
@@ -49,12 +48,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @Nullable private String ignoreChargingKey;
   private PreferenceCategory manageCategory;
   private PreferenceCategory delayCategory;
-
-  @Override public void onSelected() {
-  }
-
-  @Override public void onUnselected() {
-  }
 
   @Override public final void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getActivity()));
@@ -204,7 +197,9 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       checkManagePermission(false);
     }
 
-    presenter.showOnboardingIfNeeded(this);
+    presenter.showOnboardingIfNeeded(() -> {
+      // TODO
+    });
   }
 
   final void checkManagePermission(boolean showMessage) {
@@ -267,10 +262,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       final long delayTime = Long.parseLong(presetDelay);
       customTimePreference.setEnabled(managed && delayTime == -1);
     }
-  }
-
-  @Override public void onShowOnboarding() {
-    Timber.d("Show manage onboarding");
   }
 
   /**
