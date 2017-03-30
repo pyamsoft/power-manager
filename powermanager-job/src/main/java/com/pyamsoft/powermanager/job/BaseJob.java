@@ -19,18 +19,18 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
+import com.pyamsoft.powermanager.model.states.StateModifier;
+import com.pyamsoft.powermanager.model.types.QueuerType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public abstract class BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   private QueuerType type;
   private boolean ignoreWhenCharging;
@@ -58,7 +58,7 @@ public abstract class BaseJob {
     initialize(tag, extras);
     if (type == QueuerType.SCREEN_OFF_DISABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       if (ignoreWhenCharging) {
-        if (chargingObserver.is()) {
+        if (chargingObserver.enabled()) {
           getLogger().w("Do not run job because device is charging");
           return;
         }
@@ -144,7 +144,7 @@ public abstract class BaseJob {
 
   @CheckResult @NonNull abstract Logger getLogger();
 
-  @CheckResult @NonNull abstract StateInterestObserver getObserver();
+  @CheckResult @NonNull abstract StateObserver getObserver();
 
-  @CheckResult @NonNull abstract BooleanInterestModifier getModifier();
+  @CheckResult @NonNull abstract StateModifier getModifier();
 }

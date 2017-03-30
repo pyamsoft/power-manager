@@ -24,9 +24,9 @@ import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
 import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.model.states.StateObserver;
+import com.pyamsoft.powermanager.model.states.StateModifier;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
@@ -44,25 +44,22 @@ import timber.log.Timber;
 public class TriggerJob extends Job {
 
   @SuppressWarnings("WeakerAccess") @Inject PowerTriggerDB powerTriggerDB;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateObserver
       wifiObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateObserver
       dataObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateObserver
       bluetoothObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateObserver
       syncObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") BooleanInterestModifier
-      wifiModifier;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") BooleanInterestModifier
-      dataModifier;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_bluetooth_state") BooleanInterestModifier
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier wifiModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") StateModifier dataModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_bluetooth_state") StateModifier
       bluetoothModifier;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") BooleanInterestModifier
-      syncModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") StateModifier syncModifier;
   @SuppressWarnings("WeakerAccess") @Inject @Named("sub") Scheduler subScheduler;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs") Scheduler obsScheduler;
   @SuppressWarnings("WeakerAccess") @NonNull Disposable runDisposable = Disposables.empty();
@@ -99,7 +96,7 @@ public class TriggerJob extends Job {
         .toObservable();
 
     final Observable<PowerTriggerEntry> powerTriggerEntryObservable;
-    if (chargingObserver.is()) {
+    if (chargingObserver.enabled()) {
       powerTriggerEntryObservable = triggerQuery.flatMap(powerTriggerEntries -> {
         // Not final so we can call merges on it
         Observable<Integer> updateTriggerResult = Observable.just(-1);
@@ -119,12 +116,12 @@ public class TriggerJob extends Job {
       }).toList().map(integers -> {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
-        return PowerTriggerEntry.EMPTY;
+        return PowerTriggerEntry.empty();
       }).toObservable();
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
-        PowerTriggerEntry best = PowerTriggerEntry.EMPTY;
+        PowerTriggerEntry best = PowerTriggerEntry.empty();
 
         for (final PowerTriggerEntry entry : powerTriggerEntries) {
           Timber.d("Current entry: %s %d", entry.name(), entry.percent());
@@ -172,7 +169,7 @@ public class TriggerJob extends Job {
     runDisposable = powerTriggerEntryObservable.subscribeOn(subScheduler)
         .observeOn(obsScheduler)
         .subscribe(entry -> {
-          if (chargingObserver.is()) {
+          if (chargingObserver.enabled()) {
             Timber.w("Do not run Trigger because device is charging");
           } else if (PowerTriggerEntry.isEmpty(entry)) {
             Timber.w("Do not run Trigger because entry specified is EMPTY");
@@ -194,13 +191,13 @@ public class TriggerJob extends Job {
       Timber.d("Wifi should toggle");
       if (entry.enableWifi()) {
         Timber.d("Wifi should enable");
-        if (!wifiObserver.is()) {
+        if (!wifiObserver.enabled()) {
           logger.i("Trigger job: %s set wifi", entry.name());
           wifiModifier.set();
         }
       } else {
         Timber.d("Wifi should disable");
-        if (wifiObserver.is()) {
+        if (wifiObserver.enabled()) {
           logger.i("Trigger job: %s unset wifi", entry.name());
           wifiModifier.unset();
         }
@@ -211,13 +208,13 @@ public class TriggerJob extends Job {
       Timber.d("Data should toggle");
       if (entry.enableData()) {
         Timber.d("Data should enable");
-        if (!dataObserver.is()) {
+        if (!dataObserver.enabled()) {
           logger.i("Trigger job: %s set data", entry.name());
           dataModifier.set();
         }
       } else {
         Timber.d("Data should disable");
-        if (dataObserver.is()) {
+        if (dataObserver.enabled()) {
           logger.i("Trigger job: %s unset data", entry.name());
           dataModifier.unset();
         }
@@ -228,13 +225,13 @@ public class TriggerJob extends Job {
       Timber.d("Bluetooth should toggle");
       if (entry.enableBluetooth()) {
         Timber.d("Bluetooth should enable");
-        if (!bluetoothObserver.is()) {
+        if (!bluetoothObserver.enabled()) {
           logger.i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.set();
         }
       } else {
         Timber.d("Bluetooth should disable");
-        if (bluetoothObserver.is()) {
+        if (bluetoothObserver.enabled()) {
           logger.i("Trigger job: %s set bluetooth", entry.name());
           bluetoothModifier.unset();
         }
@@ -245,13 +242,13 @@ public class TriggerJob extends Job {
       Timber.d("Sync should toggle");
       if (entry.enableSync()) {
         Timber.d("Sync should enable");
-        if (!syncObserver.is()) {
+        if (!syncObserver.enabled()) {
           logger.i("Trigger job: %s set sync", entry.name());
           syncModifier.set();
         }
       } else {
         Timber.d("Sync should disable");
-        if (syncObserver.is()) {
+        if (syncObserver.enabled()) {
           logger.i("Trigger job: %s unset sync", entry.name());
           syncModifier.unset();
         }

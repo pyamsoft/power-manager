@@ -18,8 +18,7 @@ package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
@@ -34,9 +33,8 @@ import javax.inject.Named;
   ManagePreferencePresenter provideDataManagePreferencePresenter(
       @Named("data_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_data_manage") StateInterestObserver manageObserver,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver,
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler,
         rootPermissionObserver);
   }
 

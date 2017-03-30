@@ -21,13 +21,12 @@ import android.content.pm.PackageManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import timber.log.Timber;
 
 abstract class PermissionObserverImpl implements PermissionObserver {
 
-  // KLUDGE Holds onto App context
-  @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
+  @NonNull private final Context appContext;
   @Nullable private final String permission;
 
   PermissionObserverImpl(@NonNull Context context, @Nullable String permission) {
@@ -50,13 +49,4 @@ abstract class PermissionObserverImpl implements PermissionObserver {
   }
 
   @CheckResult protected abstract boolean checkPermission(Context appContext);
-
-  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback) {
-    Timber.e("Cannot register to observe permissions");
-  }
-
-  @Override public void unregister(@NonNull String tag) {
-    Timber.e("Cannot unregister to observe permissions");
-  }
 }

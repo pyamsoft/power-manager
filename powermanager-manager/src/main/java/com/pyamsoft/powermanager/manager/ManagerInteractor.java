@@ -23,23 +23,21 @@ import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
-import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
+import com.pyamsoft.powermanager.model.types.QueuerType;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver manageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
   @NonNull private final PowerManagerPreferences preferences;
 
   ManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver, @NonNull StateInterestObserver stateObserver) {
+      @NonNull StateObserver stateObserver) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
-    this.manageObserver = manageObserver;
     this.preferences = preferences;
   }
 
@@ -48,10 +46,10 @@ abstract class ManagerInteractor {
   }
 
   @CheckResult @NonNull public Observable<Boolean> queueSet() {
-    return isManaged().flatMap(managed -> {
+    return Observable.fromCallable(this::isManaged).flatMap(managed -> {
       if (managed) {
         Timber.d("%s: Is original state enabled?", getJobTag());
-        return isOriginalStateEnabled();
+        return Observable.just(isOriginalStateEnabled());
       } else {
         Timber.w("%s: Is not managed, return empty", getJobTag());
         return Observable.empty();
@@ -66,10 +64,9 @@ abstract class ManagerInteractor {
   }
 
   @CheckResult @NonNull public Observable<Boolean> queueUnset() {
-    return isManaged().map(baseResult -> {
+    return Observable.fromCallable(this::isManaged).doOnNext(managed -> {
       Timber.d("%s: Unset original state", getJobTag());
       setOriginalStateEnabled(false);
-      return baseResult;
     }).flatMap(managed -> {
       if (managed) {
         Timber.d("%s: Is original state enabled?", getJobTag());
@@ -153,15 +150,15 @@ abstract class ManagerInteractor {
     return preferences;
   }
 
-  @CallSuper @NonNull private Observable<Boolean> isManaged() {
-    return Observable.fromCallable(manageObserver::is);
-  }
-
   @CallSuper @NonNull Observable<Boolean> isEnabled() {
-    return Observable.fromCallable(stateObserver::is);
+    return Observable.fromCallable(stateObserver::enabled);
   }
 
-  @CheckResult @NonNull abstract Observable<Boolean> isOriginalStateEnabled();
+  @CheckResult abstract boolean isManaged();
+
+  @CheckResult abstract boolean isOriginalStateEnabled();
+
+  abstract void setOriginalStateEnabled(boolean enabled);
 
   @CheckResult abstract boolean isIgnoreWhileCharging();
 
@@ -174,8 +171,6 @@ abstract class ManagerInteractor {
   @CheckResult abstract long getPeriodicEnableTime();
 
   @CheckResult abstract long getPeriodicDisableTime();
-
-  abstract void setOriginalStateEnabled(boolean enabled);
 
   @CheckResult @NonNull
   abstract Observable<Boolean> accountForWearableBeforeDisable(boolean originalState);

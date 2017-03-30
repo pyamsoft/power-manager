@@ -19,15 +19,12 @@ package com.pyamsoft.powermanager;
 import com.pyamsoft.powermanager.airplane.AirplaneScreenComponent;
 import com.pyamsoft.powermanager.airplane.preference.AirplanePreferenceComponent;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
-import com.pyamsoft.powermanager.base.modifier.StateModifierModule;
+import com.pyamsoft.powermanager.base.states.StateModifierModule;
 import com.pyamsoft.powermanager.base.observer.permission.PermissionObserverModule;
-import com.pyamsoft.powermanager.base.observer.preference.manage.ManageObserverModule;
-import com.pyamsoft.powermanager.base.observer.preference.preference.PeriodicObserverModule;
-import com.pyamsoft.powermanager.base.observer.state.StateObserverModule;
+import com.pyamsoft.powermanager.base.states.StateObserverModule;
 import com.pyamsoft.powermanager.base.shell.ShellCommandModule;
-import com.pyamsoft.powermanager.base.wrapper.WrapperModule;
+import com.pyamsoft.powermanager.base.states.WrapperModule;
 import com.pyamsoft.powermanager.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.bluetooth.preference.BluetoothPreferenceComponent;
 import com.pyamsoft.powermanager.data.DataScreenComponent;
@@ -46,6 +43,7 @@ import com.pyamsoft.powermanager.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.sync.preference.SyncPreferenceComponent;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.wear.WearScreenComponent;
 import com.pyamsoft.powermanager.wifi.WifiScreenComponent;
 import com.pyamsoft.powermanager.wifi.preference.WifiPreferenceComponent;
@@ -54,9 +52,8 @@ import javax.inject.Singleton;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
-    ShellCommandModule.class, PermissionObserverModule.class, ManageObserverModule.class,
-    PeriodicObserverModule.class, StateObserverModule.class, StateModifierModule.class,
-    JobModule.class
+    ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
+    StateModifierModule.class, JobModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneScreenComponent plusAirplaneScreenComponent();

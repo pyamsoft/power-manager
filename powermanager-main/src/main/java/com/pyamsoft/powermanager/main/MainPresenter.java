@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;

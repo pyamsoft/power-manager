@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -36,14 +35,10 @@ import javax.inject.Named;
 
   @Provides @Named("wifi_manager_interactor")
   WearAwareManagerInteractor provideManagerWifiInteractor(
-      @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper,
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_wifi_manage") StateInterestObserver manageObserver,
-      @Named("obs_wifi_state") StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @Named("obs_wear_manage") StateInterestObserver wearManageObserver,
-      @Named("obs_wear_state") StateInterestObserver wearStateObserver) {
-    return new ManagerWifiInteractor(wrapper, preferences, manageObserver, stateObserver, jobQueuer,
-        wearManageObserver, wearStateObserver);
+      @Named("obs_wifi_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @Named("obs_wear_state") StateObserver wearStateObserver) {
+    return new ManagerWifiInteractor(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Provides @Named("data_manager") Manager provideManagerData(
@@ -53,10 +48,9 @@ import javax.inject.Named;
   }
 
   @Provides @Named("data_manager_interactor") ManagerInteractor provideManagerDataInteractor(
-      @NonNull PowerManagerPreferences preferences,
-      @Named("obs_data_manage") StateInterestObserver manageObserver, @NonNull JobQueuer jobQueuer,
-      @Named("obs_data_state") StateInterestObserver stateObserver) {
-    return new ManagerDataInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer);
+      @NonNull PowerManagerPreferences preferences, @NonNull JobQueuer jobQueuer,
+      @Named("obs_data_state") StateObserver stateObserver) {
+    return new ManagerDataInteractorImpl(preferences, stateObserver, jobQueuer);
   }
 
   @Provides @Named("bluetooth_manager") Manager provideManagerBluetooth(
@@ -68,13 +62,9 @@ import javax.inject.Named;
   @Provides @Named("bluetooth_manager_interactor")
   WearAwareManagerInteractor provideManagerBluetoothInteractor(
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_bluetooth_manage") StateInterestObserver manageObserver,
-      @Named("obs_bluetooth_state") StateInterestObserver stateObserver,
-      @NonNull JobQueuer jobQueuer,
-      @Named("obs_wear_manage") StateInterestObserver wearManageObserver,
-      @Named("obs_wear_state") StateInterestObserver wearStateObserver) {
-    return new ManagerBluetoothInteractor(preferences, manageObserver, stateObserver, jobQueuer,
-        wearManageObserver, wearStateObserver);
+      @Named("obs_bluetooth_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @Named("obs_wear_state") StateObserver wearStateObserver) {
+    return new ManagerBluetoothInteractor(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Provides @Named("sync_manager") Manager provideManagerSync(
@@ -85,9 +75,8 @@ import javax.inject.Named;
 
   @Provides @Named("sync_manager_interactor") ManagerInteractor provideManagerSyncInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobQueuer jobQueuer,
-      @Named("obs_sync_manage") StateInterestObserver manageObserver,
-      @Named("obs_sync_state") StateInterestObserver stateObserver) {
-    return new ManagerSyncInteractor(preferences, manageObserver, stateObserver, jobQueuer);
+      @Named("obs_sync_state") StateObserver stateObserver) {
+    return new ManagerSyncInteractor(preferences, stateObserver, jobQueuer);
   }
 
   @Provides @Named("doze_manager") Manager provideManagerDoze(
@@ -98,9 +87,8 @@ import javax.inject.Named;
 
   @Provides @Named("doze_manager_interactor") ManagerInteractor provideManagerDozeInteractor(
       @NonNull PowerManagerPreferences preferences, @NonNull JobQueuer jobQueuer,
-      @Named("obs_doze_manage") StateInterestObserver manageObserver,
-      @Named("obs_doze_state") StateInterestObserver stateObserver) {
-    return new ManagerDozeInteractorImpl(preferences, manageObserver, stateObserver, jobQueuer);
+      @Named("obs_doze_state") StateObserver stateObserver) {
+    return new ManagerDozeInteractorImpl(preferences, stateObserver, jobQueuer);
   }
 
   @Provides @Named("airplane_manager") Manager provideManagerAirplane(
@@ -112,12 +100,8 @@ import javax.inject.Named;
   @Provides @Named("airplane_manager_interactor")
   WearAwareManagerInteractor provideManagerAirplaneInteractor(
       @NonNull PowerManagerPreferences preferences,
-      @Named("obs_airplane_manage") StateInterestObserver manageObserver,
-      @Named("obs_airplane_state") StateInterestObserver stateObserver,
-      @NonNull JobQueuer jobQueuer,
-      @Named("obs_wear_manage") StateInterestObserver wearManageObserver,
-      @Named("obs_wear_state") StateInterestObserver wearStateObserver) {
-    return new ManagerAirplaneInteractor(preferences, manageObserver, stateObserver, jobQueuer,
-        wearManageObserver, wearStateObserver);
+      @Named("obs_airplane_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @Named("obs_wear_state") StateObserver wearStateObserver) {
+    return new ManagerAirplaneInteractor(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 }

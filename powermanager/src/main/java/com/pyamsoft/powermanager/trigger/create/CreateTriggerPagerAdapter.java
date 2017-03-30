@@ -91,9 +91,9 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final boolean syncEnable = syncFragment.getTriggerEnable();
 
     Timber.d("Post content values to bus");
-    final PowerTriggerEntry entry =
-        PowerTriggerEntry.CREATOR.create(percent, name, true, true, wifiToggle, dataToggle,
-            bluetoothToggle, syncToggle, wifiEnable, dataEnable, bluetoothEnable, syncEnable);
+    final PowerTriggerEntry entry = PowerTriggerEntry.creator()
+        .create(percent, name, true, true, wifiToggle, dataToggle, bluetoothToggle, syncToggle,
+            wifiEnable, dataEnable, bluetoothEnable, syncEnable);
     sendCreateEvent(entry);
   }
 

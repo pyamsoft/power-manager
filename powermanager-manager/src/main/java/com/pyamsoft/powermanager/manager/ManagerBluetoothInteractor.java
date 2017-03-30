@@ -20,19 +20,15 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
-import io.reactivex.Observable;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import javax.inject.Inject;
 
 class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
   @Inject ManagerBluetoothInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
-        wearStateObserver);
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateObserver wearStateObserver) {
+    super(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -59,8 +55,12 @@ class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
     return getPreferences().isIgnoreChargingBluetooth();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalBluetooh()));
+  @Override boolean isManaged() {
+    return getPreferences().isBluetoothManaged();
+  }
+
+  @Override boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalBluetooh();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {

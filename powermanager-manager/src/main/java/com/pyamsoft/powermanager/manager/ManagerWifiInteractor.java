@@ -19,24 +19,18 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @NonNull final ConnectedDeviceFunctionWrapper wrapper;
-
-  @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
-        wearStateObserver);
-    this.wrapper = wrapper;
+  @Inject ManagerWifiInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateObserver wearStateObserver) {
+    super(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -63,24 +57,31 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
     return getPreferences().isIgnoreChargingWifi();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.fromCallable(() -> getPreferences().isOriginalWifi());
+  @Override boolean isManaged() {
+    return getPreferences().isWifiManaged();
+  }
+
+  @Override boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalWifi();
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalWifi(enabled);
   }
 
   @NonNull @Override
   protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
-      // TODO check preferences
-      // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
-      if (wrapper.isConnected()) {
-        return Boolean.TRUE;
-      } else {
-        return originalResult;
-      }
+      Timber.d("Check for active connection here");
+      /*
+       // TODO check preferences
+       // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
+       if (wrapper.isConnected()) {
+       return Boolean.TRUE;
+       } else {
+       }
+       */
+      return originalResult;
     });
-  }
-
-  @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalWifi(enabled);
   }
 }

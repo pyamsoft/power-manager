@@ -72,7 +72,7 @@ import timber.log.Timber;
 
   @CheckResult @NonNull public Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
     return powerTriggerDB.queryWithPercent(entry.percent())
-        .first(PowerTriggerEntry.EMPTY)
+        .first(PowerTriggerEntry.empty())
         .toObservable()
         .flatMap(triggerEntry -> {
           if (!PowerTriggerEntry.isEmpty(triggerEntry)) {
@@ -164,6 +164,6 @@ import timber.log.Timber;
   }
 
   @CheckResult @NonNull public Observable<PowerTriggerEntry> get(int percent) {
-    return powerTriggerDB.queryWithPercent(percent).first(PowerTriggerEntry.EMPTY).toObservable();
+    return powerTriggerDB.queryWithPercent(percent).first(PowerTriggerEntry.empty()).toObservable();
   }
 }

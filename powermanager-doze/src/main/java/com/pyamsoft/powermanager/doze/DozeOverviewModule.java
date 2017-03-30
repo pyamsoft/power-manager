@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.doze;
 
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.states.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -26,7 +26,7 @@ import javax.inject.Named;
 @Module public class DozeOverviewModule {
 
   @Provides @Named("doze_overview") OverviewPagerPresenter provideDozeOverviewPagerPresenter(
-      @Named("mod_doze_state") BooleanInterestModifier stateModifier,
+      @Named("mod_doze_state") StateModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
   }

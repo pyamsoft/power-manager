@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -28,9 +28,8 @@ import timber.log.Timber;
 class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
 
   @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -58,15 +57,19 @@ class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
-  @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalDoze(enabled);
-  }
-
   @Override public boolean isIgnoreWhileCharging() {
     return getPreferences().isIgnoreChargingDoze();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalDoze()));
+  @Override boolean isManaged() {
+    return getPreferences().isDozeManaged();
+  }
+
+  @Override boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalDoze();
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalDoze(enabled);
   }
 }

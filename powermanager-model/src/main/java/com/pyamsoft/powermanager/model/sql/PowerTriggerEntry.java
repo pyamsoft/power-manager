@@ -19,7 +19,9 @@ package com.pyamsoft.powermanager.model.sql;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
+import com.pyamsoft.pydroid.helper.Checker;
 import com.squareup.sqldelight.SqlDelightStatement;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
@@ -27,29 +29,76 @@ import com.squareup.sqldelight.SqlDelightStatement;
   @NonNull public static final String EMPTY_NAME =
       PowerTriggerEntry.class.getName() + ".__TRIGGER_NAME_EMPTY";
   public static final int EMPTY_PERCENT = -1;
-  @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
-  public static final PowerTriggerEntry EMPTY =
-      new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
-          false, false, false, false, false);
-  @SuppressWarnings("StaticInitializerReferencesSubClass") @NonNull
-  private static final Factory<PowerTriggerEntry> FACTORY =
-      new Factory<>(AutoValue_PowerTriggerEntry::new);
-  @NonNull public static final Creator<PowerTriggerEntry> CREATOR = FACTORY.creator;
-  @NonNull public static final Mapper<PowerTriggerEntry> ALL_ENTRIES_MAPPER =
-      FACTORY.all_entriesMapper();
-  @NonNull public static final Mapper<PowerTriggerEntry> WITH_PERCENT_MAPPER =
-      FACTORY.with_percentMapper();
+
+  @Nullable private static volatile PowerTriggerEntry empty;
+  @Nullable private static volatile Factory<PowerTriggerEntry> factory;
+  @Nullable private static volatile Mapper<PowerTriggerEntry> allEntriesMapper;
+  @Nullable private static volatile Mapper<PowerTriggerEntry> withPercentMapper;
+
+  @CheckResult @NonNull public static PowerTriggerEntry empty() {
+    if (empty == null) {
+      synchronized (PowerTriggerEntry.class) {
+        if (empty == null) {
+          empty =
+              new AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false,
+                  false, false, false, false, false, false);
+        }
+      }
+    }
+
+    return Checker.checkNonNull(empty);
+  }
+
+  @CheckResult @NonNull private static Factory<PowerTriggerEntry> factory() {
+    if (factory == null) {
+      synchronized (PowerTriggerEntry.class) {
+        if (factory == null) {
+          factory = new Factory<>(AutoValue_PowerTriggerEntry::new);
+        }
+      }
+    }
+
+    return Checker.checkNonNull(factory);
+  }
+
+  @CheckResult @NonNull public static Mapper<PowerTriggerEntry> allEntriesMapper() {
+    if (allEntriesMapper == null) {
+      synchronized (PowerTriggerEntry.class) {
+        if (allEntriesMapper == null) {
+          allEntriesMapper = factory().all_entriesMapper();
+        }
+      }
+    }
+
+    return Checker.checkNonNull(allEntriesMapper);
+  }
+
+  @CheckResult @NonNull public static Mapper<PowerTriggerEntry> withPercentMapper() {
+    if (withPercentMapper == null) {
+      synchronized (PowerTriggerEntry.class) {
+        if (withPercentMapper == null) {
+          withPercentMapper = factory().with_percentMapper();
+        }
+      }
+    }
+
+    return Checker.checkNonNull(withPercentMapper);
+  }
+
+  @CheckResult @NonNull public static Creator<PowerTriggerEntry> creator() {
+    return factory().creator;
+  }
 
   @CheckResult public static boolean isEmpty(@NonNull PowerTriggerEntry entry) {
-    return EMPTY == entry;
+    return empty() == entry;
   }
 
   @CheckResult @NonNull public static SqlDelightStatement queryAll() {
-    return FACTORY.all_entries();
+    return factory().all_entries();
   }
 
   @CheckResult @NonNull public static SqlDelightStatement withPercent(int percent) {
-    return FACTORY.with_percent(percent);
+    return factory().with_percent(percent);
   }
 
   @CheckResult @NonNull

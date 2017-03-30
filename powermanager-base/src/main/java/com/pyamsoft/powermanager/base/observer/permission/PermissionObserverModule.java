@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

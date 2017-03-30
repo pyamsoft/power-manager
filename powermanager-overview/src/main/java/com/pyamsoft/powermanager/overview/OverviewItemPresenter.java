@@ -18,8 +18,7 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -45,17 +44,14 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
     iconDisposable = DisposableHelper.dispose(iconDisposable);
   }
 
-  public void decideManageState(@Nullable StateInterestObserver observer,
-      @NonNull ManageStateCallback callback) {
+  public void decideManageState(@NonNull States states, @NonNull ManageStateCallback callback) {
     iconDisposable = DisposableHelper.dispose(iconDisposable);
     iconDisposable = Observable.fromCallable(() -> {
       @DrawableRes final int icon;
-      if (observer == null) {
+      if (states == States.UNKNOWN) {
         icon = 0;
       } else {
-        if (observer.unknown()) {
-          icon = R.drawable.ic_help_24dp;
-        } else if (observer.is()) {
+        if (states == States.ENABLED) {
           icon = R.drawable.ic_check_box_24dp;
         } else {
           icon = R.drawable.ic_check_box_outline_24dp;

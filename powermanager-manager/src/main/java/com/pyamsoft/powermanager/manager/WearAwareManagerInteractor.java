@@ -20,37 +20,33 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver wearManageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver wearStateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearStateObserver;
 
   WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
-    this.wearManageObserver = wearManageObserver;
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateObserver wearStateObserver) {
+    super(jobQueuer, preferences, stateObserver);
     this.wearStateObserver = wearStateObserver;
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearEnabled() {
-    return Observable.fromCallable(wearStateObserver::is);
+    return Observable.fromCallable(wearStateObserver::enabled);
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
-    return Observable.fromCallable(wearManageObserver::is);
+    return Observable.fromCallable(() -> getPreferences().isWearableManaged());
   }
 
   @Override public void destroy() {
     super.destroy();
     Timber.d("Unregsiter wear state observer");
-    wearStateObserver.unregister(getClass().getName());
+    // TODO clean up wear
   }
 
   @NonNull @Override
