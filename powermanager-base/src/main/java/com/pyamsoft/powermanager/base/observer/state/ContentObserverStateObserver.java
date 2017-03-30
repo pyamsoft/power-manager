@@ -100,7 +100,7 @@ public abstract class ContentObserverStateObserver extends ContentObserver
       Timber.w("Current state is unknown for URI: %s", uri);
       return;
     }
-    if (is()) {
+    if (enabled()) {
       //noinspection Convert2streamapi
       for (final SetCallback setCallback : setMap.values()) {
         if (setCallback != null) {

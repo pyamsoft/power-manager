@@ -150,14 +150,14 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   }
 
   private void setupFab() {
-    if (observer.is()) {
+    if (observer.enabled()) {
       setFab();
     } else {
       unsetFab();
     }
 
     binding.preferenceContainerFab.setOnClickListener(view -> {
-      if (observer.is()) {
+      if (observer.enabled()) {
         presenter.wrapUnset();
       } else {
         presenter.wrapSet();

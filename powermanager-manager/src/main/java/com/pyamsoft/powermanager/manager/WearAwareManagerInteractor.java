@@ -40,11 +40,11 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearEnabled() {
-    return Observable.fromCallable(wearStateObserver::is);
+    return Observable.fromCallable(wearStateObserver::enabled);
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
-    return Observable.fromCallable(wearManageObserver::is);
+    return Observable.fromCallable(wearManageObserver::enabled);
   }
 
   @Override public void destroy() {

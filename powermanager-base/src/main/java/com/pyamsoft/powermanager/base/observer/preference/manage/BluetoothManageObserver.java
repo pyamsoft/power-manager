@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.observer.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
@@ -24,12 +23,11 @@ import javax.inject.Inject;
 
 class BluetoothManageObserver extends StatePreferenceObserver {
 
-  @Inject BluetoothManageObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject BluetoothManageObserver(@NonNull PowerManagerPreferences preferences) {
     super(preferences);
   }
 
-  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
+  @Override protected boolean enabled(@NonNull PowerManagerPreferences preferences) {
     return preferences.isBluetoothManaged();
   }
 }

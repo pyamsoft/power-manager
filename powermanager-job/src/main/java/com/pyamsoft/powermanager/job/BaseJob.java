@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.types.QueuerType;
 import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateModifier;
+import com.pyamsoft.powermanager.model.types.QueuerType;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -58,7 +58,7 @@ public abstract class BaseJob {
     initialize(tag, extras);
     if (type == QueuerType.SCREEN_OFF_DISABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       if (ignoreWhenCharging) {
-        if (chargingObserver.is()) {
+        if (chargingObserver.enabled()) {
           getLogger().w("Do not run job because device is charging");
           return;
         }

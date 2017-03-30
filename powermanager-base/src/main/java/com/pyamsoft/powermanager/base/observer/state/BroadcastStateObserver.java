@@ -130,7 +130,7 @@ public abstract class BroadcastStateObserver extends BroadcastReceiver
       return;
     }
 
-    if (is()) {
+    if (enabled()) {
       //noinspection Convert2streamapi
       for (final SetCallback setCallback : setMap.values()) {
         if (setCallback != null) {

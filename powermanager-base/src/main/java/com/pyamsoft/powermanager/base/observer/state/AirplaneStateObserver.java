@@ -34,7 +34,7 @@ class AirplaneStateObserver extends ContentObserverStateObserver {
     Timber.d("New StateObserver for Airplane Mode");
   }
 
-  @Override public boolean is() {
+  @Override public boolean enabled() {
     final boolean enabled = wrapper.getState() == States.ENABLED;
     Timber.d("Enabled: %s", enabled);
     return enabled;

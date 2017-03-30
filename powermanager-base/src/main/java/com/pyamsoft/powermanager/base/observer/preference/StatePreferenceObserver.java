@@ -32,13 +32,13 @@ public abstract class StatePreferenceObserver implements StateObserver {
     this.preferences = Checker.checkNonNull(preferences);
   }
 
-  @Override public boolean is() {
-    return is(preferences);
+  @Override public boolean enabled() {
+    return enabled(preferences);
   }
 
   @Override public boolean unknown() {
     return false;
   }
 
-  @CheckResult protected abstract boolean is(@NonNull PowerManagerPreferences preferences);
+  @CheckResult protected abstract boolean enabled(@NonNull PowerManagerPreferences preferences);
 }

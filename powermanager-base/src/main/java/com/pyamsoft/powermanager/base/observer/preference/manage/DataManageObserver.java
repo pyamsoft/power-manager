@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.observer.preference.manage;
 
-import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
@@ -29,13 +28,13 @@ class DataManageObserver extends StatePreferenceObserver {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
 
-  @Inject DataManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject DataManageObserver(@NonNull PowerManagerPreferences preferences,
       @NonNull PermissionObserver permissionObserver) {
     super(preferences);
     rootPermissionObserver = permissionObserver;
   }
 
-  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
+  @Override protected boolean enabled(@NonNull PowerManagerPreferences preferences) {
     final boolean preferenceManaged = preferences.isDataManaged();
     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
       Timber.d("isManaged: check for root on API > 19");

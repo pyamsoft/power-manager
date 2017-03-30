@@ -52,7 +52,7 @@ public class SyncStateObserver implements StateChangeObserver {
             return;
           }
 
-          if (is()) {
+          if (enabled()) {
             //noinspection Convert2streamapi
             for (final SetCallback setCallback : setMap.values()) {
               if (setCallback != null) {
@@ -117,7 +117,7 @@ public class SyncStateObserver implements StateChangeObserver {
     }
   }
 
-  @Override public boolean is() {
+  @Override public boolean enabled() {
     final boolean enabled = wrapper.getState() == States.ENABLED;
     Timber.d("Enabled: %s", enabled);
     return enabled;

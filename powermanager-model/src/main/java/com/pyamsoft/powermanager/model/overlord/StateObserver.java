@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 
 public interface StateObserver {
 
-  @CheckResult boolean is();
+  @CheckResult boolean enabled();
 
   @CheckResult boolean unknown();
 }

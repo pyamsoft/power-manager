@@ -154,11 +154,11 @@ abstract class ManagerInteractor {
   }
 
   @CallSuper @NonNull private Observable<Boolean> isManaged() {
-    return Observable.fromCallable(manageObserver::is);
+    return Observable.fromCallable(manageObserver::enabled);
   }
 
   @CallSuper @NonNull Observable<Boolean> isEnabled() {
-    return Observable.fromCallable(stateObserver::is);
+    return Observable.fromCallable(stateObserver::enabled);
   }
 
   @CheckResult @NonNull abstract Observable<Boolean> isOriginalStateEnabled();

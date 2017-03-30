@@ -55,7 +55,7 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
       } else {
         if (observer.unknown()) {
           icon = R.drawable.ic_help_24dp;
-        } else if (observer.is()) {
+        } else if (observer.enabled()) {
           icon = R.drawable.ic_check_box_24dp;
         } else {
           icon = R.drawable.ic_check_box_outline_24dp;

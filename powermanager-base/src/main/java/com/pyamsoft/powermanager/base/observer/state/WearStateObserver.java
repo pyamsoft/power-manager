@@ -111,7 +111,7 @@ class WearStateObserver extends BroadcastStateObserver {
     disconnectGoogleApiClient();
   }
 
-  @Override public boolean is() {
+  @Override public boolean enabled() {
     return isConnected();
   }
 

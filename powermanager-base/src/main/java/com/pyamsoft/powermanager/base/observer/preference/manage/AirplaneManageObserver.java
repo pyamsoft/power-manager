@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.observer.preference.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
@@ -27,14 +26,13 @@ class AirplaneManageObserver extends StatePreferenceObserver {
 
   @NonNull private final PermissionObserver rootPermissionObserver;
 
-  @Inject AirplaneManageObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
+  @Inject AirplaneManageObserver(@NonNull PowerManagerPreferences preferences,
       @NonNull PermissionObserver permissionObserver) {
     super(preferences);
     rootPermissionObserver = permissionObserver;
   }
 
-  @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {
+  @Override protected boolean enabled(@NonNull PowerManagerPreferences preferences) {
     return preferences.isAirplaneManaged() && rootPermissionObserver.hasPermission();
   }
 }

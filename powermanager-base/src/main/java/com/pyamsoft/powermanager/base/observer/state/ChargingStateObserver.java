@@ -52,7 +52,7 @@ class ChargingStateObserver extends BroadcastStateObserver {
         || status == BatteryManager.BATTERY_STATUS_FULL;
   }
 
-  @Override public boolean is() {
+  @Override public boolean enabled() {
     return isCharging();
   }
 

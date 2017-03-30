@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.observer.preference.preference;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.overlord.StateObserver;
@@ -28,32 +27,32 @@ import javax.inject.Singleton;
 @Module public class PeriodicObserverModule {
 
   @Singleton @Named("obs_wifi_periodic") @Provides StateObserver provideWifiObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new WifiPeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new WifiPeriodicObserver(preferences);
   }
 
   @Singleton @Named("obs_data_periodic") @Provides StateObserver provideDataObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DataPeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new DataPeriodicObserver(preferences);
   }
 
   @Singleton @Named("obs_bluetooth_periodic") @Provides StateObserver provideBluetoothObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new BluetoothPeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new BluetoothPeriodicObserver(preferences);
   }
 
   @Singleton @Named("obs_sync_periodic") @Provides StateObserver provideSyncObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new SyncPeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new SyncPeriodicObserver(preferences);
   }
 
   @Singleton @Named("obs_airplane_periodic") @Provides StateObserver provideAirplaneObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new AirplanePeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new AirplanePeriodicObserver(preferences);
   }
 
   @Singleton @Named("obs_doze_periodic") @Provides StateObserver provideDozeObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
-    return new DozePeriodicObserver(context, preferences);
+      @NonNull PowerManagerPreferences preferences) {
+    return new DozePeriodicObserver(preferences);
   }
 }

@@ -34,7 +34,7 @@ class WifiStateObserver extends BroadcastStateObserver {
     Timber.d("New StateObserver for Wifi");
   }
 
-  @Override public boolean is() {
+  @Override public boolean enabled() {
     final boolean enabled = wrapper.getState() == States.ENABLED;
     Timber.d("Enabled: %s", enabled);
     return enabled;
