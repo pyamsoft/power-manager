@@ -33,13 +33,59 @@ import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import java.util.Locale;
 import timber.log.Timber;
 
-public abstract class CustomTimeInputPreference extends BaseBoundPreference
-    implements CustomTimePreferencePresenter.OnCustomTimeUpdateCallback {
+public abstract class CustomTimeInputPreference extends BaseBoundPreference {
 
   @SuppressWarnings("WeakerAccess") final CustomTimePreferencePresenter presenter;
-  @Nullable private TextWatcher watcher;
-  @Nullable private EditText editText;
-  @Nullable private PreferenceCustomTimeInputBinding binding;
+  @SuppressWarnings("WeakerAccess") @Nullable TextWatcher watcher;
+  @SuppressWarnings("WeakerAccess") @Nullable EditText editText;
+  @SuppressWarnings("WeakerAccess") @Nullable PreferenceCustomTimeInputBinding binding;
+  @SuppressWarnings("WeakerAccess") @NonNull
+  final CustomTimePreferencePresenter.OnCustomTimeUpdateCallback callback =
+      new CustomTimePreferencePresenter.OnCustomTimeUpdateCallback() {
+        @Override public void onClearFocus() {
+          if (binding != null) {
+            EditText editText = binding.preferenceCustomTimeInput.getEditText();
+            if (editText != null) {
+              if (editText.hasFocus()) {
+                editText.clearFocus();
+              }
+            }
+            if (binding.preferenceCustomTimeInput.hasFocus()) {
+              binding.preferenceCustomTimeInput.clearFocus();
+            }
+          }
+        }
+
+        @Override public void onCustomTimeUpdate(long time) {
+          if (binding != null) {
+            Timber.d("Custom time updated to: %d", time);
+            if (watcher != null) {
+              if (editText != null) {
+                Timber.d("Remove text watcher");
+                editText.removeTextChangedListener(watcher);
+              }
+            }
+
+            binding.preferenceCustomTimeInput.setErrorEnabled(false);
+            if (editText != null) {
+              editText.setText(String.valueOf(time));
+              editText.setSelection(editText.getText().length());
+            }
+            binding.preferenceCustomTimeSummary.setText(formatSummaryStringForTime(time));
+
+            if (watcher != null) {
+              Timber.d("Add text watcher");
+              editText.addTextChangedListener(watcher);
+            }
+          } else {
+            Timber.e("Failed to update view, but presenter updated storage");
+          }
+        }
+
+        @Override public void onCustomTimeError() {
+          // TODO
+        }
+      };
   private boolean isDetaching;
 
   protected CustomTimeInputPreference(Context context, @StringRes int keyResId) {
@@ -86,7 +132,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
         @Override public void afterTextChanged(Editable s) {
           Timber.d("After text changed");
           final String text = s.toString();
-          presenter.updateCustomTime(text, CustomTimeInputPreference.this);
+          presenter.updateCustomTime(text, callback);
         }
       };
 
@@ -94,7 +140,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
       editText.addTextChangedListener(watcher);
     }
 
-    presenter.initializeCustomTime(this);
+    presenter.initializeCustomTime(callback);
   }
 
   @Override protected void onUnbindViewHolder() {
@@ -109,7 +155,7 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
         if (isDetaching) {
           // Save the last entered value to preferences
           final String text = editText.getText().toString();
-          presenter.updateCustomTime(text, 0, false, this);
+          presenter.updateCustomTime(text, 0, false, callback);
         }
       }
 
@@ -117,42 +163,13 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference
     }
   }
 
-  @Override public void onCustomTimeUpdate(long time) {
-    if (binding != null) {
-      Timber.d("Custom time updated to: %d", time);
-      if (watcher != null) {
-        if (editText != null) {
-          Timber.d("Remove text watcher");
-          editText.removeTextChangedListener(watcher);
-        }
-      }
-
-      binding.preferenceCustomTimeInput.setErrorEnabled(false);
-      if (editText != null) {
-        editText.setText(String.valueOf(time));
-        editText.setSelection(editText.getText().length());
-      }
-      binding.preferenceCustomTimeSummary.setText(formatSummaryStringForTime(time));
-
-      if (watcher != null) {
-        Timber.d("Add text watcher");
-        editText.addTextChangedListener(watcher);
-      }
-    } else {
-      Timber.e("Failed to update view, but presenter updated storage");
-    }
-  }
-
-  @Override public void onCustomTimeError() {
-    // TODO
-  }
-
   public void updatePresetDelay(@NonNull String presetDelay) {
     Timber.d("Update time with preset delay of: %s", presetDelay);
-    presenter.updateCustomTime(presetDelay, 0, this);
+    presenter.updateCustomTime(presetDelay, 0, callback);
   }
 
-  @CheckResult @NonNull private CharSequence formatSummaryStringForTime(long time) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull CharSequence formatSummaryStringForTime(
+      long time) {
     final PreferenceType type = getPreferenceType();
     final String deviceType;
     switch (type) {

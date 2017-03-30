@@ -32,7 +32,6 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
   // Max time 30 minutes
   private static final long MAX_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(30);
-  private static final long MIN_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(1);
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimePreferenceInteractor interactor;
@@ -77,8 +76,8 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
 
       // Make sure time is not too high or too low
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
-      longTime = Math.max(MIN_TIME_SECONDS, longTime);
 
+      callback.onClearFocus();
       customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
       customTimeDisposable = interactor.saveTime(longTime, delay)
           .subscribeOn(getSubscribeScheduler())
@@ -114,6 +113,8 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
   }
 
   interface OnCustomTimeUpdateCallback {
+
+    void onClearFocus();
 
     void onCustomTimeUpdate(long time);
 

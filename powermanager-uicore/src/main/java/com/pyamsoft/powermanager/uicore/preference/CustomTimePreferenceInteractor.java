@@ -31,9 +31,9 @@ public abstract class CustomTimePreferenceInteractor {
   }
 
   @NonNull @CheckResult public Observable<Long> saveTime(long time, long delay) {
-    return Observable.fromCallable(() -> {
+    return Observable.defer(() -> {
       saveTimeToPreferences(preferences, time);
-      return time;
+      return getTime();
     }).delay(delay, TimeUnit.MILLISECONDS);
   }
 
