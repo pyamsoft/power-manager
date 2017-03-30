@@ -24,13 +24,15 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  // Max time 10 minutes
-  private static final long MAX_TIME_SECONDS = 30 * 60;
+  // Max time 30 minutes
+  private static final long MAX_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(30);
+  private static final long MIN_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(1);
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimePreferenceInteractor interactor;
@@ -73,8 +75,9 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
         longTime = Long.parseLong(time);
       }
 
-      // Set the time to a max of 30 minutes
+      // Make sure time is not too high or too low
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
+      longTime = Math.max(MIN_TIME_SECONDS, longTime);
 
       customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
       customTimeDisposable = interactor.saveTime(longTime, delay)
