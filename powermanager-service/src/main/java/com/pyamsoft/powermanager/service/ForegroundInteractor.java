@@ -29,7 +29,7 @@ import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
-import com.pyamsoft.powermanager.model.QueuerType;
+import com.pyamsoft.powermanager.model.types.QueuerType;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Named;
