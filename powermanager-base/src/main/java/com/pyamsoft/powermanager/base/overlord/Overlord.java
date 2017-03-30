@@ -16,9 +16,9 @@
 
 package com.pyamsoft.powermanager.base.overlord;
 
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.model.overlord.StateModifier;
 
-interface Overlord extends StateModifier, StateChangeObserver {
+interface Overlord extends StateModifier, StateObserver {
 
 }

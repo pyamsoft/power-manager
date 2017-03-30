@@ -17,7 +17,8 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.overlord.StateObserver;
+import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.overlord.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -30,34 +31,16 @@ import timber.log.Timber;
 
 class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @NonNull private final StateObserver wifiObserver;
-  @NonNull private final StateObserver dataObserver;
-  @NonNull private final StateObserver bluetoothObserver;
-  @NonNull private final StateObserver syncObserver;
-  @NonNull private final StateObserver airplaneObserver;
-  @NonNull private final StateObserver dozeObserver;
-  @NonNull private final StateObserver wearObserver;
+  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final OverviewInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @NonNull @Named("obs_wifi_manage") StateObserver wifiObserver,
-      @NonNull @Named("obs_data_manage") StateObserver dataObserver,
-      @NonNull @Named("obs_bluetooth_manage") StateObserver bluetoothObserver,
-      @NonNull @Named("obs_sync_manage") StateObserver syncObserver,
-      @NonNull @Named("obs_airplane_manage") StateObserver airplaneObserver,
-      @NonNull @Named("obs_doze_manage") StateObserver dozeObserver,
-      @NonNull @Named("obs_wear_manage") StateObserver wearObserver) {
+      @NonNull PowerManagerPreferences powerManagerPreferences) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.airplaneObserver = airplaneObserver;
-    this.dozeObserver = dozeObserver;
-    this.wearObserver = wearObserver;
+    this.preferences = powerManagerPreferences;
   }
 
   @Override protected void onUnbind() {
@@ -82,31 +65,34 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
   }
 
   public void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(wifiObserver);
+    callback.onObserverRetrieved(preferences.isWifiManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(dataObserver);
+    callback.onObserverRetrieved(preferences.isDataManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(bluetoothObserver);
+    callback.onObserverRetrieved(
+        preferences.isBluetoothManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(syncObserver);
+    callback.onObserverRetrieved(preferences.isSyncManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(airplaneObserver);
+    callback.onObserverRetrieved(
+        preferences.isAirplaneManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(dozeObserver);
+    callback.onObserverRetrieved(preferences.isDozeManaged() ? States.ENABLED : States.DISABLED);
   }
 
   public void getWearObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(wearObserver);
+    callback.onObserverRetrieved(
+        preferences.isWearableManaged() ? States.ENABLED : States.DISABLED);
   }
 
   interface OnboardingCallback {
@@ -116,6 +102,6 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   interface ObserverRetrieveCallback {
 
-    void onObserverRetrieved(@NonNull StateObserver observer);
+    void onObserverRetrieved(@NonNull States state);
   }
 }

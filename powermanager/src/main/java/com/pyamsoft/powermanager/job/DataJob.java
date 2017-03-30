@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.model.overlord.StateModifier;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +28,7 @@ import javax.inject.Named;
 public class DataJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_data") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateObserver
       stateObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") StateModifier
       stateModifier;
@@ -41,7 +41,7 @@ public class DataJob extends BaseJob {
     return logger;
   }
 
-  @NonNull @Override StateChangeObserver getObserver() {
+  @NonNull @Override StateObserver getObserver() {
     return stateObserver;
   }
 

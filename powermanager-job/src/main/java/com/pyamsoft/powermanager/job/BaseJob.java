@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import com.pyamsoft.powermanager.model.types.QueuerType;
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ import javax.inject.Named;
 public abstract class BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   private QueuerType type;
   private boolean ignoreWhenCharging;
@@ -144,7 +144,7 @@ public abstract class BaseJob {
 
   @CheckResult @NonNull abstract Logger getLogger();
 
-  @CheckResult @NonNull abstract StateChangeObserver getObserver();
+  @CheckResult @NonNull abstract StateObserver getObserver();
 
   @CheckResult @NonNull abstract StateModifier getModifier();
 }

@@ -25,7 +25,7 @@ import android.widget.Toast;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
@@ -44,16 +44,16 @@ import timber.log.Timber;
 public class TriggerJob extends Job {
 
   @SuppressWarnings("WeakerAccess") @Inject PowerTriggerDB powerTriggerDB;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateObserver
       wifiObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateObserver
       dataObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateObserver
       bluetoothObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateObserver
       syncObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier wifiModifier;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_data_state") StateModifier dataModifier;

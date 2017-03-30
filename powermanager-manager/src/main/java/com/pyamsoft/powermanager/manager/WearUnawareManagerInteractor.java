@@ -26,9 +26,8 @@ import timber.log.Timber;
 abstract class WearUnawareManagerInteractor extends ManagerInteractor {
 
   WearUnawareManagerInteractor(@NonNull JobQueuer jobQueuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver manageObserver,
-      @NonNull StateObserver stateObserver) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
+      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver) {
+    super(jobQueuer, preferences, stateObserver);
   }
 
   @NonNull @Override

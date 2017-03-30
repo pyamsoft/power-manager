@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class DataFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Data";
-  @Inject @Named("obs_data_state") StateChangeObserver observer;
+  @Inject @Named("obs_data_state") StateObserver observer;
   @Inject @Named("data_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
@@ -45,7 +45,7 @@ public class DataFragment extends OverviewPagerFragment {
     return presenter;
   }
 
-  @NonNull @Override protected StateChangeObserver provideObserver() {
+  @NonNull @Override protected StateObserver provideObserver() {
     return observer;
   }
 

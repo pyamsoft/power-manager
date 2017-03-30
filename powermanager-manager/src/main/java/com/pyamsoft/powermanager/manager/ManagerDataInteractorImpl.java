@@ -20,17 +20,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.StateObserver;
-import io.reactivex.Observable;
 import javax.inject.Inject;
 
 class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
 
   @Inject ManagerDataInteractorImpl(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver manageObserver,
-      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+    super(jobQueuer, preferences, stateObserver);
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -57,8 +54,12 @@ class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
     return getPreferences().isIgnoreChargingData();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalData()));
+  @Override boolean isManaged() {
+    return getPreferences().isDataManaged();
+  }
+
+  @Override boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalData();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {

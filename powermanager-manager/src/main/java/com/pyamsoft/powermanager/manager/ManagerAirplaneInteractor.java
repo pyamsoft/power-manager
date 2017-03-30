@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
@@ -28,16 +27,17 @@ import timber.log.Timber;
 class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
   @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver manageObserver,
-      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateObserver wearManageObserver,
-      @NonNull StateChangeObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
-        wearStateObserver);
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateObserver wearStateObserver) {
+    super(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Override protected long getDelayTime() {
     return getPreferences().getAirplaneDelay();
+  }
+
+  @Override boolean isManaged() {
+    return getPreferences().isAirplaneManaged();
   }
 
   @Override protected boolean isPeriodic() {
@@ -61,15 +61,15 @@ class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }
 
-  @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalAirplane(enabled);
-  }
-
   @Override public boolean isIgnoreWhileCharging() {
     return getPreferences().isIgnoreChargingAirplane();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.defer(() -> Observable.just(getPreferences().isOriginalAirplane()));
+  @Override public boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalAirplane();
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalAirplane(enabled);
   }
 }

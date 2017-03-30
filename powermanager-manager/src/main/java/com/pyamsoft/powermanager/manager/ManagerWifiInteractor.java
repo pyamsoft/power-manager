@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
@@ -31,11 +30,9 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull final ConnectedDeviceFunctionWrapper wrapper;
 
   @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver manageObserver,
-      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateObserver wearManageObserver, @NonNull StateChangeObserver wearStateObserver) {
-    super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
-        wearStateObserver);
+      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver,
+      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
+    super(preferences, stateObserver, jobQueuer, wearStateObserver);
     this.wrapper = wrapper;
   }
 
@@ -63,8 +60,16 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
     return getPreferences().isIgnoreChargingWifi();
   }
 
-  @NonNull @Override public Observable<Boolean> isOriginalStateEnabled() {
-    return Observable.fromCallable(() -> getPreferences().isOriginalWifi());
+  @Override boolean isManaged() {
+    return getPreferences().isWifiManaged();
+  }
+
+  @Override boolean isOriginalStateEnabled() {
+    return getPreferences().isOriginalWifi();
+  }
+
+  @Override public void setOriginalStateEnabled(boolean enabled) {
+    getPreferences().setOriginalWifi(enabled);
   }
 
   @NonNull @Override
@@ -78,9 +83,5 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
         return originalResult;
       }
     });
-  }
-
-  @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalWifi(enabled);
   }
 }

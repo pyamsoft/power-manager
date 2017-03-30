@@ -21,7 +21,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -36,7 +35,7 @@ import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.model.OverviewModel;
-import com.pyamsoft.powermanager.model.overlord.StateObserver;
+import com.pyamsoft.powermanager.model.overlord.States;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
@@ -55,13 +54,13 @@ public class OverviewItem
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
-      @ColorRes int background, @Nullable StateObserver observer) {
+      @ColorRes int background, @NonNull States states) {
     super(OverviewModel.builder()
         .background(background)
         .image(image)
+        .state(states)
         .rootView(rootView)
         .title(title)
-        .observer(observer)
         .build());
   }
 
@@ -167,19 +166,18 @@ public class OverviewItem
           .tint(android.R.color.white)
           .into(binding.adapterItemOverviewImage);
 
-      presenter.decideManageState(model.observer(),
-          new OverviewItemPresenter.ManageStateCallback() {
-            @Override public void onManageStateDecided(@DrawableRes int icon) {
-              checkTask = AsyncMapHelper.unsubscribe(checkTask);
-              checkTask = AsyncDrawable.load(icon)
-                  .tint(android.R.color.white)
-                  .into(binding.adapterItemOverviewCheck);
-            }
+      presenter.decideManageState(model.state(), new OverviewItemPresenter.ManageStateCallback() {
+        @Override public void onManageStateDecided(@DrawableRes int icon) {
+          checkTask = AsyncMapHelper.unsubscribe(checkTask);
+          checkTask = AsyncDrawable.load(icon)
+              .tint(android.R.color.white)
+              .into(binding.adapterItemOverviewCheck);
+        }
 
-            @Override public void onManageStateNone() {
-              binding.adapterItemOverviewCheck.setImageDrawable(null);
-            }
-          });
+        @Override public void onManageStateNone() {
+          binding.adapterItemOverviewCheck.setImageDrawable(null);
+        }
+      });
     }
 
     void unbind() {

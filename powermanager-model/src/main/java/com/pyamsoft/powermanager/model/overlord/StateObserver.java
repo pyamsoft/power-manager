@@ -17,10 +17,27 @@
 package com.pyamsoft.powermanager.model.overlord;
 
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public interface StateObserver {
 
   @CheckResult boolean enabled();
 
   @CheckResult boolean unknown();
+
+  void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback);
+
+  void unregister(@NonNull String tag);
+
+  interface SetCallback {
+
+    void call();
+  }
+
+  interface UnsetCallback {
+
+    void call();
+  }
 }

@@ -20,22 +20,18 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearManageObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearStateObserver;
 
   WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver manageObserver, @NonNull StateChangeObserver stateObserver,
-      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearManageObserver,
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateObserver wearStateObserver) {
-    super(jobQueuer, preferences, manageObserver, stateObserver);
-    this.wearManageObserver = wearManageObserver;
+    super(jobQueuer, preferences, stateObserver);
     this.wearStateObserver = wearStateObserver;
   }
 
@@ -44,7 +40,7 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
-    return Observable.fromCallable(wearManageObserver::enabled);
+    return Observable.fromCallable(() -> getPreferences().isWearableManaged());
   }
 
   @Override public void destroy() {

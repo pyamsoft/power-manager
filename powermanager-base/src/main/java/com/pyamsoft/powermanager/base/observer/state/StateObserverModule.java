@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -29,45 +29,45 @@ import javax.inject.Singleton;
 
 @Module public class StateObserverModule {
 
-  @Singleton @Named("obs_wifi_state") @Provides StateChangeObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_state") @Provides StateObserver provideWifiObserver(
       @NonNull Context context,
       @NonNull @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper) {
     return new WifiStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_data_state") @Provides StateChangeObserver provideDataObserver(
+  @Singleton @Named("obs_data_state") @Provides StateObserver provideDataObserver(
       @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper,
       @Named("data_uri") String dataUri) {
     return new DataStateObserver(context, wrapper, dataUri);
   }
 
-  @Singleton @Named("obs_bluetooth_state") @Provides StateChangeObserver provideBluetoothObserver(
+  @Singleton @Named("obs_bluetooth_state") @Provides StateObserver provideBluetoothObserver(
       @NonNull Context context,
       @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
     return new BluetoothStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_sync_state") @Provides StateChangeObserver provideSyncObserver(
+  @Singleton @Named("obs_sync_state") @Provides StateObserver provideSyncObserver(
       @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
     return new SyncStateObserver(wrapper);
   }
 
-  @Singleton @Named("obs_doze_state") @Provides StateChangeObserver provideDozeObserver(
+  @Singleton @Named("obs_doze_state") @Provides StateObserver provideDozeObserver(
       @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
     return new DozeStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_wear_state") @Provides StateChangeObserver provideWearObserver(
+  @Singleton @Named("obs_wear_state") @Provides StateObserver provideWearObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearStateObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_airplane_state") @Provides StateChangeObserver provideAirplaneObserver(
+  @Singleton @Named("obs_airplane_state") @Provides StateObserver provideAirplaneObserver(
       @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
     return new AirplaneStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_charging_state") @Provides StateChangeObserver provideChargingObserver(
+  @Singleton @Named("obs_charging_state") @Provides StateObserver provideChargingObserver(
       @NonNull Context context) {
     return new ChargingStateObserver(context);
   }

@@ -36,6 +36,7 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
+import com.pyamsoft.powermanager.model.overlord.States;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
@@ -123,7 +124,7 @@ public class OverviewFragment extends ActionBarFragment {
 
     adapter.add(
         new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
-            null));
+            States.UNKNOWN));
 
     presenter.getAirplaneObserver(observer -> adapter.add(
         new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
@@ -136,7 +137,7 @@ public class OverviewFragment extends ActionBarFragment {
             observer)));
 
     adapter.add(new OverviewItem(view, SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp,
-        R.color.pink500, null));
+        R.color.pink500, States.UNKNOWN));
   }
 
   @SuppressWarnings("WeakerAccess") void loadFragment(@NonNull String title,

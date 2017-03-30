@@ -23,13 +23,13 @@ import android.content.IntentFilter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
 public abstract class BroadcastStateObserver extends BroadcastReceiver
-    implements StateChangeObserver {
+    implements StateObserver {
 
   // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;

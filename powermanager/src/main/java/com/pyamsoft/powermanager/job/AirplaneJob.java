@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.model.overlord.StateModifier;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +28,7 @@ import javax.inject.Named;
 public class AirplaneJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_airplane") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_airplane_state") StateChangeObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_airplane_state") StateObserver
       stateObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_airplane_state") StateModifier
       stateModifier;
@@ -41,7 +41,7 @@ public class AirplaneJob extends BaseJob {
     return logger;
   }
 
-  @NonNull @Override StateChangeObserver getObserver() {
+  @NonNull @Override StateObserver getObserver() {
     return stateObserver;
   }
 
