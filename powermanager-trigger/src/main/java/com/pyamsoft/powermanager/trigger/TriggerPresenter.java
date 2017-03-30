@@ -90,9 +90,7 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
     deleteDisposable = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::onTriggerDeleted, throwable -> {
-          Timber.e(throwable, "onError");
-        });
+        .subscribe(callback::onTriggerDeleted, throwable -> Timber.e(throwable, "onError"));
   }
 
   public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,

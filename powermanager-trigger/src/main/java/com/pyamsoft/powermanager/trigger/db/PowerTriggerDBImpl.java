@@ -99,7 +99,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       SqlDelightStatement statement = PowerTriggerEntry.queryAll();
       return RxJavaInterop.toV2Observable(
           briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
-              .mapToList(PowerTriggerEntry.ALL_ENTRIES_MAPPER::map));
+              .mapToList(PowerTriggerEntry.allEntriesMapper()::map));
     });
   }
 
@@ -112,8 +112,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       SqlDelightStatement statement = PowerTriggerEntry.withPercent(percent);
       return RxJavaInterop.toV2Observable(
           briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
-              .mapToOneOrDefault(PowerTriggerEntry.WITH_PERCENT_MAPPER::map,
-                  PowerTriggerEntry.EMPTY));
+              .mapToOneOrDefault(PowerTriggerEntry.withPercentMapper()::map,
+                  PowerTriggerEntry.empty()));
     });
   }
 

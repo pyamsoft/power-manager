@@ -119,12 +119,12 @@ public class TriggerJob extends Job {
       }).toList().map(integers -> {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
-        return PowerTriggerEntry.EMPTY;
+        return PowerTriggerEntry.empty();
       }).toObservable();
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
-        PowerTriggerEntry best = PowerTriggerEntry.EMPTY;
+        PowerTriggerEntry best = PowerTriggerEntry.empty();
 
         for (final PowerTriggerEntry entry : powerTriggerEntries) {
           Timber.d("Current entry: %s %d", entry.name(), entry.percent());
