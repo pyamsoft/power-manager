@@ -27,7 +27,7 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.powermanager.model.overlord.States;
 import com.pyamsoft.pydroid.helper.Checker;
 import java.lang.reflect.Method;
 import javax.inject.Inject;

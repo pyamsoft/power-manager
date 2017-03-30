@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model.overlord;
 
 public interface StateChangeObserver extends ChangeListener, StateObserver {
 }

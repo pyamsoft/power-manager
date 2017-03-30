@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.ChangeListener;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.overlord.ChangeListener;
+import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import io.reactivex.Observable;

@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model.overlord;
 
-public interface StateModifier {
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-  void set();
+public interface ChangeListener {
 
-  void unset();
+  void register(@NonNull String tag, @Nullable SetCallback setCallback,
+      @Nullable UnsetCallback unsetCallback);
+
+  void unregister(@NonNull String tag);
+
+  interface SetCallback {
+
+    void call();
+  }
+
+  interface UnsetCallback {
+
+    void call();
+  }
 }

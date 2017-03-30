@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.wrapper;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.powermanager.model.overlord.States;
 
 public interface DeviceFunctionWrapper {
 

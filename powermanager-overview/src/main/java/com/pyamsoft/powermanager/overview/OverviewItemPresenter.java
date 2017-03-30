@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.overview;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;

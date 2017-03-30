@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model.overlord;
 
 public enum States {
   ENABLED, DISABLED, UNKNOWN

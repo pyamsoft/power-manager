@@ -24,7 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.powermanager.model.overlord.States;
 import javax.inject.Inject;
 
 class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {

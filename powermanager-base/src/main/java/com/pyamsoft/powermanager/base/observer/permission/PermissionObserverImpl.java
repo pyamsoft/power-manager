@@ -21,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import timber.log.Timber;
 
 abstract class PermissionObserverImpl implements PermissionObserver {

@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
-import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import javax.inject.Inject;
 import timber.log.Timber;
 

@@ -23,7 +23,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.powermanager.model.overlord.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 

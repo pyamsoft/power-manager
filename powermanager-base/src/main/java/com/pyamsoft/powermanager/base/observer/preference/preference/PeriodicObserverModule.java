@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.observer.preference.preference;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

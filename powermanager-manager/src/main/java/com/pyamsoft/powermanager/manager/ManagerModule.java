@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;

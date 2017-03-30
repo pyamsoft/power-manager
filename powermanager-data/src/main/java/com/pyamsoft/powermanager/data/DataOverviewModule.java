@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.data;
 
-import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;

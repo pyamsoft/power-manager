@@ -19,11 +19,11 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.model.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 

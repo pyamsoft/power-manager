@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.ChangeListener;
+import com.pyamsoft.powermanager.model.overlord.ChangeListener;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;

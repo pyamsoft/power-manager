@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.observer.state;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.powermanager.model.overlord.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 

@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.modifier;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.model.overlord.StateModifier;
 import javax.inject.Inject;
 
 class SyncStateModifier implements StateModifier {
