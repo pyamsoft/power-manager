@@ -28,7 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class BroadcastStateObserver extends BroadcastReceiver implements StateChangeObserver {
+public abstract class BroadcastStateObserver extends BroadcastReceiver
+    implements StateChangeObserver {
 
   // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
@@ -37,12 +38,22 @@ abstract class BroadcastStateObserver extends BroadcastReceiver implements State
   @NonNull private final Map<String, UnsetCallback> unsetMap;
   private boolean registered;
 
-  BroadcastStateObserver(@NonNull Context context) {
+  protected BroadcastStateObserver(@NonNull Context context, @NonNull String... actions) {
     appContext = context.getApplicationContext();
     filter = new IntentFilter();
     setMap = new HashMap<>();
     unsetMap = new HashMap<>();
     registered = false;
+
+    setFilterActions(actions);
+  }
+
+  private void setFilterActions(@NonNull String... actions) {
+    for (final String action : actions) {
+      if (action != null && !action.isEmpty()) {
+        filter.addAction(action);
+      }
+    }
   }
 
   @NonNull @CheckResult Context getAppContext() {
@@ -51,14 +62,6 @@ abstract class BroadcastStateObserver extends BroadcastReceiver implements State
 
   @NonNull @CheckResult IntentFilter getFilter() {
     return filter;
-  }
-
-  final void setFilterActions(@NonNull String... actions) {
-    for (final String action : actions) {
-      if (action != null) {
-        filter.addAction(action);
-      }
-    }
   }
 
   private void throwEmptyFilter() {

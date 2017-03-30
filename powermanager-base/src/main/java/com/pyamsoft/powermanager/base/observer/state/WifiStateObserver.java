@@ -29,11 +29,9 @@ class WifiStateObserver extends BroadcastStateObserver {
   @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject WifiStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
+    super(context, WifiManager.WIFI_STATE_CHANGED_ACTION);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Wifi");
-
-    setFilterActions(WifiManager.WIFI_STATE_CHANGED_ACTION);
   }
 
   @Override public boolean is() {

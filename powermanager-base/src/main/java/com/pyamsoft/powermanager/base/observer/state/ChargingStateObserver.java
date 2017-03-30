@@ -27,9 +27,8 @@ import timber.log.Timber;
 class ChargingStateObserver extends BroadcastStateObserver {
 
   @Inject ChargingStateObserver(@NonNull Context context) {
-    super(context);
+    super(context, Intent.ACTION_BATTERY_CHANGED);
     Timber.d("new ChargingStateObserver instance");
-    setFilterActions(Intent.ACTION_BATTERY_CHANGED);
   }
 
   @CheckResult private int getStatus() {

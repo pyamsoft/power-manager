@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class ContentObserverStateObserver extends ContentObserver
+public abstract class ContentObserverStateObserver extends ContentObserver
     implements StateChangeObserver {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
@@ -38,7 +38,7 @@ abstract class ContentObserverStateObserver extends ContentObserver
   @NonNull private final String uri;
   private boolean registered;
 
-  ContentObserverStateObserver(@NonNull Context context, @NonNull String uri) {
+  protected ContentObserverStateObserver(@NonNull Context context, @NonNull String uri) {
     super(new Handler(Looper.getMainLooper()));
     contentResolver = context.getApplicationContext().getContentResolver();
     this.uri = uri;

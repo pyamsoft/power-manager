@@ -29,11 +29,9 @@ class BluetoothStateObserver extends BroadcastStateObserver {
   @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject BluetoothStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
+    super(context, BluetoothAdapter.ACTION_STATE_CHANGED);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");
-
-    setFilterActions(BluetoothAdapter.ACTION_STATE_CHANGED);
   }
 
   @Override public boolean is() {

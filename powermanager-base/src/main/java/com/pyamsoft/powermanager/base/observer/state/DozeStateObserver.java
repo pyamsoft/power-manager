@@ -32,11 +32,7 @@ class DozeStateObserver extends BroadcastStateObserver {
   @NonNull private final DeviceFunctionWrapper wrapper;
 
   @Inject DozeStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context);
-    if (isDozeAvailable()) {
-      setFilterActions(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED);
-    }
-
+    super(context, isDozeAvailable() ? PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED : "");
     this.wrapper = wrapper;
   }
 

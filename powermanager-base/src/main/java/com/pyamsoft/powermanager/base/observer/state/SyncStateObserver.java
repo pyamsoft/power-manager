@@ -28,14 +28,14 @@ import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class SyncStateObserver implements StateChangeObserver {
+public class SyncStateObserver implements StateChangeObserver {
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;
   @NonNull private final DeviceFunctionWrapper wrapper;
   private boolean registered;
   @Nullable private Object listener;
 
-  @Inject SyncStateObserver(@NonNull DeviceFunctionWrapper wrapper) {
+  @Inject public SyncStateObserver(@NonNull DeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Sync");
     registered = false;
