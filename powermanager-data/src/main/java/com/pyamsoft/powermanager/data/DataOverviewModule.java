@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.data;
 
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -26,7 +26,7 @@ import javax.inject.Named;
 @Module public class DataOverviewModule {
 
   @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
-      @Named("mod_data_state") BooleanInterestModifier stateModifier,
+      @Named("mod_data_state") StateModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
   }

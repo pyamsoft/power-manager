@@ -18,10 +18,10 @@ package com.pyamsoft.powermanager.base.modifier;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import javax.inject.Inject;
 
-class AirplaneStateModifier implements BooleanInterestModifier {
+class AirplaneStateModifier implements StateModifier {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 

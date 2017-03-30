@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
@@ -146,5 +146,5 @@ public abstract class BaseJob {
 
   @CheckResult @NonNull abstract StateChangeObserver getObserver();
 
-  @CheckResult @NonNull abstract BooleanInterestModifier getModifier();
+  @CheckResult @NonNull abstract StateModifier getModifier();
 }

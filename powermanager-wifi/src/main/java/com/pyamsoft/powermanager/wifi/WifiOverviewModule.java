@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.wifi;
 
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -26,7 +26,7 @@ import javax.inject.Named;
 @Module public class WifiOverviewModule {
 
   @Provides @Named("wifi_overview") OverviewPagerPresenter provideWifiOverviewPagerPresenter(
-      @Named("mod_wifi_state") BooleanInterestModifier stateModifier,
+      @Named("mod_wifi_state") StateModifier stateModifier,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
   }

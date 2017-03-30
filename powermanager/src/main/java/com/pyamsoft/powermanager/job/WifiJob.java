@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateChangeObserver;
 import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
@@ -30,7 +30,7 @@ public class WifiJob extends BaseJob {
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_wifi") Logger logger;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateChangeObserver
       stateObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") BooleanInterestModifier
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier
       stateModifier;
 
   @Override void inject() {
@@ -45,7 +45,7 @@ public class WifiJob extends BaseJob {
     return stateObserver;
   }
 
-  @NonNull @Override BooleanInterestModifier getModifier() {
+  @NonNull @Override StateModifier getModifier() {
     return stateModifier;
   }
 

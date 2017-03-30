@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.BooleanInterestModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -31,11 +31,11 @@ import timber.log.Timber;
 
 public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final BooleanInterestModifier modifier;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateModifier modifier;
   @NonNull private Disposable subscription = Disposables.empty();
 
   @Inject public OverviewPagerPresenter(@NonNull Scheduler observeScheduler,
-      @NonNull Scheduler subscribeScheduler, @NonNull BooleanInterestModifier modifier) {
+      @NonNull Scheduler subscribeScheduler, @NonNull StateModifier modifier) {
     super(observeScheduler, subscribeScheduler);
     this.modifier = modifier;
   }

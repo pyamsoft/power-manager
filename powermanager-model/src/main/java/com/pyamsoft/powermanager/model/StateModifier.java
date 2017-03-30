@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.model;
 
-public interface BooleanInterestModifier {
+public interface StateModifier {
 
   void set();
 

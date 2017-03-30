@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
 
-public interface PermissionObserver extends ChangeListener {
+public interface PermissionObserver {
 
   @CheckResult boolean hasPermission();
 }
