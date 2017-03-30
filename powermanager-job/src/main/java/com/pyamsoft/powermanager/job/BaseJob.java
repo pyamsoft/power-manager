@@ -23,14 +23,14 @@ import com.pyamsoft.powermanager.model.BooleanInterestModifier;
 import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.QueuerType;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public abstract class BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject JobQueuer jobQueuer;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateInterestObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateChangeObserver
       chargingObserver;
   private QueuerType type;
   private boolean ignoreWhenCharging;
@@ -144,7 +144,7 @@ public abstract class BaseJob {
 
   @CheckResult @NonNull abstract Logger getLogger();
 
-  @CheckResult @NonNull abstract StateInterestObserver getObserver();
+  @CheckResult @NonNull abstract StateChangeObserver getObserver();
 
   @CheckResult @NonNull abstract BooleanInterestModifier getModifier();
 }

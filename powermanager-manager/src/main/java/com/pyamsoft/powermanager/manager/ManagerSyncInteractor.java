@@ -20,15 +20,15 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
 class ManagerSyncInteractor extends WearUnawareManagerInteractor {
 
   @Inject ManagerSyncInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer) {
+      @NonNull StateChangeObserver manageObserver,
+      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer) {
     super(jobQueuer, preferences, manageObserver, stateObserver);
   }
 

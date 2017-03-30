@@ -21,14 +21,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
 public abstract class StatePreferenceObserver extends OnRegisteredSharedPreferenceChangeListener
-    implements StateInterestObserver {
+    implements StateChangeObserver {
 
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final String key;

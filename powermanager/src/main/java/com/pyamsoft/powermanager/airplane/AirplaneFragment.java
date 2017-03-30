@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
@@ -31,7 +31,7 @@ import javax.inject.Named;
 public class AirplaneFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Airplane Mode";
-  @Inject @Named("obs_airplane_state") StateInterestObserver observer;
+  @Inject @Named("obs_airplane_state") StateChangeObserver observer;
   @Inject @Named("airplane_overview") OverviewPagerPresenter presenter;
 
   @CheckResult @NonNull
@@ -45,7 +45,7 @@ public class AirplaneFragment extends OverviewPagerFragment {
     return presenter;
   }
 
-  @NonNull @Override protected StateInterestObserver provideObserver() {
+  @NonNull @Override protected StateChangeObserver provideObserver() {
     return observer;
   }
 

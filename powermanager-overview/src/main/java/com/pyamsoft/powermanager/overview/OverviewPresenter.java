@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -30,25 +30,25 @@ import timber.log.Timber;
 
 class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
-  @NonNull private final StateInterestObserver wifiObserver;
-  @NonNull private final StateInterestObserver dataObserver;
-  @NonNull private final StateInterestObserver bluetoothObserver;
-  @NonNull private final StateInterestObserver syncObserver;
-  @NonNull private final StateInterestObserver airplaneObserver;
-  @NonNull private final StateInterestObserver dozeObserver;
-  @NonNull private final StateInterestObserver wearObserver;
+  @NonNull private final StateChangeObserver wifiObserver;
+  @NonNull private final StateChangeObserver dataObserver;
+  @NonNull private final StateChangeObserver bluetoothObserver;
+  @NonNull private final StateChangeObserver syncObserver;
+  @NonNull private final StateChangeObserver airplaneObserver;
+  @NonNull private final StateChangeObserver dozeObserver;
+  @NonNull private final StateChangeObserver wearObserver;
   @NonNull private final OverviewInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @NonNull @Named("obs_wifi_manage") StateInterestObserver wifiObserver,
-      @NonNull @Named("obs_data_manage") StateInterestObserver dataObserver,
-      @NonNull @Named("obs_bluetooth_manage") StateInterestObserver bluetoothObserver,
-      @NonNull @Named("obs_sync_manage") StateInterestObserver syncObserver,
-      @NonNull @Named("obs_airplane_manage") StateInterestObserver airplaneObserver,
-      @NonNull @Named("obs_doze_manage") StateInterestObserver dozeObserver,
-      @NonNull @Named("obs_wear_manage") StateInterestObserver wearObserver) {
+      @NonNull @Named("obs_wifi_manage") StateChangeObserver wifiObserver,
+      @NonNull @Named("obs_data_manage") StateChangeObserver dataObserver,
+      @NonNull @Named("obs_bluetooth_manage") StateChangeObserver bluetoothObserver,
+      @NonNull @Named("obs_sync_manage") StateChangeObserver syncObserver,
+      @NonNull @Named("obs_airplane_manage") StateChangeObserver airplaneObserver,
+      @NonNull @Named("obs_doze_manage") StateChangeObserver dozeObserver,
+      @NonNull @Named("obs_wear_manage") StateChangeObserver wearObserver) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
     this.wifiObserver = wifiObserver;
@@ -116,6 +116,6 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
 
   interface ObserverRetrieveCallback {
 
-    void onObserverRetrieved(@NonNull StateInterestObserver observer);
+    void onObserverRetrieved(@NonNull StateChangeObserver observer);
   }
 }

@@ -16,11 +16,5 @@
 
 package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.CheckResult;
-
-public interface StateInterestObserver extends ChangeListener {
-
-  @CheckResult boolean is();
-
-  @CheckResult boolean unknown();
+public interface StateChangeObserver extends ChangeListener, StateObserver {
 }

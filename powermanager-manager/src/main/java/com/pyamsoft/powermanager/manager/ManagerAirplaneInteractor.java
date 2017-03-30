@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -27,10 +27,10 @@ import timber.log.Timber;
 class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
   @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
+      @NonNull StateChangeObserver manageObserver,
+      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateChangeObserver wearManageObserver,
+      @NonNull StateChangeObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
   }

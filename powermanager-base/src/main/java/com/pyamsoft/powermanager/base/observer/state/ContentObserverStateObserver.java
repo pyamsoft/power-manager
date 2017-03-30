@@ -24,13 +24,13 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
 abstract class ContentObserverStateObserver extends ContentObserver
-    implements StateInterestObserver {
+    implements StateChangeObserver {
 
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;

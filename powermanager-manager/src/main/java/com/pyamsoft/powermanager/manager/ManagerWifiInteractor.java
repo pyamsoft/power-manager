@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
@@ -30,10 +30,10 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull final ConnectedDeviceFunctionWrapper wrapper;
 
   @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
+      @NonNull PowerManagerPreferences preferences, @NonNull StateChangeObserver manageObserver,
+      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateChangeObserver wearManageObserver,
+      @NonNull StateChangeObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
     this.wrapper = wrapper;

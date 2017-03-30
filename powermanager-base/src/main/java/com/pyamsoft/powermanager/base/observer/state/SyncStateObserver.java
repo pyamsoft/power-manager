@@ -21,14 +21,14 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.wrapper.DeviceFunctionWrapper;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import com.pyamsoft.powermanager.model.States;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class SyncStateObserver implements StateInterestObserver {
+class SyncStateObserver implements StateChangeObserver {
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, SetCallback> setMap;
   @SuppressWarnings("WeakerAccess") @NonNull final Map<String, UnsetCallback> unsetMap;
   @NonNull private final DeviceFunctionWrapper wrapper;

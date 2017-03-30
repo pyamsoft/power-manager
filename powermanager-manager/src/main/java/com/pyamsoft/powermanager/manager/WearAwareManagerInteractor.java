@@ -20,20 +20,20 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.StateInterestObserver;
+import com.pyamsoft.powermanager.model.StateChangeObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver wearManageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final StateInterestObserver wearStateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateChangeObserver wearManageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateChangeObserver wearStateObserver;
 
   WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateInterestObserver manageObserver,
-      @NonNull StateInterestObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateInterestObserver wearManageObserver,
-      @NonNull StateInterestObserver wearStateObserver) {
+      @NonNull StateChangeObserver manageObserver,
+      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateChangeObserver wearManageObserver,
+      @NonNull StateChangeObserver wearStateObserver) {
     super(jobQueuer, preferences, manageObserver, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
