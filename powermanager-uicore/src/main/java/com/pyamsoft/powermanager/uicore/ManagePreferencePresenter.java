@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.powermanager.model.ChangeListener;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -32,13 +32,13 @@ public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empt
     implements OnboardingPresenter {
 
   @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
-  @NonNull private final InterestObserver manageObserver;
+  @NonNull private final ChangeListener manageObserver;
   @NonNull private final ManagePreferenceInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject public ManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver) {
+      @NonNull ChangeListener manageObserver) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = manageInteractor;
     this.manageObserver = manageObserver;

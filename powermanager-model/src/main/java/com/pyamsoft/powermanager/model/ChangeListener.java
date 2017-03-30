@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public interface InterestObserver {
+public interface ChangeListener {
 
   void register(@NonNull String tag, @Nullable SetCallback setCallback,
       @Nullable UnsetCallback unsetCallback);

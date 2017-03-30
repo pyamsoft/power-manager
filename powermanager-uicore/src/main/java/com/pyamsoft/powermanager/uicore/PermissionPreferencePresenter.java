@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.InterestObserver;
+import com.pyamsoft.powermanager.model.ChangeListener;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
@@ -36,7 +36,7 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @Inject public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull InterestObserver manageObserver, @NonNull PermissionObserver permissionObserver) {
+      @NonNull ChangeListener manageObserver, @NonNull PermissionObserver permissionObserver) {
     super(manageInteractor, observeScheduler, subscribeScheduler, manageObserver);
     this.permissionObserver = permissionObserver;
   }

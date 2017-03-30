@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
 
-public interface StateInterestObserver extends InterestObserver {
+public interface StateInterestObserver extends ChangeListener {
 
   @CheckResult boolean is();
 
