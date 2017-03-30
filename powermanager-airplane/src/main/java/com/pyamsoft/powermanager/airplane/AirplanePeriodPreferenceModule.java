@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import dagger.Module;
@@ -31,9 +30,8 @@ import javax.inject.Named;
   @Provides @Named("airplane_period_pref")
   PeriodPreferencePresenter provideAirplaneManagePreferencePresenter(
       @Named("airplane_period_pref_interactor") PeriodPreferenceInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_airplane_periodic") StateChangeObserver periodicObserver) {
-    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler, periodicObserver);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_period_pref_interactor")

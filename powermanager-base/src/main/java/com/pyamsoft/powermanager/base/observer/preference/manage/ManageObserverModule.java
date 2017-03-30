@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.base.observer.preference.manage;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -28,40 +28,40 @@ import javax.inject.Singleton;
 
 @Module public class ManageObserverModule {
 
-  @Singleton @Named("obs_wifi_manage") @Provides StateChangeObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_manage") @Provides StateObserver provideWifiObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WifiManageObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_data_manage") @Provides StateChangeObserver provideDataObserver(
+  @Singleton @Named("obs_data_manage") @Provides StateObserver provideDataObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new DataManageObserver(context, preferences, rootPermissionObserver);
   }
 
-  @Singleton @Named("obs_bluetooth_manage") @Provides StateChangeObserver provideBluetoothObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+  @Singleton @Named("obs_bluetooth_manage") @Provides StateObserver provideBluetoothObserver(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new BluetoothManageObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_sync_manage") @Provides StateChangeObserver provideSyncObserver(
+  @Singleton @Named("obs_sync_manage") @Provides StateObserver provideSyncObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new SyncManageObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_wear_manage") @Provides StateChangeObserver provideWearableObserver(
+  @Singleton @Named("obs_wear_manage") @Provides StateObserver provideWearableObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
     return new WearableManageObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_doze_manage") @Provides StateChangeObserver provideDozeObserver(
+  @Singleton @Named("obs_doze_manage") @Provides StateObserver provideDozeObserver(
       @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
     return new DozeManageObserver(context, preferences, dozePermissionObserver);
   }
 
-  @Singleton @Named("obs_airplane_manage") @Provides StateChangeObserver provideAirplaneObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
+  @Singleton @Named("obs_airplane_manage") @Provides StateObserver provideAirplaneObserver(
+      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     return new AirplaneManageObserver(context, preferences, rootPermissionObserver);
   }

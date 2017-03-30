@@ -16,105 +16,20 @@
 
 package com.pyamsoft.powermanager.base.observer.preference;
 
-import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
-import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
-import java.util.HashMap;
-import java.util.Map;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
+import com.pyamsoft.pydroid.helper.Checker;
 import timber.log.Timber;
 
-public abstract class StatePreferenceObserver extends OnRegisteredSharedPreferenceChangeListener
-    implements StateChangeObserver {
+public abstract class StatePreferenceObserver implements StateObserver {
 
   @NonNull private final PowerManagerPreferences preferences;
-  @NonNull private final String key;
-  @NonNull private final Map<String, SetCallback> setMap;
-  @NonNull private final Map<String, UnsetCallback> unsetMap;
-  private boolean registered;
 
-  protected StatePreferenceObserver(@NonNull PowerManagerPreferences preferences,
-      @NonNull String key) {
-    Timber.d("New PreferenceObserver with key: %s", key);
-    this.preferences = preferences;
-    this.key = key;
-    this.registered = false;
-
-    setMap = new HashMap<>();
-    unsetMap = new HashMap<>();
-  }
-
-  @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-    if (key.equals(s)) {
-      Timber.d("Received preference change for key: %s", s);
-      if (unknown()) {
-        Timber.w("Current state is unknown for key: %s", s);
-        return;
-      }
-
-      if (is()) {
-        //noinspection Convert2streamapi
-        for (final SetCallback setCallback : setMap.values()) {
-          if (setCallback != null) {
-            setCallback.call();
-          }
-        }
-      } else {
-        //noinspection Convert2streamapi
-        for (final UnsetCallback unsetCallback : unsetMap.values()) {
-          if (unsetCallback != null) {
-            unsetCallback.call();
-          }
-        }
-      }
-    }
-  }
-
-  private void registerListener() {
-    unregisterListener();
-    if (!setMap.isEmpty() && !unsetMap.isEmpty()) {
-      if (!registered) {
-        Timber.d("Register real listener for key: %s", key);
-        preferences.register(this);
-        registered = true;
-      }
-    }
-  }
-
-  private void unregisterListener() {
-    if (setMap.isEmpty() && unsetMap.isEmpty()) {
-      if (registered) {
-        Timber.d("Unregister real listener for key: %s", key);
-        preferences.unregister(this);
-        registered = false;
-      }
-    }
-  }
-
-  @Override public final void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback) {
-    if (!setMap.containsKey(tag) && !unsetMap.containsKey(tag)) {
-      Timber.d("Register new preference observer for: %s", tag);
-      setMap.put(tag, setCallback);
-      unsetMap.put(tag, unsetCallback);
-      registerListener();
-    } else {
-      Timber.e("Already registered with tag: %s", tag);
-    }
-  }
-
-  @Override public final void unregister(@NonNull String tag) {
-    if (setMap.containsKey(tag) && unsetMap.containsKey(tag)) {
-      Timber.d("Unregister preference observer for tag: %s", tag);
-      setMap.remove(tag);
-      unsetMap.remove(tag);
-      unregisterListener();
-    } else {
-      Timber.e("Already unregistered with tag: %s", tag);
-    }
+  protected StatePreferenceObserver(@NonNull PowerManagerPreferences preferences) {
+    Timber.d("New PreferenceObserver");
+    this.preferences = Checker.checkNonNull(preferences);
   }
 
   @Override public boolean is() {

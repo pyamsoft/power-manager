@@ -20,7 +20,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import javax.inject.Inject;
@@ -32,7 +31,7 @@ class DataManageObserver extends StatePreferenceObserver {
 
   @Inject DataManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull PermissionObserver permissionObserver) {
-    super(preferences, context.getString(R.string.manage_data_key));
+    super(preferences);
     rootPermissionObserver = permissionObserver;
   }
 

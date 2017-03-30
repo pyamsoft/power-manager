@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.observer.preference.preference;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import javax.inject.Inject;
 
@@ -27,7 +26,7 @@ class SyncPeriodicObserver extends StatePreferenceObserver {
 
   @Inject SyncPeriodicObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences) {
-    super(preferences, context.getString(R.string.periodic_sync_key));
+    super(preferences);
   }
 
   @Override protected boolean is(@NonNull PowerManagerPreferences preferences) {

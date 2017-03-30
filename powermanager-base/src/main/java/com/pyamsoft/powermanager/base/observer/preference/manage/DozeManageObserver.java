@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.observer.preference.manage;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ class DozeManageObserver extends StatePreferenceObserver {
 
   @Inject DozeManageObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
       @NonNull PermissionObserver dozePermissionObserver) {
-    super(preferences, context.getString(R.string.manage_doze_key));
+    super(preferences);
     this.dozePermissionObserver = dozePermissionObserver;
   }
 

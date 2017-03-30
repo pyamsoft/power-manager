@@ -199,15 +199,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   @CallSuper @Override public void onStart() {
     super.onStart();
     presenter.bindView(null);
-    presenter.registerObserver(new ManagePreferencePresenter.ManageCallback() {
-      @Override public void onManageSet() {
-        managePreference.setChecked(true);
-      }
-
-      @Override public void onManageUnset() {
-        managePreference.setChecked(false);
-      }
-    });
 
     if (shouldCheckManagePermission() && managePreference.isChecked()) {
       checkManagePermission(false);

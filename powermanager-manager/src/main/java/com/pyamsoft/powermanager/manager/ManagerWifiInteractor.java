@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 
@@ -30,10 +31,9 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull final ConnectedDeviceFunctionWrapper wrapper;
 
   @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateChangeObserver manageObserver,
+      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver manageObserver,
       @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateChangeObserver wearManageObserver,
-      @NonNull StateChangeObserver wearStateObserver) {
+      @NonNull StateObserver wearManageObserver, @NonNull StateChangeObserver wearStateObserver) {
     super(preferences, manageObserver, stateObserver, jobQueuer, wearManageObserver,
         wearStateObserver);
     this.wrapper = wrapper;

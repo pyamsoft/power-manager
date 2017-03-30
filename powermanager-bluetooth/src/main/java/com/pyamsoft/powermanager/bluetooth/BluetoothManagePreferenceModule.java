@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import dagger.Module;
@@ -31,9 +30,8 @@ import javax.inject.Named;
   @Provides @Named("bluetooth_manage_pref")
   ManagePreferencePresenter provideBluetoothManagePreferencePresenter(
       @Named("bluetooth_manage_pref_interactor") ManagePreferenceInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_bluetooth_manage") StateChangeObserver manageObserver) {
-    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver);
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_manage_pref_interactor")

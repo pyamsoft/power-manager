@@ -21,19 +21,19 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateChangeObserver wearManageObserver;
-  @SuppressWarnings("WeakerAccess") @NonNull final StateChangeObserver wearStateObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearManageObserver;
+  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearStateObserver;
 
   WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateChangeObserver manageObserver,
-      @NonNull StateChangeObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateChangeObserver wearManageObserver,
-      @NonNull StateChangeObserver wearStateObserver) {
+      @NonNull StateObserver manageObserver, @NonNull StateChangeObserver stateObserver,
+      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearManageObserver,
+      @NonNull StateObserver wearStateObserver) {
     super(jobQueuer, preferences, manageObserver, stateObserver);
     this.wearManageObserver = wearManageObserver;
     this.wearStateObserver = wearStateObserver;
@@ -50,7 +50,7 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
   @Override public void destroy() {
     super.destroy();
     Timber.d("Unregsiter wear state observer");
-    wearStateObserver.unregister(getClass().getName());
+    // TODO clean up wear
   }
 
   @NonNull @Override

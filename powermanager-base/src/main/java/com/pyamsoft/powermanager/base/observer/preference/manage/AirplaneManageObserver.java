@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.observer.preference.manage;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.R;
 import com.pyamsoft.powermanager.base.observer.preference.StatePreferenceObserver;
 import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import javax.inject.Inject;
@@ -31,7 +30,7 @@ class AirplaneManageObserver extends StatePreferenceObserver {
   @Inject AirplaneManageObserver(@NonNull Context context,
       @NonNull PowerManagerPreferences preferences,
       @NonNull PermissionObserver permissionObserver) {
-    super(preferences, context.getString(R.string.manage_airplane_key));
+    super(preferences);
     rootPermissionObserver = permissionObserver;
   }
 

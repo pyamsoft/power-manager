@@ -225,16 +225,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
   @Override public void onStart() {
     super.onStart();
     presenter.bindView(null);
-    presenter.registerObserver(new PeriodPreferencePresenter.PeriodicCallback() {
-      @Override public void onPeriodicSet() {
-        periodicPreference.setChecked(true);
-      }
-
-      @Override public void onPeriodicUnset() {
-        periodicPreference.setChecked(false);
-      }
-    });
-
     presenter.showOnboardingIfNeeded(this);
   }
 

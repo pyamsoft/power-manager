@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.overview;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -45,7 +45,7 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
     iconDisposable = DisposableHelper.dispose(iconDisposable);
   }
 
-  public void decideManageState(@Nullable StateChangeObserver observer,
+  public void decideManageState(@Nullable StateObserver observer,
       @NonNull ManageStateCallback callback) {
     iconDisposable = DisposableHelper.dispose(iconDisposable);
     iconDisposable = Observable.fromCallable(() -> {

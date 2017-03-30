@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.overlord.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
@@ -34,9 +33,8 @@ import javax.inject.Named;
   ManagePreferencePresenter provideDozeManagePreferencePresenter(
       @Named("doze_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_doze_manage") StateChangeObserver manageObserver,
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
-    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler, manageObserver,
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler,
         dozePermissionObserver);
   }
 

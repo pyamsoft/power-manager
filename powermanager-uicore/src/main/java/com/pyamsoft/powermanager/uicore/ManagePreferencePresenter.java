@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.overlord.ChangeListener;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -31,27 +30,18 @@ import timber.log.Timber;
 public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empty>
     implements OnboardingPresenter {
 
-  @NonNull private static final String OBS_TAG = "BaseManagePreferencePresenter";
-  @NonNull private final ChangeListener manageObserver;
   @NonNull private final ManagePreferenceInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject public ManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull ChangeListener manageObserver) {
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = manageInteractor;
-    this.manageObserver = manageObserver;
   }
 
   @CallSuper @Override protected void onUnbind() {
     super.onUnbind();
-    manageObserver.unregister(OBS_TAG);
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-  }
-
-  public void registerObserver(@NonNull ManageCallback callback) {
-    manageObserver.register(OBS_TAG, callback::onManageSet, callback::onManageUnset);
   }
 
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
@@ -77,13 +67,6 @@ public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empt
   @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
     callback.onDismissOnboarding();
-  }
-
-  interface ManageCallback {
-
-    void onManageSet();
-
-    void onManageUnset();
   }
 
   interface ManagePermissionCallback {

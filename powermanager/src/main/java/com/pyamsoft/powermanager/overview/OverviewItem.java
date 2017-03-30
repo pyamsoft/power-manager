@@ -35,8 +35,8 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
-import com.pyamsoft.powermanager.model.overlord.StateChangeObserver;
 import com.pyamsoft.powermanager.model.OverviewModel;
+import com.pyamsoft.powermanager.model.overlord.StateObserver;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
@@ -55,7 +55,7 @@ public class OverviewItem
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
   OverviewItem(@NonNull View rootView, @NonNull String title, @DrawableRes int image,
-      @ColorRes int background, @Nullable StateChangeObserver observer) {
+      @ColorRes int background, @Nullable StateObserver observer) {
     super(OverviewModel.builder()
         .background(background)
         .image(image)
