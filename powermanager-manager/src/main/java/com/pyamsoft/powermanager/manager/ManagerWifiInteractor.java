@@ -19,21 +19,18 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @NonNull final ConnectedDeviceFunctionWrapper wrapper;
-
-  @Inject ManagerWifiInteractor(@NonNull ConnectedDeviceFunctionWrapper wrapper,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver,
-      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
+  @Inject ManagerWifiInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
-    this.wrapper = wrapper;
   }
 
   @Override @CheckResult protected long getDelayTime() {
@@ -75,13 +72,16 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull @Override
   protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
-      // TODO check preferences
-      // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
-      if (wrapper.isConnected()) {
-        return Boolean.TRUE;
-      } else {
-        return originalResult;
-      }
+      Timber.d("Check for active connection here");
+      /*
+       // TODO check preferences
+       // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
+       if (wrapper.isConnected()) {
+       return Boolean.TRUE;
+       } else {
+       }
+       */
+      return originalResult;
     });
   }
 }

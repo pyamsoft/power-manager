@@ -35,7 +35,7 @@ import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.model.OverviewModel;
-import com.pyamsoft.powermanager.model.overlord.States;
+import com.pyamsoft.powermanager.model.states.States;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;

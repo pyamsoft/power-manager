@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.doze;
 
-import com.pyamsoft.powermanager.model.overlord.StateModifier;
+import com.pyamsoft.powermanager.model.states.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;

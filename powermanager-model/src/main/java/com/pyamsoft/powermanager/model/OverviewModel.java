@@ -22,7 +22,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.view.View;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.model.overlord.States;
+import com.pyamsoft.powermanager.model.states.States;
 
 @AutoValue public abstract class OverviewModel {
 

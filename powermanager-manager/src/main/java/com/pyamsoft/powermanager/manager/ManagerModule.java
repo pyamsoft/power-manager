@@ -18,9 +18,8 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.base.wrapper.ConnectedDeviceFunctionWrapper;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.overlord.StateObserver;
+import com.pyamsoft.powermanager.model.states.StateObserver;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -36,12 +35,10 @@ import javax.inject.Named;
 
   @Provides @Named("wifi_manager_interactor")
   WearAwareManagerInteractor provideManagerWifiInteractor(
-      @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper,
       @NonNull PowerManagerPreferences preferences,
       @Named("obs_wifi_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_state") StateObserver wearStateObserver) {
-    return new ManagerWifiInteractor(wrapper, preferences, stateObserver, jobQueuer,
-        wearStateObserver);
+    return new ManagerWifiInteractor(preferences, stateObserver, jobQueuer, wearStateObserver);
   }
 
   @Provides @Named("data_manager") Manager provideManagerData(
