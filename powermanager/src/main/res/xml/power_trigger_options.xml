@@ -23,8 +23,8 @@
 
     <ListPreference
         android:defaultValue="@string/trigger_period_default"
-        android:entries="@array/trigger_period_names"
-        android:entryValues="@array/trigger_period_values"
+        android:entries="@array/trigger_interval_names"
+        android:entryValues="@array/trigger_interval_values"
         android:key="@string/trigger_period_key"
         android:summary="@string/trigger_period_summary"
         android:title="@string/trigger_period_title"
