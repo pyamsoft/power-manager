@@ -24,10 +24,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
 import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 class PowerManagerPreferencesImpl implements PowerManagerPreferences {
 
+  private static final long PERIODIC_MINIMUM_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(1);
   @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
   @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
   @NonNull private static final String PERIOD_ONBOARD = "period_onboard";
@@ -434,7 +436,7 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
     return preferences.getBoolean(manageWearable, manageWearableDefault);
   }
 
-  @Override @SuppressLint("CommitPrefEdits") public void clearAll() {
+  @SuppressLint("ApplySharedPref") @Override public void clearAll() {
     preferences.edit().clear().commit();
   }
 
@@ -463,7 +465,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeDoze() {
-    return Long.parseLong(preferences.getString(periodicDisableDoze, periodicDisableDozeDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicDisableDoze, periodicDisableDozeDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeDoze(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeDoze(long time) {
@@ -471,8 +479,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeAirplane() {
-    return Long.parseLong(
+    long time = Long.parseLong(
         preferences.getString(periodicDisableAirplane, periodicDisableAirplaneDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeAirplane(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeAirplane(long time) {
@@ -480,7 +493,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeWifi() {
-    return Long.parseLong(preferences.getString(periodicDisableWifi, periodicDisableWifiDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicDisableWifi, periodicDisableWifiDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeWifi(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeWifi(long time) {
@@ -488,7 +507,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeData() {
-    return Long.parseLong(preferences.getString(periodicDisableData, periodicDisableDataDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicDisableData, periodicDisableDataDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeData(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeData(long time) {
@@ -496,8 +521,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeBluetooth() {
-    return Long.parseLong(
+    long time = Long.parseLong(
         preferences.getString(periodicDisableBluetooth, periodicDisableBluetoothDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeBluetooth(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeBluetooth(long time) {
@@ -505,7 +535,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicDisableTimeSync() {
-    return Long.parseLong(preferences.getString(periodicDisableSync, periodicDisableSyncDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicDisableSync, periodicDisableSyncDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicDisableTimeSync(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicDisableTimeSync(long time) {
@@ -513,7 +549,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeDoze() {
-    return Long.parseLong(preferences.getString(periodicEnableDoze, periodicEnableDozeDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicEnableDoze, periodicEnableDozeDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeDoze(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeDoze(long time) {
@@ -521,8 +563,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeAirplane() {
-    return Long.parseLong(
+    long time = Long.parseLong(
         preferences.getString(periodicEnableAirplane, periodicEnableAirplaneDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeAirplane(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeAirplane(long time) {
@@ -530,7 +577,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeWifi() {
-    return Long.parseLong(preferences.getString(periodicEnableWifi, periodicEnableWifiDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicEnableWifi, periodicEnableWifiDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeWifi(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeWifi(long time) {
@@ -538,7 +591,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeData() {
-    return Long.parseLong(preferences.getString(periodicEnableData, periodicEnableDataDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicEnableData, periodicEnableDataDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeData(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeData(long time) {
@@ -546,8 +605,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeBluetooth() {
-    return Long.parseLong(
+    long time = Long.parseLong(
         preferences.getString(periodicEnableBluetooth, periodicEnableBluetoothDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeBluetooth(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeBluetooth(long time) {
@@ -555,7 +619,13 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
   }
 
   @Override public long getPeriodicEnableTimeSync() {
-    return Long.parseLong(preferences.getString(periodicEnableSync, periodicEnableSyncDefault));
+    long time =
+        Long.parseLong(preferences.getString(periodicEnableSync, periodicEnableSyncDefault));
+    if (time < PERIODIC_MINIMUM_TIME_SECONDS) {
+      time = PERIODIC_MINIMUM_TIME_SECONDS;
+      setPeriodicEnableTimeSync(time);
+    }
+    return time;
   }
 
   @Override public void setPeriodicEnableTimeSync(long time) {
