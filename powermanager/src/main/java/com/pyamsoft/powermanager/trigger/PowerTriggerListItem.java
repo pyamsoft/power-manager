@@ -17,32 +17,29 @@
 package com.pyamsoft.powermanager.trigger;
 
 import android.databinding.DataBindingUtil;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import java.util.List;
 import java.util.Locale;
-import timber.log.Timber;
+import javax.inject.Inject;
 
-class PowerTriggerListItem extends
+public class PowerTriggerListItem extends
     GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+  @SuppressWarnings("WeakerAccess") @Inject TriggerItemPresenter presenter;
 
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
     super(trigger);
-  }
-
-  @CheckResult int getPercent() {
-    return getModel().percent();
+    Injector.get().provideComponent().plusTriggerComponent().inject(this);
   }
 
   @Override public int getType() {
@@ -59,21 +56,46 @@ class PowerTriggerListItem extends
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.bind(getModel());
+    bindModelToHolder(holder);
+
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(
+        new CompoundButton.OnCheckedChangeListener() {
+          @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            buttonView.setOnCheckedChangeListener(null);
+            buttonView.setChecked(!isChecked);
+
+            final CompoundButton.OnCheckedChangeListener listener = this;
+            presenter.toggleEnabledState(getModel(), isChecked, entry -> {
+              withModel(entry);
+              bindModelToHolder(holder);
+              buttonView.setOnCheckedChangeListener(listener);
+            });
+          }
+        });
+  }
+
+  @SuppressWarnings("WeakerAccess") void bindModelToHolder(@NonNull ViewHolder holder) {
+    holder.binding.triggerName.setText(getModel().name());
+    holder.binding.triggerPercent.setText(
+        String.format(Locale.getDefault(), "Percent: %s", getModel().percent()));
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+    holder.binding.triggerEnabledSwitch.setChecked(getModel().enabled());
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    holder.unbind();
+    holder.binding.triggerName.setText(null);
+    holder.binding.triggerPercent.setText(null);
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
+
+    presenter.stop();
+    presenter.destroy();
   }
 
-  interface OnTriggerEnabledChanged {
+  private static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    ItemFactory() {
+    }
 
-    void onChange(int position, @NonNull PowerTriggerEntry entry, boolean isChecked);
-  }
-
-  @SuppressWarnings("WeakerAccess") protected static class ItemFactory
-      implements ViewHolderFactory<ViewHolder> {
     @Override public ViewHolder create(View v) {
       return new ViewHolder(v);
     }
@@ -81,50 +103,11 @@ class PowerTriggerListItem extends
 
   static final class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull private final AdapterItemTriggerBinding binding;
-    @Nullable PowerTriggerEntry trigger;
+    @NonNull final AdapterItemTriggerBinding binding;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = DataBindingUtil.bind(itemView);
-    }
-
-    void bind(@NonNull PowerTriggerEntry trigger) {
-      binding.triggerName.setText(trigger.name());
-      binding.triggerPercent.setText(
-          String.format(Locale.getDefault(), "Percent: %s", trigger.percent()));
-      binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
-      binding.triggerEnabledSwitch.setChecked(trigger.enabled());
-
-      this.trigger = trigger;
-    }
-
-    void unbind() {
-      binding.triggerName.setText(null);
-      binding.triggerPercent.setText(null);
-      binding.triggerEnabledSwitch.setOnCheckedChangeListener(null);
-      trigger = null;
-    }
-
-    void bind(@NonNull OnTriggerEnabledChanged onTriggerEnabledChanged) {
-      final CompoundButton.OnCheckedChangeListener listener =
-          new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(@NonNull CompoundButton compoundButton, boolean b) {
-              compoundButton.setOnCheckedChangeListener(null);
-              compoundButton.setChecked(!b);
-              compoundButton.setOnCheckedChangeListener(this);
-
-              Timber.d("Toggle enabled: %s", b);
-              if (trigger != null) {
-                onTriggerEnabledChanged.onChange(getAdapterPosition(), trigger, b);
-              } else {
-                Timber.e("Trigger is NULL");
-              }
-            }
-          };
-
-      binding.triggerEnabledSwitch.setOnCheckedChangeListener(listener);
     }
   }
 }

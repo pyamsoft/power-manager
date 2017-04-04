@@ -18,7 +18,10 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.TriggerDeleteEvent;
+import com.pyamsoft.powermanager.model.TriggerCreateEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
@@ -34,7 +37,8 @@ class TriggerPresenter extends SchedulerPresenter {
   @NonNull private Disposable deleteDisposable = Disposables.empty();
   @NonNull private Disposable viewDisposable = Disposables.empty();
   @NonNull private Disposable createDisposable = Disposables.empty();
-  @NonNull private Disposable updateDisposable = Disposables.empty();
+  @NonNull private Disposable createBus = Disposables.empty();
+  @NonNull private Disposable deleteBus = Disposables.empty();
 
   @Inject TriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
@@ -46,26 +50,30 @@ class TriggerPresenter extends SchedulerPresenter {
     super.onStop();
     deleteDisposable = DisposableHelper.dispose(deleteDisposable);
     createDisposable = DisposableHelper.dispose(createDisposable);
-    updateDisposable = DisposableHelper.dispose(updateDisposable);
     viewDisposable = DisposableHelper.dispose(viewDisposable);
+    createBus = DisposableHelper.dispose(createBus);
+    deleteBus = DisposableHelper.dispose(deleteBus);
   }
 
-  public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
-    viewDisposable = DisposableHelper.dispose(viewDisposable);
-    viewDisposable = interactor.queryAll(forceRefresh)
+  public void registerOnBus(@NonNull BusCallback callback) {
+    createBus = DisposableHelper.dispose(createBus);
+    createBus = EventBus.get()
+        .listen(TriggerCreateEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .doAfterTerminate(callback::onTriggerLoadFinished)
-        .subscribe(callback::onTriggerLoaded, throwable -> {
-          Timber.e(throwable, "onError");
-        });
+        .subscribe(triggerCreateEvent -> createPowerTrigger(triggerCreateEvent.entry(), callback),
+            throwable -> Timber.e(throwable, "onError create bus"));
+
+    deleteBus = DisposableHelper.dispose(deleteBus);
+    createBus = EventBus.get()
+        .listen(TriggerDeleteEvent.class)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(triggerDeleteEvent -> deleteTrigger(triggerDeleteEvent.percent(), callback),
+            throwable -> Timber.e(throwable, "onError create bus"));
   }
 
-  public void showNewTriggerDialog(@NonNull ShowTriggerDialogCallback callback) {
-    callback.onShowNewTriggerDialog();
-  }
-
-  public void createPowerTrigger(@NonNull PowerTriggerEntry entry,
+  @SuppressWarnings("WeakerAccess") void createPowerTrigger(@NonNull PowerTriggerEntry entry,
       @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
     createDisposable = DisposableHelper.dispose(createDisposable);
@@ -84,7 +92,8 @@ class TriggerPresenter extends SchedulerPresenter {
         });
   }
 
-  public void deleteTrigger(int percent, @NonNull TriggerDeleteCallback callback) {
+  @SuppressWarnings("WeakerAccess") void deleteTrigger(int percent,
+      @NonNull TriggerDeleteCallback callback) {
     deleteDisposable = DisposableHelper.dispose(deleteDisposable);
     deleteDisposable = interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
@@ -92,13 +101,13 @@ class TriggerPresenter extends SchedulerPresenter {
         .subscribe(callback::onTriggerDeleted, throwable -> Timber.e(throwable, "onError"));
   }
 
-  public void toggleEnabledState(int position, @NonNull PowerTriggerEntry entry, boolean enabled,
-      @NonNull TriggerToggleCallback callback) {
-    updateDisposable = DisposableHelper.dispose(updateDisposable);
-    updateDisposable = interactor.update(entry, enabled)
+  public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
+    viewDisposable = DisposableHelper.dispose(viewDisposable);
+    viewDisposable = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(result -> callback.updateViewHolder(position, result), throwable -> {
+        .doAfterTerminate(callback::onTriggerLoadFinished)
+        .subscribe(callback::onTriggerLoaded, throwable -> {
           Timber.e(throwable, "onError");
         });
   }
@@ -110,8 +119,8 @@ class TriggerPresenter extends SchedulerPresenter {
     void onTriggerLoadFinished();
   }
 
-  interface ShowTriggerDialogCallback {
-    void onShowNewTriggerDialog();
+  interface BusCallback extends TriggerDeleteCallback, TriggerCreateCallback {
+
   }
 
   interface TriggerDeleteCallback {
@@ -126,10 +135,5 @@ class TriggerPresenter extends SchedulerPresenter {
     void onNewTriggerCreateError();
 
     void onNewTriggerInsertError();
-  }
-
-  interface TriggerToggleCallback {
-
-    void updateViewHolder(int position, @NonNull PowerTriggerEntry entry);
   }
 }

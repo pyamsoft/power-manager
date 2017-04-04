@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger;
+package com.pyamsoft.powermanager.model;
 
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 
-@Subcomponent(modules = PowerTriggerDBModule.class) public interface TriggerComponent {
+@AutoValue public abstract class TriggerCreateEvent {
 
-  void inject(PowerTriggerListFragment fragment);
+  @CheckResult @NonNull public static TriggerCreateEvent create(@NonNull PowerTriggerEntry entry) {
+    return new AutoValue_TriggerCreateEvent(entry);
+  }
 
-  void inject(PowerTriggerListItem powerTriggerListItem);
+  @CheckResult public abstract PowerTriggerEntry entry();
 }

@@ -22,8 +22,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
-import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment;
+import com.pyamsoft.powermanager.model.TriggerCreateEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;
 
 class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
@@ -98,17 +98,6 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
   }
 
   private void sendCreateEvent(@NonNull PowerTriggerEntry entry) {
-    Fragment powerTriggerFragment = fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG);
-    if (powerTriggerFragment instanceof PowerTriggerFragment) {
-      Fragment powerTriggerListFragment = powerTriggerFragment.getChildFragmentManager()
-          .findFragmentByTag(PowerTriggerListFragment.TAG);
-      if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
-        ((PowerTriggerListFragment) powerTriggerListFragment).createPowerTrigger(entry);
-      } else {
-        throw new ClassCastException("Fragment is not PowerTriggerListFragment");
-      }
-    } else {
-      throw new ClassCastException("Fragment is not PowerTriggerFragment");
-    }
+    EventBus.get().publish(TriggerCreateEvent.create(entry));
   }
 }

@@ -22,11 +22,11 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.model.TriggerDeleteEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;
 
 public class DeleteTriggerDialog extends DialogFragment {
@@ -69,18 +69,7 @@ public class DeleteTriggerDialog extends DialogFragment {
   }
 
   @SuppressWarnings("WeakerAccess") void sendDeleteEvent(int percent) {
-    Fragment powerTriggerFragment = getFragmentManager().findFragmentByTag(PowerTriggerFragment.TAG);
-    if (powerTriggerFragment instanceof PowerTriggerFragment) {
-      Fragment powerTriggerListFragment = powerTriggerFragment.getChildFragmentManager()
-          .findFragmentByTag(PowerTriggerListFragment.TAG);
-      if (powerTriggerListFragment instanceof PowerTriggerListFragment) {
-        ((PowerTriggerListFragment) powerTriggerListFragment).deleteTrigger(percent);
-      } else {
-        throw new ClassCastException("Fragment is not PowerTriggerListFragment");
-      }
-    } else {
-      throw new ClassCastException("Fragment is not PowerTriggerFragment");
-    }
+    EventBus.get().publish(TriggerDeleteEvent.create(percent));
   }
 
   @Override public void onDestroy() {

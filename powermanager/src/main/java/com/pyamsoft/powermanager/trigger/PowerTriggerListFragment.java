@@ -27,7 +27,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
@@ -40,7 +39,6 @@ import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
 import com.pyamsoft.pydroid.util.AppUtil;
-import java.util.List;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -92,8 +90,8 @@ public class PowerTriggerListFragment extends ActionBarFragment {
       });
 
       adapter.getItemAdapter().withComparator((item1, item2) -> {
-        final int item1Percent = item1.getPercent();
-        final int item2PPercent = item2.getPercent();
+        final int item1Percent = item1.getModel().percent();
+        final int item2PPercent = item2.getModel().percent();
         if (item1Percent == item2PPercent) {
           throw new IllegalStateException("Cannot have two triggers with same percent");
         } else if (item1Percent < item2PPercent) {
@@ -102,36 +100,6 @@ public class PowerTriggerListFragment extends ActionBarFragment {
           return 1;
         }
       }, true);
-
-      adapter.withOnBindViewHolderListener(new FastAdapter.OnBindViewHolderListener() {
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List<Object> list) {
-          final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
-          adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
-          holder.bind((position, entry, isChecked) -> presenter.toggleEnabledState(position, entry,
-              isChecked, (position1, entry1) -> {
-                Timber.d("update view holder at position: %d", position1);
-                adapter.set(position1, createNewPowerTriggerListItem(entry1));
-              }));
-        }
-
-        @CheckResult @NonNull private PowerTriggerListItem.ViewHolder toPowerTriggerListItem(
-            RecyclerView.ViewHolder viewHolder) {
-          if (viewHolder instanceof PowerTriggerListItem.ViewHolder) {
-            return (PowerTriggerListItem.ViewHolder) viewHolder;
-          } else {
-            throw new IllegalStateException("ViewHolder is not PowerTriggerListItem.ViewHolder");
-          }
-        }
-
-        @Override public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
-          final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
-          final PowerTriggerListItem item = (PowerTriggerListItem) holder.itemView.getTag();
-          if (item != null) {
-            item.unbindView(holder);
-          }
-        }
-      });
     }
 
     if (!listIsRefreshed) {
@@ -152,6 +120,36 @@ public class PowerTriggerListFragment extends ActionBarFragment {
         }
       }, false);
     }
+
+    presenter.registerOnBus(new TriggerPresenter.BusCallback() {
+      @Override public void onNewTriggerAdded(@NonNull PowerTriggerEntry entry) {
+        Timber.d("Added new trigger with percent: %d", entry.percent());
+
+        adapter.add(createNewPowerTriggerListItem(entry));
+        if (binding.powerTriggerList.getAdapter() == null) {
+          Timber.d("First trigger, show list");
+          loadListView();
+        }
+      }
+
+      @Override public void onNewTriggerCreateError() {
+        Toast.makeText(getContext(), "ERROR: Trigger must have a name and unique percent",
+            Toast.LENGTH_LONG).show();
+      }
+
+      @Override public void onNewTriggerInsertError() {
+        Toast.makeText(getContext(), "ERROR: Two triggers cannot have the same percent",
+            Toast.LENGTH_LONG).show();
+      }
+
+      @Override public void onTriggerDeleted(int position) {
+        adapter.remove(position);
+        if (adapter.getItemCount() == 0) {
+          Timber.d("Last trigger, hide list");
+          loadEmptyView();
+        }
+      }
+    });
   }
 
   @Override public void onResume() {
@@ -182,11 +180,11 @@ public class PowerTriggerListFragment extends ActionBarFragment {
         .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);
 
-    binding.powerTriggerFab.setOnClickListener(v -> presenter.showNewTriggerDialog(() -> {
+    binding.powerTriggerFab.setOnClickListener(v -> {
       Timber.d("Show new trigger dialog");
       AppUtil.guaranteeSingleDialogFragment(getActivity(), new CreateTriggerDialog(),
           "create_trigger");
-    }));
+    });
   }
 
   private void setupRecyclerView() {
@@ -212,39 +210,5 @@ public class PowerTriggerListFragment extends ActionBarFragment {
   @CheckResult @NonNull PowerTriggerListItem createNewPowerTriggerListItem(
       @NonNull PowerTriggerEntry entry) {
     return new PowerTriggerListItem(entry);
-  }
-
-  public void createPowerTrigger(@NonNull PowerTriggerEntry entry) {
-    presenter.createPowerTrigger(entry, new TriggerPresenter.TriggerCreateCallback() {
-      @Override public void onNewTriggerAdded(@NonNull PowerTriggerEntry entry) {
-        Timber.d("Added new trigger with percent: %d", entry.percent());
-
-        adapter.add(createNewPowerTriggerListItem(entry));
-        if (binding.powerTriggerList.getAdapter() == null) {
-          Timber.d("First trigger, show list");
-          loadListView();
-        }
-      }
-
-      @Override public void onNewTriggerCreateError() {
-        Toast.makeText(getContext(), "ERROR: Trigger must have a name and unique percent",
-            Toast.LENGTH_LONG).show();
-      }
-
-      @Override public void onNewTriggerInsertError() {
-        Toast.makeText(getContext(), "ERROR: Two triggers cannot have the same percent",
-            Toast.LENGTH_LONG).show();
-      }
-    });
-  }
-
-  public void deleteTrigger(int percent) {
-    presenter.deleteTrigger(percent, position -> {
-      adapter.remove(position);
-      if (adapter.getItemCount() == 0) {
-        Timber.d("Last trigger, hide list");
-        loadEmptyView();
-      }
-    });
   }
 }
