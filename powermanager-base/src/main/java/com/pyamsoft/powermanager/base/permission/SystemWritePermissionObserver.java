@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.observer.permission;
+package com.pyamsoft.powermanager.base.permission;
 
 import android.Manifest;
 import android.content.Context;

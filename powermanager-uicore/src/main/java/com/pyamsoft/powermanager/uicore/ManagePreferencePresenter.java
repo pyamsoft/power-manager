@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -27,8 +26,7 @@ import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empty>
-    implements OnboardingPresenter {
+public class ManagePreferencePresenter extends SchedulerPresenter implements OnboardingPresenter {
 
   @NonNull private final ManagePreferenceInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
@@ -39,8 +37,8 @@ public class ManagePreferencePresenter extends SchedulerPresenter<Presenter.Empt
     this.interactor = manageInteractor;
   }
 
-  @CallSuper @Override protected void onUnbind() {
-    super.onUnbind();
+  @CallSuper @Override protected void onStop() {
+    super.onStop();
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
   }
 

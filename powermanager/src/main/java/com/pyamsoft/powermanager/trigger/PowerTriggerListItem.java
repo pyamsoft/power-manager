@@ -28,7 +28,6 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.pydroid.function.ActionSingle;
 import java.util.List;
 import java.util.Locale;
 import timber.log.Timber;
@@ -40,10 +39,6 @@ class PowerTriggerListItem extends
 
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
     super(trigger);
-  }
-
-  void click(@NonNull ActionSingle<PowerTriggerEntry> onClick) {
-    onClick.call(getModel());
   }
 
   @CheckResult int getPercent() {

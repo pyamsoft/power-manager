@@ -23,7 +23,6 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
-import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
@@ -630,13 +629,5 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences {
 
   @Override public void setPeriodicEnableTimeSync(long time) {
     preferences.edit().putString(periodicEnableSync, Long.toString(time)).apply();
-  }
-
-  @Override public void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
-    listener.register(preferences);
-  }
-
-  @Override public void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener) {
-    listener.unregister(preferences);
   }
 }

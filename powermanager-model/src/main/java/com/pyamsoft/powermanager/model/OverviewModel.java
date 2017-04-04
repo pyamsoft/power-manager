@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.google.auto.value.AutoValue;
 import com.pyamsoft.powermanager.model.states.States;
 
@@ -29,8 +28,6 @@ import com.pyamsoft.powermanager.model.states.States;
   @CheckResult @NonNull public static Builder builder() {
     return new AutoValue_OverviewModel.Builder();
   }
-
-  @CheckResult public abstract View rootView();
 
   @CheckResult public abstract String title();
 
@@ -41,8 +38,6 @@ import com.pyamsoft.powermanager.model.states.States;
   @ColorRes public abstract int background();
 
   @AutoValue.Builder public static abstract class Builder {
-
-    @CheckResult public abstract Builder rootView(View v);
 
     @CheckResult public abstract Builder title(String s);
 

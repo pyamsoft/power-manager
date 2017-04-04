@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.model.types.LogType;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -31,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
+public class LoggerPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable logDisposables =
@@ -58,8 +57,8 @@ public class LoggerPresenter extends SchedulerPresenter<Presenter.Empty> {
                 interactor.getLogId()));
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     clearLogs();
   }
 

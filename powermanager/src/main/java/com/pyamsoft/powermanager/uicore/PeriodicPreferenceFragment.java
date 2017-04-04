@@ -217,7 +217,6 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
     presenter.showOnboardingIfNeeded(() -> {
       // TODO
     });
@@ -225,11 +224,12 @@ public abstract class PeriodicPreferenceFragment extends FormatterPreferenceFrag
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

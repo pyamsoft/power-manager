@@ -90,15 +90,6 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onStart() {
     super.onStart();
-    loggerWifi.bindView(null);
-    loggerData.bindView(null);
-    loggerBluetooth.bindView(null);
-    loggerSync.bindView(null);
-    loggerAirplane.bindView(null);
-    loggerDoze.bindView(null);
-    loggerManager.bindView(null);
-    loggerTrigger.bindView(null);
-
     loggerWifi.retrieveLogContents(this);
     loggerData.retrieveLogContents(this);
     loggerBluetooth.retrieveLogContents(this);
@@ -111,18 +102,26 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onStop() {
     super.onStop();
-    loggerWifi.unbindView();
-    loggerData.unbindView();
-    loggerBluetooth.unbindView();
-    loggerSync.unbindView();
-    loggerAirplane.unbindView();
-    loggerDoze.unbindView();
-    loggerManager.unbindView();
-    loggerTrigger.unbindView();
+    loggerWifi.stop();
+    loggerData.stop();
+    loggerBluetooth.stop();
+    loggerSync.stop();
+    loggerAirplane.stop();
+    loggerDoze.stop();
+    loggerManager.stop();
+    loggerTrigger.stop();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+    loggerWifi.destroy();
+    loggerData.destroy();
+    loggerBluetooth.destroy();
+    loggerSync.destroy();
+    loggerAirplane.destroy();
+    loggerDoze.destroy();
+    loggerManager.destroy();
+    loggerTrigger.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

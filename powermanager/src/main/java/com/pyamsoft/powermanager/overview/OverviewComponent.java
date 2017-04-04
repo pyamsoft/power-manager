@@ -22,5 +22,5 @@ import dagger.Subcomponent;
 
   void inject(OverviewFragment fragment);
 
-  void inject(OverviewItem.ViewHolder viewHolder);
+  void inject(OverviewItem viewHolder);
 }

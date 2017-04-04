@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.main;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
+class MainPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
@@ -44,8 +43,8 @@ class MainPresenter extends SchedulerPresenter<Presenter.Empty> {
     this.rootPermissionObserver = rootPermissionObserver;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     subscription = DisposableHelper.dispose(subscription);
     rootDisposable = DisposableHelper.dispose(rootDisposable);
   }

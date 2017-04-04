@@ -191,7 +191,6 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
 
     if (shouldCheckManagePermission() && managePreference.isChecked()) {
       checkManagePermission(false);
@@ -227,11 +226,12 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @CallSuper @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

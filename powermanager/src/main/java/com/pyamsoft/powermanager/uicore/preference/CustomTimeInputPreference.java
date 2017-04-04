@@ -100,14 +100,14 @@ public abstract class CustomTimeInputPreference extends BaseBoundPreference {
     isDetaching = true;
     super.onDetached();
     Timber.d("onDetached");
-    presenter.unbindView();
+    presenter.stop();
+    presenter.destroy();
   }
 
   @Override public void onAttached() {
     super.onAttached();
     isDetaching = false;
     Timber.d("onAttached");
-    presenter.bindView(null);
   }
 
   @Override public final void onBindViewHolder(PreferenceViewHolder holder) {

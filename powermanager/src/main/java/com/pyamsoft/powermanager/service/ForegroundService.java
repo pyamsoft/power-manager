@@ -81,13 +81,14 @@ public class ForegroundService extends Service {
     screenOnOffReceiver = new ScreenOnOffReceiver(this);
 
     Injector.get().provideComponent().plusForegroundServiceComponent().inject(this);
-    presenter.bindView(null);
+    presenter.create();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     screenOnOffReceiver.unregister();
-    presenter.unbindView();
+    presenter.stop();
+    presenter.destroy();
     stopForeground(true);
   }
 

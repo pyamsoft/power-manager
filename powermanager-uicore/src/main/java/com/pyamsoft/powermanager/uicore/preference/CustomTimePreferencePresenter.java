@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.uicore.preference;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.Empty> {
+public class CustomTimePreferencePresenter extends SchedulerPresenter {
 
   // Max time 30 minutes
   private static final long MAX_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(30);
@@ -43,8 +42,8 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter<Presenter.
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
   }
 

@@ -20,7 +20,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.states.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -30,7 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
+class OverviewItemPresenter extends SchedulerPresenter {
 
   @NonNull private Disposable iconDisposable = Disposables.empty();
 
@@ -39,8 +38,8 @@ class OverviewItemPresenter extends SchedulerPresenter<Presenter.Empty> {
     super(obsScheduler, subScheduler);
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     iconDisposable = DisposableHelper.dispose(iconDisposable);
   }
 

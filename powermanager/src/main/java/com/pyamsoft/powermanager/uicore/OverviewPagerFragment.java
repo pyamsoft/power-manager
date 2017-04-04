@@ -83,13 +83,12 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
     observer.register(FAB_TAG, this::setFab, this::unsetFab);
   }
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
     observer.unregister(FAB_TAG);
   }
 
@@ -120,6 +119,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

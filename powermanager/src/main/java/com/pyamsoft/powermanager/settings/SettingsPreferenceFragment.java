@@ -85,7 +85,6 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
     presenter.registerOnBus(type -> presenter.processClearRequest(type,
         new SettingsPreferencePresenter.ClearRequestCallback() {
           @Override public void onClearAll() {
@@ -112,8 +111,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
           @Override public void onBegin() {
             overlay = ProgressOverlay.Helper.dispose(overlay);
-            overlay =
-                new ProgressOverlay.Builder().build(getActivity());
+            overlay = new ProgressOverlay.Builder().build(getActivity());
           }
 
           @Override public void onRootCallback(boolean causedByUser, boolean hasPermission,
@@ -148,7 +146,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @Override public void onResume() {
@@ -170,6 +168,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

@@ -17,8 +17,6 @@
 package com.pyamsoft.powermanager.base;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.app.OnRegisteredSharedPreferenceChangeListener;
 
 public interface PowerManagerPreferences {
 
@@ -187,8 +185,4 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicEnableTimeSync();
 
   void setPeriodicEnableTimeSync(long time);
-
-  void register(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
-
-  void unregister(@NonNull OnRegisteredSharedPreferenceChangeListener listener);
 }

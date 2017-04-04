@@ -86,8 +86,8 @@ public class PowerTriggerListFragment extends ActionBarFragment {
       adapter.withSelectable(true);
       adapter.withSelectOnLongClick(true);
       adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
-        item.click(item1 -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
-            DeleteTriggerDialog.newInstance(item1), "delete_trigger"));
+        AppUtil.guaranteeSingleDialogFragment(getActivity(),
+            DeleteTriggerDialog.newInstance(item.getModel()), "delete_trigger");
         return true;
       });
 
@@ -108,12 +108,11 @@ public class PowerTriggerListFragment extends ActionBarFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i, List<Object> list) {
           final PowerTriggerListItem.ViewHolder holder = toPowerTriggerListItem(viewHolder);
           adapter.getAdapterItem(holder.getAdapterPosition()).bindView(holder, list);
-          holder.bind((position, entry, isChecked) -> {
-            presenter.toggleEnabledState(position, entry, isChecked, (position1, entry1) -> {
-              Timber.d("update view holder at position: %d", position1);
-              adapter.set(position1, createNewPowerTriggerListItem(entry1));
-            });
-          });
+          holder.bind((position, entry, isChecked) -> presenter.toggleEnabledState(position, entry,
+              isChecked, (position1, entry1) -> {
+                Timber.d("update view holder at position: %d", position1);
+                adapter.set(position1, createNewPowerTriggerListItem(entry1));
+              }));
         }
 
         @CheckResult @NonNull private PowerTriggerListItem.ViewHolder toPowerTriggerListItem(
@@ -134,8 +133,6 @@ public class PowerTriggerListFragment extends ActionBarFragment {
         }
       });
     }
-
-    presenter.bindView(null);
 
     if (!listIsRefreshed) {
       // Because we may already have an Adapter with entries, we clear it first so that there are no doubles.
@@ -164,11 +161,12 @@ public class PowerTriggerListFragment extends ActionBarFragment {
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 

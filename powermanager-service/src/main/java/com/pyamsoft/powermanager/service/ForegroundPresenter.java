@@ -18,11 +18,8 @@ package com.pyamsoft.powermanager.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
@@ -30,11 +27,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
+class ForegroundPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
   @NonNull private Disposable notificationDisposable = Disposables.empty();
-  @NonNull private Disposable createDisposable = Disposables.empty();
 
   @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -42,24 +38,18 @@ class ForegroundPresenter extends SchedulerPresenter<Presenter.Empty> {
     this.interactor = interactor;
   }
 
-  @Override protected void onBind(@Nullable Empty view) {
-    super.onBind(view);
-    createDisposable = DisposableHelper.dispose(createDisposable);
-    createDisposable = Observable.fromCallable(() -> {
-      interactor.create();
-      return Boolean.TRUE;
-    })
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(success -> Timber.d("Interactor was created"),
-            throwable -> Timber.e(throwable, "Error creating interactor"));
+  public void create() {
+    interactor.create();
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
-    interactor.destroy();
+  @Override protected void onStop() {
+    super.onStop();
     notificationDisposable = DisposableHelper.dispose(notificationDisposable);
-    createDisposable = DisposableHelper.dispose(createDisposable);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    interactor.destroy();
   }
 
   public void startNotification(@NonNull NotificationCallback callback) {

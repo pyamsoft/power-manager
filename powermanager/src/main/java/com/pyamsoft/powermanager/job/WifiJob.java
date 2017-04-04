@@ -19,19 +19,17 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.model.Logger;
 import com.pyamsoft.powermanager.model.states.StateModifier;
 import com.pyamsoft.powermanager.model.states.StateObserver;
-import com.pyamsoft.powermanager.model.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class WifiJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_wifi") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateObserver
-      stateObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier
-      stateModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier stateModifier;
 
   @Override void inject() {
     Injector.get().provideComponent().plusJobComponent().inject(this);

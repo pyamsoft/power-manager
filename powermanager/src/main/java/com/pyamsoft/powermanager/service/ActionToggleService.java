@@ -35,7 +35,6 @@ public class ActionToggleService extends Service {
   @Override public void onCreate() {
     super.onCreate();
     Injector.get().provideComponent().plusActionToggleServiceComponent().inject(this);
-    presenter.bindView(null);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
@@ -55,6 +54,7 @@ public class ActionToggleService extends Service {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    presenter.unbindView();
+    presenter.stop();
+    presenter.destroy();
   }
 }

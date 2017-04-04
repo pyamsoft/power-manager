@@ -74,23 +74,19 @@ public class OverviewFragment extends ActionBarFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.bindView(null);
     presenter.showOnBoarding(() -> {
       Timber.d("Show onboarding");
       // Hold a ref to the sequence or Activity will recycle bitmaps and crash
     });
 
     if (adapter.getAdapterItems().isEmpty()) {
-      final View view = getView();
-      if (view != null) {
-        populateAdapter(view);
-      }
+      populateAdapter();
     }
   }
 
   @Override public void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -105,38 +101,37 @@ public class OverviewFragment extends ActionBarFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.destroy();
     PowerManager.getRefWatcher(this).watch(this);
   }
 
-  private void populateAdapter(@NonNull View view) {
+  private void populateAdapter() {
     presenter.getWifiObserver(observer -> adapter.add(
-        new OverviewItem(view, WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
+        new OverviewItem(WifiFragment.TAG, R.drawable.ic_network_wifi_24dp, R.color.green500,
             observer)));
     presenter.getDataObserver(observer -> adapter.add(
-        new OverviewItem(view, DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
+        new OverviewItem(DataFragment.TAG, R.drawable.ic_network_cell_24dp, R.color.orange500,
             observer)));
     presenter.getBluetoothObserver(observer -> adapter.add(
-        new OverviewItem(view, BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
+        new OverviewItem(BluetoothFragment.TAG, R.drawable.ic_bluetooth_24dp, R.color.blue500,
             observer)));
     presenter.getSyncObserver(observer -> adapter.add(
-        new OverviewItem(view, SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500,
-            observer)));
+        new OverviewItem(SyncFragment.TAG, R.drawable.ic_sync_24dp, R.color.yellow500, observer)));
 
     adapter.add(
-        new OverviewItem(view, PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
+        new OverviewItem(PowerTriggerFragment.TAG, R.drawable.ic_battery_24dp, R.color.red500,
             States.UNKNOWN));
 
     presenter.getAirplaneObserver(observer -> adapter.add(
-        new OverviewItem(view, AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp,
-            R.color.cyan500, observer)));
-    presenter.getDozeObserver(observer -> adapter.add(
-        new OverviewItem(view, DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500,
+        new OverviewItem(AirplaneFragment.TAG, R.drawable.ic_airplanemode_24dp, R.color.cyan500,
             observer)));
+    presenter.getDozeObserver(observer -> adapter.add(
+        new OverviewItem(DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500, observer)));
     presenter.getWearObserver(observer -> adapter.add(
-        new OverviewItem(view, WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
+        new OverviewItem(WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
             observer)));
 
-    adapter.add(new OverviewItem(view, SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp,
+    adapter.add(new OverviewItem(SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp,
         R.color.pink500, States.UNKNOWN));
   }
 
@@ -167,7 +162,46 @@ public class OverviewFragment extends ActionBarFragment {
 
     adapter.withSelectable(true);
     adapter.withOnClickListener((view1, iAdapter, item, i) -> {
-      item.click(view1, this::loadFragment);
+      final Fragment fragment;
+      final View rootView = getView();
+      if (rootView == null) {
+        throw new RuntimeException("Rootview is NULL");
+      }
+
+      final String title = item.getModel().title();
+      switch (title) {
+        case WifiFragment.TAG:
+          fragment = WifiFragment.newInstance(view1, rootView);
+          break;
+        case DataFragment.TAG:
+          fragment = DataFragment.newInstance(view1, rootView);
+          break;
+        case BluetoothFragment.TAG:
+          fragment = BluetoothFragment.newInstance(view1, rootView);
+          break;
+        case SyncFragment.TAG:
+          fragment = SyncFragment.newInstance(view1, rootView);
+          break;
+        case PowerTriggerFragment.TAG:
+          fragment = PowerTriggerFragment.newInstance(view1, rootView);
+          break;
+        case DozeFragment.TAG:
+          fragment = DozeFragment.newInstance(view1, rootView);
+          break;
+        case WearFragment.TAG:
+          fragment = WearFragment.newInstance(view1, rootView);
+          break;
+        case SettingsPreferenceFragment.TAG:
+          fragment = SettingsPreferenceFragment.newInstance(view1, rootView);
+          break;
+        case AirplaneFragment.TAG:
+          fragment = AirplaneFragment.newInstance(view1, rootView);
+          break;
+        default:
+          throw new IllegalStateException("Invalid tag: " + title);
+      }
+
+      loadFragment(title, fragment);
       return true;
     });
 

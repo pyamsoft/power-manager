@@ -114,6 +114,7 @@ public class MainActivity extends TamperActivity {
       appBarAnimator.cancel();
     }
 
+    presenter.destroy();
     binding.unbind();
   }
 
@@ -268,7 +269,6 @@ public class MainActivity extends TamperActivity {
 
   @Override protected void onStart() {
     super.onStart();
-    presenter.bindView(null);
     presenter.runStartupHooks(new MainPresenter.StartupCallback() {
       @Override public void onServiceEnabledWhenOpen() {
         Timber.d("Should refresh service when opened");
@@ -286,7 +286,7 @@ public class MainActivity extends TamperActivity {
 
   @Override protected void onStop() {
     super.onStop();
-    presenter.unbindView();
+    presenter.stop();
   }
 
   // https://github.com/mozilla/gecko-dev/blob/master/mobile/android/base/java/org/mozilla/gecko/BrowserApp.java

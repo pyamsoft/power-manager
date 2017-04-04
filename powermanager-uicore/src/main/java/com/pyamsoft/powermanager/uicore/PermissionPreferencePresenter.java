@@ -40,8 +40,8 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
     this.permissionObserver = permissionObserver;
   }
 
-  @CallSuper @Override protected void onUnbind() {
-    super.onUnbind();
+  @CallSuper @Override protected void onStop() {
+    super.onStop();
     permissionDisposable = DisposableHelper.dispose(permissionDisposable);
   }
 

@@ -20,7 +20,6 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
+class TriggerPresenter extends SchedulerPresenter {
 
   @NonNull private final TriggerInteractor interactor;
   @NonNull private Disposable deleteDisposable = Disposables.empty();
@@ -43,8 +42,8 @@ class TriggerPresenter extends SchedulerPresenter<Presenter.Empty> {
     this.interactor = interactor;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     deleteDisposable = DisposableHelper.dispose(deleteDisposable);
     createDisposable = DisposableHelper.dispose(createDisposable);
     updateDisposable = DisposableHelper.dispose(updateDisposable);

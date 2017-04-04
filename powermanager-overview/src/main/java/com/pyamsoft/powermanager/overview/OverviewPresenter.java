@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.states.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
 
-class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
+class OverviewPresenter extends SchedulerPresenter {
 
   @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final OverviewInteractor interactor;
@@ -43,8 +42,8 @@ class OverviewPresenter extends SchedulerPresenter<Presenter.Empty> {
     this.preferences = powerManagerPreferences;
   }
 
-  @Override protected void onUnbind() {
-    super.onUnbind();
+  @Override protected void onStop() {
+    super.onStop();
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
   }
 

@@ -20,7 +20,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.states.StateModifier;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import com.pyamsoft.pydroid.presenter.Presenter;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
@@ -29,7 +28,7 @@ import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> {
+public class OverviewPagerPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final StateModifier modifier;
   @NonNull private Disposable subscription = Disposables.empty();
@@ -40,8 +39,8 @@ public class OverviewPagerPresenter extends SchedulerPresenter<Presenter.Empty> 
     this.modifier = modifier;
   }
 
-  @CallSuper @Override protected void onUnbind() {
-    super.onUnbind();
+  @CallSuper @Override protected void onStop() {
+    super.onStop();
     subscription = DisposableHelper.dispose(subscription);
   }
 

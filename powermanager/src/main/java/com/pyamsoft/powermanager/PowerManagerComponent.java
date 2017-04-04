@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.airplane.preference.AirplanePreferenceComponent
 import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.states.StateModifierModule;
-import com.pyamsoft.powermanager.base.observer.permission.PermissionObserverModule;
+import com.pyamsoft.powermanager.base.permission.PermissionObserverModule;
 import com.pyamsoft.powermanager.base.states.StateObserverModule;
 import com.pyamsoft.powermanager.base.shell.ShellCommandModule;
 import com.pyamsoft.powermanager.base.states.WrapperModule;
