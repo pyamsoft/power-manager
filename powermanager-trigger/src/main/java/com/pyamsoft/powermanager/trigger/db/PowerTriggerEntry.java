@@ -116,32 +116,31 @@ import com.squareup.sqldelight.SqlDelightStatement;
   /**
    * public
    */
-  @CheckResult @NonNull
-  static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
+  @CheckResult @NonNull static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
     return new InsertManager(openHelper);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull
-  static DeleteTriggerManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
+  @CheckResult @NonNull static DeleteTriggerManager deleteTrigger(
+      @NonNull SQLiteOpenHelper openHelper) {
     return new DeleteTriggerManager(openHelper);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull
-  static UpdateAvailabeManager updateAvailable(@NonNull SQLiteOpenHelper openHelper) {
+  @CheckResult @NonNull static UpdateAvailabeManager updateAvailable(
+      @NonNull SQLiteOpenHelper openHelper) {
     return new UpdateAvailabeManager(openHelper);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull
-  static UpdateEnabledManager updateEnabled(@NonNull SQLiteOpenHelper openHelper) {
+  @CheckResult @NonNull static UpdateEnabledManager updateEnabled(
+      @NonNull SQLiteOpenHelper openHelper) {
     return new UpdateEnabledManager(openHelper);
   }
 

@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;

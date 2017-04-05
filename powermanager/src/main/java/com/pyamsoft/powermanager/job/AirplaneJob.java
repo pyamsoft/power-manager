@@ -19,9 +19,9 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
-import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 

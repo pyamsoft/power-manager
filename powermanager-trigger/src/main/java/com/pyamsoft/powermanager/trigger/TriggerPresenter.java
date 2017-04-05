@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent;
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;

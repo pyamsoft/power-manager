@@ -19,19 +19,17 @@ package com.pyamsoft.powermanager.job;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
-import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 public class SyncJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_sync") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateObserver
-      stateObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") StateModifier
-      stateModifier;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") StateModifier stateModifier;
 
   @Override void inject() {
     Injector.get().provideComponent().plusJobComponent().inject(this);

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.base.shell;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 

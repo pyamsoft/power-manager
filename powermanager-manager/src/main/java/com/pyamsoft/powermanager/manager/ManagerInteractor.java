@@ -23,8 +23,8 @@ import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
-import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.job.QueuerType;
+import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
 import timber.log.Timber;
 

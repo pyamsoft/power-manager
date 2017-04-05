@@ -135,12 +135,11 @@ class LoggerInteractor {
   @CheckResult @NonNull public Observable<String> getLogContents() {
     return Observable.fromCallable(this::getLogLocation).flatMap(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
-      try (
-          final FileInputStream fileInputStream = new FileInputStream(logLocation);
-          final BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-          final InputStreamReader inputStreamReader = new InputStreamReader(bufferedInputStream,
-              StandardCharsets.UTF_8);
-          final BufferedReader reader = new BufferedReader(inputStreamReader)) {
+      try (final FileInputStream fileInputStream = new FileInputStream(logLocation);
+           final BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+           final InputStreamReader inputStreamReader = new InputStreamReader(bufferedInputStream,
+               StandardCharsets.UTF_8);
+           final BufferedReader reader = new BufferedReader(inputStreamReader)) {
         String line = reader.readLine();
         while (line != null) {
           fileContents.add(line);
@@ -163,13 +162,12 @@ class LoggerInteractor {
 
   @CheckResult @NonNull public Observable<Boolean> appendToLog(@NonNull String message) {
     return Observable.fromCallable(this::getLogLocation).map(logLocation -> {
-      try (
-          final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);
-          final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-              fileOutputStream);
-          final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(bufferedOutputStream,
-              StandardCharsets.UTF_8);
-          final BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
+      try (final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);
+           final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+               fileOutputStream);
+           final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
+               bufferedOutputStream, StandardCharsets.UTF_8);
+           final BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter)) {
         final String formattedMessage = formatMessage(message);
         bufferedWriter.write(formattedMessage);
         bufferedWriter.newLine();

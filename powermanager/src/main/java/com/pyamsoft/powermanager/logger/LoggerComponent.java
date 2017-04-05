@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.logger;
 
 import dagger.Subcomponent;
 
-
 @Subcomponent public interface LoggerComponent {
   void inject(LoggerPreferenceFragment loggerPreferenceFragment);
 }

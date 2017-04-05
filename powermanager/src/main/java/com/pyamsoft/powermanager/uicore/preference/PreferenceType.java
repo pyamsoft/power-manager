@@ -17,7 +17,5 @@
 package com.pyamsoft.powermanager.uicore.preference;
 
 enum PreferenceType {
-  DELAY,
-  PERIODIC_ENABLE,
-  PERIODIC_DISABLE
+  DELAY, PERIODIC_ENABLE, PERIODIC_DISABLE
 }

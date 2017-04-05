@@ -28,8 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;
 
-abstract class BroadcastStateObserver extends BroadcastReceiver
-    implements StateObserver {
+abstract class BroadcastStateObserver extends BroadcastReceiver implements StateObserver {
 
   // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
