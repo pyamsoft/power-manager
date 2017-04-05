@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
@@ -31,16 +32,15 @@ import javax.inject.Named;
 
   @Provides @Named("airplane_manage_pref")
   ManagePreferencePresenter provideAirplaneManagePreferencePresenter(
-      @Named("airplane_manage_pref_interactor") ManagePreferenceInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler,
-        rootPermissionObserver);
+      @Named("airplane_manage_pref_interactor") PermissionPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("airplane_manage_pref_interactor")
   ManagePreferenceInteractor provideAirplaneManagePreferenceInteractor(
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
       @NonNull PowerManagerPreferences preferences) {
-    return new ManagePreferenceInteractor(preferences);
+    return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);
   }
 }

@@ -19,29 +19,24 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import io.reactivex.Observable;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
-public class ManagePreferenceInteractor {
+public class PermissionPreferenceInteractor extends ManagePreferenceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
 
-  @Inject public ManagePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
-    this.preferences = preferences;
+  @Inject public PermissionPreferenceInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull PermissionObserver permissionObserver) {
+    super(preferences);
+    this.permissionObserver = permissionObserver;
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
-    return Observable.fromCallable(preferences::isManageOnboardingShown).delay(1, TimeUnit.SECONDS);
-  }
-
-  /**
-   * public
-   */
-  void setOnboarding() {
-    preferences.setManageOnboardingShown();
+  @CheckResult @NonNull Observable<Boolean> hasPermission() {
+    return Observable.fromCallable(permissionObserver::hasPermission);
   }
 }

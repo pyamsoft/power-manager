@@ -44,7 +44,10 @@ public class OverviewPagerPresenter extends SchedulerPresenter {
     subscription = DisposableHelper.dispose(subscription);
   }
 
-  public void wrapSet() {
+  /**
+   * public
+   */
+  void wrapSet() {
     subscription = DisposableHelper.dispose(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
@@ -52,7 +55,10 @@ public class OverviewPagerPresenter extends SchedulerPresenter {
         .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"));
   }
 
-  public void wrapUnset() {
+  /**
+   * public
+   */
+  void wrapUnset() {
     subscription = DisposableHelper.dispose(subscription);
     subscription = Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())

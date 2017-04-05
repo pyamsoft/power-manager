@@ -18,10 +18,8 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
@@ -30,14 +28,13 @@ import timber.log.Timber;
 
 public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
+  @NonNull private final PermissionPreferenceInteractor interactor;
   @NonNull private Disposable permissionDisposable = Disposables.empty();
 
-  @Inject public PermissionPreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
-      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler,
-      @NonNull PermissionObserver permissionObserver) {
-    super(manageInteractor, observeScheduler, subscribeScheduler);
-    this.permissionObserver = permissionObserver;
+  @Inject public PermissionPreferencePresenter(@NonNull PermissionPreferenceInteractor interactor,
+      @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
+    super(interactor, observeScheduler, subscribeScheduler);
+    this.interactor = interactor;
   }
 
   @CallSuper @Override protected void onStop() {
@@ -51,7 +48,7 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
     permissionCallback.onBegin();
     permissionDisposable = DisposableHelper.dispose(permissionDisposable);
-    permissionDisposable = Observable.fromCallable(permissionObserver::hasPermission)
+    permissionDisposable = interactor.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)

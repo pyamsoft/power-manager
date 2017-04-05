@@ -148,7 +148,7 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     });
   }
 
-  @SuppressWarnings("WeakerAccess") static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
+  private static class PowerTriggerOpenHelper extends SQLiteOpenHelper {
 
     @NonNull private static final String DB_NAME = "power_trigger_db";
     private static final int DATABASE_VERSION = 1;

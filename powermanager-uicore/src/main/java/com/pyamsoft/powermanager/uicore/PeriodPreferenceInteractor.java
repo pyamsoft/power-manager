@@ -31,12 +31,18 @@ public class PeriodPreferenceInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @CheckResult public Observable<Boolean> hasShownOnboarding() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
     return Observable.fromCallable(preferences::isPeriodicOnboardingShown)
         .delay(1, TimeUnit.SECONDS);
   }
 
-  public void setOnboarding() {
+  /**
+   * public
+   */
+  void setOnboarding() {
     preferences.setPeriodicOnboardingShown();
   }
 }
