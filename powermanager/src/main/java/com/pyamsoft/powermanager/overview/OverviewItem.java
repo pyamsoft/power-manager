@@ -35,18 +35,16 @@ import com.pyamsoft.pydroid.drawable.AsyncMap;
 import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.helper.AsyncMapHelper;
 import java.util.List;
-import javax.inject.Inject;
 
 public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-  @SuppressWarnings("WeakerAccess") @Inject OverviewItemPresenter presenter;
-  @SuppressWarnings("WeakerAccess") @NonNull AsyncMapEntry checkTask = AsyncMap.emptyEntry();
+  @NonNull private AsyncMapEntry checkTask = AsyncMap.emptyEntry();
   @NonNull private AsyncMapEntry titleTask = AsyncMap.emptyEntry();
 
-  OverviewItem(@NonNull String title, @DrawableRes int image,
-      @ColorRes int background, @NonNull States states) {
+  OverviewItem(@NonNull String title, @DrawableRes int image, @ColorRes int background,
+      @NonNull States states) {
     super(OverviewModel.builder()
         .background(background)
         .image(image)
@@ -70,9 +68,6 @@ public class OverviewItem
     titleTask = AsyncMapHelper.unsubscribe(titleTask);
     holder.binding.adapterItemOverviewImage.setImageDrawable(null);
     holder.binding.adapterItemOverviewTitle.setText(null);
-
-    presenter.stop();
-    presenter.destroy();
   }
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
@@ -86,19 +81,25 @@ public class OverviewItem
         .tint(android.R.color.white)
         .into(holder.binding.adapterItemOverviewImage);
 
-    presenter.decideManageState(getModel().state(),
-        new OverviewItemPresenter.ManageStateCallback() {
-          @Override public void onManageStateDecided(@DrawableRes int icon) {
-            checkTask = AsyncMapHelper.unsubscribe(checkTask);
-            checkTask = AsyncDrawable.load(icon)
-                .tint(android.R.color.white)
-                .into(holder.binding.adapterItemOverviewCheck);
-          }
-
-          @Override public void onManageStateNone() {
-            holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
-          }
-        });
+    @DrawableRes final int icon;
+    switch (getModel().state()) {
+      case ENABLED:
+        icon = R.drawable.ic_check_box_24dp;
+        break;
+      case DISABLED:
+        icon = R.drawable.ic_check_box_outline_24dp;
+        break;
+      default:
+        icon = 0;
+    }
+    if (icon == 0) {
+      holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
+    } else {
+      checkTask = AsyncMapHelper.unsubscribe(checkTask);
+      checkTask = AsyncDrawable.load(icon)
+          .tint(android.R.color.white)
+          .into(holder.binding.adapterItemOverviewCheck);
+    }
   }
 
   @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
@@ -114,7 +115,7 @@ public class OverviewItem
     }
   }
 
-  public static class ViewHolder extends RecyclerView.ViewHolder {
+  static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final AdapterItemOverviewBinding binding;
 
