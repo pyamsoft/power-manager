@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
+import com.pyamsoft.powermanager.settings.bus.ConfirmEvent;
 import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
 import com.pyamsoft.pydroid.util.AppUtil;
 import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
@@ -64,7 +65,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
       AppUtil.guaranteeSingleDialogFragment(getActivity(),
-          ConfirmationDialog.newInstance(ClearCodes.DATABASE), "confirm_dialog");
+          ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "confirm_dialog");
       return true;
     });
 
@@ -180,7 +181,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override protected boolean onClearAllPreferenceClicked() {
     AppUtil.guaranteeSingleDialogFragment(getActivity(),
-        ConfirmationDialog.newInstance(ClearCodes.ALL), "confirm_dialog");
+        ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "confirm_dialog");
     return true;
   }
 }

@@ -43,7 +43,10 @@ import timber.log.Timber;
     cacheInteractor.clearCache();
   }
 
-  @CheckResult @NonNull public Observable<PowerTriggerEntry> queryAll(boolean forceRefresh) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<PowerTriggerEntry> queryAll(boolean forceRefresh) {
     return Single.defer(() -> {
       final Single<List<PowerTriggerEntry>> result;
       synchronized (this) {
@@ -70,7 +73,10 @@ import timber.log.Timber;
     });
   }
 
-  @CheckResult @NonNull public Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
     return getPowerTriggerDB().queryWithPercent(entry.percent())
         .first(PowerTriggerEntry.empty())
         .toObservable()
@@ -103,7 +109,10 @@ import timber.log.Timber;
         });
   }
 
-  @CheckResult @NonNull public Observable<Integer> delete(int percent) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Integer> delete(int percent) {
     return getPowerTriggerDB().queryAll()
         .first(Collections.emptyList())
         .map(powerTriggerEntries -> {

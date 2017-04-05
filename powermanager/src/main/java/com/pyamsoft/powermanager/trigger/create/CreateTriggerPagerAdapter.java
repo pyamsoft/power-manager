@@ -18,11 +18,10 @@ package com.pyamsoft.powermanager.trigger.create;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
-import com.pyamsoft.powermanager.model.TriggerCreateEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;
 
@@ -34,11 +33,9 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
   private static final int POSITION_DATA = 2;
   private static final int POSITION_BLUETOOTH = 3;
   private static final int POSITION_SYNC = 4;
-  @NonNull private final FragmentManager fragmentManager;
 
   CreateTriggerPagerAdapter(@NonNull Fragment fragment) {
     super(fragment.getChildFragmentManager());
-    fragmentManager = fragment.getFragmentManager();
   }
 
   @Override public Fragment getItem(int position) {
@@ -94,10 +91,7 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final PowerTriggerEntry entry = PowerTriggerEntry.creator()
         .create(percent, name, true, true, wifiToggle, dataToggle, bluetoothToggle, syncToggle,
             wifiEnable, dataEnable, bluetoothEnable, syncEnable);
-    sendCreateEvent(entry);
-  }
-
-  private void sendCreateEvent(@NonNull PowerTriggerEntry entry) {
     EventBus.get().publish(TriggerCreateEvent.create(entry));
   }
 }
+

@@ -14,9 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.settings;
+package com.pyamsoft.powermanager.trigger.bus;
 
-enum ClearCodes {
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.google.auto.value.AutoValue;
 
-  DATABASE, ALL
+@AutoValue public abstract class TriggerDeleteEvent {
+
+  @CheckResult @NonNull public static TriggerDeleteEvent create(int percent) {
+    return new AutoValue_TriggerDeleteEvent(percent);
+  }
+
+  @CheckResult public abstract int percent();
 }

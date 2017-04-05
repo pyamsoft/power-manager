@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.settings.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 
-@AutoValue public abstract class TriggerCreateEvent {
+@AutoValue public abstract class ConfirmEvent {
 
-  @CheckResult @NonNull public static TriggerCreateEvent create(@NonNull PowerTriggerEntry entry) {
-    return new AutoValue_TriggerCreateEvent(entry);
+  @CheckResult @NonNull public static ConfirmEvent create(@NonNull Type type) {
+    return new AutoValue_ConfirmEvent(type);
   }
 
-  @CheckResult public abstract PowerTriggerEntry entry();
+  @CheckResult public abstract Type type();
+
+  public enum Type {
+
+    DATABASE, ALL
+  }
 }

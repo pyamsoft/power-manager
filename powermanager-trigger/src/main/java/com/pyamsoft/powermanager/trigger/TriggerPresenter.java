@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.database.sqlite.SQLiteConstraintException;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.TriggerDeleteEvent;
-import com.pyamsoft.powermanager.model.TriggerCreateEvent;
 import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent;
+import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -55,7 +55,10 @@ class TriggerPresenter extends SchedulerPresenter {
     deleteBus = DisposableHelper.dispose(deleteBus);
   }
 
-  public void registerOnBus(@NonNull BusCallback callback) {
+  /**
+   * public
+   */
+  void registerOnBus(@NonNull BusCallback callback) {
     createBus = DisposableHelper.dispose(createBus);
     createBus = EventBus.get()
         .listen(TriggerCreateEvent.class)
@@ -101,15 +104,16 @@ class TriggerPresenter extends SchedulerPresenter {
         .subscribe(callback::onTriggerDeleted, throwable -> Timber.e(throwable, "onError"));
   }
 
-  public void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
+  /**
+   * public
+   */
+  void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
     viewDisposable = DisposableHelper.dispose(viewDisposable);
     viewDisposable = interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onTriggerLoadFinished)
-        .subscribe(callback::onTriggerLoaded, throwable -> {
-          Timber.e(throwable, "onError");
-        });
+        .subscribe(callback::onTriggerLoaded, throwable -> Timber.e(throwable, "onError"));
   }
 
   interface TriggerLoadCallback {

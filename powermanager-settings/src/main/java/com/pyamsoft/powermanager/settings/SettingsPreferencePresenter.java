@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.settings.bus.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;

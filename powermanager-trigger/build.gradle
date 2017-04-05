@@ -61,6 +61,10 @@ dependencies {
   // SQLBrite
   compile "com.squareup.sqlbrite:sqlbrite:$sqlbrite"
 
+  // Auto value
+  provided "com.google.auto.value:auto-value:$autoValue"
+  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
+
   //For RxJava1 (SQLBrite)
   compile "com.github.akarnokd:rxjava2-interop:0.9.4"
   compile 'io.reactivex:rxjava:1.2.9'

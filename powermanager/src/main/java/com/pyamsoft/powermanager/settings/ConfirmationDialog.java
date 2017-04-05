@@ -23,14 +23,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.PowerManager;
+import com.pyamsoft.powermanager.settings.bus.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 
 public class ConfirmationDialog extends DialogFragment {
   @NonNull private static final String WHICH = "which_type";
 
-  @SuppressWarnings("WeakerAccess") ClearCodes clearCode;
+  @SuppressWarnings("WeakerAccess") ConfirmEvent.Type clearType;
 
-  public static ConfirmationDialog newInstance(@NonNull ClearCodes codes) {
+  public static ConfirmationDialog newInstance(@NonNull ConfirmEvent.Type codes) {
     final ConfirmationDialog fragment = new ConfirmationDialog();
     final Bundle args = new Bundle();
     args.putString(WHICH, codes.name());
@@ -45,7 +46,7 @@ public class ConfirmationDialog extends DialogFragment {
       throw new RuntimeException("Cannot show dialog without ClearCode");
     }
 
-    clearCode = ClearCodes.valueOf(code);
+    clearType = ConfirmEvent.Type.valueOf(code);
   }
 
   @Override public void onDestroy() {
@@ -54,11 +55,11 @@ public class ConfirmationDialog extends DialogFragment {
   }
 
   @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-    return new AlertDialog.Builder(getActivity()).setMessage(clearCode == ClearCodes.DATABASE
+    return new AlertDialog.Builder(getActivity()).setMessage(clearType == ConfirmEvent.Type.DATABASE
         ? "Really clear entire database?\n\nYou will have to re-configure all triggers again"
         : "Really clear all application settings?")
         .setPositiveButton("Yes", (dialogInterface, i) -> {
-          EventBus.get().publish(ConfirmEvent.create(clearCode));
+          EventBus.get().publish(ConfirmEvent.create(clearType));
         })
         .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
         .create();

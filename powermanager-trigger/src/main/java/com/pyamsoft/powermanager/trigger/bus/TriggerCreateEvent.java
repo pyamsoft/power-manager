@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.trigger.bus;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
+import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
 
-@AutoValue public abstract class TriggerDeleteEvent {
+@AutoValue public abstract class TriggerCreateEvent {
 
-  @CheckResult @NonNull public static TriggerDeleteEvent create(int percent) {
-    return new AutoValue_TriggerDeleteEvent(percent);
+  @CheckResult @NonNull public static TriggerCreateEvent create(@NonNull PowerTriggerEntry entry) {
+    return new AutoValue_TriggerCreateEvent(entry);
   }
 
-  @CheckResult public abstract int percent();
+  @CheckResult public abstract PowerTriggerEntry entry();
 }

@@ -35,8 +35,11 @@ import timber.log.Timber;
     this.cacheInteractor = cacheInteractor;
   }
 
-  @CheckResult @NonNull
-  public Observable<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry, boolean enabled) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry,
+      boolean enabled) {
     return Observable.defer(() -> {
       final int percent = entry.percent();
       Timber.d("Update enabled state with percent: %d", percent);

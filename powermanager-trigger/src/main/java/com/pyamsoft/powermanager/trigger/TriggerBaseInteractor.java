@@ -30,7 +30,10 @@ abstract class TriggerBaseInteractor {
     this.powerTriggerDB = powerTriggerDB;
   }
 
-  @CheckResult @NonNull public Observable<PowerTriggerEntry> get(int percent) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<PowerTriggerEntry> get(int percent) {
     return powerTriggerDB.queryWithPercent(percent).first(PowerTriggerEntry.empty()).toObservable();
   }
 

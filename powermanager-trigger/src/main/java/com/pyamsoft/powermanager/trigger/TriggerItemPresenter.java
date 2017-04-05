@@ -43,7 +43,10 @@ class TriggerItemPresenter extends SchedulerPresenter {
     updateDisposable = DisposableHelper.dispose(updateDisposable);
   }
 
-  public void toggleEnabledState(@NonNull PowerTriggerEntry entry, boolean enabled,
+  /**
+   * public
+   */
+  void toggleEnabledState(@NonNull PowerTriggerEntry entry, boolean enabled,
       @NonNull TriggerToggleCallback callback) {
     updateDisposable = DisposableHelper.dispose(updateDisposable);
     updateDisposable = interactor.update(entry, enabled)
