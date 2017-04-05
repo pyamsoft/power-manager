@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import com.pyamsoft.powermanager.model.JobQueuerEntry;
 import javax.inject.Inject;
 import timber.log.Timber;
 

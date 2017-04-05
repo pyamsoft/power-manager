@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.trigger;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import io.reactivex.Single;
 import java.util.List;
 import javax.inject.Inject;

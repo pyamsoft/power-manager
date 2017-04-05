@@ -23,7 +23,7 @@ import android.content.IntentFilter;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.model.states.StateObserver;
+import com.pyamsoft.powermanager.model.StateObserver;
 import java.util.HashMap;
 import java.util.Map;
 import timber.log.Timber;

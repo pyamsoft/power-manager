@@ -36,7 +36,7 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
 import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.FragmentOverviewBinding;
 import com.pyamsoft.powermanager.doze.DozeFragment;
-import com.pyamsoft.powermanager.model.states.States;
+import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;

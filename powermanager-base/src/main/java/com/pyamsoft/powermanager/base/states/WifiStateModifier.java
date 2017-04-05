@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.base.states;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.StateModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import javax.inject.Inject;
 
 class WifiStateModifier implements StateModifier {

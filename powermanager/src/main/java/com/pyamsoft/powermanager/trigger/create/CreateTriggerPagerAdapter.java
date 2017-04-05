@@ -21,7 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;
 

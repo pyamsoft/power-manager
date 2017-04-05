@@ -28,7 +28,7 @@ import android.view.Display;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.manager.Manager;
-import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;

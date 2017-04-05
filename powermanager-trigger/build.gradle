@@ -21,6 +21,7 @@ tasks.whenTaskAdded { task ->
 }
 
 apply plugin: "com.android.library"
+apply plugin: "com.squareup.sqldelight"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"

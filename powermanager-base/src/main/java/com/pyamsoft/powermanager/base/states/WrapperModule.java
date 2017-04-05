@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
-import com.pyamsoft.powermanager.model.Logger;
+import com.pyamsoft.powermanager.base.logger.Logger;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;

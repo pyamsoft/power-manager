@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.types;
+package com.pyamsoft.powermanager.uicore.preference;
 
-public enum LogType {
-  DEBUG,
-  INFO,
-  WARNING,
-  ERROR
+enum PreferenceType {
+  DELAY,
+  PERIODIC_ENABLE,
+  PERIODIC_DISABLE
 }

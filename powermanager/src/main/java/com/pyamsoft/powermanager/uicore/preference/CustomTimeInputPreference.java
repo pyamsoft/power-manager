@@ -28,7 +28,6 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.PreferenceCustomTimeInputBinding;
-import com.pyamsoft.powermanager.model.types.PreferenceType;
 import com.pyamsoft.pydroid.ui.app.BaseBoundPreference;
 import java.util.Locale;
 import timber.log.Timber;

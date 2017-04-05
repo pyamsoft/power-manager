@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.types;
+package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;

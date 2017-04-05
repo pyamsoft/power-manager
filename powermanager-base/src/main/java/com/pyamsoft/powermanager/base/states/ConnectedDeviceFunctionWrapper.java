@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.states;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.States;
+import com.pyamsoft.powermanager.model.States;
 
 interface ConnectedDeviceFunctionWrapper extends DeviceFunctionWrapper {
 

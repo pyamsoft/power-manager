@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.States;
+import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;

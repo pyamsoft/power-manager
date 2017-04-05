@@ -16,16 +16,9 @@
 
 package com.pyamsoft.powermanager.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+public interface StateModifier {
 
-public interface Logger {
+  void set();
 
-  void d(@NonNull String fmt, @Nullable Object... args);
-
-  void i(@NonNull String fmt, @Nullable Object... args);
-
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+  void unset();
 }

@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.model.states.States;
+import com.pyamsoft.powermanager.model.States;
 
-@AutoValue public abstract class OverviewModel {
+@AutoValue abstract class OverviewModel {
 
-  @CheckResult @NonNull public static Builder builder() {
+  @CheckResult @NonNull static Builder builder() {
     return new AutoValue_OverviewModel.Builder();
   }
 
-  @CheckResult public abstract String title();
+  @CheckResult abstract String title();
 
-  @CheckResult public abstract States state();
+  @CheckResult abstract States state();
 
-  @DrawableRes public abstract int image();
+  @DrawableRes abstract int image();
 
-  @ColorRes public abstract int background();
+  @ColorRes abstract int background();
 
-  @AutoValue.Builder public static abstract class Builder {
+  @AutoValue.Builder static abstract class Builder {
 
-    @CheckResult public abstract Builder title(String s);
+    @CheckResult abstract Builder title(String s);
 
-    @CheckResult public abstract Builder image(@DrawableRes int i);
+    @CheckResult abstract Builder image(@DrawableRes int i);
 
-    @CheckResult public abstract Builder background(@ColorRes int i);
+    @CheckResult abstract Builder background(@ColorRes int i);
 
-    @CheckResult public abstract Builder state(States state);
+    @CheckResult abstract Builder state(States state);
 
-    @CheckResult public abstract OverviewModel build();
+    @CheckResult abstract OverviewModel build();
   }
 }

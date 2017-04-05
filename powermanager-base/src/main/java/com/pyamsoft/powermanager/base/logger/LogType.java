@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.states;
+package com.pyamsoft.powermanager.base.logger;
 
-public enum States {
-  ENABLED, DISABLED, UNKNOWN
+enum LogType {
+  DEBUG, INFO, WARNING, ERROR
 }

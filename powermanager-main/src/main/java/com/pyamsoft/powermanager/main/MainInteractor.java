@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.states.PermissionObserver;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Named;

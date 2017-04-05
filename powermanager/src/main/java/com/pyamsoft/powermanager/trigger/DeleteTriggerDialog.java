@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import timber.log.Timber;

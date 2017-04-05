@@ -61,6 +61,10 @@ dependencies {
   // Android Job
   compile "com.evernote:android-job:$androidJob"
 
+  // Auto value
+  provided "com.google.auto.value:auto-value:$autoValue"
+  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
+
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   debugCompile project(path: ":powermanager-base", configuration: "debug")

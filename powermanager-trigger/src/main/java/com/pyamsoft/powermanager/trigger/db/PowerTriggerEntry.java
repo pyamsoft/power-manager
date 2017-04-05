@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.sql;
+package com.pyamsoft.powermanager.trigger.db;
 
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
@@ -61,7 +61,10 @@ import com.squareup.sqldelight.SqlDelightStatement;
     return Checker.checkNonNull(factory);
   }
 
-  @CheckResult @NonNull public static Mapper<PowerTriggerEntry> allEntriesMapper() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull static Mapper<PowerTriggerEntry> allEntriesMapper() {
     if (allEntriesMapper == null) {
       synchronized (PowerTriggerEntry.class) {
         if (allEntriesMapper == null) {
@@ -73,7 +76,10 @@ import com.squareup.sqldelight.SqlDelightStatement;
     return Checker.checkNonNull(allEntriesMapper);
   }
 
-  @CheckResult @NonNull public static Mapper<PowerTriggerEntry> withPercentMapper() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull static Mapper<PowerTriggerEntry> withPercentMapper() {
     if (withPercentMapper == null) {
       synchronized (PowerTriggerEntry.class) {
         if (withPercentMapper == null) {
@@ -93,35 +99,53 @@ import com.squareup.sqldelight.SqlDelightStatement;
     return empty() == entry;
   }
 
-  @CheckResult @NonNull public static SqlDelightStatement queryAll() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull static SqlDelightStatement queryAll() {
     return factory().all_entries();
   }
 
-  @CheckResult @NonNull public static SqlDelightStatement withPercent(int percent) {
+  /**
+   * public
+   */
+  @CheckResult @NonNull static SqlDelightStatement withPercent(int percent) {
     return factory().with_percent(percent);
   }
 
+  /**
+   * public
+   */
   @CheckResult @NonNull
-  public static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
+  static InsertManager insertTrigger(@NonNull SQLiteOpenHelper openHelper) {
     return new InsertManager(openHelper);
   }
 
+  /**
+   * public
+   */
   @CheckResult @NonNull
-  public static DeleteTriggerManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
+  static DeleteTriggerManager deleteTrigger(@NonNull SQLiteOpenHelper openHelper) {
     return new DeleteTriggerManager(openHelper);
   }
 
+  /**
+   * public
+   */
   @CheckResult @NonNull
-  public static UpdateAvailabeManager updateAvailable(@NonNull SQLiteOpenHelper openHelper) {
+  static UpdateAvailabeManager updateAvailable(@NonNull SQLiteOpenHelper openHelper) {
     return new UpdateAvailabeManager(openHelper);
   }
 
+  /**
+   * public
+   */
   @CheckResult @NonNull
-  public static UpdateEnabledManager updateEnabled(@NonNull SQLiteOpenHelper openHelper) {
+  static UpdateEnabledManager updateEnabled(@NonNull SQLiteOpenHelper openHelper) {
     return new UpdateEnabledManager(openHelper);
   }
 
-  @SuppressWarnings("WeakerAccess") public static class DeleteTriggerManager {
+  @SuppressWarnings("WeakerAccess") static class DeleteTriggerManager {
     @NonNull private final Delete_trigger deleteTrigger;
 
     DeleteTriggerManager(@NonNull SQLiteOpenHelper openHelper) {
@@ -134,7 +158,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
     }
   }
 
-  @SuppressWarnings("WeakerAccess") public static class InsertManager {
+  @SuppressWarnings("WeakerAccess") static class InsertManager {
     @NonNull private final Insert_trigger insertTrigger;
 
     InsertManager(@NonNull SQLiteOpenHelper openHelper) {
@@ -150,7 +174,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
     }
   }
 
-  @SuppressWarnings("WeakerAccess") public static class UpdateAvailabeManager {
+  @SuppressWarnings("WeakerAccess") static class UpdateAvailabeManager {
     @NonNull private final Update_available updateAvailable;
 
     UpdateAvailabeManager(@NonNull SQLiteOpenHelper openHelper) {

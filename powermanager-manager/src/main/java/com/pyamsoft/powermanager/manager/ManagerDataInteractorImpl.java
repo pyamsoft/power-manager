@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.model.states.StateObserver;
+import com.pyamsoft.powermanager.model.StateObserver;
 import javax.inject.Inject;
 
 class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {

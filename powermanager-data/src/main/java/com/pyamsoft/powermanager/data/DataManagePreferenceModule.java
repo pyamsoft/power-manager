@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
-import com.pyamsoft.powermanager.model.states.PermissionObserver;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;

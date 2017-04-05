@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.trigger.bus;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.model.sql.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 
 @AutoValue public abstract class TriggerCreateEvent {
 

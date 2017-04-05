@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.StateModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;

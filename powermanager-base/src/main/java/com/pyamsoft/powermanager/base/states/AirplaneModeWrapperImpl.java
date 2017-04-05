@@ -22,8 +22,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
-import com.pyamsoft.powermanager.model.Logger;
-import com.pyamsoft.powermanager.model.states.States;
+import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
 class AirplaneModeWrapperImpl implements DeviceFunctionWrapper {

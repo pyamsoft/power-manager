@@ -14,10 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model.types;
+package com.pyamsoft.powermanager.base.logger;
 
-public enum PreferenceType {
-  DELAY,
-  PERIODIC_ENABLE,
-  PERIODIC_DISABLE
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+public interface Logger {
+
+  void d(@NonNull String fmt, @Nullable Object... args);
+
+  void i(@NonNull String fmt, @Nullable Object... args);
+
+  void w(@NonNull String fmt, @Nullable Object... args);
+
+  void e(@NonNull String fmt, @Nullable Object... args);
 }

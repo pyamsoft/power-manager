@@ -17,10 +17,8 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
-import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;

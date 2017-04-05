@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.sync;
 
-import com.pyamsoft.powermanager.model.states.StateModifier;
+import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
 import dagger.Module;
 import dagger.Provides;

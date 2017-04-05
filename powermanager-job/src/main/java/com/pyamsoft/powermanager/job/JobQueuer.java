@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.JobQueuerEntry;
 
 public interface JobQueuer {
 
