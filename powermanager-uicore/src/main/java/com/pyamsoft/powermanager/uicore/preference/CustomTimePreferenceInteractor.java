@@ -30,7 +30,10 @@ public abstract class CustomTimePreferenceInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @CheckResult public Observable<Long> saveTime(long time, long delay) {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Long> saveTime(long time, long delay) {
     return Observable.defer(() -> {
       saveTimeToPreferences(preferences, time);
       return getTime();

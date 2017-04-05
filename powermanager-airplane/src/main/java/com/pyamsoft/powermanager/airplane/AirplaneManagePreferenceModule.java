@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.airplane;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.states.PermissionObserver;
-import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
@@ -38,7 +37,7 @@ import javax.inject.Named;
   }
 
   @Provides @Named("airplane_manage_pref_interactor")
-  ManagePreferenceInteractor provideAirplaneManagePreferenceInteractor(
+  PermissionPreferenceInteractor provideAirplaneManagePreferenceInteractor(
       @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
       @NonNull PowerManagerPreferences preferences) {
     return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);

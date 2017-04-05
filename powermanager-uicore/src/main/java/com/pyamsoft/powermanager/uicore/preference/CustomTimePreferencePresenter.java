@@ -47,21 +47,33 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
     customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
   }
 
-  public void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
+  /**
+   * public
+   */
+  void updateCustomTime(@NonNull String time, @NonNull OnCustomTimeUpdateCallback callback) {
     updateCustomTime(time, true, callback);
   }
 
-  public void updateCustomTime(@NonNull String time, long delay,
+  /**
+   * public
+   */
+  void updateCustomTime(@NonNull String time, long delay,
       @NonNull OnCustomTimeUpdateCallback callback) {
     updateCustomTime(time, delay, true, callback);
   }
 
-  public void updateCustomTime(@NonNull String time, boolean updateView,
+  /**
+   * public
+   */
+  private void updateCustomTime(@NonNull String time, boolean updateView,
       @NonNull OnCustomTimeUpdateCallback callback) {
     updateCustomTime(time, 600L, updateView, callback);
   }
 
-  public void updateCustomTime(@NonNull String time, long delay, boolean updateView,
+  /**
+   * public
+   */
+  void updateCustomTime(@NonNull String time, long delay, boolean updateView,
       @NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
       long longTime;
@@ -96,7 +108,10 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
     }
   }
 
-  public void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
+  /**
+   * public
+   */
+  void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
       customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
       customTimeDisposable = interactor.getTime()
