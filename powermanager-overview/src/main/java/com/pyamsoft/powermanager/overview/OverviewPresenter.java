@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.model.states.States;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
@@ -30,16 +29,13 @@ import timber.log.Timber;
 
 class OverviewPresenter extends SchedulerPresenter {
 
-  @NonNull private final PowerManagerPreferences preferences;
   @NonNull private final OverviewInteractor interactor;
   @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject OverviewPresenter(@NonNull OverviewInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler,
-      @NonNull PowerManagerPreferences powerManagerPreferences) {
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
-    this.preferences = powerManagerPreferences;
   }
 
   @Override protected void onStop() {
@@ -64,34 +60,38 @@ class OverviewPresenter extends SchedulerPresenter {
   }
 
   public void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(preferences.isWifiManaged() ? States.ENABLED : States.DISABLED);
+    callback.onObserverRetrieved(
+        interactor.isWifiManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(preferences.isDataManaged() ? States.ENABLED : States.DISABLED);
+    callback.onObserverRetrieved(
+        interactor.isDataManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        preferences.isBluetoothManaged() ? States.ENABLED : States.DISABLED);
+        interactor.isBluetoothManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(preferences.isSyncManaged() ? States.ENABLED : States.DISABLED);
+    callback.onObserverRetrieved(
+        interactor.isSyncManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        preferences.isAirplaneManaged() ? States.ENABLED : States.DISABLED);
+        interactor.isAirplaneManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(preferences.isDozeManaged() ? States.ENABLED : States.DISABLED);
+    callback.onObserverRetrieved(
+        interactor.isDozeManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   public void getWearObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        preferences.isWearableManaged() ? States.ENABLED : States.DISABLED);
+        interactor.isWearableManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   interface OnboardingCallback {

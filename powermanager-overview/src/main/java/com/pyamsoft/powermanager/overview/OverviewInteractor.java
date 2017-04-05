@@ -40,4 +40,32 @@ import javax.inject.Singleton;
   public void setShownOnboarding() {
     preferences.setOverviewOnboardingShown();
   }
+
+  @CheckResult @NonNull public Observable<Boolean> isWifiManaged() {
+    return Observable.fromCallable(preferences::isWifiManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isDataManaged() {
+    return Observable.fromCallable(preferences::isDataManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isBluetoothManaged() {
+    return Observable.fromCallable(preferences::isBluetoothManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isSyncManaged() {
+    return Observable.fromCallable(preferences::isSyncManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isAirplaneManaged() {
+    return Observable.fromCallable(preferences::isAirplaneManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isDozeManaged() {
+    return Observable.fromCallable(preferences::isDozeManaged);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> isWearableManaged() {
+    return Observable.fromCallable(preferences::isWearableManaged);
+  }
 }
