@@ -68,7 +68,7 @@ class TriggerPresenter extends SchedulerPresenter {
             throwable -> Timber.e(throwable, "onError create bus"));
 
     deleteBus = DisposableHelper.dispose(deleteBus);
-    createBus = EventBus.get()
+    deleteBus = EventBus.get()
         .listen(TriggerDeleteEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
