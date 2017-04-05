@@ -33,14 +33,23 @@ import javax.inject.Singleton;
     cachedPowerTriggerEntryObservable = null;
   }
 
-  public void clearCache() {
+  /**
+   * public
+   */
+  void clearCache() {
     cachedPowerTriggerEntryObservable = null;
   }
 
+  /**
+   * public
+   */
   @CallSuper @Nullable Single<List<PowerTriggerEntry>> retrieve() {
     return cachedPowerTriggerEntryObservable;
   }
 
+  /**
+   * public
+   */
   void cache(@NonNull Single<List<PowerTriggerEntry>> cache) {
     cachedPowerTriggerEntryObservable = cache;
   }

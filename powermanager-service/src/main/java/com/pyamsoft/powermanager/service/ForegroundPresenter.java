@@ -38,8 +38,8 @@ class ForegroundPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  public void create() {
-    interactor.create();
+  public void queueRepeatingTriggerJob() {
+    interactor.queueRepeatingTriggerJob();
   }
 
   @Override protected void onStop() {
@@ -64,13 +64,13 @@ class ForegroundPresenter extends SchedulerPresenter {
   }
 
   /**
-   * Trigger interval is only read on interactor.create()
+   * Trigger interval is only read on interactor.queueRepeatingTriggerJob()
    *
    * Restart it by destroying and then re-creating the interactor
    */
   public void restartTriggerAlarm() {
     interactor.destroy();
-    interactor.create();
+    interactor.queueRepeatingTriggerJob();
   }
 
   public void setForegroundState(boolean enable) {

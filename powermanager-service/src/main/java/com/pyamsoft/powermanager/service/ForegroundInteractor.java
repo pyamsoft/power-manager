@@ -70,7 +70,7 @@ import timber.log.Timber;
         .setContentIntent(pendingIntent);
   }
 
-  public void create() {
+  public void queueRepeatingTriggerJob() {
     final long delayTime = getPreferences().getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
     jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);

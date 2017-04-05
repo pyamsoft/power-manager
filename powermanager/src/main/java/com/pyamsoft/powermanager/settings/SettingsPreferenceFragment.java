@@ -63,8 +63,8 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
-      presenter.requestClearDatabase(type -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
-          ConfirmationDialog.newInstance(type), "confirm_dialog"));
+      AppUtil.guaranteeSingleDialogFragment(getActivity(),
+          ConfirmationDialog.newInstance(ClearCodes.DATABASE), "confirm_dialog");
       return true;
     });
 
@@ -85,23 +85,21 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onStart() {
     super.onStart();
-    presenter.registerOnBus(type -> presenter.processClearRequest(type,
-        new SettingsPreferencePresenter.ClearRequestCallback() {
-          @Override public void onClearAll() {
-            Timber.d("Everything is cleared, kill self");
-            getActivity().getApplicationContext()
-                .stopService(
-                    new Intent(getContext().getApplicationContext(), ForegroundService.class));
-            final ActivityManager activityManager =
-                (ActivityManager) getContext().getApplicationContext()
-                    .getSystemService(Context.ACTIVITY_SERVICE);
-            activityManager.clearApplicationUserData();
-          }
+    presenter.registerOnBus(new SettingsPreferencePresenter.BusCallback() {
+      @Override public void onClearAll() {
+        Timber.d("Everything is cleared, kill self");
+        getActivity().getApplicationContext()
+            .stopService(new Intent(getContext().getApplicationContext(), ForegroundService.class));
+        final ActivityManager activityManager =
+            (ActivityManager) getContext().getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        activityManager.clearApplicationUserData();
+      }
 
-          @Override public void onClearDatabase() {
-            Timber.d("Cleared the trigger database");
-          }
-        }));
+      @Override public void onClearDatabase() {
+        Timber.d("Cleared the trigger database");
+      }
+    });
     checkRoot(true);
   }
 
@@ -181,8 +179,8 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
   }
 
   @Override protected boolean onClearAllPreferenceClicked() {
-    presenter.requestClearAll(type -> AppUtil.guaranteeSingleDialogFragment(getActivity(),
-        ConfirmationDialog.newInstance(type), "confirm_dialog"));
+    AppUtil.guaranteeSingleDialogFragment(getActivity(),
+        ConfirmationDialog.newInstance(ClearCodes.ALL), "confirm_dialog");
     return true;
   }
 }

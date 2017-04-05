@@ -14,17 +14,9 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.settings;
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+enum ClearCodes {
 
-@AutoValue public abstract class ConfirmEvent {
-
-  @CheckResult @NonNull public static ConfirmEvent create(int type) {
-    return new AutoValue_ConfirmEvent(type);
-  }
-
-  @CheckResult public abstract int type();
+  DATABASE, ALL
 }

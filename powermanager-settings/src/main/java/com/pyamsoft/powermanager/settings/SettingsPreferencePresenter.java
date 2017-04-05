@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
@@ -31,8 +30,6 @@ import timber.log.Timber;
 
 class SettingsPreferencePresenter extends SchedulerPresenter {
 
-  private static final int CONFIRM_DATABASE = 0;
-  private static final int CONFIRM_ALL = 1;
   @NonNull private final SettingsPreferenceInteractor interactor;
   @NonNull private Disposable confirmedDisposable = Disposables.empty();
   @NonNull private Disposable rootDisposable = Disposables.empty();
@@ -53,60 +50,34 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
     bus = DisposableHelper.dispose(bus);
   }
 
-  public void registerOnBus(@NonNull BusCallback callback) {
+  /**
+   * public
+   *
+   * Gets confirm events from ConfirmationDialog
+   */
+  void registerOnBus(@NonNull BusCallback callback) {
     BusCallback busCallback = Checker.checkNonNull(callback);
     bus = DisposableHelper.dispose(bus);
     bus = EventBus.get()
         .listen(ConfirmEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(confirmEvent -> busCallback.onProcessClearRequest(confirmEvent.type()),
-            throwable -> Timber.e(throwable, "confirm bus error"));
+        .subscribe(confirmEvent -> {
+          switch (confirmEvent.type()) {
+            case DATABASE:
+              clearDatabase(busCallback);
+              break;
+            case ALL:
+              clearAll(busCallback);
+              break;
+            default:
+              throw new IllegalStateException(
+                  "Received invalid confirmation event type: " + confirmEvent.type());
+          }
+        }, throwable -> Timber.e(throwable, "confirm bus error"));
   }
 
-  public void checkRootEnabled(@NonNull RootCallback callback) {
-    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
-    bindCheckRootDisposable = interactor.isRootEnabled()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(rootEnabled -> checkRoot(false, rootEnabled, callback),
-            throwable -> Timber.e(throwable, "onError bindCheckRoot"));
-  }
-
-  public void requestClearDatabase(@NonNull ConfirmDialogCallback callback) {
-    callback.showConfirmDialog(CONFIRM_DATABASE);
-  }
-
-  public void requestClearAll(@NonNull ConfirmDialogCallback callback) {
-    callback.showConfirmDialog(CONFIRM_ALL);
-  }
-
-  public void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
-    rootDisposable = DisposableHelper.dispose(rootDisposable);
-    rootDisposable = interactor.checkRoot(rootEnable)
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(hasRoot -> callback.onRootCallback(causedByUser, hasRoot, rootEnable),
-            throwable -> {
-              Timber.e(throwable, "onError checking root");
-              callback.onRootCallback(causedByUser, false, rootEnable);
-            });
-  }
-
-  public void processClearRequest(int type, @NonNull ClearRequestCallback callback) {
-    switch (type) {
-      case CONFIRM_DATABASE:
-        clearDatabase(callback);
-        break;
-      case CONFIRM_ALL:
-        clearAll(callback);
-        break;
-      default:
-        throw new IllegalStateException("Received invalid confirmation event type: " + type);
-    }
-  }
-
-  private void clearAll(ClearRequestCallback callback) {
+  @SuppressWarnings("WeakerAccess") void clearAll(ClearRequestCallback callback) {
     confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
     confirmedDisposable = interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
@@ -114,7 +85,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
         .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError"));
   }
 
-  private void clearDatabase(ClearRequestCallback callback) {
+  @SuppressWarnings("WeakerAccess") void clearDatabase(ClearRequestCallback callback) {
     confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
     confirmedDisposable = interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
@@ -123,9 +94,38 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
             throwable -> Timber.e(throwable, "onError"));
   }
 
-  public interface BusCallback {
+  /**
+   * public
+   */
+  void checkRootEnabled(@NonNull RootCallback callback) {
+    callback.onBegin();
+    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
+    bindCheckRootDisposable = interactor.isRootEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(rootEnabled -> checkRoot(false, rootEnabled, callback),
+            throwable -> Timber.e(throwable, "onError bindCheckRoot"));
+  }
 
-    void onProcessClearRequest(int type);
+  /**
+   * public
+   */
+  void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
+    callback.onBegin();
+    rootDisposable = DisposableHelper.dispose(rootDisposable);
+    rootDisposable = interactor.checkRoot(rootEnable)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(hasRoot -> callback.onRootCallback(causedByUser, hasRoot, rootEnable),
+            throwable -> {
+              Timber.e(throwable, "onError checking root");
+              callback.onRootCallback(causedByUser, false, rootEnable);
+            });
+  }
+
+  interface BusCallback extends ClearRequestCallback {
   }
 
   interface RootCallback {
@@ -135,11 +135,6 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
     void onRootCallback(boolean causedByUser, boolean hasPermission, boolean rootEnable);
 
     void onComplete();
-  }
-
-  interface ConfirmDialogCallback {
-
-    void showConfirmDialog(int type);
   }
 
   interface ClearRequestCallback {

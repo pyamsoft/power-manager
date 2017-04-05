@@ -74,7 +74,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
           job = new DozeJob();
           break;
         default:
-          throw new IllegalArgumentException("Cannot create BaseJob for tag: " + tag);
+          throw new IllegalArgumentException("Cannot queueRepeatingTriggerJob BaseJob for tag: " + tag);
       }
       return job;
     }, tag -> {
@@ -102,7 +102,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
           job = new TriggerJob();
           break;
         default:
-          throw new IllegalArgumentException("Cannot create Managed Job for tag: " + tag);
+          throw new IllegalArgumentException("Cannot queueRepeatingTriggerJob Managed Job for tag: " + tag);
       }
       return job;
     });
