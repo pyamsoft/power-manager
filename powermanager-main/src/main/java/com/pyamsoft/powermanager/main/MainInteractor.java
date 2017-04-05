@@ -19,16 +19,21 @@ package com.pyamsoft.powermanager.main;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.model.states.PermissionObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 @Singleton class MainInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
 
-  @Inject MainInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject MainInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
     this.preferences = preferences;
+    this.rootPermissionObserver = rootPermissionObserver;
   }
 
   public void missingRootPermission() {
@@ -37,5 +42,9 @@ import javax.inject.Singleton;
 
   @NonNull @CheckResult public Observable<Boolean> isStartWhenOpen() {
     return Observable.fromCallable(preferences::isStartWhenOpen);
+  }
+
+  @CheckResult @NonNull public Observable<Boolean> hasRootPermission() {
+    return Observable.fromCallable(rootPermissionObserver::hasPermission);
   }
 }

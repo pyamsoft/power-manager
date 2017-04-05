@@ -31,16 +31,13 @@ import timber.log.Timber;
 class MainPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
   @NonNull private Disposable subscription = Disposables.empty();
   @NonNull private Disposable rootDisposable = Disposables.empty();
 
   @Inject MainPresenter(@NonNull MainInteractor interactor,
-      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler,
-      @NonNull @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
+      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
-    this.rootPermissionObserver = rootPermissionObserver;
   }
 
   @Override protected void onStop() {
@@ -68,7 +65,7 @@ class MainPresenter extends SchedulerPresenter {
 
   private void checkForRoot(@NonNull StartupCallback callback) {
     rootDisposable = DisposableHelper.dispose(rootDisposable);
-    rootDisposable = Observable.fromCallable(rootPermissionObserver::hasPermission)
+    rootDisposable = interactor.hasRootPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {
