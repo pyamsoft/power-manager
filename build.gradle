@@ -27,7 +27,6 @@ buildscript {
 
   ext {
 
-    devSdk = 21
     minSdk = 19
     maxSdk = 25
     buildTools = "25.0.2"
