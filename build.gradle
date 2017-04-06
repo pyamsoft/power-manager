@@ -26,7 +26,6 @@ buildscript {
   }
 
   ext {
-
     minSdk = 19
     maxSdk = 25
     buildTools = "25.0.2"
@@ -36,17 +35,16 @@ buildscript {
     supportLib = "25.3.1"
     firebase = "10.2.1"
     leakCanary = "1.5"
-    pydroid = "8.4.0"
+    pydroid = "8.4.1"
     autoValue = "1.4"
     sqlbrite = "1.1.1"
-    sqldelight = "0.6.1"
     dagger = "2.10"
     libsuperuser = "1.0.0.201608240809"
     androidJob = "1.1.8"
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.android.tools.build:gradle:2.3.1'
 
     // Retro lambda
     classpath 'me.tatarka:gradle-retrolambda:3.6.0'
@@ -64,7 +62,7 @@ buildscript {
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
 
     // SQLDelight
-    classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight"
+    classpath "com.squareup.sqldelight:gradle-plugin:0.6.1"
   }
 }
 
@@ -77,7 +75,8 @@ allprojects {
 
   gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
-      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' << '-Xep:MissingOverride:OFF'
+      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' \
+       << '-Xep:MissingOverride:OFF' << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
   }
 }
