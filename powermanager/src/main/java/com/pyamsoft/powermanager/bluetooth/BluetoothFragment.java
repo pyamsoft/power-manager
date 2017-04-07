@@ -34,13 +34,6 @@ public class BluetoothFragment extends OverviewPagerFragment {
   @Inject @Named("obs_bluetooth_state") StateObserver observer;
   @Inject @Named("bluetooth_overview") OverviewPagerPresenter presenter;
 
-  @CheckResult @NonNull
-  public static BluetoothFragment newInstance(@NonNull View from, @NonNull View container) {
-    final BluetoothFragment fragment = new BluetoothFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
-
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;
   }

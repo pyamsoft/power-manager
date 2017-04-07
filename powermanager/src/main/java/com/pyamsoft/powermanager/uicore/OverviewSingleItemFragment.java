@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerSingleBinding;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 
 public abstract class OverviewSingleItemFragment extends AppBarColoringFragment {
 
@@ -49,7 +48,6 @@ public abstract class OverviewSingleItemFragment extends AppBarColoringFragment 
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     addPreferenceFragment();
   }
 

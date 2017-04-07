@@ -163,39 +163,34 @@ public class OverviewFragment extends ActionBarFragment {
     adapter.withSelectable(true);
     adapter.withOnClickListener((view1, iAdapter, item, i) -> {
       final Fragment fragment;
-      final View rootView = getView();
-      if (rootView == null) {
-        throw new RuntimeException("Rootview is NULL");
-      }
-
       final String title = item.getModel().title();
       switch (title) {
         case WifiFragment.TAG:
-          fragment = WifiFragment.newInstance(view1, rootView);
+          fragment = new WifiFragment();
           break;
         case DataFragment.TAG:
-          fragment = DataFragment.newInstance(view1, rootView);
+          fragment = new DataFragment();
           break;
         case BluetoothFragment.TAG:
-          fragment = BluetoothFragment.newInstance(view1, rootView);
+          fragment = new BluetoothFragment();
           break;
         case SyncFragment.TAG:
-          fragment = SyncFragment.newInstance(view1, rootView);
+          fragment = new SyncFragment();
           break;
         case PowerTriggerFragment.TAG:
-          fragment = PowerTriggerFragment.newInstance(view1, rootView);
+          fragment = new PowerTriggerFragment();
           break;
         case DozeFragment.TAG:
-          fragment = DozeFragment.newInstance(view1, rootView);
+          fragment = new DozeFragment();
           break;
         case WearFragment.TAG:
-          fragment = WearFragment.newInstance(view1, rootView);
+          fragment = new WearFragment();
           break;
         case SettingsPreferenceFragment.TAG:
-          fragment = SettingsPreferenceFragment.newInstance(view1, rootView);
+          fragment = new SettingsPreferenceFragment();
           break;
         case AirplaneFragment.TAG:
-          fragment = AirplaneFragment.newInstance(view1, rootView);
+          fragment = new AirplaneFragment();
           break;
         default:
           throw new IllegalStateException("Invalid tag: " + title);

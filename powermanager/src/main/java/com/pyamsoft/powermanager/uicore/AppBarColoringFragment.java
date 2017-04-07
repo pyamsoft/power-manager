@@ -27,16 +27,10 @@ import android.view.View;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 
 abstract class AppBarColoringFragment extends ActionBarFragment {
 
   private static final long ANIMATION_TIME = 400L;
-
-  @CheckResult @NonNull
-  protected static Bundle bundleArguments(@NonNull View from, @NonNull View container) {
-    return CircularRevealFragmentUtil.bundleArguments(from, container, ANIMATION_TIME);
-  }
 
   @CallSuper @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);

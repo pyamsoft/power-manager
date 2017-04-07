@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.doze;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -33,13 +31,6 @@ public class DozeFragment extends OverviewPagerFragment {
   @NonNull public static final String TAG = "Doze";
   @Inject @Named("obs_doze_state") StateObserver observer;
   @Inject @Named("doze_overview") OverviewPagerPresenter presenter;
-
-  @CheckResult @NonNull
-  public static DozeFragment newInstance(@NonNull View from, @NonNull View container) {
-    final DozeFragment fragment = new DozeFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;

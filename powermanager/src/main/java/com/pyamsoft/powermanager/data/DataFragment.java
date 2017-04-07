@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.data;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -33,13 +31,6 @@ public class DataFragment extends OverviewPagerFragment {
   @NonNull public static final String TAG = "Data";
   @Inject @Named("obs_data_state") StateObserver observer;
   @Inject @Named("data_overview") OverviewPagerPresenter presenter;
-
-  @CheckResult @NonNull
-  public static DataFragment newInstance(@NonNull View from, @NonNull View container) {
-    final DataFragment fragment = new DataFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;

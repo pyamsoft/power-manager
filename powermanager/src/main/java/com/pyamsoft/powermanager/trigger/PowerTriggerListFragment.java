@@ -34,18 +34,17 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMap;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class PowerTriggerListFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
-  @NonNull private final AsyncMap drawableMap = new AsyncMap();
+  @NonNull private final DrawableMap drawableMap = new DrawableMap();
 
   @SuppressWarnings("WeakerAccess") @Inject TriggerPresenter presenter;
 
@@ -84,7 +83,7 @@ public class PowerTriggerListFragment extends ActionBarFragment {
       adapter.withSelectable(true);
       adapter.withSelectOnLongClick(true);
       adapter.withOnLongClickListener((view, iAdapter, item, i) -> {
-        AppUtil.guaranteeSingleDialogFragment(getActivity(),
+        DialogUtil.guaranteeSingleDialogFragment(getActivity(),
             DeleteTriggerDialog.newInstance(item.getModel()), "delete_trigger");
         return true;
       });
@@ -175,14 +174,14 @@ public class PowerTriggerListFragment extends ActionBarFragment {
   }
 
   private void setupFab() {
-    final AsyncMapEntry subscription = AsyncDrawable.load(R.drawable.ic_add_24dp)
+    final DrawableLoader.Loaded subscription = DrawableLoader.load(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
         .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);
 
     binding.powerTriggerFab.setOnClickListener(v -> {
       Timber.d("Show new trigger dialog");
-      AppUtil.guaranteeSingleDialogFragment(getActivity(), new CreateTriggerDialog(),
+      DialogUtil.guaranteeSingleDialogFragment(getActivity(), new CreateTriggerDialog(),
           "create_trigger");
     });
   }

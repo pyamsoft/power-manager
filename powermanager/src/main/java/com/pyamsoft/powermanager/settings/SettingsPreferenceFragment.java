@@ -20,10 +20,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.View;
@@ -34,8 +32,8 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent;
 import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
-import com.pyamsoft.pydroid.util.AppUtil;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
+import com.pyamsoft.pydroid.ui.helper.ProgressOverlayHelper;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -46,12 +44,6 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
   SwitchPreferenceCompat useRoot;
   @NonNull ProgressOverlay overlay = ProgressOverlay.empty();
 
-  @CheckResult @NonNull public static Fragment newInstance(View view, View rootView) {
-    Fragment fragment = new SettingsPreferenceFragment();
-    fragment.setArguments(bundleArguments(view, rootView));
-    return fragment;
-  }
-
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     Injector.get().provideComponent().plusSettingsPreferenceComponent().inject(this);
@@ -59,12 +51,11 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
 
     final Preference clearDb = findPreference(getString(R.string.clear_db_key));
     clearDb.setOnPreferenceClickListener(preference -> {
       Timber.d("Clear DB onClick");
-      AppUtil.guaranteeSingleDialogFragment(getActivity(),
+      DialogUtil.guaranteeSingleDialogFragment(getActivity(),
           ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "confirm_dialog");
       return true;
     });
@@ -109,8 +100,8 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
         new SettingsPreferencePresenter.RootCallback() {
 
           @Override public void onBegin() {
-            overlay = ProgressOverlay.Helper.dispose(overlay);
-            overlay = new ProgressOverlay.Builder().build(getActivity());
+            overlay = ProgressOverlayHelper.dispose(overlay);
+            overlay = ProgressOverlay.builder().build(getActivity());
           }
 
           @Override public void onRootCallback(boolean causedByUser, boolean hasPermission,
@@ -128,7 +119,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
           }
 
           @Override public void onComplete() {
-            overlay = ProgressOverlay.Helper.dispose(overlay);
+            overlay = ProgressOverlayHelper.dispose(overlay);
           }
         };
     if (enabled) {
@@ -140,7 +131,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onDestroyView() {
     super.onDestroyView();
-    overlay = ProgressOverlay.Helper.dispose(overlay);
+    overlay = ProgressOverlayHelper.dispose(overlay);
   }
 
   @Override public void onStop() {
@@ -180,7 +171,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
   }
 
   @Override protected boolean onClearAllPreferenceClicked() {
-    AppUtil.guaranteeSingleDialogFragment(getActivity(),
+    DialogUtil.guaranteeSingleDialogFragment(getActivity(),
         ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "confirm_dialog");
     return true;
   }

@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.airplane;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -33,13 +31,6 @@ public class AirplaneFragment extends OverviewPagerFragment {
   @NonNull public static final String TAG = "Airplane Mode";
   @Inject @Named("obs_airplane_state") StateObserver observer;
   @Inject @Named("airplane_overview") OverviewPagerPresenter presenter;
-
-  @CheckResult @NonNull
-  public static AirplaneFragment newInstance(@NonNull View from, @NonNull View container) {
-    final AirplaneFragment fragment = new AirplaneFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;

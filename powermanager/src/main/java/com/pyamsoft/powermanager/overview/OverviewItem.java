@@ -29,18 +29,15 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.model.States;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMap;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
-import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
+import com.pyamsoft.pydroid.ui.loader.DrawableMap;
 import java.util.List;
 
 public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
   @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-  @NonNull private AsyncMapEntry checkTask = AsyncMap.emptyEntry();
-  @NonNull private AsyncMapEntry titleTask = AsyncMap.emptyEntry();
+  @NonNull private DrawableMap drawableMap = new DrawableMap();
 
   OverviewItem(@NonNull String title, @DrawableRes int image, @ColorRes int background,
       @NonNull States states) {
@@ -63,8 +60,7 @@ public class OverviewItem
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    checkTask = AsyncMapHelper.unsubscribe(checkTask);
-    titleTask = AsyncMapHelper.unsubscribe(titleTask);
+    drawableMap.clear();
     holder.binding.adapterItemOverviewImage.setImageDrawable(null);
     holder.binding.adapterItemOverviewTitle.setText(null);
   }
@@ -75,10 +71,10 @@ public class OverviewItem
         ContextCompat.getColor(holder.itemView.getContext(), getModel().background()));
     holder.binding.adapterItemOverviewTitle.setText(getModel().title());
 
-    titleTask = AsyncMapHelper.unsubscribe(titleTask);
-    titleTask = AsyncDrawable.load(getModel().image())
+    DrawableLoader.Loaded titleTask = DrawableLoader.load(getModel().image())
         .tint(android.R.color.white)
         .into(holder.binding.adapterItemOverviewImage);
+    drawableMap.put("title", titleTask);
 
     @DrawableRes final int icon;
     switch (getModel().state()) {
@@ -94,10 +90,10 @@ public class OverviewItem
     if (icon == 0) {
       holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
     } else {
-      checkTask = AsyncMapHelper.unsubscribe(checkTask);
-      checkTask = AsyncDrawable.load(icon)
+      DrawableLoader.Loaded checkTask = DrawableLoader.load(icon)
           .tint(android.R.color.white)
           .into(holder.binding.adapterItemOverviewCheck);
+      drawableMap.put("check", checkTask);
     }
   }
 

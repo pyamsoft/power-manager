@@ -33,6 +33,7 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
 import com.pyamsoft.pydroid.ui.helper.ProgressOverlay;
+import com.pyamsoft.pydroid.ui.helper.ProgressOverlayHelper;
 import timber.log.Timber;
 
 public abstract class ManagePreferenceFragment extends FormatterPreferenceFragment {
@@ -204,8 +205,8 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
   final void checkManagePermission(boolean showMessage) {
     presenter.checkManagePermission(new ManagePreferencePresenter.ManagePermissionCallback() {
       @Override public void onBegin() {
-        overlay = ProgressOverlay.Helper.dispose(overlay);
-        overlay = new ProgressOverlay.Builder().build(getActivity());
+        overlay = ProgressOverlayHelper.dispose(overlay);
+        overlay = ProgressOverlay.builder().build(getActivity());
       }
 
       @Override public void onManagePermissionCallback(boolean hasPermission) {
@@ -219,7 +220,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
       }
 
       @Override public void onComplete() {
-        overlay = ProgressOverlay.Helper.dispose(overlay);
+        overlay = ProgressOverlayHelper.dispose(overlay);
       }
     });
   }
@@ -237,7 +238,7 @@ public abstract class ManagePreferenceFragment extends FormatterPreferenceFragme
 
   @CallSuper @Override public void onDestroyView() {
     super.onDestroyView();
-    overlay = ProgressOverlay.Helper.dispose(overlay);
+    overlay = ProgressOverlayHelper.dispose(overlay);
     if (customTimePreference != null) {
       customTimePreference.setOnPreferenceChangeListener(null);
       customTimePreference.setOnPreferenceClickListener(null);

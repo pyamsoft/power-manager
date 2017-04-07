@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.trigger;
 
 import android.os.Bundle;
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,13 +28,6 @@ import com.pyamsoft.powermanager.uicore.OverviewSingleItemFragment;
 public class PowerTriggerFragment extends OverviewSingleItemFragment {
 
   @NonNull public static final String TAG = "Power Triggers";
-
-  @CheckResult @NonNull
-  public static PowerTriggerFragment newInstance(@NonNull View from, @NonNull View container) {
-    final PowerTriggerFragment fragment = new PowerTriggerFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected Fragment getPreferenceFragment() {
     return new PowerTriggerListFragment();

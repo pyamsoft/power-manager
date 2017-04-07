@@ -56,7 +56,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.ads.OnlineAdSource;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -325,7 +325,7 @@ public class MainActivity extends TamperActivity {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     if (fragmentManager.findFragmentByTag(tag) == null) {
       Timber.d("Show logger dialog");
-      AppUtil.guaranteeSingleDialogFragment(this, new LoggerDialog(), tag);
+      DialogUtil.guaranteeSingleDialogFragment(this, new LoggerDialog(), tag);
       return true;
     } else {
       Timber.w("Logger dialog is already shown");

@@ -30,12 +30,9 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.StateObserver;
-import com.pyamsoft.pydroid.drawable.AsyncDrawable;
-import com.pyamsoft.pydroid.drawable.AsyncMap;
-import com.pyamsoft.pydroid.drawable.AsyncMapEntry;
-import com.pyamsoft.pydroid.helper.AsyncMapHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableHelper;
+import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
 import com.pyamsoft.pydroid.util.AnimUtil;
-import com.pyamsoft.pydroid.util.CircularRevealFragmentUtil;
 import timber.log.Timber;
 
 public abstract class OverviewPagerFragment extends AppBarColoringFragment {
@@ -47,7 +44,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
   @SuppressWarnings("WeakerAccess") OverviewPagerPresenter presenter;
   private FragmentPreferenceContainerPagerBinding binding;
   private TabLayout tabLayout;
-  @NonNull private AsyncMapEntry subscription = AsyncMap.emptyEntry();
+  @NonNull private DrawableLoader.Loaded subscription = DrawableLoader.empty();
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -68,13 +65,12 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
     setActionBarUpEnabled(false);
     tabLayout.setVisibility(View.GONE);
     tabLayout.setupWithViewPager(null);
-    subscription = AsyncMapHelper.unsubscribe(subscription);
+    subscription = DrawableHelper.unload(subscription);
     binding.unbind();
   }
 
   @Override public final void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    CircularRevealFragmentUtil.runCircularRevealOnViewCreated(view, getArguments());
     addPreferenceFragments();
     addTabLayoutToAppBar();
     selectCurrentTab(savedInstanceState);
@@ -178,8 +174,8 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
       Timber.w("Icon is 0, hiding FAB");
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
-      subscription = AsyncMapHelper.unsubscribe(subscription);
-      subscription = AsyncDrawable.load(fabIcon)
+      subscription = DrawableHelper.unload(subscription);
+      subscription = DrawableLoader.load(fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
     }

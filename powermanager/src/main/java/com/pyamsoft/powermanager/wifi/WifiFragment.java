@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.wifi;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -33,13 +31,6 @@ public class WifiFragment extends OverviewPagerFragment {
   @NonNull public static final String TAG = "Wifi";
   @Inject @Named("obs_wifi_state") StateObserver observer;
   @Inject @Named("wifi_overview") OverviewPagerPresenter presenter;
-
-  @CheckResult @NonNull
-  public static WifiFragment newInstance(@NonNull View from, @NonNull View container) {
-    final WifiFragment fragment = new WifiFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;

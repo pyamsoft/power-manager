@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.sync;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -33,13 +31,6 @@ public class SyncFragment extends OverviewPagerFragment {
   @NonNull public static final String TAG = "Sync";
   @Inject @Named("obs_sync_state") StateObserver observer;
   @Inject @Named("sync_overview") OverviewPagerPresenter presenter;
-
-  @CheckResult @NonNull
-  public static SyncFragment newInstance(@NonNull View from, @NonNull View container) {
-    final SyncFragment fragment = new SyncFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {
     return presenter;

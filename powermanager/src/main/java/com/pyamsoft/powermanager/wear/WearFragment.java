@@ -16,23 +16,14 @@
 
 package com.pyamsoft.powermanager.wear;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.OverviewSingleItemFragment;
 
 public class WearFragment extends OverviewSingleItemFragment {
 
   @NonNull public static final String TAG = "Android Wear";
-
-  @CheckResult @NonNull
-  public static WearFragment newInstance(@NonNull View from, @NonNull View container) {
-    final WearFragment fragment = new WearFragment();
-    fragment.setArguments(bundleArguments(from, container));
-    return fragment;
-  }
 
   @NonNull @Override protected Fragment getPreferenceFragment() {
     return new WearManagePreferenceFragment();

@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.pydroid.util.AppUtil;
+import com.pyamsoft.pydroid.util.DialogUtil;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -78,7 +78,7 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
 
   @Override protected void onShowManagePermissionNeededMessage() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      AppUtil.guaranteeSingleDialogFragment(getActivity(), new DozeExplanationDialog(),
+      DialogUtil.guaranteeSingleDialogFragment(getActivity(), new DozeExplanationDialog(),
           "doze_explain");
     } else {
       Toast.makeText(getContext(), "Doze is only available on Android M (23) and higher",
