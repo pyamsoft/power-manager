@@ -44,12 +44,17 @@ import timber.log.Timber;
     this.triggerInteractor = triggerInteractor;
   }
 
-
-  @CheckResult @NonNull public Observable<Boolean> isRootEnabled() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isRootEnabled() {
     return Observable.fromCallable(preferences::isRootEnabled);
   }
 
-  @NonNull @CheckResult public Observable<Boolean> checkRoot(boolean rootEnable) {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> checkRoot(boolean rootEnable) {
     return Observable.fromCallable(() -> {
       // If we are enabling root, check SU available
       // If we are not enabling root, then everything is ok
@@ -57,7 +62,10 @@ import timber.log.Timber;
     });
   }
 
-  @NonNull @CheckResult public Flowable<Boolean> clearDatabase() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Flowable<Boolean> clearDatabase() {
     return powerTriggerDB.deleteAll()
         .flatMap(result -> powerTriggerDB.deleteDatabase())
         .map(whocares -> {
@@ -66,7 +74,10 @@ import timber.log.Timber;
         });
   }
 
-  @NonNull @CheckResult public Flowable<Boolean> clearAll() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Flowable<Boolean> clearAll() {
     return clearDatabase().map(aBoolean -> {
       Timber.d("Clear all preferences");
       preferences.clearAll();

@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class BluetoothDelayPreferenceInteractor extends CustomTimePreferenceInteractor {
+class BluetoothDelayPreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
 
   @Inject BluetoothDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class DozeEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
+class DozeEnablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
 
   @Inject DozeEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

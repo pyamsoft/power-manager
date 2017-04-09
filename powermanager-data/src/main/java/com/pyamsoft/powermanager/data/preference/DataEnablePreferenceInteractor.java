@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class DataEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
+class DataEnablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
 
   @Inject DataEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

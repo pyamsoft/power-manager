@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("wifi_custom_delay_interactor")
   CustomTimePreferenceInteractor provideWifiCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull WifiPreferences preferences) {
     return new WifiDelayPreferenceInteractor(preferences);
   }
 
@@ -49,7 +49,7 @@ import javax.inject.Named;
 
   @Provides @Named("wifi_custom_enable_interactor")
   CustomTimePreferenceInteractor provideWifiCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull WifiPreferences preferences) {
     return new WifiEnablePreferenceInteractor(preferences);
   }
 
@@ -62,7 +62,7 @@ import javax.inject.Named;
 
   @Provides @Named("wifi_custom_disable_interactor")
   CustomTimePreferenceInteractor provideWifiCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull WifiPreferences preferences) {
     return new WifiDisablePreferenceInteractor(preferences);
   }
 }

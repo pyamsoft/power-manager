@@ -20,7 +20,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import com.pyamsoft.powermanager.job.QueuerType;
@@ -32,13 +31,10 @@ abstract class ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final StateObserver stateObserver;
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
-  @NonNull private final PowerManagerPreferences preferences;
 
-  ManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver stateObserver) {
+  ManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull StateObserver stateObserver) {
     this.jobQueuer = jobQueuer;
     this.stateObserver = stateObserver;
-    this.preferences = preferences;
   }
 
   public void destroy() {
@@ -144,10 +140,6 @@ abstract class ManagerInteractor {
         .repeatingOnWindow(getPeriodicEnableTime())
         .ignoreIfCharging(isIgnoreWhileCharging())
         .build());
-  }
-
-  @CallSuper @CheckResult @NonNull PowerManagerPreferences getPreferences() {
-    return preferences;
   }
 
   @CallSuper @NonNull Observable<Boolean> isEnabled() {

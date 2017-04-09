@@ -27,25 +27,28 @@ import timber.log.Timber;
 
 class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+
   @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, stateObserver);
+    super(jobQueuer, stateObserver);
+    this.preferences = preferences;
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getDozeDelay();
+    return preferences.getDozeDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicDoze();
+    return preferences.isPeriodicDoze();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeDoze();
+    return preferences.getPeriodicEnableTimeDoze();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeDoze();
+    return preferences.getPeriodicDisableTimeDoze();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -58,18 +61,18 @@ class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingDoze();
+    return preferences.isIgnoreChargingDoze();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isDozeManaged();
+    return preferences.isDozeManaged();
   }
 
   @Override boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalDoze();
+    return preferences.isOriginalDoze();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalDoze(enabled);
+    preferences.setOriginalDoze(enabled);
   }
 }

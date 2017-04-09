@@ -25,26 +25,29 @@ import javax.inject.Inject;
 
 class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+
   @Inject ManagerBluetoothInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
+    this.preferences = preferences;
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getBluetoothDelay();
+    return preferences.getBluetoothDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicBluetooth();
+    return preferences.isPeriodicBluetooth();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeBluetooth();
+    return preferences.getPeriodicEnableTimeBluetooth();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeBluetooth();
+    return preferences.getPeriodicDisableTimeBluetooth();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -52,18 +55,18 @@ class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingBluetooth();
+    return preferences.isIgnoreChargingBluetooth();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isBluetoothManaged();
+    return preferences.isBluetoothManaged();
   }
 
   @Override boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalBluetooh();
+    return preferences.isOriginalBluetooh();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalBluetooth(enabled);
+    preferences.setOriginalBluetooth(enabled);
   }
 }

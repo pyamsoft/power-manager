@@ -26,30 +26,33 @@ import timber.log.Timber;
 
 class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+
   @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
+    this.preferences = preferences;
   }
 
   @Override protected long getDelayTime() {
-    return getPreferences().getAirplaneDelay();
+    return preferences.getAirplaneDelay();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isAirplaneManaged();
+    return preferences.isAirplaneManaged();
   }
 
   @Override protected boolean isPeriodic() {
-    return getPreferences().isPeriodicAirplane();
+    return preferences.isPeriodicAirplane();
   }
 
   @Override protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeAirplane();
+    return preferences.getPeriodicEnableTimeAirplane();
   }
 
   @Override protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeAirplane();
+    return preferences.getPeriodicDisableTimeAirplane();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -62,14 +65,14 @@ class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingAirplane();
+    return preferences.isIgnoreChargingAirplane();
   }
 
   @Override public boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalAirplane();
+    return preferences.isOriginalAirplane();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalAirplane(enabled);
+    preferences.setOriginalAirplane(enabled);
   }
 }

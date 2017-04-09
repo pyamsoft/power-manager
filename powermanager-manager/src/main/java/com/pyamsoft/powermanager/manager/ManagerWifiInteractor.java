@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
@@ -27,26 +28,29 @@ import timber.log.Timber;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @Inject ManagerWifiInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateObserver wearStateObserver) {
+  @NonNull private final WifiPreferences wifiPreferences;
+
+  @Inject ManagerWifiInteractor(@NonNull WifiPreferences wifiPreferences,
+      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver,
+      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
+    this.wifiPreferences = wifiPreferences;
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getWifiDelay();
+    return wifiPreferences.getWifiDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicWifi();
+    return wifiPreferences.isPeriodicWifi();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeWifi();
+    return wifiPreferences.getPeriodicEnableTimeWifi();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeWifi();
+    return wifiPreferences.getPeriodicDisableTimeWifi();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -54,19 +58,19 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingWifi();
+    return wifiPreferences.isIgnoreChargingWifi();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isWifiManaged();
+    return wifiPreferences.isWifiManaged();
   }
 
   @Override boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalWifi();
+    return wifiPreferences.isOriginalWifi();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalWifi(enabled);
+    wifiPreferences.setOriginalWifi(enabled);
   }
 
   @NonNull @Override

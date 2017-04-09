@@ -17,21 +17,21 @@
 package com.pyamsoft.powermanager.wifi.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class WifiEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
+class WifiEnablePreferenceInteractor extends CustomTimePreferenceInteractor<WifiPreferences> {
 
-  @Inject WifiEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject WifiEnablePreferenceInteractor(@NonNull WifiPreferences preferences) {
     super(preferences);
   }
 
-  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+  @Override protected void saveTimeToPreferences(@NonNull WifiPreferences preferences, long time) {
     preferences.setPeriodicEnableTimeWifi(time);
   }
 
-  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+  @Override protected long getTimeFromPreferences(@NonNull WifiPreferences preferences) {
     return preferences.getPeriodicEnableTimeWifi();
   }
 }

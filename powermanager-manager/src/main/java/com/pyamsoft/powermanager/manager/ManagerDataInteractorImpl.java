@@ -25,25 +25,28 @@ import javax.inject.Inject;
 
 class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+
   @Inject ManagerDataInteractorImpl(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, stateObserver);
+    super(jobQueuer, stateObserver);
+    this.preferences = preferences;
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getDataDelay();
+    return preferences.getDataDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicData();
+    return preferences.isPeriodicData();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeData();
+    return preferences.getPeriodicEnableTimeData();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeData();
+    return preferences.getPeriodicDisableTimeData();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -51,18 +54,18 @@ class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingData();
+    return preferences.isIgnoreChargingData();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isDataManaged();
+    return preferences.isDataManaged();
   }
 
   @Override boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalData();
+    return preferences.isOriginalData();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalData(enabled);
+    preferences.setOriginalData(enabled);
   }
 }

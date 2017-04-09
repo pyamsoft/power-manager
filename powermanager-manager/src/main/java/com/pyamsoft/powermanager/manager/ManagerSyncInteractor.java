@@ -25,25 +25,28 @@ import javax.inject.Inject;
 
 class ManagerSyncInteractor extends WearUnawareManagerInteractor {
 
+  @NonNull private final PowerManagerPreferences preferences;
+
   @Inject ManagerSyncInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
-    super(jobQueuer, preferences, stateObserver);
+    super(jobQueuer, stateObserver);
+    this.preferences = preferences;
   }
 
   @Override @CheckResult protected long getDelayTime() {
-    return getPreferences().getMasterSyncDelay();
+    return preferences.getMasterSyncDelay();
   }
 
   @Override @CheckResult protected boolean isPeriodic() {
-    return getPreferences().isPeriodicSync();
+    return preferences.isPeriodicSync();
   }
 
   @Override @CheckResult protected long getPeriodicEnableTime() {
-    return getPreferences().getPeriodicEnableTimeSync();
+    return preferences.getPeriodicEnableTimeSync();
   }
 
   @Override @CheckResult protected long getPeriodicDisableTime() {
-    return getPreferences().getPeriodicDisableTimeSync();
+    return preferences.getPeriodicDisableTimeSync();
   }
 
   @NonNull @Override public String getJobTag() {
@@ -51,18 +54,18 @@ class ManagerSyncInteractor extends WearUnawareManagerInteractor {
   }
 
   @Override public boolean isIgnoreWhileCharging() {
-    return getPreferences().isIgnoreChargingSync();
+    return preferences.isIgnoreChargingSync();
   }
 
   @Override boolean isManaged() {
-    return getPreferences().isSyncManaged();
+    return preferences.isSyncManaged();
   }
 
   @Override boolean isOriginalStateEnabled() {
-    return getPreferences().isOriginalSync();
+    return preferences.isOriginalSync();
   }
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
-    getPreferences().setOriginalSync(enabled);
+    preferences.setOriginalSync(enabled);
   }
 }

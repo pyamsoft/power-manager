@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
@@ -25,9 +24,8 @@ import timber.log.Timber;
 
 abstract class WearUnawareManagerInteractor extends ManagerInteractor {
 
-  WearUnawareManagerInteractor(@NonNull JobQueuer jobQueuer,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver) {
-    super(jobQueuer, preferences, stateObserver);
+  WearUnawareManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull StateObserver stateObserver) {
+    super(jobQueuer, stateObserver);
   }
 
   @NonNull @Override

@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncEnablePreferenceInteractor extends CustomTimePreferenceInteractor {
+class SyncEnablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
 
   @Inject SyncEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

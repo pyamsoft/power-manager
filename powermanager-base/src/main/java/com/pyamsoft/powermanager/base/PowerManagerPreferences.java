@@ -20,10 +20,6 @@ import android.support.annotation.CheckResult;
 
 public interface PowerManagerPreferences {
 
-  @CheckResult boolean isOriginalWifi();
-
-  void setOriginalWifi(boolean state);
-
   @CheckResult boolean isOriginalData();
 
   void setOriginalData(boolean state);
@@ -84,17 +80,11 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isIgnoreChargingAirplane();
 
-  @CheckResult boolean isIgnoreChargingWifi();
-
   @CheckResult boolean isIgnoreChargingData();
 
   @CheckResult boolean isIgnoreChargingBluetooth();
 
   @CheckResult boolean isIgnoreChargingSync();
-
-  @CheckResult long getWifiDelay();
-
-  void setWifiDelay(long time);
 
   @CheckResult long getAirplaneDelay();
 
@@ -120,15 +110,11 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isSyncManaged();
 
-  @CheckResult boolean isWifiManaged();
-
   @CheckResult boolean isWearableManaged();
 
   void clearAll();
 
   @CheckResult boolean isPeriodicDoze();
-
-  @CheckResult boolean isPeriodicWifi();
 
   @CheckResult boolean isPeriodicData();
 
@@ -145,10 +131,6 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicDisableTimeAirplane();
 
   void setPeriodicDisableTimeAirplane(long time);
-
-  @CheckResult long getPeriodicDisableTimeWifi();
-
-  void setPeriodicDisableTimeWifi(long time);
 
   @CheckResult long getPeriodicDisableTimeData();
 
@@ -169,10 +151,6 @@ public interface PowerManagerPreferences {
   @CheckResult long getPeriodicEnableTimeAirplane();
 
   void setPeriodicEnableTimeAirplane(long time);
-
-  @CheckResult long getPeriodicEnableTimeWifi();
-
-  void setPeriodicEnableTimeWifi(long time);
 
   @CheckResult long getPeriodicEnableTimeData();
 

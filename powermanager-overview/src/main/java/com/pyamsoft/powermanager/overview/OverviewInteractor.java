@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.overview;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -27,9 +28,12 @@ import javax.inject.Singleton;
 @Singleton class OverviewInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final WifiPreferences wifiPreferences;
 
-  @Inject OverviewInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject OverviewInteractor(@NonNull PowerManagerPreferences preferences,
+      @NonNull WifiPreferences wifiPreferences) {
     this.preferences = preferences;
+    this.wifiPreferences = wifiPreferences;
   }
 
   @NonNull @CheckResult public Observable<Boolean> hasShownOnboarding() {
@@ -42,7 +46,7 @@ import javax.inject.Singleton;
   }
 
   @CheckResult @NonNull public Observable<Boolean> isWifiManaged() {
-    return Observable.fromCallable(preferences::isWifiManaged);
+    return Observable.fromCallable(wifiPreferences::isWifiManaged);
   }
 
   @CheckResult @NonNull public Observable<Boolean> isDataManaged() {

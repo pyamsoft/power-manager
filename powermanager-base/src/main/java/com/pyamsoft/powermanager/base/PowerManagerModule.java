@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -32,7 +33,7 @@ import javax.inject.Singleton;
 
   @NonNull private static final String SETTINGS_URI_MOBILE_DATA = "mobile_data";
   @NonNull private final Context appContext;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final PowerManagerPreferencesImpl preferences;
   @NonNull private final Class<? extends Activity> mainActivityClass;
   @NonNull private final Class<? extends Service> toggleServiceClass;
 
@@ -62,6 +63,10 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides PowerManagerPreferences providePreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides WifiPreferences providewWifiPreferences() {
     return preferences;
   }
 

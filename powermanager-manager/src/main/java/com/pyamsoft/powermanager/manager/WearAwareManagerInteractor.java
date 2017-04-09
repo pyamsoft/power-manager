@@ -27,12 +27,14 @@ import timber.log.Timber;
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearStateObserver;
+  @NonNull final PowerManagerPreferences preferences;
 
   WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateObserver wearStateObserver) {
-    super(jobQueuer, preferences, stateObserver);
+    super(jobQueuer, stateObserver);
     this.wearStateObserver = wearStateObserver;
+    this.preferences = preferences;
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearEnabled() {
@@ -40,7 +42,7 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
   }
 
   @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
-    return Observable.fromCallable(() -> getPreferences().isWearableManaged());
+    return Observable.fromCallable(preferences::isWearableManaged);
   }
 
   @Override public void destroy() {

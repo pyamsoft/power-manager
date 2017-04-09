@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneDelayPreferenceInteractor extends CustomTimePreferenceInteractor {
+class AirplaneDelayPreferenceInteractor extends CustomTimePreferenceInteractor<PowerManagerPreferences> {
 
   @Inject AirplaneDelayPreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
     super(preferences);

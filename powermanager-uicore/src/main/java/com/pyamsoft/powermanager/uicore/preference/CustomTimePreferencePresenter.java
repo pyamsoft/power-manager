@@ -33,7 +33,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
   private static final long MAX_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(30);
   private static final int MAX_CUSTOM_LENGTH = 6;
 
-  @Nullable private final CustomTimePreferenceInteractor interactor;
+  @Nullable private final CustomTimePreferenceInteractor<?> interactor;
   @NonNull private Disposable customTimeDisposable = Disposables.empty();
 
   @Inject public CustomTimePreferencePresenter(@Nullable CustomTimePreferenceInteractor interactor,
