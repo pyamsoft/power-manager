@@ -17,21 +17,23 @@
 package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class BluetoothEnablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
+class BluetoothEnablePreferenceInteractor
+    extends CustomTimePreferenceInteractor<BluetoothPreferences> {
 
-  @Inject BluetoothEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject BluetoothEnablePreferenceInteractor(@NonNull BluetoothPreferences preferences) {
     super(preferences);
   }
 
-  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+  @Override
+  protected void saveTimeToPreferences(@NonNull BluetoothPreferences preferences, long time) {
     preferences.setPeriodicEnableTimeBluetooth(time);
   }
 
-  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+  @Override protected long getTimeFromPreferences(@NonNull BluetoothPreferences preferences) {
     return preferences.getPeriodicEnableTimeBluetooth();
   }
 }

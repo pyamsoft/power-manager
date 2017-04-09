@@ -17,7 +17,8 @@
 package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
@@ -26,13 +27,17 @@ import timber.log.Timber;
 
 class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final AirplanePreferences preferences;
 
-  @Inject ManagerAirplaneInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @NonNull StateObserver wearStateObserver) {
-    super(preferences, stateObserver, jobQueuer, wearStateObserver);
+  @Inject ManagerAirplaneInteractor(@NonNull WearablePreferences wearablePreferences,
+      @NonNull AirplanePreferences preferences, @NonNull StateObserver stateObserver,
+      @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
+    super(wearablePreferences, stateObserver, jobQueuer, wearStateObserver);
     this.preferences = preferences;
+  }
+
+  @Override boolean isWearManaged() {
+    return preferences.isWearableManaged();
   }
 
   @Override protected long getDelayTime() {

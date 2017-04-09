@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("data_custom_delay_interactor")
   CustomTimePreferenceInteractor provideDataCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DataPreferences preferences) {
     return new DataDelayPreferenceInteractor(preferences);
   }
 
@@ -49,7 +49,7 @@ import javax.inject.Named;
 
   @Provides @Named("data_custom_enable_interactor")
   CustomTimePreferenceInteractor provideDataCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DataPreferences preferences) {
     return new DataEnablePreferenceInteractor(preferences);
   }
 
@@ -62,7 +62,7 @@ import javax.inject.Named;
 
   @Provides @Named("data_custom_disable_interactor")
   CustomTimePreferenceInteractor provideDataCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DataPreferences preferences) {
     return new DataDisablePreferenceInteractor(preferences);
   }
 }

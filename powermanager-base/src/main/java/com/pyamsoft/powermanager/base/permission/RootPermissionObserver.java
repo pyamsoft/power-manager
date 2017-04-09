@@ -19,22 +19,22 @@ package com.pyamsoft.powermanager.base.permission;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 class RootPermissionObserver extends PermissionObserverImpl {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final RootPreferences preferences;
   @NonNull private final RootChecker rootChecker;
 
-  @Inject RootPermissionObserver(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences, @NonNull RootChecker rootChecker) {
+  @Inject RootPermissionObserver(@NonNull Context context, @NonNull RootPreferences preferences,
+      @NonNull RootChecker rootChecker) {
     this(context, preferences, rootChecker, null);
   }
 
-  RootPermissionObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  RootPermissionObserver(@NonNull Context context, @NonNull RootPreferences preferences,
       @NonNull RootChecker rootChecker, @Nullable String permission) {
     super(context, permission);
     this.preferences = preferences;

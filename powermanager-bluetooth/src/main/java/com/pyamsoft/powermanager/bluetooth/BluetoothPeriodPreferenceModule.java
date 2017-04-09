@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("bluetooth_period_pref_interactor")
   PeriodPreferenceInteractor provideBluetoothManagePreferenceInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull OnboardingPreferences preferences) {
     return new PeriodPreferenceInteractor(preferences);
   }
 }

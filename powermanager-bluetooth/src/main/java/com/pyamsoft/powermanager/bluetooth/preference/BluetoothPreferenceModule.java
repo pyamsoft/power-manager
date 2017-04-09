@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -32,13 +32,12 @@ import javax.inject.Named;
       @NonNull @Named("bluetooth_custom_delay_interactor")
           CustomTimePreferenceInteractor interactor, @Named("obs") Scheduler obsScheduler,
       @Named("sub") Scheduler subScheduler) {
-    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler) {
-    };
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
   @Provides @Named("bluetooth_custom_delay_interactor")
   CustomTimePreferenceInteractor provideBluetoothCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull BluetoothPreferences preferences) {
     return new BluetoothDelayPreferenceInteractor(preferences);
   }
 
@@ -52,7 +51,7 @@ import javax.inject.Named;
 
   @Provides @Named("bluetooth_custom_enable_interactor")
   CustomTimePreferenceInteractor provideBluetoothCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull BluetoothPreferences preferences) {
     return new BluetoothEnablePreferenceInteractor(preferences);
   }
 
@@ -66,7 +65,7 @@ import javax.inject.Named;
 
   @Provides @Named("bluetooth_custom_disable_interactor")
   CustomTimePreferenceInteractor provideBluetoothCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull BluetoothPreferences preferences) {
     return new BluetoothDisablePreferenceInteractor(preferences);
   }
 }

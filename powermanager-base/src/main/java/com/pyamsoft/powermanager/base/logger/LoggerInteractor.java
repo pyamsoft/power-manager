@@ -20,7 +20,7 @@ import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
 import io.reactivex.Observable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -53,18 +53,21 @@ class LoggerInteractor {
   @NonNull static final String WIFI_LOG_ID = "WIFI";
 
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final LoggerPreferences preferences;
   @NonNull private final String logId;
   @Nullable private File logPath;
 
-  @Inject LoggerInteractor(@NonNull Context context, @NonNull PowerManagerPreferences preferences,
+  @Inject LoggerInteractor(@NonNull Context context, @NonNull LoggerPreferences preferences,
       @NonNull String logId) {
     this.appContext = context.getApplicationContext();
     this.preferences = preferences;
     this.logId = logId;
   }
 
-  @CheckResult @NonNull public String getLogId() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull String getLogId() {
     return logId;
   }
 
@@ -132,7 +135,10 @@ class LoggerInteractor {
     }
   }
 
-  @CheckResult @NonNull public Observable<String> getLogContents() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<String> getLogContents() {
     return Observable.fromCallable(this::getLogLocation).flatMap(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
       try (final FileInputStream fileInputStream = new FileInputStream(logLocation);
@@ -153,14 +159,18 @@ class LoggerInteractor {
     });
   }
 
-  @CheckResult @NonNull public Observable<Boolean> deleteLog() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> deleteLog() {
     return Observable.fromCallable(this::getLogLocation).map(file -> {
       Timber.w("Delete log file: %s", file.getAbsolutePath());
       return file.delete();
     });
   }
 
-  @CheckResult @NonNull public Observable<Boolean> appendToLog(@NonNull String message) {
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Observable<Boolean> appendToLog(
+      @NonNull String message) {
     return Observable.fromCallable(this::getLogLocation).map(logLocation -> {
       try (final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);
            final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(

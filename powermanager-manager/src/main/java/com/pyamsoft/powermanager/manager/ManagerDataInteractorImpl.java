@@ -18,16 +18,16 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import javax.inject.Inject;
 
 class ManagerDataInteractorImpl extends WearUnawareManagerInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final DataPreferences preferences;
 
-  @Inject ManagerDataInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  @Inject ManagerDataInteractorImpl(@NonNull DataPreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
     super(jobQueuer, stateObserver);
     this.preferences = preferences;

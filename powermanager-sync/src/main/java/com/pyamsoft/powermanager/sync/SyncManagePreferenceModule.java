@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("sync_manage_pref_interactor")
   ManagePreferenceInteractor provideSyncManagePreferenceInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull OnboardingPreferences preferences) {
     return new ManagePreferenceInteractor(preferences);
   }
 }

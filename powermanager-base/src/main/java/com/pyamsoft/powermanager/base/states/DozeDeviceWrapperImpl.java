@@ -20,8 +20,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
@@ -30,12 +30,11 @@ class DozeDeviceWrapperImpl implements DeviceFunctionWrapper {
 
   @NonNull private final Logger logger;
   @NonNull private final android.os.PowerManager androidPowerManager;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final RootPreferences preferences;
   @NonNull private final ShellCommandHelper shellCommandHelper;
 
   @Inject DozeDeviceWrapperImpl(@NonNull Context context, @NonNull Logger logger,
-      @NonNull PowerManagerPreferences preferences,
-      @NonNull ShellCommandHelper shellCommandHelper) {
+      @NonNull RootPreferences preferences, @NonNull ShellCommandHelper shellCommandHelper) {
     this.logger = logger;
     this.preferences = preferences;
     androidPowerManager =

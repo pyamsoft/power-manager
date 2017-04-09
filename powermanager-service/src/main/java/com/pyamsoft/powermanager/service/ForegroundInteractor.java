@@ -26,7 +26,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
+import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import com.pyamsoft.powermanager.job.QueuerType;
@@ -36,20 +37,22 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import timber.log.Timber;
 
-@Singleton class ForegroundInteractor extends ActionToggleInteractor {
+@Singleton class ForegroundInteractor extends ServiceInteractor {
 
   private static final int PENDING_RC = 1004;
   private static final int TOGGLE_RC = 421;
   @SuppressWarnings("WeakerAccess") @NonNull final NotificationCompat.Builder builder;
   @SuppressWarnings("WeakerAccess") @NonNull final Context appContext;
   @SuppressWarnings("WeakerAccess") @NonNull final Class<? extends Service> toggleServiceClass;
+  @NonNull private final TriggerPreferences triggerPreferences;
   @NonNull private final JobQueuer jobQueuer;
 
   @Inject ForegroundInteractor(@NonNull JobQueuer jobQueuer, @NonNull Context context,
-      @NonNull PowerManagerPreferences preferences,
+      @NonNull ServicePreferences preferences, @NonNull TriggerPreferences triggerPreferences,
       @NonNull @Named("main") Class<? extends Activity> mainActivityClass,
       @NonNull @Named("toggle") Class<? extends Service> toggleServiceClass) {
     super(preferences);
+    this.triggerPreferences = triggerPreferences;
     this.jobQueuer = jobQueuer;
     appContext = context.getApplicationContext();
     this.toggleServiceClass = toggleServiceClass;
@@ -70,8 +73,11 @@ import timber.log.Timber;
         .setContentIntent(pendingIntent);
   }
 
-  public void queueRepeatingTriggerJob() {
-    final long delayTime = getPreferences().getTriggerPeriodTime();
+  /**
+   * public
+   */
+  void queueRepeatingTriggerJob() {
+    final long delayTime = triggerPreferences.getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
     jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
     jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
@@ -94,7 +100,10 @@ import timber.log.Timber;
     return Observable.fromCallable(() -> getPreferences().getNotificationPriority());
   }
 
-  @NonNull public Observable<Notification> createNotification() {
+  /**
+   * public
+   */
+  @NonNull Observable<Notification> createNotification() {
     return isServiceEnabled().flatMap(serviceEnabled -> {
       final String actionName = serviceEnabled ? "Suspend" : "Start";
       final Intent toggleService = new Intent(appContext, toggleServiceClass);

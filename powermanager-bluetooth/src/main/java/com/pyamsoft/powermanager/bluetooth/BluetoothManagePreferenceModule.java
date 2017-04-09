@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("bluetooth_manage_pref_interactor")
   ManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull OnboardingPreferences preferences) {
     return new ManagePreferenceInteractor(preferences);
   }
 }

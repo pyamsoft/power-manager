@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.settings;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.preference.ClearPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
@@ -32,13 +32,13 @@ import timber.log.Timber;
 @Singleton class SettingsPreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final RootChecker rootChecker;
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final RootPreferences preferences;
   @SuppressWarnings("WeakerAccess") @NonNull final ClearPreferences clearPreferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor triggerInteractor;
 
   @Inject SettingsPreferenceInteractor(@NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull PowerManagerPreferences preferences, @NonNull ClearPreferences clearPreferences,
+      @NonNull RootPreferences preferences, @NonNull ClearPreferences clearPreferences,
       @NonNull RootChecker rootChecker, @NonNull TriggerInteractor triggerInteractor) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;

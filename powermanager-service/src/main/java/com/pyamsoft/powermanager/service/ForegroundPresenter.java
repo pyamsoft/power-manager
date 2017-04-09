@@ -38,7 +38,10 @@ class ForegroundPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  public void queueRepeatingTriggerJob() {
+  /**
+   * public
+   */
+  void queueRepeatingTriggerJob() {
     interactor.queueRepeatingTriggerJob();
   }
 
@@ -52,7 +55,10 @@ class ForegroundPresenter extends SchedulerPresenter {
     interactor.destroy();
   }
 
-  public void startNotification(@NonNull NotificationCallback callback) {
+  /**
+   * public
+   */
+  void startNotification(@NonNull NotificationCallback callback) {
     notificationDisposable = DisposableHelper.dispose(notificationDisposable);
     notificationDisposable = interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
@@ -64,16 +70,17 @@ class ForegroundPresenter extends SchedulerPresenter {
   }
 
   /**
-   * Trigger interval is only read on interactor.queueRepeatingTriggerJob()
+   * public
    *
+   * Trigger interval is only read on interactor.queueRepeatingTriggerJob()
    * Restart it by destroying and then re-creating the interactor
    */
-  public void restartTriggerAlarm() {
+  void restartTriggerAlarm() {
     interactor.destroy();
     interactor.queueRepeatingTriggerJob();
   }
 
-  public void setForegroundState(boolean enable) {
+  void setForegroundState(boolean enable) {
     interactor.setServiceEnabled(enable);
   }
 

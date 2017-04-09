@@ -18,7 +18,8 @@ package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
@@ -27,24 +28,36 @@ import javax.inject.Singleton;
 
 @Singleton class MainInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final RootPreferences rootPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final ServicePreferences servicePreferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver rootPermissionObserver;
 
-  @Inject MainInteractor(@NonNull PowerManagerPreferences preferences,
+  @Inject MainInteractor(@NonNull RootPreferences rootPreferences,
+      @NonNull ServicePreferences servicePreferences,
       @NonNull @Named("obs_root_permission") PermissionObserver rootPermissionObserver) {
-    this.preferences = preferences;
+    this.rootPreferences = rootPreferences;
+    this.servicePreferences = servicePreferences;
     this.rootPermissionObserver = rootPermissionObserver;
   }
 
-  public void missingRootPermission() {
-    preferences.resetRootEnabled();
+  /**
+   * public
+   */
+  void missingRootPermission() {
+    rootPreferences.resetRootEnabled();
   }
 
-  @NonNull @CheckResult public Observable<Boolean> isStartWhenOpen() {
-    return Observable.fromCallable(preferences::isStartWhenOpen);
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen() {
+    return Observable.fromCallable(servicePreferences::isStartWhenOpen);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> hasRootPermission() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> hasRootPermission() {
     return Observable.fromCallable(rootPermissionObserver::hasPermission);
   }
 }

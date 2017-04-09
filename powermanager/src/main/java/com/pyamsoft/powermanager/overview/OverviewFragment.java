@@ -127,10 +127,9 @@ public class OverviewFragment extends ActionBarFragment {
             observer)));
     presenter.getDozeObserver(observer -> adapter.add(
         new OverviewItem(DozeFragment.TAG, R.drawable.ic_doze_24dp, R.color.purple500, observer)));
-    presenter.getWearObserver(observer -> adapter.add(
-        new OverviewItem(WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
-            observer)));
 
+    adapter.add(new OverviewItem(WearFragment.TAG, R.drawable.ic_watch_24dp, R.color.lightgreen500,
+        States.UNKNOWN));
     adapter.add(new OverviewItem(SettingsPreferenceFragment.TAG, R.drawable.ic_settings_24dp,
         R.color.pink500, States.UNKNOWN));
   }

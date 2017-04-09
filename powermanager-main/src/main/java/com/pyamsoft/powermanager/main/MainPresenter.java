@@ -33,7 +33,8 @@ class MainPresenter extends SchedulerPresenter {
   @NonNull private Disposable rootDisposable = Disposables.empty();
 
   @Inject MainPresenter(@NonNull MainInteractor interactor,
-      @NonNull @Named("obs") Scheduler obsScheduler, @NonNull @Named("sub") Scheduler subScheduler) {
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
   }
@@ -44,7 +45,10 @@ class MainPresenter extends SchedulerPresenter {
     rootDisposable = DisposableHelper.dispose(rootDisposable);
   }
 
-  public void runStartupHooks(@NonNull StartupCallback callback) {
+  /**
+   * public
+   */
+  void runStartupHooks(@NonNull StartupCallback callback) {
     startServiceWhenOpen(callback);
     checkForRoot(callback);
   }

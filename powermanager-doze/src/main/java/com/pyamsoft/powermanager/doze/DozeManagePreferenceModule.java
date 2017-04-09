@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
@@ -39,7 +39,7 @@ import javax.inject.Named;
   @Provides @Named("doze_manage_pref_interactor")
   PermissionPreferenceInteractor provideDozeManagePreferenceInteractor(
       @Named("obs_doze_permission") PermissionObserver dozePermissionObserver,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull OnboardingPreferences preferences) {
     return new PermissionPreferenceInteractor(preferences, dozePermissionObserver);
   }
 }

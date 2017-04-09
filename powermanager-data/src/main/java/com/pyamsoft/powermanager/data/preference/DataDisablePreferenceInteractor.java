@@ -17,21 +17,21 @@
 package com.pyamsoft.powermanager.data.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class DataDisablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
+class DataDisablePreferenceInteractor extends CustomTimePreferenceInteractor<DataPreferences> {
 
-  @Inject DataDisablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject DataDisablePreferenceInteractor(@NonNull DataPreferences preferences) {
     super(preferences);
   }
 
-  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+  @Override protected void saveTimeToPreferences(@NonNull DataPreferences preferences, long time) {
     preferences.setPeriodicDisableTimeData(time);
   }
 
-  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+  @Override protected long getTimeFromPreferences(@NonNull DataPreferences preferences) {
     return preferences.getPeriodicDisableTimeData();
   }
 }

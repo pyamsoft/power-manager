@@ -33,9 +33,9 @@ import com.pyamsoft.powermanager.model.States;
 
   @CheckResult abstract States state();
 
-  @DrawableRes abstract int image();
+  @CheckResult @DrawableRes abstract int image();
 
-  @ColorRes abstract int background();
+  @CheckResult @ColorRes abstract int background();
 
   @AutoValue.Builder static abstract class Builder {
 

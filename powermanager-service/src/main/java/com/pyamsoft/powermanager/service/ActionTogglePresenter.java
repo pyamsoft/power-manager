@@ -42,7 +42,10 @@ class ActionTogglePresenter extends SchedulerPresenter {
     subscription = DisposableHelper.dispose(subscription);
   }
 
-  public void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
+  /**
+   * public
+   */
+  void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
     subscription = DisposableHelper.dispose(subscription);
     subscription = interactor.toggleEnabledState()
         .subscribeOn(getSubscribeScheduler())
@@ -51,7 +54,10 @@ class ActionTogglePresenter extends SchedulerPresenter {
             throwable -> Timber.e(throwable, "onError toggleForegroundState"));
   }
 
-  public interface ForegroundStateCallback {
+  /**
+   * public
+   */
+  interface ForegroundStateCallback {
 
     void onForegroundStateToggled(boolean state);
   }

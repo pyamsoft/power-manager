@@ -121,16 +121,16 @@ class ShellHandlerImpl implements ShellCommandHelper, RootChecker {
 
   @Override @WorkerThread public void runSUCommand(@NonNull String... commands) {
     Timber.d("Run command '%s' in SU session", Arrays.toString(commands));
-    rootSession.addCommand(commands, SHELL_TYPE_ROOT, (commandCode, exitCode, output) -> {
-      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
-    });
+    rootSession.addCommand(commands, SHELL_TYPE_ROOT,
+        (commandCode, exitCode, output) -> parseCommandResult(exitCode, output,
+            commandCode == SHELL_TYPE_ROOT, commands));
   }
 
   @Override @WorkerThread public void runSHCommand(@NonNull String... commands) {
     Timber.d("Run command '%s' in Shell session", Arrays.toString(commands));
-    shellSession.addCommand(commands, SHELL_TYPE_NORMAL, (commandCode, exitCode, output) -> {
-      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, commands);
-    });
+    shellSession.addCommand(commands, SHELL_TYPE_NORMAL,
+        (commandCode, exitCode, output) -> parseCommandResult(exitCode, output,
+            commandCode == SHELL_TYPE_ROOT, commands));
   }
 
   @Override @WorkerThread @CheckResult public boolean isSUAvailable() {

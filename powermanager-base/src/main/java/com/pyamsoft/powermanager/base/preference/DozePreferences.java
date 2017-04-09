@@ -18,29 +18,27 @@ package com.pyamsoft.powermanager.base.preference;
 
 import android.support.annotation.CheckResult;
 
-public interface WifiPreferences {
+public interface DozePreferences {
 
-  @CheckResult boolean isWearableManaged();
+  @CheckResult boolean isOriginalDoze();
 
-  @CheckResult boolean isOriginalWifi();
+  void setOriginalDoze(boolean state);
 
-  void setOriginalWifi(boolean state);
+  @CheckResult long getDozeDelay();
 
-  @CheckResult boolean isIgnoreChargingWifi();
+  void setDozeDelay(long time);
 
-  @CheckResult long getWifiDelay();
+  @CheckResult boolean isIgnoreChargingDoze();
 
-  void setWifiDelay(long time);
+  @CheckResult boolean isDozeManaged();
 
-  @CheckResult boolean isWifiManaged();
+  @CheckResult boolean isPeriodicDoze();
 
-  @CheckResult boolean isPeriodicWifi();
+  @CheckResult long getPeriodicDisableTimeDoze();
 
-  @CheckResult long getPeriodicDisableTimeWifi();
+  void setPeriodicDisableTimeDoze(long time);
 
-  void setPeriodicDisableTimeWifi(long time);
+  @CheckResult long getPeriodicEnableTimeDoze();
 
-  @CheckResult long getPeriodicEnableTimeWifi();
-
-  void setPeriodicEnableTimeWifi(long time);
+  void setPeriodicEnableTimeDoze(long time);
 }

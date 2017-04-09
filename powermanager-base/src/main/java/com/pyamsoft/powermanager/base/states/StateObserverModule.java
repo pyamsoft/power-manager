@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.states;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.model.StateObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -56,7 +56,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_wear_state") @Provides StateObserver provideWearObserver(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+      @NonNull Context context, @NonNull WearablePreferences preferences) {
     return new WearStateObserver(context, preferences);
   }
 

@@ -43,7 +43,10 @@ class OverviewPresenter extends SchedulerPresenter {
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
   }
 
-  public void showOnBoarding(@NonNull OnboardingCallback callback) {
+  /**
+   * public
+   */
+  void showOnBoarding(@NonNull OnboardingCallback callback) {
     onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
     onboardingDisposable = interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
@@ -55,43 +58,59 @@ class OverviewPresenter extends SchedulerPresenter {
         }, throwable -> Timber.e(throwable, "onError onShowOnboarding"));
   }
 
-  public void setShownOnBoarding() {
+  /**
+   * public
+   */
+  void setShownOnBoarding() {
     interactor.setShownOnboarding();
   }
 
-  public void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isWifiManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
-  public void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isDataManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
-  public void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isBluetoothManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
-  public void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isSyncManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
-  public void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isAirplaneManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
-  public void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
+  /**
+   * public
+   */
+  void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
         interactor.isDozeManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
-  }
-
-  public void getWearObserver(@NonNull ObserverRetrieveCallback callback) {
-    callback.onObserverRetrieved(
-        interactor.isWearableManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
   }
 
   interface OnboardingCallback {

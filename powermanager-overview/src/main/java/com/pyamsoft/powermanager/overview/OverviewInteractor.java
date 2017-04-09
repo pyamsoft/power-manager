@@ -18,7 +18,13 @@ package com.pyamsoft.powermanager.overview;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import io.reactivex.Observable;
 import java.util.concurrent.TimeUnit;
@@ -27,49 +33,84 @@ import javax.inject.Singleton;
 
 @Singleton class OverviewInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final OnboardingPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final WearablePreferences wearablePreferences;
   @SuppressWarnings("WeakerAccess") @NonNull final WifiPreferences wifiPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final DataPreferences dataPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final BluetoothPreferences bluetoothPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final SyncPreferences syncPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final AirplanePreferences airplanePreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final DozePreferences dozePreferences;
 
-  @Inject OverviewInteractor(@NonNull PowerManagerPreferences preferences,
-      @NonNull WifiPreferences wifiPreferences) {
+  @Inject OverviewInteractor(@NonNull OnboardingPreferences preferences,
+      @NonNull WearablePreferences wearablePreferences, @NonNull WifiPreferences wifiPreferences,
+      @NonNull DataPreferences dataPreferences, @NonNull BluetoothPreferences bluetoothPreferences,
+      @NonNull SyncPreferences syncPreferences, @NonNull AirplanePreferences airplanePreferences,
+      @NonNull DozePreferences dozePreferences) {
     this.preferences = preferences;
+    this.wearablePreferences = wearablePreferences;
     this.wifiPreferences = wifiPreferences;
+    this.dataPreferences = dataPreferences;
+    this.bluetoothPreferences = bluetoothPreferences;
+    this.syncPreferences = syncPreferences;
+    this.airplanePreferences = airplanePreferences;
+    this.dozePreferences = dozePreferences;
   }
 
-  @NonNull @CheckResult public Observable<Boolean> hasShownOnboarding() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
     return Observable.fromCallable(preferences::isOverviewOnboardingShown)
         .delay(1, TimeUnit.SECONDS);
   }
 
-  public void setShownOnboarding() {
+  /**
+   * public
+   */
+  void setShownOnboarding() {
     preferences.setOverviewOnboardingShown();
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isWifiManaged() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isWifiManaged() {
     return Observable.fromCallable(wifiPreferences::isWifiManaged);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isDataManaged() {
-    return Observable.fromCallable(preferences::isDataManaged);
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isDataManaged() {
+    return Observable.fromCallable(dataPreferences::isDataManaged);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isBluetoothManaged() {
-    return Observable.fromCallable(preferences::isBluetoothManaged);
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isBluetoothManaged() {
+    return Observable.fromCallable(bluetoothPreferences::isBluetoothManaged);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isSyncManaged() {
-    return Observable.fromCallable(preferences::isSyncManaged);
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isSyncManaged() {
+    return Observable.fromCallable(syncPreferences::isSyncManaged);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isAirplaneManaged() {
-    return Observable.fromCallable(preferences::isAirplaneManaged);
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isAirplaneManaged() {
+    return Observable.fromCallable(airplanePreferences::isAirplaneManaged);
   }
 
-  @CheckResult @NonNull public Observable<Boolean> isDozeManaged() {
-    return Observable.fromCallable(preferences::isDozeManaged);
-  }
-
-  @CheckResult @NonNull public Observable<Boolean> isWearableManaged() {
-    return Observable.fromCallable(preferences::isWearableManaged);
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> isDozeManaged() {
+    return Observable.fromCallable(dozePreferences::isDozeManaged);
   }
 }

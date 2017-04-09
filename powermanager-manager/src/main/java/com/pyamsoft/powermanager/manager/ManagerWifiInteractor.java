@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -31,10 +31,14 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull private final WifiPreferences wifiPreferences;
 
   @Inject ManagerWifiInteractor(@NonNull WifiPreferences wifiPreferences,
-      @NonNull PowerManagerPreferences preferences, @NonNull StateObserver stateObserver,
+      @NonNull WearablePreferences preferences, @NonNull StateObserver stateObserver,
       @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
     this.wifiPreferences = wifiPreferences;
+  }
+
+  @Override boolean isWearManaged() {
+    return wifiPreferences.isWearableManaged();
   }
 
   @Override @CheckResult protected long getDelayTime() {

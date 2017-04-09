@@ -26,7 +26,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
@@ -34,9 +34,9 @@ import timber.log.Timber;
 class WearStateObserver extends BroadcastStateObserver {
 
   @NonNull private final GoogleApiClient googleApiClient;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final WearablePreferences preferences;
 
-  WearStateObserver(@NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+  WearStateObserver(@NonNull Context context, @NonNull WearablePreferences preferences) {
     super(context);
     this.preferences = preferences;
     googleApiClient =

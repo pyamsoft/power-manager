@@ -18,29 +18,13 @@ package com.pyamsoft.powermanager.base.preference;
 
 import android.support.annotation.CheckResult;
 
-public interface WifiPreferences {
+public interface ServicePreferences {
 
-  @CheckResult boolean isWearableManaged();
+  @CheckResult boolean isServiceEnabled();
 
-  @CheckResult boolean isOriginalWifi();
+  void setServiceEnabled(boolean enabled);
 
-  void setOriginalWifi(boolean state);
+  @CheckResult boolean isStartWhenOpen();
 
-  @CheckResult boolean isIgnoreChargingWifi();
-
-  @CheckResult long getWifiDelay();
-
-  void setWifiDelay(long time);
-
-  @CheckResult boolean isWifiManaged();
-
-  @CheckResult boolean isPeriodicWifi();
-
-  @CheckResult long getPeriodicDisableTimeWifi();
-
-  void setPeriodicDisableTimeWifi(long time);
-
-  @CheckResult long getPeriodicEnableTimeWifi();
-
-  void setPeriodicEnableTimeWifi(long time);
+  @CheckResult int getNotificationPriority();
 }

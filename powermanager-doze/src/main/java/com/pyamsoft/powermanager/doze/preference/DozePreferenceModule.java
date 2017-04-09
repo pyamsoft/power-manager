@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.doze.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("doze_custom_delay_interactor")
   CustomTimePreferenceInteractor provideDozeCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DozePreferences preferences) {
     return new DozeDelayPreferenceInteractor(preferences);
   }
 
@@ -49,7 +49,7 @@ import javax.inject.Named;
 
   @Provides @Named("doze_custom_enable_interactor")
   CustomTimePreferenceInteractor provideDozeCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DozePreferences preferences) {
     return new DozeEnablePreferenceInteractor(preferences);
   }
 
@@ -62,7 +62,7 @@ import javax.inject.Named;
 
   @Provides @Named("doze_custom_disable_interactor")
   CustomTimePreferenceInteractor provideDozeCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull DozePreferences preferences) {
     return new DozeDisablePreferenceInteractor(preferences);
   }
 }

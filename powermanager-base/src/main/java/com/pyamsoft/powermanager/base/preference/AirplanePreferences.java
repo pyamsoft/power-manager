@@ -18,29 +18,29 @@ package com.pyamsoft.powermanager.base.preference;
 
 import android.support.annotation.CheckResult;
 
-public interface WifiPreferences {
+public interface AirplanePreferences {
 
   @CheckResult boolean isWearableManaged();
 
-  @CheckResult boolean isOriginalWifi();
+  @CheckResult boolean isOriginalAirplane();
 
-  void setOriginalWifi(boolean state);
+  void setOriginalAirplane(boolean state);
 
-  @CheckResult boolean isIgnoreChargingWifi();
+  @CheckResult boolean isAirplaneManaged();
 
-  @CheckResult long getWifiDelay();
+  @CheckResult boolean isIgnoreChargingAirplane();
 
-  void setWifiDelay(long time);
+  @CheckResult long getAirplaneDelay();
 
-  @CheckResult boolean isWifiManaged();
+  void setAirplaneDelay(long time);
 
-  @CheckResult boolean isPeriodicWifi();
+  @CheckResult boolean isPeriodicAirplane();
 
-  @CheckResult long getPeriodicDisableTimeWifi();
+  @CheckResult long getPeriodicDisableTimeAirplane();
 
-  void setPeriodicDisableTimeWifi(long time);
+  void setPeriodicDisableTimeAirplane(long time);
 
-  @CheckResult long getPeriodicEnableTimeWifi();
+  @CheckResult long getPeriodicEnableTimeAirplane();
 
-  void setPeriodicEnableTimeWifi(long time);
+  void setPeriodicEnableTimeAirplane(long time);
 }

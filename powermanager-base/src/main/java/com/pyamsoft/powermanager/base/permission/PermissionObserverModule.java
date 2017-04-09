@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.permission;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import dagger.Module;
@@ -30,13 +30,13 @@ import javax.inject.Singleton;
 
   @Singleton @Named("obs_root_permission") @Provides
   PermissionObserver provideRootPermissionObserver(@NonNull RootChecker rootChecker,
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+      @NonNull Context context, @NonNull RootPreferences preferences) {
     return new RootPermissionObserver(context, preferences, rootChecker);
   }
 
   @Singleton @Named("obs_doze_permission") @Provides
   PermissionObserver provideDozePermissionObserver(@NonNull RootChecker rootChecker,
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences) {
+      @NonNull Context context, @NonNull RootPreferences preferences) {
     return new DozePermissionObserver(context, preferences, rootChecker);
   }
 

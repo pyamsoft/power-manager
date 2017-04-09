@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
@@ -27,9 +27,9 @@ import timber.log.Timber;
 
 class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
 
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final DozePreferences preferences;
 
-  @Inject ManagerDozeInteractorImpl(@NonNull PowerManagerPreferences preferences,
+  @Inject ManagerDozeInteractorImpl(@NonNull DozePreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer) {
     super(jobQueuer, stateObserver);
     this.preferences = preferences;

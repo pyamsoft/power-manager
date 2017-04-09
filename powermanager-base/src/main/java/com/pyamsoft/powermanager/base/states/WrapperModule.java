@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.base.states;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import dagger.Module;
 import dagger.Provides;
@@ -41,7 +41,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("wrapper_data") DeviceFunctionWrapper provideDataConnectionWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context, @NonNull RootPreferences preferences,
       @NonNull ShellCommandHelper shellCommandHelper, @Named("logger_data") Logger logger,
       @Named("data_uri") String dataUri) {
     return new DataConnectionWrapperImpl(context, shellCommandHelper, logger, preferences, dataUri);
@@ -53,13 +53,13 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("wrapper_airplane") DeviceFunctionWrapper provideAirplaneModeWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context, @NonNull RootPreferences preferences,
       @NonNull ShellCommandHelper shellCommandHelper, @Named("logger_airplane") Logger logger) {
     return new AirplaneModeWrapperImpl(context, logger, preferences, shellCommandHelper);
   }
 
   @Singleton @Provides @Named("wrapper_doze") DeviceFunctionWrapper provideDozeWrapper(
-      @NonNull Context context, @NonNull PowerManagerPreferences preferences,
+      @NonNull Context context, @NonNull RootPreferences preferences,
       @NonNull ShellCommandHelper shellCommandHelper, @Named("logger_doze") Logger logger) {
     return new DozeDeviceWrapperImpl(context, logger, preferences, shellCommandHelper);
   }

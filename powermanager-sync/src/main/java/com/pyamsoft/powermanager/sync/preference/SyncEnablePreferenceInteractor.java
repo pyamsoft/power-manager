@@ -17,21 +17,21 @@
 package com.pyamsoft.powermanager.sync.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncEnablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
+class SyncEnablePreferenceInteractor extends CustomTimePreferenceInteractor<SyncPreferences> {
 
-  @Inject SyncEnablePreferenceInteractor(@NonNull PowerManagerPreferences preferences) {
+  @Inject SyncEnablePreferenceInteractor(@NonNull SyncPreferences preferences) {
     super(preferences);
   }
 
-  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+  @Override protected void saveTimeToPreferences(@NonNull SyncPreferences preferences, long time) {
     preferences.setPeriodicEnableTimeSync(time);
   }
 
-  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+  @Override protected long getTimeFromPreferences(@NonNull SyncPreferences preferences) {
     return preferences.getPeriodicEnableTimeSync();
   }
 }

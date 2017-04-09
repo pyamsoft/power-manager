@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.states;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,15 +37,9 @@ class BluetoothAdapterWrapperImpl implements DeviceFunctionWrapper {
   }
 
   @CheckResult @Nullable private BluetoothAdapter getBluetoothAdapter(@NonNull Context context) {
-    final BluetoothAdapter adapter;
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
-      adapter = BluetoothAdapter.getDefaultAdapter();
-    } else {
-      final BluetoothManager bluetoothManager = (BluetoothManager) context.getApplicationContext()
-          .getSystemService(Context.BLUETOOTH_SERVICE);
-      adapter = bluetoothManager.getAdapter();
-    }
-    return adapter;
+    BluetoothManager bluetoothManager = (BluetoothManager) context.getApplicationContext()
+        .getSystemService(Context.BLUETOOTH_SERVICE);
+    return bluetoothManager.getAdapter();
   }
 
   private void toggle(boolean state) {

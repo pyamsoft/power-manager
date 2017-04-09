@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.sync.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("sync_custom_delay_interactor")
   CustomTimePreferenceInteractor provideSyncCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull SyncPreferences preferences) {
     return new SyncDelayPreferenceInteractor(preferences);
   }
 
@@ -49,7 +49,7 @@ import javax.inject.Named;
 
   @Provides @Named("sync_custom_enable_interactor")
   CustomTimePreferenceInteractor provideSyncCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull SyncPreferences preferences) {
     return new SyncEnablePreferenceInteractor(preferences);
   }
 
@@ -62,7 +62,7 @@ import javax.inject.Named;
 
   @Provides @Named("sync_custom_disable_interactor")
   CustomTimePreferenceInteractor provideSyncCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull SyncPreferences preferences) {
     return new SyncDisablePreferenceInteractor(preferences);
   }
 }

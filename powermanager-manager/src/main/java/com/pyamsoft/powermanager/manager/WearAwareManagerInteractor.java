@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Observable;
@@ -27,9 +27,9 @@ import timber.log.Timber;
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final StateObserver wearStateObserver;
-  @NonNull final PowerManagerPreferences preferences;
+  @NonNull final WearablePreferences preferences;
 
-  WearAwareManagerInteractor(@NonNull PowerManagerPreferences preferences,
+  WearAwareManagerInteractor(@NonNull WearablePreferences preferences,
       @NonNull StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @NonNull StateObserver wearStateObserver) {
     super(jobQueuer, stateObserver);
@@ -37,12 +37,8 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @CheckResult public Observable<Boolean> isWearEnabled() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult Observable<Boolean> isWearEnabled() {
     return Observable.fromCallable(wearStateObserver::enabled);
-  }
-
-  @NonNull @CheckResult public Observable<Boolean> isWearManaged() {
-    return Observable.fromCallable(preferences::isWearableManaged);
   }
 
   @Override public void destroy() {
@@ -56,7 +52,7 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
     return Observable.fromCallable(() -> originalState).flatMap(originalStateEnabled -> {
       if (originalStateEnabled) {
         Timber.d("%s: Original state is enabled, is wearable managed?", getJobTag());
-        return isWearManaged();
+        return Observable.just(isWearManaged());
       } else {
         Timber.w("%s: Original state not enabled, return empty", getJobTag());
         return Observable.empty();
@@ -72,4 +68,6 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
       }
     });
   }
+
+  @CheckResult abstract boolean isWearManaged();
 }

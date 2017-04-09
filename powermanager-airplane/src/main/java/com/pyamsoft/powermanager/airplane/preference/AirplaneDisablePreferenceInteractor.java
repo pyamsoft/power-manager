@@ -17,22 +17,23 @@
 package com.pyamsoft.powermanager.airplane.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneDisablePreferenceInteractor extends CustomTimePreferenceInteractor <PowerManagerPreferences> {
+class AirplaneDisablePreferenceInteractor
+    extends CustomTimePreferenceInteractor<AirplanePreferences> {
 
-  @Inject AirplaneDisablePreferenceInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+  @Inject AirplaneDisablePreferenceInteractor(@NonNull AirplanePreferences preferences) {
     super(preferences);
   }
 
-  @Override protected void saveTimeToPreferences(PowerManagerPreferences preferences, long time) {
+  @Override
+  protected void saveTimeToPreferences(@NonNull AirplanePreferences preferences, long time) {
     preferences.setPeriodicDisableTimeAirplane(time);
   }
 
-  @Override protected long getTimeFromPreferences(PowerManagerPreferences preferences) {
+  @Override protected long getTimeFromPreferences(@NonNull AirplanePreferences preferences) {
     return preferences.getPeriodicDisableTimeAirplane();
   }
 }

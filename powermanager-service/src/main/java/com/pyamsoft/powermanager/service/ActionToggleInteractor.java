@@ -18,36 +18,24 @@ package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton class ActionToggleInteractor {
-
-  @NonNull private final PowerManagerPreferences preferences;
-
-  @Inject ActionToggleInteractor(@NonNull PowerManagerPreferences preferences) {
-    this.preferences = preferences;
+@Singleton class ActionToggleInteractor extends ServiceInteractor {
+  @Inject ActionToggleInteractor(@NonNull ServicePreferences preferences) {
+    super(preferences);
   }
 
-  @NonNull @CheckResult public Observable<Boolean> toggleEnabledState() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> toggleEnabledState() {
     return isServiceEnabled().map(enabled -> {
       final boolean newState = !enabled;
       setServiceEnabled(newState);
       return newState;
     });
-  }
-
-  void setServiceEnabled(boolean state) {
-    preferences.setServiceEnabled(state);
-  }
-
-  @CheckResult @NonNull protected Observable<Boolean> isServiceEnabled() {
-    return Observable.fromCallable(() -> getPreferences().isServiceEnabled());
-  }
-
-  @NonNull @CheckResult PowerManagerPreferences getPreferences() {
-    return preferences;
   }
 }

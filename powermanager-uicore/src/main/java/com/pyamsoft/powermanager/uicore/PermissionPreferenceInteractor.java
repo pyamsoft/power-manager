@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.uicore;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
 import io.reactivex.Observable;
 import javax.inject.Inject;
@@ -27,7 +27,7 @@ public class PermissionPreferenceInteractor extends ManagePreferenceInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
 
-  @Inject public PermissionPreferenceInteractor(@NonNull PowerManagerPreferences preferences,
+  @Inject public PermissionPreferenceInteractor(@NonNull OnboardingPreferences preferences,
       @NonNull PermissionObserver permissionObserver) {
     super(preferences);
     this.permissionObserver = permissionObserver;

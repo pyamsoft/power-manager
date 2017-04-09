@@ -30,7 +30,6 @@ import timber.log.Timber;
 
 abstract class BroadcastStateObserver extends BroadcastReceiver implements StateObserver {
 
-  // KLUDGE Holds reference to app context
   @NonNull private final Context appContext;
   @NonNull private final IntentFilter filter;
   @NonNull private final Map<String, SetCallback> setMap;

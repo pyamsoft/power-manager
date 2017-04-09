@@ -24,8 +24,8 @@ import android.provider.Settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.ShellCommandHelper;
 import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.helper.Checker;
@@ -49,12 +49,12 @@ class DataConnectionWrapperImpl implements DeviceFunctionWrapper {
   @NonNull private final Logger logger;
   @NonNull private final ConnectivityManager connectivityManager;
   @NonNull private final ContentResolver contentResolver;
-  @NonNull private final PowerManagerPreferences preferences;
+  @NonNull private final RootPreferences preferences;
   @NonNull private final String dataUri;
 
   @Inject DataConnectionWrapperImpl(@NonNull Context context,
       @NonNull ShellCommandHelper shellCommandHelper, @NonNull Logger logger,
-      @NonNull PowerManagerPreferences preferences, @NonNull String dataUri) {
+      @NonNull RootPreferences preferences, @NonNull String dataUri) {
     this.shellCommandHelper = Checker.checkNonNull(shellCommandHelper);
     this.logger = Checker.checkNonNull(logger);
     this.preferences = Checker.checkNonNull(preferences);

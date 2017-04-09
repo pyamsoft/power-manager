@@ -20,7 +20,18 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.base.preference.ClearPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
+import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import dagger.Module;
 import dagger.Provides;
@@ -63,15 +74,55 @@ import javax.inject.Singleton;
     return appContext;
   }
 
-  @Singleton @Provides PowerManagerPreferences providePreferences() {
-    return preferences;
-  }
-
   @Singleton @Provides WifiPreferences provideWifiPreferences() {
     return preferences;
   }
 
   @Singleton @Provides ClearPreferences provideClearPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides WearablePreferences provideWearablePreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides AirplanePreferences provideAirplanePreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides BluetoothPreferences provideBluetoothPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides DataPreferences provideDataPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides DozePreferences provideDozePreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides SyncPreferences provideSyncPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides OnboardingPreferences provideOnboardingPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides TriggerPreferences provideTriggerPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides ServicePreferences provideServicePreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides RootPreferences provideRootPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides LoggerPreferences provideLoggerPreferences() {
     return preferences;
   }
 

@@ -23,13 +23,27 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.base.preference.ClearPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
+import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
+import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
-class PowerManagerPreferencesImpl implements PowerManagerPreferences, WifiPreferences ,
-    ClearPreferences{
+class PowerManagerPreferencesImpl
+    implements WifiPreferences, ClearPreferences, WearablePreferences,
+    AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences,
+    LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences,
+    TriggerPreferences {
 
   private static final long PERIODIC_MINIMUM_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(1);
   @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
@@ -246,8 +260,12 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences, WifiPrefer
     preferences.edit().putBoolean(ORIGINAL_DATA, state).apply();
   }
 
-  @Override public boolean isOriginalBluetooh() {
+  @Override public boolean isOriginalBluetooth() {
     return preferences.getBoolean(ORIGINAL_BLUETOOTH, false);
+  }
+
+  @Override public void setOriginalBluetooth(boolean state) {
+    preferences.edit().putBoolean(ORIGINAL_BLUETOOTH, state).apply();
   }
 
   @Override public boolean isOriginalSync() {
@@ -272,10 +290,6 @@ class PowerManagerPreferencesImpl implements PowerManagerPreferences, WifiPrefer
 
   @Override public void setOriginalDoze(boolean state) {
     preferences.edit().putBoolean(ORIGINAL_DOZE, state).apply();
-  }
-
-  @Override public void setOriginalBluetooth(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_BLUETOOTH, state).apply();
   }
 
   @Override public boolean isServiceEnabled() {

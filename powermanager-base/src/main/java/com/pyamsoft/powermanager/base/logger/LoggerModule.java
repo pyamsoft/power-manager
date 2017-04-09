@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.base.logger;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
@@ -41,7 +41,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_manager")
   LoggerInteractor provideLoggerInteractorManager(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.MANAGER_LOG_ID);
   }
 
@@ -58,7 +58,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_wifi")
   LoggerInteractor provideLoggerInteractorWifi(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.WIFI_LOG_ID);
   }
 
@@ -75,7 +75,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_data")
   LoggerInteractor provideLoggerInteractorData(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.DATA_LOG_ID);
   }
 
@@ -93,7 +93,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_bluetooth")
   LoggerInteractor provideLoggerInteractorBluetooth(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.BLUETOOTH_LOG_ID);
   }
 
@@ -110,7 +110,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_sync")
   LoggerInteractor provideLoggerInteractorSync(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.SYNC_LOG_ID);
   }
 
@@ -128,7 +128,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_airplane")
   LoggerInteractor provideLoggerInteractorAirplane(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.AIRPLANE_LOG_ID);
   }
 
@@ -145,7 +145,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_doze")
   LoggerInteractor provideLoggerInteractorDoze(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.DOZE_LOG_ID);
   }
 
@@ -163,7 +163,7 @@ import javax.inject.Singleton;
 
   @Singleton @Provides @Named("logger_interactor_trigger")
   LoggerInteractor provideLoggerInteractorTrigger(@NonNull Context context,
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull LoggerPreferences preferences) {
     return new LoggerInteractor(context, preferences, LoggerInteractor.TRIGGER_LOG_ID);
   }
 }

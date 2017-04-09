@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import com.pyamsoft.powermanager.job.QueuerType;
@@ -41,7 +40,10 @@ abstract class ManagerInteractor {
     jobQueuer.cancel(getJobTag());
   }
 
-  @CheckResult @NonNull public Observable<Boolean> queueSet() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> queueSet() {
     return Observable.fromCallable(this::isManaged).flatMap(managed -> {
       if (managed) {
         Timber.d("%s: Is original state enabled?", getJobTag());
@@ -59,7 +61,10 @@ abstract class ManagerInteractor {
     });
   }
 
-  @CheckResult @NonNull public Observable<Boolean> queueUnset() {
+  /**
+   * public
+   */
+  @CheckResult @NonNull Observable<Boolean> queueUnset() {
     return Observable.fromCallable(this::isManaged).doOnNext(managed -> {
       Timber.d("%s: Unset original state", getJobTag());
       setOriginalStateEnabled(false);
@@ -83,14 +88,17 @@ abstract class ManagerInteractor {
     });
   }
 
-  @NonNull @CheckResult public Observable<Boolean> cancelJobs() {
+  /**
+   * public
+   */
+  @NonNull @CheckResult Observable<Boolean> cancelJobs() {
     return Observable.fromCallable(() -> {
       jobQueuer.cancel(getJobTag());
       return Boolean.TRUE;
     });
   }
 
-  @WorkerThread @CallSuper public void queueEnableJob() {
+  @SuppressWarnings("WeakerAccess") void queueEnableJob() {
     final QueuerType queuerType;
     final String jobTag = getJobTag();
     switch (jobTag) {
@@ -116,7 +124,7 @@ abstract class ManagerInteractor {
         .build());
   }
 
-  @WorkerThread @CallSuper public void queueDisableJob() {
+  @SuppressWarnings("WeakerAccess") void queueDisableJob() {
     final QueuerType queuerType;
     final String jobTag = getJobTag();
     switch (jobTag) {

@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.airplane.preference;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -36,7 +36,7 @@ import javax.inject.Named;
 
   @Provides @Named("airplane_custom_delay_interactor")
   CustomTimePreferenceInteractor provideAirplaneCustomDelayInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull AirplanePreferences preferences) {
     return new AirplaneDelayPreferenceInteractor(preferences);
   }
 
@@ -50,7 +50,7 @@ import javax.inject.Named;
 
   @Provides @Named("airplane_custom_enable_interactor")
   CustomTimePreferenceInteractor provideAirplaneCustomEnableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull AirplanePreferences preferences) {
     return new AirplaneEnablePreferenceInteractor(preferences);
   }
 
@@ -64,7 +64,7 @@ import javax.inject.Named;
 
   @Provides @Named("airplane_custom_disable_interactor")
   CustomTimePreferenceInteractor provideAirplaneCustomDisableInteractor(
-      @NonNull PowerManagerPreferences preferences) {
+      @NonNull AirplanePreferences preferences) {
     return new AirplaneDisablePreferenceInteractor(preferences);
   }
 }

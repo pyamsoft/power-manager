@@ -14,34 +14,38 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.uicore;
+package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import io.reactivex.Observable;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class ManagePreferenceInteractor {
+@Singleton class ServiceInteractor {
 
-  @SuppressWarnings("WeakerAccess") @NonNull final OnboardingPreferences preferences;
+  @NonNull private final ServicePreferences preferences;
 
-  @Inject public ManagePreferenceInteractor(@NonNull OnboardingPreferences preferences) {
+  @Inject ServiceInteractor(@NonNull ServicePreferences preferences) {
     this.preferences = preferences;
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
-    return Observable.fromCallable(preferences::isManageOnboardingShown).delay(1, TimeUnit.SECONDS);
+  @CheckResult @NonNull Observable<Boolean> isServiceEnabled() {
+    return Observable.fromCallable(() -> getPreferences().isServiceEnabled());
   }
 
   /**
    * public
    */
-  void setOnboarding() {
-    preferences.setManageOnboardingShown();
+  void setServiceEnabled(boolean newState) {
+    preferences.setServiceEnabled(newState);
+  }
+
+  @NonNull @CheckResult ServicePreferences getPreferences() {
+    return preferences;
   }
 }
