@@ -30,7 +30,7 @@ import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
@@ -66,12 +66,12 @@ public class TriggerJob extends Job {
   }
 
   private void runTriggerForPercent(int percent) {
-    final Observable<List<PowerTriggerEntry>> triggerQuery = powerTriggerDB.queryAll()
+    final Flowable<List<PowerTriggerEntry>> triggerQuery = powerTriggerDB.queryAll()
         .first(Collections.emptyList())
-        .toObservable()
+        .toFlowable()
         .flatMap(powerTriggerEntries -> {
           Timber.d("Flatten power triggers");
-          return Observable.fromIterable(powerTriggerEntries);
+          return Flowable.fromIterable(powerTriggerEntries);
         })
         .filter(entry -> {
           Timber.d("Filter empty power triggers");
@@ -90,13 +90,13 @@ public class TriggerJob extends Job {
             return 0;
           }
         })
-        .toObservable();
+        .toFlowable();
 
-    final Observable<PowerTriggerEntry> powerTriggerEntryObservable;
+    final Flowable<PowerTriggerEntry> powerTriggerEntryObservable;
     if (chargingObserver.enabled()) {
       powerTriggerEntryObservable = triggerQuery.flatMap(powerTriggerEntries -> {
         // Not final so we can call merges on it
-        Observable<Integer> updateTriggerResult = Observable.just(-1);
+        Flowable<Integer> updateTriggerResult = Flowable.just(-1);
 
         Timber.i("We are charging, mark any available triggers");
         for (final PowerTriggerEntry entry : powerTriggerEntries) {
@@ -114,7 +114,7 @@ public class TriggerJob extends Job {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
         return PowerTriggerEntry.empty();
-      }).toObservable();
+      }).toFlowable();
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
@@ -145,7 +145,7 @@ public class TriggerJob extends Job {
 
         return best;
       }).flatMap(entry -> {
-        final Observable<PowerTriggerEntry> updateTriggerResult;
+        final Flowable<PowerTriggerEntry> updateTriggerResult;
         if (!PowerTriggerEntry.isEmpty(entry)) {
           Timber.d("Mark trigger as unavailable: %s %d", entry.name(), entry.percent());
           updateTriggerResult =
@@ -155,7 +155,7 @@ public class TriggerJob extends Job {
               });
         } else {
           Timber.w("No trigger marked, EMPTY result");
-          updateTriggerResult = Observable.empty();
+          updateTriggerResult = Flowable.empty();
         }
 
         return updateTriggerResult;

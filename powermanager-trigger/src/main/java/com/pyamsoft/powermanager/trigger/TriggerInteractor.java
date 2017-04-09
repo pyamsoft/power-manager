@@ -21,7 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +46,7 @@ import timber.log.Timber;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<PowerTriggerEntry> queryAll(boolean forceRefresh) {
+  @CheckResult @NonNull Flowable<PowerTriggerEntry> queryAll(boolean forceRefresh) {
     return Single.defer(() -> {
       final Single<List<PowerTriggerEntry>> result;
       synchronized (this) {
@@ -62,7 +62,7 @@ import timber.log.Timber;
       }
 
       return result;
-    }).toObservable().flatMap(Observable::fromIterable).sorted((entry, entry2) -> {
+    }).toFlowable().flatMap(Flowable::fromIterable).sorted((entry, entry2) -> {
       if (entry.percent() == entry2.percent()) {
         return 0;
       } else if (entry.percent() < entry2.percent()) {
@@ -76,10 +76,10 @@ import timber.log.Timber;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
+  @CheckResult @NonNull Flowable<PowerTriggerEntry> put(@NonNull PowerTriggerEntry entry) {
     return getPowerTriggerDB().queryWithPercent(entry.percent())
         .first(PowerTriggerEntry.empty())
-        .toObservable()
+        .toFlowable()
         .flatMap(triggerEntry -> {
           if (!PowerTriggerEntry.isEmpty(triggerEntry)) {
             Timber.e("Entry already exists, throw");
@@ -89,10 +89,10 @@ import timber.log.Timber;
 
           if (PowerTriggerEntry.isEmpty(entry)) {
             Timber.e("Trigger is EMPTY");
-            return Observable.just(-1L);
+            return Flowable.just(-1L);
           } else if (entry.percent() > 100 || entry.percent() <= 0) {
             Timber.e("Percent too high");
-            return Observable.just(-1L);
+            return Flowable.just(-1L);
           } else {
             Timber.d("Insert new Trigger into DB");
             return getPowerTriggerDB().insert(entry);
@@ -112,7 +112,7 @@ import timber.log.Timber;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Integer> delete(int percent) {
+  @CheckResult @NonNull Flowable<Integer> delete(int percent) {
     return getPowerTriggerDB().queryAll()
         .first(Collections.emptyList())
         .map(powerTriggerEntries -> {
@@ -146,7 +146,7 @@ import timber.log.Timber;
 
           return foundEntry;
         })
-        .toObservable()
+        .toFlowable()
         .flatMap(position -> {
           Timber.d("Delete trigger with percent: %d", percent);
           return getPowerTriggerDB().deleteWithPercent(percent).map(integer -> {

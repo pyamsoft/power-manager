@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.base.PowerManagerPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,6 +44,7 @@ import timber.log.Timber;
     this.triggerInteractor = triggerInteractor;
   }
 
+
   @CheckResult @NonNull public Observable<Boolean> isRootEnabled() {
     return Observable.fromCallable(preferences::isRootEnabled);
   }
@@ -55,7 +57,7 @@ import timber.log.Timber;
     });
   }
 
-  @NonNull @CheckResult public Observable<Boolean> clearDatabase() {
+  @NonNull @CheckResult public Flowable<Boolean> clearDatabase() {
     return powerTriggerDB.deleteAll()
         .flatMap(result -> powerTriggerDB.deleteDatabase())
         .map(whocares -> {
@@ -64,7 +66,7 @@ import timber.log.Timber;
         });
   }
 
-  @NonNull @CheckResult public Observable<Boolean> clearAll() {
+  @NonNull @CheckResult public Flowable<Boolean> clearAll() {
     return clearDatabase().map(aBoolean -> {
       Timber.d("Clear all preferences");
       preferences.clearAll();

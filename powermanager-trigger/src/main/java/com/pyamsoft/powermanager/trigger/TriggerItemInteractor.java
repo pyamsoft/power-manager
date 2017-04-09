@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import timber.log.Timber;
@@ -38,9 +38,9 @@ import timber.log.Timber;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry,
+  @CheckResult @NonNull Flowable<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry,
       boolean enabled) {
-    return Observable.defer(() -> {
+    return Flowable.defer(() -> {
       final int percent = entry.percent();
       Timber.d("Update enabled state with percent: %d", percent);
       Timber.d("Update entry to enabled state: %s", enabled);
