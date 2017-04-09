@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.ClearPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import dagger.Module;
 import dagger.Provides;
@@ -66,7 +67,11 @@ import javax.inject.Singleton;
     return preferences;
   }
 
-  @Singleton @Provides WifiPreferences providewWifiPreferences() {
+  @Singleton @Provides WifiPreferences provideWifiPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides ClearPreferences provideClearPreferences() {
     return preferences;
   }
 

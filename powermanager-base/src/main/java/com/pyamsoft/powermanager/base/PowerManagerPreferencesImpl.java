@@ -23,11 +23,13 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.preference.PreferenceManager;
+import com.pyamsoft.powermanager.base.preference.ClearPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
-class PowerManagerPreferencesImpl implements PowerManagerPreferences, WifiPreferences {
+class PowerManagerPreferencesImpl implements PowerManagerPreferences, WifiPreferences ,
+    ClearPreferences{
 
   private static final long PERIODIC_MINIMUM_TIME_SECONDS = TimeUnit.MINUTES.toSeconds(1);
   @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";

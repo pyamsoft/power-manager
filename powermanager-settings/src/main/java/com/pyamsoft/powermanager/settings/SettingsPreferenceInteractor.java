@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.settings;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.PowerManagerPreferences;
+import com.pyamsoft.powermanager.base.preference.ClearPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
@@ -32,14 +33,16 @@ import timber.log.Timber;
 
   @SuppressWarnings("WeakerAccess") @NonNull final RootChecker rootChecker;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerManagerPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final ClearPreferences clearPreferences;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @NonNull final TriggerInteractor triggerInteractor;
 
   @Inject SettingsPreferenceInteractor(@NonNull PowerTriggerDB powerTriggerDB,
-      @NonNull PowerManagerPreferences preferences, @NonNull RootChecker rootChecker,
-      @NonNull TriggerInteractor triggerInteractor) {
+      @NonNull PowerManagerPreferences preferences, @NonNull ClearPreferences clearPreferences,
+      @NonNull RootChecker rootChecker, @NonNull TriggerInteractor triggerInteractor) {
     this.powerTriggerDB = powerTriggerDB;
     this.preferences = preferences;
+    this.clearPreferences = clearPreferences;
     this.rootChecker = rootChecker;
     this.triggerInteractor = triggerInteractor;
   }
@@ -80,7 +83,7 @@ import timber.log.Timber;
   @NonNull @CheckResult Flowable<Boolean> clearAll() {
     return clearDatabase().map(aBoolean -> {
       Timber.d("Clear all preferences");
-      preferences.clearAll();
+      clearPreferences.clearAll();
       return Boolean.TRUE;
     });
   }

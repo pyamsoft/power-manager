@@ -112,8 +112,6 @@ public interface PowerManagerPreferences {
 
   @CheckResult boolean isWearableManaged();
 
-  void clearAll();
-
   @CheckResult boolean isPeriodicDoze();
 
   @CheckResult boolean isPeriodicData();
