@@ -448,6 +448,7 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(manageWifi, manageWifiDefault);
   }
 
+  // TODO Split into per-module preferences
   @Override public boolean isWearableManaged() {
     return preferences.getBoolean(manageWearable, manageWearableDefault);
   }
