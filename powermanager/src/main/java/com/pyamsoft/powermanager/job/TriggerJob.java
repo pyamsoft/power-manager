@@ -30,11 +30,11 @@ import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.helper.DisposableHelper;
-import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -66,18 +66,14 @@ public class TriggerJob extends Job {
   }
 
   private void runTriggerForPercent(int percent) {
-    final Flowable<List<PowerTriggerEntry>> triggerQuery = powerTriggerDB.queryAll()
-        .first(Collections.emptyList())
-        .toFlowable()
-        .flatMap(powerTriggerEntries -> {
+    final Single<List<PowerTriggerEntry>> triggerQuery =
+        powerTriggerDB.queryAll().flatMapObservable(powerTriggerEntries -> {
           Timber.d("Flatten power triggers");
-          return Flowable.fromIterable(powerTriggerEntries);
-        })
-        .filter(entry -> {
+          return Observable.fromIterable(powerTriggerEntries);
+        }).filter(entry -> {
           Timber.d("Filter empty power triggers");
           return !PowerTriggerEntry.isEmpty(entry);
-        })
-        .toSortedList((entry, entry2) -> {
+        }).toSortedList((entry, entry2) -> {
           Timber.d("Sort entries");
           final int p1 = entry.percent();
           final int p2 = entry2.percent();
@@ -89,14 +85,13 @@ public class TriggerJob extends Job {
           } else {
             return 0;
           }
-        })
-        .toFlowable();
+        });
 
-    final Flowable<PowerTriggerEntry> powerTriggerEntryObservable;
+    final Single<PowerTriggerEntry> powerTriggerEntryObservable;
     if (chargingObserver.enabled()) {
-      powerTriggerEntryObservable = triggerQuery.flatMap(powerTriggerEntries -> {
+      powerTriggerEntryObservable = triggerQuery.flatMapObservable(powerTriggerEntries -> {
         // Not final so we can call merges on it
-        Flowable<Integer> updateTriggerResult = Flowable.just(-1);
+        Observable<Integer> updateTriggerResult = Observable.just(0);
 
         Timber.i("We are charging, mark any available triggers");
         for (final PowerTriggerEntry entry : powerTriggerEntries) {
@@ -104,7 +99,7 @@ public class TriggerJob extends Job {
           if (entry.percent() <= percent && !entry.available()) {
             Timber.d("Mark entry available for percent: %d", entry.percent());
             updateTriggerResult = updateTriggerResult.mergeWith(
-                powerTriggerDB.updateAvailable(true, entry.percent()));
+                powerTriggerDB.updateAvailable(true, entry.percent()).toObservable());
           }
         }
 
@@ -114,7 +109,7 @@ public class TriggerJob extends Job {
         Timber.d("Number of values marked available: %d", integers.size() - 1);
         Timber.d("Return an empty trigger");
         return PowerTriggerEntry.empty();
-      }).toFlowable();
+      });
     } else {
       powerTriggerEntryObservable = triggerQuery.map(powerTriggerEntries -> {
         Timber.i("Not charging, select best available trigger");
@@ -145,17 +140,15 @@ public class TriggerJob extends Job {
 
         return best;
       }).flatMap(entry -> {
-        final Flowable<PowerTriggerEntry> updateTriggerResult;
+        final Single<PowerTriggerEntry> updateTriggerResult;
         if (!PowerTriggerEntry.isEmpty(entry)) {
           Timber.d("Mark trigger as unavailable: %s %d", entry.name(), entry.percent());
-          updateTriggerResult =
-              powerTriggerDB.updateAvailable(entry.available(), entry.percent()).map(integer -> {
-                Timber.d("Updated trigger: (%d) unavailable", integer);
-                return entry;
-              });
+          updateTriggerResult = powerTriggerDB.updateAvailable(entry.available(), entry.percent())
+              .toSingleDefault(entry.percent())
+              .map(integer -> entry);
         } else {
           Timber.w("No trigger marked, EMPTY result");
-          updateTriggerResult = Flowable.empty();
+          updateTriggerResult = Single.never();
         }
 
         return updateTriggerResult;
