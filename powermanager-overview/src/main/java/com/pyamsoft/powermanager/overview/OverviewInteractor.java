@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,9 +60,8 @@ import javax.inject.Singleton;
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
-    return Observable.fromCallable(preferences::isOverviewOnboardingShown)
-        .delay(1, TimeUnit.SECONDS);
+  @NonNull @CheckResult Single<Boolean> hasShownOnboarding() {
+    return Single.fromCallable(preferences::isOverviewOnboardingShown).delay(1, TimeUnit.SECONDS);
   }
 
   /**
@@ -75,42 +74,42 @@ import javax.inject.Singleton;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isWifiManaged() {
-    return Observable.fromCallable(wifiPreferences::isWifiManaged);
+  @CheckResult @NonNull Single<Boolean> isWifiManaged() {
+    return Single.fromCallable(wifiPreferences::isWifiManaged);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isDataManaged() {
-    return Observable.fromCallable(dataPreferences::isDataManaged);
+  @CheckResult @NonNull Single<Boolean> isDataManaged() {
+    return Single.fromCallable(dataPreferences::isDataManaged);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isBluetoothManaged() {
-    return Observable.fromCallable(bluetoothPreferences::isBluetoothManaged);
+  @CheckResult @NonNull Single<Boolean> isBluetoothManaged() {
+    return Single.fromCallable(bluetoothPreferences::isBluetoothManaged);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isSyncManaged() {
-    return Observable.fromCallable(syncPreferences::isSyncManaged);
+  @CheckResult @NonNull Single<Boolean> isSyncManaged() {
+    return Single.fromCallable(syncPreferences::isSyncManaged);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isAirplaneManaged() {
-    return Observable.fromCallable(airplanePreferences::isAirplaneManaged);
+  @CheckResult @NonNull Single<Boolean> isAirplaneManaged() {
+    return Single.fromCallable(airplanePreferences::isAirplaneManaged);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isDozeManaged() {
-    return Observable.fromCallable(dozePreferences::isDozeManaged);
+  @CheckResult @NonNull Single<Boolean> isDozeManaged() {
+    return Single.fromCallable(dozePreferences::isDozeManaged);
   }
 }

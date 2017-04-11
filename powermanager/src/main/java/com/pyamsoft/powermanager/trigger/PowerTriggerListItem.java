@@ -22,7 +22,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CompoundButton;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding;
@@ -34,7 +33,6 @@ import javax.inject.Inject;
 public class PowerTriggerListItem extends
     GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder> {
 
-  @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @SuppressWarnings("WeakerAccess") @Inject TriggerItemPresenter presenter;
 
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
@@ -48,10 +46,6 @@ public class PowerTriggerListItem extends
 
   @Override public int getLayoutRes() {
     return R.layout.adapter_item_trigger;
-  }
-
-  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
-    return FACTORY;
   }
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
@@ -92,13 +86,8 @@ public class PowerTriggerListItem extends
     presenter.destroy();
   }
 
-  private static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-    ItemFactory() {
-    }
-
-    @Override public ViewHolder create(View v) {
-      return new ViewHolder(v);
-    }
+  @Override public ViewHolder getViewHolder(View view) {
+    return new ViewHolder(view);
   }
 
   static final class ViewHolder extends RecyclerView.ViewHolder {

@@ -24,7 +24,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
@@ -36,7 +35,6 @@ import java.util.List;
 public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
-  @NonNull private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
   @NonNull private DrawableMap drawableMap = new DrawableMap();
 
   OverviewItem(@NonNull String title, @DrawableRes int image, @ColorRes int background,
@@ -96,18 +94,8 @@ public class OverviewItem
       drawableMap.put("check", checkTask);
     }
   }
-
-  @Override public ViewHolderFactory<? extends ViewHolder> getFactory() {
-    return FACTORY;
-  }
-
-  private static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-    ItemFactory() {
-    }
-
-    @Override public ViewHolder create(View v) {
-      return new ViewHolder(v);
-    }
+  @Override public ViewHolder getViewHolder(View view) {
+    return new ViewHolder(view);
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {

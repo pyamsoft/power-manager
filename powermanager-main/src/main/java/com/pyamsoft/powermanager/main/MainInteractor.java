@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -50,14 +50,14 @@ import javax.inject.Singleton;
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> isStartWhenOpen() {
-    return Observable.fromCallable(servicePreferences::isStartWhenOpen);
+  @NonNull @CheckResult Single<Boolean> isStartWhenOpen() {
+    return Single.fromCallable(servicePreferences::isStartWhenOpen);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> hasRootPermission() {
-    return Observable.fromCallable(rootPermissionObserver::hasPermission);
+  @CheckResult @NonNull Single<Boolean> hasRootPermission() {
+    return Single.fromCallable(rootPermissionObserver::hasPermission);
   }
 }

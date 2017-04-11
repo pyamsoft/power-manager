@@ -70,7 +70,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getWifiObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isWifiManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isWifiManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   /**
@@ -78,7 +78,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getDataObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isDataManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isDataManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   /**
@@ -86,7 +86,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getBluetoothObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isBluetoothManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isBluetoothManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   /**
@@ -94,7 +94,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getSyncObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isSyncManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isSyncManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   /**
@@ -102,7 +102,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getAirplaneObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isAirplaneManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isAirplaneManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   /**
@@ -110,7 +110,7 @@ class OverviewPresenter extends SchedulerPresenter {
    */
   void getDozeObserver(@NonNull ObserverRetrieveCallback callback) {
     callback.onObserverRetrieved(
-        interactor.isDozeManaged().blockingFirst() ? States.ENABLED : States.DISABLED);
+        interactor.isDozeManaged().blockingGet() ? States.ENABLED : States.DISABLED);
   }
 
   interface OnboardingCallback {

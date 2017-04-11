@@ -65,7 +65,7 @@ public class LoggerPresenter extends SchedulerPresenter {
     final Disposable logDisposable = interactor.log(logType, fmt, args)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(success -> {
+        .subscribe(() -> {
           // TODO anything else?
         }, throwable -> {
           Timber.e(throwable, "onError: Unable to successfully log message to log file");
@@ -96,7 +96,8 @@ public class LoggerPresenter extends SchedulerPresenter {
           if (deleted) {
             callback.onLogDeleted(interactor.getLogId());
           }
-        }, throwable -> Timber.e(throwable, "onError deleteLog"), this::clearLogs);
+          clearLogs();
+        }, throwable -> Timber.e(throwable, "onError deleteLog"));
   }
 
   @SuppressWarnings("WeakerAccess") void clearLogs() {

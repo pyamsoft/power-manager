@@ -23,7 +23,9 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import com.pyamsoft.powermanager.job.QueuerType;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import timber.log.Timber;
 
 abstract class ManagerInteractor {
@@ -43,59 +45,56 @@ abstract class ManagerInteractor {
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> queueSet() {
-    return Observable.fromCallable(this::isManaged).flatMap(managed -> {
+  @CheckResult @NonNull Completable queueSet() {
+    return Maybe.fromCallable(this::isManaged).flatMap(managed -> {
       if (managed) {
         Timber.d("%s: Is original state enabled?", getJobTag());
-        return Observable.just(isOriginalStateEnabled());
+        return Maybe.just(isOriginalStateEnabled());
       } else {
         Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Observable.empty();
+        return Maybe.empty();
       }
-    }).doOnNext(originalState -> {
+    }).doOnSuccess(originalState -> {
       if (originalState) {
         queueEnableJob();
-        Timber.d("%s: Unset original state", getJobTag());
-        setOriginalStateEnabled(false);
       }
-    });
+    }).doOnComplete(() -> {
+      Timber.d("%s: Unset original state", getJobTag());
+      setOriginalStateEnabled(false);
+    }).ignoreElement();
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> queueUnset() {
-    return Observable.fromCallable(this::isManaged).doOnNext(managed -> {
+  @CheckResult @NonNull Completable queueUnset() {
+    return Maybe.fromCallable(this::isManaged).doOnSuccess(managed -> {
       Timber.d("%s: Unset original state", getJobTag());
       setOriginalStateEnabled(false);
     }).flatMap(managed -> {
       if (managed) {
         Timber.d("%s: Is original state enabled?", getJobTag());
-        return isEnabled();
+        return isEnabled().toMaybe();
       } else {
         Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Observable.empty();
+        return Maybe.empty();
       }
-    }).map(enabled -> {
+    }).doOnSuccess(enabled -> {
       Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
       setOriginalStateEnabled(enabled);
-      return enabled;
-    }).flatMap(this::accountForWearableBeforeDisable).doOnNext(shouldQueue -> {
+    }).flatMap(this::accountForWearableBeforeDisable).doOnSuccess(shouldQueue -> {
       // Only queue a disable job if the radio is not ignored
       if (shouldQueue) {
         queueDisableJob();
       }
-    });
+    }).ignoreElement();
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> cancelJobs() {
-    return Observable.fromCallable(() -> {
-      jobQueuer.cancel(getJobTag());
-      return Boolean.TRUE;
-    });
+  @NonNull @CheckResult Completable cancelJobs() {
+    return Completable.fromAction(() -> jobQueuer.cancel(getJobTag()));
   }
 
   @SuppressWarnings("WeakerAccess") void queueEnableJob() {
@@ -150,8 +149,8 @@ abstract class ManagerInteractor {
         .build());
   }
 
-  @CallSuper @NonNull Observable<Boolean> isEnabled() {
-    return Observable.fromCallable(stateObserver::enabled);
+  @CallSuper @NonNull Single<Boolean> isEnabled() {
+    return Single.fromCallable(stateObserver::enabled);
   }
 
   @CheckResult abstract boolean isManaged();
@@ -173,5 +172,5 @@ abstract class ManagerInteractor {
   @CheckResult abstract long getPeriodicDisableTime();
 
   @CheckResult @NonNull
-  abstract Observable<Boolean> accountForWearableBeforeDisable(boolean originalState);
+  abstract Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState);
 }

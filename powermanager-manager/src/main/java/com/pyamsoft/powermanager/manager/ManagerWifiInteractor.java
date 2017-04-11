@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -78,7 +78,7 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   }
 
   @NonNull @Override
-  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+  protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
       Timber.d("Check for active connection here");
       /*

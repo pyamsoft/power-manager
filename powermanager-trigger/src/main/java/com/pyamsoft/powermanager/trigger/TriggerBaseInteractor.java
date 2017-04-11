@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 
 abstract class TriggerBaseInteractor {
 
@@ -33,8 +33,8 @@ abstract class TriggerBaseInteractor {
   /**
    * public
    */
-  @CheckResult @NonNull Flowable<PowerTriggerEntry> get(int percent) {
-    return powerTriggerDB.queryWithPercent(percent).first(PowerTriggerEntry.empty()).toFlowable();
+  @CheckResult @NonNull Single<PowerTriggerEntry> get(int percent) {
+    return powerTriggerDB.queryWithPercent(percent);
   }
 
   @NonNull @CheckResult PowerTriggerDB getPowerTriggerDB() {

@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.manager;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
 import timber.log.Timber;
 
 abstract class WearUnawareManagerInteractor extends ManagerInteractor {
@@ -29,8 +29,8 @@ abstract class WearUnawareManagerInteractor extends ManagerInteractor {
   }
 
   @NonNull @Override
-  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
-    return Observable.fromCallable(() -> {
+  protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+    return Maybe.fromCallable(() -> {
       Timber.d("%s: Unaware of wearables,just pass through", getJobTag());
       return originalState;
     });

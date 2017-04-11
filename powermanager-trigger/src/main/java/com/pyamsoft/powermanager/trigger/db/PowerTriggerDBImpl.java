@@ -27,9 +27,12 @@ import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.squareup.sqldelight.SqlDelightStatement;
 import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.disposables.Disposables;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -58,8 +61,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
         }, throwable -> Timber.e(throwable, "onError closing database"));
   }
 
-  @Override @CheckResult @NonNull public Flowable<Long> insert(@NonNull PowerTriggerEntry entry) {
-    return Flowable.fromCallable(() -> {
+  @Override @CheckResult @NonNull public Completable insert(@NonNull PowerTriggerEntry entry) {
+    return Completable.fromCallable(() -> {
       if (PowerTriggerEntry.isEmpty(entry)) {
         throw new IllegalStateException("Cannot insert empty entries");
       }
@@ -68,69 +71,62 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
       openDatabase();
       final int percent = entry.percent();
       return deleteWithPercentUnguarded(percent);
-    }).map(deleted -> {
-      Timber.d("Delete result: %d", deleted);
-      return PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry);
-    }).onBackpressureBuffer(16, () -> Timber.e("PowerTriggerDBImpl insert backpressure overflow"));
+    })
+        .andThen(Completable.fromCallable(
+            () -> PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry)));
   }
 
-  @NonNull @Override public Flowable<Integer> updateAvailable(boolean available, int percent) {
-    return Flowable.fromCallable(() -> {
+  @NonNull @Override public Completable updateAvailable(boolean available, int percent) {
+    return Completable.fromCallable(() -> {
       Timber.i("DB: UPDATE AVAILABLE");
       openDatabase();
       return PowerTriggerEntry.updateAvailable(openHelper).executeProgram(available, percent);
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl updateAvailable backpressure overflow"));
+    });
   }
 
-  @NonNull @Override public Flowable<Integer> updateEnabled(boolean enabled, int percent) {
-    return Flowable.fromCallable(() -> {
+  @NonNull @Override public Completable updateEnabled(boolean enabled, int percent) {
+    return Completable.fromCallable(() -> {
       Timber.i("DB: UPDATE ENABLED");
       openDatabase();
       return PowerTriggerEntry.updateEnabled(openHelper).executeProgram(enabled, percent);
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl updateEnabled backpressure overflow"));
+    });
   }
 
-  @Override @NonNull @CheckResult public Flowable<List<PowerTriggerEntry>> queryAll() {
-    return Flowable.defer(() -> {
+  @Override @NonNull @CheckResult public Single<List<PowerTriggerEntry>> queryAll() {
+    return Single.defer(() -> {
       Timber.i("DB: QUERY ALL");
       openDatabase();
 
       SqlDelightStatement statement = PowerTriggerEntry.queryAll();
-      return RxJavaInterop.toV2Flowable(
+      return RxJavaInterop.toV2Single(
           briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
-              .mapToList(PowerTriggerEntry.allEntriesMapper()::map));
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl queryAll backpressure overflow"));
+              .mapToList(PowerTriggerEntry.allEntriesMapper()::map)
+              .firstOrDefault(Collections.emptyList())
+              .toSingle());
+    });
   }
 
-  @Override @NonNull @CheckResult public Flowable<PowerTriggerEntry> queryWithPercent(int percent) {
-    return Flowable.defer(() -> {
+  @Override @NonNull @CheckResult public Single<PowerTriggerEntry> queryWithPercent(int percent) {
+    return Single.defer(() -> {
       Timber.i("DB: QUERY PERCENT");
       openDatabase();
 
       SqlDelightStatement statement = PowerTriggerEntry.withPercent(percent);
-      return RxJavaInterop.toV2Flowable(
+      return RxJavaInterop.toV2Single(
           briteDatabase.createQuery(statement.tables, statement.statement, statement.args)
               .mapToOneOrDefault(PowerTriggerEntry.withPercentMapper()::map,
-                  PowerTriggerEntry.empty()));
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl queryWithPercent backpressure overflow"));
+                  PowerTriggerEntry.empty())
+              .firstOrDefault(PowerTriggerEntry.empty())
+              .toSingle());
+    });
   }
 
-  @Override @CheckResult @NonNull public Flowable<Integer> deleteWithPercent(int percent) {
-    return Flowable.fromCallable(() -> {
+  @Override @CheckResult @NonNull public Completable deleteWithPercent(int percent) {
+    return Completable.fromCallable(() -> {
       Timber.i("DB: DELETE PERCENT");
       openDatabase();
       return deleteWithPercentUnguarded(percent);
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl deleteWithPercent backpressure overflow"));
+    });
   }
 
   @SuppressWarnings("WeakerAccess") @VisibleForTesting @CheckResult int deleteWithPercentUnguarded(
@@ -138,26 +134,17 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return PowerTriggerEntry.deleteTrigger(openHelper).executeProgram(percent);
   }
 
-  @Override @CheckResult @NonNull public Flowable<Integer> deleteAll() {
-    return Flowable.fromCallable(() -> {
+  @Override @CheckResult @NonNull public Completable deleteAll() {
+    return Completable.fromAction(() -> {
       Timber.i("DB: DELETE ALL");
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
       dbOpenDisposable = DisposableHelper.dispose(dbOpenDisposable);
       briteDatabase.close();
-      deleteDatabase();
-      return 1;
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl deleteAll backpressure overflow"));
+    }).andThen(deleteDatabase());
   }
 
-  @NonNull @Override public Flowable<Boolean> deleteDatabase() {
-    return Flowable.fromCallable(() -> {
-      openHelper.deleteDatabase();
-      return Boolean.TRUE;
-    })
-        .onBackpressureBuffer(16,
-            () -> Timber.e("PowerTriggerDBImpl deleteDatabase backpressure overflow"));
+  @NonNull @Override public Completable deleteDatabase() {
+    return Completable.fromAction(openHelper::deleteDatabase);
   }
 
   private static class PowerTriggerOpenHelper extends SQLiteOpenHelper {

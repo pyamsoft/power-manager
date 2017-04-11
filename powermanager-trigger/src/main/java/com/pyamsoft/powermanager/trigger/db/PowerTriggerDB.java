@@ -18,24 +18,25 @@ package com.pyamsoft.powermanager.trigger.db;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import java.util.List;
 
 public interface PowerTriggerDB {
 
-  @CheckResult @NonNull Flowable<Long> insert(@NonNull PowerTriggerEntry entry);
+  @CheckResult @NonNull Completable insert(@NonNull PowerTriggerEntry entry);
 
-  @CheckResult @NonNull Flowable<Integer> updateAvailable(boolean available, int percent);
+  @CheckResult @NonNull Completable updateAvailable(boolean available, int percent);
 
-  @CheckResult @NonNull Flowable<Integer> updateEnabled(boolean enabled, int percent);
+  @CheckResult @NonNull Completable updateEnabled(boolean enabled, int percent);
 
-  @NonNull @CheckResult Flowable<List<PowerTriggerEntry>> queryAll();
+  @NonNull @CheckResult Single<List<PowerTriggerEntry>> queryAll();
 
-  @NonNull @CheckResult Flowable<PowerTriggerEntry> queryWithPercent(int percent);
+  @NonNull @CheckResult Single<PowerTriggerEntry> queryWithPercent(int percent);
 
-  @CheckResult @NonNull Flowable<Integer> deleteWithPercent(int percent);
+  @CheckResult @NonNull Completable deleteWithPercent(int percent);
 
-  @CheckResult @NonNull Flowable<Integer> deleteAll();
+  @CheckResult @NonNull Completable deleteAll();
 
-  @CheckResult @NonNull Flowable<Boolean> deleteDatabase();
+  @CheckResult @NonNull Completable deleteDatabase();
 }

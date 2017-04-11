@@ -18,7 +18,8 @@ package com.pyamsoft.powermanager.uicore.preference;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import java.util.concurrent.TimeUnit;
 
 public abstract class CustomTimePreferenceInteractor<T> {
@@ -32,15 +33,14 @@ public abstract class CustomTimePreferenceInteractor<T> {
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Long> saveTime(long time, long delay) {
-    return Observable.defer(() -> {
-      saveTimeToPreferences(preferences, time);
-      return getTime();
-    }).delay(delay, TimeUnit.MILLISECONDS);
+  @NonNull @CheckResult Single<Long> saveTime(long time, long delay) {
+    return Completable.fromAction(() -> saveTimeToPreferences(preferences, time))
+        .andThen(getTime())
+        .delay(delay, TimeUnit.MILLISECONDS);
   }
 
-  @NonNull @CheckResult public Observable<Long> getTime() {
-    return Observable.fromCallable(() -> getTimeFromPreferences(preferences));
+  @NonNull @CheckResult public Single<Long> getTime() {
+    return Single.fromCallable(() -> getTimeFromPreferences(preferences));
   }
 
   protected abstract void saveTimeToPreferences(@NonNull T preferences, long time);

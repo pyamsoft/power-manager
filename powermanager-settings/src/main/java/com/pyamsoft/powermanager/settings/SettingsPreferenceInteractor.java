@@ -23,8 +23,9 @@ import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.shell.RootChecker;
 import com.pyamsoft.powermanager.trigger.TriggerInteractor;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
-import io.reactivex.Flowable;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import timber.log.Timber;
@@ -68,20 +69,18 @@ import timber.log.Timber;
   /**
    * public
    */
-  @NonNull @CheckResult Flowable<Boolean> clearDatabase() {
+  @NonNull @CheckResult Single<Boolean> clearDatabase() {
     return powerTriggerDB.deleteAll()
-        .flatMap(result -> powerTriggerDB.deleteDatabase())
-        .map(whocares -> {
-          triggerInteractor.clearCached();
-          return Boolean.TRUE;
-        });
+        .andThen(powerTriggerDB.deleteDatabase())
+        .andThen(Completable.fromAction(triggerInteractor::clearCached))
+        .andThen(Single.just(Boolean.TRUE));
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Flowable<Boolean> clearAll() {
-    return clearDatabase().map(aBoolean -> {
+  @NonNull @CheckResult Single<Boolean> clearAll() {
+    return clearDatabase().map(whoCares -> {
       Timber.d("Clear all preferences");
       clearPreferences.clearAll();
       return Boolean.TRUE;

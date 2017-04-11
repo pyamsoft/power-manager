@@ -31,7 +31,7 @@ import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import com.pyamsoft.powermanager.job.QueuerType;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -95,15 +95,14 @@ import timber.log.Timber;
     jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
-  Observable<Integer> getNotificationPriority() {
-    return Observable.fromCallable(() -> getPreferences().getNotificationPriority());
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult Single<Integer> getNotificationPriority() {
+    return Single.fromCallable(() -> getPreferences().getNotificationPriority());
   }
 
   /**
    * public
    */
-  @NonNull Observable<Notification> createNotification() {
+  @NonNull Single<Notification> createNotification() {
     return isServiceEnabled().flatMap(serviceEnabled -> {
       final String actionName = serviceEnabled ? "Suspend" : "Start";
       final Intent toggleService = new Intent(appContext, toggleServiceClass);

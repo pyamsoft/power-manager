@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -64,7 +64,7 @@ class ManagerAirplaneInteractor extends WearAwareManagerInteractor {
     return JobQueuer.AIRPLANE_JOB_TAG;
   }
 
-  @NonNull @Override public Observable<Boolean> isEnabled() {
+  @NonNull @Override public Single<Boolean> isEnabled() {
     Timber.d("Invert getState for Airplane");
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }

@@ -21,7 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -55,7 +55,7 @@ class ManagerDozeInteractorImpl extends WearUnawareManagerInteractor {
     return JobQueuer.DOZE_JOB_TAG;
   }
 
-  @NonNull @Override public Observable<Boolean> isEnabled() {
+  @NonNull @Override public Single<Boolean> isEnabled() {
     Timber.d("Invert getState for Doze");
     return super.isEnabled().map(aBoolean -> !aBoolean);
   }

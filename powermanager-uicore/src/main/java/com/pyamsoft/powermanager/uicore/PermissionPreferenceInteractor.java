@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 
 public class PermissionPreferenceInteractor extends ManagePreferenceInteractor {
@@ -36,7 +36,7 @@ public class PermissionPreferenceInteractor extends ManagePreferenceInteractor {
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> hasPermission() {
-    return Observable.fromCallable(permissionObserver::hasPermission);
+  @CheckResult @NonNull Single<Boolean> hasPermission() {
+    return Single.fromCallable(permissionObserver::hasPermission);
   }
 }

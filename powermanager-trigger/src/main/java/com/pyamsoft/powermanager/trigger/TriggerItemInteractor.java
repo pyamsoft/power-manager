@@ -20,7 +20,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import io.reactivex.Flowable;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import timber.log.Timber;
@@ -38,16 +39,13 @@ import timber.log.Timber;
   /**
    * public
    */
-  @CheckResult @NonNull Flowable<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry,
+  @CheckResult @NonNull Single<PowerTriggerEntry> update(@NonNull PowerTriggerEntry entry,
       boolean enabled) {
-    return Flowable.defer(() -> {
+    return Completable.fromCallable(() -> {
       final int percent = entry.percent();
       Timber.d("Update enabled state with percent: %d", percent);
       Timber.d("Update entry to enabled state: %s", enabled);
       return getPowerTriggerDB().updateEnabled(enabled, percent);
-    }).flatMap(updated -> {
-      cacheInteractor.clearCache();
-      return get(entry.percent());
-    });
+    }).andThen(Completable.fromAction(cacheInteractor::clearCache)).andThen(get(entry.percent()));
   }
 }

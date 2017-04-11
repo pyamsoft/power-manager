@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.service;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.ServicePreferences;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -34,8 +34,8 @@ import javax.inject.Singleton;
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> isServiceEnabled() {
-    return Observable.fromCallable(() -> getPreferences().isServiceEnabled());
+  @CheckResult @NonNull Single<Boolean> isServiceEnabled() {
+    return Single.fromCallable(() -> getPreferences().isServiceEnabled());
   }
 
   /**

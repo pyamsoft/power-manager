@@ -21,7 +21,8 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Observable;
+import io.reactivex.Maybe;
+import io.reactivex.Single;
 import timber.log.Timber;
 
 abstract class WearAwareManagerInteractor extends ManagerInteractor {
@@ -37,8 +38,8 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
     this.preferences = preferences;
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult Observable<Boolean> isWearEnabled() {
-    return Observable.fromCallable(wearStateObserver::enabled);
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult Single<Boolean> isWearEnabled() {
+    return Single.fromCallable(wearStateObserver::enabled);
   }
 
   @Override public void destroy() {
@@ -48,23 +49,23 @@ abstract class WearAwareManagerInteractor extends ManagerInteractor {
   }
 
   @NonNull @Override
-  protected Observable<Boolean> accountForWearableBeforeDisable(boolean originalState) {
-    return Observable.fromCallable(() -> originalState).flatMap(originalStateEnabled -> {
+  protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
+    return Maybe.fromCallable(() -> originalState).flatMap(originalStateEnabled -> {
       if (originalStateEnabled) {
         Timber.d("%s: Original state is enabled, is wearable managed?", getJobTag());
-        return Observable.just(isWearManaged());
+        return Maybe.just(isWearManaged());
       } else {
         Timber.w("%s: Original state not enabled, return empty", getJobTag());
-        return Observable.empty();
+        return Maybe.empty();
       }
     }).flatMap(wearManaged -> {
       if (wearManaged) {
         Timber.d("%s: Is wearable not enabled?", getJobTag());
         // Invert the result
-        return isWearEnabled().map(wearEnabled -> !wearEnabled);
+        return isWearEnabled().map(wearEnabled -> !wearEnabled).toMaybe();
       } else {
         Timber.d("%s: Wearable is not managed, but radio is managed, continue stream", getJobTag());
-        return Observable.just(Boolean.TRUE);
+        return Maybe.just(Boolean.TRUE);
       }
     });
   }

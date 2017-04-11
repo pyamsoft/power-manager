@@ -21,7 +21,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -93,26 +96,25 @@ class LoggerInteractor {
   }
 
   @CheckResult @NonNull
-  public Observable<Boolean> log(@NonNull LogType logType, @NonNull String fmt,
-      @Nullable Object... args) {
+  public Completable log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
     logWithTimber(logType, fmt, args);
-    return isLoggingEnabled().filter(enabled -> enabled).flatMap(loggingEnabled -> {
+    return isLoggingEnabled().filter(enabled -> enabled).flatMapCompletable(loggingEnabled -> {
       final String message = String.format(Locale.getDefault(), fmt, args);
       final String logMessage =
           String.format(Locale.getDefault(), "%s: %s", logType.name(), message);
 
-      final Observable<Boolean> writeAppendResult;
+      final Completable writeAppendResult;
       if (loggingEnabled) {
         writeAppendResult = appendToLog(logMessage);
       } else {
-        writeAppendResult = Observable.just(Boolean.FALSE);
+        writeAppendResult = Completable.complete();
       }
       return writeAppendResult;
     });
   }
 
-  @CheckResult @NonNull private Observable<Boolean> isLoggingEnabled() {
-    return Observable.defer(() -> Observable.just(preferences.isLoggerEnabled()));
+  @CheckResult @NonNull private Single<Boolean> isLoggingEnabled() {
+    return Single.fromCallable(preferences::isLoggerEnabled);
   }
 
   private void logWithTimber(@NonNull LogType logType, @NonNull String fmt,
@@ -139,7 +141,7 @@ class LoggerInteractor {
    * public
    */
   @CheckResult @NonNull Observable<String> getLogContents() {
-    return Observable.fromCallable(this::getLogLocation).flatMap(logLocation -> {
+    return Single.fromCallable(this::getLogLocation).map(logLocation -> {
       final List<String> fileContents = new ArrayList<>();
       try (final FileInputStream fileInputStream = new FileInputStream(logLocation);
            final BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
@@ -155,23 +157,23 @@ class LoggerInteractor {
         throw new IllegalStateException(e);
       }
 
-      return Observable.fromIterable(fileContents);
-    });
+      return fileContents;
+    }).flatMapObservable(Observable::fromIterable);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Observable<Boolean> deleteLog() {
-    return Observable.fromCallable(this::getLogLocation).map(file -> {
+  @CheckResult @NonNull Single<Boolean> deleteLog() {
+    return Single.fromCallable(this::getLogLocation).map(file -> {
       Timber.w("Delete log file: %s", file.getAbsolutePath());
       return file.delete();
     });
   }
 
-  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Observable<Boolean> appendToLog(
+  @SuppressWarnings("WeakerAccess") @CheckResult @NonNull Completable appendToLog(
       @NonNull String message) {
-    return Observable.fromCallable(this::getLogLocation).map(logLocation -> {
+    return Maybe.fromCallable(this::getLogLocation).flatMapCompletable(logLocation -> {
       try (final FileOutputStream fileOutputStream = new FileOutputStream(logLocation, true);
            final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
                fileOutputStream);
@@ -186,8 +188,7 @@ class LoggerInteractor {
         throw new IllegalStateException(e);
       }
 
-      // Returning just true performs auto boxing. Returning the constant is more efficient
-      return Boolean.TRUE;
+      return Completable.complete();
     });
   }
 

@@ -170,9 +170,8 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
     return R.color.pink700;
   }
 
-  @Override protected boolean onClearAllPreferenceClicked() {
+  @Override protected void onClearAllClicked() {
     DialogUtil.guaranteeSingleDialogFragment(getActivity(),
         ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "confirm_dialog");
-    return true;
   }
 }

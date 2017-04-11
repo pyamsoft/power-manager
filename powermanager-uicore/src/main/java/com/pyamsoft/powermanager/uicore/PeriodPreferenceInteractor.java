@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
@@ -34,9 +34,8 @@ public class PeriodPreferenceInteractor {
   /**
    * public
    */
-  @NonNull @CheckResult Observable<Boolean> hasShownOnboarding() {
-    return Observable.fromCallable(preferences::isPeriodicOnboardingShown)
-        .delay(1, TimeUnit.SECONDS);
+  @NonNull @CheckResult Single<Boolean> hasShownOnboarding() {
+    return Single.fromCallable(preferences::isPeriodicOnboardingShown).delay(1, TimeUnit.SECONDS);
   }
 
   /**
