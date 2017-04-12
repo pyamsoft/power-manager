@@ -187,8 +187,12 @@ public class PowerTriggerListFragment extends ActionBarFragment {
   }
 
   private void setupRecyclerView() {
-    binding.powerTriggerList.setLayoutManager(new LinearLayoutManager(getContext()));
+    LinearLayoutManager manager = new LinearLayoutManager(getContext());
+    manager.setItemPrefetchEnabled(true);
+    manager.setInitialPrefetchItemCount(3);
+    binding.powerTriggerList.setLayoutManager(manager);
     binding.powerTriggerList.setHasFixedSize(true);
+    binding.powerTriggerList.setClipToPadding(false);
     binding.powerTriggerList.addItemDecoration(dividerDecoration);
   }
 
