@@ -28,14 +28,15 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemOverviewBinding;
 import com.pyamsoft.powermanager.model.States;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
-import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.ui.loader.ImageLoader;
+import com.pyamsoft.pydroid.ui.loader.LoaderMap;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import java.util.List;
 
 public class OverviewItem
     extends GenericAbstractItem<OverviewModel, OverviewItem, OverviewItem.ViewHolder> {
 
-  @NonNull private DrawableMap drawableMap = new DrawableMap();
+  @NonNull private LoaderMap drawableMap = new LoaderMap();
 
   OverviewItem(@NonNull String title, @DrawableRes int image, @ColorRes int background,
       @NonNull States states) {
@@ -69,7 +70,7 @@ public class OverviewItem
         ContextCompat.getColor(holder.itemView.getContext(), getModel().background()));
     holder.binding.adapterItemOverviewTitle.setText(getModel().title());
 
-    DrawableLoader.Loaded titleTask = DrawableLoader.load(getModel().image())
+    Loaded titleTask = ImageLoader.fromResource(getModel().image())
         .tint(android.R.color.white)
         .into(holder.binding.adapterItemOverviewImage);
     drawableMap.put("title", titleTask);
@@ -88,12 +89,13 @@ public class OverviewItem
     if (icon == 0) {
       holder.binding.adapterItemOverviewCheck.setImageDrawable(null);
     } else {
-      DrawableLoader.Loaded checkTask = DrawableLoader.load(icon)
+      Loaded checkTask = ImageLoader.fromResource(icon)
           .tint(android.R.color.white)
           .into(holder.binding.adapterItemOverviewCheck);
       drawableMap.put("check", checkTask);
     }
   }
+
   @Override public ViewHolder getViewHolder(View view) {
     return new ViewHolder(view);
   }

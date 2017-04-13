@@ -31,14 +31,15 @@ import android.view.WindowManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
-import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.ui.loader.ImageLoader;
+import com.pyamsoft.pydroid.ui.loader.LoaderMap;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
 
   private static final String CURRENT_PAGE = "current_page";
-  @NonNull private final DrawableMap taskMap = new DrawableMap();
+  @NonNull private final LoaderMap taskMap = new LoaderMap();
   @SuppressWarnings("WeakerAccess") DialogNewTriggerBinding binding;
   private CreateTriggerPagerAdapter adapter;
   private ViewPager.OnPageChangeListener pageChangeListener;
@@ -136,8 +137,8 @@ public class CreateTriggerDialog extends DialogFragment {
       }
     });
 
-    final DrawableLoader.Loaded continueTask =
-        DrawableLoader.load(R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
+    final Loaded continueTask =
+        ImageLoader.fromResource(R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
   }
 
@@ -152,12 +153,12 @@ public class CreateTriggerDialog extends DialogFragment {
       dismiss();
     });
 
-    final DrawableLoader.Loaded backTask =
-        DrawableLoader.load(R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
+    final Loaded backTask =
+        ImageLoader.fromResource(R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
-    final DrawableLoader.Loaded closeTask =
-        DrawableLoader.load(R.drawable.ic_close_24dp).into(binding.newTriggerClose);
+    final Loaded closeTask =
+        ImageLoader.fromResource(R.drawable.ic_close_24dp).into(binding.newTriggerClose);
     taskMap.put("close", closeTask);
   }
 

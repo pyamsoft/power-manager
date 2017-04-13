@@ -35,8 +35,9 @@ import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding;
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
-import com.pyamsoft.pydroid.ui.loader.DrawableLoader;
-import com.pyamsoft.pydroid.ui.loader.DrawableMap;
+import com.pyamsoft.pydroid.ui.loader.ImageLoader;
+import com.pyamsoft.pydroid.ui.loader.LoaderMap;
+import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.util.DialogUtil;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -44,7 +45,7 @@ import timber.log.Timber;
 public class PowerTriggerListFragment extends ActionBarFragment {
 
   @NonNull public static final String TAG = "PowerTriggerListFragment";
-  @NonNull private final DrawableMap drawableMap = new DrawableMap();
+  @NonNull private final LoaderMap drawableMap = new LoaderMap();
 
   @SuppressWarnings("WeakerAccess") @Inject TriggerPresenter presenter;
 
@@ -174,7 +175,7 @@ public class PowerTriggerListFragment extends ActionBarFragment {
   }
 
   private void setupFab() {
-    final DrawableLoader.Loaded subscription = DrawableLoader.load(R.drawable.ic_add_24dp)
+    final Loaded subscription = ImageLoader.fromResource(R.drawable.ic_add_24dp)
         .tint(android.R.color.white)
         .into(binding.powerTriggerFab);
     drawableMap.put("fab", subscription);
