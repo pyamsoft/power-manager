@@ -51,9 +51,7 @@ import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
 import com.pyamsoft.powermanager.wifi.WifiFragment;
-import com.pyamsoft.pydroid.ads.AdSource;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
-import com.pyamsoft.pydroid.ui.ads.OnlineAdSource;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.DialogUtil;
@@ -86,6 +84,7 @@ public class MainActivity extends TamperActivity {
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     super.onCreate(savedInstanceState);
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -97,11 +96,6 @@ public class MainActivity extends TamperActivity {
     }
 
     Injector.get().provideComponent().plusMainComponent().inject(this);
-  }
-
-  @Override protected int bindActivityToView() {
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-    return R.id.ad_view;
   }
 
   @Override protected void onDestroy() {
@@ -331,12 +325,6 @@ public class MainActivity extends TamperActivity {
       Timber.w("Logger dialog is already shown");
       return false;
     }
-  }
-
-  @Nullable @Override protected AdSource provideOnlineAdSource() {
-    OnlineAdSource source = new OnlineAdSource(R.string.banner_main_ad_id);
-    source.addTestAdIds("5681ECE0897CFFF6A56CFE947F4BC19E");
-    return source;
   }
 
   @CheckResult @NonNull public TabLayout getTabLayout() {
