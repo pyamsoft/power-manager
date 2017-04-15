@@ -125,11 +125,10 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
     super.insertCustomLicensesIntoMap();
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
-    Licenses.create("TapTargetView", "https://github.com/KeepSafe/TapTargetView",
-        "licenses/taptargetview");
     Licenses.create("Android-Job", "https://github.com/evernote/android-job",
         "licenses/androidjob");
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
     Licenses.create("Dagger", "https://github.com/google/dagger", "licenses/dagger2");
+    Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase");
   }
 }

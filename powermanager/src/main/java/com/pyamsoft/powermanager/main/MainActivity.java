@@ -172,9 +172,9 @@ public class MainActivity extends TamperActivity {
   }
 
   @NonNull @Override protected String[] getChangeLogLines() {
-    final String line1 = "BUGFIX: Faster performance for automatic management";
-    final String line2 = "BUGFIX: Better periodic timing for reoccuring automatic events";
-    final String line3 = "BUGFIX: Faster power trigger list loading";
+    final String line1 = "BUGFIX: Bugfixes and improvements";
+    final String line2 = "BUGFIX: Removed all Advertisements";
+    final String line3 = "BUGFIX: Faster loading of Open Source Licenses page";
     return new String[] { line1, line2, line3 };
   }
 
