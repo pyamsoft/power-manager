@@ -16,20 +16,15 @@
 
 package com.pyamsoft.powermanager.uicore;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class ManagePreferencePresenter extends SchedulerPresenter implements OnboardingPresenter {
 
   @NonNull private final ManagePreferenceInteractor interactor;
-  @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject public ManagePreferencePresenter(@NonNull ManagePreferenceInteractor manageInteractor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -37,34 +32,19 @@ public class ManagePreferencePresenter extends SchedulerPresenter implements Onb
     this.interactor = manageInteractor;
   }
 
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-  }
-
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
     // Override if you need to check permissions
   }
 
-  @Override public void setShownOnBoarding() {
-    interactor.setOnboarding();
-  }
-
   @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-    onboardingDisposable = interactor.hasShownOnboarding()
+    disposeOnStop(interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
           if (!onboard) {
             callback.onShowOnboarding();
           }
-        }, throwable -> Timber.e(throwable, "onError onShowOnboarding"));
-  }
-
-  @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-    callback.onDismissOnboarding();
+        }, throwable -> Timber.e(throwable, "onError onShowOnboarding")));
   }
 
   interface ManagePermissionCallback {

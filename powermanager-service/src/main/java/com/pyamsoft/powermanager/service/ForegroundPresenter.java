@@ -18,11 +18,8 @@ package com.pyamsoft.powermanager.service;
 
 import android.app.Notification;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -30,7 +27,6 @@ import timber.log.Timber;
 class ForegroundPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ForegroundInteractor interactor;
-  @NonNull private Disposable notificationDisposable = Disposables.empty();
 
   @Inject ForegroundPresenter(@NonNull ForegroundInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -45,11 +41,6 @@ class ForegroundPresenter extends SchedulerPresenter {
     interactor.queueRepeatingTriggerJob();
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    notificationDisposable = DisposableHelper.dispose(notificationDisposable);
-  }
-
   @Override protected void onDestroy() {
     super.onDestroy();
     interactor.destroy();
@@ -59,14 +50,11 @@ class ForegroundPresenter extends SchedulerPresenter {
    * public
    */
   void startNotification(@NonNull NotificationCallback callback) {
-    notificationDisposable = DisposableHelper.dispose(notificationDisposable);
-    notificationDisposable = interactor.createNotification()
+    disposeOnStop(interactor.createNotification()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::onStartNotificationInForeground, throwable -> {
-          Timber.e(throwable, "onError");
-          // TODO handle error
-        });
+        .subscribe(callback::onStartNotificationInForeground,
+            throwable -> Timber.e(throwable, "onError")));
   }
 
   /**

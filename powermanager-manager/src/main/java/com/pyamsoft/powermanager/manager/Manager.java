@@ -20,24 +20,21 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.helper.SchedulerHelper;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.disposables.CompositeDisposable;
 import timber.log.Timber;
 
 public class Manager {
 
   @SuppressWarnings("WeakerAccess") @NonNull final ManagerInteractor interactor;
+  @NonNull private final CompositeDisposable compositeDisposable;
   @NonNull private final Scheduler scheduler;
-  @NonNull private Disposable cancelDisposable = Disposables.empty();
-  @NonNull private Disposable setDisposable = Disposables.empty();
-  @NonNull private Disposable unsetDisposable = Disposables.empty();
 
   Manager(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
     this.interactor = interactor;
     this.scheduler = scheduler;
+    compositeDisposable = new CompositeDisposable();
     SchedulerHelper.enforceSubscribeScheduler(scheduler);
   }
 
@@ -46,19 +43,17 @@ public class Manager {
   }
 
   public void cancel(@NonNull Runnable onCancel) {
-    cancelDisposable = DisposableHelper.dispose(cancelDisposable);
-    cancelDisposable = interactor.cancelJobs()
+    compositeDisposable.add(interactor.cancelJobs()
         .subscribeOn(getScheduler())
         .observeOn(getScheduler())
         .subscribe(() -> {
           Timber.d("Job cancelled: %s", interactor.getJobTag());
           onCancel.run();
-        }, throwable -> Timber.e(throwable, "onError cancelling manager"));
+        }, throwable -> Timber.e(throwable, "onError cancelling manager")));
   }
 
   public void queueSet(@Nullable Runnable onSet) {
-    setDisposable = DisposableHelper.dispose(setDisposable);
-    setDisposable =
+    compositeDisposable.add(
         interactor.queueSet().subscribeOn(scheduler).observeOn(scheduler).subscribe(() -> {
           // Technically can ignore this as if we are here we are non-empty
           // If we are non empty it means we pass the test
@@ -66,26 +61,23 @@ public class Manager {
           if (onSet != null) {
             onSet.run();
           }
-        }, throwable -> Timber.e(throwable, "%s: onError queueSet", interactor.getJobTag()));
+        }, throwable -> Timber.e(throwable, "%s: onError queueSet", interactor.getJobTag())));
   }
 
   public void queueUnset(@Nullable Runnable onUnset) {
-    unsetDisposable = DisposableHelper.dispose(unsetDisposable);
-    unsetDisposable = interactor.queueUnset().
+    compositeDisposable.add(interactor.queueUnset().
         subscribeOn(scheduler).observeOn(scheduler).subscribe(() -> {
       // Only queue a disable job if the radio is not ignored
       Timber.d("%s: Queued up a new disable job", interactor.getJobTag());
       if (onUnset != null) {
         onUnset.run();
       }
-    }, throwable -> Timber.e(throwable, "%s: onError queueUnset", interactor.getJobTag()));
+    }, throwable -> Timber.e(throwable, "%s: onError queueUnset", interactor.getJobTag())));
   }
 
   @CallSuper public void cleanup() {
+    compositeDisposable.clear();
     interactor.destroy();
-    cancelDisposable = DisposableHelper.dispose(cancelDisposable);
-    setDisposable = DisposableHelper.dispose(setDisposable);
-    unsetDisposable = DisposableHelper.dispose(unsetDisposable);
 
     // Reset the device back to its original state when the Service is cleaned up
     queueSet(null);

@@ -17,11 +17,8 @@
 package com.pyamsoft.powermanager.main;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -29,20 +26,12 @@ import timber.log.Timber;
 class MainPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final MainInteractor interactor;
-  @NonNull private Disposable subscription = Disposables.empty();
-  @NonNull private Disposable rootDisposable = Disposables.empty();
 
   @Inject MainPresenter(@NonNull MainInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    subscription = DisposableHelper.dispose(subscription);
-    rootDisposable = DisposableHelper.dispose(rootDisposable);
   }
 
   /**
@@ -54,20 +43,18 @@ class MainPresenter extends SchedulerPresenter {
   }
 
   private void startServiceWhenOpen(@NonNull StartupCallback callback) {
-    subscription = DisposableHelper.dispose(subscription);
-    subscription = interactor.isStartWhenOpen()
+    disposeOnStop(interactor.isStartWhenOpen()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(start -> {
           if (start) {
             callback.onServiceEnabledWhenOpen();
           }
-        }, throwable -> Timber.e(throwable, "onError isStartWhenOpen"));
+        }, throwable -> Timber.e(throwable, "onError isStartWhenOpen")));
   }
 
   private void checkForRoot(@NonNull StartupCallback callback) {
-    rootDisposable = DisposableHelper.dispose(rootDisposable);
-    rootDisposable = interactor.hasRootPermission()
+    disposeOnStop(interactor.hasRootPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(hasPermission -> {
@@ -75,7 +62,7 @@ class MainPresenter extends SchedulerPresenter {
             interactor.missingRootPermission();
             callback.explainRootRequirement();
           }
-        }, throwable -> Timber.e(throwable, "onError checking root permission"));
+        }, throwable -> Timber.e(throwable, "onError checking root permission")));
   }
 
   interface StartupCallback {

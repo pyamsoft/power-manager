@@ -22,7 +22,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 import com.squareup.sqldelight.SqlDelightStatement;
@@ -30,8 +29,7 @@ import hu.akarnokd.rxjava.interop.RxJavaInterop;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.disposables.CompositeDisposable;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -43,22 +41,21 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
 
   @SuppressWarnings("WeakerAccess") @NonNull final BriteDatabase briteDatabase;
   @SuppressWarnings("WeakerAccess") @NonNull final PowerTriggerOpenHelper openHelper;
-  @SuppressWarnings("WeakerAccess") @NonNull Disposable dbOpenDisposable = Disposables.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable compositeDisposable;
 
   @Inject PowerTriggerDBImpl(@NonNull Context context) {
     openHelper = new PowerTriggerOpenHelper(context);
     briteDatabase = new SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, Schedulers.io());
+    compositeDisposable = new CompositeDisposable();
   }
 
   @SuppressWarnings("WeakerAccess") synchronized void openDatabase() {
-    dbOpenDisposable = DisposableHelper.dispose(dbOpenDisposable);
-
     // After a 1 minute timeout, close the DB
-    dbOpenDisposable =
+    compositeDisposable.add(
         Flowable.defer(() -> Flowable.timer(1, TimeUnit.MINUTES)).subscribe(aLong -> {
           Timber.w("PowerTriggerDB is closed");
           briteDatabase.close();
-        }, throwable -> Timber.e(throwable, "onError closing database"));
+        }, throwable -> Timber.e(throwable, "onError closing database")));
   }
 
   @Override @CheckResult @NonNull public Completable insert(@NonNull PowerTriggerEntry entry) {
@@ -138,8 +135,8 @@ class PowerTriggerDBImpl implements PowerTriggerDB {
     return Completable.fromAction(() -> {
       Timber.i("DB: DELETE ALL");
       briteDatabase.execute(PowerTriggerEntry.DELETE_ALL);
-      dbOpenDisposable = DisposableHelper.dispose(dbOpenDisposable);
       briteDatabase.close();
+      compositeDisposable.clear();
     }).andThen(deleteDatabase());
   }
 

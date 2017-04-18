@@ -20,16 +20,7 @@ import android.support.annotation.NonNull;
 
 interface OnboardingPresenter {
 
-  void setShownOnBoarding();
-
   void showOnboardingIfNeeded(@NonNull OnboardingCallback callback);
-
-  void dismissOnboarding(@NonNull OnboardingDismissCallback callback);
-
-  interface OnboardingDismissCallback {
-
-    void onDismissOnboarding();
-  }
 
   interface OnboardingCallback {
 

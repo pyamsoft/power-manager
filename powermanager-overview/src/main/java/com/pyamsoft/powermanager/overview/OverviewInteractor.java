@@ -67,13 +67,6 @@ import javax.inject.Singleton;
   /**
    * public
    */
-  void setShownOnboarding() {
-    preferences.setOverviewOnboardingShown();
-  }
-
-  /**
-   * public
-   */
   @CheckResult @NonNull Single<Boolean> isWifiManaged() {
     return Single.fromCallable(wifiPreferences::isWifiManaged);
   }

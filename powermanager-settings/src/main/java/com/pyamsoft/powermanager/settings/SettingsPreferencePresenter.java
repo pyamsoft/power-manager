@@ -20,11 +20,8 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent;
 import com.pyamsoft.pydroid.bus.EventBus;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -32,23 +29,11 @@ import timber.log.Timber;
 class SettingsPreferencePresenter extends SchedulerPresenter {
 
   @NonNull private final SettingsPreferenceInteractor interactor;
-  @NonNull private Disposable confirmedDisposable = Disposables.empty();
-  @NonNull private Disposable rootDisposable = Disposables.empty();
-  @NonNull private Disposable bindCheckRootDisposable = Disposables.empty();
-  @NonNull private Disposable bus = Disposables.empty();
 
   @Inject SettingsPreferencePresenter(@NonNull SettingsPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     super(obsScheduler, subScheduler);
     this.interactor = interactor;
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
-    rootDisposable = DisposableHelper.dispose(rootDisposable);
-    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
-    bus = DisposableHelper.dispose(bus);
   }
 
   /**
@@ -58,8 +43,7 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
    */
   void registerOnBus(@NonNull BusCallback callback) {
     BusCallback busCallback = Checker.checkNonNull(callback);
-    bus = DisposableHelper.dispose(bus);
-    bus = EventBus.get()
+    disposeOnStop(EventBus.get()
         .listen(ConfirmEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
@@ -75,55 +59,51 @@ class SettingsPreferencePresenter extends SchedulerPresenter {
               throw new IllegalStateException(
                   "Received invalid confirmation event type: " + confirmEvent.type());
           }
-        }, throwable -> Timber.e(throwable, "confirm bus error"));
+        }, throwable -> Timber.e(throwable, "confirm bus error")));
   }
 
   @SuppressWarnings("WeakerAccess") void clearAll(ClearRequestCallback callback) {
-    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
-    confirmedDisposable = interactor.clearAll()
+    disposeOnStop(interactor.clearAll()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError"));
+        .subscribe(aBoolean -> callback.onClearAll(), throwable -> Timber.e(throwable, "onError")));
   }
 
   @SuppressWarnings("WeakerAccess") void clearDatabase(ClearRequestCallback callback) {
-    confirmedDisposable = DisposableHelper.dispose(confirmedDisposable);
-    confirmedDisposable = interactor.clearDatabase()
+    disposeOnStop(interactor.clearDatabase()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> callback.onClearDatabase(),
-            throwable -> Timber.e(throwable, "onError"));
+            throwable -> Timber.e(throwable, "onError")));
   }
 
   /**
    * public
    */
   void checkRootEnabled(@NonNull RootCallback callback) {
-    callback.onBegin();
-    bindCheckRootDisposable = DisposableHelper.dispose(bindCheckRootDisposable);
-    bindCheckRootDisposable = interactor.isRootEnabled()
+    disposeOnStop(interactor.isRootEnabled()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
+        .doOnSubscribe(disposable -> callback.onBegin())
         .subscribe(rootEnabled -> checkRoot(false, rootEnabled, callback),
-            throwable -> Timber.e(throwable, "onError bindCheckRoot"));
+            throwable -> Timber.e(throwable, "onError bindCheckRoot")));
   }
 
   /**
    * public
    */
   void checkRoot(boolean causedByUser, boolean rootEnable, @NonNull RootCallback callback) {
-    callback.onBegin();
-    rootDisposable = DisposableHelper.dispose(rootDisposable);
-    rootDisposable = interactor.checkRoot(rootEnable)
+    disposeOnStop(interactor.checkRoot(rootEnable)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
+        .doOnSubscribe(disposable -> callback.onBegin())
         .subscribe(hasRoot -> callback.onRootCallback(causedByUser, hasRoot, rootEnable),
             throwable -> {
               Timber.e(throwable, "onError checking root");
               callback.onRootCallback(causedByUser, false, rootEnable);
-            });
+            }));
   }
 
   interface BusCallback extends ClearRequestCallback {

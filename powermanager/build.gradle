@@ -35,8 +35,8 @@ android {
     applicationId "com.pyamsoft.powermanager"
     targetSdkVersion rootProject.ext.maxSdk
     minSdkVersion rootProject.ext.minSdk
-    versionCode 103
-    versionName "6.7.0"
+    versionCode 104
+    versionName "6.7.1"
 
     // For vector drawables
     vectorDrawables.useSupportLibrary = true
@@ -55,7 +55,6 @@ android {
     debug {
       versionNameSuffix "-dev"
       multiDexEnabled true
-      multiDexKeepFile new File('multidex-config.txt')
     }
   }
 

@@ -22,11 +22,8 @@ import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent;
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
 import com.pyamsoft.pydroid.bus.EventBus;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -34,11 +31,6 @@ import timber.log.Timber;
 class TriggerPresenter extends SchedulerPresenter {
 
   @NonNull private final TriggerInteractor interactor;
-  @NonNull private Disposable deleteDisposable = Disposables.empty();
-  @NonNull private Disposable viewDisposable = Disposables.empty();
-  @NonNull private Disposable createDisposable = Disposables.empty();
-  @NonNull private Disposable createBus = Disposables.empty();
-  @NonNull private Disposable deleteBus = Disposables.empty();
 
   @Inject TriggerPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerInteractor interactor) {
@@ -46,41 +38,29 @@ class TriggerPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    deleteDisposable = DisposableHelper.dispose(deleteDisposable);
-    createDisposable = DisposableHelper.dispose(createDisposable);
-    viewDisposable = DisposableHelper.dispose(viewDisposable);
-    createBus = DisposableHelper.dispose(createBus);
-    deleteBus = DisposableHelper.dispose(deleteBus);
-  }
-
   /**
    * public
    */
   void registerOnBus(@NonNull BusCallback callback) {
-    createBus = DisposableHelper.dispose(createBus);
-    createBus = EventBus.get()
+    disposeOnStop(EventBus.get()
         .listen(TriggerCreateEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(triggerCreateEvent -> createPowerTrigger(triggerCreateEvent.entry(), callback),
-            throwable -> Timber.e(throwable, "onError create bus"));
+            throwable -> Timber.e(throwable, "onError create bus")));
 
-    deleteBus = DisposableHelper.dispose(deleteBus);
-    deleteBus = EventBus.get()
+    disposeOnStop(EventBus.get()
         .listen(TriggerDeleteEvent.class)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(triggerDeleteEvent -> deleteTrigger(triggerDeleteEvent.percent(), callback),
-            throwable -> Timber.e(throwable, "onError create bus"));
+            throwable -> Timber.e(throwable, "onError create bus")));
   }
 
   @SuppressWarnings("WeakerAccess") void createPowerTrigger(@NonNull PowerTriggerEntry entry,
       @NonNull TriggerCreateCallback callback) {
     Timber.d("Create new power trigger");
-    createDisposable = DisposableHelper.dispose(createDisposable);
-    createDisposable = interactor.put(entry)
+    disposeOnStop(interactor.put(entry)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onNewTriggerAdded, throwable -> {
@@ -92,28 +72,26 @@ class TriggerPresenter extends SchedulerPresenter {
             Timber.e("Issue creating trigger");
             callback.onNewTriggerCreateError();
           }
-        });
+        }));
   }
 
   @SuppressWarnings("WeakerAccess") void deleteTrigger(int percent,
       @NonNull TriggerDeleteCallback callback) {
-    deleteDisposable = DisposableHelper.dispose(deleteDisposable);
-    deleteDisposable = interactor.delete(percent)
+    disposeOnStop(interactor.delete(percent)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::onTriggerDeleted, throwable -> Timber.e(throwable, "onError"));
+        .subscribe(callback::onTriggerDeleted, throwable -> Timber.e(throwable, "onError")));
   }
 
   /**
    * public
    */
   void loadTriggerView(@NonNull TriggerLoadCallback callback, boolean forceRefresh) {
-    viewDisposable = DisposableHelper.dispose(viewDisposable);
-    viewDisposable = interactor.queryAll(forceRefresh)
+    disposeOnStop(interactor.queryAll(forceRefresh)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onTriggerLoadFinished)
-        .subscribe(callback::onTriggerLoaded, throwable -> Timber.e(throwable, "onError"));
+        .subscribe(callback::onTriggerLoaded, throwable -> Timber.e(throwable, "onError")));
   }
 
   interface TriggerLoadCallback {

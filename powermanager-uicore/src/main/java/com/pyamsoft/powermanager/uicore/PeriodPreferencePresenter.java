@@ -16,20 +16,15 @@
 
 package com.pyamsoft.powermanager.uicore;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class PeriodPreferencePresenter extends SchedulerPresenter implements OnboardingPresenter {
 
   @NonNull private final PeriodPreferenceInteractor interactor;
-  @NonNull private Disposable onboardingDisposable = Disposables.empty();
 
   @Inject public PeriodPreferencePresenter(@NonNull PeriodPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -37,29 +32,14 @@ public class PeriodPreferencePresenter extends SchedulerPresenter implements Onb
     this.interactor = interactor;
   }
 
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-  }
-
-  @Override public void setShownOnBoarding() {
-    interactor.setOnboarding();
-  }
-
   @Override public void showOnboardingIfNeeded(@NonNull OnboardingCallback callback) {
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-    onboardingDisposable = interactor.hasShownOnboarding()
+    disposeOnStop(interactor.hasShownOnboarding()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(onboard -> {
           if (!onboard) {
             callback.onShowOnboarding();
           }
-        }, throwable -> Timber.e(throwable, "onError onShowOnboarding"));
-  }
-
-  @Override public void dismissOnboarding(@NonNull OnboardingDismissCallback callback) {
-    onboardingDisposable = DisposableHelper.dispose(onboardingDisposable);
-    callback.onDismissOnboarding();
+        }, throwable -> Timber.e(throwable, "onError onShowOnboarding")));
   }
 }

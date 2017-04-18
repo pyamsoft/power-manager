@@ -18,13 +18,10 @@ package com.pyamsoft.powermanager.base.logger;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -32,28 +29,24 @@ import timber.log.Timber;
 public class LoggerPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final LoggerInteractor interactor;
-  @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable logDisposables =
-      new CompositeDisposable();
-  @NonNull private Disposable logContenDisposable = Disposables.empty();
-  @NonNull private Disposable clearLogDisposable = Disposables.empty();
-  @NonNull private Disposable deleteLogDisposable = Disposables.empty();
+  @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable logDisposables;
 
   @Inject LoggerPresenter(@NonNull LoggerInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
+    logDisposables = new CompositeDisposable();
   }
 
   public void retrieveLogContents(@NonNull LogCallback callback) {
-    callback.onPrepareLogContentRetrieval();
-    logContenDisposable = DisposableHelper.dispose(logContenDisposable);
-    logContenDisposable = interactor.getLogContents()
+    logDisposables.add(interactor.getLogContents()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onAllLogContentsRetrieved)
+        .doOnSubscribe(disposable -> callback.onPrepareLogContentRetrieval())
         .subscribe(callback::onLogContentRetrieved,
             throwable -> Timber.e(throwable, "onError: Failed to retrieve log contents: %s",
-                interactor.getLogId()));
+                interactor.getLogId())));
   }
 
   @Override protected void onStop() {
@@ -62,7 +55,7 @@ public class LoggerPresenter extends SchedulerPresenter {
   }
 
   public void log(@NonNull LogType logType, @NonNull String fmt, @Nullable Object... args) {
-    final Disposable logDisposable = interactor.log(logType, fmt, args)
+    logDisposables.add(interactor.log(logType, fmt, args)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(() -> {
@@ -70,26 +63,24 @@ public class LoggerPresenter extends SchedulerPresenter {
         }, throwable -> {
           Timber.e(throwable, "onError: Unable to successfully log message to log file");
           // TODO Any other error handling?
-        });
+        }));
 
     queueClearLogDisposable();
-    logDisposables.add(logDisposable);
   }
 
   private void queueClearLogDisposable() {
-    clearLogDisposable = DisposableHelper.dispose(clearLogDisposable);
-    clearLogDisposable = Observable.just(Boolean.TRUE)
+    logDisposables.add(Observable.just(Boolean.TRUE)
         .delay(1, TimeUnit.MINUTES)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(aBoolean -> logDisposables.clear(),
-            throwable -> Timber.e(throwable, "onError clearing composite subscription"));
+            throwable -> Timber.e(throwable, "onError clearing composite subscription")));
   }
 
   public void deleteLog(@NonNull DeleteCallback callback) {
     // Stop everything before we delete the log
     clearLogs();
-    deleteLogDisposable = interactor.deleteLog()
+    logDisposables.add(interactor.deleteLog()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(deleted -> {
@@ -97,14 +88,11 @@ public class LoggerPresenter extends SchedulerPresenter {
             callback.onLogDeleted(interactor.getLogId());
           }
           clearLogs();
-        }, throwable -> Timber.e(throwable, "onError deleteLog"));
+        }, throwable -> Timber.e(throwable, "onError deleteLog")));
   }
 
   @SuppressWarnings("WeakerAccess") void clearLogs() {
     logDisposables.clear();
-    logContenDisposable = DisposableHelper.dispose(logContenDisposable);
-    clearLogDisposable = DisposableHelper.dispose(clearLogDisposable);
-    deleteLogDisposable = DisposableHelper.dispose(deleteLogDisposable);
   }
 
   public interface DeleteCallback {

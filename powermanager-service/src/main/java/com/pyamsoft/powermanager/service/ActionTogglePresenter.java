@@ -17,11 +17,8 @@
 package com.pyamsoft.powermanager.service;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -29,7 +26,6 @@ import timber.log.Timber;
 class ActionTogglePresenter extends SchedulerPresenter {
 
   @NonNull private final ActionToggleInteractor interactor;
-  @NonNull private Disposable subscription = Disposables.empty();
 
   @Inject ActionTogglePresenter(@NonNull ActionToggleInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
@@ -37,21 +33,15 @@ class ActionTogglePresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    subscription = DisposableHelper.dispose(subscription);
-  }
-
   /**
    * public
    */
   void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
-    subscription = DisposableHelper.dispose(subscription);
-    subscription = interactor.toggleEnabledState()
+    disposeOnStop(interactor.toggleEnabledState()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onForegroundStateToggled,
-            throwable -> Timber.e(throwable, "onError toggleForegroundState"));
+            throwable -> Timber.e(throwable, "onError toggleForegroundState")));
   }
 
   /**

@@ -19,17 +19,13 @@ package com.pyamsoft.powermanager.uicore;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.helper.Checker;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class PermissionPreferencePresenter extends ManagePreferencePresenter {
 
   @NonNull private final PermissionPreferenceInteractor interactor;
-  @NonNull private Disposable permissionDisposable = Disposables.empty();
 
   @Inject public PermissionPreferencePresenter(@NonNull PermissionPreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
@@ -37,27 +33,21 @@ public class PermissionPreferencePresenter extends ManagePreferencePresenter {
     this.interactor = interactor;
   }
 
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    permissionDisposable = DisposableHelper.dispose(permissionDisposable);
-  }
-
   @CallSuper @Override
   public void checkManagePermission(@NonNull ManagePermissionCallback callback) {
     ManagePermissionCallback permissionCallback = Checker.checkNonNull(callback);
 
-    permissionCallback.onBegin();
-    permissionDisposable = DisposableHelper.dispose(permissionDisposable);
-    permissionDisposable = interactor.hasPermission()
+    disposeOnStop(interactor.hasPermission()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
+        .doOnSubscribe(disposable -> permissionCallback.onBegin())
         .subscribe(hasPermission -> {
           Timber.d("Permission granted? %s", hasPermission);
           permissionCallback.onManagePermissionCallback(hasPermission);
         }, throwable -> {
           Timber.e(throwable, "onError checkManagePermission");
           permissionCallback.onManagePermissionCallback(false);
-        });
+        }));
   }
 }

@@ -29,12 +29,10 @@ import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
+import io.reactivex.disposables.CompositeDisposable;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -43,6 +41,7 @@ import timber.log.Timber;
 
 public class TriggerJob extends Job {
 
+  @SuppressWarnings("WeakerAccess") @NonNull final CompositeDisposable compositeDisposable;
   @SuppressWarnings("WeakerAccess") @Inject PowerTriggerDB powerTriggerDB;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
@@ -59,10 +58,10 @@ public class TriggerJob extends Job {
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") StateModifier syncModifier;
   @SuppressWarnings("WeakerAccess") @Inject @Named("sub") Scheduler subScheduler;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs") Scheduler obsScheduler;
-  @SuppressWarnings("WeakerAccess") @NonNull Disposable runDisposable = Disposables.empty();
 
   public TriggerJob() {
     Injector.get().provideComponent().plusJobComponent().inject(this);
+    compositeDisposable = new CompositeDisposable();
   }
 
   private void runTriggerForPercent(int percent) {
@@ -155,8 +154,7 @@ public class TriggerJob extends Job {
       });
     }
 
-    runDisposable = DisposableHelper.dispose(runDisposable);
-    runDisposable = powerTriggerEntryObservable.subscribeOn(subScheduler)
+    compositeDisposable.add(powerTriggerEntryObservable.subscribeOn(subScheduler)
         .observeOn(obsScheduler)
         .subscribe(entry -> {
           if (chargingObserver.enabled()) {
@@ -166,7 +164,7 @@ public class TriggerJob extends Job {
           } else {
             onTriggerRun(getContext(), entry);
           }
-        }, throwable -> Timber.e(throwable, "onError"));
+        }, throwable -> Timber.e(throwable, "onError")));
   }
 
   @SuppressWarnings("WeakerAccess") void onTriggerRun(@NonNull Context context,
@@ -263,6 +261,7 @@ public class TriggerJob extends Job {
 
     logger.d("Run trigger job for percent: %d", percent);
     runTriggerForPercent(percent);
+    compositeDisposable.clear();
     return Result.SUCCESS;
   }
 }

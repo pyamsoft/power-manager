@@ -18,11 +18,8 @@ package com.pyamsoft.powermanager.uicore.preference;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -34,17 +31,11 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
   private static final int MAX_CUSTOM_LENGTH = 6;
 
   @Nullable private final CustomTimePreferenceInteractor<?> interactor;
-  @NonNull private Disposable customTimeDisposable = Disposables.empty();
 
   @Inject public CustomTimePreferencePresenter(@Nullable CustomTimePreferenceInteractor interactor,
       @NonNull Scheduler observeScheduler, @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
-  }
-
-  @Override protected void onStop() {
-    super.onStop();
-    customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
   }
 
   /**
@@ -88,11 +79,10 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
       // Make sure time is not too high or too low
       longTime = Math.min(MAX_TIME_SECONDS, longTime);
 
-      callback.onClearFocus();
-      customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
-      customTimeDisposable = interactor.saveTime(longTime, delay)
+      disposeOnStop(interactor.saveTime(longTime, delay)
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
+          .doOnSubscribe(disposable -> callback.onClearFocus())
           .subscribe(customTime -> {
             if (updateView) {
               callback.onCustomTimeUpdate(customTime);
@@ -102,7 +92,7 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
             if (updateView) {
               callback.onCustomTimeError();
             }
-          });
+          }));
     } else {
       Timber.e("NULL interactor");
     }
@@ -113,14 +103,13 @@ public class CustomTimePreferencePresenter extends SchedulerPresenter {
    */
   void initializeCustomTime(@NonNull OnCustomTimeUpdateCallback callback) {
     if (interactor != null) {
-      customTimeDisposable = DisposableHelper.dispose(customTimeDisposable);
-      customTimeDisposable = interactor.getTime()
+      disposeOnStop(interactor.getTime()
           .subscribeOn(getSubscribeScheduler())
           .observeOn(getObserveScheduler())
           .subscribe(callback::onCustomTimeUpdate, throwable -> {
             Timber.e(throwable, "onError updateCustomTime");
             callback.onCustomTimeError();
-          });
+          }));
     } else {
       Timber.e("NULL interactor");
     }

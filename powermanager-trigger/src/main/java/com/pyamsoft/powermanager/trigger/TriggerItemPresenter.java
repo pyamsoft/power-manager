@@ -18,11 +18,8 @@ package com.pyamsoft.powermanager.trigger;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -30,7 +27,6 @@ import timber.log.Timber;
 class TriggerItemPresenter extends SchedulerPresenter {
 
   @NonNull private final TriggerItemInteractor interactor;
-  @NonNull private Disposable updateDisposable = Disposables.empty();
 
   @Inject TriggerItemPresenter(@NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler, @NonNull TriggerItemInteractor interactor) {
@@ -38,21 +34,15 @@ class TriggerItemPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  @Override protected void onStop() {
-    super.onStop();
-    updateDisposable = DisposableHelper.dispose(updateDisposable);
-  }
-
   /**
    * public
    */
   void toggleEnabledState(@NonNull PowerTriggerEntry entry, boolean enabled,
       @NonNull TriggerToggleCallback callback) {
-    updateDisposable = DisposableHelper.dispose(updateDisposable);
-    updateDisposable = interactor.update(entry, enabled)
+    disposeOnStop(interactor.update(entry, enabled)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
-        .subscribe(callback::updateViewHolder, throwable -> Timber.e(throwable, "onError"));
+        .subscribe(callback::updateViewHolder, throwable -> Timber.e(throwable, "onError")));
   }
 
   interface TriggerToggleCallback {

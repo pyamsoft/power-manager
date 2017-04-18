@@ -16,22 +16,17 @@
 
 package com.pyamsoft.powermanager.uicore;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.StateModifier;
-import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.disposables.Disposables;
 import javax.inject.Inject;
 import timber.log.Timber;
 
 public class OverviewPagerPresenter extends SchedulerPresenter {
 
   @SuppressWarnings("WeakerAccess") @NonNull final StateModifier modifier;
-  @NonNull private Disposable subscription = Disposables.empty();
 
   @Inject public OverviewPagerPresenter(@NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler, @NonNull StateModifier modifier) {
@@ -39,31 +34,24 @@ public class OverviewPagerPresenter extends SchedulerPresenter {
     this.modifier = modifier;
   }
 
-  @CallSuper @Override protected void onStop() {
-    super.onStop();
-    subscription = DisposableHelper.dispose(subscription);
-  }
-
   /**
    * public
    */
   void wrapSet() {
-    subscription = DisposableHelper.dispose(subscription);
-    subscription = Observable.fromCallable(() -> Boolean.TRUE)
+    disposeOnStop(Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
-        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet"));
+        .subscribe(ignore -> modifier.set(), throwable -> Timber.e(throwable, "onError wrapSet")));
   }
 
   /**
    * public
    */
   void wrapUnset() {
-    subscription = DisposableHelper.dispose(subscription);
-    subscription = Observable.fromCallable(() -> Boolean.TRUE)
+    disposeOnStop(Observable.fromCallable(() -> Boolean.TRUE)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getSubscribeScheduler())
         .subscribe(ignore -> modifier.unset(),
-            throwable -> Timber.e(throwable, "onError wrapUnset"));
+            throwable -> Timber.e(throwable, "onError wrapUnset")));
   }
 }
