@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Peter Kenji Yamanaka
+ * Copyright 2017 Peter Kenji Yamanaka
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.evernote.android.job.Job;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
@@ -117,12 +116,8 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
     ForegroundService.start(context);
   }
 
-  @Nullable @Override public String provideGoogleOpenSourceLicenses(@NonNull Context context) {
-    return GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(context);
-  }
-
-  @Override public void insertCustomLicensesIntoMap() {
-    super.insertCustomLicensesIntoMap();
+  @Override public void insertCustomLicensesIntoMap(@NonNull Context context) {
+    super.insertCustomLicensesIntoMap(context);
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite");
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight");
     Licenses.create("Android-Job", "https://github.com/evernote/android-job",
@@ -130,5 +125,12 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser");
     Licenses.create("Dagger", "https://github.com/google/dagger", "licenses/dagger2");
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase");
+
+    String gmsContent =
+        GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(context);
+    if (gmsContent != null) {
+      Licenses.createWithContent("Google Play Services",
+          "https://developers.google.com/android/guides/overview", gmsContent);
+    }
   }
 }
