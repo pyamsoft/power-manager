@@ -52,7 +52,7 @@ import timber.log.Timber;
       final Single<List<PowerTriggerEntry>> result;
       synchronized (this) {
         Single<List<PowerTriggerEntry>> cache = cacheInteractor.retrieve();
-        if (cache == null || forceRefresh) {
+        if (cache == null || forceRefresh || cache.blockingGet().isEmpty()) {
           Timber.d("Refresh power triggers");
           result = getPowerTriggerDB().queryAll().cache();
           cacheInteractor.cache(result);
