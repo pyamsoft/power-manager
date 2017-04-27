@@ -22,7 +22,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
-import com.pyamsoft.powermanager.wifi.preference.WifiCustomTimePreference;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -35,7 +34,7 @@ public class WifiPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
+    Injector.get().provideComponent().plusWifiComponent().inject(this);
   }
 
   @Override protected int providePeriodicKeyResId() {

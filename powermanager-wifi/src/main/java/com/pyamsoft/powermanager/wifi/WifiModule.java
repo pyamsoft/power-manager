@@ -14,18 +14,57 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.wifi.preference;
+package com.pyamsoft.powermanager.wifi;
 
-import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
+import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
+import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 
-@Module public class WifiPreferenceModule {
+@Module public class WifiModule {
+
+  @Provides @Named("wifi_overview") OverviewPagerPresenter provideWifiOverviewPagerPresenter(
+      @Named("mod_wifi_state") StateModifier stateModifier, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("wifi_manage_pref")
+  ManagePreferencePresenter provideWifiManagePreferencePresenter(
+      @Named("wifi_manage_pref_interactor") ManagePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("wifi_manage_pref_interactor")
+  ManagePreferenceInteractor provideWifiManagePreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new ManagePreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("wifi_period_pref")
+  PeriodPreferencePresenter provideWifiPeriodPreferencePresenter(
+      @Named("wifi_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("wifi_period_pref_interactor")
+  PeriodPreferenceInteractor provideWifiPeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
 
   @Provides @Named("wifi_custom_delay")
   CustomTimePreferencePresenter provideWifiCustomDelayPresenter(

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.wifi.preference;
+package com.pyamsoft.powermanager.wifi;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class WifiCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("wifi_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public WifiCustomTimePreference(Context context, @StringRes int keyResId) {
+  WifiCustomTimePreference(Context context, @StringRes int keyResId) {
     super(context, keyResId);
   }
 
@@ -43,7 +43,7 @@ public class WifiCustomTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusWifiPreferenceComponent().inject(this);
+    Injector.get().provideComponent().plusWifiComponent().inject(this);
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

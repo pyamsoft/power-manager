@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.wifi.preference;
+package com.pyamsoft.powermanager.wifi;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = WifiPreferenceModule.class) public interface WifiPreferenceComponent {
+@Subcomponent(modules = {
+    WifiModule.class,
+}) public interface WifiComponent {
+
+  void inject(WifiFragment fragment);
+
+  void inject(WifiManagePreferenceFragment fragment);
+
+  void inject(WifiPeriodicPreferenceFragment fragment);
 
   void inject(WifiCustomTimePreference preference);
 }

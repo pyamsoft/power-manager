@@ -41,7 +41,7 @@ public class WifiFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusWifiScreenComponent().inject(this);
+    Injector.get().provideComponent().plusWifiComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {
