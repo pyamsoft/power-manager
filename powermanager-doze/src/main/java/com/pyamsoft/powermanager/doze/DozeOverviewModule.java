@@ -16,18 +16,95 @@
 
 package com.pyamsoft.powermanager.doze;
 
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
+import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 
 @Module public class DozeOverviewModule {
 
   @Provides @Named("doze_overview") OverviewPagerPresenter provideDozeOverviewPagerPresenter(
-      @Named("mod_doze_state") StateModifier stateModifier,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+      @Named("mod_doze_state") StateModifier stateModifier, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
     return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("doze_manage_pref")
+  ManagePreferencePresenter provideDozeManagePreferencePresenter(
+      @Named("doze_manage_pref_interactor") PermissionPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("doze_manage_pref_interactor")
+  PermissionPreferenceInteractor provideDozeManagePreferenceInteractor(
+      @Named("obs_doze_permission") PermissionObserver dozePermissionObserver,
+      @NonNull OnboardingPreferences preferences) {
+    return new PermissionPreferenceInteractor(preferences, dozePermissionObserver);
+  }
+
+  @Provides @Named("doze_period_pref")
+  PeriodPreferencePresenter provideDozePeriodPreferencePresenter(
+      @Named("doze_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("doze_period_pref_interactor")
+  PeriodPreferenceInteractor provideDozePeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("doze_custom_delay")
+  CustomTimePreferencePresenter provideDozeCustomDelayPresenter(
+      @NonNull @Named("doze_custom_delay_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("doze_custom_delay_interactor")
+  CustomTimePreferenceInteractor provideDozeCustomDelayInteractor(
+      @NonNull DozePreferences preferences) {
+    return new DozeDelayPreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("doze_custom_enable")
+  CustomTimePreferencePresenter provideDozeCustomEnablePresenter(
+      @NonNull @Named("doze_custom_enable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("doze_custom_enable_interactor")
+  CustomTimePreferenceInteractor provideDozeCustomEnableInteractor(
+      @NonNull DozePreferences preferences) {
+    return new DozeEnablePreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("doze_custom_disable")
+  CustomTimePreferencePresenter provideDozeCustomDisablePresenter(
+      @NonNull @Named("doze_custom_disable_interactor") CustomTimePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("doze_custom_disable_interactor")
+  CustomTimePreferenceInteractor provideDozeCustomDisableInteractor(
+      @NonNull DozePreferences preferences) {
+    return new DozeDisablePreferenceInteractor(preferences);
   }
 }

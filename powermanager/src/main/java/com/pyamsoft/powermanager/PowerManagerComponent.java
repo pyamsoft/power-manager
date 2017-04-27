@@ -29,8 +29,7 @@ import com.pyamsoft.powermanager.bluetooth.BluetoothScreenComponent;
 import com.pyamsoft.powermanager.bluetooth.preference.BluetoothPreferenceComponent;
 import com.pyamsoft.powermanager.data.DataScreenComponent;
 import com.pyamsoft.powermanager.data.preference.DataPreferenceComponent;
-import com.pyamsoft.powermanager.doze.DozeScreenComponent;
-import com.pyamsoft.powermanager.doze.preference.DozePreferenceComponent;
+import com.pyamsoft.powermanager.doze.DozeComponent;
 import com.pyamsoft.powermanager.job.JobComponent;
 import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerComponent;
@@ -66,9 +65,7 @@ import javax.inject.Singleton;
 
   DataPreferenceComponent plusDataPreferenceComponent();
 
-  DozeScreenComponent plusDozeScreenComponent();
-
-  DozePreferenceComponent plusDozePreferenceComponent();
+  DozeComponent plusDozeComponent();
 
   MainComponent plusMainComponent();
 

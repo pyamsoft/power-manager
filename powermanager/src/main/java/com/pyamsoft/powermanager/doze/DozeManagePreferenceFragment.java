@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -91,7 +90,7 @@ public class DozeManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDozeComponent().inject(this);
   }
 
   @NonNull @Override protected String getModuleName() {

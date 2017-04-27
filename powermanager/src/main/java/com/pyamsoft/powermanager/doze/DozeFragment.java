@@ -41,7 +41,7 @@ public class DozeFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDozeComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.doze;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.doze.preference.DozeCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -35,7 +34,7 @@ public class DozePeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusDozeScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDozeComponent().inject(this);
   }
 
   @Override protected int providePeriodicKeyResId() {

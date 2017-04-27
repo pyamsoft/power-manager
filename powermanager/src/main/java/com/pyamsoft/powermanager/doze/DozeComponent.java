@@ -19,12 +19,14 @@ package com.pyamsoft.powermanager.doze;
 import dagger.Subcomponent;
 
 @Subcomponent(modules = {
-    DozeOverviewModule.class, DozeManagePreferenceModule.class, DozePeriodPreferenceModule.class,
-}) public interface DozeScreenComponent {
+    DozeOverviewModule.class,
+}) public interface DozeComponent {
 
   void inject(DozeFragment fragment);
 
   void inject(DozeManagePreferenceFragment fragment);
 
   void inject(DozePeriodicPreferenceFragment fragment);
+
+  void inject(DozeCustomTimePreference preference);
 }

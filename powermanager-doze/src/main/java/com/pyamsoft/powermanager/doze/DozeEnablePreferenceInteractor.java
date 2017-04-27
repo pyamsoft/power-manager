@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.doze.preference;
+package com.pyamsoft.powermanager.doze;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class DozeDelayPreferenceInteractor extends CustomTimePreferenceInteractor<DozePreferences> {
+class DozeEnablePreferenceInteractor extends CustomTimePreferenceInteractor<DozePreferences> {
 
-  @Inject DozeDelayPreferenceInteractor(@NonNull DozePreferences preferences) {
+  @Inject DozeEnablePreferenceInteractor(@NonNull DozePreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(@NonNull DozePreferences preferences, long time) {
-    preferences.setDozeDelay(time);
+    preferences.setPeriodicEnableTimeDoze(time);
   }
 
   @Override protected long getTimeFromPreferences(@NonNull DozePreferences preferences) {
-    return preferences.getDozeDelay();
+    return preferences.getPeriodicEnableTimeDoze();
   }
 }
