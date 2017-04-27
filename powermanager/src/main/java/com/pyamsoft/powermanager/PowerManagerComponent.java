@@ -26,8 +26,11 @@ import com.pyamsoft.powermanager.base.states.StateModifierModule;
 import com.pyamsoft.powermanager.base.states.StateObserverModule;
 import com.pyamsoft.powermanager.base.states.WrapperModule;
 import com.pyamsoft.powermanager.bluetooth.BluetoothComponent;
+import com.pyamsoft.powermanager.bluetooth.BluetoothSingletonModule;
 import com.pyamsoft.powermanager.data.DataComponent;
+import com.pyamsoft.powermanager.data.DataSingletonModule;
 import com.pyamsoft.powermanager.doze.DozeComponent;
+import com.pyamsoft.powermanager.doze.DozeSingletonModule;
 import com.pyamsoft.powermanager.job.JobComponent;
 import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerComponent;
@@ -38,17 +41,22 @@ import com.pyamsoft.powermanager.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceComponent;
 import com.pyamsoft.powermanager.sync.SyncComponent;
+import com.pyamsoft.powermanager.sync.SyncSingletonModule;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.wear.WearComponent;
+import com.pyamsoft.powermanager.wear.WearSingletonModule;
 import com.pyamsoft.powermanager.wifi.WifiComponent;
+import com.pyamsoft.powermanager.wifi.WifiSingletonModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
-    StateModifierModule.class, JobModule.class, AirplaneSingletonModule.class
+    StateModifierModule.class, JobModule.class, AirplaneSingletonModule.class,
+    BluetoothSingletonModule.class, DataSingletonModule.class, DozeSingletonModule.class,
+    SyncSingletonModule.class, WearSingletonModule.class, WifiSingletonModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneComponent plusAirplaneComponent();

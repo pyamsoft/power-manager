@@ -17,9 +17,6 @@
 package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.preference.DataPreferences;
-import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
-import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
@@ -49,24 +46,11 @@ import javax.inject.Named;
     return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @Provides @Named("data_manage_pref_interactor")
-  PermissionPreferenceInteractor provideDataManagePreferenceInteractor(
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
-      @NonNull OnboardingPreferences preferences) {
-    return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);
-  }
-
   @Provides @Named("data_period_pref")
   PeriodPreferencePresenter provideDataPeriodPreferencePresenter(
       @Named("data_period_pref_interactor") PeriodPreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
-  }
-
-  @Provides @Named("data_period_pref_interactor")
-  PeriodPreferenceInteractor provideDataPeriodPreferenceInteractor(
-      @NonNull OnboardingPreferences preferences) {
-    return new PeriodPreferenceInteractor(preferences);
   }
 
   @Provides @Named("data_custom_delay")
@@ -76,12 +60,6 @@ import javax.inject.Named;
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @Provides @Named("data_custom_delay_interactor")
-  CustomTimePreferenceInteractor provideDataCustomDelayInteractor(
-      @NonNull DataPreferences preferences) {
-    return new DataDelayPreferenceInteractor(preferences);
-  }
-
   @Provides @Named("data_custom_enable")
   CustomTimePreferencePresenter provideDataCustomEnablePresenter(
       @NonNull @Named("data_custom_enable_interactor") CustomTimePreferenceInteractor interactor,
@@ -89,22 +67,10 @@ import javax.inject.Named;
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
   }
 
-  @Provides @Named("data_custom_enable_interactor")
-  CustomTimePreferenceInteractor provideDataCustomEnableInteractor(
-      @NonNull DataPreferences preferences) {
-    return new DataEnablePreferenceInteractor(preferences);
-  }
-
   @Provides @Named("data_custom_disable")
   CustomTimePreferencePresenter provideDataCustomDisablePresenter(
       @NonNull @Named("data_custom_disable_interactor") CustomTimePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new CustomTimePreferencePresenter(interactor, obsScheduler, subScheduler);
-  }
-
-  @Provides @Named("data_custom_disable_interactor")
-  CustomTimePreferenceInteractor provideDataCustomDisableInteractor(
-      @NonNull DataPreferences preferences) {
-    return new DataDisablePreferenceInteractor(preferences);
   }
 }

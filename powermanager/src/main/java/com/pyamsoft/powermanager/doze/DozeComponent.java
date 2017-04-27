@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.doze;
 import dagger.Subcomponent;
 
 @Subcomponent(modules = {
-    DozeOverviewModule.class,
+    DozeModule.class,
 }) public interface DozeComponent {
 
   void inject(DozeFragment fragment);

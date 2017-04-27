@@ -18,7 +18,7 @@ package com.pyamsoft.powermanager.wear;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = WearManagePreferenceModule.class) public interface WearComponent {
+@Subcomponent(modules = WearModule.class) public interface WearComponent {
 
   void inject(WearManagePreferenceFragment fragment);
 }

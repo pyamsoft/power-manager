@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.data;
+package com.pyamsoft.powermanager.wear;
 
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
 import dagger.Module;
+import dagger.Provides;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
-@Module public class DataPreferenceModule {
+@Module public class WearSingletonModule {
 
+  @Singleton @Provides @Named("wear_manage_pref_interactor")
+  ManagePreferenceInteractor provideWearManagePreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new ManagePreferenceInteractor(preferences);
+  }
 }

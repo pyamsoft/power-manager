@@ -25,18 +25,12 @@ import dagger.Provides;
 import io.reactivex.Scheduler;
 import javax.inject.Named;
 
-@Module public class WearManagePreferenceModule {
+@Module public class WearModule {
 
   @Provides @Named("wear_manage_pref")
   ManagePreferencePresenter provideWearManagePreferencePresenter(
       @Named("wear_manage_pref_interactor") ManagePreferenceInteractor interactor,
       @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
     return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler);
-  }
-
-  @Provides @Named("wear_manage_pref_interactor")
-  ManagePreferenceInteractor provideWearManagePreferenceInteractor(
-      @NonNull OnboardingPreferences preferences) {
-    return new ManagePreferenceInteractor(preferences);
   }
 }
