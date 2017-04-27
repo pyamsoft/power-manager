@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.sync;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.sync.preference.SyncCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -35,7 +34,7 @@ public class SyncPeriodicPreferenceFragment extends PeriodicPreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncComponent().inject(this);
   }
 
   @Override protected int providePeriodicKeyResId() {

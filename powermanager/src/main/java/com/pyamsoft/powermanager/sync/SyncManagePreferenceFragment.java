@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.sync.preference.SyncCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -36,7 +35,7 @@ public class SyncManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncComponent().inject(this);
   }
 
   @Override protected int provideManageKeyResId() {

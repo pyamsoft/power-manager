@@ -40,8 +40,7 @@ import com.pyamsoft.powermanager.overview.OverviewComponent;
 import com.pyamsoft.powermanager.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.service.ForegroundServiceComponent;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceComponent;
-import com.pyamsoft.powermanager.sync.SyncScreenComponent;
-import com.pyamsoft.powermanager.sync.preference.SyncPreferenceComponent;
+import com.pyamsoft.powermanager.sync.SyncComponent;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import com.pyamsoft.powermanager.wear.WearComponent;
@@ -83,9 +82,7 @@ import javax.inject.Singleton;
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
 
-  SyncScreenComponent plusSyncScreenComponent();
-
-  SyncPreferenceComponent plusSyncPreferenceComponent();
+  SyncComponent plusSyncComponent();
 
   WifiComponent plusWifiComponent();
 

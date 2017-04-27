@@ -16,18 +16,17 @@
 
 package com.pyamsoft.powermanager.sync;
 
-import com.pyamsoft.powermanager.model.StateModifier;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import dagger.Module;
-import dagger.Provides;
-import io.reactivex.Scheduler;
-import javax.inject.Named;
+import dagger.Subcomponent;
 
-@Module public class SyncOverviewModule {
+@Subcomponent(modules = {
+    SyncModule.class,
+}) public interface SyncComponent {
 
-  @Provides @Named("sync_overview") OverviewPagerPresenter provideSyncOverviewPagerPresenter(
-      @Named("mod_sync_state") StateModifier stateModifier, @Named("obs") Scheduler obsScheduler,
-      @Named("sub") Scheduler subScheduler) {
-    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
-  }
+  void inject(SyncFragment fragment);
+
+  void inject(SyncPeriodicPreferenceFragment fragment);
+
+  void inject(SyncManagePreferenceFragment fragment);
+
+  void inject(SyncCustomTimePreference preference);
 }

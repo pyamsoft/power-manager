@@ -41,7 +41,7 @@ public class SyncFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusSyncScreenComponent().inject(this);
+    Injector.get().provideComponent().plusSyncComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;

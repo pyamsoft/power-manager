@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.sync;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class SyncDelayPreferenceInteractor extends CustomTimePreferenceInteractor<SyncPreferences> {
+class SyncEnablePreferenceInteractor extends CustomTimePreferenceInteractor<SyncPreferences> {
 
-  @Inject SyncDelayPreferenceInteractor(@NonNull SyncPreferences preferences) {
+  @Inject SyncEnablePreferenceInteractor(@NonNull SyncPreferences preferences) {
     super(preferences);
   }
 
   @Override protected void saveTimeToPreferences(@NonNull SyncPreferences preferences, long time) {
-    preferences.setMasterSyncDelay(time);
+    preferences.setPeriodicEnableTimeSync(time);
   }
 
   @Override protected long getTimeFromPreferences(@NonNull SyncPreferences preferences) {
-    return preferences.getMasterSyncDelay();
+    return preferences.getPeriodicEnableTimeSync();
   }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.sync;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class SyncCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("sync_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public SyncCustomTimePreference(Context context, @StringRes int keyResId) {
+  SyncCustomTimePreference(Context context, @StringRes int keyResId) {
     super(context, keyResId);
   }
 
@@ -43,7 +43,7 @@ public class SyncCustomTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusSyncPreferenceComponent().inject(this);
+    Injector.get().provideComponent().plusSyncComponent().inject(this);
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

@@ -14,18 +14,57 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.sync.preference;
+package com.pyamsoft.powermanager.sync;
 
-import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
+import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
+import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 
-@Module public class SyncPreferenceModule {
+@Module public class SyncModule {
+
+  @Provides @Named("sync_overview") OverviewPagerPresenter provideSyncOverviewPagerPresenter(
+      @Named("mod_sync_state") StateModifier stateModifier, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("sync_manage_pref")
+  ManagePreferencePresenter provideSyncManagePreferencePresenter(
+      @Named("sync_manage_pref_interactor") ManagePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("sync_manage_pref_interactor")
+  ManagePreferenceInteractor provideSyncManagePreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new ManagePreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("sync_period_pref")
+  PeriodPreferencePresenter provideSyncPeriodPreferencePresenter(
+      @Named("sync_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("sync_period_pref_interactor")
+  PeriodPreferenceInteractor provideSyncPeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
 
   @Provides @Named("sync_custom_delay")
   CustomTimePreferencePresenter provideSyncCustomDelayPresenter(
