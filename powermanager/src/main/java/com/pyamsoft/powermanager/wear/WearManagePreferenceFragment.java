@@ -35,7 +35,7 @@ public class WearManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusWearScreenComponent().inject(this);
+    Injector.get().provideComponent().plusWearComponent().inject(this);
   }
 
   @Override protected int provideManageKeyResId() {

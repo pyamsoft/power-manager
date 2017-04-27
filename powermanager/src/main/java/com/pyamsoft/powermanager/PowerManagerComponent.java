@@ -44,7 +44,7 @@ import com.pyamsoft.powermanager.sync.SyncScreenComponent;
 import com.pyamsoft.powermanager.sync.preference.SyncPreferenceComponent;
 import com.pyamsoft.powermanager.trigger.TriggerComponent;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
-import com.pyamsoft.powermanager.wear.WearScreenComponent;
+import com.pyamsoft.powermanager.wear.WearComponent;
 import com.pyamsoft.powermanager.wifi.WifiComponent;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -89,7 +89,7 @@ import javax.inject.Singleton;
 
   WifiComponent plusWifiComponent();
 
-  WearScreenComponent plusWearScreenComponent();
+  WearComponent plusWearComponent();
 
   TriggerComponent plusTriggerComponent();
 
