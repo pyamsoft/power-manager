@@ -16,8 +16,7 @@
 
 package com.pyamsoft.powermanager;
 
-import com.pyamsoft.powermanager.airplane.AirplaneScreenComponent;
-import com.pyamsoft.powermanager.airplane.preference.AirplanePreferenceComponent;
+import com.pyamsoft.powermanager.airplane.AirplaneComponent;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.permission.PermissionObserverModule;
@@ -51,9 +50,7 @@ import javax.inject.Singleton;
     StateModifierModule.class, JobModule.class
 }) public interface PowerManagerComponent {
 
-  AirplaneScreenComponent plusAirplaneScreenComponent();
-
-  AirplanePreferenceComponent plusAirplanePreferenceComponent();
+  AirplaneComponent plusAirplaneComponent();
 
   BluetoothComponent plusBluetoothComponent();
 

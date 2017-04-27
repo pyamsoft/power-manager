@@ -41,7 +41,7 @@ public class AirplaneFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusAirplaneScreenComponent().inject(this);
+    Injector.get().provideComponent().plusAirplaneComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

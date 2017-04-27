@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.airplane;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = AirplanePreferenceModule.class)
-public interface AirplanePreferenceComponent {
+@Subcomponent(modules = {
+    AirplaneModule.class,
+}) public interface AirplaneComponent {
+
+  void inject(AirplanePeriodicPreferenceFragment fragment);
+
+  void inject(AirplaneManagePreferenceFragment fragment);
+
+  void inject(AirplaneFragment fragment);
 
   void inject(AirplaneCustomTimePreference preference);
 }

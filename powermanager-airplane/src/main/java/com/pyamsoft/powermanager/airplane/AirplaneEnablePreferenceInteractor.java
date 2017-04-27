@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.airplane;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import javax.inject.Inject;
 
-class AirplaneDelayPreferenceInteractor
+class AirplaneEnablePreferenceInteractor
     extends CustomTimePreferenceInteractor<AirplanePreferences> {
 
-  @Inject AirplaneDelayPreferenceInteractor(@NonNull AirplanePreferences preferences) {
+  @Inject AirplaneEnablePreferenceInteractor(@NonNull AirplanePreferences preferences) {
     super(preferences);
   }
 
   @Override
   protected void saveTimeToPreferences(@NonNull AirplanePreferences preferences, long time) {
-    preferences.setAirplaneDelay(time);
+    preferences.setPeriodicEnableTimeAirplane(time);
   }
 
   @Override protected long getTimeFromPreferences(@NonNull AirplanePreferences preferences) {
-    return preferences.getAirplaneDelay();
+    return preferences.getPeriodicEnableTimeAirplane();
   }
 }

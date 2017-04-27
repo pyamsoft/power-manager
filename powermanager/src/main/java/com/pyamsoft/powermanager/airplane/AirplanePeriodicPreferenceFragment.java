@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.airplane;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.airplane.preference.AirplaneCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.PeriodicPreferenceFragment;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -35,7 +34,7 @@ public class AirplanePeriodicPreferenceFragment extends PeriodicPreferenceFragme
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusAirplaneScreenComponent().inject(this);
+    Injector.get().provideComponent().plusAirplaneComponent().inject(this);
   }
 
   @Override protected int providePeriodicKeyResId() {

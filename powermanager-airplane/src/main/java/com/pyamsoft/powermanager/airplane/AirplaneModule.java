@@ -14,18 +14,61 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.airplane;
 
-import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.Scheduler;
+import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 
-@Module public class AirplanePreferenceModule {
+@Module public class AirplaneModule {
+
+  @Provides @Named("airplane_overview")
+  OverviewPagerPresenter provideAirplaneOverviewPagerPresenter(
+      @Named("mod_airplane_state") StateModifier stateModifier,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("airplane_manage_pref")
+  ManagePreferencePresenter provideAirplaneManagePreferencePresenter(
+      @Named("airplane_manage_pref_interactor") PermissionPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("airplane_manage_pref_interactor")
+  PermissionPreferenceInteractor provideAirplaneManagePreferenceInteractor(
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
+      @NonNull OnboardingPreferences preferences) {
+    return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);
+  }
+
+  @Provides @Named("airplane_period_pref")
+  PeriodPreferencePresenter provideAirplanePeriodPreferencePresenter(
+      @Named("airplane_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("airplane_period_pref_interactor")
+  PeriodPreferenceInteractor provideAirplanePeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
 
   @Provides @Named("airplane_custom_delay")
   CustomTimePreferencePresenter provideAirplaneCustomDelayPresenter(

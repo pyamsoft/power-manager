@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.airplane.preference;
+package com.pyamsoft.powermanager.airplane;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("airplane_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public AirplaneCustomTimePreference(Context context, @StringRes int keyResId) {
+  AirplaneCustomTimePreference(Context context, @StringRes int keyResId) {
     super(context, keyResId);
   }
 
@@ -43,7 +43,7 @@ public class AirplaneCustomTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusAirplanePreferenceComponent().inject(this);
+    Injector.get().provideComponent().plusAirplaneComponent().inject(this);
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

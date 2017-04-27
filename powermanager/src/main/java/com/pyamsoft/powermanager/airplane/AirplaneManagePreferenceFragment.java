@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.airplane.preference.AirplaneCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -85,7 +84,7 @@ public class AirplaneManagePreferenceFragment extends ManagePreferenceFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusAirplaneScreenComponent().inject(this);
+    Injector.get().provideComponent().plusAirplaneComponent().inject(this);
   }
 
   @NonNull @Override protected String getModuleName() {
