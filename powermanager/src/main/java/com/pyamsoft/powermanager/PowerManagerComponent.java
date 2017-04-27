@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager;
 
 import com.pyamsoft.powermanager.airplane.AirplaneComponent;
+import com.pyamsoft.powermanager.airplane.AirplaneSingletonModule;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.permission.PermissionObserverModule;
@@ -47,7 +48,7 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
-    StateModifierModule.class, JobModule.class
+    StateModifierModule.class, JobModule.class, AirplaneSingletonModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneComponent plusAirplaneComponent();
