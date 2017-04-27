@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.data.preference;
+package com.pyamsoft.powermanager.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class DataCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("data_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public DataCustomTimePreference(Context context, @StringRes int keyResId) {
+  DataCustomTimePreference(Context context, @StringRes int keyResId) {
     super(context, keyResId);
   }
 
@@ -43,7 +43,7 @@ public class DataCustomTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusDataPreferenceComponent().inject(this);
+    Injector.get().provideComponent().plusDataComponent().inject(this);
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

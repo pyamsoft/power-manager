@@ -41,7 +41,7 @@ public class DataFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusDataScreenComponent().inject(this);
+    Injector.get().provideComponent().plusDataComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

@@ -16,27 +16,7 @@
 
 package com.pyamsoft.powermanager.data;
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
-import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
-import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import dagger.Module;
-import dagger.Provides;
-import io.reactivex.Scheduler;
-import javax.inject.Named;
 
 @Module public class DataPeriodPreferenceModule {
-
-  @Provides @Named("data_period_pref")
-  PeriodPreferencePresenter provideDataManagePreferencePresenter(
-      @Named("data_period_pref_interactor") PeriodPreferenceInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
-  }
-
-  @Provides @Named("data_period_pref_interactor")
-  PeriodPreferenceInteractor provideDataManagePreferenceInteractor(
-      @NonNull OnboardingPreferences preferences) {
-    return new PeriodPreferenceInteractor(preferences);
-  }
 }

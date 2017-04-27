@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.data.preference;
+package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;

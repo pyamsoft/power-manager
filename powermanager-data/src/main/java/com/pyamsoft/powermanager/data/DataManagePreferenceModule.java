@@ -28,18 +28,4 @@ import io.reactivex.Scheduler;
 import javax.inject.Named;
 
 @Module public class DataManagePreferenceModule {
-
-  @Provides @Named("data_manage_pref")
-  ManagePreferencePresenter provideDataManagePreferencePresenter(
-      @Named("data_manage_pref_interactor") PermissionPreferenceInteractor interactor,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
-  }
-
-  @Provides @Named("data_manage_pref_interactor")
-  PermissionPreferenceInteractor provideDataManagePreferenceInteractor(
-      @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
-      @NonNull OnboardingPreferences preferences) {
-    return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);
-  }
 }

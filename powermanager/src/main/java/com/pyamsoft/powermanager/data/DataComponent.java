@@ -16,18 +16,17 @@
 
 package com.pyamsoft.powermanager.data;
 
-import com.pyamsoft.powermanager.model.StateModifier;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import dagger.Module;
-import dagger.Provides;
-import io.reactivex.Scheduler;
-import javax.inject.Named;
+import dagger.Subcomponent;
 
-@Module public class DataOverviewModule {
+@Subcomponent(modules = {
+    DataModule.class,
+}) public interface DataComponent {
 
-  @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
-      @Named("mod_data_state") StateModifier stateModifier,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
-  }
+  void inject(DataFragment fragment);
+
+  void inject(DataManagePreferenceFragment fragment);
+
+  void inject(DataPeriodicPreferenceFragment fragment);
+
+  void inject(DataCustomTimePreference preference);
 }

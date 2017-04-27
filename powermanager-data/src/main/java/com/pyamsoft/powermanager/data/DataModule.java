@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.data.preference;
+package com.pyamsoft.powermanager.data;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
+import com.pyamsoft.powermanager.uicore.PermissionPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PermissionPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -25,7 +34,40 @@ import dagger.Provides;
 import io.reactivex.Scheduler;
 import javax.inject.Named;
 
-@Module public class DataPreferenceModule {
+@Module public class DataModule {
+
+  @Provides @Named("data_overview") OverviewPagerPresenter provideDataOverviewPagerPresenter(
+      @Named("mod_data_state") StateModifier stateModifier, @Named("obs") Scheduler obsScheduler,
+      @Named("sub") Scheduler subScheduler) {
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("data_manage_pref")
+  ManagePreferencePresenter provideDataManagePreferencePresenter(
+      @Named("data_manage_pref_interactor") PermissionPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PermissionPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("data_manage_pref_interactor")
+  PermissionPreferenceInteractor provideDataManagePreferenceInteractor(
+      @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
+      @NonNull OnboardingPreferences preferences) {
+    return new PermissionPreferenceInteractor(preferences, rootPermissionObserver);
+  }
+
+  @Provides @Named("data_period_pref")
+  PeriodPreferencePresenter provideDataPeriodPreferencePresenter(
+      @Named("data_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("data_period_pref_interactor")
+  PeriodPreferenceInteractor provideDataPeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
 
   @Provides @Named("data_custom_delay")
   CustomTimePreferencePresenter provideDataCustomDelayPresenter(

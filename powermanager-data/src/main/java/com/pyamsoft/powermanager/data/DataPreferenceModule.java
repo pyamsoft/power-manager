@@ -16,15 +16,8 @@
 
 package com.pyamsoft.powermanager.data;
 
-import dagger.Subcomponent;
+import dagger.Module;
 
-@Subcomponent(modules = {
-    DataOverviewModule.class, DataManagePreferenceModule.class, DataPeriodPreferenceModule.class,
-}) public interface DataScreenComponent {
+@Module public class DataPreferenceModule {
 
-  void inject(DataFragment fragment);
-
-  void inject(DataManagePreferenceFragment fragment);
-
-  void inject(DataPeriodicPreferenceFragment fragment);
 }
