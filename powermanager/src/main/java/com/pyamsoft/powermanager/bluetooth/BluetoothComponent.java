@@ -16,19 +16,17 @@
 
 package com.pyamsoft.powermanager.bluetooth;
 
-import com.pyamsoft.powermanager.model.StateModifier;
-import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
-import dagger.Module;
-import dagger.Provides;
-import io.reactivex.Scheduler;
-import javax.inject.Named;
+import dagger.Subcomponent;
 
-@Module public class BluetoothOverviewModule {
+@Subcomponent(modules = {
+    BluetoothModule.class,
+}) public interface BluetoothComponent {
 
-  @Provides @Named("bluetooth_overview")
-  OverviewPagerPresenter provideBluetoothOverviewPagerPresenter(
-      @Named("mod_bluetooth_state") StateModifier stateModifier,
-      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
-    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
-  }
+  void inject(BluetoothFragment fragment);
+
+  void inject(BluetoothManagePreferenceFragment fragment);
+
+  void inject(BluetoothPeriodicPreferenceFragment fragment);
+
+  void inject(BluetoothCustomTimePreference preference);
 }

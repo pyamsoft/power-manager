@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.bluetooth.preference;
+package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;

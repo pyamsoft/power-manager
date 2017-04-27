@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.bluetooth.preference;
+package com.pyamsoft.powermanager.bluetooth;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
   @SuppressWarnings("WeakerAccess") @Named("bluetooth_custom_disable") @Inject
   CustomTimePreferencePresenter disablePresenter;
 
-  public BluetoothCustomTimePreference(Context context, @StringRes int keyResId) {
+  BluetoothCustomTimePreference(Context context, @StringRes int keyResId) {
     super(context, keyResId);
   }
 
@@ -43,7 +43,7 @@ public class BluetoothCustomTimePreference extends CustomTimeInputPreference {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusBluetoothPreferenceComponent().inject(this);
+    Injector.get().provideComponent().plusBluetoothComponent().inject(this);
   }
 
   @NonNull @Override protected CustomTimePreferencePresenter provideEnablePresenter() {

@@ -25,8 +25,7 @@ import com.pyamsoft.powermanager.base.shell.ShellCommandModule;
 import com.pyamsoft.powermanager.base.states.StateModifierModule;
 import com.pyamsoft.powermanager.base.states.StateObserverModule;
 import com.pyamsoft.powermanager.base.states.WrapperModule;
-import com.pyamsoft.powermanager.bluetooth.BluetoothScreenComponent;
-import com.pyamsoft.powermanager.bluetooth.preference.BluetoothPreferenceComponent;
+import com.pyamsoft.powermanager.bluetooth.BluetoothComponent;
 import com.pyamsoft.powermanager.data.DataComponent;
 import com.pyamsoft.powermanager.doze.DozeComponent;
 import com.pyamsoft.powermanager.job.JobComponent;
@@ -56,13 +55,17 @@ import javax.inject.Singleton;
 
   AirplanePreferenceComponent plusAirplanePreferenceComponent();
 
-  BluetoothScreenComponent plusBluetoothScreenComponent();
-
-  BluetoothPreferenceComponent plusBluetoothPreferenceComponent();
+  BluetoothComponent plusBluetoothComponent();
 
   DataComponent plusDataComponent();
 
   DozeComponent plusDozeComponent();
+
+  SyncComponent plusSyncComponent();
+
+  WifiComponent plusWifiComponent();
+
+  WearComponent plusWearComponent();
 
   MainComponent plusMainComponent();
 
@@ -75,12 +78,6 @@ import javax.inject.Singleton;
   ForegroundServiceComponent plusForegroundServiceComponent();
 
   SettingsPreferenceComponent plusSettingsPreferenceComponent();
-
-  SyncComponent plusSyncComponent();
-
-  WifiComponent plusWifiComponent();
-
-  WearComponent plusWearComponent();
 
   TriggerComponent plusTriggerComponent();
 

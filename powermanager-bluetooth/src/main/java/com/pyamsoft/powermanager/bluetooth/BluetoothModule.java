@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.bluetooth.preference;
+package com.pyamsoft.powermanager.bluetooth;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
+import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
+import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.uicore.ManagePreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
+import com.pyamsoft.powermanager.uicore.OverviewPagerPresenter;
+import com.pyamsoft.powermanager.uicore.PeriodPreferenceInteractor;
+import com.pyamsoft.powermanager.uicore.PeriodPreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferenceInteractor;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimePreferencePresenter;
 import dagger.Module;
@@ -25,7 +32,40 @@ import dagger.Provides;
 import io.reactivex.Scheduler;
 import javax.inject.Named;
 
-@Module public class BluetoothPreferenceModule {
+@Module public class BluetoothModule {
+
+  @Provides @Named("bluetooth_overview")
+  OverviewPagerPresenter provideBluetoothOverviewPagerPresenter(
+      @Named("mod_bluetooth_state") StateModifier stateModifier,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new OverviewPagerPresenter(obsScheduler, subScheduler, stateModifier);
+  }
+
+  @Provides @Named("bluetooth_manage_pref")
+  ManagePreferencePresenter provideBluetoothManagePreferencePresenter(
+      @Named("bluetooth_manage_pref_interactor") ManagePreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new ManagePreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("bluetooth_manage_pref_interactor")
+  ManagePreferenceInteractor provideBluetoothManagePreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new ManagePreferenceInteractor(preferences);
+  }
+
+  @Provides @Named("bluetooth_period_pref")
+  PeriodPreferencePresenter provideBluetoothPeriodPreferencePresenter(
+      @Named("bluetooth_period_pref_interactor") PeriodPreferenceInteractor interactor,
+      @Named("obs") Scheduler obsScheduler, @Named("sub") Scheduler subScheduler) {
+    return new PeriodPreferencePresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("bluetooth_period_pref_interactor")
+  PeriodPreferenceInteractor provideBluetoothPeriodPreferenceInteractor(
+      @NonNull OnboardingPreferences preferences) {
+    return new PeriodPreferenceInteractor(preferences);
+  }
 
   @Provides @Named("bluetooth_custom_delay")
   CustomTimePreferencePresenter provideBluetoothCustomDelayPresenter(

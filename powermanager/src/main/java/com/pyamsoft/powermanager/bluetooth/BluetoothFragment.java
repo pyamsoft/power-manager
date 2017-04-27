@@ -16,9 +16,7 @@
 
 package com.pyamsoft.powermanager.bluetooth;
 
-import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.view.View;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.model.StateObserver;
@@ -43,7 +41,7 @@ public class BluetoothFragment extends OverviewPagerFragment {
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
+    Injector.get().provideComponent().plusBluetoothComponent().inject(this);
   }
 
   @Override protected int getFabSetIcon() {

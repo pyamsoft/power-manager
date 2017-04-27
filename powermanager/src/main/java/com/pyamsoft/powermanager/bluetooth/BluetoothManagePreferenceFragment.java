@@ -20,7 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.bluetooth.preference.BluetoothCustomTimePreference;
 import com.pyamsoft.powermanager.uicore.ManagePreferenceFragment;
 import com.pyamsoft.powermanager.uicore.ManagePreferencePresenter;
 import com.pyamsoft.powermanager.uicore.preference.CustomTimeInputPreference;
@@ -36,7 +35,7 @@ public class BluetoothManagePreferenceFragment extends ManagePreferenceFragment 
   }
 
   @Override protected void injectDependencies() {
-    Injector.get().provideComponent().plusBluetoothScreenComponent().inject(this);
+    Injector.get().provideComponent().plusBluetoothComponent().inject(this);
   }
 
   @Override protected int provideManageKeyResId() {
