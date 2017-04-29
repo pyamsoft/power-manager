@@ -36,6 +36,7 @@ import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerComponent;
 import com.pyamsoft.powermanager.main.MainComponent;
 import com.pyamsoft.powermanager.manager.ManagerComponent;
+import com.pyamsoft.powermanager.manager.ManagerSingletonModule;
 import com.pyamsoft.powermanager.overview.OverviewComponent;
 import com.pyamsoft.powermanager.service.ActionToggleServiceComponent;
 import com.pyamsoft.powermanager.service.ForegroundServiceComponent;
@@ -56,7 +57,8 @@ import javax.inject.Singleton;
     ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
     StateModifierModule.class, JobModule.class, AirplaneSingletonModule.class,
     BluetoothSingletonModule.class, DataSingletonModule.class, DozeSingletonModule.class,
-    SyncSingletonModule.class, WearSingletonModule.class, WifiSingletonModule.class
+    SyncSingletonModule.class, WearSingletonModule.class, WifiSingletonModule.class,
+    ManagerSingletonModule.class
 }) public interface PowerManagerComponent {
 
   AirplaneComponent plusAirplaneComponent();
