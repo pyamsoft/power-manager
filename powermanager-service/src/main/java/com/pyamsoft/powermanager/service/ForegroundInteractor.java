@@ -95,7 +95,8 @@ import timber.log.Timber;
     jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
-  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult Single<Integer> getNotificationPriority() {
+  @SuppressWarnings("WeakerAccess") @NonNull @CheckResult
+  Single<Integer> getNotificationPriority() {
     return Single.fromCallable(() -> getPreferences().getNotificationPriority());
   }
 
