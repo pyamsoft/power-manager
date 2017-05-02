@@ -33,14 +33,14 @@ buildscript {
 
     retrolambda = "2.5.1"
     supportLib = "25.3.1"
-    firebase = "10.2.1"
+    firebase = "10.2.4"
     leakCanary = "1.5"
     pydroid = "9.1.2"
     autoValue = "1.4.1"
     sqlbrite = "1.1.1"
     dagger = "2.10"
-    libsuperuser = "1.0.0.201608240809"
-    androidJob = "1.1.8"
+    libsuperuser = "1.0.0.201704021214"
+    androidJob = "1.1.10"
   }
 
   dependencies {
