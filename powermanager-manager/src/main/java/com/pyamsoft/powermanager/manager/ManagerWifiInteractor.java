@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateObserver;
 import io.reactivex.Maybe;
 import javax.inject.Inject;
@@ -28,13 +29,15 @@ import timber.log.Timber;
 
 class ManagerWifiInteractor extends WearAwareManagerInteractor {
 
-  @NonNull private final WifiPreferences wifiPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final WifiPreferences wifiPreferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final ConnectedStateObserver wifiStateObserver;
 
   @Inject ManagerWifiInteractor(@NonNull WifiPreferences wifiPreferences,
-      @NonNull WearablePreferences preferences, @NonNull StateObserver stateObserver,
+      @NonNull WearablePreferences preferences, @NonNull ConnectedStateObserver stateObserver,
       @NonNull JobQueuer jobQueuer, @NonNull StateObserver wearStateObserver) {
     super(preferences, stateObserver, jobQueuer, wearStateObserver);
     this.wifiPreferences = wifiPreferences;
+    this.wifiStateObserver = stateObserver;
   }
 
   @Override boolean isWearManaged() {
@@ -81,15 +84,14 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
       Timber.d("Check for active connection here");
-      /*
-       // TODO check preferences
-       // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
-       if (wrapper.isConnected()) {
-       return Boolean.TRUE;
-       } else {
-       }
-       */
-      return originalResult;
+      // TODO check preferences
+      // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
+      if (wifiStateObserver.connected()) {
+        Timber.i("Wifi is not connected, force continue the manage stream");
+        return Boolean.TRUE;
+      } else {
+        return originalResult;
+      }
     });
   }
 }
