@@ -20,8 +20,8 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.pyamsoft.powermanager.base.logger.Logger;
-import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
+import com.pyamsoft.powermanager.model.StateObserver;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -47,10 +47,11 @@ public abstract class BaseJob {
     inject();
   }
 
-  void run(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+  @CheckResult
+  private boolean runJob(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
     if (isStopped()) {
       getLogger().w("Stop job early");
-      return;
+      return false;
     }
 
     initialize(tag, extras);
@@ -58,14 +59,14 @@ public abstract class BaseJob {
       if (ignoreWhenCharging) {
         if (chargingObserver.enabled()) {
           getLogger().w("Do not run job because device is charging");
-          return;
+          return true;
         }
       }
     }
 
     if (isStopped()) {
       getLogger().w("Stop job early");
-      return;
+      return false;
     }
 
     getLogger().i("Run job: %s [%s]", type, jobTag);
@@ -77,9 +78,10 @@ public abstract class BaseJob {
 
     if (isStopped()) {
       getLogger().w("Stop job early");
-      return;
+      return false;
     }
-    repeatIfRequired();
+
+    return true;
   }
 
   private void repeatIfRequired() {
@@ -127,6 +129,15 @@ public abstract class BaseJob {
     }
 
     getModifier().unset();
+  }
+
+  /**
+   * Runs the Job. Called either by managed jobs or directly by the JobQueuer
+   */
+  void run(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+    if (runJob(tag, extras)) {
+      repeatIfRequired();
+    }
   }
 
   /**
