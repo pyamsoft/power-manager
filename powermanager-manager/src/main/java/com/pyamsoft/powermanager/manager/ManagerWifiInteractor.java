@@ -89,12 +89,12 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
       }
 
       // TODO check preferences
-      // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
       if (wifiStateObserver.connected()) {
+        // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
+        return originalResult;
+      } else {
         Timber.i("Wifi is not connected, force continue the manage stream");
         return Boolean.TRUE;
-      } else {
-        return originalResult;
       }
     });
   }

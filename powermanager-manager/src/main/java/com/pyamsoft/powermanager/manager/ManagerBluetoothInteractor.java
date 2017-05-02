@@ -89,12 +89,12 @@ class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
       }
 
       // TODO check preferences
-      // If bluetooth doesn't have an existing connection, we forcefully continue the stream so that Bluetooth is turned off
       if (bluetoothStateObserver.connected()) {
+        return originalResult;
+      } else {
+        // If bluetooth doesn't have an existing connection, we forcefully continue the stream so that Bluetooth is turned off
         Timber.i("Bluetooth is not connected, force continue the manage stream");
         return Boolean.TRUE;
-      } else {
-        return originalResult;
       }
     });
   }
