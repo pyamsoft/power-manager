@@ -24,6 +24,7 @@ import com.pyamsoft.powermanager.base.logger.Logger;
 import com.pyamsoft.powermanager.model.Connections;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
 
@@ -53,6 +54,7 @@ class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
 
   @NonNull @Override public States getState() {
     if (wifiManager == null) {
+      Timber.w("Wifi state unknown");
       return States.UNKNOWN;
     } else {
       return wifiManager.isWifiEnabled() ? States.ENABLED : States.DISABLED;
@@ -61,6 +63,7 @@ class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
 
   @Override @NonNull public Connections getConnectionState() {
     if (wifiManager == null) {
+      Timber.w("Wifi connection state unknown");
       return Connections.UNKNOWN;
     } else {
       return wifiManager.getConnectionInfo() == null ? Connections.DISCONNECTED

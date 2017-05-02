@@ -53,4 +53,10 @@ class WifiStateObserver extends BroadcastStateObserver implements ConnectedState
     Timber.d("Connected: %s", connected);
     return connected;
   }
+
+  @Override public boolean connectionUnknown() {
+    final boolean unknown = wrapper.getConnectionState() == Connections.UNKNOWN;
+    Timber.d("Connection unknown: %s", unknown);
+    return unknown;
+  }
 }

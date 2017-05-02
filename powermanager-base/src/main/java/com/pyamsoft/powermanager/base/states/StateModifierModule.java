@@ -36,7 +36,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("mod_bluetooth_state") @Provides StateModifier provideBluetoothModifier(
-      @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
+      @NonNull @Named("wrapper_bluetooth") ConnectedDeviceFunctionWrapper wrapper) {
     return new BluetoothStateModifier(wrapper);
   }
 

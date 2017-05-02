@@ -40,9 +40,9 @@ import javax.inject.Singleton;
     return new DataStateObserver(context, wrapper, dataUri);
   }
 
-  @Singleton @Named("obs_bluetooth_state") @Provides StateObserver provideBluetoothObserver(
-      @NonNull Context context,
-      @NonNull @Named("wrapper_bluetooth") DeviceFunctionWrapper wrapper) {
+  @Singleton @Named("obs_bluetooth_state") @Provides
+  ConnectedStateObserver provideBluetoothObserver(@NonNull Context context,
+      @NonNull @Named("wrapper_bluetooth") ConnectedDeviceFunctionWrapper wrapper) {
     return new BluetoothStateObserver(context, wrapper);
   }
 

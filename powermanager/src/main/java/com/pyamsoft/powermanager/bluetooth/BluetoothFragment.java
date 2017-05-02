@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.bluetooth;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.uicore.ModulePagerAdapter;
 import com.pyamsoft.powermanager.uicore.OverviewPagerFragment;
@@ -29,7 +30,7 @@ import javax.inject.Named;
 public class BluetoothFragment extends OverviewPagerFragment {
 
   @NonNull public static final String TAG = "Bluetooth";
-  @Inject @Named("obs_bluetooth_state") StateObserver observer;
+  @Inject @Named("obs_bluetooth_state") ConnectedStateObserver observer;
   @Inject @Named("bluetooth_overview") OverviewPagerPresenter presenter;
 
   @NonNull @Override protected OverviewPagerPresenter providePresenter() {

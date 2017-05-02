@@ -52,8 +52,8 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("bluetooth_manager_interactor")
   WearAwareManagerInteractor provideManagerBluetoothInteractor(
       @NonNull BluetoothPreferences preferences, @NonNull WearablePreferences wearablePreferences,
-      @Named("obs_bluetooth_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
-      @Named("obs_wear_state") StateObserver wearStateObserver) {
+      @Named("obs_bluetooth_state") ConnectedStateObserver stateObserver,
+      @NonNull JobQueuer jobQueuer, @Named("obs_wear_state") StateObserver wearStateObserver) {
     return new ManagerBluetoothInteractor(wearablePreferences, preferences, stateObserver,
         jobQueuer, wearStateObserver);
   }

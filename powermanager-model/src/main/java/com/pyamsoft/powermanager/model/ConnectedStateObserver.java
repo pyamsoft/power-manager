@@ -21,4 +21,6 @@ import android.support.annotation.CheckResult;
 public interface ConnectedStateObserver extends StateObserver {
 
   @CheckResult boolean connected();
+
+  @CheckResult boolean connectionUnknown();
 }

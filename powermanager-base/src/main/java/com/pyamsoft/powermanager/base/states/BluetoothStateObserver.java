@@ -19,15 +19,18 @@ package com.pyamsoft.powermanager.base.states;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
+import com.pyamsoft.powermanager.model.Connections;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothStateObserver extends BroadcastStateObserver {
+class BluetoothStateObserver extends BroadcastStateObserver implements ConnectedStateObserver {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
+  @NonNull private final ConnectedDeviceFunctionWrapper wrapper;
 
-  @Inject BluetoothStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
+  @Inject BluetoothStateObserver(@NonNull Context context,
+      @NonNull ConnectedDeviceFunctionWrapper wrapper) {
     super(context, BluetoothAdapter.ACTION_STATE_CHANGED);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");
@@ -42,6 +45,18 @@ class BluetoothStateObserver extends BroadcastStateObserver {
   @Override public boolean unknown() {
     final boolean unknown = wrapper.getState() == States.UNKNOWN;
     Timber.d("Unknown: %s", unknown);
+    return unknown;
+  }
+
+  @Override public boolean connected() {
+    final boolean connected = wrapper.getConnectionState() == Connections.CONNECTED;
+    Timber.d("Connected: %s", connected);
+    return connected;
+  }
+
+  @Override public boolean connectionUnknown() {
+    final boolean unknown = wrapper.getConnectionState() == Connections.UNKNOWN;
+    Timber.d("Connection unknown: %s", unknown);
     return unknown;
   }
 }

@@ -83,7 +83,11 @@ class ManagerWifiInteractor extends WearAwareManagerInteractor {
   @NonNull @Override
   protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
     return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
-      Timber.d("Check for active connection here");
+      if (wifiStateObserver.connectionUnknown()) {
+        Timber.w("Wifi connection state unknown");
+        return originalResult;
+      }
+
       // TODO check preferences
       // If wifi doesn't have an existing connection, we forcefully continue the stream so that WiFi is turned off
       if (wifiStateObserver.connected()) {

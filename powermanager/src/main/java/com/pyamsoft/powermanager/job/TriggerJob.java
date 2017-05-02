@@ -47,9 +47,10 @@ public class TriggerJob extends Job {
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") ConnectedStateObserver wifiObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") ConnectedStateObserver
+      wifiObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateObserver dataObserver;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateObserver
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") ConnectedStateObserver
       bluetoothObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_sync_state") StateObserver syncObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier wifiModifier;

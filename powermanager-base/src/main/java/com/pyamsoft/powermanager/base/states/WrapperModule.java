@@ -35,7 +35,7 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("wrapper_bluetooth")
-  DeviceFunctionWrapper provideBluetoothAdapterWrapper(@NonNull Context context,
+  ConnectedDeviceFunctionWrapper provideBluetoothAdapterWrapper(@NonNull Context context,
       @Named("logger_bluetooth") Logger logger) {
     return new BluetoothAdapterWrapperImpl(context, logger);
   }
