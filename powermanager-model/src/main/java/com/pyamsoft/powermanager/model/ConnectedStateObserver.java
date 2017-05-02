@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.states;
+package com.pyamsoft.powermanager.model;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.Connections;
 
-interface ConnectedDeviceFunctionWrapper extends DeviceFunctionWrapper {
+public interface ConnectedStateObserver extends StateObserver {
 
-  @CheckResult @NonNull Connections getConnectionState();
+  @CheckResult boolean connected();
 }

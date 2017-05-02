@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -36,7 +37,7 @@ import javax.inject.Singleton;
   @Singleton @Provides @Named("wifi_manager_interactor")
   WearAwareManagerInteractor provideManagerWifiInteractor(@NonNull WifiPreferences wifiPreferences,
       @NonNull WearablePreferences wearablePreferences,
-      @Named("obs_wifi_state") StateObserver stateObserver, @NonNull JobQueuer jobQueuer,
+      @Named("obs_wifi_state") ConnectedStateObserver stateObserver, @NonNull JobQueuer jobQueuer,
       @Named("obs_wear_state") StateObserver wearStateObserver) {
     return new ManagerWifiInteractor(wifiPreferences, wearablePreferences, stateObserver, jobQueuer,
         wearStateObserver);

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.evernote.android.job.Job;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB;
@@ -46,7 +47,7 @@ public class TriggerJob extends Job {
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_charging_state") StateObserver
       chargingObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_trigger") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") StateObserver wifiObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") ConnectedStateObserver wifiObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_data_state") StateObserver dataObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs_bluetooth_state") StateObserver
       bluetoothObserver;

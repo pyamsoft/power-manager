@@ -19,15 +19,18 @@ package com.pyamsoft.powermanager.base.states;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
+import com.pyamsoft.powermanager.model.Connections;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class WifiStateObserver extends BroadcastStateObserver {
+class WifiStateObserver extends BroadcastStateObserver implements ConnectedStateObserver {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
+  @NonNull private final ConnectedDeviceFunctionWrapper wrapper;
 
-  @Inject WifiStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
+  @Inject WifiStateObserver(@NonNull Context context,
+      @NonNull ConnectedDeviceFunctionWrapper wrapper) {
     super(context, WifiManager.WIFI_STATE_CHANGED_ACTION);
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Wifi");
@@ -43,5 +46,11 @@ class WifiStateObserver extends BroadcastStateObserver {
     final boolean unknown = wrapper.getState() == States.UNKNOWN;
     Timber.d("Unknown: %s", unknown);
     return unknown;
+  }
+
+  @Override public boolean connected() {
+    final boolean connected = wrapper.getConnectionState() == Connections.CONNECTED;
+    Timber.d("Connected: %s", connected);
+    return connected;
   }
 }

@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.base.states;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateObserver;
 import dagger.Module;
 import dagger.Provides;
@@ -27,7 +28,7 @@ import javax.inject.Singleton;
 
 @Module public class StateObserverModule {
 
-  @Singleton @Named("obs_wifi_state") @Provides StateObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi_state") @Provides ConnectedStateObserver provideWifiObserver(
       @NonNull Context context,
       @NonNull @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper) {
     return new WifiStateObserver(context, wrapper);

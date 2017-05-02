@@ -21,6 +21,7 @@ import android.net.wifi.WifiManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.base.logger.Logger;
+import com.pyamsoft.powermanager.model.Connections;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 
@@ -58,11 +59,12 @@ class WifiManagerWrapperImpl implements ConnectedDeviceFunctionWrapper {
     }
   }
 
-  @Override @NonNull public States getConnectionState() {
+  @Override @NonNull public Connections getConnectionState() {
     if (wifiManager == null) {
-      return States.UNKNOWN;
+      return Connections.UNKNOWN;
     } else {
-      return wifiManager.getConnectionInfo() == null ? States.DISABLED : States.ENABLED;
+      return wifiManager.getConnectionInfo() == null ? Connections.DISCONNECTED
+          : Connections.CONNECTED;
     }
   }
 }
