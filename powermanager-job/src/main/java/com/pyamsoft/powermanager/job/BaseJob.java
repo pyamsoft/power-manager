@@ -35,10 +35,8 @@ public abstract class BaseJob {
   private long windowOnTime;
   private long windowOffTime;
   private boolean repeat;
-  private String jobTag;
 
-  private void initialize(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
-    jobTag = tag;
+  private void initialize(@NonNull PersistableBundleCompat extras) {
     ignoreWhenCharging = extras.getBoolean(JobQueuerImpl.KEY_IGNORE_CHARGING, false);
     type = QueuerType.valueOf(extras.getString(JobQueuerImpl.KEY_QUEUE_TYPE, null));
     windowOnTime = extras.getLong(JobQueuerImpl.KEY_ON_WINDOW, 0);
@@ -50,43 +48,38 @@ public abstract class BaseJob {
   @CheckResult
   private boolean runJob(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
     if (isStopped()) {
-      getLogger().w("Stop job early");
+      getLogger().w("Stop job early: " + tag);
       return false;
     }
 
-    initialize(tag, extras);
+    initialize(extras);
     if (type == QueuerType.SCREEN_OFF_DISABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
       if (ignoreWhenCharging) {
         if (chargingObserver.enabled()) {
-          getLogger().w("Do not run job because device is charging");
+          getLogger().w("Do not run job because device is charging: " + tag);
           return true;
         }
       }
     }
 
     if (isStopped()) {
-      getLogger().w("Stop job early");
+      getLogger().w("Stop job early: " + tag);
       return false;
     }
 
-    getLogger().i("Run job: %s [%s]", type, jobTag);
+    getLogger().i("Run job: %s [%s]", type, tag);
     if (type == QueuerType.SCREEN_ON_ENABLE || type == QueuerType.SCREEN_OFF_ENABLE) {
-      set();
+      getModifier().set();
     } else {
-      unset();
-    }
-
-    if (isStopped()) {
-      getLogger().w("Stop job early");
-      return false;
+      getModifier().unset();
     }
 
     return true;
   }
 
-  private void repeatIfRequired() {
+  private void repeatIfRequired(@NonNull String tag) {
     if (!repeat) {
-      getLogger().w("Job is not repeating. Do not re-queue");
+      getLogger().w("Job is not repeating. Do not re-queue: " + tag);
       return;
     }
 
@@ -99,7 +92,7 @@ public abstract class BaseJob {
       newDelayTime = windowOnTime * 1000L;
     }
 
-    final JobQueuerEntry entry = JobQueuerEntry.builder(jobTag)
+    final JobQueuerEntry entry = JobQueuerEntry.builder(tag)
         .ignoreIfCharging(ignoreWhenCharging)
         .delay(newDelayTime)
         .repeating(true)
@@ -108,27 +101,9 @@ public abstract class BaseJob {
         .type(newType)
         .build();
 
-    getLogger().d("Requeue job with new type: %s", newType);
-    jobQueuer.cancel(jobTag);
+    getLogger().d("Requeue job with new type: %s [%s]", newType, tag);
+    jobQueuer.cancel(tag);
     jobQueuer.queue(entry);
-  }
-
-  private void set() {
-    if (isStopped()) {
-      getLogger().w("Stop job early");
-      return;
-    }
-
-    getModifier().set();
-  }
-
-  private void unset() {
-    if (isStopped()) {
-      getLogger().w("Stop job early");
-      return;
-    }
-
-    getModifier().unset();
   }
 
   /**
@@ -136,7 +111,7 @@ public abstract class BaseJob {
    */
   void run(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
     if (runJob(tag, extras)) {
-      repeatIfRequired();
+      repeatIfRequired(tag);
     }
   }
 
