@@ -51,7 +51,7 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Injector.get().provideComponent().plusLoggerComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

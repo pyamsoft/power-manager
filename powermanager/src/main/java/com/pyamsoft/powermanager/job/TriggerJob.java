@@ -62,7 +62,7 @@ public class TriggerJob extends Job {
   @SuppressWarnings("WeakerAccess") @Inject @Named("obs") Scheduler obsScheduler;
 
   public TriggerJob() {
-    Injector.get().provideComponent().plusJobComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
     compositeDisposable = new CompositeDisposable();
   }
 

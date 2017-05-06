@@ -31,9 +31,9 @@ import android.view.WindowManager;
 import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding;
-import com.pyamsoft.pydroid.ui.loader.ImageLoader;
-import com.pyamsoft.pydroid.ui.loader.LoaderMap;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.LoaderMap;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import timber.log.Timber;
 
 public class CreateTriggerDialog extends DialogFragment {
@@ -138,7 +138,7 @@ public class CreateTriggerDialog extends DialogFragment {
     });
 
     final Loaded continueTask =
-        ImageLoader.fromResource(R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
+        ImageLoader.fromResource(getActivity(), R.drawable.ic_arrow_forward_24dp).into(binding.newTriggerContinue);
     taskMap.put("continue", continueTask);
   }
 
@@ -154,11 +154,11 @@ public class CreateTriggerDialog extends DialogFragment {
     });
 
     final Loaded backTask =
-        ImageLoader.fromResource(R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
+        ImageLoader.fromResource(getActivity(), R.drawable.ic_arrow_back_24dp).into(binding.newTriggerBack);
     taskMap.put("back", backTask);
 
     final Loaded closeTask =
-        ImageLoader.fromResource(R.drawable.ic_close_24dp).into(binding.newTriggerClose);
+        ImageLoader.fromResource(getActivity(), R.drawable.ic_close_24dp).into(binding.newTriggerClose);
     taskMap.put("close", closeTask);
   }
 

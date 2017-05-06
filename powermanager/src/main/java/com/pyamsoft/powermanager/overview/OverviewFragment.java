@@ -55,7 +55,7 @@ public class OverviewFragment extends ActionBarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Injector.get().provideComponent().plusOverviewComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Nullable @Override

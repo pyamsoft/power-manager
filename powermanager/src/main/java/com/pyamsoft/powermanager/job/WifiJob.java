@@ -29,11 +29,12 @@ import javax.inject.Named;
 public class WifiJob extends BaseJob {
 
   @SuppressWarnings("WeakerAccess") @Inject @Named("logger_wifi") Logger logger;
-  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") ConnectedStateObserver stateObserver;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("obs_wifi_state") ConnectedStateObserver
+      stateObserver;
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_wifi_state") StateModifier stateModifier;
 
   @Override void inject() {
-    Injector.get().provideComponent().plusJobComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @NonNull @Override Logger getLogger() {

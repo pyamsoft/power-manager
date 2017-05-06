@@ -30,9 +30,9 @@ import com.pyamsoft.powermanager.PowerManager;
 import com.pyamsoft.powermanager.databinding.FragmentPreferenceContainerPagerBinding;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.model.StateObserver;
-import com.pyamsoft.pydroid.ui.loader.ImageLoader;
-import com.pyamsoft.pydroid.ui.loader.LoaderHelper;
-import com.pyamsoft.pydroid.ui.loader.loaded.Loaded;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.LoaderHelper;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import com.pyamsoft.pydroid.util.AnimUtil;
 import timber.log.Timber;
 
@@ -176,7 +176,7 @@ public abstract class OverviewPagerFragment extends AppBarColoringFragment {
       binding.preferenceContainerFab.setVisibility(View.GONE);
     } else {
       subscription = LoaderHelper.unload(subscription);
-      subscription = ImageLoader.fromResource(fabIcon)
+      subscription = ImageLoader.fromResource(getContext(), fabIcon)
           .tint(android.R.color.white)
           .into(binding.preferenceContainerFab);
     }

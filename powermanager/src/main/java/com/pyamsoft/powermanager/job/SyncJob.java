@@ -32,7 +32,7 @@ public class SyncJob extends BaseJob {
   @SuppressWarnings("WeakerAccess") @Inject @Named("mod_sync_state") StateModifier stateModifier;
 
   @Override void inject() {
-    Injector.get().provideComponent().plusJobComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @NonNull @Override Logger getLogger() {

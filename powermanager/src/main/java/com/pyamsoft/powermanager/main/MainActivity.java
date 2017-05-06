@@ -95,7 +95,7 @@ public class MainActivity extends TamperActivity {
       loadOverviewFragment();
     }
 
-    Injector.get().provideComponent().plusMainComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Override protected void onDestroy() {

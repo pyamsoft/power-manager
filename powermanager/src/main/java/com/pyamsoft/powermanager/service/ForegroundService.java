@@ -80,7 +80,7 @@ public class ForegroundService extends Service {
     super.onCreate();
     screenOnOffReceiver = new ScreenOnOffReceiver(this);
 
-    Injector.get().provideComponent().plusForegroundServiceComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
     presenter.queueRepeatingTriggerJob();
   }
 

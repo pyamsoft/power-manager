@@ -46,7 +46,7 @@ public class SettingsPreferenceFragment extends AppBarColoringSettingsFragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Injector.get().provideComponent().plusSettingsPreferenceComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

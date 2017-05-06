@@ -35,7 +35,7 @@ public class BluetoothJob extends BaseJob {
       stateModifier;
 
   @Override void inject() {
-    Injector.get().provideComponent().plusJobComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @NonNull @Override Logger getLogger() {

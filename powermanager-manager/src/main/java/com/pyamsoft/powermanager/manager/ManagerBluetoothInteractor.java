@@ -23,9 +23,7 @@ import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Maybe;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
@@ -78,24 +76,5 @@ class ManagerBluetoothInteractor extends WearAwareManagerInteractor {
 
   @Override public void setOriginalStateEnabled(boolean enabled) {
     preferences.setOriginalBluetooth(enabled);
-  }
-
-  @NonNull @Override
-  protected Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState) {
-    return super.accountForWearableBeforeDisable(originalState).map(originalResult -> {
-      if (bluetoothStateObserver.connectionUnknown()) {
-        Timber.w("Bluetooth connection state unknown");
-        return originalResult;
-      }
-
-      // TODO check preferences
-      if (bluetoothStateObserver.connected()) {
-        return originalResult;
-      } else {
-        // If bluetooth doesn't have an existing connection, we forcefully continue the stream so that Bluetooth is turned off
-        Timber.i("Bluetooth is not connected, force continue the manage stream");
-        return Boolean.TRUE;
-      }
-    });
   }
 }

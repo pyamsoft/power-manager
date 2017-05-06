@@ -34,7 +34,7 @@ public class ActionToggleService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    Injector.get().provideComponent().plusActionToggleServiceComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
