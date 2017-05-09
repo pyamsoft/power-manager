@@ -26,19 +26,7 @@ public interface DataPreferences {
 
   @CheckResult boolean isIgnoreChargingData();
 
-  @CheckResult long getDataDelay();
-
-  void setDataDelay(long time);
-
   @CheckResult boolean isDataManaged();
 
   @CheckResult boolean isPeriodicData();
-
-  @CheckResult long getPeriodicDisableTimeData();
-
-  void setPeriodicDisableTimeData(long time);
-
-  @CheckResult long getPeriodicEnableTimeData();
-
-  void setPeriodicEnableTimeData(long time);
 }

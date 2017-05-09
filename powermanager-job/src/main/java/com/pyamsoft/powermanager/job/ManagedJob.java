@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.preference;
+package com.pyamsoft.powermanager.job;
 
-import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.evernote.android.job.Job;
 
-public interface SyncPreferences {
+class ManagedJob extends Job {
 
-  @CheckResult boolean isOriginalSync();
+  @NonNull private final JobHandler jobHandler;
 
-  void setOriginalSync(boolean state);
+  ManagedJob(@NonNull JobHandler jobHandler) {
+    this.jobHandler = jobHandler;
+  }
 
-  @CheckResult boolean isIgnoreChargingSync();
-
-  @CheckResult boolean isSyncManaged();
-
-  @CheckResult boolean isPeriodicSync();
+  @NonNull @Override protected Result onRunJob(Params params) {
+    jobHandler.newRunner(this::isCanceled).run(params.getTag(), params.getExtras());
+    return Result.SUCCESS;
+  }
 }

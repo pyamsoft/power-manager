@@ -23,22 +23,28 @@ import com.evernote.android.job.JobManager;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
+import timber.log.Timber;
 
 @Module public class JobModule {
 
-  @NonNull private final BaseJobCreator baseJobCreator;
-  @NonNull private final JobCreator jobCreator;
-
-  public JobModule(@NonNull BaseJobCreator baseJobCreator, @NonNull JobCreator jobCreator) {
-    this.baseJobCreator = baseJobCreator;
-    this.jobCreator = jobCreator;
+  @Singleton @Provides JobCreator provideJobCreator(@NonNull JobHandler jobHandler) {
+    return s -> {
+      if (JobQueuer.MANAGED_TAG.equals(s)) {
+        return new ManagedJob(jobHandler);
+      } else {
+        Timber.e("Invalid job tag: %s", s);
+        return null;
+      }
+    };
   }
 
-  @Singleton @Provides JobQueuer provideJobQueuer(@NonNull JobManager jobManager) {
-    return new JobQueuerImpl(jobManager, baseJobCreator);
+  @Singleton @Provides JobQueuer provideJobQueuer(@NonNull JobManager jobManager,
+      @NonNull JobHandler jobHandler) {
+    return new JobQueuerImpl(jobManager, jobHandler);
   }
 
-  @Singleton @Provides JobManager provideJobManager(@NonNull Context context) {
+  @Singleton @Provides JobManager provideJobManager(@NonNull Context context,
+      @NonNull JobCreator jobCreator) {
     JobManager.create(context.getApplicationContext());
     JobManager.instance().removeJobCreator(jobCreator);
     JobManager.instance().addJobCreator(jobCreator);

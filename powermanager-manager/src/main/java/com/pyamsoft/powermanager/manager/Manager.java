@@ -43,36 +43,31 @@ public class Manager {
   }
 
   public void cancel(@NonNull Runnable onCancel) {
-    compositeDisposable.add(interactor.cancelJobs()
-        .subscribeOn(getScheduler())
-        .observeOn(getScheduler())
-        .subscribe(() -> {
-          Timber.d("Job cancelled: %s", interactor.getJobTag());
+    compositeDisposable.add(
+        interactor.cancel().subscribeOn(getScheduler()).observeOn(getScheduler()).subscribe(tag -> {
+          Timber.d("Job cancelled: %s", tag);
           onCancel.run();
         }, throwable -> Timber.e(throwable, "onError cancelling manager")));
   }
 
-  public void queueSet(@Nullable Runnable onSet) {
+  public void enable(@Nullable Runnable onEnabled) {
     compositeDisposable.add(
-        interactor.queueSet().subscribeOn(scheduler).observeOn(scheduler).subscribe(() -> {
-          // Technically can ignore this as if we are here we are non-empty
-          // If we are non empty it means we pass the test
-          Timber.d("%s: Queued up a new enable job", interactor.getJobTag());
-          if (onSet != null) {
-            onSet.run();
+        interactor.queueEnable().subscribeOn(scheduler).observeOn(scheduler).subscribe(tag -> {
+          Timber.d("%s: Queued up a new enable job", tag);
+          if (onEnabled != null) {
+            onEnabled.run();
           }
-        }, throwable -> Timber.e(throwable, "%s: onError queueSet", interactor.getJobTag())));
+        }, throwable -> Timber.e(throwable, "%s: onError enable")));
   }
 
-  public void queueUnset(@Nullable Runnable onUnset) {
-    compositeDisposable.add(interactor.queueUnset().
-        subscribeOn(scheduler).observeOn(scheduler).subscribe(() -> {
-      // Only queue a disable job if the radio is not ignored
-      Timber.d("%s: Queued up a new disable job", interactor.getJobTag());
-      if (onUnset != null) {
-        onUnset.run();
+  public void disable(@Nullable Runnable onDisabled) {
+    compositeDisposable.add(interactor.queueDisable().
+        subscribeOn(scheduler).observeOn(scheduler).subscribe(tag -> {
+      Timber.d("%s: Queued up a new disable job", tag);
+      if (onDisabled != null) {
+        onDisabled.run();
       }
-    }, throwable -> Timber.e(throwable, "%s: onError queueUnset", interactor.getJobTag())));
+    }, throwable -> Timber.e(throwable, "%s: onError disable")));
   }
 
   @CallSuper public void cleanup() {
@@ -80,6 +75,6 @@ public class Manager {
     interactor.destroy();
 
     // Reset the device back to its original state when the Service is cleaned up
-    queueSet(null);
+    enable(null);
   }
 }

@@ -16,7 +16,11 @@
 
 package com.pyamsoft.powermanager.base.preference;
 
+import android.support.annotation.CheckResult;
+
 public interface WearablePreferences {
+
+  @CheckResult boolean isWearableManaged();
 
   long getWearableDelay();
 }

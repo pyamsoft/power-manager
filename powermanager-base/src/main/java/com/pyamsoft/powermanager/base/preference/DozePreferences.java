@@ -24,21 +24,9 @@ public interface DozePreferences {
 
   void setOriginalDoze(boolean state);
 
-  @CheckResult long getDozeDelay();
-
-  void setDozeDelay(long time);
-
   @CheckResult boolean isIgnoreChargingDoze();
 
   @CheckResult boolean isDozeManaged();
 
   @CheckResult boolean isPeriodicDoze();
-
-  @CheckResult long getPeriodicDisableTimeDoze();
-
-  void setPeriodicDisableTimeDoze(long time);
-
-  @CheckResult long getPeriodicEnableTimeDoze();
-
-  void setPeriodicEnableTimeDoze(long time);
 }

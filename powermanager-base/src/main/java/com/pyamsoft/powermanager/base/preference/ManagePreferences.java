@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.base.preference;
 
 import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
 
-public interface BaseJobCreator {
+public interface ManagePreferences {
 
-  @NonNull @CheckResult BaseJob create(@NonNull String tag);
+  @CheckResult long getManageDelay();
+
+  void setManageDelay(long time);
+
+  @CheckResult long getPeriodicDisableTime();
+
+  void setPeriodicDisableTime(long time);
+
+  @CheckResult long getPeriodicEnableTime();
+
+  void setPeriodicEnableTime(long time);
 }

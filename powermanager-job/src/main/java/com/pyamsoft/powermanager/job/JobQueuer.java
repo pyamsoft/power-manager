@@ -20,13 +20,7 @@ import android.support.annotation.NonNull;
 
 public interface JobQueuer {
 
-  @NonNull String TRIGGER_JOB_TAG = "trigger_job";
-  @NonNull String DOZE_JOB_TAG = "doze_job";
-  @NonNull String AIRPLANE_JOB_TAG = "airplane_job";
-  @NonNull String WIFI_JOB_TAG = "wifi_job";
-  @NonNull String DATA_JOB_TAG = "data_job";
-  @NonNull String BLUETOOTH_JOB_TAG = "bluetooth_job";
-  @NonNull String SYNC_JOB_TAG = "sync_job";
+  @NonNull String MANAGED_TAG = "Manage-Job";
 
   void cancel(@NonNull String tag);
 

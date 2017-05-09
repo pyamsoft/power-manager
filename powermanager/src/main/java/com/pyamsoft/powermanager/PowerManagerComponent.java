@@ -42,7 +42,6 @@ import com.pyamsoft.powermanager.job.WifiJob;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.manager.ManagerComponent;
-import com.pyamsoft.powermanager.manager.ManagerSingletonModule;
 import com.pyamsoft.powermanager.overview.OverviewFragment;
 import com.pyamsoft.powermanager.overview.OverviewItem;
 import com.pyamsoft.powermanager.service.ActionToggleService;

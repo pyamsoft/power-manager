@@ -20,27 +20,13 @@ import android.support.annotation.CheckResult;
 
 public interface BluetoothPreferences {
 
-  @CheckResult boolean isWearableManaged();
-
   @CheckResult boolean isOriginalBluetooth();
 
   void setOriginalBluetooth(boolean state);
 
   @CheckResult boolean isIgnoreChargingBluetooth();
 
-  @CheckResult long getBluetoothDelay();
-
-  void setBluetoothDelay(long time);
-
   @CheckResult boolean isBluetoothManaged();
 
   @CheckResult boolean isPeriodicBluetooth();
-
-  @CheckResult long getPeriodicDisableTimeBluetooth();
-
-  void setPeriodicDisableTimeBluetooth(long time);
-
-  @CheckResult long getPeriodicEnableTimeBluetooth();
-
-  void setPeriodicEnableTimeBluetooth(long time);
 }

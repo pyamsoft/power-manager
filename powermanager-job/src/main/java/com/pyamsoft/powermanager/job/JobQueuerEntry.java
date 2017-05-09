@@ -28,33 +28,25 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult public abstract String tag();
 
-  @CheckResult public abstract QueuerType type();
+  @CheckResult public abstract boolean screenOn();
 
   @CheckResult public abstract long delay();
-
-  @CheckResult public abstract boolean repeating();
 
   @CheckResult public abstract long repeatingOnWindow();
 
   @CheckResult public abstract long repeatingOffWindow();
 
-  @CheckResult public abstract boolean ignoreIfCharging();
-
   @AutoValue.Builder public static abstract class Builder {
 
     @CheckResult abstract Builder tag(String tag);
 
-    @CheckResult public abstract Builder type(QueuerType type);
+    @CheckResult public abstract Builder screenOn(boolean screen);
 
     @CheckResult public abstract Builder delay(long delay);
-
-    @CheckResult public abstract Builder repeating(boolean repeating);
 
     @CheckResult public abstract Builder repeatingOnWindow(long window);
 
     @CheckResult public abstract Builder repeatingOffWindow(long window);
-
-    @CheckResult public abstract Builder ignoreIfCharging(boolean ignore);
 
     @CheckResult public abstract JobQueuerEntry build();
   }

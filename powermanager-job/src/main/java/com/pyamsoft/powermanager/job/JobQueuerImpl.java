@@ -26,17 +26,15 @@ import timber.log.Timber;
 
 class JobQueuerImpl implements JobQueuer {
 
-  @NonNull final static String KEY_IGNORE_CHARGING = "extra_key__ignore_charging";
-  @NonNull final static String KEY_PERIODIC = "extra_key__periodic";
   @NonNull final static String KEY_ON_WINDOW = "extra_key__on_window";
   @NonNull final static String KEY_OFF_WINDOW = "extra_key__off_window";
-  @NonNull final static String KEY_QUEUE_TYPE = "extra_key__type";
+  @NonNull final static String KEY_SCREEN = "extra_key__screen";
   @NonNull private final JobManager jobManager;
-  @NonNull private final BaseJobCreator jobCreator;
+  @NonNull private final JobHandler jobHandler;
 
-  @Inject JobQueuerImpl(@NonNull JobManager jobManager, @NonNull BaseJobCreator creator) {
+  @Inject JobQueuerImpl(@NonNull JobManager jobManager, @NonNull JobHandler jobHandler) {
     this.jobManager = jobManager;
-    this.jobCreator = creator;
+    this.jobHandler = jobHandler;
   }
 
   @Override public void cancel(@NonNull String tag) {
@@ -46,18 +44,16 @@ class JobQueuerImpl implements JobQueuer {
 
   @CheckResult @NonNull private PersistableBundleCompat createExtras(JobQueuerEntry entry) {
     final PersistableBundleCompat extras = new PersistableBundleCompat();
-    extras.putString(KEY_QUEUE_TYPE, entry.type().name());
+    extras.putBoolean(KEY_SCREEN, entry.screenOn());
     extras.putLong(KEY_ON_WINDOW, entry.repeatingOnWindow());
     extras.putLong(KEY_OFF_WINDOW, entry.repeatingOffWindow());
-    extras.putBoolean(KEY_PERIODIC, entry.repeating());
-    extras.putBoolean(KEY_IGNORE_CHARGING, entry.ignoreIfCharging());
     return extras;
   }
 
   @Override public void queue(@NonNull JobQueuerEntry entry) {
     final PersistableBundleCompat extras = createExtras(entry);
     if (entry.delay() == 0) {
-      jobCreator.create(entry.tag()).run(entry.tag(), extras);
+      jobHandler.newRunner(() -> Boolean.FALSE).run(entry.tag(), extras);
     } else {
       new JobRequest.Builder(entry.tag()).setExact(entry.delay())
           .setPersisted(false)

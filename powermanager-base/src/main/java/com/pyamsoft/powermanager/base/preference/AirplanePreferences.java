@@ -20,8 +20,6 @@ import android.support.annotation.CheckResult;
 
 public interface AirplanePreferences {
 
-  @CheckResult boolean isWearableManaged();
-
   @CheckResult boolean isOriginalAirplane();
 
   void setOriginalAirplane(boolean state);
@@ -30,17 +28,5 @@ public interface AirplanePreferences {
 
   @CheckResult boolean isIgnoreChargingAirplane();
 
-  @CheckResult long getAirplaneDelay();
-
-  void setAirplaneDelay(long time);
-
   @CheckResult boolean isPeriodicAirplane();
-
-  @CheckResult long getPeriodicDisableTimeAirplane();
-
-  void setPeriodicDisableTimeAirplane(long time);
-
-  @CheckResult long getPeriodicEnableTimeAirplane();
-
-  void setPeriodicEnableTimeAirplane(long time);
 }

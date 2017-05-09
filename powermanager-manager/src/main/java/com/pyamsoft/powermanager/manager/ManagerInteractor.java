@@ -16,161 +16,83 @@
 
 package com.pyamsoft.powermanager.manager;
 
-import android.support.annotation.CallSuper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.ManagePreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
-import com.pyamsoft.powermanager.job.QueuerType;
-import com.pyamsoft.powermanager.model.StateObserver;
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
 import io.reactivex.Single;
-import timber.log.Timber;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-abstract class ManagerInteractor {
+import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
 
-  @SuppressWarnings("WeakerAccess") @NonNull final StateObserver stateObserver;
+@Singleton class ManagerInteractor {
+
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
+  @NonNull ManagePreferences preferences;
 
-  ManagerInteractor(@NonNull JobQueuer jobQueuer, @NonNull StateObserver stateObserver) {
+  @Inject ManagerInteractor(@NonNull JobQueuer jobQueuer) {
     this.jobQueuer = jobQueuer;
-    this.stateObserver = stateObserver;
   }
 
   public void destroy() {
-    jobQueuer.cancel(getJobTag());
+    jobQueuer.cancel(MANAGED_TAG);
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Completable queueSet() {
-    return Maybe.fromCallable(this::isManaged).flatMap(managed -> {
-      if (managed) {
-        Timber.d("%s: Is original state enabled?", getJobTag());
-        return Maybe.just(isOriginalStateEnabled());
-      } else {
-        Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Maybe.empty();
-      }
-    }).doOnSuccess(originalState -> {
-      if (originalState) {
-        queueEnableJob();
-      }
-    }).doOnComplete(() -> {
-      Timber.d("%s: Unset original state", getJobTag());
-      setOriginalStateEnabled(false);
-    }).ignoreElement();
+  @NonNull @CheckResult Single<String> cancel() {
+    return Single.fromCallable(() -> {
+      destroy();
+      return MANAGED_TAG;
+    });
   }
 
   /**
    * public
    */
-  @CheckResult @NonNull Completable queueUnset() {
-    return Maybe.fromCallable(this::isManaged).doOnSuccess(managed -> {
-      Timber.d("%s: Unset original state", getJobTag());
-      setOriginalStateEnabled(false);
-    }).flatMap(managed -> {
-      if (managed) {
-        Timber.d("%s: Is original state enabled?", getJobTag());
-        return isEnabled().toMaybe();
-      } else {
-        Timber.w("%s: Is not managed, return empty", getJobTag());
-        return Maybe.empty();
-      }
-    }).doOnSuccess(enabled -> {
-      Timber.d("%s: Set original state enabled: %s", getJobTag(), enabled);
-      setOriginalStateEnabled(enabled);
-    }).flatMap(this::accountForWearableBeforeDisable).doOnSuccess(shouldQueue -> {
-      // Only queue a disable job if the radio is not ignored
-      if (shouldQueue) {
-        queueDisableJob();
-      }
-    }).ignoreElement();
+  @CheckResult @NonNull Single<String> queueEnable() {
+    return Single.fromCallable(() -> {
+      // Queue up an enable job
+      jobQueuer.cancel(MANAGED_TAG);
+      jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
+          .screenOn(true)
+          .delay(0)
+          .repeatingOffWindow(0L)
+          .repeatingOnWindow(0L)
+          .build());
+      return MANAGED_TAG;
+    });
   }
 
   /**
    * public
    */
-  @NonNull @CheckResult Completable cancelJobs() {
-    return Completable.fromAction(() -> jobQueuer.cancel(getJobTag()));
+  @CheckResult @NonNull Single<String> queueDisable() {
+    return Single.fromCallable(() -> {
+      // Queue up a disable job
+      jobQueuer.cancel(MANAGED_TAG);
+      jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
+          .screenOn(false)
+          .delay(getDelayTime() * 1000L)
+          .repeatingOffWindow(getPeriodicDisableTime())
+          .repeatingOnWindow(getPeriodicEnableTime())
+          .build());
+      return MANAGED_TAG;
+    });
   }
 
-  @SuppressWarnings("WeakerAccess") void queueEnableJob() {
-    final QueuerType queuerType;
-    final String jobTag = getJobTag();
-    switch (jobTag) {
-      case JobQueuer.AIRPLANE_JOB_TAG:
-        queuerType = QueuerType.SCREEN_ON_DISABLE;
-        break;
-      case JobQueuer.DOZE_JOB_TAG:
-        queuerType = QueuerType.SCREEN_ON_DISABLE;
-        break;
-      default:
-        queuerType = QueuerType.SCREEN_ON_ENABLE;
-    }
-
-    // Queue up an enable job
-    jobQueuer.cancel(jobTag);
-    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
-        .type(queuerType)
-        .delay(0)
-        .repeating(false)
-        .repeatingOffWindow(0L)
-        .repeatingOnWindow(0L)
-        .ignoreIfCharging(false)
-        .build());
+  @SuppressWarnings("WeakerAccess") @CheckResult long getDelayTime() {
+    return preferences.getManageDelay();
   }
 
-  @SuppressWarnings("WeakerAccess") void queueDisableJob() {
-    final QueuerType queuerType;
-    final String jobTag = getJobTag();
-    switch (jobTag) {
-      case JobQueuer.AIRPLANE_JOB_TAG:
-        queuerType = QueuerType.SCREEN_OFF_ENABLE;
-        break;
-      case JobQueuer.DOZE_JOB_TAG:
-        queuerType = QueuerType.SCREEN_OFF_ENABLE;
-        break;
-      default:
-        queuerType = QueuerType.SCREEN_OFF_DISABLE;
-    }
-
-    // Queue up a disable job
-    jobQueuer.cancel(jobTag);
-    jobQueuer.queue(JobQueuerEntry.builder(jobTag)
-        .type(queuerType)
-        .delay(getDelayTime() * 1000L)
-        .repeating(isPeriodic())
-        .repeatingOffWindow(getPeriodicDisableTime())
-        .repeatingOnWindow(getPeriodicEnableTime())
-        .ignoreIfCharging(isIgnoreWhileCharging())
-        .build());
+  @SuppressWarnings("WeakerAccess") @CheckResult long getPeriodicEnableTime() {
+    return preferences.getPeriodicEnableTime();
   }
 
-  @CallSuper @NonNull Single<Boolean> isEnabled() {
-    return Single.fromCallable(stateObserver::enabled);
+  @SuppressWarnings("WeakerAccess") @CheckResult long getPeriodicDisableTime() {
+    return preferences.getPeriodicDisableTime();
   }
-
-  @CheckResult abstract boolean isManaged();
-
-  @CheckResult abstract boolean isOriginalStateEnabled();
-
-  abstract void setOriginalStateEnabled(boolean enabled);
-
-  @CheckResult abstract boolean isIgnoreWhileCharging();
-
-  @CheckResult @NonNull abstract String getJobTag();
-
-  @CheckResult abstract long getDelayTime();
-
-  @CheckResult abstract boolean isPeriodic();
-
-  @CheckResult abstract long getPeriodicEnableTime();
-
-  @CheckResult abstract long getPeriodicDisableTime();
-
-  @CheckResult @NonNull
-  abstract Maybe<Boolean> accountForWearableBeforeDisable(boolean originalState);
 }

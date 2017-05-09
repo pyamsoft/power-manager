@@ -28,45 +28,45 @@ import javax.inject.Singleton;
 
 @Module public class StateObserverModule {
 
-  @Singleton @Named("obs_wifi_state") @Provides ConnectedStateObserver provideWifiObserver(
+  @Singleton @Named("obs_wifi") @Provides ConnectedStateObserver provideWifiObserver(
       @NonNull Context context,
       @NonNull @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper) {
     return new WifiStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_data_state") @Provides StateObserver provideDataObserver(
+  @Singleton @Named("obs_data") @Provides StateObserver provideDataObserver(
       @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper,
       @Named("data_uri") String dataUri) {
     return new DataStateObserver(context, wrapper, dataUri);
   }
 
-  @Singleton @Named("obs_bluetooth_state") @Provides
-  ConnectedStateObserver provideBluetoothObserver(@NonNull Context context,
+  @Singleton @Named("obs_bluetooth") @Provides ConnectedStateObserver provideBluetoothObserver(
+      @NonNull Context context,
       @NonNull @Named("wrapper_bluetooth") ConnectedDeviceFunctionWrapper wrapper) {
     return new BluetoothStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_sync_state") @Provides StateObserver provideSyncObserver(
+  @Singleton @Named("obs_sync") @Provides StateObserver provideSyncObserver(
       @Named("wrapper_sync") DeviceFunctionWrapper wrapper) {
     return new SyncStateObserver(wrapper);
   }
 
-  @Singleton @Named("obs_doze_state") @Provides StateObserver provideDozeObserver(
+  @Singleton @Named("obs_doze") @Provides StateObserver provideDozeObserver(
       @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
     return new DozeStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_wear_state") @Provides StateObserver provideWearObserver(
+  @Singleton @Named("obs_wear") @Provides StateObserver provideWearObserver(
       @NonNull Context context, @NonNull WearablePreferences preferences) {
     return new WearStateObserver(context, preferences);
   }
 
-  @Singleton @Named("obs_airplane_state") @Provides StateObserver provideAirplaneObserver(
+  @Singleton @Named("obs_airplane") @Provides StateObserver provideAirplaneObserver(
       @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
     return new AirplaneStateObserver(context, wrapper);
   }
 
-  @Singleton @Named("obs_charging_state") @Provides StateObserver provideChargingObserver(
+  @Singleton @Named("obs_charging") @Provides StateObserver provideChargingObserver(
       @NonNull Context context) {
     return new ChargingStateObserver(context);
   }
