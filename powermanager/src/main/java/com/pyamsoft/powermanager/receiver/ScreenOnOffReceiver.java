@@ -45,12 +45,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   @NonNull private final Context appContext;
   @NonNull private final DisplayManager displayManager;
 
-  @Inject @Named("wifi_manager") Manager managerWifi;
-  @Inject @Named("data_manager") Manager managerData;
-  @Inject @Named("bluetooth_manager") Manager managerBluetooth;
-  @Inject @Named("sync_manager") Manager managerSync;
-  @Inject @Named("doze_manager") Manager managerDoze;
-  @Inject @Named("airplane_manager") Manager managerAirplane;
+  @Inject Manager manager;
   @Inject @Named("logger_manager") Logger logger;
   private boolean isRegistered;
 
@@ -59,7 +54,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
     isRegistered = false;
 
     displayManager = (DisplayManager) appContext.getSystemService(Context.DISPLAY_SERVICE);
-    Injector.get().provideComponent().plusManagerComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   /**
@@ -112,24 +107,11 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableManagers() {
-    managerDoze.cancel(() -> managerDoze.queueSet(() -> {
-      managerAirplane.cancel(() -> managerAirplane.queueSet(null));
-      managerWifi.cancel(() -> managerWifi.queueSet(null));
-      managerData.cancel(() -> managerData.queueSet(null));
-      managerBluetooth.cancel(() -> managerBluetooth.queueSet(null));
-      managerSync.cancel(() -> managerSync.queueSet(null));
-    }));
+    manager.cancel(() -> manager.enable(null));
   }
 
   private void disableManagers() {
-    managerDoze.cancel(() -> {
-      managerAirplane.cancel(() -> managerAirplane.queueUnset(null));
-      managerWifi.cancel(() -> managerWifi.queueUnset(null));
-      managerData.cancel(() -> managerData.queueUnset(null));
-      managerBluetooth.cancel(() -> managerBluetooth.queueUnset(null));
-      managerSync.cancel(() -> managerSync.queueUnset(null));
-      managerDoze.queueUnset(null);
-    });
+    manager.cancel(() -> manager.disable(null));
   }
 
   public final void register() {
@@ -145,12 +127,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void cleanup() {
-    managerWifi.cleanup();
-    managerData.cleanup();
-    managerBluetooth.cleanup();
-    managerSync.cleanup();
-    managerDoze.cleanup();
-    managerAirplane.cleanup();
+    manager.cleanup();
   }
 
   public final void unregister() {

@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.helper.SchedulerHelper;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
+import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class Manager {
@@ -31,7 +33,8 @@ public class Manager {
   @NonNull private final CompositeDisposable compositeDisposable;
   @NonNull private final Scheduler scheduler;
 
-  Manager(@NonNull ManagerInteractor interactor, @NonNull Scheduler scheduler) {
+  @Inject Manager(@NonNull ManagerInteractor interactor,
+      @NonNull @Named("io") Scheduler scheduler) {
     this.interactor = interactor;
     this.scheduler = scheduler;
     compositeDisposable = new CompositeDisposable();

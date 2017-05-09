@@ -29,6 +29,7 @@ import com.pyamsoft.powermanager.base.preference.ClearPreferences;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
+import com.pyamsoft.powermanager.base.preference.ManagePreferences;
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.preference.ServicePreferences;
@@ -41,7 +42,8 @@ import javax.inject.Inject;
 class PowerManagerPreferencesImpl
     implements WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences,
     BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences,
-    OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences {
+    OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences,
+    ManagePreferences {
 
   @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
   @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
@@ -353,5 +355,29 @@ class PowerManagerPreferencesImpl
 
   @Override public boolean isPeriodicAirplane() {
     return preferences.getBoolean(periodicAirplane, periodicAirplaneDefault);
+  }
+
+  @Override public long getManageDelay() {
+    return 0;
+  }
+
+  @Override public void setManageDelay(long time) {
+
+  }
+
+  @Override public long getPeriodicDisableTime() {
+    return 0;
+  }
+
+  @Override public void setPeriodicDisableTime(long time) {
+
+  }
+
+  @Override public long getPeriodicEnableTime() {
+    return 0;
+  }
+
+  @Override public void setPeriodicEnableTime(long time) {
+
   }
 }

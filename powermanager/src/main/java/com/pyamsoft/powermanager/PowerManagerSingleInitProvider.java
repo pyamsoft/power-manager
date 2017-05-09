@@ -18,16 +18,24 @@ package com.pyamsoft.powermanager;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import com.evernote.android.job.JobManager;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
+import com.pyamsoft.powermanager.job.JobHandler;
+import com.pyamsoft.powermanager.job.JobQueuer;
+import com.pyamsoft.powermanager.job.Jobs;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
+import javax.inject.Inject;
+import timber.log.Timber;
 
 public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
+
+  @Inject JobHandler jobHandler;
 
   @NonNull @Override protected BuildConfigChecker initializeBuildConfigChecker() {
     return new BuildConfigChecker() {
@@ -43,6 +51,20 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
     final PowerManagerComponent component =
         DaggerPowerManagerComponent.builder().powerManagerModule(module).build();
     Injector.set(component);
+
+    // Inject the jobHandler
+    Injector.get().provideComponent().inject(this);
+
+    // Guarantee JobManager creation
+    JobManager.create(context);
+    JobManager.instance().addJobCreator(s -> {
+      if (JobQueuer.MANAGED_TAG.equals(s)) {
+        return Jobs.newJob(jobHandler);
+      } else {
+        Timber.e("Could not create job for tag: %s", s);
+        return null;
+      }
+    });
 
     ForegroundService.start(context);
   }

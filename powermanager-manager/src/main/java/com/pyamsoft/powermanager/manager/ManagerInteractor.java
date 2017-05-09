@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
 import io.reactivex.Single;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
@@ -30,10 +31,12 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
 @Singleton class ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
-  @NonNull ManagePreferences preferences;
+  @NonNull private final ManagePreferences preferences;
 
-  @Inject ManagerInteractor(@NonNull JobQueuer jobQueuer) {
+  @Inject ManagerInteractor(@NonNull @Named("instant") JobQueuer jobQueuer,
+      @NonNull ManagePreferences preferences) {
     this.jobQueuer = jobQueuer;
+    this.preferences = preferences;
   }
 
   public void destroy() {

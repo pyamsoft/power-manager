@@ -21,23 +21,20 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
-import javax.inject.Inject;
 import timber.log.Timber;
 
-class JobQueuerImpl implements JobQueuer {
+abstract class BaseJobQueuer implements JobQueuer {
 
   @NonNull final static String KEY_ON_WINDOW = "extra_key__on_window";
   @NonNull final static String KEY_OFF_WINDOW = "extra_key__off_window";
   @NonNull final static String KEY_SCREEN = "extra_key__screen";
   @NonNull private final JobManager jobManager;
-  @NonNull private final JobHandler jobHandler;
 
-  @Inject JobQueuerImpl(@NonNull JobManager jobManager, @NonNull JobHandler jobHandler) {
+  BaseJobQueuer(@NonNull JobManager jobManager) {
     this.jobManager = jobManager;
-    this.jobHandler = jobHandler;
   }
 
-  @Override public void cancel(@NonNull String tag) {
+  @Override public final void cancel(@NonNull String tag) {
     Timber.w("Cancel all jobs for tag: %s", tag);
     jobManager.cancelAllForTag(tag);
   }
@@ -50,22 +47,26 @@ class JobQueuerImpl implements JobQueuer {
     return extras;
   }
 
-  @Override public void queue(@NonNull JobQueuerEntry entry) {
+  @Override public final void queue(@NonNull JobQueuerEntry entry) {
     final PersistableBundleCompat extras = createExtras(entry);
     if (entry.delay() == 0) {
-      jobHandler.newRunner(() -> Boolean.FALSE).run(entry.tag(), extras);
+      runInstantJob(entry.tag(), extras);
     } else {
-      new JobRequest.Builder(entry.tag()).setExact(entry.delay())
-          .setPersisted(false)
-          .setExtras(extras)
-          .setRequiresCharging(false)
-          .setRequiresDeviceIdle(false)
-          .build()
-          .schedule();
+      scheduleJob(entry, extras);
     }
   }
 
-  @Override public void queueRepeating(@NonNull JobQueuerEntry entry) {
+  private void scheduleJob(@NonNull JobQueuerEntry entry, @NonNull PersistableBundleCompat extras) {
+    new JobRequest.Builder(entry.tag()).setExact(entry.delay())
+        .setPersisted(false)
+        .setExtras(extras)
+        .setRequiresCharging(false)
+        .setRequiresDeviceIdle(false)
+        .build()
+        .schedule();
+  }
+
+  @Override public final void queueRepeating(@NonNull JobQueuerEntry entry) {
     final PersistableBundleCompat extras = createExtras(entry);
     new JobRequest.Builder(entry.tag()).setPeriodic(entry.delay())
         .setPersisted(false)
@@ -75,4 +76,6 @@ class JobQueuerImpl implements JobQueuer {
         .build()
         .schedule();
   }
+
+  abstract void runInstantJob(@NonNull String tag, @NonNull PersistableBundleCompat extras);
 }

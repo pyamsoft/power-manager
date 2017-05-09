@@ -26,6 +26,7 @@ import com.pyamsoft.powermanager.base.preference.ClearPreferences;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences;
+import com.pyamsoft.powermanager.base.preference.ManagePreferences;
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences;
 import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.preference.ServicePreferences;
@@ -123,6 +124,10 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides LoggerPreferences provideLoggerPreferences() {
+    return preferences;
+  }
+
+  @Singleton @Provides ManagePreferences provideManagePreferences() {
     return preferences;
   }
 

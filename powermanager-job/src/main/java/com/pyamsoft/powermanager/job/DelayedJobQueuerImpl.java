@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager;
+package com.pyamsoft.powermanager.job;
 
-import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
-import dagger.Subcomponent;
+import android.support.annotation.NonNull;
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
+import javax.inject.Inject;
 
-@Subcomponent(modules = ManagerModule.class) public interface ManagerComponent {
+class DelayedJobQueuerImpl extends BaseJobQueuer {
 
-  void inject(ScreenOnOffReceiver receiver);
+  @Inject DelayedJobQueuerImpl(@NonNull JobManager jobManager) {
+    super(jobManager);
+  }
+
+  @Override void runInstantJob(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+    throw new RuntimeException(
+        tag + ": Cannot schedule instant jobs with DelayedJobQueuerImpl, use InstantJobQueuerImpl");
+  }
 }

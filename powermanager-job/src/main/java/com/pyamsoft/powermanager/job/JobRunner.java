@@ -18,20 +18,17 @@ package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
-import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
-import com.pyamsoft.pydroid.function.FuncNone;
-import javax.inject.Inject;
-import javax.inject.Named;
 
-public class JobHandler {
+abstract class JobRunner {
 
   @NonNull private final JobQueuer jobQueuer;
   @NonNull private final StateObserver chargingObserver;
@@ -57,20 +54,13 @@ public class JobHandler {
   @NonNull private final AirplanePreferences airplanePreferences;
   @NonNull private final DozePreferences dozePreferences;
 
-  @Inject JobHandler(@NonNull @Named("delay") JobQueuer jobQueuer,
-      @NonNull @Named("obs_charging") StateObserver chargingObserver,
-      @NonNull @Named("obs_wifi") ConnectedStateObserver wifiObserver,
-      @NonNull @Named("obs_data") StateObserver dataObserver,
-      @NonNull @Named("obs_bluetooth") ConnectedStateObserver bluetoothObserver,
-      @NonNull @Named("obs_sync") StateObserver syncObserver,
-      @NonNull @Named("obs_doze") StateObserver dozeObserver,
-      @NonNull @Named("obs_airplane") StateObserver airplaneObserver,
-      @NonNull @Named("mod_wifi") StateModifier wifiModifier,
-      @NonNull @Named("mod_data") StateModifier dataModifier,
-      @NonNull @Named("mod_bluetooth") StateModifier bluetoothModifier,
-      @NonNull @Named("mod_sync") StateModifier syncModifier,
-      @NonNull @Named("mod_doze") StateModifier dozeModifier,
-      @NonNull @Named("mod_airplane") StateModifier airplaneModifier,
+  JobRunner(@NonNull JobQueuer jobQueuer, @NonNull StateObserver chargingObserver,
+      @NonNull StateObserver wifiObserver, @NonNull StateObserver dataObserver,
+      @NonNull StateObserver bluetoothObserver, @NonNull StateObserver syncObserver,
+      @NonNull StateObserver dozeObserver, @NonNull StateObserver airplaneObserver,
+      @NonNull StateModifier wifiModifier, @NonNull StateModifier dataModifier,
+      @NonNull StateModifier bluetoothModifier, @NonNull StateModifier syncModifier,
+      @NonNull StateModifier dozeModifier, @NonNull StateModifier airplaneModifier,
       @NonNull WifiPreferences wifiPreferences, @NonNull DataPreferences dataPreferences,
       @NonNull BluetoothPreferences bluetoothPreferences, @NonNull SyncPreferences syncPreferences,
       @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences) {
@@ -96,14 +86,61 @@ public class JobHandler {
     this.dozePreferences = dozePreferences;
   }
 
-  @CheckResult @NonNull JobRunner newRunner(@NonNull FuncNone<Boolean> stopper) {
-    return new JobRunner(jobQueuer, chargingObserver, wifiObserver, dataObserver, bluetoothObserver,
-        syncObserver, dozeObserver, airplaneObserver, wifiModifier, dataModifier, bluetoothModifier,
-        syncModifier, dozeModifier, airplaneModifier, wifiPreferences, dataPreferences,
-        bluetoothPreferences, syncPreferences, airplanePreferences, dozePreferences) {
-      @Override boolean isStopped() {
-        return stopper.call();
-      }
-    };
+  @CheckResult private boolean runJob(@NonNull String tag, boolean screenOn) {
+    if (screenOn) {
+      return runEnableJob(tag);
+    } else {
+      return runDisableJob(tag);
+    }
   }
+
+  @CheckResult private boolean runEnableJob(@NonNull String tag) {
+    // TODO
+    return false;
+  }
+
+  @CheckResult private boolean runDisableJob(@NonNull String tag) {
+    // TODO
+    return true;
+  }
+
+  private void repeatIfRequired(@NonNull String tag, boolean screenOn, long windowOnTime,
+      long windowOffTime) {
+    final long newDelayTime;
+    // Switch them
+    if (screenOn) {
+      newDelayTime = windowOnTime * 1000L;
+    } else {
+      newDelayTime = windowOffTime * 1000L;
+    }
+
+    final JobQueuerEntry entry = JobQueuerEntry.builder(tag)
+        .screenOn(!screenOn)
+        .delay(newDelayTime)
+        .repeatingOffWindow(windowOffTime)
+        .repeatingOnWindow(windowOnTime)
+        .build();
+
+    jobQueuer.cancel(tag);
+    jobQueuer.queue(entry);
+  }
+
+  /**
+   * Runs the Job. Called either by managed jobs or directly by the JobQueuer
+   */
+  void run(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+    boolean screenOn = extras.getBoolean(BaseJobQueuer.KEY_SCREEN, true);
+    long windowOnTime = extras.getLong(BaseJobQueuer.KEY_ON_WINDOW, 0);
+    long windowOffTime = extras.getLong(BaseJobQueuer.KEY_OFF_WINDOW, 0);
+    if (runJob(tag, screenOn)) {
+      repeatIfRequired(tag, screenOn, windowOnTime, windowOffTime);
+    }
+  }
+
+  /**
+   * Override in the actual ManagedJobs to call Job.isCancelled();
+   *
+   * If it is not a managed job it never isStopped, always run to completion
+   */
+  @CheckResult abstract boolean isStopped();
 }

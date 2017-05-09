@@ -11,10 +11,8 @@
       <module fileurl="file://$PROJECT_DIR$/powermanager-model/powermanager-model.iml" filepath="$PROJECT_DIR$/powermanager-model/powermanager-model.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-service/powermanager-service.iml" filepath="$PROJECT_DIR$/powermanager-service/powermanager-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" filepath="$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" filepath="$PROJECT_DIR$/powermanager-sync/powermanager-sync.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" filepath="$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" filepath="$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-wifi/powermanager-wifi.iml" filepath="$PROJECT_DIR$/powermanager-wifi/powermanager-wifi.iml" />
     </modules>
   </component>
 </project>

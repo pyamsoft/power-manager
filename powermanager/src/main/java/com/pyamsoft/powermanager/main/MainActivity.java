@@ -39,18 +39,11 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.BuildConfig;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.airplane.AirplaneFragment;
-import com.pyamsoft.powermanager.bluetooth.BluetoothFragment;
-import com.pyamsoft.powermanager.data.DataFragment;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
-import com.pyamsoft.powermanager.doze.DozeFragment;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
-import com.pyamsoft.powermanager.overview.OverviewFragment;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
-import com.pyamsoft.powermanager.sync.SyncFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
-import com.pyamsoft.powermanager.wifi.WifiFragment;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
@@ -140,26 +133,12 @@ public class MainActivity extends TamperActivity {
   }
 
   @CheckResult private boolean hasNoActiveFragment() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    return fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(WifiFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(DataFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(BluetoothFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(SyncFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(PowerTriggerFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(DozeFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(AirplaneFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(SettingsPreferenceFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null;
+    return true;
   }
 
   private void loadOverviewFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(OverviewFragment.TAG) == null) {
-      fragmentManager.beginTransaction()
-          .replace(R.id.main_container, new OverviewFragment(), OverviewFragment.TAG)
-          .commitNow();
-    }
+    // TODO
   }
 
   @Override protected void onPostResume() {

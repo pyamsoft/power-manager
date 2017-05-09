@@ -29,8 +29,6 @@ import android.support.v4.content.ContextCompat;
 import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
-import com.pyamsoft.powermanager.job.JobQueuerEntry;
-import com.pyamsoft.powermanager.job.QueuerType;
 import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -47,8 +45,9 @@ import timber.log.Timber;
   @NonNull private final TriggerPreferences triggerPreferences;
   @NonNull private final JobQueuer jobQueuer;
 
-  @Inject ForegroundInteractor(@NonNull JobQueuer jobQueuer, @NonNull Context context,
-      @NonNull ServicePreferences preferences, @NonNull TriggerPreferences triggerPreferences,
+  @Inject ForegroundInteractor(@NonNull @Named("delay") JobQueuer jobQueuer,
+      @NonNull Context context, @NonNull ServicePreferences preferences,
+      @NonNull TriggerPreferences triggerPreferences,
       @NonNull @Named("main") Class<? extends Activity> mainActivityClass,
       @NonNull @Named("toggle") Class<? extends Service> toggleServiceClass) {
     super(preferences);
@@ -79,20 +78,22 @@ import timber.log.Timber;
   void queueRepeatingTriggerJob() {
     final long delayTime = triggerPreferences.getTriggerPeriodTime();
     final long triggerPeriod = delayTime * 60 * 1000L;
-    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
-    jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
-        .repeatingOnWindow(0)
-        .repeating(true)
-        .repeatingOffWindow(0)
-        .delay(triggerPeriod)
-        .ignoreIfCharging(false)
-        .type(QueuerType.POWER_TRIGGER)
-        .build());
+    // TODO
+    //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    //jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
+    //    .repeatingOnWindow(0)
+    //    .repeating(true)
+    //    .repeatingOffWindow(0)
+    //    .delay(triggerPeriod)
+    //    .ignoreIfCharging(false)
+    //    .type(QueuerType.POWER_TRIGGER)
+    //    .build());
   }
 
   public void destroy() {
     Timber.d("Cancel all trigger jobs");
-    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    // TODO
+    //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
   @SuppressWarnings("WeakerAccess") @NonNull @CheckResult

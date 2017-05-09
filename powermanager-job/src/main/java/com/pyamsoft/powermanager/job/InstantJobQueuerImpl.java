@@ -16,28 +16,25 @@
 
 package com.pyamsoft.powermanager.job;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.JobManager;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Named;
-import javax.inject.Singleton;
+import com.evernote.android.job.util.support.PersistableBundleCompat;
+import javax.inject.Inject;
 
-@Module public class JobModule {
+/**
+ * Created by pyamsoft on 5/8/17.
+ */
 
-  @Singleton @Provides @Named("delay") JobQueuer provideDelayedJobQueuer(
-      @NonNull JobManager jobManager) {
-    return new DelayedJobQueuerImpl(jobManager);
+class InstantJobQueuerImpl extends BaseJobQueuer {
+
+  @NonNull private final JobHandler jobHandler;
+
+  @Inject InstantJobQueuerImpl(@NonNull JobManager jobManager, @NonNull JobHandler jobHandler) {
+    super(jobManager);
+    this.jobHandler = jobHandler;
   }
 
-  @Singleton @Provides @Named("instant") JobQueuer provideInstantJobQueuer(
-      @NonNull JobManager jobManager, @NonNull JobHandler jobHandler) {
-    return new InstantJobQueuerImpl(jobManager, jobHandler);
-  }
-
-  @Singleton @Provides JobManager provideJobManager(@NonNull Context context) {
-    JobManager.create(context.getApplicationContext());
-    return JobManager.instance();
+  @Override void runInstantJob(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
+    jobHandler.newRunner(() -> Boolean.FALSE).run(tag, extras);
   }
 }

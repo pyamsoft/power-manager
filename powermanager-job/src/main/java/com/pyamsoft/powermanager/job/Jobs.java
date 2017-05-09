@@ -18,29 +18,15 @@ package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.evernote.android.job.Job;
 
-public enum QueuerType {
+public final class Jobs {
 
-  POWER_TRIGGER,
-  SCREEN_OFF_ENABLE,
-  SCREEN_OFF_DISABLE,
-  SCREEN_ON_ENABLE,
-  SCREEN_ON_DISABLE;
-
-  @CheckResult @NonNull public QueuerType flip() {
-    final QueuerType newType;
-    if (this == QueuerType.SCREEN_OFF_DISABLE) {
-      newType = QueuerType.SCREEN_ON_ENABLE;
-    } else if (this == QueuerType.SCREEN_OFF_ENABLE) {
-      newType = QueuerType.SCREEN_ON_DISABLE;
-    } else if (this == QueuerType.SCREEN_ON_ENABLE) {
-      newType = QueuerType.SCREEN_OFF_DISABLE;
-    } else if (this == QueuerType.SCREEN_ON_DISABLE) {
-      newType = QueuerType.SCREEN_OFF_ENABLE;
-    } else {
-      throw new IllegalStateException("Invalid QueuerType " + this);
-    }
-    return newType;
+  private Jobs() {
+    throw new RuntimeException("No instances");
   }
 
+  @CheckResult @NonNull public static Job newJob(@NonNull JobHandler jobHandler) {
+    return new ManagedJob(jobHandler);
+  }
 }
