@@ -56,7 +56,7 @@ public class PowerTriggerListFragment extends ActionBarFragment {
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Injector.get().provideComponent().plusTriggerComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Nullable @Override

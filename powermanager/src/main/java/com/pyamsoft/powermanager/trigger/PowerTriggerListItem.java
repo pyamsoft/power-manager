@@ -37,7 +37,7 @@ public class PowerTriggerListItem extends
 
   PowerTriggerListItem(@NonNull PowerTriggerEntry trigger) {
     super(trigger);
-    Injector.get().provideComponent().plusTriggerComponent().inject(this);
+    Injector.get().provideComponent().inject(this);
   }
 
   @Override public int getType() {

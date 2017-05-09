@@ -30,7 +30,8 @@ import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
-import com.pyamsoft.powermanager.trigger.TriggerComponent;
+import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment;
+import com.pyamsoft.powermanager.trigger.PowerTriggerListItem;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
 import dagger.Component;
 import javax.inject.Singleton;
@@ -41,7 +42,9 @@ import javax.inject.Singleton;
     StateModifierModule.class, JobModule.class,
 }) public interface PowerManagerComponent {
 
-  TriggerComponent plusTriggerComponent();
+  void inject(PowerTriggerListFragment fragment);
+
+  void inject(PowerTriggerListItem powerTriggerListItem);
 
   void inject(PowerManagerSingleInitProvider provider);
 
