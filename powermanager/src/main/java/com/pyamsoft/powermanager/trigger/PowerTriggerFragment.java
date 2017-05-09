@@ -19,27 +19,14 @@ package com.pyamsoft.powermanager.trigger;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.uicore.OverviewSingleItemFragment;
+import com.pyamsoft.powermanager.uicore.WatchedFragment;
 
-public class PowerTriggerFragment extends OverviewSingleItemFragment {
+public class PowerTriggerFragment extends WatchedFragment {
 
   @NonNull public static final String TAG = "Power Triggers";
-
-  @NonNull @Override protected Fragment getPreferenceFragment() {
-    return new PowerTriggerListFragment();
-  }
-
-  @Override protected int provideAppBarColor() {
-    return R.color.red500;
-  }
-
-  @Override protected int provideStatusBarColor() {
-    return R.color.red700;
-  }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);

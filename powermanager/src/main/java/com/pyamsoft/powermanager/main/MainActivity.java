@@ -29,7 +29,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -42,9 +41,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
-import com.pyamsoft.powermanager.trigger.PowerTriggerFragment;
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.DialogUtil;
@@ -304,12 +300,5 @@ public class MainActivity extends TamperActivity {
       Timber.w("Logger dialog is already shown");
       return false;
     }
-  }
-
-  @CheckResult @NonNull public TabLayout getTabLayout() {
-    if (binding == null || binding.tabLayout == null) {
-      throw new IllegalStateException("TabLayout is NULL");
-    }
-    return binding.tabLayout;
   }
 }
