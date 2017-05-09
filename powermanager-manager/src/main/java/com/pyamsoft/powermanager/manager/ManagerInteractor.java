@@ -107,6 +107,8 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
       jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
           .screenOn(true)
           .delay(0)
+          .oneshot(true)
+          .firstRun(true)
           .repeatingOffWindow(0L)
           .repeatingOnWindow(0L)
           .build());
@@ -124,6 +126,8 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
       jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
           .screenOn(false)
           .delay(getDelayTime() * 1000L)
+          .oneshot(false)
+          .firstRun(true)
           .repeatingOffWindow(getPeriodicDisableTime())
           .repeatingOnWindow(getPeriodicEnableTime())
           .build());
@@ -159,11 +163,11 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
     }
 
     if (!airplaneObserver.unknown()) {
-      airplanePreferences.setOriginalAirplane(airplaneObserver.enabled());
+      airplanePreferences.setOriginalAirplane(!airplaneObserver.enabled());
     }
 
     if (!dozeObserver.unknown()) {
-      dozePreferences.setOriginalDoze(dozeObserver.enabled());
+      dozePreferences.setOriginalDoze(!dozeObserver.enabled());
     }
 
     Timber.w("Stored original states, prepare for Sleep");

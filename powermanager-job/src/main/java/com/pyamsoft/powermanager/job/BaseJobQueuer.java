@@ -28,6 +28,8 @@ abstract class BaseJobQueuer implements JobQueuer {
   @NonNull final static String KEY_ON_WINDOW = "extra_key__on_window";
   @NonNull final static String KEY_OFF_WINDOW = "extra_key__off_window";
   @NonNull final static String KEY_SCREEN = "extra_key__screen";
+  @NonNull final static String KEY_ONESHOT = "extra_key__once";
+  @NonNull final static String KEY_FIRST_RUN = "extra_key__first";
   @NonNull private final JobManager jobManager;
 
   BaseJobQueuer(@NonNull JobManager jobManager) {
@@ -44,6 +46,8 @@ abstract class BaseJobQueuer implements JobQueuer {
     extras.putBoolean(KEY_SCREEN, entry.screenOn());
     extras.putLong(KEY_ON_WINDOW, entry.repeatingOnWindow());
     extras.putLong(KEY_OFF_WINDOW, entry.repeatingOffWindow());
+    extras.putBoolean(KEY_ONESHOT, entry.oneshot());
+    extras.putBoolean(KEY_FIRST_RUN, entry.firstRun());
     return extras;
   }
 

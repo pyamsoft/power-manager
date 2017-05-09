@@ -28,6 +28,10 @@ import com.google.auto.value.AutoValue;
 
   @CheckResult public abstract String tag();
 
+  @CheckResult public abstract boolean firstRun();
+
+  @CheckResult public abstract boolean oneshot();
+
   @CheckResult public abstract boolean screenOn();
 
   @CheckResult public abstract long delay();
@@ -41,6 +45,10 @@ import com.google.auto.value.AutoValue;
     @CheckResult abstract Builder tag(String tag);
 
     @CheckResult public abstract Builder screenOn(boolean screen);
+
+    @CheckResult public abstract Builder firstRun(boolean first);
+
+    @CheckResult public abstract Builder oneshot(boolean oneshot);
 
     @CheckResult public abstract Builder delay(long delay);
 

@@ -18,17 +18,28 @@ package com.pyamsoft.powermanager.job;
 
 import android.support.annotation.NonNull;
 import com.evernote.android.job.Job;
+import com.pyamsoft.pydroid.function.FuncNone;
 
 class ManagedJob extends Job {
 
   @NonNull private final JobHandler jobHandler;
+  @NonNull private final FuncNone<Boolean> stopper;
 
   ManagedJob(@NonNull JobHandler jobHandler) {
     this.jobHandler = jobHandler;
+    stopper = new FuncNone<Boolean>() {
+      @Override public Boolean call() {
+        return null;
+      }
+    };
   }
 
   @NonNull @Override protected Result onRunJob(Params params) {
-    jobHandler.newRunner(this::isCanceled).run(params.getTag(), params.getExtras());
+    jobHandler.newRunner(new FuncNone<Boolean>() {
+      @Override public Boolean call() {
+        return isCanceled() || isFinished();
+      }
+    }).run(params.getTag(), params.getExtras());
     return Result.SUCCESS;
   }
 }

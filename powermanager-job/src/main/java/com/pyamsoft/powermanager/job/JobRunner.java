@@ -71,16 +71,16 @@ abstract class JobRunner {
     this.dozePreferences = dozePreferences;
   }
 
-  @CheckResult private boolean runJob(@NonNull String tag, boolean screenOn) {
+  @CheckResult private boolean runJob(@NonNull String tag, boolean screenOn, boolean firstRun) {
     if (screenOn) {
-      return runEnableJob(tag);
+      return runEnableJob(tag, firstRun);
     } else {
-      return runDisableJob(tag);
+      return runDisableJob(tag, firstRun);
     }
   }
 
-  @CheckResult private boolean runEnableJob(@NonNull String tag) {
-    if (dozePreferences.isOriginalDoze()) {
+  @CheckResult private boolean runEnableJob(@NonNull String tag, boolean firstRun) {
+    if (dozePreferences.isOriginalDoze() && (firstRun || dozePreferences.isPeriodicDoze())) {
       Timber.i("%s: Disable Doze", tag);
       dozeModifier.unset();
     }
@@ -89,7 +89,8 @@ abstract class JobRunner {
       return false;
     }
 
-    if (airplanePreferences.isOriginalAirplane()) {
+    if (airplanePreferences.isOriginalAirplane() && (firstRun
+        || airplanePreferences.isPeriodicAirplane())) {
       Timber.i("%s: Disable Airplane mode", tag);
       airplaneModifier.unset();
     }
@@ -98,7 +99,7 @@ abstract class JobRunner {
       return false;
     }
 
-    if (wifiPreferences.isOriginalWifi()) {
+    if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
       Timber.i("%s: Enable WiFi", tag);
       wifiModifier.set();
     }
@@ -107,7 +108,7 @@ abstract class JobRunner {
       return false;
     }
 
-    if (dataPreferences.isOriginalData()) {
+    if (dataPreferences.isOriginalData() && (firstRun || dataPreferences.isPeriodicData())) {
       Timber.i("%s: Enable Data", tag);
       dataModifier.set();
     }
@@ -116,7 +117,8 @@ abstract class JobRunner {
       return false;
     }
 
-    if (bluetoothPreferences.isOriginalBluetooth()) {
+    if (bluetoothPreferences.isOriginalBluetooth() && (firstRun
+        || bluetoothPreferences.isPeriodicBluetooth())) {
       Timber.i("%s: Enable Bluetooth", tag);
       bluetoothModifier.set();
     }
@@ -125,19 +127,19 @@ abstract class JobRunner {
       return false;
     }
 
-    if (syncPreferences.isOriginalSync()) {
+    if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
       Timber.i("%s: Enable Sync", tag);
       syncModifier.set();
     }
     return true;
   }
 
-  @CheckResult private boolean runDisableJob(@NonNull String tag) {
+  @CheckResult private boolean runDisableJob(@NonNull String tag, boolean firstRun) {
     final boolean isCharging = chargingObserver.enabled();
     if (isCharging && wifiPreferences.isIgnoreChargingWifi()) {
       Timber.w("Do not disable WiFi while device is charging");
     } else {
-      if (wifiPreferences.isOriginalWifi()) {
+      if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
         Timber.i("%s: Disable WiFi", tag);
         wifiModifier.unset();
       }
@@ -150,7 +152,7 @@ abstract class JobRunner {
     if (isCharging && dataPreferences.isIgnoreChargingData()) {
       Timber.w("Do not disable Data while device is charging");
     } else {
-      if (dataPreferences.isOriginalData()) {
+      if (dataPreferences.isOriginalData() && (firstRun || dataPreferences.isPeriodicData())) {
         Timber.i("%s: Disable Data", tag);
         dataModifier.unset();
       }
@@ -163,7 +165,8 @@ abstract class JobRunner {
     if (isCharging && bluetoothPreferences.isIgnoreChargingBluetooth()) {
       Timber.w("Do not disable Bluetooth while device is charging");
     } else {
-      if (bluetoothPreferences.isOriginalBluetooth()) {
+      if (bluetoothPreferences.isOriginalBluetooth() && (firstRun
+          || bluetoothPreferences.isPeriodicBluetooth())) {
         Timber.i("%s: Disable Bluetooth", tag);
         bluetoothModifier.unset();
       }
@@ -176,7 +179,7 @@ abstract class JobRunner {
     if (isCharging && syncPreferences.isIgnoreChargingSync()) {
       Timber.w("Do not disable Sync while device is charging");
     } else {
-      if (syncPreferences.isOriginalSync()) {
+      if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
         Timber.i("%s: Disable Sync", tag);
         syncModifier.unset();
       }
@@ -189,7 +192,8 @@ abstract class JobRunner {
     if (isCharging && airplanePreferences.isIgnoreChargingAirplane()) {
       Timber.w("Do not enable Airplane mode while device is charging");
     } else {
-      if (airplanePreferences.isOriginalAirplane()) {
+      if (airplanePreferences.isOriginalAirplane() && (firstRun
+          || airplanePreferences.isPeriodicAirplane())) {
         Timber.i("%s: Enable Airplane mode", tag);
         airplaneModifier.set();
       }
@@ -202,7 +206,7 @@ abstract class JobRunner {
     if (isCharging && dozePreferences.isIgnoreChargingDoze()) {
       Timber.w("Do not enable Doze mode while device is charging");
     } else {
-      if (dozePreferences.isOriginalDoze()) {
+      if (dozePreferences.isOriginalDoze() && (firstRun || dozePreferences.isPeriodicDoze())) {
         Timber.i("%s: Enable Doze mode", tag);
         dozeModifier.set();
       }
@@ -222,6 +226,8 @@ abstract class JobRunner {
     }
 
     final JobQueuerEntry entry = JobQueuerEntry.builder(tag)
+        .oneshot(false)
+        .firstRun(false)
         .screenOn(!screenOn)
         .delay(newDelayTime)
         .repeatingOffWindow(windowOffTime)
@@ -239,7 +245,9 @@ abstract class JobRunner {
     boolean screenOn = extras.getBoolean(BaseJobQueuer.KEY_SCREEN, true);
     long windowOnTime = extras.getLong(BaseJobQueuer.KEY_ON_WINDOW, 0);
     long windowOffTime = extras.getLong(BaseJobQueuer.KEY_OFF_WINDOW, 0);
-    if (runJob(tag, screenOn)) {
+    boolean oneshot = extras.getBoolean(BaseJobQueuer.KEY_ONESHOT, false);
+    boolean firstRun = extras.getBoolean(BaseJobQueuer.KEY_FIRST_RUN, false);
+    if (runJob(tag, screenOn, firstRun) && !oneshot) {
       repeatIfRequired(tag, screenOn, windowOnTime, windowOffTime);
     }
   }
