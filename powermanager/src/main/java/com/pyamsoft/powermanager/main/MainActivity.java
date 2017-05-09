@@ -41,6 +41,7 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
 import com.pyamsoft.powermanager.service.ForegroundService;
+import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
 import com.pyamsoft.pydroid.ui.sec.TamperActivity;
 import com.pyamsoft.pydroid.util.DialogUtil;
@@ -135,6 +136,7 @@ public class MainActivity extends TamperActivity {
   private void loadOverviewFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     // TODO
+    AboutLibrariesFragment.show(this, R.id.main_container, AboutLibrariesFragment.BackStackState.LAST);
   }
 
   @Override protected void onPostResume() {

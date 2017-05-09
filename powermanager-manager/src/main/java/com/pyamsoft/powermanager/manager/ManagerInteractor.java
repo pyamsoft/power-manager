@@ -111,7 +111,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
           .repeatingOnWindow(0L)
           .build());
       return MANAGED_TAG;
-    });
+    }).doAfterSuccess(s -> eraseOriginalStates());
   }
 
   /**
@@ -128,7 +128,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
           .repeatingOnWindow(getPeriodicEnableTime())
           .build());
       return MANAGED_TAG;
-    })).doOnSuccess(s -> eraseOriginalStates());
+    }));
   }
 
   @SuppressWarnings("WeakerAccess") void eraseOriginalStates() {
