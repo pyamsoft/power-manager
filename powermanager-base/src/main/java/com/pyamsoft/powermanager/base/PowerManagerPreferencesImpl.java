@@ -38,6 +38,7 @@ import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 class PowerManagerPreferencesImpl
     implements WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences,
@@ -106,6 +107,17 @@ class PowerManagerPreferencesImpl
   @NonNull private final String triggerPeriodKey;
   @NonNull private final String triggerPeriodDefault;
 
+  @NonNull private final String globalManageDelayKey;
+  @NonNull private final String globalManageEnableKey;
+  @NonNull private final String globalManageDisableKey;
+  @NonNull private final String globalManageDelayDefault;
+  @NonNull private final String globalManageEnableDefault;
+  @NonNull private final String globalManageDisableDefault;
+  private final long defaultGlobalDelayValue;
+  private final long defaultGlobalEnableValue;
+  private final long defaultGlobalDisableValue;
+  private final long defaultTriggerPeriodValue;
+
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
     preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
@@ -166,6 +178,18 @@ class PowerManagerPreferencesImpl
 
     triggerPeriodKey = res.getString(R.string.trigger_period_key);
     triggerPeriodDefault = res.getString(R.string.trigger_period_default);
+    defaultTriggerPeriodValue = Long.valueOf(triggerPeriodDefault);
+
+    globalManageDelayKey = res.getString(R.string.key_manage_delay_time);
+    globalManageEnableKey = res.getString(R.string.key_manage_enable_time);
+    globalManageDisableKey = res.getString(R.string.key_manage_disable_time);
+    globalManageDelayDefault = res.getString(R.string.default_manage_delay_time);
+    globalManageEnableDefault = res.getString(R.string.default_manage_enable_time);
+    globalManageDisableDefault = res.getString(R.string.default_manage_disable_time);
+
+    defaultGlobalDelayValue = Long.valueOf(globalManageDelayDefault);
+    defaultGlobalEnableValue = Long.valueOf(globalManageEnableDefault);
+    defaultGlobalDisableValue = Long.valueOf(globalManageDisableDefault);
   }
 
   @Override public boolean isOriginalWifi() {
@@ -225,7 +249,15 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public long getTriggerPeriodTime() {
-    return Long.parseLong(preferences.getString(triggerPeriodKey, triggerPeriodDefault));
+    String rawPref = preferences.getString(triggerPeriodKey, triggerPeriodDefault);
+    long delay;
+    try {
+      delay = Long.valueOf(rawPref);
+    } catch (Exception e) {
+      Timber.e(e, "Error assigning trigger period to long");
+      delay = defaultTriggerPeriodValue;
+    }
+    return delay;
   }
 
   @Override public boolean isLoggerEnabled() {
@@ -324,7 +356,6 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(manageWifi, manageWifiDefault);
   }
 
-  // TODO Split into per-module preferences
   @Override public boolean isWearableManaged() {
     return preferences.getBoolean(manageWearable, manageWearableDefault);
   }
@@ -358,26 +389,50 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public long getManageDelay() {
-    return 0;
+    String rawPref = preferences.getString(globalManageDelayKey, globalManageDelayDefault);
+    long delay;
+    try {
+      delay = Long.valueOf(rawPref);
+    } catch (Exception e) {
+      Timber.e(e, "Error assigning global delay to long");
+      delay = defaultGlobalDelayValue;
+    }
+    return delay;
   }
 
   @Override public void setManageDelay(long time) {
-
+    preferences.edit().putString(globalManageDelayKey, Long.valueOf(time).toString()).apply();
   }
 
   @Override public long getPeriodicDisableTime() {
-    return 0;
+    String rawPref = preferences.getString(globalManageDisableKey, globalManageDisableDefault);
+    long delay;
+    try {
+      delay = Long.valueOf(rawPref);
+    } catch (Exception e) {
+      Timber.e(e, "Error assigning global disable to long");
+      delay = defaultGlobalDisableValue;
+    }
+    return delay;
   }
 
   @Override public void setPeriodicDisableTime(long time) {
-
+    preferences.edit().putString(globalManageDisableKey, Long.valueOf(time).toString()).apply();
   }
 
   @Override public long getPeriodicEnableTime() {
-    return 0;
+    String rawPref = preferences.getString(globalManageEnableKey, globalManageEnableDefault);
+    long delay;
+    try {
+      delay = Long.valueOf(rawPref);
+    } catch (Exception e) {
+      Timber.e(e, "Error assigning global enable to long");
+      delay = defaultGlobalEnableValue;
+    }
+    return delay;
   }
 
   @Override public void setPeriodicEnableTime(long time) {
-
+    preferences.edit().putString(globalManageEnableKey, Long.valueOf(time).toString()).apply();
   }
 }

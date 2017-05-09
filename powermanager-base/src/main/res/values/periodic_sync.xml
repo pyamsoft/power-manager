@@ -20,10 +20,4 @@
   <bool name="periodic_sync_default">true</bool>
   <string name="periodic_sync_key">sync_periodic</string>
 
-  <string name="periodic_sync_disable_default">300</string>
-  <string name="periodic_sync_disable_key">periodic_sync_disable</string>
-
-  <string name="periodic_sync_enable_default">60</string>
-  <string name="periodic_sync_enable_key">periodic_sync_enable</string>
-
 </resources>

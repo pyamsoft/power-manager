@@ -20,10 +20,4 @@
   <bool name="periodic_doze_default">true</bool>
   <string name="periodic_doze_key">doze_periodic</string>
 
-  <string name="periodic_doze_disable_default">300</string>
-  <string name="periodic_doze_disable_key">periodic_doze_disable</string>
-
-  <string name="periodic_doze_enable_default">60</string>
-  <string name="periodic_doze_enable_key">periodic_doze_enable</string>
-
 </resources>

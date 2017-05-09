@@ -17,7 +17,6 @@
 
 <resources>
 
-
   <string name="trigger_period_key">trigger_interval_key</string>
   <string name="trigger_period_default">30</string>
 

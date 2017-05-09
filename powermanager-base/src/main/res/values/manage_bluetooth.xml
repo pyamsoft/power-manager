@@ -20,9 +20,6 @@
   <bool name="manage_bluetooth_default">false</bool>
   <string name="manage_bluetooth_key">manage_bluetooth</string>
 
-  <string name="bluetooth_time_default">30</string>
-  <string name="bluetooth_time_key">bluetooth_time</string>
-
   <bool name="ignore_charging_bluetooth_default">false</bool>
   <string name="ignore_charging_bluetooth_key">ignore_charging_bluetooth</string>
 

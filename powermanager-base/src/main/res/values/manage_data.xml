@@ -20,9 +20,6 @@
   <bool name="manage_data_default">false</bool>
   <string name="manage_data_key">manage_data_root</string>
 
-  <string name="data_time_default">30</string>
-  <string name="data_time_key">data_time</string>
-
   <bool name="ignore_charging_data_default">false</bool>
   <string name="ignore_charging_data_key">ignore_charging_data</string>
 

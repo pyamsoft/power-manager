@@ -20,10 +20,4 @@
   <bool name="periodic_bluetooth_default">true</bool>
   <string name="periodic_bluetooth_key">bluetooth_periodic</string>
 
-  <string name="periodic_bluetooth_disable_default">300</string>
-  <string name="periodic_bluetooth_disable_key">periodic_bluetooth_disable</string>
-
-  <string name="periodic_bluetooth_enable_default">60</string>
-  <string name="periodic_bluetooth_enable_key">periodic_bluetooth_enable</string>
-
 </resources>

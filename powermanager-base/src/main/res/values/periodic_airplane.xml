@@ -20,10 +20,4 @@
   <bool name="periodic_airplane_default">true</bool>
   <string name="periodic_airplane_key">airplane_periodic</string>
 
-  <string name="periodic_airplane_disable_default">300</string>
-  <string name="periodic_airplane_disable_key">periodic_airplane_disable</string>
-
-  <string name="periodic_airplane_enable_default">60</string>
-  <string name="periodic_airplane_enable_key">periodic_airplane_enable</string>
-
 </resources>

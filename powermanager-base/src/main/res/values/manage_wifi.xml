@@ -20,9 +20,6 @@
   <bool name="manage_wifi_default">true</bool>
   <string name="manage_wifi_key">manage_wifi</string>
 
-  <string name="wifi_time_default">30</string>
-  <string name="wifi_time_key">wifi_time</string>
-
   <bool name="ignore_charging_wifi_default">false</bool>
   <string name="ignore_charging_wifi_key">ignore_charging_wifi</string>
 

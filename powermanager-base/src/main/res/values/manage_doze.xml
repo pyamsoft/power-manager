@@ -20,9 +20,6 @@
   <bool name="manage_doze_default">false</bool>
   <string name="manage_doze_key">manage_doze_root</string>
 
-  <string name="doze_time_default">30</string>
-  <string name="doze_time_key">doze_time</string>
-
   <bool name="ignore_charging_doze_default">false</bool>
   <string name="ignore_charging_doze_key">ignore_charging_doze</string>
 
