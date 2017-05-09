@@ -9,22 +9,16 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/powermanager" />
-            <option value="$PROJECT_DIR$/powermanager-airplane" />
             <option value="$PROJECT_DIR$/powermanager-base" />
-            <option value="$PROJECT_DIR$/powermanager-bluetooth" />
-            <option value="$PROJECT_DIR$/powermanager-data" />
-            <option value="$PROJECT_DIR$/powermanager-doze" />
             <option value="$PROJECT_DIR$/powermanager-job" />
             <option value="$PROJECT_DIR$/powermanager-main" />
             <option value="$PROJECT_DIR$/powermanager-manager" />
             <option value="$PROJECT_DIR$/powermanager-model" />
-            <option value="$PROJECT_DIR$/powermanager-overview" />
             <option value="$PROJECT_DIR$/powermanager-service" />
             <option value="$PROJECT_DIR$/powermanager-settings" />
             <option value="$PROJECT_DIR$/powermanager-sync" />
             <option value="$PROJECT_DIR$/powermanager-trigger" />
             <option value="$PROJECT_DIR$/powermanager-uicore" />
-            <option value="$PROJECT_DIR$/powermanager-wear" />
             <option value="$PROJECT_DIR$/powermanager-wifi" />
           </set>
         </option>
