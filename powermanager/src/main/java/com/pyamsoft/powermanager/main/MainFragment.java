@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.main;
 
+import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.evernote.android.job.Job;
+import com.pyamsoft.powermanager.uicore.WatchedFragment;
 
-class ManagedJob extends Job {
+public class MainFragment extends WatchedFragment {
 
-  @NonNull private final JobHandler jobHandler;
+  @NonNull public static final String TAG = "MainFragment";
 
-  ManagedJob(@NonNull JobHandler jobHandler) {
-    this.jobHandler = jobHandler;
-  }
-
-  @NonNull @Override protected Result onRunJob(Params params) {
-    jobHandler.newRunner(() -> isCanceled() || isFinished())
-        .run(params.getTag(), params.getExtras());
-    return Result.SUCCESS;
+  @CheckResult @NonNull public static MainFragment newInstance() {
+    Bundle args = new Bundle();
+    MainFragment fragment = new MainFragment();
+    fragment.setArguments(args);
+    return fragment;
   }
 }

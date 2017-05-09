@@ -19,16 +19,27 @@ package com.pyamsoft.powermanager.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import com.pyamsoft.powermanager.Injector;
+import com.pyamsoft.powermanager.manager.Manager;
 import com.pyamsoft.powermanager.service.ForegroundService;
+import javax.inject.Inject;
 import timber.log.Timber;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
+
+  @Inject Manager manager;
 
   @Override public void onReceive(Context context, Intent intent) {
     if (intent != null) {
       final String action = intent.getAction();
       if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
         Timber.d("Boot completed");
+
+        if (manager == null) {
+          Injector.get().provideComponent().inject(this);
+        }
+
+        manager.cleanup();
         ForegroundService.start(context.getApplicationContext());
       }
     }

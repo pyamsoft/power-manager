@@ -42,5 +42,8 @@
   <string name="onboard_desc_period_enable">Duration for how long the component should stay disabled before being toggled on</string>
   <string name="onboard_title_period_disable">Time Before Disable</string>
   <string name="onboard_desc_period_disable">Duration for how long the component should stay enabled before being toggled off</string>
+  <string name="manage">Manage</string>
+  <string name="triggers">Triggers</string>
+  <string name="settings">Settings</string>
 </resources>
 

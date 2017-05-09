@@ -26,10 +26,10 @@ import com.pyamsoft.powermanager.base.states.WrapperModule;
 import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
+import com.pyamsoft.powermanager.receiver.BootCompletedReceiver;
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.service.ActionToggleService;
 import com.pyamsoft.powermanager.service.ForegroundService;
-import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment;
 import com.pyamsoft.powermanager.trigger.PowerTriggerListItem;
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule;
@@ -50,6 +50,8 @@ import javax.inject.Singleton;
 
   void inject(ScreenOnOffReceiver receiver);
 
+  void inject(BootCompletedReceiver receiver);
+
   void inject(LoggerPreferenceFragment loggerPreferenceFragment);
 
   void inject(MainActivity mainActivity);
@@ -57,6 +59,4 @@ import javax.inject.Singleton;
   void inject(ActionToggleService actionToggleService);
 
   void inject(ForegroundService foregroundService);
-
-  void inject(SettingsPreferenceFragment settingsPreferenceFragment);
 }

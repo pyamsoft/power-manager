@@ -15,21 +15,27 @@
   ~ limitations under the License.
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <android.support.design.widget.CoordinatorLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      >
+  <group
+      android:checkableBehavior="single">
 
-    <FrameLayout
-        android:id="@+id/preference_container_single"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+    <item
+        android:id="@+id/menu_manage"
+        android:icon="@drawable/ic_network_wifi_24dp"
+        android:title="@string/manage"/>
 
-  </android.support.design.widget.CoordinatorLayout>
+    <item
+        android:id="@+id/menu_triggers"
+        android:icon="@drawable/ic_battery_24dp"
+        android:title="@string/triggers"/>
 
-</layout>
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/settings"/>
+
+  </group>
+
+</menu>

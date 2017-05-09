@@ -16,21 +16,15 @@
 
 package com.pyamsoft.powermanager.main;
 
-import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CheckResult;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -56,48 +50,23 @@ public class MainActivity extends TamperActivity {
       Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? null : new Handler(Looper.getMainLooper());
   @SuppressWarnings("WeakerAccess") @Inject MainPresenter presenter;
   private ActivityMainBinding binding;
-  @ColorInt private int oldAppBarColor;
-  @ColorInt private int oldStatusBarColor;
-  @Nullable private ValueAnimator appBarAnimator;
-  @Nullable private ValueAnimator statusBarAnimator;
-
-  @SuppressWarnings("WeakerAccess") @CheckResult @ColorInt
-  static int blendColors(@ColorInt int from, @ColorInt int to, float ratio) {
-    final float inverseRatio = 1f - ratio;
-
-    final float r = Color.red(to) * ratio + Color.red(from) * inverseRatio;
-    final float g = Color.green(to) * ratio + Color.green(from) * inverseRatio;
-    final float b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio;
-
-    return Color.rgb((int) r, (int) g, (int) b);
-  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     setTheme(R.style.Theme_PowerManager_Light);
-    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
     super.onCreate(savedInstanceState);
-    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-    oldAppBarColor = ContextCompat.getColor(this, R.color.amber500);
-    oldStatusBarColor = ContextCompat.getColor(this, R.color.amber700);
+    Injector.get().provideComponent().inject(this);
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     setupAppBar();
+
     if (hasNoActiveFragment()) {
       loadOverviewFragment();
     }
-
-    Injector.get().provideComponent().inject(this);
   }
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    if (statusBarAnimator != null) {
-      statusBarAnimator.cancel();
-    }
-
-    if (appBarAnimator != null) {
-      appBarAnimator.cancel();
-    }
-
     presenter.destroy();
     binding.unbind();
   }
@@ -130,13 +99,18 @@ public class MainActivity extends TamperActivity {
   }
 
   @CheckResult private boolean hasNoActiveFragment() {
-    return true;
+    final FragmentManager fragmentManager = getSupportFragmentManager();
+    return fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null
+        && fragmentManager.findFragmentByTag(MainFragment.TAG) == null;
   }
 
   private void loadOverviewFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
-    // TODO
-    AboutLibrariesFragment.show(this, R.id.main_container, AboutLibrariesFragment.BackStackState.LAST);
+    if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null) {
+      fragmentManager.beginTransaction()
+          .replace(R.id.main_container, MainFragment.newInstance(), MainFragment.TAG)
+          .commit();
+    }
   }
 
   @Override protected void onPostResume() {
@@ -169,73 +143,6 @@ public class MainActivity extends TamperActivity {
 
   @Override public int getCurrentApplicationVersion() {
     return BuildConfig.VERSION_CODE;
-  }
-
-  /**
-   * Color the app bar using a nice blending animation
-   */
-  public void colorAppBar(@ColorRes int color, long duration) {
-    final int newColor = ContextCompat.getColor(this, color);
-    Timber.d("Blend appbar color");
-    blendAppBar(oldAppBarColor, newColor, duration);
-    oldAppBarColor = newColor;
-  }
-
-  /**
-   * Runs a blending animation on the app bar color
-   */
-  private void blendAppBar(int fromColor, int toColor, long duration) {
-    if (appBarAnimator != null) {
-      appBarAnimator.cancel();
-    }
-
-    appBarAnimator = ValueAnimator.ofFloat(0, 1);
-    appBarAnimator.addUpdateListener(animation -> {
-      // Use animation position to blend colors.
-      final float position = animation.getAnimatedFraction();
-
-      // Apply blended color to the status bar.
-      final int blended = blendColors(fromColor, toColor, position);
-
-      // To color the entire app bar
-      binding.mainAppbar.setBackgroundColor(blended);
-    });
-
-    appBarAnimator.setDuration(duration).start();
-  }
-
-  /**
-   * Colors the status bar using a nice blending animation
-   */
-  public void colorStatusBar(@ColorRes int colorDark, long duration) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      final int newColor = ContextCompat.getColor(this, colorDark);
-      Timber.d("Blend statusbar color");
-      blendStatusBar(oldStatusBarColor, newColor, duration);
-      oldStatusBarColor = newColor;
-    }
-  }
-
-  /**
-   * Runs a blending animation on the status bar color
-   */
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP) private void blendStatusBar(@ColorInt int fromColor,
-      @ColorInt int toColor, long duration) {
-    if (statusBarAnimator != null) {
-      statusBarAnimator.cancel();
-    }
-
-    statusBarAnimator = ValueAnimator.ofFloat(0, 1);
-    statusBarAnimator.addUpdateListener(animation -> {
-      // Use animation position to blend colors.
-      final float position = animation.getAnimatedFraction();
-
-      // Apply blended color to the status bar.
-      final int blended = blendColors(fromColor, toColor, position);
-      getWindow().setStatusBarColor(blended);
-    });
-
-    statusBarAnimator.setDuration(duration).start();
   }
 
   @Override protected void onStart() {
