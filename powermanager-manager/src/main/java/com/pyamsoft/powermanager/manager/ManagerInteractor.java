@@ -18,25 +18,69 @@ package com.pyamsoft.powermanager.manager;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
+import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.base.preference.ManagePreferences;
+import com.pyamsoft.powermanager.base.preference.SyncPreferences;
+import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.JobQueuerEntry;
+import com.pyamsoft.powermanager.model.ConnectedStateObserver;
+import com.pyamsoft.powermanager.model.StateObserver;
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import timber.log.Timber;
 
 import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
 
 @Singleton class ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
+  @NonNull private final StateObserver wifiObserver;
+  @NonNull private final StateObserver dataObserver;
+  @NonNull private final StateObserver bluetoothObserver;
+  @NonNull private final StateObserver syncObserver;
+  @NonNull private final StateObserver dozeObserver;
+  @NonNull private final StateObserver airplaneObserver;
+
   @NonNull private final ManagePreferences preferences;
+  @NonNull private final WifiPreferences wifiPreferences;
+  @NonNull private final DataPreferences dataPreferences;
+  @NonNull private final BluetoothPreferences bluetoothPreferences;
+  @NonNull private final SyncPreferences syncPreferences;
+  @NonNull private final AirplanePreferences airplanePreferences;
+  @NonNull private final DozePreferences dozePreferences;
 
   @Inject ManagerInteractor(@NonNull @Named("instant") JobQueuer jobQueuer,
-      @NonNull ManagePreferences preferences) {
+      @NonNull ManagePreferences preferences,
+      @NonNull @Named("obs_wifi") ConnectedStateObserver wifiObserver,
+      @NonNull @Named("obs_data") StateObserver dataObserver,
+      @NonNull @Named("obs_bluetooth") ConnectedStateObserver bluetoothObserver,
+      @NonNull @Named("obs_sync") StateObserver syncObserver,
+      @NonNull @Named("obs_doze") StateObserver dozeObserver,
+      @NonNull @Named("obs_airplane") StateObserver airplaneObserver,
+      @NonNull WifiPreferences wifiPreferences, @NonNull DataPreferences dataPreferences,
+      @NonNull BluetoothPreferences bluetoothPreferences, @NonNull SyncPreferences syncPreferences,
+      @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences) {
     this.jobQueuer = jobQueuer;
     this.preferences = preferences;
+    this.wifiObserver = wifiObserver;
+    this.dataObserver = dataObserver;
+    this.bluetoothObserver = bluetoothObserver;
+    this.syncObserver = syncObserver;
+    this.airplaneObserver = airplaneObserver;
+    this.dozeObserver = dozeObserver;
+    this.wifiPreferences = wifiPreferences;
+    this.dataPreferences = dataPreferences;
+    this.bluetoothPreferences = bluetoothPreferences;
+    this.syncPreferences = syncPreferences;
+    this.airplanePreferences = airplanePreferences;
+    this.dozePreferences = dozePreferences;
   }
 
   public void destroy() {
@@ -74,7 +118,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
    * public
    */
   @CheckResult @NonNull Single<String> queueDisable() {
-    return Single.fromCallable(() -> {
+    return Completable.fromAction(this::storeOriginalStates).andThen(Single.fromCallable(() -> {
       // Queue up a disable job
       jobQueuer.cancel(MANAGED_TAG);
       jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
@@ -84,7 +128,45 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
           .repeatingOnWindow(getPeriodicEnableTime())
           .build());
       return MANAGED_TAG;
-    });
+    })).doOnSuccess(s -> eraseOriginalStates());
+  }
+
+  @SuppressWarnings("WeakerAccess") void eraseOriginalStates() {
+    wifiPreferences.setOriginalWifi(false);
+    dataPreferences.setOriginalData(false);
+    bluetoothPreferences.setOriginalBluetooth(false);
+    syncPreferences.setOriginalSync(false);
+    airplanePreferences.setOriginalAirplane(false);
+    dozePreferences.setOriginalDoze(false);
+    Timber.w("Erased original states, prepare for another Screen event");
+  }
+
+  @SuppressWarnings("WeakerAccess") void storeOriginalStates() {
+    if (!wifiObserver.unknown()) {
+      wifiPreferences.setOriginalWifi(wifiObserver.enabled());
+    }
+
+    if (!dataObserver.unknown()) {
+      dataPreferences.setOriginalData(dataObserver.enabled());
+    }
+
+    if (!bluetoothObserver.unknown()) {
+      bluetoothPreferences.setOriginalBluetooth(bluetoothObserver.enabled());
+    }
+
+    if (!syncObserver.unknown()) {
+      syncPreferences.setOriginalSync(syncObserver.enabled());
+    }
+
+    if (!airplaneObserver.unknown()) {
+      airplanePreferences.setOriginalAirplane(airplaneObserver.enabled());
+    }
+
+    if (!dozeObserver.unknown()) {
+      dozePreferences.setOriginalDoze(dozeObserver.enabled());
+    }
+
+    Timber.w("Stored original states, prepare for Sleep");
   }
 
   @SuppressWarnings("WeakerAccess") @CheckResult long getDelayTime() {

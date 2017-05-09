@@ -27,18 +27,12 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
+import timber.log.Timber;
 
 abstract class JobRunner {
 
   @NonNull private final JobQueuer jobQueuer;
   @NonNull private final StateObserver chargingObserver;
-
-  @NonNull private final StateObserver wifiObserver;
-  @NonNull private final StateObserver dataObserver;
-  @NonNull private final StateObserver bluetoothObserver;
-  @NonNull private final StateObserver syncObserver;
-  @NonNull private final StateObserver dozeObserver;
-  @NonNull private final StateObserver airplaneObserver;
 
   @NonNull private final StateModifier wifiModifier;
   @NonNull private final StateModifier dataModifier;
@@ -55,9 +49,6 @@ abstract class JobRunner {
   @NonNull private final DozePreferences dozePreferences;
 
   JobRunner(@NonNull JobQueuer jobQueuer, @NonNull StateObserver chargingObserver,
-      @NonNull StateObserver wifiObserver, @NonNull StateObserver dataObserver,
-      @NonNull StateObserver bluetoothObserver, @NonNull StateObserver syncObserver,
-      @NonNull StateObserver dozeObserver, @NonNull StateObserver airplaneObserver,
       @NonNull StateModifier wifiModifier, @NonNull StateModifier dataModifier,
       @NonNull StateModifier bluetoothModifier, @NonNull StateModifier syncModifier,
       @NonNull StateModifier dozeModifier, @NonNull StateModifier airplaneModifier,
@@ -66,12 +57,6 @@ abstract class JobRunner {
       @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences) {
     this.jobQueuer = jobQueuer;
     this.chargingObserver = chargingObserver;
-    this.wifiObserver = wifiObserver;
-    this.dataObserver = dataObserver;
-    this.bluetoothObserver = bluetoothObserver;
-    this.syncObserver = syncObserver;
-    this.dozeObserver = dozeObserver;
-    this.airplaneObserver = airplaneObserver;
     this.wifiModifier = wifiModifier;
     this.dataModifier = dataModifier;
     this.bluetoothModifier = bluetoothModifier;
@@ -95,12 +80,134 @@ abstract class JobRunner {
   }
 
   @CheckResult private boolean runEnableJob(@NonNull String tag) {
-    // TODO
-    return false;
+    if (dozePreferences.isOriginalDoze()) {
+      Timber.i("%s: Disable Doze", tag);
+      dozeModifier.unset();
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (airplanePreferences.isOriginalAirplane()) {
+      Timber.i("%s: Disable Airplane mode", tag);
+      airplaneModifier.unset();
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (wifiPreferences.isOriginalWifi()) {
+      Timber.i("%s: Enable WiFi", tag);
+      wifiModifier.set();
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (dataPreferences.isOriginalData()) {
+      Timber.i("%s: Enable Data", tag);
+      dataModifier.set();
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (bluetoothPreferences.isOriginalBluetooth()) {
+      Timber.i("%s: Enable Bluetooth", tag);
+      bluetoothModifier.set();
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (syncPreferences.isOriginalSync()) {
+      Timber.i("%s: Enable Sync", tag);
+      syncModifier.set();
+    }
+    return true;
   }
 
   @CheckResult private boolean runDisableJob(@NonNull String tag) {
-    // TODO
+    final boolean isCharging = chargingObserver.enabled();
+    if (isCharging && wifiPreferences.isIgnoreChargingWifi()) {
+      Timber.w("Do not disable WiFi while device is charging");
+    } else {
+      if (wifiPreferences.isOriginalWifi()) {
+        Timber.i("%s: Disable WiFi", tag);
+        wifiModifier.unset();
+      }
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (isCharging && dataPreferences.isIgnoreChargingData()) {
+      Timber.w("Do not disable Data while device is charging");
+    } else {
+      if (dataPreferences.isOriginalData()) {
+        Timber.i("%s: Disable Data", tag);
+        dataModifier.unset();
+      }
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (isCharging && bluetoothPreferences.isIgnoreChargingBluetooth()) {
+      Timber.w("Do not disable Bluetooth while device is charging");
+    } else {
+      if (bluetoothPreferences.isOriginalBluetooth()) {
+        Timber.i("%s: Disable Bluetooth", tag);
+        bluetoothModifier.unset();
+      }
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (isCharging && syncPreferences.isIgnoreChargingSync()) {
+      Timber.w("Do not disable Sync while device is charging");
+    } else {
+      if (syncPreferences.isOriginalSync()) {
+        Timber.i("%s: Disable Sync", tag);
+        syncModifier.unset();
+      }
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (isCharging && airplanePreferences.isIgnoreChargingAirplane()) {
+      Timber.w("Do not enable Airplane mode while device is charging");
+    } else {
+      if (airplanePreferences.isOriginalAirplane()) {
+        Timber.i("%s: Enable Airplane mode", tag);
+        airplaneModifier.set();
+      }
+    }
+    if (isStopped()) {
+      Timber.w("%s: Stopped early", tag);
+      return false;
+    }
+
+    if (isCharging && dozePreferences.isIgnoreChargingDoze()) {
+      Timber.w("Do not enable Doze mode while device is charging");
+    } else {
+      if (dozePreferences.isOriginalDoze()) {
+        Timber.i("%s: Enable Doze mode", tag);
+        dozeModifier.set();
+      }
+    }
+
     return true;
   }
 

@@ -21,10 +21,6 @@ import com.evernote.android.job.JobManager;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
 import javax.inject.Inject;
 
-/**
- * Created by pyamsoft on 5/8/17.
- */
-
 class InstantJobQueuerImpl extends BaseJobQueuer {
 
   @NonNull private final JobHandler jobHandler;
