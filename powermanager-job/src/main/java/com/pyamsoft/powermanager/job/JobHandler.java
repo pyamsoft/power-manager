@@ -22,8 +22,10 @@ import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.pydroid.function.FuncNone;
@@ -48,6 +50,10 @@ public class JobHandler {
   @NonNull private final SyncPreferences syncPreferences;
   @NonNull private final AirplanePreferences airplanePreferences;
   @NonNull private final DozePreferences dozePreferences;
+  @NonNull private final RootPreferences rootPreferences;
+
+  @NonNull private final PermissionObserver rootPermissionObserver;
+  @NonNull private final PermissionObserver dozePermissionObserver;
 
   @Inject JobHandler(@NonNull @Named("delay") JobQueuer jobQueuer,
       @NonNull @Named("obs_charging") StateObserver chargingObserver,
@@ -59,7 +65,10 @@ public class JobHandler {
       @NonNull @Named("mod_airplane") StateModifier airplaneModifier,
       @NonNull WifiPreferences wifiPreferences, @NonNull DataPreferences dataPreferences,
       @NonNull BluetoothPreferences bluetoothPreferences, @NonNull SyncPreferences syncPreferences,
-      @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences) {
+      @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences,
+      @NonNull RootPreferences rootPreferences,
+      @NonNull @Named("obs_root_permission") PermissionObserver rootPermissionObserver,
+      @NonNull @Named("obs_doze_permission") PermissionObserver dozePermissionObserver) {
     this.jobQueuer = jobQueuer;
     this.chargingObserver = chargingObserver;
     this.wifiModifier = wifiModifier;
@@ -74,12 +83,16 @@ public class JobHandler {
     this.syncPreferences = syncPreferences;
     this.airplanePreferences = airplanePreferences;
     this.dozePreferences = dozePreferences;
+    this.rootPreferences = rootPreferences;
+    this.rootPermissionObserver = rootPermissionObserver;
+    this.dozePermissionObserver = dozePermissionObserver;
   }
 
   @CheckResult @NonNull JobRunner newRunner(@NonNull FuncNone<Boolean> stopper) {
     return new JobRunner(jobQueuer, chargingObserver, wifiModifier, dataModifier, bluetoothModifier,
         syncModifier, dozeModifier, airplaneModifier, wifiPreferences, dataPreferences,
-        bluetoothPreferences, syncPreferences, airplanePreferences, dozePreferences) {
+        bluetoothPreferences, syncPreferences, airplanePreferences, dozePreferences,
+        rootPreferences, rootPermissionObserver, dozePermissionObserver) {
       @Override boolean isStopped() {
         return stopper.call();
       }

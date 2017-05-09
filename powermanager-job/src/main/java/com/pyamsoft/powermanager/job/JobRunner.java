@@ -23,8 +23,10 @@ import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
+import com.pyamsoft.powermanager.base.preference.RootPreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import com.pyamsoft.powermanager.model.StateModifier;
 import com.pyamsoft.powermanager.model.StateObserver;
 import timber.log.Timber;
@@ -47,6 +49,9 @@ abstract class JobRunner {
   @NonNull private final SyncPreferences syncPreferences;
   @NonNull private final AirplanePreferences airplanePreferences;
   @NonNull private final DozePreferences dozePreferences;
+  @NonNull private final RootPreferences rootPreferences;
+  @NonNull private final PermissionObserver rootPermissionObserver;
+  @NonNull private final PermissionObserver dozePermissionObserver;
 
   JobRunner(@NonNull JobQueuer jobQueuer, @NonNull StateObserver chargingObserver,
       @NonNull StateModifier wifiModifier, @NonNull StateModifier dataModifier,
@@ -54,7 +59,9 @@ abstract class JobRunner {
       @NonNull StateModifier dozeModifier, @NonNull StateModifier airplaneModifier,
       @NonNull WifiPreferences wifiPreferences, @NonNull DataPreferences dataPreferences,
       @NonNull BluetoothPreferences bluetoothPreferences, @NonNull SyncPreferences syncPreferences,
-      @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences) {
+      @NonNull AirplanePreferences airplanePreferences, @NonNull DozePreferences dozePreferences,
+      @NonNull RootPreferences rootPreferences, @NonNull PermissionObserver rootPermissionObserver,
+      @NonNull PermissionObserver dozePermissionObserver) {
     this.jobQueuer = jobQueuer;
     this.chargingObserver = chargingObserver;
     this.wifiModifier = wifiModifier;
@@ -69,6 +76,9 @@ abstract class JobRunner {
     this.syncPreferences = syncPreferences;
     this.airplanePreferences = airplanePreferences;
     this.dozePreferences = dozePreferences;
+    this.rootPreferences = rootPreferences;
+    this.rootPermissionObserver = rootPermissionObserver;
+    this.dozePermissionObserver = dozePermissionObserver;
   }
 
   @CheckResult private boolean runJob(@NonNull String tag, boolean screenOn, boolean firstRun) {
@@ -80,7 +90,10 @@ abstract class JobRunner {
   }
 
   @CheckResult private boolean runEnableJob(@NonNull String tag, boolean firstRun) {
-    if (dozePreferences.isOriginalDoze() && (firstRun || dozePreferences.isPeriodicDoze())) {
+    if (dozePreferences.isOriginalDoze()
+        && (firstRun || dozePreferences.isPeriodicDoze())
+        && rootPreferences.isRootEnabled()
+        && dozePermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Doze", tag);
       dozeModifier.unset();
     }
@@ -89,8 +102,11 @@ abstract class JobRunner {
       return false;
     }
 
-    if (airplanePreferences.isOriginalAirplane() && (firstRun
-        || airplanePreferences.isPeriodicAirplane())) {
+    if (airplanePreferences.isOriginalAirplane()
+        && (firstRun
+        || airplanePreferences.isPeriodicAirplane())
+        && rootPreferences.isRootEnabled()
+        && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Airplane mode", tag);
       airplaneModifier.unset();
     }
@@ -108,7 +124,10 @@ abstract class JobRunner {
       return false;
     }
 
-    if (dataPreferences.isOriginalData() && (firstRun || dataPreferences.isPeriodicData())) {
+    if (dataPreferences.isOriginalData()
+        && (firstRun || dataPreferences.isPeriodicData())
+        && rootPreferences.isRootEnabled()
+        && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Enable Data", tag);
       dataModifier.set();
     }
@@ -152,7 +171,10 @@ abstract class JobRunner {
     if (isCharging && dataPreferences.isIgnoreChargingData()) {
       Timber.w("Do not disable Data while device is charging");
     } else {
-      if (dataPreferences.isOriginalData() && (firstRun || dataPreferences.isPeriodicData())) {
+      if (dataPreferences.isOriginalData()
+          && (firstRun || dataPreferences.isPeriodicData())
+          && rootPreferences.isRootEnabled()
+          && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Disable Data", tag);
         dataModifier.unset();
       }
@@ -192,8 +214,11 @@ abstract class JobRunner {
     if (isCharging && airplanePreferences.isIgnoreChargingAirplane()) {
       Timber.w("Do not enable Airplane mode while device is charging");
     } else {
-      if (airplanePreferences.isOriginalAirplane() && (firstRun
-          || airplanePreferences.isPeriodicAirplane())) {
+      if (airplanePreferences.isOriginalAirplane()
+          && (firstRun
+          || airplanePreferences.isPeriodicAirplane())
+          && rootPreferences.isRootEnabled()
+          && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Airplane mode", tag);
         airplaneModifier.set();
       }
@@ -206,7 +231,10 @@ abstract class JobRunner {
     if (isCharging && dozePreferences.isIgnoreChargingDoze()) {
       Timber.w("Do not enable Doze mode while device is charging");
     } else {
-      if (dozePreferences.isOriginalDoze() && (firstRun || dozePreferences.isPeriodicDoze())) {
+      if (dozePreferences.isOriginalDoze()
+          && (firstRun || dozePreferences.isPeriodicDoze())
+          && rootPreferences.isRootEnabled()
+          && dozePermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Doze mode", tag);
         dozeModifier.set();
       }
