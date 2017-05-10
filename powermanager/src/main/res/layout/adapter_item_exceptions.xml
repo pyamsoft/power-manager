@@ -52,6 +52,16 @@
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:padding="8dp"
+          android:text="@string/if_device_is"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          android:textStyle="bold"
+          />
+
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -68,7 +78,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:text="Charging"
+            android:text="@string/charging"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 
@@ -154,7 +164,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:text="Connected to Android Wear"
+            android:text="@string/connected_to_android_wear"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             />
 

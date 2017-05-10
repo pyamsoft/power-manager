@@ -30,5 +30,8 @@
   <string name="manage_desc">Power Manager will automatically turn device functions off when the screen turns off, and turn them back on when the screen turns back on</string>
   <string name="exceptions_title">Exceptions</string>
   <string name="exceptions_desc">Power Manager will ignore certain device functions if these conditions are met</string>
+  <string name="if_device_is">If Device Is</string>
+  <string name="charging">Charging</string>
+  <string name="connected_to_android_wear">Connected to Android Wear</string>
 </resources>
 
