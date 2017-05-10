@@ -26,18 +26,18 @@ public interface StateObserver {
 
   @CheckResult boolean unknown();
 
-  void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback);
-
-  void unregister(@NonNull String tag);
-
-  interface SetCallback {
-
-    void call();
-  }
-
-  interface UnsetCallback {
-
-    void call();
-  }
+  //void register(@NonNull String tag, @Nullable SetCallback setCallback,
+  //    @Nullable UnsetCallback unsetCallback);
+  //
+  //void unregister(@NonNull String tag);
+  //
+  //interface SetCallback {
+  //
+  //  void call();
+  //}
+  //
+  //interface UnsetCallback {
+  //
+  //  void call();
+  //}
 }

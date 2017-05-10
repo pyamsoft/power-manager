@@ -29,21 +29,18 @@ import javax.inject.Singleton;
 @Module public class StateObserverModule {
 
   @Singleton @Named("obs_wifi") @Provides ConnectedStateObserver provideWifiObserver(
-      @NonNull Context context,
       @NonNull @Named("wrapper_wifi") ConnectedDeviceFunctionWrapper wrapper) {
-    return new WifiStateObserver(context, wrapper);
+    return new WifiStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_data") @Provides StateObserver provideDataObserver(
-      @NonNull Context context, @Named("wrapper_data") DeviceFunctionWrapper wrapper,
-      @Named("data_uri") String dataUri) {
-    return new DataStateObserver(context, wrapper, dataUri);
+      @Named("wrapper_data") DeviceFunctionWrapper wrapper) {
+    return new DataStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_bluetooth") @Provides ConnectedStateObserver provideBluetoothObserver(
-      @NonNull Context context,
       @NonNull @Named("wrapper_bluetooth") ConnectedDeviceFunctionWrapper wrapper) {
-    return new BluetoothStateObserver(context, wrapper);
+    return new BluetoothStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_sync") @Provides StateObserver provideSyncObserver(
@@ -52,8 +49,8 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_doze") @Provides StateObserver provideDozeObserver(
-      @NonNull Context context, @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
-    return new DozeStateObserver(context, wrapper);
+      @Named("wrapper_doze") DeviceFunctionWrapper wrapper) {
+    return new DozeStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_wear") @Provides StateObserver provideWearObserver(
@@ -62,8 +59,8 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Named("obs_airplane") @Provides StateObserver provideAirplaneObserver(
-      @NonNull Context context, @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
-    return new AirplaneStateObserver(context, wrapper);
+      @Named("wrapper_airplane") DeviceFunctionWrapper wrapper) {
+    return new AirplaneStateObserver(wrapper);
   }
 
   @Singleton @Named("obs_charging") @Provides StateObserver provideChargingObserver(

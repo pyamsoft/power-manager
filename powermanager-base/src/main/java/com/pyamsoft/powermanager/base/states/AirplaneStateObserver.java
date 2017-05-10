@@ -16,19 +16,17 @@
 
 package com.pyamsoft.powermanager.base.states;
 
-import android.content.Context;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class AirplaneStateObserver extends ContentObserverStateObserver {
+class AirplaneStateObserver implements StateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject AirplaneStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context, Settings.Global.AIRPLANE_MODE_ON);
+  @Inject AirplaneStateObserver(@NonNull DeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Airplane Mode");
   }

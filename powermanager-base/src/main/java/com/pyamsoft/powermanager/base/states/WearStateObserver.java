@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.states;
 import android.content.Context;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,17 +26,17 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
+import com.pyamsoft.powermanager.model.StateObserver;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
 
-class WearStateObserver extends BroadcastStateObserver {
+class WearStateObserver implements StateObserver {
 
   @NonNull private final GoogleApiClient googleApiClient;
   @NonNull private final WearablePreferences preferences;
 
   WearStateObserver(@NonNull Context context, @NonNull WearablePreferences preferences) {
-    super(context);
     this.preferences = preferences;
     googleApiClient =
         new GoogleApiClient.Builder(context.getApplicationContext()).addApiIfAvailable(Wearable.API)
@@ -98,17 +97,6 @@ class WearStateObserver extends BroadcastStateObserver {
       Timber.d("Disconnect Google Api Client");
       googleApiClient.disconnect();
     }
-  }
-
-  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback) {
-    Timber.w("Cannot monitor for state changes on Wearables");
-    disconnectGoogleApiClient();
-  }
-
-  @Override public void unregister(@NonNull String tag) {
-    Timber.w("Cannot monitor for state changes on Wearables");
-    disconnectGoogleApiClient();
   }
 
   @Override public boolean enabled() {

@@ -16,22 +16,19 @@
 
 package com.pyamsoft.powermanager.base.states;
 
-import android.content.Context;
 import android.os.Build;
-import android.os.PowerManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DozeStateObserver extends BroadcastStateObserver {
+class DozeStateObserver implements StateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject DozeStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper) {
-    super(context, isDozeAvailable() ? PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED : "");
+  @Inject DozeStateObserver(@NonNull DeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
   }
 
@@ -39,27 +36,14 @@ class DozeStateObserver extends BroadcastStateObserver {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
   }
 
-  @Override public void register(@NonNull String tag, @Nullable SetCallback setCallback,
-      @Nullable UnsetCallback unsetCallback) {
-    if (isDozeAvailable()) {
-      super.register(tag, setCallback, unsetCallback);
-    }
-  }
-
-  @Override public void unregister(@NonNull String tag) {
-    if (isDozeAvailable()) {
-      super.unregister(tag);
-    }
-  }
-
   @Override public boolean enabled() {
-    final boolean enabled = wrapper.getState() == States.ENABLED;
+    final boolean enabled = isDozeAvailable() && (wrapper.getState() == States.ENABLED);
     Timber.d("Enabled: %s", enabled);
     return enabled;
   }
 
   @Override public boolean unknown() {
-    final boolean unknown = wrapper.getState() == States.UNKNOWN;
+    final boolean unknown = !isDozeAvailable() || (wrapper.getState() == States.UNKNOWN);
     Timber.d("Unknown: %s", unknown);
     return unknown;
   }

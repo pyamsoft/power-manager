@@ -16,19 +16,17 @@
 
 package com.pyamsoft.powermanager.base.states;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.StateObserver;
 import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class DataStateObserver extends ContentObserverStateObserver {
+class DataStateObserver implements StateObserver {
 
   @NonNull private final DeviceFunctionWrapper wrapper;
 
-  @Inject DataStateObserver(@NonNull Context context, @NonNull DeviceFunctionWrapper wrapper,
-      @NonNull String dataUri) {
-    super(context, dataUri);
+  @Inject DataStateObserver(@NonNull DeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Data");
   }

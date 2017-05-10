@@ -18,21 +18,27 @@ package com.pyamsoft.powermanager.base.states;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.StateObserver;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class ChargingStateObserver extends BroadcastStateObserver {
+class ChargingStateObserver implements StateObserver {
+
+  @NonNull private final Context appContext;
+  @NonNull private final IntentFilter filter;
 
   @Inject ChargingStateObserver(@NonNull Context context) {
-    super(context, Intent.ACTION_BATTERY_CHANGED);
+    appContext = context.getApplicationContext();
+    filter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
     Timber.d("new ChargingStateObserver instance");
   }
 
   @CheckResult private int getStatus() {
-    final Intent batteryStatus = getAppContext().registerReceiver(null, getFilter());
+    final Intent batteryStatus = appContext.registerReceiver(null, filter);
     int status;
     if (batteryStatus == null) {
       Timber.e("NULL BatteryStatus Intent, return Unknown");

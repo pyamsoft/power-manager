@@ -16,8 +16,6 @@
 
 package com.pyamsoft.powermanager.base.states;
 
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.model.ConnectedStateObserver;
 import com.pyamsoft.powermanager.model.Connections;
@@ -25,13 +23,11 @@ import com.pyamsoft.powermanager.model.States;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-class BluetoothStateObserver extends BroadcastStateObserver implements ConnectedStateObserver {
+class BluetoothStateObserver implements ConnectedStateObserver {
 
   @NonNull private final ConnectedDeviceFunctionWrapper wrapper;
 
-  @Inject BluetoothStateObserver(@NonNull Context context,
-      @NonNull ConnectedDeviceFunctionWrapper wrapper) {
-    super(context, BluetoothAdapter.ACTION_STATE_CHANGED);
+  @Inject BluetoothStateObserver(@NonNull ConnectedDeviceFunctionWrapper wrapper) {
     this.wrapper = wrapper;
     Timber.d("New StateObserver for Bluetooth");
   }
