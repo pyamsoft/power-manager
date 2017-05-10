@@ -38,7 +38,7 @@
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
           android:padding="8dp"
-          android:text="Manage"
+          android:text="@string/manage_title"
           android:textAppearance="@style/TextAppearance.AppCompat.Large"
           />
 
@@ -47,7 +47,7 @@
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
           android:padding="8dp"
-          android:text="Power Manager will automatically turn these features off when the screen turns off, and turn them back on when the screen turns back on"
+          android:text="@string/manage_desc"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
@@ -117,7 +117,6 @@
             />
 
       </LinearLayout>
-
 
     </LinearLayout>
 

@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.manage;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -151,12 +150,10 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final AdapterItemManageBinding binding;
-    @NonNull final Context context;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = AdapterItemManageBinding.bind(itemView);
-      context = itemView.getContext();
     }
   }
 }

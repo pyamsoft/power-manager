@@ -28,6 +28,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.pyamsoft.powermanager.databinding.FragmentManageBinding;
 import com.pyamsoft.powermanager.uicore.WatchedFragment;
+import timber.log.Timber;
 
 public class ManageFragment extends WatchedFragment {
 
@@ -55,12 +56,26 @@ public class ManageFragment extends WatchedFragment {
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
+    setupRecyclerView();
+  }
+
+  private void setupRecyclerView() {
     GenericItemAdapter<String, BaseItem<?, ?>> adapter = new GenericItemAdapter<>(s -> {
-      if (ManageItem.TAG.equals(s)) {
-        return new ManageItem();
-      } else {
-        return null;
+      final BaseItem<?, ?> item;
+      switch (s) {
+        case ManageItem.TAG:
+          Timber.d("Inflate ManageItem for TAG: %s", s);
+          item = new ManageItem();
+          break;
+        case ExceptionItem.TAG:
+          Timber.d("Inflate ExceptionItem for TAG: %s", s);
+          item = new ExceptionItem();
+          break;
+        default:
+          Timber.e("Cannot inflate item for TAG: %s", s);
+          item = null;
       }
+      return item;
     });
 
     LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -72,5 +87,6 @@ public class ManageFragment extends WatchedFragment {
     binding.recycler.setAdapter(adapter.wrap(new FastAdapter().withSelectable(true)));
 
     adapter.add(new ManageItem());
+    adapter.add(new ExceptionItem());
   }
 }

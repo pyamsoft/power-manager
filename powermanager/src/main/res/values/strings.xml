@@ -24,26 +24,11 @@
   <string name="create_trigger_percent_explain">Enter the percent that the Power Trigger should activate on. Percents are a non zero, positive number, and may not always run exactly depending on your current settings.</string>
   <string name="no_power_triggers_msg">No Power Triggers! Make one down below!</string>
 
-  <string name="onboard_title_module">Power Manager Modules</string>
-  <string name="onboard_desc_module">Each module focuses on a different component of power management.</string>
-  <string name="onboard_title_module_manage">Module Managed State</string>
-  <string name="onboard_desc_module_manage">The mark on the side of each module conveys whether or not the module is currently controlled by Power Manager</string>
-  <string name="onboard_title_manage_manage">Manage Switch</string>
-  <string name="onboard_desc_manage_manage">This switch controls whether or not the module is controlled by Power Manager</string>
-  <string name="onboard_title_manage_preset">Preset Delay Times</string>
-  <string name="onboard_desc_manage_preset">When managed, the time selected her controls the delay before Power Manager begins controlling this component</string>
-  <string name="onboard_title_manage_custom">Custom Delay Time</string>
-  <string name="onboard_desc_manage_custom">When managed, for more fine grained control, a custom time can be specified</string>
-  <string name="onboard_title_overview_fab">Toggle Component On/Off</string>
-  <string name="onboard_desc_overview_fab">When selected, will toggle the component on or off depending on its current state</string>
-  <string name="onboard_title_period_period">Periodic Automatic Toggle</string>
-  <string name="onboard_desc_period_period">Controls whether Power Manager will periodically toggle this component while the screen is off</string>
-  <string name="onboard_title_period_enable">Time Before Enable</string>
-  <string name="onboard_desc_period_enable">Duration for how long the component should stay disabled before being toggled on</string>
-  <string name="onboard_title_period_disable">Time Before Disable</string>
-  <string name="onboard_desc_period_disable">Duration for how long the component should stay enabled before being toggled off</string>
-  <string name="manage">Manage</string>
   <string name="triggers">Triggers</string>
   <string name="settings">Settings</string>
+  <string name="manage_title">Manage</string>
+  <string name="manage_desc">Power Manager will automatically turn device functions off when the screen turns off, and turn them back on when the screen turns back on</string>
+  <string name="exceptions_title">Exceptions</string>
+  <string name="exceptions_desc">Power Manager will ignore certain device functions if these conditions are met</string>
 </resources>
 
