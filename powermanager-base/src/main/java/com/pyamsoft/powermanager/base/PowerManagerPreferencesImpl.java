@@ -343,6 +343,10 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(ignoreChargingBluetooth, ignoreChargingBluetoothDefault);
   }
 
+  @Override public void setIgnoreChargingBluetooth(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingBluetooth, state).apply();
+  }
+
   @Override public boolean isIgnoreChargingSync() {
     return preferences.getBoolean(ignoreChargingSync, ignoreChargingSyncDefault);
   }
@@ -353,6 +357,10 @@ class PowerManagerPreferencesImpl
 
   @Override public boolean isBluetoothManaged() {
     return preferences.getBoolean(manageBluetooth, manageBluetoothDefault);
+  }
+
+  @Override public void setBluetoothManaged(boolean state) {
+    preferences.edit().putBoolean(manageBluetooth, state).apply();
   }
 
   @Override public boolean isDataManaged() {
@@ -389,6 +397,10 @@ class PowerManagerPreferencesImpl
 
   @Override public boolean isPeriodicBluetooth() {
     return preferences.getBoolean(periodicBluetooth, periodicBluetoothDefault);
+  }
+
+  @Override public void setPeriodicBluetooth(boolean state) {
+    preferences.edit().putBoolean(periodicBluetooth, state).apply();
   }
 
   @Override public boolean isPeriodicSync() {

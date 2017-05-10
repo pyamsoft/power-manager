@@ -26,7 +26,13 @@ public interface BluetoothPreferences {
 
   @CheckResult boolean isIgnoreChargingBluetooth();
 
+  void setIgnoreChargingBluetooth(boolean state);
+
   @CheckResult boolean isBluetoothManaged();
 
+  void setBluetoothManaged(boolean state);
+
   @CheckResult boolean isPeriodicBluetooth();
+
+  void setPeriodicBluetooth(boolean state);
 }
