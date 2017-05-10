@@ -46,6 +46,9 @@ class PowerManagerPreferencesImpl
     OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences,
     ManagePreferences {
 
+  private static final long DELAY_MINIMUM = 5;
+  private static final long PERIOD_MINIMUM = 60;
+
   @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
   @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
   @NonNull private static final String PERIOD_ONBOARD = "period_onboard";
@@ -316,8 +319,16 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(manageAirplane, manageAirplaneDefault);
   }
 
+  @Override public void setAirplaneManaged(boolean state) {
+    preferences.edit().putBoolean(manageAirplane, state).apply();
+  }
+
   @Override public boolean isIgnoreChargingAirplane() {
     return preferences.getBoolean(ignoreChargingAirplane, ignoreChargingAirplaneDefault);
+  }
+
+  @Override public void setIgnoreChargingAirplane(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingAirplane, state).apply();
   }
 
   @Override public boolean isIgnoreChargingWifi() {
@@ -388,6 +399,10 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(periodicAirplane, periodicAirplaneDefault);
   }
 
+  @Override public void setPeriodicAirplane(boolean state) {
+    preferences.edit().putBoolean(periodicAirplane, state).apply();
+  }
+
   @Override public long getManageDelay() {
     String rawPref = preferences.getString(globalManageDelayKey, globalManageDelayDefault);
     long delay;
@@ -396,6 +411,10 @@ class PowerManagerPreferencesImpl
     } catch (Exception e) {
       Timber.e(e, "Error assigning global delay to long");
       delay = defaultGlobalDelayValue;
+    }
+    if (delay < DELAY_MINIMUM) {
+      delay = DELAY_MINIMUM;
+      setManageDelay(delay);
     }
     return delay;
   }
@@ -413,6 +432,10 @@ class PowerManagerPreferencesImpl
       Timber.e(e, "Error assigning global disable to long");
       delay = defaultGlobalDisableValue;
     }
+    if (delay < PERIOD_MINIMUM) {
+      delay = PERIOD_MINIMUM;
+      setPeriodicDisableTime(delay);
+    }
     return delay;
   }
 
@@ -428,6 +451,11 @@ class PowerManagerPreferencesImpl
     } catch (Exception e) {
       Timber.e(e, "Error assigning global enable to long");
       delay = defaultGlobalEnableValue;
+    }
+
+    if (delay < PERIOD_MINIMUM) {
+      delay = PERIOD_MINIMUM;
+      setPeriodicEnableTime(delay);
     }
     return delay;
   }

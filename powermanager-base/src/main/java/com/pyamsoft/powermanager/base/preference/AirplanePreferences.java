@@ -26,7 +26,13 @@ public interface AirplanePreferences {
 
   @CheckResult boolean isAirplaneManaged();
 
+  void setAirplaneManaged(boolean state);
+
   @CheckResult boolean isIgnoreChargingAirplane();
 
+  void setIgnoreChargingAirplane(boolean state);
+
   @CheckResult boolean isPeriodicAirplane();
+
+  void setPeriodicAirplane(boolean state);
 }
