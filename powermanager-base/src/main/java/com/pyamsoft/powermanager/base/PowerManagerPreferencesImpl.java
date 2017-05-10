@@ -311,8 +311,16 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(ignoreChargingDoze, ignoreChargingDozeDefault);
   }
 
+  @Override public void setIgnoreChargingDoze(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingDoze, state).apply();
+  }
+
   @Override public boolean isDozeManaged() {
     return preferences.getBoolean(manageDoze, manageDozeDefault);
+  }
+
+  @Override public void setDozeManaged(boolean state) {
+    preferences.edit().putBoolean(manageDoze, state).apply();
   }
 
   @Override public boolean isAirplaneManaged() {
@@ -335,8 +343,16 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(ignoreChargingWifi, ignoreChargingWifiDefault);
   }
 
+  @Override public void setIgnoreChargingWifi(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingWifi, state).apply();
+  }
+
   @Override public boolean isIgnoreChargingData() {
     return preferences.getBoolean(ignoreChargingData, ignoreChargingDataDefault);
+  }
+
+  @Override public void setIgnoreChargingData(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingData, state).apply();
   }
 
   @Override public boolean isIgnoreChargingBluetooth() {
@@ -349,6 +365,10 @@ class PowerManagerPreferencesImpl
 
   @Override public boolean isIgnoreChargingSync() {
     return preferences.getBoolean(ignoreChargingSync, ignoreChargingSyncDefault);
+  }
+
+  @Override public void setIgnoreChargingSync(boolean state) {
+    preferences.edit().putBoolean(ignoreChargingSync, state).apply();
   }
 
   @Override public int getNotificationPriority() {
@@ -367,12 +387,24 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(manageData, manageDataDefault);
   }
 
+  @Override public void setDataManaged(boolean state) {
+    preferences.edit().putBoolean(manageData, state).apply();
+  }
+
   @Override public boolean isSyncManaged() {
     return preferences.getBoolean(manageSync, manageSyncDefault);
   }
 
+  @Override public void setSyncManaged(boolean state) {
+    preferences.edit().putBoolean(manageSync, state).apply();
+  }
+
   @Override public boolean isWifiManaged() {
     return preferences.getBoolean(manageWifi, manageWifiDefault);
+  }
+
+  @Override public void setWifiManaged(boolean state) {
+    preferences.edit().putBoolean(manageWifi, state).apply();
   }
 
   @Override public boolean isWearableManaged() {
@@ -387,12 +419,24 @@ class PowerManagerPreferencesImpl
     return preferences.getBoolean(periodicDoze, periodicDozeDefault);
   }
 
+  @Override public void setPeriodicDoze(boolean state) {
+    preferences.edit().putBoolean(periodicDoze, state).apply();
+  }
+
   @Override public boolean isPeriodicWifi() {
     return preferences.getBoolean(periodicWifi, periodicWifiDefault);
   }
 
+  @Override public void setPeriodicWifi(boolean state) {
+    preferences.edit().putBoolean(periodicWifi, state).apply();
+  }
+
   @Override public boolean isPeriodicData() {
     return preferences.getBoolean(periodicData, periodicDataDefault);
+  }
+
+  @Override public void setPeriodicData(boolean state) {
+    preferences.edit().putBoolean(periodicData, state).apply();
   }
 
   @Override public boolean isPeriodicBluetooth() {
@@ -405,6 +449,10 @@ class PowerManagerPreferencesImpl
 
   @Override public boolean isPeriodicSync() {
     return preferences.getBoolean(periodicSync, periodicSyncDefault);
+  }
+
+  @Override public void setPeriodicSync(boolean state) {
+    preferences.edit().putBoolean(periodicSync, state).apply();
   }
 
   @Override public boolean isPeriodicAirplane() {

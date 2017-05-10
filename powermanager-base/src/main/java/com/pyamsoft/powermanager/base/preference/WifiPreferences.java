@@ -26,7 +26,13 @@ public interface WifiPreferences {
 
   @CheckResult boolean isIgnoreChargingWifi();
 
+  void setIgnoreChargingWifi(boolean state);
+
   @CheckResult boolean isWifiManaged();
 
+  void setWifiManaged(boolean state);
+
   @CheckResult boolean isPeriodicWifi();
+
+  void setPeriodicWifi(boolean state);
 }

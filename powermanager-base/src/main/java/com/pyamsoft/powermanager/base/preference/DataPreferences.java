@@ -26,7 +26,13 @@ public interface DataPreferences {
 
   @CheckResult boolean isIgnoreChargingData();
 
+  void setIgnoreChargingData(boolean state);
+
   @CheckResult boolean isDataManaged();
 
+  void setDataManaged(boolean state);
+
   @CheckResult boolean isPeriodicData();
+
+  void setPeriodicData(boolean state);
 }

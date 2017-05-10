@@ -26,7 +26,13 @@ public interface SyncPreferences {
 
   @CheckResult boolean isIgnoreChargingSync();
 
+  void setIgnoreChargingSync(boolean state);
+
   @CheckResult boolean isSyncManaged();
 
+  void setSyncManaged(boolean state);
+
   @CheckResult boolean isPeriodicSync();
+
+  void setPeriodicSync(boolean state);
 }

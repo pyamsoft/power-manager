@@ -26,7 +26,13 @@ public interface DozePreferences {
 
   @CheckResult boolean isIgnoreChargingDoze();
 
+  void setIgnoreChargingDoze(boolean state);
+
   @CheckResult boolean isDozeManaged();
 
+  void setDozeManaged(boolean state);
+
   @CheckResult boolean isPeriodicDoze();
+
+  void setPeriodicDoze(boolean state);
 }
