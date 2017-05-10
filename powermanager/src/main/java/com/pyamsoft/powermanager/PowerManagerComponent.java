@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager;
 
+import android.support.annotation.CheckResult;
 import com.pyamsoft.powermanager.base.PowerManagerModule;
 import com.pyamsoft.powermanager.base.logger.LoggerModule;
 import com.pyamsoft.powermanager.base.permission.PermissionObserverModule;
@@ -26,6 +27,8 @@ import com.pyamsoft.powermanager.base.states.WrapperModule;
 import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
+import com.pyamsoft.powermanager.manage.ManageComponent;
+import com.pyamsoft.powermanager.manage.ManageSingletonModule;
 import com.pyamsoft.powermanager.receiver.BootCompletedReceiver;
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
 import com.pyamsoft.powermanager.service.ActionToggleService;
@@ -39,8 +42,10 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
-    StateModifierModule.class, JobModule.class,
+    StateModifierModule.class, JobModule.class, ManageSingletonModule.class
 }) public interface PowerManagerComponent {
+
+  @CheckResult ManageComponent plusManageComponent();
 
   void inject(PowerTriggerListFragment fragment);
 

@@ -117,10 +117,12 @@ dependencies {
     transitive = true
   }
 
+  debugCompile project(path: ":powermanager-manage", configuration: "debug")
+  releaseCompile project(path: ":powermanager-manage", configuration: "release")
   debugCompile project(path: ":powermanager-main", configuration: "debug")
-  releaseCompile project(path: ":powermanager-uicore", configuration: "release")
-  debugCompile project(path: ":powermanager-uicore", configuration: "debug")
   releaseCompile project(path: ":powermanager-main", configuration: "release")
+  debugCompile project(path: ":powermanager-uicore", configuration: "debug")
+  releaseCompile project(path: ":powermanager-uicore", configuration: "release")
   debugCompile project(path: ":powermanager-service", configuration: "debug")
   releaseCompile project(path: ":powermanager-service", configuration: "release")
   debugCompile project(path: ":powermanager-settings", configuration: "debug")
