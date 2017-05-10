@@ -17,10 +17,10 @@
 
 <resources>
 
-  <string name="unsuspend_when_open_key">unsuspend_when_open_key</string>
+  <string name="unsuspend_when_open_key">pm7_unsuspend_when_open_key</string>
   <bool name="unsuspend_when_open_default">true</bool>
 
-  <string name="use_root_key">use_root</string>
+  <string name="use_root_key">pm7_use_root</string>
   <bool name="use_root_default">false</bool>
 
 </resources>

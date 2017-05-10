@@ -72,7 +72,5 @@ public class ManageFragment extends WatchedFragment {
     binding.recycler.setAdapter(adapter.wrap(new FastAdapter().withSelectable(true)));
 
     adapter.add(new ManageItem());
-    adapter.add(new ManageItem());
-    adapter.add(new ManageItem());
   }
 }

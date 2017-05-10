@@ -49,16 +49,16 @@ class PowerManagerPreferencesImpl
   private static final long DELAY_MINIMUM = 5;
   private static final long PERIOD_MINIMUM = 60;
 
-  @NonNull private static final String OVERVIEW_ONBOARD = "overview_onboard";
-  @NonNull private static final String MANAGE_ONBOARD = "manage_onboard";
-  @NonNull private static final String PERIOD_ONBOARD = "period_onboard";
-  @NonNull private static final String SERVICE_ENABLED = "service_enabled";
-  @NonNull private static final String ORIGINAL_WIFI = "original_wifi";
-  @NonNull private static final String ORIGINAL_DATA = "original_data";
-  @NonNull private static final String ORIGINAL_BLUETOOTH = "original_bluetooth";
-  @NonNull private static final String ORIGINAL_SYNC = "original_sync";
-  @NonNull private static final String ORIGINAL_AIRPLANE = "original_airplane";
-  @NonNull private static final String ORIGINAL_DOZE = "original_doze";
+  @NonNull private static final String OVERVIEW_ONBOARD = "pm7_overview_onboard";
+  @NonNull private static final String MANAGE_ONBOARD = "pm7_manage_onboard";
+  @NonNull private static final String PERIOD_ONBOARD = "pm7_period_onboard";
+  @NonNull private static final String SERVICE_ENABLED = "pm7_service_enabled";
+  @NonNull private static final String ORIGINAL_WIFI = "pm7_original_wifi";
+  @NonNull private static final String ORIGINAL_DATA = "pm7_original_data";
+  @NonNull private static final String ORIGINAL_BLUETOOTH = "pm7_original_bluetooth";
+  @NonNull private static final String ORIGINAL_SYNC = "pm7_original_sync";
+  @NonNull private static final String ORIGINAL_AIRPLANE = "pm7_original_airplane";
+  @NonNull private static final String ORIGINAL_DOZE = "pm7_original_doze";
   @NonNull private final SharedPreferences preferences;
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;

@@ -18,9 +18,9 @@
 <resources>
 
   <bool name="manage_doze_default">false</bool>
-  <string name="manage_doze_key">manage_doze_root</string>
+  <string name="manage_doze_key">pm7_manage_doze</string>
 
   <bool name="ignore_charging_doze_default">false</bool>
-  <string name="ignore_charging_doze_key">ignore_charging_doze</string>
+  <string name="ignore_charging_doze_key">pm7_ignore_charging_doze</string>
 
 </resources>

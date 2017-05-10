@@ -18,6 +18,6 @@
 <resources>
 
   <bool name="periodic_airplane_default">true</bool>
-  <string name="periodic_airplane_key">airplane_periodic</string>
+  <string name="periodic_airplane_key">pm7_airplane_periodic</string>
 
 </resources>

@@ -18,9 +18,9 @@
 <resources>
 
   <bool name="manage_wifi_default">true</bool>
-  <string name="manage_wifi_key">manage_wifi</string>
+  <string name="manage_wifi_key">pm7_manage_wifi</string>
 
   <bool name="ignore_charging_wifi_default">false</bool>
-  <string name="ignore_charging_wifi_key">ignore_charging_wifi</string>
+  <string name="ignore_charging_wifi_key">pm7_ignore_charging_wifi</string>
 
 </resources>

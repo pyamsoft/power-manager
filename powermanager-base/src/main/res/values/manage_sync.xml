@@ -18,9 +18,9 @@
 <resources>
 
   <bool name="manage_sync_default">true</bool>
-  <string name="manage_sync_key">manage_sync</string>
+  <string name="manage_sync_key">pm7_manage_sync</string>
 
   <bool name="ignore_charging_sync_default">false</bool>
-  <string name="ignore_charging_sync_key">ignore_charging_sync</string>
+  <string name="ignore_charging_sync_key">pm7_ignore_charging_sync</string>
 
 </resources>

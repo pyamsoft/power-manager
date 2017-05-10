@@ -18,6 +18,6 @@
 <resources>
 
   <bool name="periodic_data_default">true</bool>
-  <string name="periodic_data_key">data_periodic</string>
+  <string name="periodic_data_key">pm7_data_periodic</string>
 
 </resources>

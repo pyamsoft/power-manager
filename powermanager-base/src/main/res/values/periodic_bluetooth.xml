@@ -18,6 +18,6 @@
 <resources>
 
   <bool name="periodic_bluetooth_default">true</bool>
-  <string name="periodic_bluetooth_key">bluetooth_periodic</string>
+  <string name="periodic_bluetooth_key">pm7_bluetooth_periodic</string>
 
 </resources>

@@ -17,12 +17,12 @@
 
 <resources>
 
-  <string name="key_manage_delay_time">global_manage_delay_time</string>
+  <string name="key_manage_delay_time">pm7_global_manage_delay_time</string>
   <string name="default_manage_delay_time">30</string>
 
-  <string name="key_manage_disable_time">global_manage_disable_time</string>
+  <string name="key_manage_disable_time">pm7_global_manage_disable_time</string>
   <string name="default_manage_disable_time">300</string>
 
-  <string name="key_manage_enable_time">global_manage_enable_time</string>
+  <string name="key_manage_enable_time">pm7_global_manage_enable_time</string>
   <string name="default_manage_enable_time">60</string>
 </resources>

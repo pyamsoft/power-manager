@@ -18,9 +18,9 @@
 <resources>
 
   <bool name="manage_wearable_default">false</bool>
-  <string name="manage_wearable_key">manage_wearable</string>
+  <string name="manage_wearable_key">pm7_manage_wearable</string>
 
   <string name="wearable_time_default">3</string>
-  <string name="wearable_time_key">wearable_time</string>
+  <string name="wearable_time_key">pm7_wearable_time</string>
 
 </resources>
