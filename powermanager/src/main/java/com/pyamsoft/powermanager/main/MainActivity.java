@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.main;
 
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,6 +73,9 @@ public class MainActivity extends TamperActivity {
   private void setupAppBar() {
     setSupportActionBar(binding.mainToolbar);
     binding.mainToolbar.setTitle(getString(R.string.app_name));
+
+    // Hide expanded title
+    binding.mainCollapsebar.setExpandedTitleColor(Color.TRANSPARENT);
   }
 
   private void setupBottomBar() {
