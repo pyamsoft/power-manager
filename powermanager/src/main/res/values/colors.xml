@@ -16,6 +16,5 @@
   -->
 
 <resources>
-  <item name="adapter_manage_card_item" type="id"/>
-  <item name="adapter_trigger_item" type="id"/>
+  <color name="card_divider">#ffcacaca</color>
 </resources>

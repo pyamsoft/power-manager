@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.main;
+package com.pyamsoft.powermanager.manage;
 
-import android.os.Bundle;
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.uicore.WatchedFragment;
+import android.support.v7.widget.RecyclerView;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 
-public class MainFragment extends WatchedFragment {
+abstract class BaseItem<I extends BaseItem<?, ?>, VH extends RecyclerView.ViewHolder>
+    extends GenericAbstractItem<String, I, VH> {
 
-  @NonNull public static final String TAG = "MainFragment";
-
-  @CheckResult @NonNull public static MainFragment newInstance() {
-    Bundle args = new Bundle();
-    MainFragment fragment = new MainFragment();
-    fragment.setArguments(args);
-    return fragment;
+  BaseItem(String tag) {
+    super(tag);
   }
 }

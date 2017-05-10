@@ -74,6 +74,33 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
+    <LinearLayout
+        android:id="@+id/bottomtabs_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        >
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="4dp"
+          android:background="@drawable/bottom_nav_scrim"
+          />
+
+      <android.support.design.widget.BottomNavigationView
+          android:id="@+id/bottomtabs"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:background="?attr/colorPrimary"
+          app:itemIconTint="@drawable/bottom_nav_state"
+          app:itemTextColor="@drawable/bottom_nav_state"
+          app:menu="@menu/navigation_menu"
+          />
+
+    </LinearLayout>
+
+
   </android.support.design.widget.CoordinatorLayout>
 
 </layout>

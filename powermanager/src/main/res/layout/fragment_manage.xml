@@ -14,8 +14,14 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout>
 
-<resources>
-  <item name="adapter_manage_card_item" type="id"/>
-  <item name="adapter_trigger_item" type="id"/>
-</resources>
+  <android.support.v7.widget.RecyclerView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/recycler"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginBottom="?attr/actionBarSize"
+      />
+
+</layout>

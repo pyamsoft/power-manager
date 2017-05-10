@@ -24,6 +24,8 @@ import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -34,6 +36,7 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.ActivityMainBinding;
 import com.pyamsoft.powermanager.logger.LoggerDialog;
+import com.pyamsoft.powermanager.manage.ManageFragment;
 import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment;
 import com.pyamsoft.pydroid.ui.rating.RatingDialog;
@@ -59,10 +62,57 @@ public class MainActivity extends TamperActivity {
     Injector.get().provideComponent().inject(this);
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     setupAppBar();
+    setupBottomBar();
 
     if (hasNoActiveFragment()) {
-      loadOverviewFragment();
+      binding.bottomtabs.getMenu().performIdentifierAction(R.id.menu_manage, 0);
     }
+  }
+
+  private void setupAppBar() {
+    setSupportActionBar(binding.mainToolbar);
+    binding.mainToolbar.setTitle(getString(R.string.app_name));
+  }
+
+  private void setupBottomBar() {
+    binding.bottomtabs.setOnNavigationItemSelectedListener(
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+          @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            final boolean handled;
+            switch (item.getItemId()) {
+              case R.id.menu_manage:
+                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG);
+                break;
+              case R.id.menu_triggers:
+                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG);
+                break;
+              case R.id.menu_settings:
+                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG);
+                break;
+              default:
+                handled = false;
+            }
+
+            if (handled) {
+              item.setChecked(!item.isChecked());
+            }
+
+            return handled;
+          }
+
+          @CheckResult
+          private boolean replaceFragment(@NonNull Fragment fragment, @NonNull String tag) {
+            final FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager.findFragmentByTag(tag) == null) {
+              fragmentManager.beginTransaction()
+                  .replace(R.id.main_container, fragment, tag)
+                  .commit();
+              return true;
+            } else {
+              return false;
+            }
+          }
+        });
   }
 
   @Override protected void onDestroy() {
@@ -93,24 +143,10 @@ public class MainActivity extends TamperActivity {
     return handled || super.onOptionsItemSelected(item);
   }
 
-  private void setupAppBar() {
-    setSupportActionBar(binding.mainToolbar);
-    binding.mainToolbar.setTitle(getString(R.string.app_name));
-  }
-
   @CheckResult private boolean hasNoActiveFragment() {
     final FragmentManager fragmentManager = getSupportFragmentManager();
     return fragmentManager.findFragmentByTag(AboutLibrariesFragment.TAG) == null
-        && fragmentManager.findFragmentByTag(MainFragment.TAG) == null;
-  }
-
-  private void loadOverviewFragment() {
-    final FragmentManager fragmentManager = getSupportFragmentManager();
-    if (fragmentManager.findFragmentByTag(MainFragment.TAG) == null) {
-      fragmentManager.beginTransaction()
-          .replace(R.id.main_container, MainFragment.newInstance(), MainFragment.TAG)
-          .commit();
-    }
+        && fragmentManager.findFragmentByTag(ManageFragment.TAG) == null;
   }
 
   @Override protected void onPostResume() {

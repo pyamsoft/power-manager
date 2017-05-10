@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/powermanager-base" />
             <option value="$PROJECT_DIR$/powermanager-job" />
             <option value="$PROJECT_DIR$/powermanager-main" />
+            <option value="$PROJECT_DIR$/powermanager-manage" />
             <option value="$PROJECT_DIR$/powermanager-manager" />
             <option value="$PROJECT_DIR$/powermanager-model" />
             <option value="$PROJECT_DIR$/powermanager-service" />
