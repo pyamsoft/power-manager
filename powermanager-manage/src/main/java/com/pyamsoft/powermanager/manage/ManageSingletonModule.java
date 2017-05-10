@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.base.preference.DataPreferences;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
@@ -36,8 +37,9 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("manage_data_interactor") ManageInteractor provideData(
-      @NonNull DataPreferences preferences) {
-    return new DataManageInteractor(preferences);
+      @NonNull DataPreferences preferences,
+      @NonNull @Named("obs_root_permission") PermissionObserver permissionObserver) {
+    return new DataManageInteractor(preferences, permissionObserver);
   }
 
   @Singleton @Provides @Named("manage_bluetooth_interactor") ManageInteractor provideBluetooth(
@@ -51,12 +53,14 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides @Named("manage_airplane_interactor") ManageInteractor provideAirplane(
-      @NonNull AirplanePreferences preferences) {
-    return new AirplaneManageInteractor(preferences);
+      @NonNull AirplanePreferences preferences,
+      @NonNull @Named("obs_root_permission") PermissionObserver permissionObserver) {
+    return new AirplaneManageInteractor(preferences, permissionObserver);
   }
 
   @Singleton @Provides @Named("manage_doze_interactor") ManageInteractor provideDoze(
-      @NonNull DozePreferences preferences) {
-    return new DozeManageInteractor(preferences);
+      @NonNull DozePreferences preferences,
+      @NonNull @Named("obs_doze_permission") PermissionObserver permissionObserver) {
+    return new DozeManageInteractor(preferences, permissionObserver);
   }
 }

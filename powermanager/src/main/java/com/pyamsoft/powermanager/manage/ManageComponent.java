@@ -19,4 +19,6 @@ package com.pyamsoft.powermanager.manage;
 import dagger.Subcomponent;
 
 @Subcomponent(modules = ManageModule.class) public interface ManageComponent {
+
+  void inject(ManageItem manageItem);
 }

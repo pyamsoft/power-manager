@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
+import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -30,16 +31,12 @@ class BluetoothManageInteractor extends ManageInteractor {
     this.preferences = preferences;
   }
 
-  @NonNull @Override Completable setManaged() {
-    return Completable.fromAction(() -> preferences.setBluetoothManaged(true));
+  @NonNull @Override Completable setManaged(boolean state) {
+    return Completable.fromAction(() -> preferences.setBluetoothManaged(state));
   }
 
-  @NonNull @Override Completable setUnManaged() {
-    return Completable.fromAction(() -> preferences.setBluetoothManaged(false));
-  }
-
-  @NonNull @Override Single<Boolean> isManaged() {
+  @NonNull @Override Single<States> isManaged() {
     return Single.fromCallable(
-        () -> preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE);
+        () -> preferences.isBluetoothManaged() ? States.ENABLED : States.DISABLED);
   }
 }

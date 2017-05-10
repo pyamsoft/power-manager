@@ -18,6 +18,8 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -25,21 +27,25 @@ import javax.inject.Inject;
 class AirplaneManageInteractor extends ManageInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final AirplanePreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
 
-  @Inject AirplaneManageInteractor(@NonNull AirplanePreferences preferences) {
+  @Inject AirplaneManageInteractor(@NonNull AirplanePreferences preferences,
+      @NonNull PermissionObserver permissionObserver) {
     this.preferences = preferences;
+    this.permissionObserver = permissionObserver;
   }
 
-  @NonNull @Override Completable setManaged() {
-    return Completable.fromAction(() -> preferences.setAirplaneManaged(true));
+  @NonNull @Override Completable setManaged(boolean state) {
+    return Completable.fromAction(() -> preferences.setAirplaneManaged(state));
   }
 
-  @NonNull @Override Completable setUnManaged() {
-    return Completable.fromAction(() -> preferences.setAirplaneManaged(false));
-  }
-
-  @NonNull @Override Single<Boolean> isManaged() {
-    return Single.fromCallable(
-        () -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
+  @NonNull @Override Single<States> isManaged() {
+    return Single.fromCallable(() -> {
+      if (!permissionObserver.hasPermission()) {
+        return States.UNKNOWN;
+      } else {
+        return preferences.isAirplaneManaged() ? States.ENABLED : States.DISABLED;
+      }
+    });
   }
 }

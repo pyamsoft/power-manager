@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import timber.log.Timber;
@@ -34,27 +35,13 @@ class ManagePresenter extends SchedulerPresenter {
   /**
    * public
    */
-  void setManaged(@NonNull ActionCallback callback) {
-    disposeOnDestroy(interactor.setManaged()
+  void setManaged(boolean state, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setManaged(state)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onSuccess, throwable -> {
+        .subscribe(() -> Timber.d("Set managed state successfully: %s", state), throwable -> {
           Timber.e(throwable, "Error setting managed");
-          callback.onError(throwable);
-        }));
-  }
-
-  /**
-   * public
-   */
-  void setUnManaged(@NonNull ActionCallback callback) {
-    disposeOnDestroy(interactor.setUnManaged()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onSuccess, throwable -> {
-          Timber.e(throwable, "Error setting unmanaged");
           callback.onError(throwable);
         }));
   }
@@ -75,8 +62,6 @@ class ManagePresenter extends SchedulerPresenter {
 
   interface ActionCallback {
 
-    void onSuccess();
-
     void onError(@NonNull Throwable throwable);
 
     void onComplete();
@@ -84,7 +69,7 @@ class ManagePresenter extends SchedulerPresenter {
 
   interface RetrieveCallback {
 
-    void onRetrieved(boolean managed);
+    void onRetrieved(@NonNull States state);
 
     void onError(@NonNull Throwable throwable);
 

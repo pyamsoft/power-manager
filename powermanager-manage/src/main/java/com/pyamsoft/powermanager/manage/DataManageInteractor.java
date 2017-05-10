@@ -16,29 +16,50 @@
 
 package com.pyamsoft.powermanager.manage;
 
+import android.os.Build;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
+import com.pyamsoft.powermanager.model.PermissionObserver;
+import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import java.util.concurrent.Callable;
 import javax.inject.Inject;
 
 class DataManageInteractor extends ManageInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final DataPreferences preferences;
+  @SuppressWarnings("WeakerAccess") @NonNull final PermissionObserver permissionObserver;
 
-  @Inject DataManageInteractor(@NonNull DataPreferences preferences) {
+  @Inject DataManageInteractor(@NonNull DataPreferences preferences,
+      @NonNull PermissionObserver permissionObserver) {
     this.preferences = preferences;
+    this.permissionObserver = permissionObserver;
   }
 
-  @NonNull @Override Completable setManaged() {
-    return Completable.fromAction(() -> preferences.setDataManaged(true));
+  @NonNull @Override Completable setManaged(boolean state) {
+    return Completable.fromAction(() -> preferences.setDataManaged(state));
   }
 
-  @NonNull @Override Completable setUnManaged() {
-    return Completable.fromAction(() -> preferences.setDataManaged(false));
-  }
+  @NonNull @Override Single<States> isManaged() {
+    return Single.fromCallable(new Callable<States>() {
+      @Override public States call() throws Exception {
+        // Above KitKat, we must have Root
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+          if (!permissionObserver.hasPermission()) {
+            return States.UNKNOWN;
+          } else {
+            return getStateFromPreferences();
+          }
+        } else {
+          return getStateFromPreferences();
+        }
+      }
 
-  @NonNull @Override Single<Boolean> isManaged() {
-    return Single.fromCallable(() -> preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE);
+      @CheckResult @NonNull private States getStateFromPreferences() {
+        return preferences.isDataManaged() ? States.ENABLED : States.DISABLED;
+      }
+    });
   }
 }
