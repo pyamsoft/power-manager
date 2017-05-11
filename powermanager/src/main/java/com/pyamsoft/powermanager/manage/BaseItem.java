@@ -16,13 +16,34 @@
 
 package com.pyamsoft.powermanager.manage;
 
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
+import com.pyamsoft.powermanager.R;
+import com.pyamsoft.pydroid.loader.ImageLoader;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 
 abstract class BaseItem<I extends BaseItem<?, ?>, VH extends RecyclerView.ViewHolder>
     extends GenericAbstractItem<String, I, VH> {
 
   BaseItem(String tag) {
     super(tag);
+  }
+
+  @CheckResult @NonNull Loaded loadArrow(@NonNull ImageView imageView) {
+    return ImageLoader.fromResource(imageView.getContext(), R.drawable.ic_arrow_up_24dp)
+        .into(imageView);
+  }
+
+  void setArrowRotation(@NonNull ImageView imageView, boolean expanded) {
+    imageView.clearAnimation();
+    if (expanded) {
+      ViewCompat.setRotation(imageView, 0);
+    } else {
+      ViewCompat.setRotation(imageView, 180);
+    }
   }
 }

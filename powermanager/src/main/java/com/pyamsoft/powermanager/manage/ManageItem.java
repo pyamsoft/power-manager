@@ -25,7 +25,11 @@ import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemManageBinding;
+import com.pyamsoft.powermanager.manage.bus.ManageEvent;
 import com.pyamsoft.powermanager.model.States;
+import com.pyamsoft.pydroid.bus.EventBus;
+import com.pyamsoft.pydroid.loader.LoaderHelper;
+import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -39,10 +43,13 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
   @Inject @Named("manage_sync") ManagePresenter presenterSync;
   @Inject @Named("manage_airplane") ManagePresenter presenterAirplane;
   @Inject @Named("manage_doze") ManagePresenter presenterDoze;
+  boolean expanded;
+  @NonNull private Loaded arrowLoaded = LoaderHelper.empty();
 
   ManageItem() {
     super(TAG);
     Injector.get().provideComponent().plusManageComponent().inject(this);
+    expanded = false;
   }
 
   @Override public ViewHolder getViewHolder(View view) {
@@ -59,12 +66,21 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
+    arrowLoaded = loadArrow(holder.binding.manageArrow);
+    setArrowRotation(holder.binding.manageArrow, expanded);
+    holder.binding.manageArrow.setOnClickListener(v -> {
+      expanded = !expanded;
+      EventBus.get().publish(ManageEvent.create(holder.getAdapterPosition()));
+    });
+
     bindSwitch(holder.binding.manageWifi, "WiFi", presenterWifi);
     bindSwitch(holder.binding.manageData, "Cellular Data", presenterData);
     bindSwitch(holder.binding.manageBluetooth, "Bluetooth", presenterBluetooth);
     bindSwitch(holder.binding.manageSync, "Auto Sync", presenterSync);
     bindSwitch(holder.binding.manageAirplane, "Airplane Mode", presenterAirplane);
     bindSwitch(holder.binding.manageDoze, "Doze Mode", presenterDoze);
+
+    holder.binding.manageContainerExpandable.setVisibility(expanded ? View.VISIBLE : View.GONE);
   }
 
   private void bindSwitch(@NonNull SwitchCompat switchCompat, @NonNull String name,
@@ -130,6 +146,9 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
+    arrowLoaded = LoaderHelper.unload(arrowLoaded);
+    holder.binding.manageArrow.setImageDrawable(null);
+    holder.binding.manageArrow.setOnClickListener(null);
     unbindSwitch(holder.binding.manageWifi, presenterWifi);
     unbindSwitch(holder.binding.manageData, presenterData);
     unbindSwitch(holder.binding.manageBluetooth, presenterBluetooth);

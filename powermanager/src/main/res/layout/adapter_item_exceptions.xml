@@ -34,14 +34,29 @@
         android:orientation="vertical"
         >
 
-      <TextView
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:gravity="center_vertical"
-          android:padding="8dp"
-          android:text="@string/exceptions_title"
-          android:textAppearance="@style/TextAppearance.AppCompat.Large"
-          />
+          android:orientation="horizontal"
+          android:padding="16dp"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/exceptions_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
+
+        <com.pyamsoft.pydroid.ui.widget.SquareImageView
+            android:id="@+id/manage_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            />
+
+      </LinearLayout>
 
       <TextView
           android:layout_width="match_parent"
@@ -200,6 +215,15 @@
               android:layout_height="wrap_content"
               android:gravity="center_vertical"
               android:text="Do not manage Bluetooth"
+              android:textAppearance="@style/TextAppearance.AppCompat.Small"
+              />
+
+          <CheckBox
+              android:id="@+id/exception_wear_sync"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:text="Do not manage Auto Sync"
               android:textAppearance="@style/TextAppearance.AppCompat.Small"
               />
 
