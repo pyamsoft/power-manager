@@ -58,10 +58,6 @@ dependencies {
 
   retrolambdaConfig "net.orfjackal.retrolambda:retrolambda:${rootProject.ext.retrolambda}"
 
-  // Auto value
-  provided "com.google.auto.value:auto-value:$autoValue"
-  annotationProcessor "com.google.auto.value:auto-value:$autoValue"
-
   annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
 
   debugCompile project(path: ":powermanager-base", configuration: "debug")

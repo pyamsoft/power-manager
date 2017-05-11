@@ -28,14 +28,11 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.pyamsoft.powermanager.databinding.FragmentManageBinding;
 import com.pyamsoft.powermanager.uicore.WatchedFragment;
-import javax.inject.Inject;
 import timber.log.Timber;
 
 public class ManageFragment extends WatchedFragment {
 
   @NonNull public static final String TAG = "ManageFragment";
-  @Inject ManageCardPresenter presenter;
-  GenericItemAdapter<String, BaseItem<?, ?>> adapter;
   private FragmentManageBinding binding;
 
   @CheckResult @NonNull public static ManageFragment newInstance() {
@@ -63,7 +60,7 @@ public class ManageFragment extends WatchedFragment {
   }
 
   private void setupRecyclerView() {
-    adapter = new GenericItemAdapter<>(s -> {
+    GenericItemAdapter<String, BaseItem<?, ?>> adapter = new GenericItemAdapter<>(s -> {
       final BaseItem<?, ?> item;
       switch (s) {
         case ManageItem.TAG:
@@ -91,20 +88,5 @@ public class ManageFragment extends WatchedFragment {
 
     adapter.add(new ManageItem());
     adapter.add(new ExceptionItem());
-  }
-
-  @Override public void onStart() {
-    super.onStart();
-    presenter.registerOnBus(position -> adapter.notifyItemChanged(position));
-  }
-
-  @Override public void onStop() {
-    super.onStop();
-    presenter.stop();
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    presenter.destroy();
   }
 }

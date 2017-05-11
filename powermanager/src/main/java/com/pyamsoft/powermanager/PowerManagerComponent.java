@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.manage.ManageComponent;
+import com.pyamsoft.powermanager.manage.ManageFragment;
 import com.pyamsoft.powermanager.manage.ManageSingletonModule;
 import com.pyamsoft.powermanager.receiver.BootCompletedReceiver;
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
@@ -64,4 +65,6 @@ import javax.inject.Singleton;
   void inject(ActionToggleService actionToggleService);
 
   void inject(ForegroundService foregroundService);
+
+  void inject(ManageFragment manageFragment);
 }

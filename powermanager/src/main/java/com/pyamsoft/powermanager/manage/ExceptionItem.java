@@ -21,13 +21,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemExceptionsBinding;
+import com.pyamsoft.pydroid.loader.LoaderMap;
+import java.util.List;
 
 public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHolder> {
 
   @NonNull public static final String TAG = "ExceptionItem";
+  @SuppressWarnings("WeakerAccess") boolean expandedCharging;
+  @SuppressWarnings("WeakerAccess") boolean expandedWear;
+  @NonNull private LoaderMap loaderMap = new LoaderMap();
 
   ExceptionItem() {
     super(TAG);
+    expandedCharging = false;
+    expandedWear = false;
   }
 
   @Override public ViewHolder getViewHolder(View view) {
@@ -40,6 +47,29 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
   @Override public int getLayoutRes() {
     return R.layout.adapter_item_exceptions;
+  }
+
+  @Override public void bindView(ViewHolder holder, List<Object> payloads) {
+    super.bindView(holder, payloads);
+    loaderMap.put("charging", loadArrow(holder.binding.exceptionChargingArrow));
+    setArrowRotation(holder.binding.exceptionChargingArrow, expandedCharging);
+    holder.binding.exceptionChargingContainer.setVisibility(
+        expandedCharging ? View.VISIBLE : View.GONE);
+    holder.binding.exceptionChargingTitleContainer.setOnClickListener(v -> {
+      expandedCharging = !expandedCharging;
+      setArrowRotation(holder.binding.exceptionChargingArrow, expandedCharging);
+      holder.binding.exceptionChargingContainer.setVisibility(
+          expandedCharging ? View.VISIBLE : View.GONE);
+    });
+
+    loaderMap.put("wear", loadArrow(holder.binding.exceptionWearArrow));
+    setArrowRotation(holder.binding.exceptionWearArrow, expandedWear);
+    holder.binding.exceptionWearContainer.setVisibility(expandedWear ? View.VISIBLE : View.GONE);
+    holder.binding.exceptionWearTitleContainer.setOnClickListener(v -> {
+      expandedWear = !expandedWear;
+      setArrowRotation(holder.binding.exceptionWearArrow, expandedWear);
+      holder.binding.exceptionWearContainer.setVisibility(expandedWear ? View.VISIBLE : View.GONE);
+    });
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {

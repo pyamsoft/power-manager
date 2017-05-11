@@ -21,6 +21,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="16dp"
+      android:animateLayoutChanges="true"
       app:cardBackgroundColor="@android:color/white"
       app:cardCornerRadius="4dp"
       app:cardElevation="2dp"
@@ -34,6 +35,7 @@
         >
 
       <LinearLayout
+          android:id="@+id/manage_title_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:gravity="center_vertical"
