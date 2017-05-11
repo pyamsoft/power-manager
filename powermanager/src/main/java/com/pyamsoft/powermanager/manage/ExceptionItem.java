@@ -72,6 +72,16 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     });
   }
 
+  @Override public void unbindView(ViewHolder holder) {
+    super.unbindView(holder);
+    loaderMap.clear();
+    holder.binding.exceptionChargingArrow.setImageDrawable(null);
+    holder.binding.exceptionChargingTitleContainer.setOnClickListener(null);
+    holder.binding.exceptionWearArrow.setImageDrawable(null);
+    holder.binding.exceptionWearTitleContainer.setOnClickListener(null);
+    holder.binding.unbind();
+  }
+
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final AdapterItemExceptionsBinding binding;
