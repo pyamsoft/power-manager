@@ -29,7 +29,7 @@ import java.util.List;
 
 public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHolder> {
 
-  @NonNull public static final String TAG = "ExceptionItem";
+  @NonNull static final String TAG = "ExceptionItem";
 
   ExceptionItem() {
     super(TAG);

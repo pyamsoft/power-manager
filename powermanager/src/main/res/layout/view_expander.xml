@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="8dp"
         >
 
       <TextView
@@ -63,7 +63,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/material_light_background"
         android:orientation="vertical"
         android:visibility="gone"
         />

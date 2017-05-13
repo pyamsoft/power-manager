@@ -84,7 +84,7 @@ public class ManageFragment extends WatchedFragment {
     binding.recycler.setLayoutManager(manager);
     binding.recycler.setClipToPadding(false);
     binding.recycler.setHasFixedSize(true);
-    binding.recycler.setAdapter(adapter.wrap(new FastAdapter().withSelectable(true)));
+    binding.recycler.setAdapter(adapter.wrap(new FastAdapter()));
 
     adapter.add(new ManageItem());
     adapter.add(new ExceptionItem());
