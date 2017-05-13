@@ -22,11 +22,11 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import timber.log.Timber;
 
-class ManagePresenter extends SchedulerPresenter {
+class ExceptionPresenter extends SchedulerPresenter {
 
-  @NonNull private final ManageInteractor interactor;
+  @NonNull private final ExceptionInteractor interactor;
 
-  ManagePresenter(@NonNull ManageInteractor interactor, @NonNull Scheduler observeScheduler,
+  ExceptionPresenter(@NonNull ExceptionInteractor interactor, @NonNull Scheduler observeScheduler,
       @NonNull Scheduler subscribeScheduler) {
     super(observeScheduler, subscribeScheduler);
     this.interactor = interactor;
@@ -35,13 +35,28 @@ class ManagePresenter extends SchedulerPresenter {
   /**
    * public
    */
-  void setManaged(boolean state, @NonNull ActionCallback callback) {
-    disposeOnDestroy(interactor.setManaged(state)
+  void setIgnoreCharging(boolean state, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setIgnoreCharging(state)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
-        .subscribe(() -> Timber.d("Set managed state successfully: %s", state), throwable -> {
-          Timber.e(throwable, "Error setting managed");
+        .subscribe(() -> Timber.d("Set ignore charging state successfully: %s", state),
+            throwable -> {
+              Timber.e(throwable, "Error setting ignore charging");
+              callback.onError(throwable);
+            }));
+  }
+
+  /**
+   * public
+   */
+  void getIgnoreCharging(@NonNull RetrieveCallback callback) {
+    disposeOnDestroy(interactor.isIgnoreCharging()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(callback::onRetrieved, throwable -> {
+          Timber.e(throwable, "Error getting ignore charging");
           callback.onError(throwable);
         }));
   }
@@ -49,13 +64,27 @@ class ManagePresenter extends SchedulerPresenter {
   /**
    * public
    */
-  void getState(@NonNull RetrieveCallback callback) {
-    disposeOnDestroy(interactor.isManaged()
+  void setIgnoreWear(boolean state, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setIgnoreWear(state)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(() -> Timber.d("Set ignore wear state successfully: %s", state), throwable -> {
+          Timber.e(throwable, "Error setting ignore wear");
+          callback.onError(throwable);
+        }));
+  }
+
+  /**
+   * public
+   */
+  void getIgnoreWear(@NonNull RetrieveCallback callback) {
+    disposeOnDestroy(interactor.isIgnoreWear()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .doAfterTerminate(callback::onComplete)
         .subscribe(callback::onRetrieved, throwable -> {
-          Timber.e(throwable, "Error getting managed");
+          Timber.e(throwable, "Error getting ignore wear");
           callback.onError(throwable);
         }));
   }

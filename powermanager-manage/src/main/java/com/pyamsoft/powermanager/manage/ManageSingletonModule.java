@@ -63,4 +63,34 @@ import javax.inject.Singleton;
       @NonNull @Named("obs_doze_permission") PermissionObserver permissionObserver) {
     return new DozeManageInteractor(preferences, permissionObserver);
   }
+
+  @Singleton @Provides @Named("exception_wifi_interactor") ExceptionInteractor provideWifiException(
+      @NonNull WifiPreferences preferences) {
+    return new WifiExceptionInteractor(preferences);
+  }
+
+  @Singleton @Provides @Named("exception_data_interactor") ExceptionInteractor provideDataException(
+      @NonNull DataPreferences preferences) {
+    return new DataExceptionInteractor(preferences);
+  }
+
+  @Singleton @Provides @Named("exception_bluetooth_interactor")
+  ExceptionInteractor provideBluetoothException(@NonNull BluetoothPreferences preferences) {
+    return new BluetoothExceptionInteractor(preferences);
+  }
+
+  @Singleton @Provides @Named("exception_sync_interactor") ExceptionInteractor provideSyncException(
+      @NonNull SyncPreferences preferences) {
+    return new SyncExceptionInteractor(preferences);
+  }
+
+  @Singleton @Provides @Named("exception_airplane_interactor")
+  ExceptionInteractor provideAirplaneException(@NonNull AirplanePreferences preferences) {
+    return new AirplaneExceptionInteractor(preferences);
+  }
+
+  @Singleton @Provides @Named("exception_doze_interactor") ExceptionInteractor provideDozeException(
+      @NonNull DozePreferences preferences) {
+    return new DozeExceptionInteractor(preferences);
+  }
 }

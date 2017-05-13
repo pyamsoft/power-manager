@@ -110,9 +110,9 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
             // Make sure we don't trigger anything
             buttonView.setOnCheckedChangeListener(null);
 
-            // Save this listener for later
+            // Update backing
             final CompoundButton.OnCheckedChangeListener listener = this;
-            ManagePresenter.ActionCallback callback = new ManagePresenter.ActionCallback() {
+            presenter.setManaged(isChecked, new ManagePresenter.ActionCallback() {
               @Override public void onError(@NonNull Throwable throwable) {
                 Toast.makeText(switchCompat.getContext(), "Failed to set state: " + name,
                     Toast.LENGTH_SHORT).show();
@@ -125,10 +125,7 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
                 // Re-apply listener
                 buttonView.setOnCheckedChangeListener(listener);
               }
-            };
-
-            // Update backing
-            presenter.setManaged(isChecked, callback);
+            });
           }
         });
       }

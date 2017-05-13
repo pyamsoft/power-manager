@@ -65,4 +65,46 @@ import javax.inject.Named;
       @NonNull @Named("sub") Scheduler subScheduler) {
     return new ManagePresenter(interactor, obsScheduler, subScheduler);
   }
+
+  @Provides @Named("exception_wifi") ExceptionPresenter provideWifiException(
+      @NonNull @Named("exception_wifi_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("exception_data") ExceptionPresenter provideDataException(
+      @NonNull @Named("exception_data_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("exception_bluetooth") ExceptionPresenter provideBluetoothException(
+      @NonNull @Named("exception_bluetooth_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("exception_sync") ExceptionPresenter provideSyncException(
+      @NonNull @Named("exception_sync_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("exception_airplane") ExceptionPresenter provideAirplaneException(
+      @NonNull @Named("exception_airplane_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
+
+  @Provides @Named("exception_doze") ExceptionPresenter provideDozeException(
+      @NonNull @Named("exception_doze_interactor") ExceptionInteractor interactor,
+      @NonNull @Named("obs") Scheduler obsScheduler,
+      @NonNull @Named("sub") Scheduler subScheduler) {
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+  }
 }

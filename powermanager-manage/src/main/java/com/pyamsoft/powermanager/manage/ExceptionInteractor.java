@@ -16,11 +16,19 @@
 
 package com.pyamsoft.powermanager.manage;
 
-import dagger.Subcomponent;
+import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
+import com.pyamsoft.powermanager.model.States;
+import io.reactivex.Completable;
+import io.reactivex.Single;
 
-@Subcomponent(modules = ManageModule.class) public interface ManageComponent {
+abstract class ExceptionInteractor {
 
-  void inject(ManageItem manageItem);
+  @CheckResult @NonNull abstract Completable setIgnoreCharging(boolean state);
 
-  void inject(ExceptionItem exceptionItem);
+  @CheckResult @NonNull abstract Single<States> isIgnoreCharging();
+
+  @CheckResult @NonNull abstract Completable setIgnoreWear(boolean state);
+
+  @CheckResult @NonNull abstract Single<States> isIgnoreWear();
 }
