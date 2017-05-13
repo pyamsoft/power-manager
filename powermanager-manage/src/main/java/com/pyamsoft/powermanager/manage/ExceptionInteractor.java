@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
@@ -26,9 +25,13 @@ abstract class ExceptionInteractor {
 
   @CheckResult @NonNull abstract Completable setIgnoreCharging(boolean state);
 
-  @CheckResult @NonNull abstract Single<States> isIgnoreCharging();
+  @CheckResult @NonNull abstract Single<Boolean> isIgnoreCharging();
+
+  @CheckResult @NonNull abstract Single<Boolean> isIgnoreChargingEnabled();
 
   @CheckResult @NonNull abstract Completable setIgnoreWear(boolean state);
 
-  @CheckResult @NonNull abstract Single<States> isIgnoreWear();
+  @CheckResult @NonNull abstract Single<Boolean> isIgnoreWear();
+
+  @CheckResult @NonNull abstract Single<Boolean> isIgnoreWearEnabled();
 }

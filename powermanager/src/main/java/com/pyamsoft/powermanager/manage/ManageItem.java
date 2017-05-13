@@ -28,7 +28,6 @@ import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemManageBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerManageBinding;
-import com.pyamsoft.powermanager.model.States;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -84,16 +83,10 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
     // Get current state
     presenter.getState(new ManagePresenter.RetrieveCallback() {
-      @Override public void onRetrieved(@NonNull States states) {
+      @Override public void onRetrieved(boolean enabled) {
         // Make sure we don't trigger anything
         switchCompat.setOnCheckedChangeListener(null);
-
-        if (states == States.UNKNOWN) {
-          // We do not know, disable this UI
-          switchCompat.setEnabled(false);
-        } else {
-          switchCompat.setChecked(states == States.ENABLED);
-        }
+        switchCompat.setChecked(enabled);
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
@@ -128,6 +121,24 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
             });
           }
         });
+      }
+    });
+
+    presenter.getStateEnabled(new ManagePresenter.RetrieveCallback() {
+      @Override public void onRetrieved(boolean enabled) {
+        switchCompat.setEnabled(enabled);
+      }
+
+      @Override public void onError(@NonNull Throwable throwable) {
+        Toast.makeText(switchCompat.getContext(), "Failed to retrieve state enabled: " + name,
+            Toast.LENGTH_SHORT).show();
+
+        // Mark switch as disabled
+        switchCompat.setEnabled(false);
+      }
+
+      @Override public void onComplete() {
+
       }
     });
   }

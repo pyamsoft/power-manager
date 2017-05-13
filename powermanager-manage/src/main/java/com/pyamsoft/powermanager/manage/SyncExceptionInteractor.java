@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -35,27 +34,24 @@ class SyncExceptionInteractor extends ExceptionInteractor {
     return Completable.fromAction(() -> preferences.setIgnoreChargingSync(state));
   }
 
-  @NonNull @Override Single<States> isIgnoreCharging() {
-    return Single.fromCallable(() -> {
-      if (!preferences.isSyncManaged()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isIgnoreChargingSync() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isIgnoreCharging() {
+    return Single.fromCallable(
+        () -> preferences.isIgnoreChargingSync() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isIgnoreChargingEnabled() {
+    return Single.fromCallable(() -> preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 
   @NonNull @Override Completable setIgnoreWear(boolean state) {
     return Completable.fromAction(() -> preferences.setIgnoreWearSync(state));
   }
 
-  @NonNull @Override Single<States> isIgnoreWear() {
-    return Single.fromCallable(() -> {
-      if (!preferences.isSyncManaged()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isIgnoreWearSync() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isIgnoreWear() {
+    return Single.fromCallable(() -> preferences.isIgnoreWearSync() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
+    return Single.fromCallable(() -> preferences.isIgnoreWearSync() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.SyncPreferences;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -35,8 +34,11 @@ class SyncManageInteractor extends ManageInteractor {
     return Completable.fromAction(() -> preferences.setSyncManaged(state));
   }
 
-  @NonNull @Override Single<States> isManaged() {
-    return Single.fromCallable(
-        () -> preferences.isSyncManaged() ? States.ENABLED : States.DISABLED);
+  @NonNull @Override Single<Boolean> isManaged() {
+    return Single.fromCallable(() -> preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isManagedEnabled() {
+    return Single.just(Boolean.TRUE);
   }
 }

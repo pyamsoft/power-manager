@@ -29,7 +29,6 @@ import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemExceptionsBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionChargingBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionWearBinding;
-import com.pyamsoft.powermanager.model.States;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -122,16 +121,10 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
     // Get current state
     presenter.getIgnoreCharging(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(@NonNull States states) {
+      @Override public void onRetrieved(boolean enabled) {
         // Make sure we don't trigger anything
         checkBox.setOnCheckedChangeListener(null);
-
-        if (states == States.UNKNOWN) {
-          // We do not know, disable this UI
-          checkBox.setEnabled(false);
-        } else {
-          checkBox.setChecked(states == States.ENABLED);
-        }
+        checkBox.setChecked(enabled);
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
@@ -168,6 +161,24 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
         });
       }
     });
+
+    presenter.getIgnoreChargingEnabled(new ExceptionPresenter.RetrieveCallback() {
+      @Override public void onRetrieved(boolean enabled) {
+        checkBox.setEnabled(enabled);
+      }
+
+      @Override public void onError(@NonNull Throwable throwable) {
+        Toast.makeText(checkBox.getContext(), "Failed to retrieve enabled state: " + name,
+            Toast.LENGTH_SHORT).show();
+
+        // Mark switch as disabled
+        checkBox.setEnabled(false);
+      }
+
+      @Override public void onComplete() {
+
+      }
+    });
   }
 
   private void bindWearCheck(@NonNull CheckBox checkBox, @NonNull String name,
@@ -180,16 +191,10 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
     // Get current state
     presenter.getIgnoreWear(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(@NonNull States states) {
+      @Override public void onRetrieved(boolean enabled) {
         // Make sure we don't trigger anything
         checkBox.setOnCheckedChangeListener(null);
-
-        if (states == States.UNKNOWN) {
-          // We do not know, disable this UI
-          checkBox.setEnabled(false);
-        } else {
-          checkBox.setChecked(states == States.ENABLED);
-        }
+        checkBox.setChecked(enabled);
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
@@ -224,6 +229,24 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
             });
           }
         });
+      }
+    });
+
+    presenter.getIgnoreWearEnabled(new ExceptionPresenter.RetrieveCallback() {
+      @Override public void onRetrieved(boolean enabled) {
+        checkBox.setEnabled(enabled);
+      }
+
+      @Override public void onError(@NonNull Throwable throwable) {
+        Toast.makeText(checkBox.getContext(), "Failed to retrieve enabled state: " + name,
+            Toast.LENGTH_SHORT).show();
+
+        // Mark switch as disabled
+        checkBox.setEnabled(false);
+      }
+
+      @Override public void onComplete() {
+
       }
     });
   }

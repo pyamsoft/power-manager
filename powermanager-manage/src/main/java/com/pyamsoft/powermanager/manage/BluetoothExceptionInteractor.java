@@ -18,7 +18,6 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -35,27 +34,27 @@ class BluetoothExceptionInteractor extends ExceptionInteractor {
     return Completable.fromAction(() -> preferences.setIgnoreChargingBluetooth(state));
   }
 
-  @NonNull @Override Single<States> isIgnoreCharging() {
-    return Single.fromCallable(() -> {
-      if (!preferences.isBluetoothManaged()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isIgnoreChargingBluetooth() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isIgnoreCharging() {
+    return Single.fromCallable(
+        () -> preferences.isIgnoreChargingBluetooth() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isIgnoreChargingEnabled() {
+    return Single.fromCallable(
+        () -> preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 
   @NonNull @Override Completable setIgnoreWear(boolean state) {
     return Completable.fromAction(() -> preferences.setIgnoreWearBluetooth(state));
   }
 
-  @NonNull @Override Single<States> isIgnoreWear() {
-    return Single.fromCallable(() -> {
-      if (!preferences.isBluetoothManaged()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isIgnoreWearBluetooth() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isIgnoreWear() {
+    return Single.fromCallable(
+        () -> preferences.isIgnoreWearBluetooth() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
+    return Single.fromCallable(
+        () -> preferences.isIgnoreWearBluetooth() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

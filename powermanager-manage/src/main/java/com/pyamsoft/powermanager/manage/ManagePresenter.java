@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import timber.log.Timber;
@@ -60,6 +59,20 @@ class ManagePresenter extends SchedulerPresenter {
         }));
   }
 
+  /**
+   * public
+   */
+  void getStateEnabled(@NonNull RetrieveCallback callback) {
+    disposeOnDestroy(interactor.isManagedEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(callback::onRetrieved, throwable -> {
+          Timber.e(throwable, "Error getting managed enabled");
+          callback.onError(throwable);
+        }));
+  }
+
   interface ActionCallback {
 
     void onError(@NonNull Throwable throwable);
@@ -69,7 +82,7 @@ class ManagePresenter extends SchedulerPresenter {
 
   interface RetrieveCallback {
 
-    void onRetrieved(@NonNull States state);
+    void onRetrieved(boolean enabled);
 
     void onError(@NonNull Throwable throwable);
 

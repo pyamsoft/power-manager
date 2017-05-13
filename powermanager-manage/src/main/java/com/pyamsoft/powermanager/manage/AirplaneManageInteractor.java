@@ -39,13 +39,11 @@ class AirplaneManageInteractor extends ManageInteractor {
     return Completable.fromAction(() -> preferences.setAirplaneManaged(state));
   }
 
-  @NonNull @Override Single<States> isManaged() {
-    return Single.fromCallable(() -> {
-      if (!permissionObserver.hasPermission()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isAirplaneManaged() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isManaged() {
+    return Single.fromCallable(() -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isManagedEnabled() {
+    return Single.fromCallable(permissionObserver::hasPermission);
   }
 }

@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.States;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import timber.log.Timber;
@@ -64,6 +63,20 @@ class ExceptionPresenter extends SchedulerPresenter {
   /**
    * public
    */
+  void getIgnoreChargingEnabled(@NonNull RetrieveCallback callback) {
+    disposeOnDestroy(interactor.isIgnoreChargingEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(callback::onRetrieved, throwable -> {
+          Timber.e(throwable, "Error getting ignore charging enabled");
+          callback.onError(throwable);
+        }));
+  }
+
+  /**
+   * public
+   */
   void setIgnoreWear(boolean state, @NonNull ActionCallback callback) {
     disposeOnDestroy(interactor.setIgnoreWear(state)
         .subscribeOn(getSubscribeScheduler())
@@ -89,6 +102,20 @@ class ExceptionPresenter extends SchedulerPresenter {
         }));
   }
 
+  /**
+   * public
+   */
+  void getIgnoreWearEnabled(@NonNull RetrieveCallback callback) {
+    disposeOnDestroy(interactor.isIgnoreWearEnabled()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .doAfterTerminate(callback::onComplete)
+        .subscribe(callback::onRetrieved, throwable -> {
+          Timber.e(throwable, "Error getting ignore wear enabled");
+          callback.onError(throwable);
+        }));
+  }
+
   interface ActionCallback {
 
     void onError(@NonNull Throwable throwable);
@@ -98,7 +125,7 @@ class ExceptionPresenter extends SchedulerPresenter {
 
   interface RetrieveCallback {
 
-    void onRetrieved(@NonNull States state);
+    void onRetrieved(boolean enabled);
 
     void onError(@NonNull Throwable throwable);
 

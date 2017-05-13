@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.manage;
 import android.support.annotation.NonNull;
 import com.pyamsoft.powermanager.base.preference.DozePreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -39,13 +38,11 @@ class DozeManageInteractor extends ManageInteractor {
     return Completable.fromAction(() -> preferences.setDozeManaged(state));
   }
 
-  @NonNull @Override Single<States> isManaged() {
-    return Single.fromCallable(() -> {
-      if (!permissionObserver.hasPermission()) {
-        return States.UNKNOWN;
-      } else {
-        return preferences.isDozeManaged() ? States.ENABLED : States.DISABLED;
-      }
-    });
+  @NonNull @Override Single<Boolean> isManaged() {
+    return Single.fromCallable(() -> preferences.isDozeManaged() ? Boolean.TRUE : Boolean.FALSE);
+  }
+
+  @NonNull @Override Single<Boolean> isManagedEnabled() {
+    return Single.fromCallable(permissionObserver::hasPermission);
   }
 }
