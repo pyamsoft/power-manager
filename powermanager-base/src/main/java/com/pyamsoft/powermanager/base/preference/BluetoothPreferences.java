@@ -35,4 +35,8 @@ public interface BluetoothPreferences {
   @CheckResult boolean isPeriodicBluetooth();
 
   void setPeriodicBluetooth(boolean state);
+
+  @CheckResult boolean isIgnoreWearBluetooth();
+
+  void setIgnoreWearBluetooth(boolean state);
 }

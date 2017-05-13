@@ -35,4 +35,8 @@ public interface WifiPreferences {
   @CheckResult boolean isPeriodicWifi();
 
   void setPeriodicWifi(boolean state);
+
+  @CheckResult boolean isIgnoreWearWifi();
+
+  void setIgnoreWearWifi(boolean state);
 }

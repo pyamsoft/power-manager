@@ -32,6 +32,10 @@ public interface DozePreferences {
 
   void setDozeManaged(boolean state);
 
+  @CheckResult boolean isIgnoreWearDoze();
+
+  void setIgnoreWearDoze(boolean state);
+
   @CheckResult boolean isPeriodicDoze();
 
   void setPeriodicDoze(boolean state);

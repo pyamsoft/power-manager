@@ -35,4 +35,8 @@ public interface SyncPreferences {
   @CheckResult boolean isPeriodicSync();
 
   void setPeriodicSync(boolean state);
+
+  @CheckResult boolean isIgnoreWearSync();
+
+  void setIgnoreWearSync(boolean state);
 }

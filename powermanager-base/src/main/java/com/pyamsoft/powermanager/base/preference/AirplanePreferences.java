@@ -32,6 +32,10 @@ public interface AirplanePreferences {
 
   void setIgnoreChargingAirplane(boolean state);
 
+  @CheckResult boolean isIgnoreWearAirplane();
+
+  void setIgnoreWearAirplane(boolean state);
+
   @CheckResult boolean isPeriodicAirplane();
 
   void setPeriodicAirplane(boolean state);

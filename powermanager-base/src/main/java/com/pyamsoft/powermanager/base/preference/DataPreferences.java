@@ -35,4 +35,8 @@ public interface DataPreferences {
   @CheckResult boolean isPeriodicData();
 
   void setPeriodicData(boolean state);
+
+  @CheckResult boolean isIgnoreWearData();
+
+  void setIgnoreWearData(boolean state);
 }

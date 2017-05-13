@@ -37,6 +37,7 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences;
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.base.preference.WearablePreferences;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import timber.log.Timber;
 
@@ -46,8 +47,9 @@ class PowerManagerPreferencesImpl
     OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences,
     ManagePreferences {
 
-  private static final long DELAY_MINIMUM = 5;
-  private static final long PERIOD_MINIMUM = 60;
+  private static final long DELAY_MINIMUM = TimeUnit.SECONDS.toSeconds(5);
+  private static final long PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1);
+  private static final long TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15);
 
   @NonNull private static final String OVERVIEW_ONBOARD = "pm7_overview_onboard";
   @NonNull private static final String MANAGE_ONBOARD = "pm7_manage_onboard";
@@ -97,8 +99,19 @@ class PowerManagerPreferencesImpl
   private final boolean ignoreChargingBluetoothDefault;
   private final boolean ignoreChargingSyncDefault;
 
-  @NonNull private final String manageWearable;
-  private final boolean manageWearableDefault;
+  @NonNull private final String ignoreWearDoze;
+  @NonNull private final String ignoreWearAirplane;
+  @NonNull private final String ignoreWearWifi;
+  @NonNull private final String ignoreWearData;
+  @NonNull private final String ignoreWearBluetooth;
+  @NonNull private final String ignoreWearSync;
+  private final boolean ignoreWearDozeDefault;
+  private final boolean ignoreWearAirplaneDefault;
+  private final boolean ignoreWearWifiDefault;
+  private final boolean ignoreWearDataDefault;
+  private final boolean ignoreWearBluetoothDefault;
+  private final boolean ignoreWearSyncDefault;
+
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
@@ -109,17 +122,14 @@ class PowerManagerPreferencesImpl
   private final boolean loggerEnabledDefault;
   @NonNull private final String triggerPeriodKey;
   @NonNull private final String triggerPeriodDefault;
+  private final long defaultTriggerPeriodValue;
 
   @NonNull private final String globalManageDelayKey;
   @NonNull private final String globalManageEnableKey;
   @NonNull private final String globalManageDisableKey;
-  @NonNull private final String globalManageDelayDefault;
-  @NonNull private final String globalManageEnableDefault;
-  @NonNull private final String globalManageDisableDefault;
-  private final long defaultGlobalDelayValue;
-  private final long defaultGlobalEnableValue;
-  private final long defaultGlobalDisableValue;
-  private final long defaultTriggerPeriodValue;
+  private final long globalManageDelayDefault;
+  private final long globalManageEnableDefault;
+  private final long globalManageDisableDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
@@ -164,8 +174,18 @@ class PowerManagerPreferencesImpl
     ignoreChargingBluetoothDefault = res.getBoolean(R.bool.ignore_charging_bluetooth_default);
     ignoreChargingSyncDefault = res.getBoolean(R.bool.ignore_charging_sync_default);
 
-    manageWearable = res.getString(R.string.manage_wearable_key);
-    manageWearableDefault = res.getBoolean(R.bool.manage_wearable_default);
+    ignoreWearDoze = res.getString(R.string.ignore_wear_doze_key);
+    ignoreWearAirplane = res.getString(R.string.ignore_wear_airplane_key);
+    ignoreWearWifi = res.getString(R.string.ignore_wear_wifi_key);
+    ignoreWearData = res.getString(R.string.ignore_wear_data_key);
+    ignoreWearBluetooth = res.getString(R.string.ignore_wear_bluetooth_key);
+    ignoreWearSync = res.getString(R.string.ignore_wear_sync_key);
+    ignoreWearDozeDefault = res.getBoolean(R.bool.ignore_wear_doze_default);
+    ignoreWearAirplaneDefault = res.getBoolean(R.bool.ignore_wear_airplane_default);
+    ignoreWearWifiDefault = res.getBoolean(R.bool.ignore_wear_wifi_default);
+    ignoreWearDataDefault = res.getBoolean(R.bool.ignore_wear_data_default);
+    ignoreWearBluetoothDefault = res.getBoolean(R.bool.ignore_wear_bluetooth_default);
+    ignoreWearSyncDefault = res.getBoolean(R.bool.ignore_wear_sync_default);
 
     wearableDelay = res.getString(R.string.wearable_time_key);
     wearableDelayDefault = res.getString(R.string.wearable_time_default);
@@ -181,18 +201,14 @@ class PowerManagerPreferencesImpl
 
     triggerPeriodKey = res.getString(R.string.trigger_period_key);
     triggerPeriodDefault = res.getString(R.string.trigger_period_default);
-    defaultTriggerPeriodValue = Long.valueOf(triggerPeriodDefault);
+    defaultTriggerPeriodValue = Integer.valueOf(triggerPeriodDefault);
 
     globalManageDelayKey = res.getString(R.string.key_manage_delay_time);
     globalManageEnableKey = res.getString(R.string.key_manage_enable_time);
     globalManageDisableKey = res.getString(R.string.key_manage_disable_time);
-    globalManageDelayDefault = res.getString(R.string.default_manage_delay_time);
-    globalManageEnableDefault = res.getString(R.string.default_manage_enable_time);
-    globalManageDisableDefault = res.getString(R.string.default_manage_disable_time);
-
-    defaultGlobalDelayValue = Long.valueOf(globalManageDelayDefault);
-    defaultGlobalEnableValue = Long.valueOf(globalManageEnableDefault);
-    defaultGlobalDisableValue = Long.valueOf(globalManageDisableDefault);
+    globalManageDelayDefault = res.getInteger(R.integer.default_manage_delay_time);
+    globalManageEnableDefault = res.getInteger(R.integer.default_manage_enable_time);
+    globalManageDisableDefault = res.getInteger(R.integer.default_manage_disable_time);
   }
 
   @Override public boolean isOriginalWifi() {
@@ -257,8 +273,13 @@ class PowerManagerPreferencesImpl
     try {
       delay = Long.valueOf(rawPref);
     } catch (Exception e) {
-      Timber.e(e, "Error assigning trigger period to long");
+      Timber.e(e, "Error assigning trigger period to int");
       delay = defaultTriggerPeriodValue;
+    }
+
+    if (delay < TRIGGER_MINIMUM) {
+      delay = TRIGGER_MINIMUM;
+      preferences.edit().putString(triggerPeriodKey, String.valueOf(TRIGGER_MINIMUM)).apply();
     }
     return delay;
   }
@@ -323,6 +344,14 @@ class PowerManagerPreferencesImpl
     preferences.edit().putBoolean(manageDoze, state).apply();
   }
 
+  @Override public boolean isIgnoreWearDoze() {
+    return preferences.getBoolean(ignoreWearDoze, ignoreWearDozeDefault);
+  }
+
+  @Override public void setIgnoreWearDoze(boolean state) {
+    preferences.edit().putBoolean(ignoreWearDoze, state).apply();
+  }
+
   @Override public boolean isAirplaneManaged() {
     return preferences.getBoolean(manageAirplane, manageAirplaneDefault);
   }
@@ -337,6 +366,14 @@ class PowerManagerPreferencesImpl
 
   @Override public void setIgnoreChargingAirplane(boolean state) {
     preferences.edit().putBoolean(ignoreChargingAirplane, state).apply();
+  }
+
+  @Override public boolean isIgnoreWearAirplane() {
+    return preferences.getBoolean(ignoreWearAirplane, ignoreWearAirplaneDefault);
+  }
+
+  @Override public void setIgnoreWearAirplane(boolean state) {
+    preferences.edit().putBoolean(ignoreWearAirplane, state).apply();
   }
 
   @Override public boolean isIgnoreChargingWifi() {
@@ -407,10 +444,6 @@ class PowerManagerPreferencesImpl
     preferences.edit().putBoolean(manageWifi, state).apply();
   }
 
-  @Override public boolean isWearableManaged() {
-    return preferences.getBoolean(manageWearable, manageWearableDefault);
-  }
-
   @SuppressLint("ApplySharedPref") @Override public void clearAll() {
     preferences.edit().clear().commit();
   }
@@ -431,12 +464,28 @@ class PowerManagerPreferencesImpl
     preferences.edit().putBoolean(periodicWifi, state).apply();
   }
 
+  @Override public boolean isIgnoreWearWifi() {
+    return preferences.getBoolean(ignoreWearWifi, ignoreWearWifiDefault);
+  }
+
+  @Override public void setIgnoreWearWifi(boolean state) {
+    preferences.edit().putBoolean(ignoreWearWifi, state).apply();
+  }
+
   @Override public boolean isPeriodicData() {
     return preferences.getBoolean(periodicData, periodicDataDefault);
   }
 
   @Override public void setPeriodicData(boolean state) {
     preferences.edit().putBoolean(periodicData, state).apply();
+  }
+
+  @Override public boolean isIgnoreWearData() {
+    return preferences.getBoolean(ignoreWearData, ignoreWearDataDefault);
+  }
+
+  @Override public void setIgnoreWearData(boolean state) {
+    preferences.edit().putBoolean(ignoreWearData, state).apply();
   }
 
   @Override public boolean isPeriodicBluetooth() {
@@ -447,12 +496,28 @@ class PowerManagerPreferencesImpl
     preferences.edit().putBoolean(periodicBluetooth, state).apply();
   }
 
+  @Override public boolean isIgnoreWearBluetooth() {
+    return preferences.getBoolean(ignoreWearBluetooth, ignoreWearBluetoothDefault);
+  }
+
+  @Override public void setIgnoreWearBluetooth(boolean state) {
+    preferences.edit().putBoolean(ignoreWearBluetooth, state).apply();
+  }
+
   @Override public boolean isPeriodicSync() {
     return preferences.getBoolean(periodicSync, periodicSyncDefault);
   }
 
   @Override public void setPeriodicSync(boolean state) {
     preferences.edit().putBoolean(periodicSync, state).apply();
+  }
+
+  @Override public boolean isIgnoreWearSync() {
+    return preferences.getBoolean(ignoreWearSync, ignoreWearSyncDefault);
+  }
+
+  @Override public void setIgnoreWearSync(boolean state) {
+    preferences.edit().putBoolean(ignoreWearSync, state).apply();
   }
 
   @Override public boolean isPeriodicAirplane() {
@@ -464,14 +529,7 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public long getManageDelay() {
-    String rawPref = preferences.getString(globalManageDelayKey, globalManageDelayDefault);
-    long delay;
-    try {
-      delay = Long.valueOf(rawPref);
-    } catch (Exception e) {
-      Timber.e(e, "Error assigning global delay to long");
-      delay = defaultGlobalDelayValue;
-    }
+    long delay = preferences.getLong(globalManageDelayKey, globalManageDelayDefault);
     if (delay < DELAY_MINIMUM) {
       delay = DELAY_MINIMUM;
       setManageDelay(delay);
@@ -480,18 +538,11 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setManageDelay(long time) {
-    preferences.edit().putString(globalManageDelayKey, Long.valueOf(time).toString()).apply();
+    preferences.edit().putLong(globalManageDelayKey, time).apply();
   }
 
   @Override public long getPeriodicDisableTime() {
-    String rawPref = preferences.getString(globalManageDisableKey, globalManageDisableDefault);
-    long delay;
-    try {
-      delay = Long.valueOf(rawPref);
-    } catch (Exception e) {
-      Timber.e(e, "Error assigning global disable to long");
-      delay = defaultGlobalDisableValue;
-    }
+    long delay = preferences.getLong(globalManageDisableKey, globalManageDisableDefault);
     if (delay < PERIOD_MINIMUM) {
       delay = PERIOD_MINIMUM;
       setPeriodicDisableTime(delay);
@@ -500,19 +551,11 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setPeriodicDisableTime(long time) {
-    preferences.edit().putString(globalManageDisableKey, Long.valueOf(time).toString()).apply();
+    preferences.edit().putLong(globalManageDisableKey, time).apply();
   }
 
   @Override public long getPeriodicEnableTime() {
-    String rawPref = preferences.getString(globalManageEnableKey, globalManageEnableDefault);
-    long delay;
-    try {
-      delay = Long.valueOf(rawPref);
-    } catch (Exception e) {
-      Timber.e(e, "Error assigning global enable to long");
-      delay = defaultGlobalEnableValue;
-    }
-
+    long delay = preferences.getLong(globalManageEnableKey, globalManageEnableDefault);
     if (delay < PERIOD_MINIMUM) {
       delay = PERIOD_MINIMUM;
       setPeriodicEnableTime(delay);
@@ -521,6 +564,6 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setPeriodicEnableTime(long time) {
-    preferences.edit().putString(globalManageEnableKey, Long.valueOf(time).toString()).apply();
+    preferences.edit().putLong(globalManageEnableKey, time).apply();
   }
 }
