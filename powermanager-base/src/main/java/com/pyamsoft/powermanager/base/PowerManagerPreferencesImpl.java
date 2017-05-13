@@ -51,6 +51,7 @@ class PowerManagerPreferencesImpl
   private static final long PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1);
   private static final long TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15);
 
+  @NonNull private static final String CUSTOM_MANAGE_DELAY = "pm7_custom_manage_delay";
   @NonNull private static final String OVERVIEW_ONBOARD = "pm7_overview_onboard";
   @NonNull private static final String MANAGE_ONBOARD = "pm7_manage_onboard";
   @NonNull private static final String PERIOD_ONBOARD = "pm7_period_onboard";
@@ -539,6 +540,14 @@ class PowerManagerPreferencesImpl
 
   @Override public void setManageDelay(long time) {
     preferences.edit().putLong(globalManageDelayKey, time).apply();
+  }
+
+  @Override public boolean isCustomManageDelay() {
+    return preferences.getBoolean(CUSTOM_MANAGE_DELAY, false);
+  }
+
+  @Override public void setCustomManageDelay(boolean custom) {
+    preferences.edit().putBoolean(CUSTOM_MANAGE_DELAY, custom).apply();
   }
 
   @Override public long getPeriodicDisableTime() {

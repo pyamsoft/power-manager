@@ -24,6 +24,10 @@ public interface ManagePreferences {
 
   void setManageDelay(long time);
 
+  @CheckResult boolean isCustomManageDelay();
+
+  void setCustomManageDelay(boolean custom);
+
   @CheckResult long getPeriodicDisableTime();
 
   void setPeriodicDisableTime(long time);

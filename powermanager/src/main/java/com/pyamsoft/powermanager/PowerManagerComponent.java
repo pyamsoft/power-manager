@@ -27,6 +27,7 @@ import com.pyamsoft.powermanager.base.states.WrapperModule;
 import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
+import com.pyamsoft.powermanager.manage.DelayItem;
 import com.pyamsoft.powermanager.manage.ManageComponent;
 import com.pyamsoft.powermanager.manage.ManageFragment;
 import com.pyamsoft.powermanager.manage.ManageSingletonModule;
@@ -67,4 +68,6 @@ import javax.inject.Singleton;
   void inject(ForegroundService foregroundService);
 
   void inject(ManageFragment manageFragment);
+
+  void inject(DelayItem delayItem);
 }
