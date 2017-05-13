@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.job.JobQueuer;
 import com.pyamsoft.powermanager.job.Jobs;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.service.ActionToggleService;
-import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.about.Licenses;
 import com.pyamsoft.pydroid.helper.BuildConfigChecker;
 import com.pyamsoft.pydroid.ui.SingleInitContentProvider;
@@ -65,8 +64,6 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
         return null;
       }
     });
-
-    ForegroundService.start(context);
   }
 
   @Override public void insertCustomLicensesIntoMap(@NonNull Context context) {

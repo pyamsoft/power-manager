@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import com.pyamsoft.powermanager.service.ForegroundService;
 import com.pyamsoft.pydroid.ui.PYDroidApplication;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
@@ -57,5 +58,10 @@ public class PowerManager extends PYDroidApplication {
       throw new IllegalStateException("RefWatcher is NULL");
     }
     return refWatcher;
+  }
+
+  @Override protected void onCreateNormalMode() {
+    super.onCreateNormalMode();
+    ForegroundService.start(getApplicationContext());
   }
 }
