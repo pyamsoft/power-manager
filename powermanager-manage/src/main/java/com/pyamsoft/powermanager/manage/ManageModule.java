@@ -28,83 +28,131 @@ import javax.inject.Named;
       @NonNull @Named("manage_wifi_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.WIFI;
+      }
+    };
   }
 
   @Provides @Named("manage_data") ManagePresenter provideData(
       @NonNull @Named("manage_data_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.DATA;
+      }
+    };
   }
 
   @Provides @Named("manage_bluetooth") ManagePresenter provideBluetooth(
       @NonNull @Named("manage_bluetooth_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.BLUETOOTH;
+      }
+    };
   }
 
   @Provides @Named("manage_sync") ManagePresenter provideSync(
       @NonNull @Named("manage_sync_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.SYNC;
+      }
+    };
   }
 
   @Provides @Named("manage_airplane") ManagePresenter provideAirplane(
       @NonNull @Named("manage_airplane_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.AIRPLANE;
+      }
+    };
   }
 
   @Provides @Named("manage_doze") ManagePresenter provideDoze(
       @NonNull @Named("manage_doze_interactor") ManageInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ManagePresenter(interactor, obsScheduler, subScheduler);
+    return new ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.DOZE;
+      }
+    };
   }
 
   @Provides @Named("exception_wifi") ExceptionPresenter provideWifiException(
       @NonNull @Named("exception_wifi_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.WIFI;
+      }
+    };
   }
 
   @Provides @Named("exception_data") ExceptionPresenter provideDataException(
       @NonNull @Named("exception_data_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.DATA;
+      }
+    };
   }
 
   @Provides @Named("exception_bluetooth") ExceptionPresenter provideBluetoothException(
       @NonNull @Named("exception_bluetooth_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.BLUETOOTH;
+      }
+    };
   }
 
   @Provides @Named("exception_sync") ExceptionPresenter provideSyncException(
       @NonNull @Named("exception_sync_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.SYNC;
+      }
+    };
   }
 
   @Provides @Named("exception_airplane") ExceptionPresenter provideAirplaneException(
       @NonNull @Named("exception_airplane_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.AIRPLANE;
+      }
+    };
   }
 
   @Provides @Named("exception_doze") ExceptionPresenter provideDozeException(
       @NonNull @Named("exception_doze_interactor") ExceptionInteractor interactor,
       @NonNull @Named("obs") Scheduler obsScheduler,
       @NonNull @Named("sub") Scheduler subScheduler) {
-    return new ExceptionPresenter(interactor, obsScheduler, subScheduler);
+    return new ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @NonNull @Override ManageTargets getTarget() {
+        return ManageTargets.DOZE;
+      }
+    };
   }
 }

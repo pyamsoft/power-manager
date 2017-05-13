@@ -17,11 +17,12 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
+import com.pyamsoft.powermanager.manage.bus.ManageChangeEvent;
+import com.pyamsoft.pydroid.bus.EventBus;
 import io.reactivex.Scheduler;
 import timber.log.Timber;
 
-class ExceptionPresenter extends SchedulerPresenter {
+abstract class ExceptionPresenter extends TargetPresenter {
 
   @NonNull private final ExceptionInteractor interactor;
 
@@ -90,6 +91,25 @@ class ExceptionPresenter extends SchedulerPresenter {
           Timber.e(throwable, "Error getting ignore wear");
           callback.onError(throwable);
         }));
+  }
+
+  /**
+   * public
+   */
+  void registerOnBus(@NonNull BusCallback callback) {
+    disposeOnDestroy(EventBus.get()
+        .listen(ManageChangeEvent.class)
+        .filter(manageChangeEvent -> manageChangeEvent.target() == getTarget())
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(manageChangeEvent -> callback.onManageChanged(),
+            throwable -> Timber.e(throwable, "Error on manage change bus for target: %s",
+                getTarget())));
+  }
+
+  interface BusCallback {
+
+    void onManageChanged();
   }
 
   interface ActionCallback {

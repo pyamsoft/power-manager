@@ -74,41 +74,48 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     holder.binding.exceptionWearContainer.setExpandingContent(
         holder.wearContainerBinding.getRoot());
 
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingAirplane, "Airplane",
-        presenterAirplane);
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingWifi, "Wifi", presenterWifi);
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingData, "Data", presenterData);
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingBluetooth, "Bluetooth",
-        presenterBluetooth);
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingSync, "Sync", presenterSync);
-    bindChargingCheck(holder.chargingContainerBinding.exceptionChargingDoze, "Doze", presenterDoze);
-
-    bindWearCheck(holder.wearContainerBinding.exceptionWearAirplane, "Airplane", presenterAirplane);
-    bindWearCheck(holder.wearContainerBinding.exceptionWearWifi, "Wifi", presenterWifi);
-    bindWearCheck(holder.wearContainerBinding.exceptionWearData, "Data", presenterData);
-    bindWearCheck(holder.wearContainerBinding.exceptionWearBluetooth, "Bluetooth",
-        presenterBluetooth);
-    bindWearCheck(holder.wearContainerBinding.exceptionWearSync, "Sync", presenterSync);
-    bindWearCheck(holder.wearContainerBinding.exceptionWearDoze, "Doze", presenterDoze);
+    bind(holder.chargingContainerBinding.exceptionChargingWifi,
+        holder.wearContainerBinding.exceptionWearWifi, "Wifi", presenterWifi);
+    bind(holder.chargingContainerBinding.exceptionChargingData,
+        holder.wearContainerBinding.exceptionWearData, "Data", presenterData);
+    bind(holder.chargingContainerBinding.exceptionChargingBluetooth,
+        holder.wearContainerBinding.exceptionWearBluetooth, "Bluetooth", presenterBluetooth);
+    bind(holder.chargingContainerBinding.exceptionChargingSync,
+        holder.wearContainerBinding.exceptionWearSync, "Sync", presenterSync);
+    bind(holder.chargingContainerBinding.exceptionChargingAirplane,
+        holder.wearContainerBinding.exceptionWearAirplane, "Airplane", presenterAirplane);
+    bind(holder.chargingContainerBinding.exceptionChargingDoze,
+        holder.wearContainerBinding.exceptionWearDoze, "Doze", presenterDoze);
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingAirplane,
+    unbind(holder.chargingContainerBinding.exceptionChargingAirplane,
         holder.wearContainerBinding.exceptionWearAirplane, presenterAirplane);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingWifi,
+    unbind(holder.chargingContainerBinding.exceptionChargingWifi,
         holder.wearContainerBinding.exceptionWearWifi, presenterWifi);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingData,
+    unbind(holder.chargingContainerBinding.exceptionChargingData,
         holder.wearContainerBinding.exceptionWearData, presenterData);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingBluetooth,
+    unbind(holder.chargingContainerBinding.exceptionChargingBluetooth,
         holder.wearContainerBinding.exceptionWearBluetooth, presenterBluetooth);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingSync,
+    unbind(holder.chargingContainerBinding.exceptionChargingSync,
         holder.wearContainerBinding.exceptionWearSync, presenterSync);
-    unbindCheckbox(holder.chargingContainerBinding.exceptionChargingDoze,
+    unbind(holder.chargingContainerBinding.exceptionChargingDoze,
         holder.wearContainerBinding.exceptionWearDoze, presenterDoze);
     holder.wearContainerBinding.unbind();
     holder.chargingContainerBinding.unbind();
     holder.binding.unbind();
+  }
+
+  private void bind(@NonNull CheckBox charging, @NonNull CheckBox wear, @NonNull String name,
+      @NonNull ExceptionPresenter presenter) {
+    bindChargingCheck(charging, name, presenter);
+    bindWearCheck(wear, name, presenter);
+
+    presenter.registerOnBus(() -> {
+      getIgnoreCharging(presenter, charging, name);
+      getIgnoreWear(presenter, wear, name);
+    });
   }
 
   private void bindChargingCheck(@NonNull CheckBox checkBox, @NonNull String name,
@@ -120,6 +127,11 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     checkBox.setText("Do not manage " + name);
 
     // Get current state
+    getIgnoreCharging(presenter, checkBox, name);
+  }
+
+  @SuppressWarnings("WeakerAccess") void getIgnoreCharging(@NonNull ExceptionPresenter presenter,
+      @NonNull CheckBox checkBox, @NonNull String name) {
     presenter.getIgnoreCharging(new ExceptionPresenter.RetrieveCallback() {
 
       @Override public void onEnableRetrieved(boolean enabled) {
@@ -177,6 +189,11 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     checkBox.setText("Do not manage " + name);
 
     // Get current state
+    getIgnoreWear(presenter, checkBox, name);
+  }
+
+  @SuppressWarnings("WeakerAccess") void getIgnoreWear(@NonNull ExceptionPresenter presenter,
+      @NonNull CheckBox checkBox, @NonNull String name) {
     presenter.getIgnoreWear(new ExceptionPresenter.RetrieveCallback() {
 
       @Override public void onEnableRetrieved(boolean enabled) {
@@ -225,7 +242,7 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     });
   }
 
-  private void unbindCheckbox(@NonNull CheckBox chargeCheckbox, @NonNull CheckBox wearCheckBox,
+  private void unbind(@NonNull CheckBox chargeCheckbox, @NonNull CheckBox wearCheckBox,
       @NonNull ExceptionPresenter presenter) {
     chargeCheckbox.setText(null);
     chargeCheckbox.setOnCheckedChangeListener(null);
