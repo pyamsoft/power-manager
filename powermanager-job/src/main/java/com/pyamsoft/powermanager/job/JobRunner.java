@@ -150,7 +150,8 @@ abstract class JobRunner {
       Timber.i("%s: Enable Sync", tag);
       syncModifier.set();
     }
-    return true;
+
+    return isJobRepeatRequired();
   }
 
   @CheckResult private boolean runDisableJob(@NonNull String tag, boolean firstRun) {
@@ -240,7 +241,24 @@ abstract class JobRunner {
       }
     }
 
-    return true;
+    return isJobRepeatRequired();
+  }
+
+  @CheckResult private boolean isJobRepeatRequired() {
+    boolean repeatWifi = wifiPreferences.isWifiManaged() && wifiPreferences.isPeriodicWifi();
+    boolean repeatData = dataPreferences.isDataManaged() && dataPreferences.isPeriodicData();
+    boolean repeatBluetooth =
+        bluetoothPreferences.isBluetoothManaged() && bluetoothPreferences.isPeriodicBluetooth();
+    boolean repeatSync = syncPreferences.isSyncManaged() && syncPreferences.isPeriodicSync();
+    boolean repeatAirplane =
+        airplanePreferences.isAirplaneManaged() && airplanePreferences.isPeriodicAirplane();
+    boolean repeatDoze = dozePreferences.isDozeManaged() && dozePreferences.isPeriodicDoze();
+    return repeatWifi
+        || repeatData
+        || repeatBluetooth
+        || repeatSync
+        || repeatAirplane
+        || repeatDoze;
   }
 
   private void repeatIfRequired(@NonNull String tag, boolean screenOn, long windowOnTime,
