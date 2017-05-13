@@ -26,7 +26,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.databinding.AdapterItemManageBinding;
+import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerManageBinding;
 import java.util.List;
 import javax.inject.Inject;
@@ -56,7 +56,7 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
   }
 
   @Override public int getLayoutRes() {
-    return R.layout.adapter_item_manage;
+    return R.layout.adapter_item_simple;
   }
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
@@ -68,9 +68,9 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
     bindSwitch(holder.containerBinding.manageAirplane, "Airplane Mode", presenterAirplane);
     bindSwitch(holder.containerBinding.manageDoze, "Doze Mode", presenterDoze);
 
-    holder.binding.manageExpander.setTitle(R.string.manage_title);
-    holder.binding.manageExpander.setDescription(R.string.manage_desc);
-    holder.binding.manageExpander.setExpandingContent(holder.containerBinding.getRoot());
+    holder.binding.simpleExpander.setTitle(R.string.manage_title);
+    holder.binding.simpleExpander.setDescription(R.string.manage_desc);
+    holder.binding.simpleExpander.setExpandingContent(holder.containerBinding.getRoot());
   }
 
   private void bindSwitch(@NonNull SwitchCompat switchCompat, @NonNull String name,
@@ -152,12 +152,12 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final AdapterItemManageBinding binding;
+    @NonNull final AdapterItemSimpleBinding binding;
     @NonNull final LayoutContainerManageBinding containerBinding;
 
     ViewHolder(View itemView) {
       super(itemView);
-      binding = AdapterItemManageBinding.bind(itemView);
+      binding = AdapterItemSimpleBinding.bind(itemView);
 
       View container = LayoutInflater.from(itemView.getContext())
           .inflate(R.layout.layout_container_manage, (ViewGroup) itemView, false);

@@ -185,26 +185,44 @@ public class ExpanderView extends FrameLayout {
     arrowLoad = LoaderHelper.unload(arrowLoad);
   }
 
+  public void setTitle(@NonNull String title) {
+    setTitle(new SpannableString(title));
+  }
+
   public void setTitle(@StringRes int title) {
     setTitle(new SpannableString(getContext().getString(title)));
   }
 
-  public void setTitle(@Nullable Spannable title) {
+  public void setTitle(@NonNull Spannable title) {
     binding.expanderTitle.setText(title);
-    binding.expanderTitle.setVisibility(title == null ? View.GONE : View.VISIBLE);
+    binding.expanderTitle.setVisibility(View.VISIBLE);
+  }
+
+  public void clearTitle() {
+    binding.expanderTitle.setText(null);
+    binding.expanderTitle.setVisibility(View.GONE);
   }
 
   public void setTitleTextSize(@Px int size) {
     binding.expanderTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, size);
   }
 
+  public void setDescription(@NonNull String description) {
+    setDescription(new SpannableString(description));
+  }
+
   public void setDescription(@StringRes int description) {
     setDescription(new SpannableString(getContext().getString(description)));
   }
 
-  public void setDescription(@Nullable Spannable description) {
+  public void setDescription(@NonNull Spannable description) {
     binding.expanderDescription.setText(description);
-    binding.expanderDescription.setVisibility(description == null ? View.GONE : View.VISIBLE);
+    binding.expanderDescription.setVisibility(View.VISIBLE);
+  }
+
+  public void clearDescription() {
+    binding.expanderDescription.setText(null);
+    binding.expanderDescription.setVisibility(View.GONE);
   }
 
   public void setExpandingContent(@LayoutRes int layout) {

@@ -16,6 +16,8 @@
   -->
 
 <resources>
+  <item name="adapter_poll_card_item" type="id"/>
+  <item name="adapter_delay_card_item" type="id"/>
   <item name="adapter_exception_card_item" type="id"/>
   <item name="adapter_manage_card_item" type="id"/>
   <item name="adapter_trigger_item" type="id"/>

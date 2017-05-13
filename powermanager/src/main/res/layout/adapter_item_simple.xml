@@ -29,7 +29,7 @@
       >
 
     <com.pyamsoft.powermanager.uicore.ExpanderView
-        android:id="@+id/manage_expander"
+        android:id="@+id/simple_expander"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

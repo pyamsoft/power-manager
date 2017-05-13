@@ -71,6 +71,14 @@ public class ManageFragment extends WatchedFragment {
           Timber.d("Inflate ExceptionItem for TAG: %s", s);
           item = new ExceptionItem();
           break;
+        case DelayItem.TAG:
+          Timber.d("Inflate DelayItem for TAG: %s", s);
+          item = new DelayItem();
+          break;
+        case PollItem.TAG:
+          Timber.d("Inflate PollItem for TAG: %s", s);
+          item = new PollItem();
+          break;
         default:
           Timber.e("Cannot inflate item for TAG: %s", s);
           item = null;
@@ -87,6 +95,8 @@ public class ManageFragment extends WatchedFragment {
     binding.recycler.setAdapter(adapter.wrap(new FastAdapter()));
 
     adapter.add(new ManageItem());
+    adapter.add(new DelayItem());
+    adapter.add(new PollItem());
     adapter.add(new ExceptionItem());
   }
 }
