@@ -36,11 +36,13 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.ViewExpanderBinding;
 import com.pyamsoft.pydroid.loader.ImageLoader;
 import com.pyamsoft.pydroid.loader.LoaderHelper;
 import com.pyamsoft.pydroid.loader.loaded.Loaded;
+import timber.log.Timber;
 
 public class ExpanderView extends FrameLayout {
 
@@ -74,6 +76,12 @@ public class ExpanderView extends FrameLayout {
   }
 
   private void init() {
+    if (isInEditMode()) {
+      Timber.d("In edit mode!");
+      addView(new LinearLayout(getContext()));
+      return;
+    }
+
     binding = ViewExpanderBinding.inflate(LayoutInflater.from(getContext()), this, false);
     addView(binding.getRoot());
 
@@ -157,6 +165,11 @@ public class ExpanderView extends FrameLayout {
 
   @Override protected void onAttachedToWindow() {
     super.onAttachedToWindow();
+    if (isInEditMode()) {
+      Timber.d("In edit mode!");
+      return;
+    }
+
     arrowLoad = LoaderHelper.unload(arrowLoad);
     arrowLoad = ImageLoader.fromResource(getContext(), R.drawable.ic_arrow_up_24dp)
         .into(binding.expanderArrow);
@@ -164,6 +177,11 @@ public class ExpanderView extends FrameLayout {
 
   @Override protected void onDetachedFromWindow() {
     super.onDetachedFromWindow();
+    if (isInEditMode()) {
+      Timber.d("In edit mode!");
+      return;
+    }
+
     arrowLoad = LoaderHelper.unload(arrowLoad);
   }
 
