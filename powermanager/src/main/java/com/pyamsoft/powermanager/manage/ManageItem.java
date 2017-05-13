@@ -19,15 +19,16 @@ package com.pyamsoft.powermanager.manage;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemManageBinding;
+import com.pyamsoft.powermanager.databinding.LayoutContainerManageBinding;
 import com.pyamsoft.powermanager.model.States;
-import com.pyamsoft.pydroid.loader.LoaderHelper;
-import com.pyamsoft.pydroid.loader.loaded.Loaded;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,13 +42,10 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
   @Inject @Named("manage_sync") ManagePresenter presenterSync;
   @Inject @Named("manage_airplane") ManagePresenter presenterAirplane;
   @Inject @Named("manage_doze") ManagePresenter presenterDoze;
-  @SuppressWarnings("WeakerAccess") boolean expanded;
-  @NonNull private Loaded arrowLoaded = LoaderHelper.empty();
 
   ManageItem() {
     super(TAG);
     Injector.get().provideComponent().plusManageComponent().inject(this);
-    expanded = false;
   }
 
   @Override public ViewHolder getViewHolder(View view) {
@@ -64,21 +62,16 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    bindSwitch(holder.binding.manageWifi, "WiFi", presenterWifi);
-    bindSwitch(holder.binding.manageData, "Cellular Data", presenterData);
-    bindSwitch(holder.binding.manageBluetooth, "Bluetooth", presenterBluetooth);
-    bindSwitch(holder.binding.manageSync, "Auto Sync", presenterSync);
-    bindSwitch(holder.binding.manageAirplane, "Airplane Mode", presenterAirplane);
-    bindSwitch(holder.binding.manageDoze, "Doze Mode", presenterDoze);
+    bindSwitch(holder.containerBinding.manageWifi, "WiFi", presenterWifi);
+    bindSwitch(holder.containerBinding.manageData, "Cellular Data", presenterData);
+    bindSwitch(holder.containerBinding.manageBluetooth, "Bluetooth", presenterBluetooth);
+    bindSwitch(holder.containerBinding.manageSync, "Auto Sync", presenterSync);
+    bindSwitch(holder.containerBinding.manageAirplane, "Airplane Mode", presenterAirplane);
+    bindSwitch(holder.containerBinding.manageDoze, "Doze Mode", presenterDoze);
 
-    arrowLoaded = loadArrow(holder.binding.manageArrow);
-    setArrowRotation(holder.binding.manageArrow, expanded);
-    holder.binding.manageContainerExpandable.setVisibility(expanded ? View.VISIBLE : View.GONE);
-    holder.binding.manageTitleContainer.setOnClickListener(v -> {
-      expanded = !expanded;
-      setArrowRotation(holder.binding.manageArrow, expanded);
-      holder.binding.manageContainerExpandable.setVisibility(expanded ? View.VISIBLE : View.GONE);
-    });
+    holder.binding.manageExpander.setTitle(R.string.manage_title);
+    holder.binding.manageExpander.setDescription(R.string.manage_desc);
+    holder.binding.manageExpander.setExpandingContent(holder.containerBinding.getRoot());
   }
 
   private void bindSwitch(@NonNull SwitchCompat switchCompat, @NonNull String name,
@@ -144,16 +137,14 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    arrowLoaded = LoaderHelper.unload(arrowLoaded);
-    holder.binding.manageArrow.setImageDrawable(null);
-    holder.binding.manageTitleContainer.setOnClickListener(null);
-    unbindSwitch(holder.binding.manageWifi, presenterWifi);
-    unbindSwitch(holder.binding.manageData, presenterData);
-    unbindSwitch(holder.binding.manageBluetooth, presenterBluetooth);
-    unbindSwitch(holder.binding.manageSync, presenterSync);
-    unbindSwitch(holder.binding.manageAirplane, presenterAirplane);
-    unbindSwitch(holder.binding.manageDoze, presenterDoze);
+    unbindSwitch(holder.containerBinding.manageWifi, presenterWifi);
+    unbindSwitch(holder.containerBinding.manageData, presenterData);
+    unbindSwitch(holder.containerBinding.manageBluetooth, presenterBluetooth);
+    unbindSwitch(holder.containerBinding.manageSync, presenterSync);
+    unbindSwitch(holder.containerBinding.manageAirplane, presenterAirplane);
+    unbindSwitch(holder.containerBinding.manageDoze, presenterDoze);
     holder.binding.unbind();
+    holder.containerBinding.unbind();
   }
 
   private void unbindSwitch(@NonNull SwitchCompat switchCompat,
@@ -167,10 +158,15 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull final AdapterItemManageBinding binding;
+    @NonNull final LayoutContainerManageBinding containerBinding;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = AdapterItemManageBinding.bind(itemView);
+
+      View container = LayoutInflater.from(itemView.getContext())
+          .inflate(R.layout.layout_container_manage, (ViewGroup) itemView, false);
+      containerBinding = LayoutContainerManageBinding.bind(container);
     }
   }
 }
