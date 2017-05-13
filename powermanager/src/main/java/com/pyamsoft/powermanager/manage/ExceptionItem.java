@@ -49,10 +49,13 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
+    holder.binding.exceptionChargingContainer.setTitleTextSize(18);
     holder.binding.exceptionChargingContainer.setTitle(R.string.charging);
     holder.binding.exceptionChargingContainer.setDescription(null);
     holder.binding.exceptionChargingContainer.setExpandingContent(
         holder.chargingContainerBinding.getRoot());
+
+    holder.binding.exceptionWearContainer.setTitleTextSize(18);
     holder.binding.exceptionWearContainer.setTitle(R.string.connected_to_android_wear);
     holder.binding.exceptionWearContainer.setDescription(null);
     holder.binding.exceptionWearContainer.setExpandingContent(
