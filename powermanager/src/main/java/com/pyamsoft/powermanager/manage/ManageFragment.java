@@ -28,11 +28,13 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.pyamsoft.powermanager.databinding.FragmentManageBinding;
 import com.pyamsoft.powermanager.uicore.WatchedFragment;
+import io.reactivex.Observable;
 import timber.log.Timber;
 
 public class ManageFragment extends WatchedFragment {
 
   @NonNull public static final String TAG = "ManageFragment";
+  GenericItemAdapter<String, BaseItem<?, ?>> adapter;
   private FragmentManageBinding binding;
 
   @CheckResult @NonNull public static ManageFragment newInstance() {
@@ -52,6 +54,12 @@ public class ManageFragment extends WatchedFragment {
   @Override public void onDestroyView() {
     super.onDestroyView();
     binding.unbind();
+
+    // Explicit unbind list item observables
+    Observable.just(adapter)
+        .map(stringBaseItemGenericItemAdapter -> adapter.getAdapterItems())
+        .flatMap(Observable::fromIterable)
+        .blockingForEach(BaseItem::unbindItem);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -60,7 +68,7 @@ public class ManageFragment extends WatchedFragment {
   }
 
   private void setupRecyclerView() {
-    GenericItemAdapter<String, BaseItem<?, ?>> adapter = new GenericItemAdapter<>(s -> {
+    adapter = new GenericItemAdapter<>(s -> {
       final BaseItem<?, ?> item;
       switch (s) {
         case ManageItem.TAG:

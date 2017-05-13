@@ -132,22 +132,34 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    unbindSwitch(holder.containerBinding.manageWifi, presenterWifi);
-    unbindSwitch(holder.containerBinding.manageData, presenterData);
-    unbindSwitch(holder.containerBinding.manageBluetooth, presenterBluetooth);
-    unbindSwitch(holder.containerBinding.manageSync, presenterSync);
-    unbindSwitch(holder.containerBinding.manageAirplane, presenterAirplane);
-    unbindSwitch(holder.containerBinding.manageDoze, presenterDoze);
+    unbindSwitch(holder.containerBinding.manageWifi);
+    unbindSwitch(holder.containerBinding.manageData);
+    unbindSwitch(holder.containerBinding.manageBluetooth);
+    unbindSwitch(holder.containerBinding.manageSync);
+    unbindSwitch(holder.containerBinding.manageAirplane);
+    unbindSwitch(holder.containerBinding.manageDoze);
     holder.binding.unbind();
     holder.containerBinding.unbind();
   }
 
-  private void unbindSwitch(@NonNull SwitchCompat switchCompat,
-      @NonNull ManagePresenter presenter) {
+  @Override void unbindItem() {
+    presenterAirplane.stop();
+    presenterAirplane.destroy();
+    presenterWifi.stop();
+    presenterWifi.destroy();
+    presenterData.stop();
+    presenterData.destroy();
+    presenterBluetooth.stop();
+    presenterBluetooth.destroy();
+    presenterSync.stop();
+    presenterSync.destroy();
+    presenterDoze.stop();
+    presenterDoze.destroy();
+  }
+
+  private void unbindSwitch(@NonNull SwitchCompat switchCompat) {
     switchCompat.setText(null);
     switchCompat.setOnCheckedChangeListener(null);
-    presenter.stop();
-    presenter.destroy();
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {

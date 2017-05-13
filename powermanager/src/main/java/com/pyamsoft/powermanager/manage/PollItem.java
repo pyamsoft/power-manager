@@ -55,6 +55,10 @@ public class PollItem extends BaseItem<PollItem, PollItem.ViewHolder> {
     holder.binding.unbind();
   }
 
+  @Override void unbindItem() {
+
+  }
+
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull AdapterItemSimpleBinding binding;

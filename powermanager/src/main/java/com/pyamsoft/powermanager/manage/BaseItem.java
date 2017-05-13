@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.manage;
 
+import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
 
@@ -25,4 +26,11 @@ abstract class BaseItem<I extends BaseItem<?, ?>, VH extends RecyclerView.ViewHo
   BaseItem(String tag) {
     super(tag);
   }
+
+  @CallSuper @Override public void unbindView(VH holder) {
+    super.unbindView(holder);
+    unbindItem();
+  }
+
+  abstract void unbindItem();
 }

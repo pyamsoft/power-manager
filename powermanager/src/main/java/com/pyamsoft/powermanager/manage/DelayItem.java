@@ -55,6 +55,10 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     holder.binding.unbind();
   }
 
+  @Override void unbindItem() {
+
+  }
+
   static class ViewHolder extends RecyclerView.ViewHolder {
 
     @NonNull AdapterItemSimpleBinding binding;

@@ -91,20 +91,35 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
     unbind(holder.chargingContainerBinding.exceptionChargingAirplane,
-        holder.wearContainerBinding.exceptionWearAirplane, presenterAirplane);
+        holder.wearContainerBinding.exceptionWearAirplane);
     unbind(holder.chargingContainerBinding.exceptionChargingWifi,
-        holder.wearContainerBinding.exceptionWearWifi, presenterWifi);
+        holder.wearContainerBinding.exceptionWearWifi);
     unbind(holder.chargingContainerBinding.exceptionChargingData,
-        holder.wearContainerBinding.exceptionWearData, presenterData);
+        holder.wearContainerBinding.exceptionWearData);
     unbind(holder.chargingContainerBinding.exceptionChargingBluetooth,
-        holder.wearContainerBinding.exceptionWearBluetooth, presenterBluetooth);
+        holder.wearContainerBinding.exceptionWearBluetooth);
     unbind(holder.chargingContainerBinding.exceptionChargingSync,
-        holder.wearContainerBinding.exceptionWearSync, presenterSync);
+        holder.wearContainerBinding.exceptionWearSync);
     unbind(holder.chargingContainerBinding.exceptionChargingDoze,
-        holder.wearContainerBinding.exceptionWearDoze, presenterDoze);
+        holder.wearContainerBinding.exceptionWearDoze);
     holder.wearContainerBinding.unbind();
     holder.chargingContainerBinding.unbind();
     holder.binding.unbind();
+  }
+
+  @Override void unbindItem() {
+    presenterAirplane.stop();
+    presenterAirplane.destroy();
+    presenterWifi.stop();
+    presenterWifi.destroy();
+    presenterData.stop();
+    presenterData.destroy();
+    presenterBluetooth.stop();
+    presenterBluetooth.destroy();
+    presenterSync.stop();
+    presenterSync.destroy();
+    presenterDoze.stop();
+    presenterDoze.destroy();
   }
 
   private void bind(@NonNull CheckBox charging, @NonNull CheckBox wear, @NonNull String name,
@@ -242,14 +257,11 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
     });
   }
 
-  private void unbind(@NonNull CheckBox chargeCheckbox, @NonNull CheckBox wearCheckBox,
-      @NonNull ExceptionPresenter presenter) {
+  private void unbind(@NonNull CheckBox chargeCheckbox, @NonNull CheckBox wearCheckBox) {
     chargeCheckbox.setText(null);
     chargeCheckbox.setOnCheckedChangeListener(null);
     wearCheckBox.setText(null);
     wearCheckBox.setOnCheckedChangeListener(null);
-    presenter.stop();
-    presenter.destroy();
   }
 
   static class ViewHolder extends RecyclerView.ViewHolder {
