@@ -52,6 +52,6 @@ class SyncExceptionInteractor extends ExceptionInteractor {
   }
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
-    return Single.fromCallable(() -> preferences.isIgnoreWearSync() ? Boolean.TRUE : Boolean.FALSE);
+    return Single.fromCallable(() -> preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

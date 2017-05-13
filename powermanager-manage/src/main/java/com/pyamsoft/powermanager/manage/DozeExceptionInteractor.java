@@ -52,6 +52,6 @@ class DozeExceptionInteractor extends ExceptionInteractor {
   }
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
-    return Single.fromCallable(() -> preferences.isIgnoreWearDoze() ? Boolean.TRUE : Boolean.FALSE);
+    return Single.fromCallable(() -> preferences.isDozeManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

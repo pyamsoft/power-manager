@@ -55,6 +55,6 @@ class BluetoothExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
     return Single.fromCallable(
-        () -> preferences.isIgnoreWearBluetooth() ? Boolean.TRUE : Boolean.FALSE);
+        () -> preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

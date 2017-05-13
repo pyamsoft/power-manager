@@ -55,6 +55,6 @@ class AirplaneExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
     return Single.fromCallable(
-        () -> preferences.isIgnoreWearAirplane() ? Boolean.TRUE : Boolean.FALSE);
+        () -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

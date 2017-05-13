@@ -52,6 +52,6 @@ class DataExceptionInteractor extends ExceptionInteractor {
   }
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
-    return Single.fromCallable(() -> preferences.isIgnoreWearData() ? Boolean.TRUE : Boolean.FALSE);
+    return Single.fromCallable(() -> preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }

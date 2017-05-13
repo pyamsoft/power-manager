@@ -52,6 +52,6 @@ class WifiExceptionInteractor extends ExceptionInteractor {
   }
 
   @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
-    return Single.fromCallable(() -> preferences.isIgnoreWearWifi() ? Boolean.TRUE : Boolean.FALSE);
+    return Single.fromCallable(() -> preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE);
   }
 }
