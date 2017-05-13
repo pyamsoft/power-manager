@@ -52,23 +52,11 @@ class ManagePresenter extends SchedulerPresenter {
     disposeOnDestroy(interactor.isManaged()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .doOnSuccess(booleanBooleanPair -> callback.onEnableRetrieved(booleanBooleanPair.first))
         .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
+        .map(booleanBooleanPair -> booleanBooleanPair.second)
+        .subscribe(callback::onStateRetrieved, throwable -> {
           Timber.e(throwable, "Error getting managed");
-          callback.onError(throwable);
-        }));
-  }
-
-  /**
-   * public
-   */
-  void getStateEnabled(@NonNull RetrieveCallback callback) {
-    disposeOnDestroy(interactor.isManagedEnabled()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
-          Timber.e(throwable, "Error getting managed enabled");
           callback.onError(throwable);
         }));
   }
@@ -82,7 +70,9 @@ class ManagePresenter extends SchedulerPresenter {
 
   interface RetrieveCallback {
 
-    void onRetrieved(boolean enabled);
+    void onEnableRetrieved(boolean enabled);
+
+    void onStateRetrieved(boolean enabled);
 
     void onError(@NonNull Throwable throwable);
 

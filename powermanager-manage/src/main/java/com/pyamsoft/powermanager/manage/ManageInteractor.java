@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
@@ -25,7 +26,5 @@ abstract class ManageInteractor {
 
   @CheckResult @NonNull abstract Completable setManaged(boolean state);
 
-  @CheckResult @NonNull abstract Single<Boolean> isManaged();
-
-  @CheckResult @NonNull abstract Single<Boolean> isManagedEnabled();
+  @CheckResult @NonNull abstract Single<Pair<Boolean, Boolean>> isManaged();
 }

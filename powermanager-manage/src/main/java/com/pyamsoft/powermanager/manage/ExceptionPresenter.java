@@ -53,23 +53,11 @@ class ExceptionPresenter extends SchedulerPresenter {
     disposeOnDestroy(interactor.isIgnoreCharging()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .doOnSuccess(booleanBooleanPair -> callback.onEnableRetrieved(booleanBooleanPair.first))
         .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
+        .map(booleanBooleanPair -> booleanBooleanPair.second)
+        .subscribe(callback::onStateRetrieved, throwable -> {
           Timber.e(throwable, "Error getting ignore charging");
-          callback.onError(throwable);
-        }));
-  }
-
-  /**
-   * public
-   */
-  void getIgnoreChargingEnabled(@NonNull RetrieveCallback callback) {
-    disposeOnDestroy(interactor.isIgnoreChargingEnabled()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
-          Timber.e(throwable, "Error getting ignore charging enabled");
           callback.onError(throwable);
         }));
   }
@@ -95,23 +83,11 @@ class ExceptionPresenter extends SchedulerPresenter {
     disposeOnDestroy(interactor.isIgnoreWear()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
+        .doOnSuccess(booleanBooleanPair -> callback.onEnableRetrieved(booleanBooleanPair.first))
         .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
+        .map(booleanBooleanPair -> booleanBooleanPair.second)
+        .subscribe(callback::onStateRetrieved, throwable -> {
           Timber.e(throwable, "Error getting ignore wear");
-          callback.onError(throwable);
-        }));
-  }
-
-  /**
-   * public
-   */
-  void getIgnoreWearEnabled(@NonNull RetrieveCallback callback) {
-    disposeOnDestroy(interactor.isIgnoreWearEnabled()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .doAfterTerminate(callback::onComplete)
-        .subscribe(callback::onRetrieved, throwable -> {
-          Timber.e(throwable, "Error getting ignore wear enabled");
           callback.onError(throwable);
         }));
   }
@@ -125,7 +101,9 @@ class ExceptionPresenter extends SchedulerPresenter {
 
   interface RetrieveCallback {
 
-    void onRetrieved(boolean enabled);
+    void onEnableRetrieved(boolean enabled);
+
+    void onStateRetrieved(boolean enabled);
 
     void onError(@NonNull Throwable throwable);
 

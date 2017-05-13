@@ -17,9 +17,9 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import com.pyamsoft.powermanager.model.PermissionObserver;
-import com.pyamsoft.powermanager.model.States;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import javax.inject.Inject;
@@ -39,11 +39,9 @@ class AirplaneManageInteractor extends ManageInteractor {
     return Completable.fromAction(() -> preferences.setAirplaneManaged(state));
   }
 
-  @NonNull @Override Single<Boolean> isManaged() {
-    return Single.fromCallable(() -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
-  }
-
-  @NonNull @Override Single<Boolean> isManagedEnabled() {
-    return Single.fromCallable(permissionObserver::hasPermission);
+  @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
+    return Single.fromCallable(
+        () -> new Pair<>(permissionObserver.hasPermission() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

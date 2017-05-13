@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.base.preference.WifiPreferences;
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -34,11 +35,8 @@ class WifiManageInteractor extends ManageInteractor {
     return Completable.fromAction(() -> preferences.setWifiManaged(state));
   }
 
-  @NonNull @Override Single<Boolean> isManaged() {
-    return Single.fromCallable(() -> preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE);
-  }
-
-  @NonNull @Override Single<Boolean> isManagedEnabled() {
-    return Single.just(Boolean.TRUE);
+  @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
+    return Single.fromCallable(
+        () -> new Pair<>(Boolean.TRUE, preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

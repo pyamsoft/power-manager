@@ -121,7 +121,12 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
     // Get current state
     presenter.getIgnoreCharging(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(boolean enabled) {
+
+      @Override public void onEnableRetrieved(boolean enabled) {
+        checkBox.setEnabled(enabled);
+      }
+
+      @Override public void onStateRetrieved(boolean enabled) {
         // Make sure we don't trigger anything
         checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(enabled);
@@ -161,24 +166,6 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
         });
       }
     });
-
-    presenter.getIgnoreChargingEnabled(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(boolean enabled) {
-        checkBox.setEnabled(enabled);
-      }
-
-      @Override public void onError(@NonNull Throwable throwable) {
-        Toast.makeText(checkBox.getContext(), "Failed to retrieve enabled state: " + name,
-            Toast.LENGTH_SHORT).show();
-
-        // Mark switch as disabled
-        checkBox.setEnabled(false);
-      }
-
-      @Override public void onComplete() {
-
-      }
-    });
   }
 
   private void bindWearCheck(@NonNull CheckBox checkBox, @NonNull String name,
@@ -191,7 +178,12 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
     // Get current state
     presenter.getIgnoreWear(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(boolean enabled) {
+
+      @Override public void onEnableRetrieved(boolean enabled) {
+        checkBox.setEnabled(enabled);
+      }
+
+      @Override public void onStateRetrieved(boolean enabled) {
         // Make sure we don't trigger anything
         checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(enabled);
@@ -229,24 +221,6 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
             });
           }
         });
-      }
-    });
-
-    presenter.getIgnoreWearEnabled(new ExceptionPresenter.RetrieveCallback() {
-      @Override public void onRetrieved(boolean enabled) {
-        checkBox.setEnabled(enabled);
-      }
-
-      @Override public void onError(@NonNull Throwable throwable) {
-        Toast.makeText(checkBox.getContext(), "Failed to retrieve enabled state: " + name,
-            Toast.LENGTH_SHORT).show();
-
-        // Mark switch as disabled
-        checkBox.setEnabled(false);
-      }
-
-      @Override public void onComplete() {
-
       }
     });
   }

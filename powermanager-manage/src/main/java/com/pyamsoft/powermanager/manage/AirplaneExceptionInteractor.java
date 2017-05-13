@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences;
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -34,27 +35,19 @@ class AirplaneExceptionInteractor extends ExceptionInteractor {
     return Completable.fromAction(() -> preferences.setIgnoreChargingAirplane(state));
   }
 
-  @NonNull @Override Single<Boolean> isIgnoreCharging() {
-    return Single.fromCallable(
-        () -> preferences.isIgnoreChargingAirplane() ? Boolean.TRUE : Boolean.FALSE);
-  }
-
-  @NonNull @Override Single<Boolean> isIgnoreChargingEnabled() {
-    return Single.fromCallable(
-        () -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
-  }
-
   @NonNull @Override Completable setIgnoreWear(boolean state) {
     return Completable.fromAction(() -> preferences.setIgnoreWearAirplane(state));
   }
 
-  @NonNull @Override Single<Boolean> isIgnoreWear() {
+  @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> preferences.isIgnoreWearAirplane() ? Boolean.TRUE : Boolean.FALSE);
+        () -> new Pair<>(preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.isIgnoreChargingAirplane() ? Boolean.TRUE : Boolean.FALSE));
   }
 
-  @NonNull @Override Single<Boolean> isIgnoreWearEnabled() {
+  @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE);
+        () -> new Pair<>(preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.isIgnoreWearAirplane() ? Boolean.TRUE : Boolean.FALSE));
   }
 }
