@@ -28,6 +28,8 @@ import android.support.annotation.StyleRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -164,21 +166,21 @@ public class ExpanderView extends FrameLayout {
   }
 
   public void setTitle(@StringRes int title) {
-    setTitle(getContext().getString(title));
+    setTitle(new SpannableString(getContext().getString(title)));
   }
 
-  public void setTitle(@NonNull String title) {
+  public void setTitle(@Nullable Spannable title) {
     binding.expanderTitle.setText(title);
-    binding.expanderTitle.setVisibility(View.VISIBLE);
+    binding.expanderTitle.setVisibility(title == null ? View.GONE : View.VISIBLE);
   }
 
   public void setDescription(@StringRes int description) {
-    setDescription(getContext().getString(description));
+    setDescription(new SpannableString(getContext().getString(description)));
   }
 
-  public void setDescription(@NonNull String description) {
+  public void setDescription(@Nullable Spannable description) {
     binding.expanderDescription.setText(description);
-    binding.expanderDescription.setVisibility(View.VISIBLE);
+    binding.expanderDescription.setVisibility(description == null ? View.GONE : View.VISIBLE);
   }
 
   public void setExpandingContent(@LayoutRes int layout) {

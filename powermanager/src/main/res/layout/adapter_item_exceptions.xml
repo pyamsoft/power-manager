@@ -62,214 +62,27 @@
           android:textStyle="bold"
           />
 
-      <LinearLayout
+      <com.pyamsoft.powermanager.uicore.ExpanderView
+          android:id="@+id/exception_charging_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@color/material_light_background"
-          android:orientation="vertical"
           android:paddingBottom="8dp"
           android:paddingEnd="8dp"
           android:paddingStart="8dp"
           android:paddingTop="8dp"
-          >
+          />
 
-        <LinearLayout
-            android:id="@+id/exception_charging_title_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            >
-
-          <TextView
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:gravity="center_vertical"
-              android:text="@string/charging"
-              android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-              />
-
-          <com.pyamsoft.pydroid.ui.widget.SquareImageView
-              android:id="@+id/exception_charging_arrow"
-              android:layout_width="24dp"
-              android:layout_height="24dp"
-              />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/exception_charging_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingEnd="0dp"
-            android:paddingStart="16dp"
-            android:visibility="gone"
-            >
-
-          <CheckBox
-              android:id="@+id/exception_charging_wifi"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage WiFi"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_charging_data"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Mobile Data"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_charging_bluetooth"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Bluetooth"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_charging_sync"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Auto Sync"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_charging_airplane"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Airplane Mode"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_charging_doze"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Doze Mode"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-        </LinearLayout>
-
-      </LinearLayout>
-
-      <LinearLayout
+      <com.pyamsoft.powermanager.uicore.ExpanderView
+          android:id="@+id/exception_wear_container"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@color/material_light_background"
-          android:orientation="vertical"
           android:paddingBottom="8dp"
           android:paddingEnd="8dp"
           android:paddingStart="8dp"
           android:paddingTop="8dp"
-          >
-
-        <LinearLayout
-            android:id="@+id/exception_wear_title_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            >
-
-          <TextView
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="1"
-              android:gravity="center_vertical"
-              android:text="@string/connected_to_android_wear"
-              android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-              />
-
-          <com.pyamsoft.pydroid.ui.widget.SquareImageView
-              android:id="@+id/exception_wear_arrow"
-              android:layout_width="24dp"
-              android:layout_height="24dp"
-              />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/exception_wear_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingEnd="0dp"
-            android:paddingStart="16dp"
-            android:visibility="gone"
-            >
-
-          <CheckBox
-              android:id="@+id/exception_wear_wifi"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage WiFi"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_wear_data"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Mobile Data"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_wear_bluetooth"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Bluetooth"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_wear_sync"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Auto Sync"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_wear_airplane"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Airplane Mode"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-          <CheckBox
-              android:id="@+id/exception_wear_doze"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center_vertical"
-              android:text="Do not manage Doze Mode"
-              android:textAppearance="@style/TextAppearance.AppCompat.Small"
-              />
-
-        </LinearLayout>
-
-      </LinearLayout>
+          />
 
     </LinearLayout>
 
