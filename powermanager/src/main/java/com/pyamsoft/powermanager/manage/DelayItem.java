@@ -29,6 +29,7 @@ import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerDelayBinding;
 import java.util.List;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
@@ -63,15 +64,15 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     presenter.getDelayTime(new DelayPresenter.DelayCallback() {
       @Override public void onCustomDelay(long time) {
         holder.delayBinding.delayRadioGroup.clearCheck();
-        holder.delayBinding.delayRadioCustom.setChecked(true);
-        holder.delayBinding.delayInputCustom.setEnabled(true);
+        selectCustomDelay(holder);
+        holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
       }
 
-      @Override public void onPresetDelay(int index) {
-        holder.delayBinding.delayRadioCustom.setChecked(false);
-        holder.delayBinding.delayInputCustom.setEnabled(false);
+      @Override public void onPresetDelay(int index, long time) {
+        selectPresetDelay(holder);
         holder.delayBinding.delayRadioGroup.check(
             holder.delayBinding.delayRadioGroup.getChildAt(index).getId());
+        holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
@@ -82,6 +83,78 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
       }
     });
+
+    holder.delayBinding.delayRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+      if (checkedId == -1) {
+        Timber.d("Custom is checked");
+        selectCustomDelay(holder);
+      } else {
+        Timber.d("Preset is checked");
+        selectPresetDelay(holder);
+
+        final long time;
+        switch (checkedId) {
+          case R.id.delay_radio_five:
+            time = 5;
+            break;
+          case R.id.delay_radio_ten:
+            time = 10;
+            break;
+          case R.id.delay_radio_fifteen:
+            time = 15;
+            break;
+          case R.id.delay_radio_thirty:
+            time = 30;
+            break;
+          case R.id.delay_radio_fourtyfive:
+            time = 45;
+            break;
+          case R.id.delay_radio_sixty:
+            time = 60;
+            break;
+          case R.id.delay_radio_ninety:
+            time = 90;
+            break;
+          case R.id.delay_radio_onetwenty:
+            time = 120;
+            break;
+          default:
+            throw new IllegalArgumentException("Could not find RadioButton with id: " + checkedId);
+        }
+        presenter.setDelayTime(time, new DelayPresenter.ActionCallback() {
+          @Override public void onError(@NonNull Throwable throwable) {
+            // TODO error
+          }
+        });
+      }
+    });
+
+    holder.delayBinding.delayRadioCustom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      if (isChecked) {
+        holder.delayBinding.delayRadioGroup.clearCheck();
+        selectCustomDelay(holder);
+      }
+    });
+
+    presenter.listenForDelayTimeChanges(new DelayPresenter.OnDelayChangedCallback() {
+      @Override public void onDelayTimeChanged(long time) {
+        holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
+      }
+
+      @Override public void onError(@NonNull Throwable throwable) {
+        // TODO
+      }
+    });
+  }
+
+  @SuppressWarnings("WeakerAccess") void selectPresetDelay(@NonNull ViewHolder holder) {
+    holder.delayBinding.delayRadioCustom.setChecked(false);
+    holder.delayBinding.delayInputCustom.setEnabled(false);
+  }
+
+  @SuppressWarnings("WeakerAccess") void selectCustomDelay(@NonNull ViewHolder holder) {
+    holder.delayBinding.delayRadioCustom.setChecked(true);
+    holder.delayBinding.delayInputCustom.setEnabled(true);
   }
 
   @Override public void unbindView(ViewHolder holder) {

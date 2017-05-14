@@ -33,6 +33,16 @@ class DelayPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
+  void setDelayTime(long time, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setDelayTime(time)
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(() -> Timber.d("Set delay time successfully: %s", time), throwable -> {
+          Timber.e(throwable, "Error setting managed");
+          callback.onError(throwable);
+        }));
+  }
+
   /**
    * public
    */
@@ -68,7 +78,7 @@ class DelayPresenter extends SchedulerPresenter {
               throw new IllegalStateException("No preset delay with time: " + delayTime);
             }
 
-            callback.onPresetDelay(index);
+            callback.onPresetDelay(index, delayTime);
           }
         }, throwable -> {
           Timber.e(throwable, "Error getting delay time");
@@ -76,11 +86,36 @@ class DelayPresenter extends SchedulerPresenter {
         }));
   }
 
+  /**
+   * public
+   */
+  void listenForDelayTimeChanges(@NonNull OnDelayChangedCallback callback) {
+    disposeOnDestroy(interactor.listenTimeChanges()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(callback::onDelayTimeChanged, throwable -> {
+          Timber.e(throwable, "Error on delay changed event");
+          callback.onError(throwable);
+        }));
+  }
+
+  interface ActionCallback {
+
+    void onError(@NonNull Throwable throwable);
+  }
+
+  interface OnDelayChangedCallback {
+
+    void onDelayTimeChanged(long time);
+
+    void onError(@NonNull Throwable throwable);
+  }
+
   interface DelayCallback {
 
     void onCustomDelay(long time);
 
-    void onPresetDelay(int index);
+    void onPresetDelay(int index, long time);
 
     void onError(@NonNull Throwable throwable);
 

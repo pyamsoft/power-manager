@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.base.preference;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
+import android.support.annotation.NonNull;
 
 public interface ManagePreferences {
 
@@ -35,4 +37,14 @@ public interface ManagePreferences {
   @CheckResult long getPeriodicEnableTime();
 
   void setPeriodicEnableTime(long time);
+
+  @CheckResult @NonNull SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
+      @NonNull DelayTimeChangeListener listener);
+
+  void unregisterDelayChanges(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+
+  interface DelayTimeChangeListener {
+
+    void onDelayTimeChanged(long time);
+  }
 }

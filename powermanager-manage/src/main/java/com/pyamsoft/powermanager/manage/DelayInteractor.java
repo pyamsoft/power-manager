@@ -16,13 +16,18 @@
 
 package com.pyamsoft.powermanager.manage;
 
+import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.base.preference.ManagePreferences;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Completable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import timber.log.Timber;
 
 @Singleton class DelayInteractor {
 
@@ -35,5 +40,24 @@ import javax.inject.Singleton;
   @CheckResult @NonNull Single<Pair<Boolean, Long>> getDelayTime() {
     return Single.fromCallable(
         () -> new Pair<>(preferences.isCustomManageDelay(), preferences.getManageDelay()));
+  }
+
+  @CheckResult @NonNull Completable setDelayTime(long time) {
+    return Completable.fromAction(() -> preferences.setManageDelay(time));
+  }
+
+  @CheckResult @NonNull Flowable<Long> listenTimeChanges() {
+    return Flowable.create(emitter -> {
+      SharedPreferences.OnSharedPreferenceChangeListener listener =
+          preferences.registerDelayChanges(time -> {
+            Timber.d("On delay changed");
+            emitter.onNext(time);
+          });
+
+      emitter.setCancellable(() -> {
+        Timber.d("Stop listening for delay changes");
+        preferences.unregisterDelayChanges(listener);
+      });
+    }, BackpressureStrategy.BUFFER);
   }
 }

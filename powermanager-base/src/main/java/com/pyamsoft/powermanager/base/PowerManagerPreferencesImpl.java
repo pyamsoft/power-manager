@@ -62,6 +62,7 @@ class PowerManagerPreferencesImpl
   @NonNull private static final String ORIGINAL_SYNC = "pm7_original_sync";
   @NonNull private static final String ORIGINAL_AIRPLANE = "pm7_original_airplane";
   @NonNull private static final String ORIGINAL_DOZE = "pm7_original_doze";
+  @NonNull final String globalManageDelayKey;
   @NonNull private final SharedPreferences preferences;
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
@@ -99,7 +100,6 @@ class PowerManagerPreferencesImpl
   private final boolean ignoreChargingDataDefault;
   private final boolean ignoreChargingBluetoothDefault;
   private final boolean ignoreChargingSyncDefault;
-
   @NonNull private final String ignoreWearDoze;
   @NonNull private final String ignoreWearAirplane;
   @NonNull private final String ignoreWearWifi;
@@ -112,7 +112,6 @@ class PowerManagerPreferencesImpl
   private final boolean ignoreWearDataDefault;
   private final boolean ignoreWearBluetoothDefault;
   private final boolean ignoreWearSyncDefault;
-
   @NonNull private final String wearableDelay;
   @NonNull private final String wearableDelayDefault;
   @NonNull private final String startWhenOpen;
@@ -124,8 +123,6 @@ class PowerManagerPreferencesImpl
   @NonNull private final String triggerPeriodKey;
   @NonNull private final String triggerPeriodDefault;
   private final long defaultTriggerPeriodValue;
-
-  @NonNull private final String globalManageDelayKey;
   @NonNull private final String globalManageEnableKey;
   @NonNull private final String globalManageDisableKey;
   private final long globalManageDelayDefault;
@@ -574,5 +571,22 @@ class PowerManagerPreferencesImpl
 
   @Override public void setPeriodicEnableTime(long time) {
     preferences.edit().putLong(globalManageEnableKey, time).apply();
+  }
+
+  @NonNull @Override public SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
+      @NonNull DelayTimeChangeListener listener) {
+    SharedPreferences.OnSharedPreferenceChangeListener preferenceListener =
+        (sharedPreferences, key) -> {
+          if (globalManageDelayKey.equals(key)) {
+            listener.onDelayTimeChanged(getManageDelay());
+          }
+        };
+    preferences.registerOnSharedPreferenceChangeListener(preferenceListener);
+    return preferenceListener;
+  }
+
+  @Override public void unregisterDelayChanges(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    preferences.unregisterOnSharedPreferenceChangeListener(listener);
   }
 }
