@@ -55,10 +55,6 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.binding.simpleExpander.setTitle("Active Delay");
-    holder.binding.simpleExpander.setDescription(
-        "Power Manager will wait for the specified amount of time before automatically managing certain device functions");
-    holder.binding.simpleExpander.setExpandingContent(holder.delayBinding.getRoot());
 
     final Context context = holder.itemView.getContext();
     presenter.getDelayTime(new DelayPresenter.DelayCallback() {
@@ -94,37 +90,36 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
         final long time;
         switch (checkedId) {
-          case R.id.delay_radio_five:
+          case R.id.delay_radio_one:
             time = 5;
             break;
-          case R.id.delay_radio_ten:
+          case R.id.delay_radio_two:
             time = 10;
             break;
-          case R.id.delay_radio_fifteen:
+          case R.id.delay_radio_three:
             time = 15;
             break;
-          case R.id.delay_radio_thirty:
+          case R.id.delay_radio_four:
             time = 30;
             break;
-          case R.id.delay_radio_fourtyfive:
+          case R.id.delay_radio_five:
             time = 45;
             break;
-          case R.id.delay_radio_sixty:
+          case R.id.delay_radio_six:
             time = 60;
             break;
-          case R.id.delay_radio_ninety:
+          case R.id.delay_radio_seven:
             time = 90;
             break;
-          case R.id.delay_radio_onetwenty:
+          case R.id.delay_radio_eight:
             time = 120;
             break;
           default:
             throw new IllegalArgumentException("Could not find RadioButton with id: " + checkedId);
         }
-        presenter.setDelayTime(time, new DelayPresenter.ActionCallback() {
-          @Override public void onError(@NonNull Throwable throwable) {
-            // TODO error
-          }
+        presenter.setDelayTime(time, throwable -> {
+          Toast.makeText(context, "Failed to set delay time", Toast.LENGTH_SHORT).show();
+          group.setEnabled(false);
         });
       }
     });
@@ -142,7 +137,10 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
-        // TODO
+        Toast.makeText(context, "Error while listening for delay changes", Toast.LENGTH_SHORT)
+            .show();
+        holder.delayBinding.delayRadioCustom.setEnabled(false);
+        holder.delayBinding.delayInputCustom.setEnabled(false);
       }
     });
   }
@@ -180,6 +178,19 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
       View containerDelay = LayoutInflater.from(itemView.getContext())
           .inflate(R.layout.layout_container_delay, (ViewGroup) itemView, false);
       delayBinding = LayoutContainerDelayBinding.bind(containerDelay);
+
+      binding.simpleExpander.setTitle("Active Delay");
+      binding.simpleExpander.setDescription(
+          "Power Manager will wait for the specified amount of time before automatically managing certain device functions");
+      binding.simpleExpander.setExpandingContent(delayBinding.getRoot());
+      delayBinding.delayRadioOne.setText("5 Seconds");
+      delayBinding.delayRadioTwo.setText("10 Seconds");
+      delayBinding.delayRadioThree.setText("15 Seconds");
+      delayBinding.delayRadioFour.setText("30 Seconds");
+      delayBinding.delayRadioFive.setText("45 Seconds");
+      delayBinding.delayRadioSix.setText("1 Minute");
+      delayBinding.delayRadioSeven.setText("1 Minute 30 Seconds");
+      delayBinding.delayRadioEight.setText("2 Minutes");
     }
   }
 }

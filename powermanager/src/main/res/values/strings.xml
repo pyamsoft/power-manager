@@ -33,5 +33,6 @@
   <string name="if_device_is">If Device Is</string>
   <string name="charging">Charging</string>
   <string name="connected_to_android_wear">Connected to Android Wear</string>
+  <string name="custom_time">Custom Time</string>
 </resources>
 

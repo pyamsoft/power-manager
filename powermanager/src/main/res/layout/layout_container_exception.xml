@@ -23,10 +23,7 @@
       android:layout_height="wrap_content"
       android:background="@color/material_light_background"
       android:orientation="vertical"
-      android:paddingBottom="8dp"
-      android:paddingEnd="8dp"
-      android:paddingStart="24dp"
-      android:paddingTop="8dp"
+      android:padding="8dp"
       >
 
 
@@ -42,7 +39,7 @@
         >
 
       <TextView
-          android:text="Ignore If"
+          android:text="Do not Manage When:"
           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -72,7 +69,7 @@
           />
 
       <TextView
-          android:text="Ignore WiFi"
+          android:text="WiFi"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -97,7 +94,7 @@
           />
 
       <TextView
-          android:text="Ignore Data"
+          android:text="Data"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -122,7 +119,7 @@
           />
 
       <TextView
-          android:text="Ignore Bluetooth"
+          android:text="Bluetooth"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -147,7 +144,7 @@
           />
 
       <TextView
-          android:text="Ignore Sync"
+          android:text="Sync"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -172,7 +169,7 @@
           />
 
       <TextView
-          android:text="Ignore Airplane Mode"
+          android:text="Airplane Mode"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"
@@ -197,7 +194,7 @@
           />
 
       <TextView
-          android:text="Ignore Doze Mode"
+          android:text="Doze Mode"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           app:layout_column="0"
           app:layout_columnWeight="1"

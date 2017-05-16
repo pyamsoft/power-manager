@@ -21,10 +21,7 @@
       android:layout_height="wrap_content"
       android:background="@color/material_light_background"
       android:orientation="vertical"
-      android:paddingBottom="8dp"
-      android:paddingEnd="8dp"
-      android:paddingStart="24dp"
-      android:paddingTop="8dp"
+      android:padding="8dp"
       >
 
     <RadioGroup
@@ -34,66 +31,58 @@
         >
 
       <RadioButton
+          android:id="@+id/delay_radio_one"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          />
+
+      <RadioButton
+          android:id="@+id/delay_radio_two"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          />
+
+      <RadioButton
+          android:id="@+id/delay_radio_three"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          />
+
+      <RadioButton
+          android:id="@+id/delay_radio_four"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textAppearance="@style/TextAppearance.AppCompat.Small"
+          />
+
+      <RadioButton
           android:id="@+id/delay_radio_five"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="5 Seconds"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
       <RadioButton
-          android:id="@+id/delay_radio_ten"
+          android:id="@+id/delay_radio_six"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="10 Seconds"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
       <RadioButton
-          android:id="@+id/delay_radio_fifteen"
+          android:id="@+id/delay_radio_seven"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="15 Seconds"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
       <RadioButton
-          android:id="@+id/delay_radio_thirty"
+          android:id="@+id/delay_radio_eight"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:text="30 Seconds"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          />
-
-      <RadioButton
-          android:id="@+id/delay_radio_fourtyfive"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="45 Seconds"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          />
-
-      <RadioButton
-          android:id="@+id/delay_radio_sixty"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="1 Minute"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          />
-
-      <RadioButton
-          android:id="@+id/delay_radio_ninety"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="1 Minute 30 Seconds"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          />
-
-      <RadioButton
-          android:id="@+id/delay_radio_onetwenty"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:text="2 Minutes"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
@@ -111,7 +100,7 @@
           android:layout_height="wrap_content"
           android:layout_marginEnd="8dp"
           android:gravity="center_vertical"
-          android:text="Custom Time"
+          android:text="@string/custom_time"
           android:textAppearance="@style/TextAppearance.AppCompat.Small"
           />
 
