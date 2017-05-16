@@ -90,13 +90,13 @@ public class ExpanderView extends FrameLayout {
     if (expanded) {
       ViewCompat.setRotation(binding.expanderArrow, 0);
       binding.expanderContainer.setAlpha(1);
-      binding.expanderContainer.setScaleY(1);
+      //binding.expanderContainer.setScaleY(1);
       binding.expanderContainer.setVisibility(View.VISIBLE);
     } else {
       ViewCompat.setRotation(binding.expanderArrow, 180);
       binding.expanderContainer.setVisibility(View.GONE);
       binding.expanderContainer.setAlpha(0);
-      binding.expanderContainer.setScaleY(0);
+      //binding.expanderContainer.setScaleY(0);
     }
 
     binding.expanderContainer.setVisibility(expanded ? View.VISIBLE : View.GONE);
@@ -110,10 +110,11 @@ public class ExpanderView extends FrameLayout {
       if (expanded) {
         // This is expanding now
         // Be visible, but hidden
-        binding.expanderContainer.setScaleY(0);
         binding.expanderContainer.setAlpha(0);
+
+        // TODO Animation is buggy
+        //binding.expanderContainer.setScaleY(0);
         containerAnimation = ViewCompat.animate(binding.expanderContainer)
-            .scaleY(1)
             .alpha(1)
             .setListener(new ViewPropertyAnimatorListenerAdapter() {
 
@@ -129,10 +130,11 @@ public class ExpanderView extends FrameLayout {
       } else {
         // This is collapsing now
         // Be visible
-        binding.expanderContainer.setScaleY(1);
         binding.expanderContainer.setAlpha(1);
+
+        // TODO Animation is buggy
+        //binding.expanderContainer.setScaleY(1);
         containerAnimation = ViewCompat.animate(binding.expanderContainer)
-            .scaleY(0)
             .alpha(0)
             .setListener(new ViewPropertyAnimatorListenerAdapter() {
 
