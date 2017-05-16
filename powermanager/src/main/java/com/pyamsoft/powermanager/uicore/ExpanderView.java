@@ -183,6 +183,8 @@ public class ExpanderView extends FrameLayout {
     }
 
     arrowLoad = LoaderHelper.unload(arrowLoad);
+    cancelArrowAnimation();
+    cancelContainerAnimation();
   }
 
   public void setTitle(@NonNull String title) {
