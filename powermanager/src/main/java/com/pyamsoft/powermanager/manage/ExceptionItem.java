@@ -26,9 +26,8 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.R;
-import com.pyamsoft.powermanager.databinding.AdapterItemExceptionsBinding;
-import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionChargingBinding;
-import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionWearBinding;
+import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding;
+import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionBinding;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -57,53 +56,40 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
   }
 
   @Override public int getLayoutRes() {
-    return R.layout.adapter_item_exceptions;
+    return R.layout.adapter_item_simple;
   }
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.binding.exceptionChargingContainer.setTitleTextSize(18);
-    holder.binding.exceptionChargingContainer.setTitle(R.string.charging);
-    holder.binding.exceptionChargingContainer.clearDescription();
-    holder.binding.exceptionChargingContainer.setExpandingContent(
-        holder.chargingContainerBinding.getRoot());
-
-    holder.binding.exceptionWearContainer.setTitleTextSize(18);
-    holder.binding.exceptionWearContainer.setTitle(R.string.connected_to_android_wear);
-    holder.binding.exceptionWearContainer.clearDescription();
-    holder.binding.exceptionWearContainer.setExpandingContent(
-        holder.wearContainerBinding.getRoot());
-
-    bind(holder.chargingContainerBinding.exceptionChargingWifi,
-        holder.wearContainerBinding.exceptionWearWifi, "Wifi", presenterWifi);
-    bind(holder.chargingContainerBinding.exceptionChargingData,
-        holder.wearContainerBinding.exceptionWearData, "Data", presenterData);
-    bind(holder.chargingContainerBinding.exceptionChargingBluetooth,
-        holder.wearContainerBinding.exceptionWearBluetooth, "Bluetooth", presenterBluetooth);
-    bind(holder.chargingContainerBinding.exceptionChargingSync,
-        holder.wearContainerBinding.exceptionWearSync, "Sync", presenterSync);
-    bind(holder.chargingContainerBinding.exceptionChargingAirplane,
-        holder.wearContainerBinding.exceptionWearAirplane, "Airplane", presenterAirplane);
-    bind(holder.chargingContainerBinding.exceptionChargingDoze,
-        holder.wearContainerBinding.exceptionWearDoze, "Doze", presenterDoze);
+    bind(holder.containerBinding.exceptionChargingWifi, holder.containerBinding.exceptionWearWifi,
+        "Wifi", presenterWifi);
+    bind(holder.containerBinding.exceptionChargingData, holder.containerBinding.exceptionWearData,
+        "Data", presenterData);
+    bind(holder.containerBinding.exceptionChargingBluetooth,
+        holder.containerBinding.exceptionWearBluetooth, "Bluetooth", presenterBluetooth);
+    bind(holder.containerBinding.exceptionChargingSync, holder.containerBinding.exceptionWearSync,
+        "Sync", presenterSync);
+    bind(holder.containerBinding.exceptionChargingAirplane,
+        holder.containerBinding.exceptionWearAirplane, "Airplane", presenterAirplane);
+    bind(holder.containerBinding.exceptionChargingDoze, holder.containerBinding.exceptionWearDoze,
+        "Doze", presenterDoze);
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
-    unbind(holder.chargingContainerBinding.exceptionChargingAirplane,
-        holder.wearContainerBinding.exceptionWearAirplane);
-    unbind(holder.chargingContainerBinding.exceptionChargingWifi,
-        holder.wearContainerBinding.exceptionWearWifi);
-    unbind(holder.chargingContainerBinding.exceptionChargingData,
-        holder.wearContainerBinding.exceptionWearData);
-    unbind(holder.chargingContainerBinding.exceptionChargingBluetooth,
-        holder.wearContainerBinding.exceptionWearBluetooth);
-    unbind(holder.chargingContainerBinding.exceptionChargingSync,
-        holder.wearContainerBinding.exceptionWearSync);
-    unbind(holder.chargingContainerBinding.exceptionChargingDoze,
-        holder.wearContainerBinding.exceptionWearDoze);
-    holder.wearContainerBinding.unbind();
-    holder.chargingContainerBinding.unbind();
+    unbind(holder.containerBinding.exceptionChargingAirplane,
+        holder.containerBinding.exceptionWearAirplane);
+    unbind(holder.containerBinding.exceptionChargingWifi,
+        holder.containerBinding.exceptionWearWifi);
+    unbind(holder.containerBinding.exceptionChargingData,
+        holder.containerBinding.exceptionWearData);
+    unbind(holder.containerBinding.exceptionChargingBluetooth,
+        holder.containerBinding.exceptionWearBluetooth);
+    unbind(holder.containerBinding.exceptionChargingSync,
+        holder.containerBinding.exceptionWearSync);
+    unbind(holder.containerBinding.exceptionChargingDoze,
+        holder.containerBinding.exceptionWearDoze);
+    holder.containerBinding.unbind();
     holder.binding.unbind();
   }
 
@@ -137,9 +123,6 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
       @NonNull ExceptionPresenter presenter) {
     // Set enabled in case it failed last time
     checkBox.setEnabled(true);
-
-    // Set title
-    checkBox.setText("Do not manage " + name);
 
     // Get current state
     getIgnoreCharging(presenter, checkBox, name);
@@ -199,9 +182,6 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
       @NonNull ExceptionPresenter presenter) {
     // Set enabled in case it failed last time
     checkBox.setEnabled(true);
-
-    // Set title
-    checkBox.setText("Do not manage " + name);
 
     // Get current state
     getIgnoreWear(presenter, checkBox, name);
@@ -266,23 +246,19 @@ public class ExceptionItem extends BaseItem<ExceptionItem, ExceptionItem.ViewHol
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull final AdapterItemExceptionsBinding binding;
-    @NonNull final LayoutContainerExceptionChargingBinding chargingContainerBinding;
-    @NonNull final LayoutContainerExceptionWearBinding wearContainerBinding;
+    @NonNull final AdapterItemSimpleBinding binding;
+    @NonNull final LayoutContainerExceptionBinding containerBinding;
 
     ViewHolder(View itemView) {
       super(itemView);
-      binding = AdapterItemExceptionsBinding.bind(itemView);
+      binding = AdapterItemSimpleBinding.bind(itemView);
       LayoutInflater layoutInflater = LayoutInflater.from(itemView.getContext());
       View chargingContainer =
-          layoutInflater.inflate(R.layout.layout_container_exception_charging, (ViewGroup) itemView,
-              false);
-      chargingContainerBinding = LayoutContainerExceptionChargingBinding.bind(chargingContainer);
-
-      View wearContainer =
-          layoutInflater.inflate(R.layout.layout_container_exception_wear, (ViewGroup) itemView,
-              false);
-      wearContainerBinding = LayoutContainerExceptionWearBinding.bind(wearContainer);
+          layoutInflater.inflate(R.layout.layout_container_exception, (ViewGroup) itemView, false);
+      containerBinding = LayoutContainerExceptionBinding.bind(chargingContainer);
+      binding.simpleExpander.setTitle(R.string.exceptions_title);
+      binding.simpleExpander.setDescription(R.string.exceptions_desc);
+      binding.simpleExpander.setExpandingContent(containerBinding.getRoot());
     }
   }
 }

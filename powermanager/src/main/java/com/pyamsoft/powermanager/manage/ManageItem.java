@@ -67,10 +67,6 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
     bindSwitch(holder.containerBinding.manageSync, "Auto Sync", presenterSync);
     bindSwitch(holder.containerBinding.manageAirplane, "Airplane Mode", presenterAirplane);
     bindSwitch(holder.containerBinding.manageDoze, "Doze Mode", presenterDoze);
-
-    holder.binding.simpleExpander.setTitle(R.string.manage_title);
-    holder.binding.simpleExpander.setDescription(R.string.manage_desc);
-    holder.binding.simpleExpander.setExpandingContent(holder.containerBinding.getRoot());
   }
 
   private void bindSwitch(@NonNull SwitchCompat switchCompat, @NonNull String name,
@@ -170,10 +166,13 @@ public class ManageItem extends BaseItem<ManageItem, ManageItem.ViewHolder> {
     ViewHolder(View itemView) {
       super(itemView);
       binding = AdapterItemSimpleBinding.bind(itemView);
+      binding.simpleExpander.setTitle(R.string.manage_title);
+      binding.simpleExpander.setDescription(R.string.manage_desc);
 
       View container = LayoutInflater.from(itemView.getContext())
           .inflate(R.layout.layout_container_manage, (ViewGroup) itemView, false);
       containerBinding = LayoutContainerManageBinding.bind(container);
+      binding.simpleExpander.setExpandingContent(containerBinding.getRoot());
     }
   }
 }

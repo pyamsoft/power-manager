@@ -109,6 +109,9 @@ dependencies {
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
   testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
+  // Grid Layout
+  compile "com.android.support:gridlayout-v7:$supportLib"
+
   // PYDroid
   compile("com.github.pyamsoft.pydroid:pydroid-ui:$pydroid@aar") {
     transitive = true
