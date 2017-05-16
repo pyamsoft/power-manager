@@ -18,9 +18,12 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import com.pyamsoft.powermanager.R;
 import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding;
+import com.pyamsoft.powermanager.databinding.LayoutContainerDelayBinding;
 import java.util.List;
 
 public class PollItem extends BaseItem<PollItem, PollItem.ViewHolder> {
@@ -45,13 +48,11 @@ public class PollItem extends BaseItem<PollItem, PollItem.ViewHolder> {
 
   @Override public void bindView(ViewHolder holder, List<Object> payloads) {
     super.bindView(holder, payloads);
-    holder.binding.simpleExpander.setTitle("Smart Polling");
-    holder.binding.simpleExpander.setDescription(
-        "Power Manager will periodically poll the features it manages, to do things like automatically sync your latest emails and messages.");
   }
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
+    holder.delayBinding.unbind();
     holder.binding.unbind();
   }
 
@@ -61,11 +62,29 @@ public class PollItem extends BaseItem<PollItem, PollItem.ViewHolder> {
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull AdapterItemSimpleBinding binding;
+    @NonNull final LayoutContainerDelayBinding delayBinding;
+    @NonNull final AdapterItemSimpleBinding binding;
 
     ViewHolder(View itemView) {
       super(itemView);
       binding = AdapterItemSimpleBinding.bind(itemView);
+
+      View containerDelay = LayoutInflater.from(itemView.getContext())
+          .inflate(R.layout.layout_container_delay, (ViewGroup) itemView, false);
+      delayBinding = LayoutContainerDelayBinding.bind(containerDelay);
+
+      binding.simpleExpander.setTitle("Smart Polling");
+      binding.simpleExpander.setDescription(
+          "Power Manager will periodically poll the features it manages, to do things like automatically sync your latest emails and messages.");
+      binding.simpleExpander.setExpandingContent(delayBinding.getRoot());
+      delayBinding.delayRadioOne.setText("1 Minute");
+      delayBinding.delayRadioTwo.setText("3 Minutes");
+      delayBinding.delayRadioThree.setText("5 Minutes");
+      delayBinding.delayRadioFour.setText("10 Minutes");
+      delayBinding.delayRadioFive.setText("15 Minutes");
+      delayBinding.delayRadioSix.setText("30 Minutes");
+      delayBinding.delayRadioSeven.setText("45 Minutes");
+      delayBinding.delayRadioEight.setText("1 Hour");
     }
   }
 }

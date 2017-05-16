@@ -168,8 +168,8 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   static class ViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull AdapterItemSimpleBinding binding;
-    @NonNull LayoutContainerDelayBinding delayBinding;
+    @NonNull final AdapterItemSimpleBinding binding;
+    @NonNull final LayoutContainerDelayBinding delayBinding;
 
     ViewHolder(View itemView) {
       super(itemView);
