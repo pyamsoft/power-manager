@@ -30,6 +30,7 @@ import com.pyamsoft.powermanager.base.preference.ServicePreferences;
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences;
 import com.pyamsoft.powermanager.job.JobQueuer;
 import io.reactivex.Single;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -77,7 +78,7 @@ import timber.log.Timber;
    */
   void queueRepeatingTriggerJob() {
     final long delayTime = triggerPreferences.getTriggerPeriodTime();
-    final long triggerPeriod = delayTime * 60 * 1000L;
+    final long triggerPeriod = TimeUnit.MINUTES.toSeconds(delayTime);
     // TODO
     //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
     //jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)

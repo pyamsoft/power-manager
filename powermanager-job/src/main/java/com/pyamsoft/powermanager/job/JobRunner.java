@@ -266,9 +266,9 @@ abstract class JobRunner {
     final long newDelayTime;
     // Switch them
     if (screenOn) {
-      newDelayTime = windowOnTime * 1000L;
+      newDelayTime = windowOnTime;
     } else {
-      newDelayTime = windowOffTime * 1000L;
+      newDelayTime = windowOffTime;
     }
 
     final JobQueuerEntry entry = JobQueuerEntry.builder(tag)

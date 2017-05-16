@@ -36,8 +36,6 @@ public interface ManagePreferences {
 
   @CheckResult long getPeriodicEnableTime();
 
-  void setPeriodicEnableTime(long time);
-
   @CheckResult @NonNull SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
       @NonNull DelayTimeChangeListener listener);
 

@@ -125,7 +125,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
       jobQueuer.cancel(MANAGED_TAG);
       jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
           .screenOn(false)
-          .delay(getDelayTime() * 1000L)
+          .delay(getDelayTime())
           .oneshot(false)
           .firstRun(true)
           .repeatingOffWindow(getPeriodicDisableTime())

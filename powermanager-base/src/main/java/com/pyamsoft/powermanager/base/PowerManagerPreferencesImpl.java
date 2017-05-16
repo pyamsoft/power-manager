@@ -51,18 +51,23 @@ class PowerManagerPreferencesImpl
   private static final long PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1);
   private static final long TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15);
 
+  private static final long MANAGE_DELAY_DEFAULT = TimeUnit.SECONDS.toSeconds(30);
+  private static final long MANAGE_DISABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(5);
+  private static final long MANAGE_ENABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(1);
+
   @NonNull private static final String CUSTOM_MANAGE_DELAY = "pm7_custom_manage_delay";
-  @NonNull private static final String OVERVIEW_ONBOARD = "pm7_overview_onboard";
-  @NonNull private static final String MANAGE_ONBOARD = "pm7_manage_onboard";
-  @NonNull private static final String PERIOD_ONBOARD = "pm7_period_onboard";
-  @NonNull private static final String SERVICE_ENABLED = "pm7_service_enabled";
-  @NonNull private static final String ORIGINAL_WIFI = "pm7_original_wifi";
-  @NonNull private static final String ORIGINAL_DATA = "pm7_original_data";
-  @NonNull private static final String ORIGINAL_BLUETOOTH = "pm7_original_bluetooth";
-  @NonNull private static final String ORIGINAL_SYNC = "pm7_original_sync";
-  @NonNull private static final String ORIGINAL_AIRPLANE = "pm7_original_airplane";
-  @NonNull private static final String ORIGINAL_DOZE = "pm7_original_doze";
-  @NonNull final String globalManageDelayKey;
+  @NonNull private static final String KEY_MANAGE_DELAY_TIME = "pm7_global_manage_delay_time";
+  @NonNull private static final String KEY_MANAGE_DISABLE_TIME = "pm7_global_manage_disable_time";
+  @NonNull private static final String KEY_OVERVIEW_ONBOARD = "pm7_overview_onboard";
+  @NonNull private static final String KEY_MANAGE_ONBOARD = "pm7_manage_onboard";
+  @NonNull private static final String KEY_PERIOD_ONBOARD = "pm7_period_onboard";
+  @NonNull private static final String KEY_SERVICE_ENABLED = "pm7_service_enabled";
+  @NonNull private static final String KEY_ORIGINAL_WIFI = "pm7_original_wifi";
+  @NonNull private static final String KEY_ORIGINAL_DATA = "pm7_original_data";
+  @NonNull private static final String KEY_ORIGINAL_BLUETOOTH = "pm7_original_bluetooth";
+  @NonNull private static final String KEY_ORIGINAL_SYNC = "pm7_original_sync";
+  @NonNull private static final String KEY_ORIGINAL_AIRPLANE = "pm7_original_airplane";
+  @NonNull private static final String KEY_ORIGINAL_DOZE = "pm7_original_doze";
   @NonNull private final SharedPreferences preferences;
   @NonNull private final String manageAirplane;
   @NonNull private final String manageWifi;
@@ -123,11 +128,6 @@ class PowerManagerPreferencesImpl
   @NonNull private final String triggerPeriodKey;
   @NonNull private final String triggerPeriodDefault;
   private final long defaultTriggerPeriodValue;
-  @NonNull private final String globalManageEnableKey;
-  @NonNull private final String globalManageDisableKey;
-  private final long globalManageDelayDefault;
-  private final long globalManageEnableDefault;
-  private final long globalManageDisableDefault;
 
   @Inject PowerManagerPreferencesImpl(@NonNull Context context) {
     final Context appContext = context.getApplicationContext();
@@ -200,69 +200,62 @@ class PowerManagerPreferencesImpl
     triggerPeriodKey = res.getString(R.string.trigger_period_key);
     triggerPeriodDefault = res.getString(R.string.trigger_period_default);
     defaultTriggerPeriodValue = Integer.valueOf(triggerPeriodDefault);
-
-    globalManageDelayKey = res.getString(R.string.key_manage_delay_time);
-    globalManageEnableKey = res.getString(R.string.key_manage_enable_time);
-    globalManageDisableKey = res.getString(R.string.key_manage_disable_time);
-    globalManageDelayDefault = res.getInteger(R.integer.default_manage_delay_time);
-    globalManageEnableDefault = res.getInteger(R.integer.default_manage_enable_time);
-    globalManageDisableDefault = res.getInteger(R.integer.default_manage_disable_time);
   }
 
   @Override public boolean isOriginalWifi() {
-    return preferences.getBoolean(ORIGINAL_WIFI, false);
+    return preferences.getBoolean(KEY_ORIGINAL_WIFI, false);
   }
 
   @Override public void setOriginalWifi(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_WIFI, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_WIFI, state).apply();
   }
 
   @Override public boolean isOriginalData() {
-    return preferences.getBoolean(ORIGINAL_DATA, false);
+    return preferences.getBoolean(KEY_ORIGINAL_DATA, false);
   }
 
   @Override public void setOriginalData(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_DATA, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_DATA, state).apply();
   }
 
   @Override public boolean isOriginalBluetooth() {
-    return preferences.getBoolean(ORIGINAL_BLUETOOTH, false);
+    return preferences.getBoolean(KEY_ORIGINAL_BLUETOOTH, false);
   }
 
   @Override public void setOriginalBluetooth(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_BLUETOOTH, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_BLUETOOTH, state).apply();
   }
 
   @Override public boolean isOriginalSync() {
-    return preferences.getBoolean(ORIGINAL_SYNC, false);
+    return preferences.getBoolean(KEY_ORIGINAL_SYNC, false);
   }
 
   @Override public void setOriginalSync(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_SYNC, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_SYNC, state).apply();
   }
 
   @Override public boolean isOriginalAirplane() {
-    return preferences.getBoolean(ORIGINAL_AIRPLANE, false);
+    return preferences.getBoolean(KEY_ORIGINAL_AIRPLANE, false);
   }
 
   @Override public void setOriginalAirplane(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_AIRPLANE, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_AIRPLANE, state).apply();
   }
 
   @Override public boolean isOriginalDoze() {
-    return preferences.getBoolean(ORIGINAL_DOZE, false);
+    return preferences.getBoolean(KEY_ORIGINAL_DOZE, false);
   }
 
   @Override public void setOriginalDoze(boolean state) {
-    preferences.edit().putBoolean(ORIGINAL_DOZE, state).apply();
+    preferences.edit().putBoolean(KEY_ORIGINAL_DOZE, state).apply();
   }
 
   @Override public boolean isServiceEnabled() {
-    return preferences.getBoolean(SERVICE_ENABLED, true);
+    return preferences.getBoolean(KEY_SERVICE_ENABLED, true);
   }
 
   @Override public void setServiceEnabled(boolean enabled) {
-    preferences.edit().putBoolean(SERVICE_ENABLED, enabled).apply();
+    preferences.edit().putBoolean(KEY_SERVICE_ENABLED, enabled).apply();
   }
 
   @Override public long getTriggerPeriodTime() {
@@ -299,27 +292,27 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public boolean isPeriodicOnboardingShown() {
-    return preferences.getBoolean(PERIOD_ONBOARD, false);
+    return preferences.getBoolean(KEY_PERIOD_ONBOARD, false);
   }
 
   @Override public void setPeriodicOnboardingShown() {
-    preferences.edit().putBoolean(PERIOD_ONBOARD, true).apply();
+    preferences.edit().putBoolean(KEY_PERIOD_ONBOARD, true).apply();
   }
 
   @Override public boolean isManageOnboardingShown() {
-    return preferences.getBoolean(MANAGE_ONBOARD, false);
+    return preferences.getBoolean(KEY_MANAGE_ONBOARD, false);
   }
 
   @Override public void setManageOnboardingShown() {
-    preferences.edit().putBoolean(MANAGE_ONBOARD, true).apply();
+    preferences.edit().putBoolean(KEY_MANAGE_ONBOARD, true).apply();
   }
 
   @Override public boolean isOverviewOnboardingShown() {
-    return preferences.getBoolean(OVERVIEW_ONBOARD, false);
+    return preferences.getBoolean(KEY_OVERVIEW_ONBOARD, false);
   }
 
   @Override public void setOverviewOnboardingShown() {
-    preferences.edit().putBoolean(OVERVIEW_ONBOARD, true).apply();
+    preferences.edit().putBoolean(KEY_OVERVIEW_ONBOARD, true).apply();
   }
 
   @Override public long getWearableDelay() {
@@ -527,7 +520,7 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public long getManageDelay() {
-    long delay = preferences.getLong(globalManageDelayKey, globalManageDelayDefault);
+    long delay = preferences.getLong(KEY_MANAGE_DELAY_TIME, MANAGE_DELAY_DEFAULT);
     if (delay < DELAY_MINIMUM) {
       delay = DELAY_MINIMUM;
       setManageDelay(delay);
@@ -536,7 +529,7 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setManageDelay(long time) {
-    preferences.edit().putLong(globalManageDelayKey, time).apply();
+    preferences.edit().putLong(KEY_MANAGE_DELAY_TIME, time).apply();
   }
 
   @Override public boolean isCustomManageDelay() {
@@ -548,7 +541,7 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public long getPeriodicDisableTime() {
-    long delay = preferences.getLong(globalManageDisableKey, globalManageDisableDefault);
+    long delay = preferences.getLong(KEY_MANAGE_DISABLE_TIME, MANAGE_DISABLE_DEFAULT);
     if (delay < PERIOD_MINIMUM) {
       delay = PERIOD_MINIMUM;
       setPeriodicDisableTime(delay);
@@ -557,27 +550,18 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setPeriodicDisableTime(long time) {
-    preferences.edit().putLong(globalManageDisableKey, time).apply();
+    preferences.edit().putLong(KEY_MANAGE_DISABLE_TIME, time).apply();
   }
 
   @Override public long getPeriodicEnableTime() {
-    long delay = preferences.getLong(globalManageEnableKey, globalManageEnableDefault);
-    if (delay < PERIOD_MINIMUM) {
-      delay = PERIOD_MINIMUM;
-      setPeriodicEnableTime(delay);
-    }
-    return delay;
-  }
-
-  @Override public void setPeriodicEnableTime(long time) {
-    preferences.edit().putLong(globalManageEnableKey, time).apply();
+    return MANAGE_ENABLE_DEFAULT;
   }
 
   @NonNull @Override public SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
       @NonNull DelayTimeChangeListener listener) {
     SharedPreferences.OnSharedPreferenceChangeListener preferenceListener =
         (sharedPreferences, key) -> {
-          if (globalManageDelayKey.equals(key)) {
+          if (KEY_MANAGE_DELAY_TIME.equals(key)) {
             listener.onDelayTimeChanged(getManageDelay());
           }
         };

@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import com.evernote.android.job.JobManager;
 import com.evernote.android.job.JobRequest;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
+import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
 
 abstract class BaseJobQueuer implements JobQueuer {
@@ -61,7 +62,7 @@ abstract class BaseJobQueuer implements JobQueuer {
   }
 
   private void scheduleJob(@NonNull JobQueuerEntry entry, @NonNull PersistableBundleCompat extras) {
-    new JobRequest.Builder(entry.tag()).setExact(entry.delay())
+    new JobRequest.Builder(entry.tag()).setExact(TimeUnit.SECONDS.toMillis(entry.delay()))
         .setPersisted(false)
         .setExtras(extras)
         .setRequiresCharging(false)
@@ -72,7 +73,7 @@ abstract class BaseJobQueuer implements JobQueuer {
 
   @Override public final void queueRepeating(@NonNull JobQueuerEntry entry) {
     final PersistableBundleCompat extras = createExtras(entry);
-    new JobRequest.Builder(entry.tag()).setPeriodic(entry.delay())
+    new JobRequest.Builder(entry.tag()).setPeriodic(TimeUnit.SECONDS.toMillis(entry.delay()))
         .setPersisted(false)
         .setExtras(extras)
         .setRequiresCharging(false)
