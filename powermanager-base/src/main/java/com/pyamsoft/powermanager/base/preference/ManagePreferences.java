@@ -30,6 +30,10 @@ public interface ManagePreferences {
 
   void setCustomManageDelay(boolean custom);
 
+  @CheckResult boolean isCustomDisableTime();
+
+  void setCustomDisableTime(boolean custom);
+
   @CheckResult long getPeriodicDisableTime();
 
   void setPeriodicDisableTime(long time);
@@ -37,12 +41,18 @@ public interface ManagePreferences {
   @CheckResult long getPeriodicEnableTime();
 
   @CheckResult @NonNull SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
-      @NonNull DelayTimeChangeListener listener);
+      @NonNull TimeChangeListener listener);
 
   void unregisterDelayChanges(@NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
 
-  interface DelayTimeChangeListener {
+  @CheckResult @NonNull SharedPreferences.OnSharedPreferenceChangeListener registerDisableChanges(
+      @NonNull TimeChangeListener listener);
 
-    void onDelayTimeChanged(long time);
+  void unregisterDisableChanges(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener);
+
+  interface TimeChangeListener {
+
+    void onTimeChanged(long time);
   }
 }

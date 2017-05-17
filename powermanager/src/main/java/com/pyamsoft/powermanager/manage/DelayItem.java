@@ -32,12 +32,13 @@ import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding;
 import com.pyamsoft.powermanager.databinding.LayoutContainerDelayBinding;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import timber.log.Timber;
 
 public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   @NonNull static final String TAG = "DelayItem";
-  @SuppressWarnings("WeakerAccess") @Inject DelayPresenter presenter;
+  @SuppressWarnings("WeakerAccess") @Inject @Named("manage_delay") DelayPresenter presenter;
   @NonNull private final TextWatcher watcher = new TextWatcher() {
     @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -80,8 +81,30 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
       }
 
-      @Override public void onPresetDelay(int index, long time) {
+      @Override public void onPresetDelay(long time) {
         selectPresetDelay(holder);
+
+        final int index;
+        if (time == 5) {
+          index = 0;
+        } else if (time == 10) {
+          index = 1;
+        } else if (time == 15) {
+          index = 2;
+        } else if (time == 30) {
+          index = 3;
+        } else if (time == 45) {
+          index = 4;
+        } else if (time == 60) {
+          index = 5;
+        } else if (time == 90) {
+          index = 6;
+        } else if (time == 120) {
+          index = 7;
+        } else {
+          throw new IllegalStateException("No preset delay with time: " + time);
+        }
+
         holder.delayBinding.delayRadioGroup.check(
             holder.delayBinding.delayRadioGroup.getChildAt(index).getId());
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));

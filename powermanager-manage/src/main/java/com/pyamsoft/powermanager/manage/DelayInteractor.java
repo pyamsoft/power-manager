@@ -20,7 +20,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-import com.pyamsoft.powermanager.base.preference.ManagePreferences;
 import com.pyamsoft.pydroid.bus.EventBus;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Completable;
@@ -29,40 +28,37 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import timber.log.Timber;
 
-@Singleton class DelayInteractor {
+class DelayInteractor {
 
-  @NonNull final ManagePreferences preferences;
+  @NonNull final TimePrefrenceWrapper preferences;
   @NonNull private final EventBus customInputBus;
 
-  @Inject DelayInteractor(@NonNull ManagePreferences preferences) {
+  @Inject DelayInteractor(@NonNull TimePrefrenceWrapper preferences) {
     this.preferences = preferences;
     customInputBus = EventBus.newLocalBus();
   }
 
   @CheckResult @NonNull Single<Pair<Boolean, Long>> getDelayTime() {
-    return Single.fromCallable(
-        () -> new Pair<>(preferences.isCustomManageDelay(), preferences.getManageDelay()));
+    return Single.fromCallable(() -> new Pair<>(preferences.isCustom(), preferences.getTime()));
   }
 
   @CheckResult @NonNull Completable setDelayTime(long time) {
-    return Completable.fromAction(() -> preferences.setManageDelay(time))
-        .andThen(Completable.fromAction(() -> preferences.setCustomManageDelay(false)));
+    return Completable.fromAction(() -> preferences.setTime(time, false));
   }
 
   @CheckResult @NonNull Flowable<Long> listenTimeChanges() {
     return Flowable.create(emitter -> {
       SharedPreferences.OnSharedPreferenceChangeListener listener =
-          preferences.registerDelayChanges(time -> {
+          preferences.registerTimeChanges(time -> {
             Timber.d("On delay changed");
             emitter.onNext(time);
           });
 
       emitter.setCancellable(() -> {
         Timber.d("Stop listening for delay changes");
-        preferences.unregisterDelayChanges(listener);
+        preferences.unregisterTimeChanges(listener);
       });
     }, BackpressureStrategy.BUFFER);
   }
@@ -102,8 +98,7 @@ import timber.log.Timber;
       errorString = s;
       time = 0;
     }
-    preferences.setManageDelay(time);
-    preferences.setCustomManageDelay(true);
+    preferences.setTime(time, true);
     return new Pair<>(errorString, time);
   }
 }

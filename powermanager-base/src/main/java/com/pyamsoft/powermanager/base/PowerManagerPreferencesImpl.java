@@ -56,6 +56,7 @@ class PowerManagerPreferencesImpl
   private static final long MANAGE_ENABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(1);
 
   @NonNull private static final String CUSTOM_MANAGE_DELAY = "pm7_custom_manage_delay";
+  @NonNull private static final String CUSTOM_MANAGE_DISABLE = "pm7_custom_manage_disable";
   @NonNull private static final String KEY_MANAGE_DELAY_TIME = "pm7_global_manage_delay_time";
   @NonNull private static final String KEY_MANAGE_DISABLE_TIME = "pm7_global_manage_disable_time";
   @NonNull private static final String KEY_OVERVIEW_ONBOARD = "pm7_overview_onboard";
@@ -543,6 +544,14 @@ class PowerManagerPreferencesImpl
     preferences.edit().putBoolean(CUSTOM_MANAGE_DELAY, custom).apply();
   }
 
+  @Override public boolean isCustomDisableTime() {
+    return preferences.getBoolean(CUSTOM_MANAGE_DISABLE, false);
+  }
+
+  @Override public void setCustomDisableTime(boolean custom) {
+    preferences.edit().putBoolean(CUSTOM_MANAGE_DISABLE, custom).apply();
+  }
+
   @Override public long getPeriodicDisableTime() {
     long delay = preferences.getLong(KEY_MANAGE_DISABLE_TIME, MANAGE_DISABLE_DEFAULT);
     if (delay < PERIOD_MINIMUM) {
@@ -564,11 +573,11 @@ class PowerManagerPreferencesImpl
   }
 
   @NonNull @Override public SharedPreferences.OnSharedPreferenceChangeListener registerDelayChanges(
-      @NonNull DelayTimeChangeListener listener) {
+      @NonNull TimeChangeListener listener) {
     SharedPreferences.OnSharedPreferenceChangeListener preferenceListener =
         (sharedPreferences, key) -> {
           if (KEY_MANAGE_DELAY_TIME.equals(key)) {
-            listener.onDelayTimeChanged(getManageDelay());
+            listener.onTimeChanged(getManageDelay());
           }
         };
     preferences.registerOnSharedPreferenceChangeListener(preferenceListener);
@@ -576,6 +585,24 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void unregisterDelayChanges(
+      @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
+    preferences.unregisterOnSharedPreferenceChangeListener(listener);
+  }
+
+  @NonNull @Override
+  public SharedPreferences.OnSharedPreferenceChangeListener registerDisableChanges(
+      @NonNull TimeChangeListener listener) {
+    SharedPreferences.OnSharedPreferenceChangeListener preferenceListener =
+        (sharedPreferences, key) -> {
+          if (KEY_MANAGE_DISABLE_TIME.equals(key)) {
+            listener.onTimeChanged(getPeriodicDisableTime());
+          }
+        };
+    preferences.registerOnSharedPreferenceChangeListener(preferenceListener);
+    return preferenceListener;
+  }
+
+  @Override public void unregisterDisableChanges(
       @NonNull SharedPreferences.OnSharedPreferenceChangeListener listener) {
     preferences.unregisterOnSharedPreferenceChangeListener(listener);
   }

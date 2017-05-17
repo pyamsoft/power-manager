@@ -84,28 +84,7 @@ class DelayPresenter extends SchedulerPresenter {
           if (isCustom) {
             callback.onCustomDelay(delayTime);
           } else {
-            final int index;
-            if (delayTime == 5) {
-              index = 0;
-            } else if (delayTime == 10) {
-              index = 1;
-            } else if (delayTime == 15) {
-              index = 2;
-            } else if (delayTime == 30) {
-              index = 3;
-            } else if (delayTime == 45) {
-              index = 4;
-            } else if (delayTime == 60) {
-              index = 5;
-            } else if (delayTime == 90) {
-              index = 6;
-            } else if (delayTime == 120) {
-              index = 7;
-            } else {
-              throw new IllegalStateException("No preset delay with time: " + delayTime);
-            }
-
-            callback.onPresetDelay(index, delayTime);
+            callback.onPresetDelay(delayTime);
           }
         }, throwable -> {
           Timber.e(throwable, "Error getting delay time");
@@ -151,7 +130,7 @@ class DelayPresenter extends SchedulerPresenter {
 
     void onCustomDelay(long time);
 
-    void onPresetDelay(int index, long time);
+    void onPresetDelay(long time);
 
     void onError(@NonNull Throwable throwable);
 

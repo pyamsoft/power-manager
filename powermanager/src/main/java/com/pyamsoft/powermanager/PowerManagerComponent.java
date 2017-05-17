@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.job.JobModule;
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment;
 import com.pyamsoft.powermanager.main.MainActivity;
 import com.pyamsoft.powermanager.manage.DelayItem;
+import com.pyamsoft.powermanager.manage.DelayModule;
 import com.pyamsoft.powermanager.manage.ManageComponent;
 import com.pyamsoft.powermanager.manage.ManageFragment;
 import com.pyamsoft.powermanager.manage.ManageSingletonModule;
@@ -44,7 +45,7 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = {
     PowerManagerModule.class, WrapperModule.class, PowerTriggerDBModule.class, LoggerModule.class,
     ShellCommandModule.class, PermissionObserverModule.class, StateObserverModule.class,
-    StateModifierModule.class, JobModule.class, ManageSingletonModule.class
+    StateModifierModule.class, JobModule.class, ManageSingletonModule.class, DelayModule.class
 }) public interface PowerManagerComponent {
 
   @CheckResult ManageComponent plusManageComponent();
