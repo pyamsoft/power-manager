@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.manage;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import com.pyamsoft.powermanager.base.preference.DataPreferences;
@@ -40,8 +41,15 @@ class DataManageInteractor extends ManageInteractor {
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
-    return Single.fromCallable(
-        () -> new Pair<>(permissionObserver.hasPermission() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE));
+    return Single.fromCallable(() -> {
+      final Boolean permission;
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        permission = permissionObserver.hasPermission() ? Boolean.TRUE : Boolean.FALSE;
+      } else {
+        // Always have permission on KitKat
+        permission = Boolean.TRUE;
+      }
+      return new Pair<>(permission, preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE);
+    });
   }
 }
