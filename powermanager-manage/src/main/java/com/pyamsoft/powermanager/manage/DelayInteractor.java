@@ -42,8 +42,9 @@ import timber.log.Timber;
         () -> new Pair<>(preferences.isCustomManageDelay(), preferences.getManageDelay()));
   }
 
-  @CheckResult @NonNull Completable setDelayTime(long time) {
-    return Completable.fromAction(() -> preferences.setManageDelay(time));
+  @CheckResult @NonNull Completable setDelayTime(long time, boolean custom) {
+    return Completable.fromAction(() -> preferences.setManageDelay(time))
+        .andThen(Completable.fromAction(() -> preferences.setCustomManageDelay(custom)));
   }
 
   @CheckResult @NonNull Flowable<Long> listenTimeChanges() {

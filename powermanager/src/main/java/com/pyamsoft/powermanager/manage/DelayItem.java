@@ -117,7 +117,7 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
           default:
             throw new IllegalArgumentException("Could not find RadioButton with id: " + checkedId);
         }
-        presenter.setDelayTime(time, throwable -> {
+        presenter.setPresetDelayTime(time, throwable -> {
           Toast.makeText(context, "Failed to set delay time", Toast.LENGTH_SHORT).show();
           group.setEnabled(false);
         });

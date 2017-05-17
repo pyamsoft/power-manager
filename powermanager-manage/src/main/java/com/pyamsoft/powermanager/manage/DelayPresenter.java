@@ -33,8 +33,22 @@ class DelayPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
-  void setDelayTime(long time, @NonNull ActionCallback callback) {
-    disposeOnDestroy(interactor.setDelayTime(time)
+  /**
+   * public
+   */
+  void setPresetDelayTime(long time, @NonNull ActionCallback callback) {
+    setDelayTime(time, false, callback);
+  }
+
+  /**
+   * public
+   */
+  void setCustomDelayTime(long time, @NonNull ActionCallback callback) {
+    setDelayTime(time, true, callback);
+  }
+
+  private void setDelayTime(long time, boolean custom, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setDelayTime(time, custom)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(() -> Timber.d("Set delay time successfully: %s", time), throwable -> {
