@@ -18,7 +18,10 @@ package com.pyamsoft.powermanager.manage;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,19 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   @NonNull static final String TAG = "DelayItem";
   @SuppressWarnings("WeakerAccess") @Inject DelayPresenter presenter;
+  @NonNull private final TextWatcher watcher = new TextWatcher() {
+    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override public void afterTextChanged(Editable s) {
+      presenter.submitCustomTimeChange(s.toString(), false);
+    }
+  };
 
   DelayItem() {
     super(TAG);
@@ -134,6 +150,8 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     presenter.listenForDelayTimeChanges(new DelayPresenter.OnDelayChangedCallback() {
       @Override public void onDelayTimeChanged(long time) {
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
+        holder.delayBinding.delayInputCustom.setSelection(
+            holder.delayBinding.delayInputCustom.getText().length() - 1);
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
@@ -143,6 +161,26 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
         holder.delayBinding.delayInputCustom.setEnabled(false);
       }
     });
+
+    presenter.listenForCustomTimeChanges(new DelayPresenter.CustomTimeChangedCallback() {
+      @Override public void onCustomTimeChanged(long time) {
+        holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
+      }
+
+      @Override public void onCustomTimeInputError(@Nullable String error) {
+        holder.delayBinding.delayInputCustom.setError(
+            (error == null) ? null : "Invalid number: " + error);
+      }
+
+      @Override public void onError(@NonNull Throwable throwable) {
+        Toast.makeText(context, "Error while listening for custom changes", Toast.LENGTH_SHORT)
+            .show();
+        holder.delayBinding.delayRadioCustom.setEnabled(false);
+        holder.delayBinding.delayInputCustom.setEnabled(false);
+      }
+    });
+
+    holder.delayBinding.delayInputCustom.addTextChangedListener(watcher);
   }
 
   @SuppressWarnings("WeakerAccess") void selectPresetDelay(@NonNull ViewHolder holder) {
@@ -157,6 +195,11 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   @Override public void unbindView(ViewHolder holder) {
     super.unbindView(holder);
+    if (holder.delayBinding.delayInputCustom.isEnabled()) {
+      presenter.submitCustomTimeChange(holder.delayBinding.delayInputCustom.getText().toString(),
+          true);
+    }
+    holder.delayBinding.delayInputCustom.removeTextChangedListener(watcher);
     holder.delayBinding.unbind();
     holder.binding.unbind();
   }

@@ -529,6 +529,9 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setManageDelay(long time) {
+    if (time < DELAY_MINIMUM) {
+      time = DELAY_MINIMUM;
+    }
     preferences.edit().putLong(KEY_MANAGE_DELAY_TIME, time).apply();
   }
 
@@ -550,6 +553,9 @@ class PowerManagerPreferencesImpl
   }
 
   @Override public void setPeriodicDisableTime(long time) {
+    if (time < PERIOD_MINIMUM) {
+      time = PERIOD_MINIMUM;
+    }
     preferences.edit().putLong(KEY_MANAGE_DISABLE_TIME, time).apply();
   }
 

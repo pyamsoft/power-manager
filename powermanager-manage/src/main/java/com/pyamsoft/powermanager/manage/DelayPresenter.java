@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import javax.inject.Inject;
@@ -36,19 +37,31 @@ class DelayPresenter extends SchedulerPresenter {
   /**
    * public
    */
-  void setPresetDelayTime(long time, @NonNull ActionCallback callback) {
-    setDelayTime(time, false, callback);
+  void submitCustomTimeChange(@NonNull String text, boolean instant) {
+    interactor.acceptCustomTimeChange(text, instant);
   }
 
   /**
    * public
    */
-  void setCustomDelayTime(long time, @NonNull ActionCallback callback) {
-    setDelayTime(time, true, callback);
+  void listenForCustomTimeChanges(@NonNull CustomTimeChangedCallback callback) {
+    disposeOnDestroy(interactor.listenCustomTimeChanges()
+        .subscribeOn(getSubscribeScheduler())
+        .observeOn(getObserveScheduler())
+        .subscribe(pair -> {
+          callback.onCustomTimeInputError(pair.first);
+          callback.onCustomTimeChanged(pair.second);
+        }, throwable -> {
+          Timber.e(throwable, "Error listen custom time change");
+          callback.onError(throwable);
+        }));
   }
 
-  private void setDelayTime(long time, boolean custom, @NonNull ActionCallback callback) {
-    disposeOnDestroy(interactor.setDelayTime(time, custom)
+  /**
+   * public
+   */
+  void setPresetDelayTime(long time, @NonNull ActionCallback callback) {
+    disposeOnDestroy(interactor.setDelayTime(time)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(() -> Timber.d("Set delay time successfully: %s", time), throwable -> {
@@ -121,6 +134,15 @@ class DelayPresenter extends SchedulerPresenter {
   interface OnDelayChangedCallback {
 
     void onDelayTimeChanged(long time);
+
+    void onError(@NonNull Throwable throwable);
+  }
+
+  interface CustomTimeChangedCallback {
+
+    void onCustomTimeChanged(long time);
+
+    void onCustomTimeInputError(@Nullable String error);
 
     void onError(@NonNull Throwable throwable);
   }
