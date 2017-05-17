@@ -30,9 +30,13 @@
     <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:alignmentMode="alignBounds"
+        app:alignmentMode="alignMargins"
         app:columnCount="3"
+        app:columnOrderPreserved="true"
+        app:orientation="vertical"
         app:rowCount="7"
+        app:rowOrderPreserved="true"
+        app:useDefaultMargins="true"
         >
 
       <TextView
