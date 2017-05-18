@@ -20,7 +20,6 @@ include ':powermanager', ':powermanager-manage',
     ':powermanager-job',
     ':powermanager-trigger',
     ':powermanager-main',
-    ':powermanager-uicore',
     ':powermanager-settings',
     ':powermanager-service',
     ':powermanager-manager'

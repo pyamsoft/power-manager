@@ -13,7 +13,6 @@
       <module fileurl="file://$PROJECT_DIR$/powermanager-service/powermanager-service.iml" filepath="$PROJECT_DIR$/powermanager-service/powermanager-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" filepath="$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" filepath="$PROJECT_DIR$/powermanager-trigger/powermanager-trigger.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" filepath="$PROJECT_DIR$/powermanager-uicore/powermanager-uicore.iml" />
     </modules>
   </component>
 </project>

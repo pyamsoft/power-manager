@@ -18,7 +18,6 @@
             <option value="$PROJECT_DIR$/powermanager-service" />
             <option value="$PROJECT_DIR$/powermanager-settings" />
             <option value="$PROJECT_DIR$/powermanager-trigger" />
-            <option value="$PROJECT_DIR$/powermanager-uicore" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
