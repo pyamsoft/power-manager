@@ -39,19 +39,20 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
 
   @NonNull static final String TAG = "DelayItem";
   @SuppressWarnings("WeakerAccess") @Inject @Named("manage_delay") DelayPresenter presenter;
-  @NonNull private final TextWatcher watcher = new TextWatcher() {
-    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+  @SuppressWarnings("WeakerAccess") @NonNull final TextWatcher customTimeWatcher =
+      new TextWatcher() {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    }
+        }
 
-    @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-    }
+        }
 
-    @Override public void afterTextChanged(Editable s) {
-      presenter.submitCustomTimeChange(s.toString(), false);
-    }
-  };
+        @Override public void afterTextChanged(Editable s) {
+          presenter.submitCustomTimeChange(s.toString(), false);
+        }
+      };
 
   DelayItem() {
     super(TAG);
@@ -77,12 +78,12 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     presenter.getDelayTime(new DelayPresenter.DelayCallback() {
       @Override public void onCustomDelay(long time) {
         holder.delayBinding.delayRadioGroup.clearCheck();
-        selectCustomDelay(holder);
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
+        enableCustomInput(holder);
       }
 
       @Override public void onPresetDelay(long time) {
-        selectPresetDelay(holder);
+        disableCustomInput(holder);
 
         final int index;
         if (time == 5) {
@@ -122,10 +123,10 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     holder.delayBinding.delayRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
       if (checkedId == -1) {
         Timber.d("Custom is checked");
-        selectCustomDelay(holder);
+        enableCustomInput(holder);
       } else {
         Timber.d("Preset is checked");
-        selectPresetDelay(holder);
+        disableCustomInput(holder);
 
         final long time;
         switch (checkedId) {
@@ -166,12 +167,15 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
     holder.delayBinding.delayRadioCustom.setOnCheckedChangeListener((buttonView, isChecked) -> {
       if (isChecked) {
         holder.delayBinding.delayRadioGroup.clearCheck();
-        selectCustomDelay(holder);
+        enableCustomInput(holder);
+      } else {
+        disableCustomInput(holder);
       }
     });
 
     presenter.listenForDelayTimeChanges(new DelayPresenter.OnDelayChangedCallback() {
       @Override public void onDelayTimeChanged(long time) {
+        // Remove watcher
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
         holder.delayBinding.delayInputCustom.setSelection(
             holder.delayBinding.delayInputCustom.getText().length() - 1);
@@ -180,11 +184,24 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
       @Override public void onError(@NonNull Throwable throwable) {
         Toast.makeText(context, "Error while listening for delay changes", Toast.LENGTH_SHORT)
             .show();
-        holder.delayBinding.delayRadioCustom.setEnabled(false);
-        holder.delayBinding.delayInputCustom.setEnabled(false);
+        disableCustomInput(holder);
       }
     });
+  }
 
+  @SuppressWarnings("WeakerAccess") void disableCustomInput(@NonNull ViewHolder holder) {
+    holder.delayBinding.delayRadioCustom.setChecked(false);
+    holder.delayBinding.delayInputCustom.setEnabled(false);
+
+    holder.delayBinding.delayInputCustom.removeTextChangedListener(customTimeWatcher);
+    presenter.stopListeningCustomTimeChanges();
+  }
+
+  @SuppressWarnings("WeakerAccess") void enableCustomInput(@NonNull ViewHolder holder) {
+    holder.delayBinding.delayRadioCustom.setChecked(true);
+    holder.delayBinding.delayInputCustom.setEnabled(true);
+
+    holder.delayBinding.delayInputCustom.addTextChangedListener(customTimeWatcher);
     presenter.listenForCustomTimeChanges(new DelayPresenter.CustomTimeChangedCallback() {
       @Override public void onCustomTimeChanged(long time) {
         holder.delayBinding.delayInputCustom.setText(String.valueOf(time));
@@ -196,24 +213,11 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
       }
 
       @Override public void onError(@NonNull Throwable throwable) {
-        Toast.makeText(context, "Error while listening for custom changes", Toast.LENGTH_SHORT)
-            .show();
-        holder.delayBinding.delayRadioCustom.setEnabled(false);
-        holder.delayBinding.delayInputCustom.setEnabled(false);
+        Toast.makeText(holder.itemView.getContext(), "Error while listening for custom changes",
+            Toast.LENGTH_SHORT).show();
+        disableCustomInput(holder);
       }
     });
-
-    holder.delayBinding.delayInputCustom.addTextChangedListener(watcher);
-  }
-
-  @SuppressWarnings("WeakerAccess") void selectPresetDelay(@NonNull ViewHolder holder) {
-    holder.delayBinding.delayRadioCustom.setChecked(false);
-    holder.delayBinding.delayInputCustom.setEnabled(false);
-  }
-
-  @SuppressWarnings("WeakerAccess") void selectCustomDelay(@NonNull ViewHolder holder) {
-    holder.delayBinding.delayRadioCustom.setChecked(true);
-    holder.delayBinding.delayInputCustom.setEnabled(true);
   }
 
   @Override public void unbindView(ViewHolder holder) {
@@ -222,7 +226,8 @@ public class DelayItem extends BaseItem<DelayItem, DelayItem.ViewHolder> {
       presenter.submitCustomTimeChange(holder.delayBinding.delayInputCustom.getText().toString(),
           true);
     }
-    holder.delayBinding.delayInputCustom.removeTextChangedListener(watcher);
+    holder.delayBinding.delayInputCustom.removeTextChangedListener(customTimeWatcher);
+
     holder.delayBinding.unbind();
     holder.binding.unbind();
   }

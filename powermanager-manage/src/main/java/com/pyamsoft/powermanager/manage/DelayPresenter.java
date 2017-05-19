@@ -18,8 +18,10 @@ package com.pyamsoft.powermanager.manage;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.pyamsoft.pydroid.helper.DisposableHelper;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
+import io.reactivex.disposables.Disposable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import timber.log.Timber;
@@ -27,6 +29,7 @@ import timber.log.Timber;
 class DelayPresenter extends SchedulerPresenter {
 
   @NonNull private final DelayInteractor interactor;
+  @NonNull private Disposable customTimeChangeDisposable = DisposableHelper.dispose(null);
 
   @Inject DelayPresenter(@NonNull @Named("obs") Scheduler observeScheduler,
       @NonNull @Named("sub") Scheduler subscribeScheduler, @NonNull DelayInteractor interactor) {
@@ -34,18 +37,32 @@ class DelayPresenter extends SchedulerPresenter {
     this.interactor = interactor;
   }
 
+  @Override protected void onStop() {
+    super.onStop();
+    stopListeningCustomTimeChanges();
+  }
+
   /**
    * public
    */
   void submitCustomTimeChange(@NonNull String text, boolean instant) {
+    Timber.d("Custom time changed: %s instant? %s", text, instant);
     interactor.acceptCustomTimeChange(text, instant);
   }
 
   /**
    * public
    */
+  void stopListeningCustomTimeChanges() {
+    customTimeChangeDisposable = DisposableHelper.dispose(customTimeChangeDisposable);
+  }
+
+  /**
+   * public
+   */
   void listenForCustomTimeChanges(@NonNull CustomTimeChangedCallback callback) {
-    disposeOnDestroy(interactor.listenCustomTimeChanges()
+    stopListeningCustomTimeChanges();
+    customTimeChangeDisposable = interactor.listenCustomTimeChanges()
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(pair -> {
@@ -54,7 +71,7 @@ class DelayPresenter extends SchedulerPresenter {
         }, throwable -> {
           Timber.e(throwable, "Error listen custom time change");
           callback.onError(throwable);
-        }));
+        });
   }
 
   /**
