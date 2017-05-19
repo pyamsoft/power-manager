@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.job;
 
+import android.os.Build;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.util.support.PersistableBundleCompat;
@@ -97,12 +98,14 @@ abstract class JobRunner {
   }
 
   @CheckResult private boolean runEnableJob(@NonNull String tag, boolean firstRun) {
+    boolean didSomething = false;
     if (dozePreferences.isOriginalDoze()
         && (firstRun || dozePreferences.isPeriodicDoze())
         && rootPreferences.isRootEnabled()
         && dozePermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Doze", tag);
       dozeModifier.unset();
+      didSomething = true;
     }
     if (isStopped()) {
       Timber.w("%s: Stopped early", tag);
@@ -116,6 +119,7 @@ abstract class JobRunner {
         && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Airplane mode", tag);
       airplaneModifier.unset();
+      didSomething = true;
     }
     if (isStopped()) {
       Timber.w("%s: Stopped early", tag);
@@ -125,6 +129,7 @@ abstract class JobRunner {
     if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
       Timber.i("%s: Enable WiFi", tag);
       wifiModifier.set();
+      didSomething = true;
     }
     if (isStopped()) {
       Timber.w("%s: Stopped early", tag);
@@ -137,6 +142,7 @@ abstract class JobRunner {
         && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Enable Data", tag);
       dataModifier.set();
+      didSomething = true;
     }
     if (isStopped()) {
       Timber.w("%s: Stopped early", tag);
@@ -147,6 +153,7 @@ abstract class JobRunner {
         || bluetoothPreferences.isPeriodicBluetooth())) {
       Timber.i("%s: Enable Bluetooth", tag);
       bluetoothModifier.set();
+      didSomething = true;
     }
     if (isStopped()) {
       Timber.w("%s: Stopped early", tag);
@@ -156,12 +163,14 @@ abstract class JobRunner {
     if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
       Timber.i("%s: Enable Sync", tag);
       syncModifier.set();
+      didSomething = true;
     }
 
-    return isJobRepeatRequired();
+    return isJobRepeatRequired(didSomething);
   }
 
   @CheckResult private boolean runDisableJob(@NonNull String tag, boolean firstRun) {
+    boolean didSomething = false;
     final boolean isCharging = chargingObserver.enabled();
     if (isCharging && wifiPreferences.isIgnoreChargingWifi()) {
       Timber.w("Do not disable WiFi while device is charging");
@@ -169,6 +178,7 @@ abstract class JobRunner {
       if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
         Timber.i("%s: Disable WiFi", tag);
         wifiModifier.unset();
+        didSomething = true;
       }
     }
     if (isStopped()) {
@@ -185,6 +195,7 @@ abstract class JobRunner {
           && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Disable Data", tag);
         dataModifier.unset();
+        didSomething = true;
       }
     }
     if (isStopped()) {
@@ -199,6 +210,7 @@ abstract class JobRunner {
           || bluetoothPreferences.isPeriodicBluetooth())) {
         Timber.i("%s: Disable Bluetooth", tag);
         bluetoothModifier.unset();
+        didSomething = true;
       }
     }
     if (isStopped()) {
@@ -212,6 +224,7 @@ abstract class JobRunner {
       if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
         Timber.i("%s: Disable Sync", tag);
         syncModifier.unset();
+        didSomething = true;
       }
     }
     if (isStopped()) {
@@ -229,6 +242,7 @@ abstract class JobRunner {
           && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Airplane mode", tag);
         airplaneModifier.set();
+        didSomething = true;
       }
     }
     if (isStopped()) {
@@ -245,27 +259,34 @@ abstract class JobRunner {
           && dozePermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Doze mode", tag);
         dozeModifier.set();
+        didSomething = true;
       }
     }
 
-    return isJobRepeatRequired();
+    return isJobRepeatRequired(didSomething);
   }
 
-  @CheckResult private boolean isJobRepeatRequired() {
+  @CheckResult private boolean isJobRepeatRequired(boolean didSomething) {
     boolean repeatWifi = wifiPreferences.isWifiManaged() && wifiPreferences.isPeriodicWifi();
     boolean repeatData = dataPreferences.isDataManaged() && dataPreferences.isPeriodicData();
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      repeatData &= rootPermissionObserver.hasPermission();
+    }
     boolean repeatBluetooth =
         bluetoothPreferences.isBluetoothManaged() && bluetoothPreferences.isPeriodicBluetooth();
     boolean repeatSync = syncPreferences.isSyncManaged() && syncPreferences.isPeriodicSync();
-    boolean repeatAirplane =
-        airplanePreferences.isAirplaneManaged() && airplanePreferences.isPeriodicAirplane();
-    boolean repeatDoze = dozePreferences.isDozeManaged() && dozePreferences.isPeriodicDoze();
-    return repeatWifi
+    boolean repeatAirplane = airplanePreferences.isAirplaneManaged()
+        && airplanePreferences.isPeriodicAirplane()
+        && rootPermissionObserver.hasPermission();
+    boolean repeatDoze = dozePreferences.isDozeManaged()
+        && dozePreferences.isPeriodicDoze()
+        && dozePermissionObserver.hasPermission();
+    return didSomething && (repeatWifi
         || repeatData
         || repeatBluetooth
         || repeatSync
         || repeatAirplane
-        || repeatDoze;
+        || repeatDoze);
   }
 
   private void repeatIfRequired(@NonNull String tag, boolean screenOn, long windowOnTime,
