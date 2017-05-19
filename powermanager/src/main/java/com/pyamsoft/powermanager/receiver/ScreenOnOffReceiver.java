@@ -107,11 +107,11 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
   }
 
   private void enableManagers() {
-    manager.cancel(() -> manager.enable(null));
+    manager.enable(null);
   }
 
   private void disableManagers() {
-    manager.cancel(() -> manager.disable(null));
+    manager.disable(null);
   }
 
   public final void register() {

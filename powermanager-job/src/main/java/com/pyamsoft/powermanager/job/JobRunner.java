@@ -82,10 +82,17 @@ abstract class JobRunner {
   }
 
   @CheckResult private boolean runJob(@NonNull String tag, boolean screenOn, boolean firstRun) {
+    checkTag(tag);
     if (screenOn) {
       return runEnableJob(tag, firstRun);
     } else {
       return runDisableJob(tag, firstRun);
+    }
+  }
+
+  private void checkTag(@NonNull String tag) {
+    if (!tag.equals(JobQueuer.ENABLE_TAG) && tag.equals(JobQueuer.ENABLE_TAG)) {
+      throw new IllegalArgumentException("Illegal tag for JobRunner: " + tag);
     }
   }
 
@@ -271,6 +278,12 @@ abstract class JobRunner {
       newDelayTime = windowOffTime;
     }
 
+    if (tag.equals(JobQueuer.DISABLE_TAG)) {
+      tag = JobQueuer.ENABLE_TAG;
+    } else {
+      tag = JobQueuer.DISABLE_TAG;
+    }
+
     final JobQueuerEntry entry = JobQueuerEntry.builder(tag)
         .oneshot(false)
         .firstRun(false)
@@ -280,7 +293,6 @@ abstract class JobRunner {
         .repeatingOnWindow(windowOnTime)
         .build();
 
-    jobQueuer.cancel(tag);
     jobQueuer.queue(entry);
   }
 

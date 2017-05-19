@@ -20,7 +20,8 @@ import android.support.annotation.NonNull;
 
 public interface JobQueuer {
 
-  @NonNull String MANAGED_TAG = "Manage-Job";
+  @NonNull String ENABLE_TAG = "ENABLE";
+  @NonNull String DISABLE_TAG = "DISABLE";
 
   void cancel(@NonNull String tag);
 

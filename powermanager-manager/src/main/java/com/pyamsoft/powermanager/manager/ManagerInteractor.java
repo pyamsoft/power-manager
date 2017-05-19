@@ -36,8 +36,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import timber.log.Timber;
 
-import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
-
 @Singleton class ManagerInteractor {
 
   @SuppressWarnings("WeakerAccess") @NonNull final JobQueuer jobQueuer;
@@ -83,18 +81,12 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
     this.dozePreferences = dozePreferences;
   }
 
-  public void destroy() {
-    jobQueuer.cancel(MANAGED_TAG);
-  }
-
   /**
    * public
    */
-  @NonNull @CheckResult Single<String> cancel() {
-    return Single.fromCallable(() -> {
-      destroy();
-      return MANAGED_TAG;
-    });
+  public void destroy() {
+    jobQueuer.cancel(JobQueuer.ENABLE_TAG);
+    jobQueuer.cancel(JobQueuer.DISABLE_TAG);
   }
 
   /**
@@ -102,9 +94,10 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
    */
   @CheckResult @NonNull Single<String> queueEnable() {
     return Single.fromCallable(() -> {
+      final String tag = JobQueuer.ENABLE_TAG;
       // Queue up an enable job
-      jobQueuer.cancel(MANAGED_TAG);
-      jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
+      jobQueuer.cancel(tag);
+      jobQueuer.queue(JobQueuerEntry.builder(tag)
           .screenOn(true)
           .delay(0)
           .oneshot(true)
@@ -112,7 +105,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
           .repeatingOffWindow(0L)
           .repeatingOnWindow(0L)
           .build());
-      return MANAGED_TAG;
+      return tag;
     }).doAfterSuccess(s -> eraseOriginalStates());
   }
 
@@ -121,9 +114,10 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
    */
   @CheckResult @NonNull Single<String> queueDisable() {
     return Completable.fromAction(this::storeOriginalStates).andThen(Single.fromCallable(() -> {
+      final String tag = JobQueuer.DISABLE_TAG;
       // Queue up a disable job
-      jobQueuer.cancel(MANAGED_TAG);
-      jobQueuer.queue(JobQueuerEntry.builder(MANAGED_TAG)
+      jobQueuer.cancel(tag);
+      jobQueuer.queue(JobQueuerEntry.builder(tag)
           .screenOn(false)
           .delay(getDelayTime())
           .oneshot(false)
@@ -131,7 +125,7 @@ import static com.pyamsoft.powermanager.job.JobQueuer.MANAGED_TAG;
           .repeatingOffWindow(getPeriodicDisableTime())
           .repeatingOnWindow(getPeriodicEnableTime())
           .build());
-      return MANAGED_TAG;
+      return tag;
     }));
   }
 

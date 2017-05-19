@@ -57,7 +57,7 @@ public class PowerManagerSingleInitProvider extends SingleInitContentProvider {
     // Guarantee JobManager creation
     JobManager.create(context);
     JobManager.instance().addJobCreator(s -> {
-      if (JobQueuer.MANAGED_TAG.equals(s)) {
+      if (JobQueuer.ENABLE_TAG.equals(s) || JobQueuer.DISABLE_TAG.equals(s)) {
         return Jobs.newJob(jobHandler);
       } else {
         Timber.e("Could not create job for tag: %s", s);
