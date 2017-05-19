@@ -19,10 +19,12 @@ package com.pyamsoft.powermanager.job;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import com.evernote.android.job.JobManager;
+import com.evernote.android.job.util.JobCat;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import timber.log.Timber;
 
 @Module public class JobModule {
 
@@ -37,6 +39,10 @@ import javax.inject.Singleton;
   }
 
   @Singleton @Provides JobManager provideJobManager(@NonNull Context context) {
+    // Job logs via Timber in debug mode
+    JobCat.addLogPrinter((priority, tag, message, t) -> Timber.tag(tag).log(priority, t, message));
+    JobCat.setLogcatEnabled(false);
+
     JobManager.create(context.getApplicationContext());
     return JobManager.instance();
   }

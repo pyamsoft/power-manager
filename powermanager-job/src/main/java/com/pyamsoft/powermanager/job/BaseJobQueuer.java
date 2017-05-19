@@ -31,6 +31,8 @@ abstract class BaseJobQueuer implements JobQueuer {
   @NonNull final static String KEY_SCREEN = "extra_key__screen";
   @NonNull final static String KEY_ONESHOT = "extra_key__once";
   @NonNull final static String KEY_FIRST_RUN = "extra_key__first";
+  private static final long WINDOW_SMALL = TimeUnit.SECONDS.toMillis(15);
+  private static final long FIVE_SECONDS = TimeUnit.SECONDS.toMillis(5);
   @NonNull private final JobManager jobManager;
 
   BaseJobQueuer(@NonNull JobManager jobManager) {
@@ -62,7 +64,16 @@ abstract class BaseJobQueuer implements JobQueuer {
   }
 
   private void scheduleJob(@NonNull JobQueuerEntry entry, @NonNull PersistableBundleCompat extras) {
-    new JobRequest.Builder(entry.tag()).setExact(TimeUnit.SECONDS.toMillis(entry.delay()))
+    long startTime = TimeUnit.SECONDS.toMillis(entry.delay());
+    final long window;
+
+    // If the delay is less than 15 seconds, set the window to +5 seconds
+    if (startTime < WINDOW_SMALL) {
+      window = FIVE_SECONDS;
+    } else {
+      window = FIVE_SECONDS << 1;
+    }
+    new JobRequest.Builder(entry.tag()).setExecutionWindow(startTime, startTime + window)
         .setPersisted(false)
         .setExtras(extras)
         .setRequiresCharging(false)
