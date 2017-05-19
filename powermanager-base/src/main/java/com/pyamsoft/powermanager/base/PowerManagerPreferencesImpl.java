@@ -48,8 +48,11 @@ class PowerManagerPreferencesImpl
     ManagePreferences {
 
   private static final long DELAY_MINIMUM = TimeUnit.SECONDS.toSeconds(5);
+  private static final long DELAY_MAXIMUM = TimeUnit.MINUTES.toSeconds(30);
   private static final long PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1);
+  private static final long PERIOD_MAXIMUM = TimeUnit.HOURS.toSeconds(1);
   private static final long TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15);
+  private static final long TRIGGER_MAXIMUM = TimeUnit.HOURS.toSeconds(2);
 
   private static final long MANAGE_DELAY_DEFAULT = TimeUnit.SECONDS.toSeconds(30);
   private static final long MANAGE_DISABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(5);
@@ -271,6 +274,10 @@ class PowerManagerPreferencesImpl
 
     if (delay < TRIGGER_MINIMUM) {
       delay = TRIGGER_MINIMUM;
+      preferences.edit().putString(triggerPeriodKey, String.valueOf(TRIGGER_MINIMUM)).apply();
+    }
+    if (delay > TRIGGER_MAXIMUM) {
+      delay = TRIGGER_MAXIMUM;
       preferences.edit().putString(triggerPeriodKey, String.valueOf(TRIGGER_MINIMUM)).apply();
     }
     return delay;
@@ -526,12 +533,19 @@ class PowerManagerPreferencesImpl
       delay = DELAY_MINIMUM;
       setManageDelay(delay);
     }
+    if (delay > DELAY_MAXIMUM) {
+      delay = DELAY_MAXIMUM;
+      setManageDelay(delay);
+    }
     return delay;
   }
 
   @Override public void setManageDelay(long time) {
     if (time < DELAY_MINIMUM) {
       time = DELAY_MINIMUM;
+    }
+    if (time > DELAY_MAXIMUM) {
+      time = DELAY_MAXIMUM;
     }
     preferences.edit().putLong(KEY_MANAGE_DELAY_TIME, time).apply();
   }
@@ -558,12 +572,19 @@ class PowerManagerPreferencesImpl
       delay = PERIOD_MINIMUM;
       setPeriodicDisableTime(delay);
     }
+    if (delay > PERIOD_MAXIMUM) {
+      delay = PERIOD_MAXIMUM;
+      setPeriodicDisableTime(delay);
+    }
     return delay;
   }
 
   @Override public void setPeriodicDisableTime(long time) {
     if (time < PERIOD_MINIMUM) {
       time = PERIOD_MINIMUM;
+    }
+    if (time > PERIOD_MAXIMUM) {
+      time = PERIOD_MAXIMUM;
     }
     preferences.edit().putLong(KEY_MANAGE_DISABLE_TIME, time).apply();
   }

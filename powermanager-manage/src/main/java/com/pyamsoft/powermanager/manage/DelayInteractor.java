@@ -99,6 +99,6 @@ class DelayInteractor {
       time = 0;
     }
     preferences.setTime(time, true);
-    return new Pair<>(errorString, time);
+    return new Pair<>(errorString, preferences.getTime());
   }
 }
