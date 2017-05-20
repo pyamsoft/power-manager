@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.service;
 
 import android.app.Notification;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
@@ -49,8 +50,15 @@ class ForegroundPresenter extends SchedulerPresenter {
   /**
    * public
    */
+  @CheckResult @NonNull Notification hangNotification() {
+    return interactor.createNotification(false).blockingGet();
+  }
+
+  /**
+   * public
+   */
   void startNotification(@NonNull NotificationCallback callback) {
-    disposeOnStop(interactor.createNotification()
+    disposeOnStop(interactor.createNotification(true)
         .subscribeOn(getSubscribeScheduler())
         .observeOn(getObserveScheduler())
         .subscribe(callback::onStartNotificationInForeground,

@@ -21,7 +21,6 @@ import com.pyamsoft.pydroid.presenter.SchedulerPresenter;
 import io.reactivex.Scheduler;
 import javax.inject.Inject;
 import javax.inject.Named;
-import timber.log.Timber;
 
 class ActionTogglePresenter extends SchedulerPresenter {
 
@@ -37,16 +36,9 @@ class ActionTogglePresenter extends SchedulerPresenter {
    * public
    */
   void toggleForegroundState(@NonNull ForegroundStateCallback callback) {
-    disposeOnStop(interactor.toggleEnabledState()
-        .subscribeOn(getSubscribeScheduler())
-        .observeOn(getObserveScheduler())
-        .subscribe(callback::onForegroundStateToggled,
-            throwable -> Timber.e(throwable, "onError toggleForegroundState")));
+    callback.onForegroundStateToggled(interactor.toggleEnabledState().blockingGet());
   }
 
-  /**
-   * public
-   */
   interface ForegroundStateCallback {
 
     void onForegroundStateToggled(boolean state);

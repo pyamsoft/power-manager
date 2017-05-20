@@ -16,20 +16,19 @@
 
 package com.pyamsoft.powermanager.service;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import com.pyamsoft.powermanager.Injector;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ActionToggleService extends Service {
+public class ActionToggleService extends IntentService {
 
   @Inject ActionTogglePresenter presenter;
 
-  @Nullable @Override public IBinder onBind(Intent intent) {
-    return null;
+  public ActionToggleService() {
+    super(ActionToggleService.class.getSimpleName());
   }
 
   @Override public void onCreate() {
@@ -37,7 +36,13 @@ public class ActionToggleService extends Service {
     Injector.get().provideComponent().inject(this);
   }
 
-  @Override public int onStartCommand(Intent intent, int flags, int startId) {
+  @Override public void onDestroy() {
+    super.onDestroy();
+    presenter.stop();
+    presenter.destroy();
+  }
+
+  @Override protected void onHandleIntent(@Nullable Intent intent) {
     presenter.toggleForegroundState(state -> {
       Timber.d("Foreground state toggled: %s", state);
       if (state) {
@@ -45,16 +50,6 @@ public class ActionToggleService extends Service {
       } else {
         ForegroundService.stop(getApplicationContext());
       }
-
-      Timber.d("Kill Action Toggle service");
-      stopSelf();
     });
-    return START_STICKY;
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    presenter.stop();
-    presenter.destroy();
   }
 }

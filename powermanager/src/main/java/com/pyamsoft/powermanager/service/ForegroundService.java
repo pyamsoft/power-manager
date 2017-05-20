@@ -16,49 +16,40 @@
 
 package com.pyamsoft.powermanager.service;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import com.pyamsoft.powermanager.Injector;
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver;
+import com.pyamsoft.pydroid.ui.app.AutoRestartService;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class ForegroundService extends Service {
+public class ForegroundService extends AutoRestartService {
 
-  @NonNull private static final String EXTRA_SERVICE_ENABLED = "EXTRA_SERVICE_ENABLED";
+  static final int NOTIFICATION_ID = 1000;
   @NonNull private static final String EXTRA_RESTART_TRIGGERS = "EXTRA_RESTART_TRIGGERS";
-  private static final int NOTIFICATION_ID = 1000;
   @Inject ForegroundPresenter presenter;
   private ScreenOnOffReceiver screenOnOffReceiver;
-
-  /**
-   * Force the service into a state
-   */
-  private static void forceService(@NonNull Context context, boolean state) {
-    final Context appContext = context.getApplicationContext();
-    final Intent service = new Intent(appContext, ForegroundService.class);
-    service.putExtra(EXTRA_SERVICE_ENABLED, state);
-
-    Timber.d("Force service: %s", state);
-    appContext.startService(service);
-  }
+  private NotificationManagerCompat notificationManager;
 
   /**
    * Force the service On
    */
   public static void start(@NonNull Context context) {
-    forceService(context, true);
+    context.getApplicationContext()
+        .startService(new Intent(context.getApplicationContext(), ForegroundService.class));
   }
 
   /**
    * Force the service Off
    */
   public static void stop(@NonNull Context context) {
-    forceService(context, false);
+    context.getApplicationContext()
+        .stopService(new Intent(context.getApplicationContext(), ForegroundService.class));
   }
 
   /**
@@ -78,48 +69,38 @@ public class ForegroundService extends Service {
 
   @Override public void onCreate() {
     super.onCreate();
-    screenOnOffReceiver = new ScreenOnOffReceiver(this);
-
     Injector.get().provideComponent().inject(this);
+
+    notificationManager = NotificationManagerCompat.from(getApplicationContext());
+    notificationManager.cancel(NOTIFICATION_ID);
+
+    presenter.setForegroundState(true);
     presenter.queueRepeatingTriggerJob();
+
+    screenOnOffReceiver = new ScreenOnOffReceiver(this);
+    screenOnOffReceiver.register();
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
+    presenter.setForegroundState(false);
     screenOnOffReceiver.unregister();
+
     presenter.stop();
     presenter.destroy();
+
     stopForeground(true);
+
+    notificationManager.notify(NOTIFICATION_ID, presenter.hangNotification());
   }
 
   @Override public int onStartCommand(Intent intent, int flags, int startId) {
     if (intent != null) {
-      if (intent.hasExtra(EXTRA_SERVICE_ENABLED)) {
-        final boolean enable = intent.getBooleanExtra(EXTRA_SERVICE_ENABLED, true);
-        processServiceEnableCommand(enable);
-      } else if (intent.hasExtra(EXTRA_RESTART_TRIGGERS)) {
-        final boolean restart = intent.getBooleanExtra(EXTRA_RESTART_TRIGGERS, true);
-        processTriggerRestartCommand(restart);
+      if (intent.getBooleanExtra(EXTRA_RESTART_TRIGGERS, false)) {
+        presenter.restartTriggerAlarm();
       }
     }
     presenter.startNotification(notification -> startForeground(NOTIFICATION_ID, notification));
     return START_STICKY;
-  }
-
-  private void processTriggerRestartCommand(boolean restart) {
-    if (restart) {
-      presenter.restartTriggerAlarm();
-    }
-  }
-
-  private void processServiceEnableCommand(boolean enable) {
-    presenter.setForegroundState(enable);
-    if (enable) {
-      Timber.i("Register SCREEN receiver");
-      screenOnOffReceiver.register();
-    } else {
-      Timber.w("Unregister SCREEN receiver");
-      screenOnOffReceiver.unregister();
-    }
   }
 }

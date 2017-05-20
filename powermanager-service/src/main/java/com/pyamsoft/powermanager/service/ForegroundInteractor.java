@@ -66,9 +66,8 @@ import timber.log.Timber;
         context.getString(R.string.app_name))
         .setSmallIcon(R.drawable.ic_notification)
         .setColor(ContextCompat.getColor(context, R.color.amber500))
-        .setWhen(0)
-        .setOngoing(true)
         .setAutoCancel(false)
+        .setWhen(0)
         .setNumber(0)
         .setContentIntent(pendingIntent);
   }
@@ -105,7 +104,7 @@ import timber.log.Timber;
   /**
    * public
    */
-  @NonNull Single<Notification> createNotification() {
+  @NonNull Single<Notification> createNotification(boolean foreground) {
     return isServiceEnabled().flatMap(serviceEnabled -> {
       final String actionName = serviceEnabled ? "Suspend" : "Start";
       final Intent toggleService = new Intent(appContext, toggleServiceClass);
@@ -121,6 +120,7 @@ import timber.log.Timber;
         builder.mActions.clear();
         return builder.setPriority(priority)
             .setContentText(title)
+            .setOngoing(foreground)
             .addAction(R.drawable.ic_notification, actionName, actionToggleService)
             .build();
       });
