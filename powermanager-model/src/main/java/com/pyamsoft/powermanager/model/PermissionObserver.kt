@@ -20,5 +20,5 @@ import android.support.annotation.CheckResult
 
 interface PermissionObserver {
 
-    @CheckResult fun hasPermission(): Boolean
+  @CheckResult fun hasPermission(): Boolean
 }

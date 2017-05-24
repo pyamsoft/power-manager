@@ -24,10 +24,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
+import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.fragment_manage.recycler
-import com.pyamsoft.powermanager.R
 import timber.log.Timber
 
 class ManageFragment : WatchedFragment() {
@@ -68,10 +68,10 @@ class ManageFragment : WatchedFragment() {
           Timber.d("Inflate DelayItem for TAG: %s", s)
           item = DelayItem()
         }
-//        PollItem.TAG -> {
-//          Timber.d("Inflate PollItem for TAG: %s", s)
-//          item = PollItem()
-//        }
+      //        PollItem.TAG -> {
+      //          Timber.d("Inflate PollItem for TAG: %s", s)
+      //          item = PollItem()
+      //        }
         else -> {
           Timber.e("Cannot inflate item for TAG: %s", s)
           item = null

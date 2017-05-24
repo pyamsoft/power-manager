@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult
 
 interface ConnectedStateObserver : StateObserver {
 
-    @CheckResult fun connected(): Boolean
+  @CheckResult fun connected(): Boolean
 
-    @CheckResult fun connectionUnknown(): Boolean
+  @CheckResult fun connectionUnknown(): Boolean
 }

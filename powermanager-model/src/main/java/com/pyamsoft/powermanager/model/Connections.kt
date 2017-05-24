@@ -17,5 +17,5 @@
 package com.pyamsoft.powermanager.model
 
 enum class Connections {
-    CONNECTED, DISCONNECTED, UNKNOWN
+  CONNECTED, DISCONNECTED, UNKNOWN
 }

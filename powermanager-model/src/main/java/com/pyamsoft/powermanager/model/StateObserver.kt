@@ -20,8 +20,8 @@ import android.support.annotation.CheckResult
 
 interface StateObserver {
 
-    @CheckResult fun enabled(): Boolean
+  @CheckResult fun enabled(): Boolean
 
-    @CheckResult fun unknown(): Boolean
+  @CheckResult fun unknown(): Boolean
 
 }

@@ -17,5 +17,5 @@
 package com.pyamsoft.powermanager.model
 
 enum class States {
-    ENABLED, DISABLED, UNKNOWN
+  ENABLED, DISABLED, UNKNOWN
 }
