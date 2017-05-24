@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.logger;
+package com.pyamsoft.powermanager.base.logger
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+interface Logger {
 
-public interface Logger {
+    fun d(fmt: String, vararg args: Any)
 
-  void d(@NonNull String fmt, @Nullable Object... args);
+    fun i(fmt: String, vararg args: Any)
 
-  void i(@NonNull String fmt, @Nullable Object... args);
+    fun w(fmt: String, vararg args: Any)
 
-  void w(@NonNull String fmt, @Nullable Object... args);
-
-  void e(@NonNull String fmt, @Nullable Object... args);
+    fun e(fmt: String, vararg args: Any)
 }

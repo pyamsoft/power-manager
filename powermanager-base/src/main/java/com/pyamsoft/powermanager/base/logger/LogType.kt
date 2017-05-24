@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.logger;
+package com.pyamsoft.powermanager.base.logger
 
-enum LogType {
+internal enum class LogType {
   DEBUG, INFO, WARNING, ERROR
 }
