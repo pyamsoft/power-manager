@@ -15,190 +15,187 @@
   ~ limitations under the License.
   -->
 
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/material_light_background"
+    android:orientation="vertical"
+    android:padding="8dp"
+    >
 
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
+  <android.support.v7.widget.GridLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/material_light_background"
-      android:orientation="vertical"
-      android:padding="8dp"
+      app:alignmentMode="alignMargins"
+      app:columnCount="3"
+      app:columnOrderPreserved="true"
+      app:orientation="vertical"
+      app:rowCount="7"
+      app:rowOrderPreserved="true"
+      app:useDefaultMargins="true"
       >
 
+    <TextView
+        android:text="Ignore If:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="0"
+        />
 
-    <android.support.v7.widget.GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:alignmentMode="alignMargins"
-        app:columnCount="3"
-        app:columnOrderPreserved="true"
-        app:orientation="vertical"
-        app:rowCount="7"
-        app:rowOrderPreserved="true"
-        app:useDefaultMargins="true"
-        >
+    <TextView
+        android:layout_marginEnd="8dp"
+        android:text="Charging"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="bold"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="0"
+        />
 
-      <TextView
-          android:text="Ignore If:"
-          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="0"
-          />
+    <TextView
+        android:text="Wearable\nConnected"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="bold"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="0"
+        />
 
-      <TextView
-          android:layout_marginEnd="8dp"
-          android:text="Charging"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          android:textStyle="bold"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="0"
-          />
+    <TextView
+        android:text="WiFi"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="1"
+        />
 
-      <TextView
-          android:text="Wearable\nConnected"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          android:textStyle="bold"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="0"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_wifi"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="1"
+        />
 
-      <TextView
-          android:text="WiFi"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="1"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_wifi"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="1"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_wifi"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="1"
-          />
+    <TextView
+        android:text="Data"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="2"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_wear_wifi"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="1"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_data"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="2"
+        />
 
-      <TextView
-          android:text="Data"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="2"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_data"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="2"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_data"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="2"
-          />
+    <TextView
+        android:text="Bluetooth"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="3"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_wear_data"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="2"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_bluetooth"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="3"
+        />
 
-      <TextView
-          android:text="Bluetooth"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="3"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_bluetooth"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="3"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_bluetooth"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="3"
-          />
+    <TextView
+        android:text="Sync"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="4"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_wear_bluetooth"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="3"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_sync"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="4"
+        />
 
-      <TextView
-          android:text="Sync"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="4"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_sync"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="4"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_sync"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="4"
-          />
+    <TextView
+        android:text="Airplane Mode"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="5"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_wear_sync"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="4"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_airplane"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="5"
+        />
 
-      <TextView
-          android:text="Airplane Mode"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="5"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_airplane"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="5"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_airplane"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="5"
-          />
+    <TextView
+        android:text="Doze Mode"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="6"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_wear_airplane"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="5"
-          />
+    <CheckBox
+        android:id="@+id/exception_charging_doze"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="6"
+        />
 
-      <TextView
-          android:text="Doze Mode"
-          android:textAppearance="@style/TextAppearance.AppCompat.Small"
-          app:layout_column="0"
-          app:layout_gravity="center_vertical"
-          app:layout_row="6"
-          />
+    <CheckBox
+        android:id="@+id/exception_wear_doze"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="6"
+        />
 
-      <CheckBox
-          android:id="@+id/exception_charging_doze"
-          app:layout_column="1"
-          app:layout_gravity="center"
-          app:layout_row="6"
-          />
+  </android.support.v7.widget.GridLayout>
 
-      <CheckBox
-          android:id="@+id/exception_wear_doze"
-          app:layout_column="2"
-          app:layout_gravity="center"
-          app:layout_row="6"
-          />
-
-    </android.support.v7.widget.GridLayout>
-  </LinearLayout>
-
-</layout>
+</LinearLayout>

@@ -15,68 +15,66 @@
   ~ limitations under the License.
   -->
 
-<layout>
-  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/material_light_background"
+    android:orientation="vertical"
+    android:padding="8dp"
+    >
+
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_wifi"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/material_light_background"
-      android:orientation="vertical"
-      android:padding="8dp"
-      >
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_wifi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_data"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_bluetooth"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_bluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_sync"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_sync"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_airplane"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_airplane"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+  <android.support.v7.widget.SwitchCompat
+      android:id="@+id/manage_doze"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:padding="4dp"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/manage_doze"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
-
-  </LinearLayout>
-</layout>
+</LinearLayout>

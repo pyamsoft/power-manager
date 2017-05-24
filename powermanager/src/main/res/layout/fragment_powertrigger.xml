@@ -15,75 +15,71 @@
   ~ limitations under the License.
   -->
 
-<layout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-  <android.support.design.widget.CoordinatorLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
       >
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/power_trigger_preference_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
         >
 
-      <FrameLayout
-          android:id="@+id/power_trigger_preference_container"
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/power_trigger_list"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
+          android:layout_height="match_parent"
           />
 
       <FrameLayout
+          android:id="@+id/power_trigger_empty"
           android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_marginTop="16dp"
-          android:layout_weight="1"
+          android:layout_height="match_parent"
+          android:padding="8dp"
           >
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/power_trigger_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_power_triggers_msg"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             />
-
-        <FrameLayout
-            android:id="@+id/power_trigger_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            >
-
-          <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:text="@string/no_power_triggers_msg"
-              android:textAppearance="?android:attr/textAppearanceMedium"
-              />
-
-        </FrameLayout>
 
       </FrameLayout>
 
-    </LinearLayout>
+    </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/power_trigger_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        app:pressedTranslationZ="12dp"
-        app:useCompatPadding="true"
-        />
+  </LinearLayout>
 
-  </android.support.design.widget.CoordinatorLayout>
+  <android.support.design.widget.FloatingActionButton
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:id="@+id/power_trigger_fab"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom|end"
+      android:layout_margin="16dp"
+      app:elevation="6dp"
+      app:fabSize="normal"
+      app:pressedTranslationZ="12dp"
+      app:useCompatPadding="true"
+      />
 
-</layout>
+</android.support.design.widget.CoordinatorLayout>
+

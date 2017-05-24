@@ -48,7 +48,6 @@ class PowerManager : Application() {
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return
     }
-
     PYDroid.initialize(this, BuildConfig.DEBUG)
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite")
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight")
