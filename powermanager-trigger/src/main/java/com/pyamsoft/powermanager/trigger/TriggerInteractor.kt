@@ -28,7 +28,7 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton internal class TriggerInteractor @Inject internal constructor(
+@Singleton class TriggerInteractor @Inject internal constructor(
     powerTriggerDB: PowerTriggerDB,
     internal val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
@@ -49,8 +49,8 @@ import javax.inject.Singleton
    */
   @CheckResult internal fun put(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
     return powerTriggerDB.queryWithPercent(entry.percent())
-        .flatMapCompletable { triggerEntry ->
-          if (!PowerTriggerEntry.isEmpty(triggerEntry)) {
+        .flatMapCompletable {
+          if (!PowerTriggerEntry.isEmpty(it)) {
             Timber.e("Entry already exists, throw")
             throw SQLiteConstraintException(
                 "Entry already exists with percent: " + entry.percent())

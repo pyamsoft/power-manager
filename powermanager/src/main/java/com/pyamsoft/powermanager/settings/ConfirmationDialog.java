@@ -58,9 +58,8 @@ public class ConfirmationDialog extends DialogFragment {
     return new AlertDialog.Builder(getActivity()).setMessage(clearType == ConfirmEvent.Type.DATABASE
         ? "Really clear entire database?\n\nYou will have to re-configure all triggers again"
         : "Really clear all application settings?")
-        .setPositiveButton("Yes", (dialogInterface, i) -> {
-          EventBus.get().publish(ConfirmEvent.create(clearType));
-        })
+        .setPositiveButton("Yes",
+            (dialogInterface, i) -> EventBus.get().publish(new ConfirmEvent(clearType)))
         .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.dismiss())
         .create();
   }

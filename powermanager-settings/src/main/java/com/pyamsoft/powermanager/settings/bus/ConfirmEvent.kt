@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.settings.bus;
+package com.pyamsoft.powermanager.settings.bus
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+data class ConfirmEvent(val type: Type) {
 
-@AutoValue public abstract class ConfirmEvent {
-
-  @CheckResult @NonNull public static ConfirmEvent create(@NonNull Type type) {
-    return new AutoValue_ConfirmEvent(type);
-  }
-
-  @CheckResult public abstract Type type();
-
-  public enum Type {
-
+  enum class Type {
     DATABASE, ALL
   }
 }

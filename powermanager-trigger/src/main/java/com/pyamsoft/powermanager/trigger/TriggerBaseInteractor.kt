@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Single
 
-internal abstract class TriggerBaseInteractor(protected val powerTriggerDB: PowerTriggerDB) {
+abstract class TriggerBaseInteractor(protected val powerTriggerDB: PowerTriggerDB) {
 
   /**
    * public
