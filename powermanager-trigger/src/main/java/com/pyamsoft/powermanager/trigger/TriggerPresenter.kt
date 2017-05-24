@@ -27,7 +27,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler,
+class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler,
     private val interactor: TriggerInteractor) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -89,14 +89,14 @@ internal class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: 
         .subscribe({ callback.onTriggerLoaded(it) }, { Timber.e(it, "onError") }))
   }
 
-  internal interface TriggerLoadCallback {
+  interface TriggerLoadCallback {
 
     fun onTriggerLoaded(entry: PowerTriggerEntry)
 
     fun onTriggerLoadFinished()
   }
 
-  internal interface BusCallback : TriggerDeleteCallback, TriggerCreateCallback
+  interface BusCallback : TriggerDeleteCallback, TriggerCreateCallback
 
   internal interface TriggerDeleteCallback {
 

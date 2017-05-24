@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.uicore;
+package com.pyamsoft.powermanager.uicore
 
-import android.support.annotation.CallSuper;
-import com.pyamsoft.powermanager.PowerManager;
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment;
+import android.support.annotation.CallSuper
+import android.support.v7.preference.PreferenceFragmentCompat
+import com.pyamsoft.powermanager.PowerManager
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
 
-public abstract class WatchedFragment extends ActionBarFragment {
+abstract class WatchedPreferenceFragment : PreferenceFragmentCompat() {
 
-  @CallSuper @Override public void onDestroy() {
-    super.onDestroy();
-    PowerManager.getRefWatcher(this).watch(this);
+  @CallSuper override fun onDestroy() {
+    super.onDestroy()
+    PowerManager.getRefWatcher(this).watch(this)
   }
 }

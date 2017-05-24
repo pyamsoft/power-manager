@@ -51,7 +51,7 @@ public class ConfirmationDialog extends DialogFragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    PowerManager.getRefWatcher(this).watch(this);
+    PowerManager.Companion.getRefWatcher(this).watch(this);
   }
 
   @NonNull @Override public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

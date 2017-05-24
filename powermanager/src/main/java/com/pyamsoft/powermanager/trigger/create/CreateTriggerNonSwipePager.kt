@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger.create;
+package com.pyamsoft.powermanager.trigger.create
 
-import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
+import android.content.Context
+import android.support.v4.view.ViewPager
+import android.util.AttributeSet
+import android.view.MotionEvent
 
-public class CreateTriggerNonSwipePager extends ViewPager {
+class CreateTriggerNonSwipePager : ViewPager {
 
-  public CreateTriggerNonSwipePager(Context context) {
-    super(context);
-  }
+  constructor(context: Context) : super(context) {}
 
-  public CreateTriggerNonSwipePager(Context context, AttributeSet attrs) {
-    super(context, attrs);
-  }
+  constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
 
-  @Override public boolean onInterceptTouchEvent(MotionEvent event) {
+  override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     // Never allow swiping to switch between pages
-    return false;
+    return false
   }
 
-  @Override public boolean onTouchEvent(MotionEvent event) {
+  override fun onTouchEvent(event: MotionEvent): Boolean {
     // Never allow swiping to switch between pages
-    return false;
+    return false
   }
 }

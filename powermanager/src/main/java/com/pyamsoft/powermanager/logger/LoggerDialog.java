@@ -55,7 +55,7 @@ public class LoggerDialog extends DialogFragment
 
   @Override public void onDestroy() {
     super.onDestroy();
-    PowerManager.getRefWatcher(this).watch(this);
+    PowerManager.Companion.getRefWatcher(this).watch(this);
   }
 
   private void addOptionsPreferenceFragment() {

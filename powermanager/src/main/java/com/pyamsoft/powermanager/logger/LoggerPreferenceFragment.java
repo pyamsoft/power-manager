@@ -122,7 +122,7 @@ public class LoggerPreferenceFragment extends PreferenceFragmentCompat
     loggerDoze.destroy();
     loggerManager.destroy();
     loggerTrigger.destroy();
-    PowerManager.getRefWatcher(this).watch(this);
+    PowerManager.Companion.getRefWatcher(this).watch(this);
   }
 
   @CheckResult @NonNull private LoggerDialog getLoggerDialog() {

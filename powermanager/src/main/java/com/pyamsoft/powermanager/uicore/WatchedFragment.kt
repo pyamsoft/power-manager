@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.uicore;
+package com.pyamsoft.powermanager.uicore
 
-import android.support.annotation.CallSuper;
-import android.support.v4.app.DialogFragment;
-import com.pyamsoft.powermanager.PowerManager;
+import android.support.annotation.CallSuper
+import com.pyamsoft.powermanager.PowerManager
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
 
-public abstract class WatchedDialog extends DialogFragment {
+abstract class WatchedFragment : ActionBarFragment() {
 
-  @CallSuper @Override public void onDestroy() {
-    super.onDestroy();
-    PowerManager.getRefWatcher(this).watch(this);
+  @CallSuper override fun onDestroy() {
+    super.onDestroy()
+    PowerManager.getRefWatcher(this).watch(this)
   }
 }
