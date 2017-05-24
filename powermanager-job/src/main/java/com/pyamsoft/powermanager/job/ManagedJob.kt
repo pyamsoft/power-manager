@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.job
 
-import android.support.annotation.NonNull;
+import com.evernote.android.job.Job
 
-public interface JobQueuer {
+internal class ManagedJob(private val jobHandler: JobHandler) : Job() {
 
-  @NonNull String ENABLE_TAG = "ENABLE";
-  @NonNull String DISABLE_TAG = "DISABLE";
-
-  void cancel(@NonNull String tag);
-
-  void queue(@NonNull JobQueuerEntry entry);
-
-  void queueRepeating(@NonNull JobQueuerEntry entry);
+  override fun onRunJob(params: Job.Params): Job.Result {
+    jobHandler.newRunner { isCanceled || isFinished }
+        .run(params.tag, params.extras)
+    return Job.Result.SUCCESS
+  }
 }

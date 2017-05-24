@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.job
 
-import android.support.annotation.NonNull;
-import com.evernote.android.job.JobManager;
-import com.evernote.android.job.util.support.PersistableBundleCompat;
-import javax.inject.Inject;
+interface JobQueuer {
 
-class DelayedJobQueuerImpl extends BaseJobQueuer {
+  fun cancel(tag: String)
 
-  @Inject DelayedJobQueuerImpl(@NonNull JobManager jobManager) {
-    super(jobManager);
-  }
+  fun queue(entry: JobQueuerEntry)
 
-  @Override void runInstantJob(@NonNull String tag, @NonNull PersistableBundleCompat extras) {
-    throw new RuntimeException(
-        tag + ": Cannot schedule instant jobs with DelayedJobQueuerImpl, use InstantJobQueuerImpl");
+  fun queueRepeating(entry: JobQueuerEntry)
+
+  companion object {
+
+    const val ENABLE_TAG = "ENABLE"
+    const val DISABLE_TAG = "DISABLE"
   }
 }

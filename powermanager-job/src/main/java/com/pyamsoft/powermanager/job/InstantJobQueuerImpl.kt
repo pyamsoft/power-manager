@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.job
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager
+import com.evernote.android.job.util.support.PersistableBundleCompat
+import javax.inject.Inject
 
-public final class Jobs {
+internal class InstantJobQueuerImpl @Inject constructor(jobManager: JobManager,
+    private val jobHandler: JobHandler) : BaseJobQueuer(jobManager) {
 
-  private Jobs() {
-    throw new RuntimeException("No instances");
-  }
-
-  @CheckResult @NonNull public static Job newJob(@NonNull JobHandler jobHandler) {
-    return new ManagedJob(jobHandler);
+  override fun runInstantJob(tag: String, extras: PersistableBundleCompat) {
+    jobHandler.newRunner({ false }).run(tag, extras)
   }
 }

@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job;
+package com.pyamsoft.powermanager.job
 
-import android.support.annotation.NonNull;
-import com.evernote.android.job.Job;
+import android.support.annotation.CheckResult
+import com.evernote.android.job.Job
 
-class ManagedJob extends Job {
+class Jobs private constructor() {
 
-  @NonNull private final JobHandler jobHandler;
-
-  ManagedJob(@NonNull JobHandler jobHandler) {
-    this.jobHandler = jobHandler;
+  init {
+    throw RuntimeException("No instances")
   }
 
-  @NonNull @Override protected Result onRunJob(Params params) {
-    jobHandler.newRunner(() -> isCanceled() || isFinished())
-        .run(params.getTag(), params.getExtras());
-    return Result.SUCCESS;
+  companion object {
+
+    @JvmStatic
+    @CheckResult fun newJob(jobHandler: JobHandler): Job {
+      return ManagedJob(jobHandler)
+    }
   }
 }

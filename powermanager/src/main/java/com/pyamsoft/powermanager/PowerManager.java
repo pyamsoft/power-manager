@@ -83,7 +83,7 @@ public class PowerManager extends Application {
     JobManager.create(this);
     JobManager.instance().addJobCreator(s -> {
       if (JobQueuer.ENABLE_TAG.equals(s) || JobQueuer.DISABLE_TAG.equals(s)) {
-        return Jobs.newJob(jobHandler);
+        return Jobs.Companion.newJob(jobHandler);
       } else {
         Timber.e("Could not create job for tag: %s", s);
         return null;
