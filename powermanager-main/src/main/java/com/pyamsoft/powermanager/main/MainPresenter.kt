@@ -18,9 +18,9 @@ package com.pyamsoft.powermanager.main
 
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-import timber.log.Timber
 
 internal class MainPresenter @Inject constructor(val interactor: MainInteractor,
     @Named("obs") obsScheduler: Scheduler,
@@ -38,23 +38,23 @@ internal class MainPresenter @Inject constructor(val interactor: MainInteractor,
     disposeOnStop(interactor.isStartWhenOpen
         .subscribeOn(subscribeScheduler)
         .observeOn(observeScheduler)
-        .subscribe({ start ->
-          if (start!!) {
+        .subscribe({
+          if (it) {
             callback.onServiceEnabledWhenOpen()
           }
-        }) { throwable -> Timber.e(throwable, "onError isStartWhenOpen") })
+        }, { Timber.e(it, "onError isStartWhenOpen") }))
   }
 
   private fun checkForRoot(callback: StartupCallback) {
     disposeOnStop(interactor.hasRootPermission()
         .subscribeOn(subscribeScheduler)
         .observeOn(observeScheduler)
-        .subscribe({ hasPermission ->
-          if (!hasPermission) {
+        .subscribe({
+          if (!it) {
             interactor.missingRootPermission()
             callback.explainRootRequirement()
           }
-        }) { throwable -> Timber.e(throwable, "onError checking root permission") })
+        }, { Timber.e(it, "onError checking root permission") }))
   }
 
   internal interface StartupCallback {
