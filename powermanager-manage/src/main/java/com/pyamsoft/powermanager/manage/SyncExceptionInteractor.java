@@ -41,13 +41,13 @@ class SyncExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingSync() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getSyncManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingSync() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearSync() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getSyncManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearSync() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

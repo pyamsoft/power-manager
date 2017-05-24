@@ -36,7 +36,7 @@ class SyncManageInteractor extends ManageInteractor {
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
-    return Single.fromCallable(
-        () -> new Pair<>(Boolean.TRUE, preferences.isSyncManaged() ? Boolean.TRUE : Boolean.FALSE));
+    return Single.fromCallable(() -> new Pair<>(Boolean.TRUE,
+        preferences.getSyncManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

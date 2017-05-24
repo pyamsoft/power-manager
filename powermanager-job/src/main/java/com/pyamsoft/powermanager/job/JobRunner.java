@@ -99,9 +99,9 @@ abstract class JobRunner {
 
   @CheckResult private boolean runEnableJob(@NonNull String tag, boolean firstRun) {
     boolean didSomething = false;
-    if (dozePreferences.isOriginalDoze()
-        && (firstRun || dozePreferences.isPeriodicDoze())
-        && rootPreferences.isRootEnabled()
+    if (dozePreferences.getOriginalDoze()
+        && (firstRun || dozePreferences.getPeriodicDoze())
+        && rootPreferences.getRootEnabled()
         && dozePermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Doze", tag);
       dozeModifier.unset();
@@ -112,10 +112,10 @@ abstract class JobRunner {
       return false;
     }
 
-    if (airplanePreferences.isOriginalAirplane()
+    if (airplanePreferences.getOriginalAirplane()
         && (firstRun
-        || airplanePreferences.isPeriodicAirplane())
-        && rootPreferences.isRootEnabled()
+        || airplanePreferences.getPeriodicAirplane())
+        && rootPreferences.getRootEnabled()
         && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Disable Airplane mode", tag);
       airplaneModifier.unset();
@@ -126,7 +126,7 @@ abstract class JobRunner {
       return false;
     }
 
-    if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
+    if (wifiPreferences.getOriginalWifi() && (firstRun || wifiPreferences.getPeriodicWifi())) {
       Timber.i("%s: Enable WiFi", tag);
       wifiModifier.set();
       didSomething = true;
@@ -136,9 +136,9 @@ abstract class JobRunner {
       return false;
     }
 
-    if (dataPreferences.isOriginalData()
-        && (firstRun || dataPreferences.isPeriodicData())
-        && rootPreferences.isRootEnabled()
+    if (dataPreferences.getOriginalData()
+        && (firstRun || dataPreferences.getPeriodicData())
+        && rootPreferences.getRootEnabled()
         && rootPermissionObserver.hasPermission()) {
       Timber.i("%s: Enable Data", tag);
       dataModifier.set();
@@ -149,8 +149,8 @@ abstract class JobRunner {
       return false;
     }
 
-    if (bluetoothPreferences.isOriginalBluetooth() && (firstRun
-        || bluetoothPreferences.isPeriodicBluetooth())) {
+    if (bluetoothPreferences.getOriginalBluetooth() && (firstRun
+        || bluetoothPreferences.getPeriodicBluetooth())) {
       Timber.i("%s: Enable Bluetooth", tag);
       bluetoothModifier.set();
       didSomething = true;
@@ -160,7 +160,7 @@ abstract class JobRunner {
       return false;
     }
 
-    if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
+    if (syncPreferences.getOriginalSync() && (firstRun || syncPreferences.getPeriodicSync())) {
       Timber.i("%s: Enable Sync", tag);
       syncModifier.set();
       didSomething = true;
@@ -172,10 +172,10 @@ abstract class JobRunner {
   @CheckResult private boolean runDisableJob(@NonNull String tag, boolean firstRun) {
     boolean didSomething = false;
     final boolean isCharging = chargingObserver.enabled();
-    if (isCharging && wifiPreferences.isIgnoreChargingWifi()) {
+    if (isCharging && wifiPreferences.getIgnoreChargingWifi()) {
       Timber.w("Do not disable WiFi while device is charging");
     } else {
-      if (wifiPreferences.isOriginalWifi() && (firstRun || wifiPreferences.isPeriodicWifi())) {
+      if (wifiPreferences.getOriginalWifi() && (firstRun || wifiPreferences.getPeriodicWifi())) {
         Timber.i("%s: Disable WiFi", tag);
         wifiModifier.unset();
         didSomething = true;
@@ -186,12 +186,12 @@ abstract class JobRunner {
       return false;
     }
 
-    if (isCharging && dataPreferences.isIgnoreChargingData()) {
+    if (isCharging && dataPreferences.getIgnoreChargingData()) {
       Timber.w("Do not disable Data while device is charging");
     } else {
-      if (dataPreferences.isOriginalData()
-          && (firstRun || dataPreferences.isPeriodicData())
-          && rootPreferences.isRootEnabled()
+      if (dataPreferences.getOriginalData()
+          && (firstRun || dataPreferences.getPeriodicData())
+          && rootPreferences.getRootEnabled()
           && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Disable Data", tag);
         dataModifier.unset();
@@ -203,11 +203,11 @@ abstract class JobRunner {
       return false;
     }
 
-    if (isCharging && bluetoothPreferences.isIgnoreChargingBluetooth()) {
+    if (isCharging && bluetoothPreferences.getIgnoreChargingBluetooth()) {
       Timber.w("Do not disable Bluetooth while device is charging");
     } else {
-      if (bluetoothPreferences.isOriginalBluetooth() && (firstRun
-          || bluetoothPreferences.isPeriodicBluetooth())) {
+      if (bluetoothPreferences.getOriginalBluetooth() && (firstRun
+          || bluetoothPreferences.getPeriodicBluetooth())) {
         Timber.i("%s: Disable Bluetooth", tag);
         bluetoothModifier.unset();
         didSomething = true;
@@ -218,10 +218,10 @@ abstract class JobRunner {
       return false;
     }
 
-    if (isCharging && syncPreferences.isIgnoreChargingSync()) {
+    if (isCharging && syncPreferences.getIgnoreChargingSync()) {
       Timber.w("Do not disable Sync while device is charging");
     } else {
-      if (syncPreferences.isOriginalSync() && (firstRun || syncPreferences.isPeriodicSync())) {
+      if (syncPreferences.getOriginalSync() && (firstRun || syncPreferences.getPeriodicSync())) {
         Timber.i("%s: Disable Sync", tag);
         syncModifier.unset();
         didSomething = true;
@@ -232,13 +232,13 @@ abstract class JobRunner {
       return false;
     }
 
-    if (isCharging && airplanePreferences.isIgnoreChargingAirplane()) {
+    if (isCharging && airplanePreferences.getIgnoreChargingAirplane()) {
       Timber.w("Do not enable Airplane mode while device is charging");
     } else {
-      if (airplanePreferences.isOriginalAirplane()
+      if (airplanePreferences.getOriginalAirplane()
           && (firstRun
-          || airplanePreferences.isPeriodicAirplane())
-          && rootPreferences.isRootEnabled()
+          || airplanePreferences.getPeriodicAirplane())
+          && rootPreferences.getRootEnabled()
           && rootPermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Airplane mode", tag);
         airplaneModifier.set();
@@ -250,12 +250,12 @@ abstract class JobRunner {
       return false;
     }
 
-    if (isCharging && dozePreferences.isIgnoreChargingDoze()) {
+    if (isCharging && dozePreferences.getIgnoreChargingDoze()) {
       Timber.w("Do not enable Doze mode while device is charging");
     } else {
-      if (dozePreferences.isOriginalDoze()
-          && (firstRun || dozePreferences.isPeriodicDoze())
-          && rootPreferences.isRootEnabled()
+      if (dozePreferences.getOriginalDoze()
+          && (firstRun || dozePreferences.getPeriodicDoze())
+          && rootPreferences.getRootEnabled()
           && dozePermissionObserver.hasPermission()) {
         Timber.i("%s: Enable Doze mode", tag);
         dozeModifier.set();
@@ -267,19 +267,19 @@ abstract class JobRunner {
   }
 
   @CheckResult private boolean isJobRepeatRequired(boolean didSomething) {
-    boolean repeatWifi = wifiPreferences.isWifiManaged() && wifiPreferences.isPeriodicWifi();
-    boolean repeatData = dataPreferences.isDataManaged() && dataPreferences.isPeriodicData();
+    boolean repeatWifi = wifiPreferences.getWifiManaged() && wifiPreferences.getPeriodicWifi();
+    boolean repeatData = dataPreferences.getDataManaged() && dataPreferences.getPeriodicData();
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       repeatData &= rootPermissionObserver.hasPermission();
     }
     boolean repeatBluetooth =
-        bluetoothPreferences.isBluetoothManaged() && bluetoothPreferences.isPeriodicBluetooth();
-    boolean repeatSync = syncPreferences.isSyncManaged() && syncPreferences.isPeriodicSync();
-    boolean repeatAirplane = airplanePreferences.isAirplaneManaged()
-        && airplanePreferences.isPeriodicAirplane()
+        bluetoothPreferences.getBluetoothManaged() && bluetoothPreferences.getPeriodicBluetooth();
+    boolean repeatSync = syncPreferences.getSyncManaged() && syncPreferences.getPeriodicSync();
+    boolean repeatAirplane = airplanePreferences.getAirplaneManaged()
+        && airplanePreferences.getPeriodicAirplane()
         && rootPermissionObserver.hasPermission();
-    boolean repeatDoze = dozePreferences.isDozeManaged()
-        && dozePreferences.isPeriodicDoze()
+    boolean repeatDoze = dozePreferences.getDozeManaged()
+        && dozePreferences.getPeriodicDoze()
         && dozePermissionObserver.hasPermission();
     return didSomething && (repeatWifi
         || repeatData

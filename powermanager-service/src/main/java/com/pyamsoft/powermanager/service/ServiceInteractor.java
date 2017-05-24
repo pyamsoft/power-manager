@@ -35,7 +35,7 @@ import javax.inject.Singleton;
    * public
    */
   @CheckResult @NonNull Single<Boolean> isServiceEnabled() {
-    return Single.fromCallable(() -> getPreferences().isServiceEnabled());
+    return Single.fromCallable(() -> getPreferences().getServiceEnabled());
   }
 
   /**

@@ -42,6 +42,6 @@ class DozeManageInteractor extends ManageInteractor {
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
     return Single.fromCallable(
         () -> new Pair<>(permissionObserver.hasPermission() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isDozeManaged() ? Boolean.TRUE : Boolean.FALSE));
+            preferences.getDozeManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

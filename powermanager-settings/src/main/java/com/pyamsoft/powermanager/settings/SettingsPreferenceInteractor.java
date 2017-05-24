@@ -52,7 +52,7 @@ import timber.log.Timber;
    * public
    */
   @CheckResult @NonNull Observable<Boolean> isRootEnabled() {
-    return Observable.fromCallable(preferences::isRootEnabled);
+    return Observable.fromCallable(preferences::getRootEnabled);
   }
 
   /**

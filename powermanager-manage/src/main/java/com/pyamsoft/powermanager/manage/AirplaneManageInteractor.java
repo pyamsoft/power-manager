@@ -42,6 +42,6 @@ class AirplaneManageInteractor extends ManageInteractor {
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
     return Single.fromCallable(
         () -> new Pair<>(permissionObserver.hasPermission() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE));
+            preferences.getAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

@@ -41,13 +41,13 @@ class DataExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingData() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getDataManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingData() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearData() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getDataManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearData() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

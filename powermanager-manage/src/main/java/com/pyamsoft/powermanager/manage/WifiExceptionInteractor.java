@@ -41,13 +41,13 @@ class WifiExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingWifi() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getWifiManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingWifi() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearWifi() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getWifiManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearWifi() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

@@ -37,6 +37,6 @@ class BluetoothManageInteractor extends ManageInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
     return Single.fromCallable(() -> new Pair<>(Boolean.TRUE,
-        preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE));
+        preferences.getBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

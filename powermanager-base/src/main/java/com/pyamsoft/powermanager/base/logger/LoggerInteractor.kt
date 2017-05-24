@@ -90,7 +90,7 @@ internal class LoggerInteractor @Inject constructor(context: Context,
   }
 
   private val isLoggingEnabled: Single<Boolean>
-    @CheckResult get() = Single.fromCallable { preferences.isLoggerEnabled }
+    @CheckResult get() = Single.fromCallable { preferences.loggerEnabled }
 
   private fun logWithTimber(logType: LogType, fmt: String,
       vararg args: Any) {

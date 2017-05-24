@@ -49,7 +49,7 @@ class DataManageInteractor extends ManageInteractor {
         // Always have permission on KitKat
         permission = Boolean.TRUE;
       }
-      return new Pair<>(permission, preferences.isDataManaged() ? Boolean.TRUE : Boolean.FALSE);
+      return new Pair<>(permission, preferences.getDataManaged() ? Boolean.TRUE : Boolean.FALSE);
     });
   }
 }

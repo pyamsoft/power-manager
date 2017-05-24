@@ -41,13 +41,13 @@ class AirplaneExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingAirplane() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingAirplane() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearAirplane() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getAirplaneManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearAirplane() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

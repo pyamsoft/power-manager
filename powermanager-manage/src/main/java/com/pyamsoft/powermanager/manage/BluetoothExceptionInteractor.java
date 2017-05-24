@@ -41,13 +41,13 @@ class BluetoothExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingBluetooth() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingBluetooth() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearBluetooth() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getBluetoothManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearBluetooth() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

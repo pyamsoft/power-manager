@@ -31,7 +31,7 @@ import javax.inject.Singleton;
   DelayInteractor provideManageDelayInteractor(@NonNull ManagePreferences preferences) {
     return new DelayInteractor(new TimePrefrenceWrapper() {
       @Override public boolean isCustom() {
-        return preferences.isCustomManageDelay();
+        return preferences.getCustomManageDelay();
       }
 
       @Override public long getTime() {
@@ -60,7 +60,7 @@ import javax.inject.Singleton;
   DelayInteractor provideManageDisableInteractor(@NonNull ManagePreferences preferences) {
     return new DelayInteractor(new TimePrefrenceWrapper() {
       @Override public boolean isCustom() {
-        return preferences.isCustomDisableTime();
+        return preferences.getCustomDisableTime();
       }
 
       @Override public long getTime() {

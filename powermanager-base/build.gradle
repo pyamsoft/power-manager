@@ -59,7 +59,7 @@ dependencies {
 
   // Dagger2
   compile "com.google.dagger:dagger:$dagger"
-  annotationProcessor "com.google.dagger:dagger-compiler:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
 
   debugCompile project(path: ":powermanager-model", configuration: "debug")
   releaseCompile project(path: ":powermanager-model", configuration: "release")

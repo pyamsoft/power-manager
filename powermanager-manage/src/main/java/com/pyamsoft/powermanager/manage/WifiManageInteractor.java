@@ -37,6 +37,6 @@ class WifiManageInteractor extends ManageInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isManaged() {
     return Single.fromCallable(
-        () -> new Pair<>(Boolean.TRUE, preferences.isWifiManaged() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(Boolean.TRUE, preferences.getWifiManaged() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

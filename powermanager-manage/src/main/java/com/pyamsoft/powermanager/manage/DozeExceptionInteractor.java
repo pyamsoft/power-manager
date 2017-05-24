@@ -41,13 +41,13 @@ class DozeExceptionInteractor extends ExceptionInteractor {
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreCharging() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isDozeManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreChargingDoze() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getDozeManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreChargingDoze() ? Boolean.TRUE : Boolean.FALSE));
   }
 
   @NonNull @Override Single<Pair<Boolean, Boolean>> isIgnoreWear() {
     return Single.fromCallable(
-        () -> new Pair<>(preferences.isDozeManaged() ? Boolean.TRUE : Boolean.FALSE,
-            preferences.isIgnoreWearDoze() ? Boolean.TRUE : Boolean.FALSE));
+        () -> new Pair<>(preferences.getDozeManaged() ? Boolean.TRUE : Boolean.FALSE,
+            preferences.getIgnoreWearDoze() ? Boolean.TRUE : Boolean.FALSE));
   }
 }

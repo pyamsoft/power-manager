@@ -51,7 +51,7 @@ import javax.inject.Singleton;
    * public
    */
   @NonNull @CheckResult Single<Boolean> isStartWhenOpen() {
-    return Single.fromCallable(servicePreferences::isStartWhenOpen);
+    return Single.fromCallable(servicePreferences::getStartWhenOpen);
   }
 
   /**
