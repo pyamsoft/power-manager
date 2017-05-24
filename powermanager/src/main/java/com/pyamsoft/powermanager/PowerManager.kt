@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import com.pyamsoft.pydroid.about.Licenses
+import com.pyamsoft.pydroid.ui.PYDroid
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import timber.log.Timber
@@ -48,6 +49,7 @@ class PowerManager : Application() {
       return
     }
 
+    PYDroid.initialize(this, BuildConfig.DEBUG)
     Licenses.create("SQLBrite", "https://github.com/square/sqlbrite", "licenses/sqlbrite")
     Licenses.create("SQLDelight", "https://github.com/square/sqldelight", "licenses/sqldelight")
     Licenses.create("Android-Job", "https://github.com/evernote/android-job", "licenses/androidjob")
