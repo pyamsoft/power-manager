@@ -14,18 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger.bus;
+package com.pyamsoft.powermanager.trigger.bus
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry;
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 
-@AutoValue public abstract class TriggerCreateEvent {
-
-  @CheckResult @NonNull public static TriggerCreateEvent create(@NonNull PowerTriggerEntry entry) {
-    return new AutoValue_TriggerCreateEvent(entry);
-  }
-
-  @CheckResult public abstract PowerTriggerEntry entry();
-}
+data class TriggerCreateEvent(val entry: PowerTriggerEntry)

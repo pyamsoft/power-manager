@@ -69,7 +69,7 @@ public class DeleteTriggerDialog extends DialogFragment {
   }
 
   @SuppressWarnings("WeakerAccess") void sendDeleteEvent(int percent) {
-    EventBus.get().publish(TriggerDeleteEvent.create(percent));
+    EventBus.get().publish(new TriggerDeleteEvent(percent));
   }
 
   @Override public void onDestroy() {

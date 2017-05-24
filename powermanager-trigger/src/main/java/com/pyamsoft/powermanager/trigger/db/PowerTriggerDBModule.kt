@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger.db;
+package com.pyamsoft.powermanager.trigger.db
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import dagger.Module;
-import dagger.Provides;
-import javax.inject.Singleton;
+import android.content.Context
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-@Module public class PowerTriggerDBModule {
+@Module class PowerTriggerDBModule {
 
-  @Singleton @Provides PowerTriggerDB providePowerTriggerDB(@NonNull Context context) {
-    return new PowerTriggerDBImpl(context.getApplicationContext());
+  @Singleton @Provides internal fun providePowerTriggerDB(context: Context): PowerTriggerDB {
+    return PowerTriggerDBImpl(context.applicationContext)
   }
 }

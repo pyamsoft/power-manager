@@ -21,7 +21,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
-import com.pyamsoft.pydroid.helper.Checker;
 import com.squareup.sqldelight.SqlDelightStatement;
 
 @AutoValue public abstract class PowerTriggerEntry implements PowerTriggerModel {
@@ -46,19 +45,36 @@ import com.squareup.sqldelight.SqlDelightStatement;
       }
     }
 
-    return Checker.checkNonNull(empty);
+    return throwIfNull(empty);
   }
 
   @CheckResult @NonNull private static Factory<PowerTriggerEntry> factory() {
     if (factory == null) {
       synchronized (PowerTriggerEntry.class) {
         if (factory == null) {
-          factory = new Factory<>(AutoValue_PowerTriggerEntry::new);
+          factory = new Factory<>(new Creator<PowerTriggerEntry>() {
+            @Override
+            public PowerTriggerEntry create(int percent, @NonNull String name, boolean enabled,
+                boolean available, boolean toggleWifi, boolean toggleData, boolean toggleBluetooth,
+                boolean toggleSync, boolean enableWifi, boolean enableData, boolean enableBluetooth,
+                boolean enableSync) {
+              return new AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi,
+                  toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth,
+                  enableSync);
+            }
+          });
         }
       }
     }
 
-    return Checker.checkNonNull(factory);
+    return throwIfNull(factory);
+  }
+
+  @CheckResult @NonNull private static <T> T throwIfNull(@Nullable T t) {
+    if (t == null) {
+      throw new NullPointerException("Object cannot be NULL");
+    }
+    return t;
   }
 
   /**
@@ -73,7 +89,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
       }
     }
 
-    return Checker.checkNonNull(allEntriesMapper);
+    return throwIfNull(allEntriesMapper);
   }
 
   /**
@@ -88,7 +104,7 @@ import com.squareup.sqldelight.SqlDelightStatement;
       }
     }
 
-    return Checker.checkNonNull(withPercentMapper);
+    return throwIfNull(withPercentMapper);
   }
 
   @CheckResult @NonNull public static Creator<PowerTriggerEntry> creator() {

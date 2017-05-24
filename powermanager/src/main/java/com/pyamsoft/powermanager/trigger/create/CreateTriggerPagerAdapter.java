@@ -91,7 +91,7 @@ class CreateTriggerPagerAdapter extends FragmentStatePagerAdapter {
     final PowerTriggerEntry entry = PowerTriggerEntry.creator()
         .create(percent, name, true, true, wifiToggle, dataToggle, bluetoothToggle, syncToggle,
             wifiEnable, dataEnable, bluetoothEnable, syncEnable);
-    EventBus.get().publish(TriggerCreateEvent.create(entry));
+    EventBus.get().publish(new TriggerCreateEvent(entry));
   }
 }
 

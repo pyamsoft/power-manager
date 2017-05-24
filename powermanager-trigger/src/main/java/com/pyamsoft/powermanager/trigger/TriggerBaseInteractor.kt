@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.trigger.bus;
+package com.pyamsoft.powermanager.trigger
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
+import android.support.annotation.CheckResult
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
+import io.reactivex.Single
 
-@AutoValue public abstract class TriggerDeleteEvent {
+internal abstract class TriggerBaseInteractor(protected val powerTriggerDB: PowerTriggerDB) {
 
-  @CheckResult @NonNull public static TriggerDeleteEvent create(int percent) {
-    return new AutoValue_TriggerDeleteEvent(percent);
+  /**
+   * public
+   */
+  @CheckResult operator fun get(percent: Int): Single<PowerTriggerEntry> {
+    return powerTriggerDB.queryWithPercent(percent)
   }
-
-  @CheckResult public abstract int percent();
 }
