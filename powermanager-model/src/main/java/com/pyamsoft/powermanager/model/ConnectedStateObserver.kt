@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model
 
-public enum Connections {
-  CONNECTED, DISCONNECTED, UNKNOWN
+import android.support.annotation.CheckResult
+
+interface ConnectedStateObserver : StateObserver {
+
+    @CheckResult fun connected(): Boolean
+
+    @CheckResult fun connectionUnknown(): Boolean
 }

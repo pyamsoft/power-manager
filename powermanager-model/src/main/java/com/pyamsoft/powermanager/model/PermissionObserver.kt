@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model
 
-import android.support.annotation.CheckResult;
+import android.support.annotation.CheckResult
 
-public interface ConnectedStateObserver extends StateObserver {
+interface PermissionObserver {
 
-  @CheckResult boolean connected();
-
-  @CheckResult boolean connectionUnknown();
+    @CheckResult fun hasPermission(): Boolean
 }

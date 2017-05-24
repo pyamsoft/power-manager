@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model
 
-public interface StateModifier {
-
-  void set();
-
-  void unset();
+enum class Connections {
+    CONNECTED, DISCONNECTED, UNKNOWN
 }

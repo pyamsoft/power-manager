@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.model;
+package com.pyamsoft.powermanager.model
 
-public enum States {
-  ENABLED, DISABLED, UNKNOWN
+interface StateModifier {
+
+    fun set()
+
+    fun unset()
 }
