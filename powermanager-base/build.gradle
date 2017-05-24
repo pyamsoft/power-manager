@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: "com.android.library"
+apply plugin: 'kotlin-android'
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -71,5 +66,6 @@ dependencies {
 
   debugCompile project(path: ":powermanager-model", configuration: "debug")
   releaseCompile project(path: ":powermanager-model", configuration: "release")
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 

@@ -19,9 +19,8 @@ package com.pyamsoft.powermanager;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.pyamsoft.pydroid.ui.IPYDroidApp;
 
-public class Injector implements IPYDroidApp<PowerManagerComponent> {
+public class Injector {
 
   @Nullable private static volatile Injector instance = null;
   @NonNull private final PowerManagerComponent component;
@@ -46,7 +45,7 @@ public class Injector implements IPYDroidApp<PowerManagerComponent> {
     return instance;
   }
 
-  @NonNull @Override public PowerManagerComponent provideComponent() {
+  @NonNull public PowerManagerComponent provideComponent() {
     return component;
   }
 }

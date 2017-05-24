@@ -67,11 +67,5 @@
         android:name=".service.ActionToggleService"
         android:exported="false"/>
 
-    <provider
-        android:name=".PowerManagerSingleInitProvider"
-        android:authorities="com.pyamsoft.powermanager.PowerManagerSingleInitProvider"
-        android:exported="false"
-        android:syncable="false"/>
-
   </application>
 </manifest>

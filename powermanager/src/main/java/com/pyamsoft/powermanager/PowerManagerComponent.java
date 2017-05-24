@@ -54,7 +54,7 @@ import javax.inject.Singleton;
 
   void inject(PowerTriggerListItem powerTriggerListItem);
 
-  void inject(PowerManagerSingleInitProvider provider);
+  void inject(PowerManager application);
 
   void inject(ScreenOnOffReceiver receiver);
 

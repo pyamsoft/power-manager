@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-tasks.whenTaskAdded { task ->
-  if (task.name.startsWith("lint")) {
-    task.enabled = false
-  }
-}
-
 apply plugin: "com.android.application"
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: "com.google.gms.google-services"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -128,7 +125,5 @@ dependencies {
   releaseCompile project(path: ":powermanager-service", configuration: "release")
   debugCompile project(path: ":powermanager-settings", configuration: "debug")
   releaseCompile project(path: ":powermanager-settings", configuration: "release")
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
-
-// AdView
-apply plugin: "com.google.gms.google-services"
