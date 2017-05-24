@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.states
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.model.States
 
-internal interface DeviceFunctionWrapper {
+interface DeviceFunctionWrapper {
 
   fun enable()
 

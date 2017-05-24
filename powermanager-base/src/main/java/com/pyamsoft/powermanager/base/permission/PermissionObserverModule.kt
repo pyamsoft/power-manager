@@ -27,19 +27,15 @@ import javax.inject.Singleton
 
 @Module class PermissionObserverModule {
 
-  @Singleton
-  @Named("obs_root_permission")
-  @Provides
-  internal fun provideRootPermissionObserver(rootChecker: RootChecker,
-      context: Context, preferences: RootPreferences): PermissionObserver {
+  @Singleton @Named("obs_root_permission") @Provides fun provideRootPermissionObserver(
+      rootChecker: RootChecker, context: Context,
+      preferences: RootPreferences): PermissionObserver {
     return RootPermissionObserver(context, preferences, rootChecker)
   }
 
-  @Singleton
-  @Named("obs_doze_permission")
-  @Provides
-  internal fun provideDozePermissionObserver(rootChecker: RootChecker,
-      context: Context, preferences: RootPreferences): PermissionObserver {
+  @Singleton @Named("obs_doze_permission") @Provides fun provideDozePermissionObserver(
+      rootChecker: RootChecker, context: Context,
+      preferences: RootPreferences): PermissionObserver {
     return DozePermissionObserver(context, preferences, rootChecker)
   }
 }

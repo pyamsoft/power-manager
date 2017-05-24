@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult
 import io.reactivex.Completable
 import io.reactivex.Single
 
-internal abstract class ManageInteractor {
+abstract class ManageInteractor {
 
   @CheckResult internal abstract fun setManaged(state: Boolean): Completable
 

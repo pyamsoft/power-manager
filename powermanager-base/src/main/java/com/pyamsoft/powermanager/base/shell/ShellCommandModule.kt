@@ -24,11 +24,11 @@ import javax.inject.Singleton
 
   private val impl: ShellHandlerImpl = ShellHandlerImpl()
 
-  @Singleton @Provides internal fun provideShellCommandHelper(): ShellCommandHelper {
+  @Singleton @Provides fun provideShellCommandHelper(): ShellCommandHelper {
     return impl
   }
 
-  @Singleton @Provides internal fun provideRootChecker(): RootChecker {
+  @Singleton @Provides fun provideRootChecker(): RootChecker {
     return impl
   }
 }

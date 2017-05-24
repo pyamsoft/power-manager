@@ -29,7 +29,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal class DelayInteractor @Inject constructor(val preferences: TimePrefrenceWrapper) {
+class DelayInteractor @Inject internal constructor(val preferences: TimePrefrenceWrapper) {
   private val customInputBus: EventBus = EventBus.newLocalBus()
 
   val delayTime: Single<Pair<Boolean, Long>>

@@ -23,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class TriggerItemPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler,
+class TriggerItemPresenter @Inject internal constructor(@Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler,
     private val interactor: TriggerItemInteractor) : SchedulerPresenter(obsScheduler,
     subScheduler) {
@@ -33,10 +33,8 @@ class TriggerItemPresenter @Inject constructor(@Named("obs") obsScheduler: Sched
    */
   fun toggleEnabledState(entry: PowerTriggerEntry, enabled: Boolean,
       callback: TriggerToggleCallback) {
-    disposeOnStop(interactor.update(entry, enabled)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ callback.updateViewHolder(it) }, { Timber.e(it, "onError") }))
+    disposeOnStop(interactor.update(entry, enabled).subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({ callback.updateViewHolder(it) }, { Timber.e(it, "onError") }))
   }
 
   interface TriggerToggleCallback {

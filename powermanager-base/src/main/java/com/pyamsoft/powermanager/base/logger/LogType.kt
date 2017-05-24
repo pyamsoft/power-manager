@@ -16,6 +16,6 @@
 
 package com.pyamsoft.powermanager.base.logger
 
-internal enum class LogType {
+enum class LogType {
   DEBUG, INFO, WARNING, ERROR
 }

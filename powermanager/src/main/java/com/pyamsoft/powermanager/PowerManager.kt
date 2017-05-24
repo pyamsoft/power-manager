@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 class PowerManager : Application() {
 
-  @Inject lateinit internal var jobHandler: JobHandler
+  @field:Inject lateinit internal var jobHandler: JobHandler
   private lateinit var refWatcher: RefWatcher
 
   override fun onCreate() {
@@ -96,18 +96,18 @@ class PowerManager : Application() {
   companion object {
 
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedDialog): RefWatcher {
-      return getRefWatcher(fragment)
+      return getRefWatcherInternal(fragment)
     }
 
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedPreferenceFragment): RefWatcher {
-      return getRefWatcher(fragment)
+      return getRefWatcherInternal(fragment)
     }
 
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedFragment): RefWatcher {
-      return getRefWatcher(fragment)
+      return getRefWatcherInternal(fragment)
     }
 
-    @JvmStatic @CheckResult private fun getRefWatcher(fragment: Fragment): RefWatcher {
+    @JvmStatic @CheckResult private fun getRefWatcherInternal(fragment: Fragment): RefWatcher {
       val application = fragment.activity.application
       if (application is PowerManager) {
         return application.watcher

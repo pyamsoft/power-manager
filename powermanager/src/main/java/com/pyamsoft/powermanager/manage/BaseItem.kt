@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage;
+package com.pyamsoft.powermanager.manage
 
-import android.support.annotation.CallSuper;
-import android.support.v7.widget.RecyclerView;
-import com.mikepenz.fastadapter.items.GenericAbstractItem;
+import android.support.v7.widget.RecyclerView.ViewHolder
+import com.mikepenz.fastadapter.items.GenericAbstractItem
 
-abstract class BaseItem<I extends BaseItem<?, ?>, VH extends RecyclerView.ViewHolder>
-    extends GenericAbstractItem<String, I, VH> {
+@Suppress(
+    "FINITE_BOUNDS_VIOLATION_IN_JAVA") abstract class BaseItem<I : GenericAbstractItem<String, *, *>, VH : ViewHolder> internal constructor(
+    tag: String) : GenericAbstractItem<String, I, VH>(tag) {
 
-  BaseItem(String tag) {
-    super(tag);
-  }
+  abstract fun unbindItem()
 
-  @CallSuper @Override public void unbindView(VH holder) {
-    super.unbindView(holder);
-    unbindItem();
-  }
-
-  abstract void unbindItem();
 }
+

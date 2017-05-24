@@ -24,7 +24,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class ForegroundPresenter @Inject constructor(val interactor: ForegroundInteractor,
+class ForegroundPresenter @Inject internal constructor(val interactor: ForegroundInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -51,11 +51,9 @@ internal class ForegroundPresenter @Inject constructor(val interactor: Foregroun
    * public
    */
   fun startNotification(callback: NotificationCallback) {
-    disposeOnStop(interactor.createNotification(true)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ callback.onStartNotificationInForeground(it) }
-            , { Timber.e(it, "onError") }))
+    disposeOnStop(interactor.createNotification(true).subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({ callback.onStartNotificationInForeground(it) },
+        { Timber.e(it, "onError") }))
   }
 
   /**
@@ -73,7 +71,7 @@ internal class ForegroundPresenter @Inject constructor(val interactor: Foregroun
     interactor.setServiceEnabled(enable)
   }
 
-  internal interface NotificationCallback {
+  interface NotificationCallback {
 
     fun onStartNotificationInForeground(notification: Notification)
   }

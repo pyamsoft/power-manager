@@ -24,32 +24,32 @@ import javax.inject.Singleton
 
 @Module class StateModifierModule {
 
-  @Singleton @Named("mod_wifi") @Provides internal fun provideWifiModifier(
+  @Singleton @Named("mod_wifi") @Provides fun provideWifiModifier(
       @Named("wrapper_wifi") wrapper: ConnectedDeviceFunctionWrapper): StateModifier {
     return WifiStateModifier(wrapper)
   }
 
-  @Singleton @Named("mod_data") @Provides internal fun provideDataModifier(
+  @Singleton @Named("mod_data") @Provides fun provideDataModifier(
       @Named("wrapper_data") wrapper: DeviceFunctionWrapper): StateModifier {
     return DataStateModifier(wrapper)
   }
 
-  @Singleton @Named("mod_bluetooth") @Provides internal fun provideBluetoothModifier(
+  @Singleton @Named("mod_bluetooth") @Provides fun provideBluetoothModifier(
       @Named("wrapper_bluetooth") wrapper: ConnectedDeviceFunctionWrapper): StateModifier {
     return BluetoothStateModifier(wrapper)
   }
 
-  @Singleton @Named("mod_sync") @Provides internal fun provideSyncModifier(
+  @Singleton @Named("mod_sync") @Provides fun provideSyncModifier(
       @Named("wrapper_sync") wrapper: DeviceFunctionWrapper): StateModifier {
     return SyncStateModifier(wrapper)
   }
 
-  @Singleton @Named("mod_airplane") @Provides internal fun provideAirplaneModeModifier(
+  @Singleton @Named("mod_airplane") @Provides fun provideAirplaneModeModifier(
       @Named("wrapper_airplane") wrapper: DeviceFunctionWrapper): StateModifier {
     return AirplaneStateModifier(wrapper)
   }
 
-  @Singleton @Named("mod_doze") @Provides internal fun provideDozeModifier(
+  @Singleton @Named("mod_doze") @Provides fun provideDozeModifier(
       @Named("wrapper_doze") wrapper: DeviceFunctionWrapper): StateModifier {
     return DozeStateModifier(wrapper)
   }

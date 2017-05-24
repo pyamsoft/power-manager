@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-internal abstract class ExceptionPresenter(private val interactor: ExceptionInteractor,
+abstract class ExceptionPresenter internal constructor(private val interactor: ExceptionInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
     subscribeScheduler) {
 
@@ -88,19 +88,19 @@ internal abstract class ExceptionPresenter(private val interactor: ExceptionInte
     }))
   }
 
-  internal interface BusCallback {
+  interface BusCallback {
 
     fun onManageChanged()
   }
 
-  internal interface ActionCallback {
+  interface ActionCallback {
 
     fun onError(throwable: Throwable)
 
     fun onComplete()
   }
 
-  internal interface RetrieveCallback {
+  interface RetrieveCallback {
 
     fun onEnableRetrieved(enabled: Boolean)
 

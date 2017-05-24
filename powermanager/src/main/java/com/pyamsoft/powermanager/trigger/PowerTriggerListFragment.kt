@@ -44,7 +44,7 @@ import javax.inject.Inject
 class PowerTriggerListFragment : WatchedFragment() {
   private val drawableMap = LoaderMap()
 
-  @Inject lateinit internal var presenter: TriggerPresenter
+  @field:Inject lateinit internal var presenter: TriggerPresenter
   internal var adapter: FastItemAdapter<PowerTriggerListItem>? = null
   internal var listIsRefreshed: Boolean = false
   private lateinit var dividerDecoration: RecyclerView.ItemDecoration

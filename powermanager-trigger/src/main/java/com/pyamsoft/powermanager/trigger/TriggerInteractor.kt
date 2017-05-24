@@ -28,8 +28,7 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton class TriggerInteractor @Inject internal constructor(
-    powerTriggerDB: PowerTriggerDB,
+@Singleton class TriggerInteractor @Inject internal constructor(powerTriggerDB: PowerTriggerDB,
     internal val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
   fun clearCached() {
@@ -41,6 +40,7 @@ import javax.inject.Singleton
    */
   @CheckResult internal fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
     // TODO
+    Timber.d("Force refresh? %s", forceRefresh)
     return Observable.empty()
   }
 
@@ -48,28 +48,24 @@ import javax.inject.Singleton
    * public
    */
   @CheckResult internal fun put(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
-    return powerTriggerDB.queryWithPercent(entry.percent())
-        .flatMapCompletable {
-          if (!PowerTriggerEntry.isEmpty(it)) {
-            Timber.e("Entry already exists, throw")
-            throw SQLiteConstraintException(
-                "Entry already exists with percent: " + entry.percent())
-          }
+    return powerTriggerDB.queryWithPercent(entry.percent()).flatMapCompletable {
+      if (!PowerTriggerEntry.isEmpty(it)) {
+        Timber.e("Entry already exists, throw")
+        throw SQLiteConstraintException("Entry already exists with percent: " + entry.percent())
+      }
 
-          if (PowerTriggerEntry.isEmpty(entry)) {
-            Timber.e("Trigger is EMPTY")
-            throw IllegalStateException("Trigger is EMPTY")
-          } else if (entry.percent() > 100 || entry.percent() <= 0) {
-            Timber.e("Percent too high")
-            throw IllegalStateException("Percent is too high")
-          } else {
-            Timber.d("Insert new Trigger into DB")
-            return@flatMapCompletable powerTriggerDB.queryWithPercent(entry.percent())
-                .flatMapCompletable { powerTriggerDB.insert(it) }
-          }
-        }
-        .andThen(Completable.fromAction { cacheInteractor.clearCache() })
-        .andThen(get(entry.percent()))
+      if (PowerTriggerEntry.isEmpty(entry)) {
+        Timber.e("Trigger is EMPTY")
+        throw IllegalStateException("Trigger is EMPTY")
+      } else if (entry.percent() > 100 || entry.percent() <= 0) {
+        Timber.e("Percent too high")
+        throw IllegalStateException("Percent is too high")
+      } else {
+        Timber.d("Insert new Trigger into DB")
+        return@flatMapCompletable powerTriggerDB.queryWithPercent(
+            entry.percent()).flatMapCompletable { powerTriggerDB.insert(it) }
+      }
+    }.andThen(Completable.fromAction { cacheInteractor.clearCache() }).andThen(get(entry.percent()))
   }
 
   /**

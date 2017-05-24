@@ -34,7 +34,7 @@ class PowerTriggerListItem internal constructor(
     trigger: PowerTriggerEntry) : GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder>(
     trigger) {
 
-  @Inject lateinit internal var presenter: TriggerItemPresenter
+  @field:Inject lateinit internal var presenter: TriggerItemPresenter
 
   init {
     Injector.get().provideComponent().inject(this)

@@ -27,42 +27,42 @@ import javax.inject.Singleton
 
 @Module class StateObserverModule {
 
-  @Singleton @Named("obs_wifi") @Provides internal fun provideWifiObserver(
+  @Singleton @Named("obs_wifi") @Provides fun provideWifiObserver(
       @Named("wrapper_wifi") wrapper: ConnectedDeviceFunctionWrapper): ConnectedStateObserver {
     return WifiStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_data") @Provides internal fun provideDataObserver(
+  @Singleton @Named("obs_data") @Provides fun provideDataObserver(
       @Named("wrapper_data") wrapper: DeviceFunctionWrapper): StateObserver {
     return DataStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_bluetooth") @Provides internal fun provideBluetoothObserver(
+  @Singleton @Named("obs_bluetooth") @Provides fun provideBluetoothObserver(
       @Named("wrapper_bluetooth") wrapper: ConnectedDeviceFunctionWrapper): ConnectedStateObserver {
     return BluetoothStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_sync") @Provides internal fun provideSyncObserver(
+  @Singleton @Named("obs_sync") @Provides fun provideSyncObserver(
       @Named("wrapper_sync") wrapper: DeviceFunctionWrapper): StateObserver {
     return SyncStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_doze") @Provides internal fun provideDozeObserver(
+  @Singleton @Named("obs_doze") @Provides fun provideDozeObserver(
       @Named("wrapper_doze") wrapper: DeviceFunctionWrapper): StateObserver {
     return DozeStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_wear") @Provides internal fun provideWearObserver(
-      context: Context, preferences: WearablePreferences): StateObserver {
+  @Singleton @Named("obs_wear") @Provides fun provideWearObserver(context: Context,
+      preferences: WearablePreferences): StateObserver {
     return WearStateObserver(context, preferences)
   }
 
-  @Singleton @Named("obs_airplane") @Provides internal fun provideAirplaneObserver(
+  @Singleton @Named("obs_airplane") @Provides fun provideAirplaneObserver(
       @Named("wrapper_airplane") wrapper: DeviceFunctionWrapper): StateObserver {
     return AirplaneStateObserver(wrapper)
   }
 
-  @Singleton @Named("obs_charging") @Provides internal fun provideChargingObserver(
+  @Singleton @Named("obs_charging") @Provides fun provideChargingObserver(
       context: Context): StateObserver {
     return ChargingStateObserver(context)
   }

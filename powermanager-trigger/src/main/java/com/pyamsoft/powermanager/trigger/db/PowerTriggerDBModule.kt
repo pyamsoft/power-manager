@@ -23,7 +23,7 @@ import javax.inject.Singleton
 
 @Module class PowerTriggerDBModule {
 
-  @Singleton @Provides internal fun providePowerTriggerDB(context: Context): PowerTriggerDB {
+  @Singleton @Provides fun providePowerTriggerDB(context: Context): PowerTriggerDB {
     return PowerTriggerDBImpl(context.applicationContext)
   }
 }

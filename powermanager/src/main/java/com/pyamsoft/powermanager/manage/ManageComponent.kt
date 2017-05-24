@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage;
+package com.pyamsoft.powermanager.manage
 
-import dagger.Subcomponent;
+import dagger.Subcomponent
 
-@Subcomponent(modules = ManageModule.class) public interface ManageComponent {
+@Subcomponent(modules = arrayOf(ManageModule::class)) interface ManageComponent {
 
-  void inject(ManageItem manageItem);
+  fun inject(manageItem: ManageItem)
 
-  void inject(ExceptionItem exceptionItem);
+  fun inject(exceptionItem: ExceptionItem)
+
 }

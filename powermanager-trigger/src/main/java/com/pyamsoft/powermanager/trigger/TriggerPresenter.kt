@@ -27,7 +27,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler,
+class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler,
     private val interactor: TriggerInteractor) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -35,28 +35,20 @@ class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler
    * public
    */
   fun registerOnBus(callback: BusCallback) {
-    disposeOnStop(EventBus.get()
-        .listen(TriggerCreateEvent::class.java)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ createPowerTrigger(it.entry, callback) },
-            { Timber.e(it, "onError create bus") }))
+    disposeOnStop(EventBus.get().listen(TriggerCreateEvent::class.java).subscribeOn(
+        subscribeScheduler).observeOn(observeScheduler).subscribe(
+        { createPowerTrigger(it.entry, callback) }, { Timber.e(it, "onError create bus") }))
 
-    disposeOnStop(EventBus.get()
-        .listen(TriggerDeleteEvent::class.java)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ deleteTrigger(it.percent, callback) },
-            { Timber.e(it, "onError create bus") }))
+    disposeOnStop(EventBus.get().listen(TriggerDeleteEvent::class.java).subscribeOn(
+        subscribeScheduler).observeOn(observeScheduler).subscribe(
+        { deleteTrigger(it.percent, callback) }, { Timber.e(it, "onError create bus") }))
   }
 
-  fun createPowerTrigger(entry: PowerTriggerEntry,
-      callback: TriggerCreateCallback) {
+  fun createPowerTrigger(entry: PowerTriggerEntry, callback: TriggerCreateCallback) {
     Timber.d("Create new power trigger")
-    disposeOnStop(interactor.put(entry)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ callback.onNewTriggerAdded(it) }, {
+    disposeOnStop(
+        interactor.put(entry).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+            { callback.onNewTriggerAdded(it) }, {
           Timber.e(it, "onError")
           if (it is SQLiteConstraintException) {
             Timber.e("Error inserting into DB")
@@ -68,25 +60,20 @@ class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler
         }))
   }
 
-  fun deleteTrigger(percent: Int,
-      callback: TriggerDeleteCallback) {
-    disposeOnStop(interactor.delete(percent)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ callback.onTriggerDeleted(it) }, {
-          Timber.e(it, "onError")
-        }))
+  fun deleteTrigger(percent: Int, callback: TriggerDeleteCallback) {
+    disposeOnStop(interactor.delete(percent).subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({ callback.onTriggerDeleted(it) }, {
+      Timber.e(it, "onError")
+    }))
   }
 
   /**
    * public
    */
   fun loadTriggerView(callback: TriggerLoadCallback, forceRefresh: Boolean) {
-    disposeOnStop(interactor.queryAll(forceRefresh)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .doAfterTerminate({ callback.onTriggerLoadFinished() })
-        .subscribe({ callback.onTriggerLoaded(it) }, { Timber.e(it, "onError") }))
+    disposeOnStop(interactor.queryAll(forceRefresh).subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).doAfterTerminate({ callback.onTriggerLoadFinished() }).subscribe(
+        { callback.onTriggerLoaded(it) }, { Timber.e(it, "onError") }))
   }
 
   interface TriggerLoadCallback {
@@ -98,12 +85,12 @@ class TriggerPresenter @Inject constructor(@Named("obs") obsScheduler: Scheduler
 
   interface BusCallback : TriggerDeleteCallback, TriggerCreateCallback
 
-  internal interface TriggerDeleteCallback {
+  interface TriggerDeleteCallback {
 
     fun onTriggerDeleted(position: Int)
   }
 
-  internal interface TriggerCreateCallback {
+  interface TriggerCreateCallback {
 
     fun onNewTriggerAdded(entry: PowerTriggerEntry)
 

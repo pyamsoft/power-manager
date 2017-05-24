@@ -24,7 +24,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal class LoggerPresenter @Inject internal constructor(
+class LoggerPresenter @Inject internal constructor(
     internal val interactor: LoggerInteractor,
     observeScheduler: Scheduler,
     subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {

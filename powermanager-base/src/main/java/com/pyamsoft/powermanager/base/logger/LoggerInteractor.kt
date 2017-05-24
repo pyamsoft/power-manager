@@ -40,7 +40,7 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-internal class LoggerInteractor @Inject constructor(context: Context,
+class LoggerInteractor @Inject constructor(context: Context,
     val preferences: LoggerPreferences,
     val logId: String) {
 

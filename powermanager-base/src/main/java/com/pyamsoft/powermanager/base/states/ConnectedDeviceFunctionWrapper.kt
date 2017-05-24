@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.states
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.model.Connections
 
-internal interface ConnectedDeviceFunctionWrapper : DeviceFunctionWrapper {
+interface ConnectedDeviceFunctionWrapper : DeviceFunctionWrapper {
 
   @get:CheckResult val connectionState: Connections
 }

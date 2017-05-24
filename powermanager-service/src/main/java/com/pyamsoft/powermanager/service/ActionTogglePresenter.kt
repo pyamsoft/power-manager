@@ -21,9 +21,8 @@ import io.reactivex.Scheduler
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class ActionTogglePresenter @Inject constructor(
-    private val interactor: ActionToggleInteractor,
-    @Named("obs") obsScheduler: Scheduler,
+class ActionTogglePresenter @Inject internal constructor(
+    private val interactor: ActionToggleInteractor, @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
   /**
@@ -33,7 +32,7 @@ internal class ActionTogglePresenter @Inject constructor(
     callback.onForegroundStateToggled(interactor.toggleEnabledState().blockingGet())
   }
 
-  internal interface ForegroundStateCallback {
+  interface ForegroundStateCallback {
 
     fun onForegroundStateToggled(state: Boolean)
   }

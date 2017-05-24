@@ -26,7 +26,7 @@ import javax.inject.Singleton
 
 @Module class DelayModule {
 
-  @Singleton @Provides @Named("manage_delay_interactor") internal fun provideManageDelayInteractor(
+  @Singleton @Provides @Named("manage_delay_interactor") fun provideManageDelayInteractor(
       preferences: ManagePreferences): DelayInteractor {
     return DelayInteractor(object : TimePrefrenceWrapper {
       override val time: Long
@@ -52,8 +52,7 @@ import javax.inject.Singleton
     })
   }
 
-  @Singleton @Provides @Named(
-      "manage_disable_interactor") internal fun provideManageDisableInteractor(
+  @Singleton @Provides @Named("manage_disable_interactor") fun provideManageDisableInteractor(
       preferences: ManagePreferences): DelayInteractor {
     return DelayInteractor(object : TimePrefrenceWrapper {
       override val isCustom: Boolean
@@ -78,13 +77,13 @@ import javax.inject.Singleton
     })
   }
 
-  @Provides @Named("manage_delay") internal fun provideManageDelayPresenter(
+  @Provides @Named("manage_delay") fun provideManageDelayPresenter(
       @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
       @Named("manage_delay_interactor") interactor: DelayInteractor): DelayPresenter {
     return DelayPresenter(observeScheduler, subscribeScheduler, interactor)
   }
 
-  @Provides @Named("manage_disable") internal fun provideManageDisablePresenter(
+  @Provides @Named("manage_disable") fun provideManageDisablePresenter(
       @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
       @Named("manage_disable_interactor") interactor: DelayInteractor): DelayPresenter {
     return DelayPresenter(observeScheduler, subscribeScheduler, interactor)

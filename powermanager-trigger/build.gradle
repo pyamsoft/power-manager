@@ -70,3 +70,6 @@ dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
+kapt {
+  correctErrorTypes = true
+}

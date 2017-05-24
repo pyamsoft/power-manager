@@ -23,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class DelayPresenter @Inject constructor(@Named("obs") observeScheduler: Scheduler,
+class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
     @Named("sub") subscribeScheduler: Scheduler,
     private val interactor: DelayInteractor) : SchedulerPresenter(observeScheduler,
     subscribeScheduler) {
@@ -105,19 +105,19 @@ internal class DelayPresenter @Inject constructor(@Named("obs") observeScheduler
     }))
   }
 
-  internal interface ActionCallback {
+  interface ActionCallback {
 
     fun onError(throwable: Throwable)
   }
 
-  internal interface OnDelayChangedCallback {
+  interface OnDelayChangedCallback {
 
     fun onDelayTimeChanged(time: Long)
 
     fun onError(throwable: Throwable)
   }
 
-  internal interface CustomTimeChangedCallback {
+  interface CustomTimeChangedCallback {
 
     fun onCustomTimeChanged(time: Long)
 
@@ -126,7 +126,7 @@ internal class DelayPresenter @Inject constructor(@Named("obs") observeScheduler
     fun onError(throwable: Throwable)
   }
 
-  internal interface DelayCallback {
+  interface DelayCallback {
 
     fun onCustomDelay(time: Long)
 

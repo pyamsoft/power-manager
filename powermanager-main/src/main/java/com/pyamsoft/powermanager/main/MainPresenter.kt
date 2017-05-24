@@ -22,7 +22,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class MainPresenter @Inject constructor(val interactor: MainInteractor,
+class MainPresenter @Inject internal constructor(val interactor: MainInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -35,29 +35,25 @@ internal class MainPresenter @Inject constructor(val interactor: MainInteractor,
   }
 
   private fun startServiceWhenOpen(callback: StartupCallback) {
-    disposeOnStop(interactor.isStartWhenOpen
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({
-          if (it) {
-            callback.onServiceEnabledWhenOpen()
-          }
-        }, { Timber.e(it, "onError isStartWhenOpen") }))
+    disposeOnStop(interactor.isStartWhenOpen.subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({
+      if (it) {
+        callback.onServiceEnabledWhenOpen()
+      }
+    }, { Timber.e(it, "onError isStartWhenOpen") }))
   }
 
   private fun checkForRoot(callback: StartupCallback) {
-    disposeOnStop(interactor.hasRootPermission()
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({
-          if (!it) {
-            interactor.missingRootPermission()
-            callback.explainRootRequirement()
-          }
-        }, { Timber.e(it, "onError checking root permission") }))
+    disposeOnStop(interactor.hasRootPermission().subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({
+      if (!it) {
+        interactor.missingRootPermission()
+        callback.explainRootRequirement()
+      }
+    }, { Timber.e(it, "onError checking root permission") }))
   }
 
-  internal interface StartupCallback {
+  interface StartupCallback {
 
     fun onServiceEnabledWhenOpen()
 

@@ -27,44 +27,36 @@ import javax.inject.Singleton
 
 @Module class WrapperModule {
 
-  @Singleton
-  @Provides
-  @Named("wrapper_wifi")
-  internal fun provideWifiManagerWrapper(context: Context,
+  @Singleton @Provides @Named("wrapper_wifi") fun provideWifiManagerWrapper(context: Context,
       @Named("logger_wifi") logger: Logger): ConnectedDeviceFunctionWrapper {
     return WifiManagerWrapperImpl(context, logger)
   }
 
-  @Singleton
-  @Provides
-  @Named("wrapper_bluetooth")
-  internal fun provideBluetoothAdapterWrapper(context: Context,
-      @Named("logger_bluetooth") logger: Logger): ConnectedDeviceFunctionWrapper {
+  @Singleton @Provides @Named("wrapper_bluetooth") fun provideBluetoothAdapterWrapper(
+      context: Context, @Named("logger_bluetooth") logger: Logger): ConnectedDeviceFunctionWrapper {
     return BluetoothAdapterWrapperImpl(context, logger)
   }
 
-  @Singleton @Provides @Named("wrapper_data") internal fun provideDataConnectionWrapper(
-      context: Context, preferences: RootPreferences,
-      shellCommandHelper: ShellCommandHelper, @Named("logger_data") logger: Logger,
+  @Singleton @Provides @Named("wrapper_data") fun provideDataConnectionWrapper(context: Context,
+      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
+      @Named("logger_data") logger: Logger,
       @Named("data_uri") dataUri: String): DeviceFunctionWrapper {
     return DataConnectionWrapperImpl(context, shellCommandHelper, logger, preferences, dataUri)
   }
 
-  @Singleton @Provides @Named("wrapper_sync") internal fun provideSyncConnectionWrapper(
+  @Singleton @Provides @Named("wrapper_sync") fun provideSyncConnectionWrapper(
       @Named("logger_sync") logger: Logger): DeviceFunctionWrapper {
     return SyncConnectionWrapperImpl(logger)
   }
 
-  @Singleton @Provides @Named("wrapper_airplane") internal fun provideAirplaneModeWrapper(
-      context: Context, preferences: RootPreferences,
-      shellCommandHelper: ShellCommandHelper,
+  @Singleton @Provides @Named("wrapper_airplane") fun provideAirplaneModeWrapper(context: Context,
+      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
       @Named("logger_airplane") logger: Logger): DeviceFunctionWrapper {
     return AirplaneModeWrapperImpl(context, logger, preferences, shellCommandHelper)
   }
 
-  @Singleton @Provides @Named("wrapper_doze") internal fun provideDozeWrapper(
-      context: Context, preferences: RootPreferences,
-      shellCommandHelper: ShellCommandHelper,
+  @Singleton @Provides @Named("wrapper_doze") fun provideDozeWrapper(context: Context,
+      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
       @Named("logger_doze") logger: Logger): DeviceFunctionWrapper {
     return DozeDeviceWrapperImpl(context, logger, preferences, shellCommandHelper)
   }

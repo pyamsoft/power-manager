@@ -30,15 +30,13 @@ import com.pyamsoft.powermanager.base.preference.TriggerPreferences
 import com.pyamsoft.powermanager.job.JobQueuer
 import io.reactivex.Single
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton internal class ForegroundInteractor @Inject constructor(
-    @param:Named("delay") private val jobQueuer: JobQueuer,
-    context: Context, preferences: ServicePreferences,
-    private val triggerPreferences: TriggerPreferences,
+    @param:Named("delay") private val jobQueuer: JobQueuer, context: Context,
+    preferences: ServicePreferences, private val triggerPreferences: TriggerPreferences,
     @Named("main") mainActivityClass: Class<out Activity>,
     @param:Named("toggle") val toggleServiceClass: Class<out Service>) : ServiceInteractor(
     preferences) {
@@ -50,22 +48,18 @@ import javax.inject.Singleton
     val pendingIntent = PendingIntent.getActivity(appContext, PENDING_RC, intent, 0)
 
     builder = NotificationCompat.Builder(appContext).setContentTitle(
-        context.getString(R.string.app_name))
-        .setSmallIcon(R.drawable.ic_notification)
-        .setColor(ContextCompat.getColor(context, R.color.amber500))
-        .setAutoCancel(false)
-        .setWhen(0)
-        .setNumber(0)
-        .setContentIntent(pendingIntent)
+        context.getString(R.string.app_name)).setSmallIcon(R.drawable.ic_notification).setColor(
+        ContextCompat.getColor(context, R.color.amber500)).setAutoCancel(false).setWhen(
+        0).setNumber(0).setContentIntent(pendingIntent)
   }
 
   /**
    * public
    */
   fun queueRepeatingTriggerJob() {
-    val delayTime = triggerPreferences.triggerPeriodTime
-    val triggerPeriod = TimeUnit.MINUTES.toSeconds(delayTime)
     // TODO
+    //    val delayTime = triggerPreferences.triggerPeriodTime
+    //    val triggerPeriod = TimeUnit.MINUTES.toSeconds(delayTime)
     //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
     //jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
     //    .repeatingOnWindow(0)
@@ -84,8 +78,7 @@ import javax.inject.Singleton
   }
 
   val notificationPriority: Single<Int>
-    @CheckResult
-    get() = Single.fromCallable { preferences.notificationPriority }
+    @CheckResult get() = Single.fromCallable { preferences.notificationPriority }
 
   /**
    * public
@@ -102,11 +95,8 @@ import javax.inject.Singleton
       notificationPriority.map {
         // Clear all of the Actions
         builder.mActions.clear()
-        builder.setPriority(it)
-            .setContentText(title)
-            .setOngoing(foreground)
-            .addAction(R.drawable.ic_notification, actionName, actionToggleService)
-            .build()
+        builder.setPriority(it).setContentText(title).setOngoing(foreground).addAction(
+            R.drawable.ic_notification, actionName, actionToggleService).build()
       }
     }
   }

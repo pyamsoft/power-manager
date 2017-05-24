@@ -51,93 +51,92 @@ import javax.inject.Singleton
     preferences = PowerManagerPreferencesImpl(appContext)
   }
 
-  @Singleton @Provides @Named("data_uri") internal fun provideMobileDataUri(): String {
+  @Singleton @Provides @Named("data_uri") fun provideMobileDataUri(): String {
     return SETTINGS_URI_MOBILE_DATA
   }
 
-  @Singleton @Provides @Named("main") internal fun provideMainClass(): Class<out Activity> {
+  @Singleton @Provides @Named("main") fun provideMainClass(): Class<out Activity> {
     return mainActivityClass
   }
 
-  @Singleton @Provides @Named(
-      "toggle") internal fun provideToggleServiceClass(): Class<out Service> {
+  @Singleton @Provides @Named("toggle") fun provideToggleServiceClass(): Class<out Service> {
     return toggleServiceClass
   }
 
-  @Singleton @Provides internal fun provideContext(): Context {
+  @Singleton @Provides fun provideContext(): Context {
     return appContext
   }
 
-  @Singleton @Provides internal fun provideWifiPreferences(): WifiPreferences {
+  @Singleton @Provides fun provideWifiPreferences(): WifiPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideClearPreferences(): ClearPreferences {
+  @Singleton @Provides fun provideClearPreferences(): ClearPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideWearablePreferences(): WearablePreferences {
+  @Singleton @Provides fun provideWearablePreferences(): WearablePreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideAirplanePreferences(): AirplanePreferences {
+  @Singleton @Provides fun provideAirplanePreferences(): AirplanePreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideBluetoothPreferences(): BluetoothPreferences {
+  @Singleton @Provides fun provideBluetoothPreferences(): BluetoothPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideDataPreferences(): DataPreferences {
+  @Singleton @Provides fun provideDataPreferences(): DataPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideDozePreferences(): DozePreferences {
+  @Singleton @Provides fun provideDozePreferences(): DozePreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideSyncPreferences(): SyncPreferences {
+  @Singleton @Provides fun provideSyncPreferences(): SyncPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideOnboardingPreferences(): OnboardingPreferences {
+  @Singleton @Provides fun provideOnboardingPreferences(): OnboardingPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideTriggerPreferences(): TriggerPreferences {
+  @Singleton @Provides fun provideTriggerPreferences(): TriggerPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideServicePreferences(): ServicePreferences {
+  @Singleton @Provides fun provideServicePreferences(): ServicePreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideRootPreferences(): RootPreferences {
+  @Singleton @Provides fun provideRootPreferences(): RootPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideLoggerPreferences(): LoggerPreferences {
+  @Singleton @Provides fun provideLoggerPreferences(): LoggerPreferences {
     return preferences
   }
 
-  @Singleton @Provides internal fun provideManagePreferences(): ManagePreferences {
+  @Singleton @Provides fun provideManagePreferences(): ManagePreferences {
     return preferences
   }
 
-  @Singleton @Provides @Named("sub") internal fun provideSubScheduler(): Scheduler {
+  @Singleton @Provides @Named("sub") fun provideSubScheduler(): Scheduler {
     return Schedulers.computation()
   }
 
-  @Singleton @Provides @Named("io") internal fun provideIoScheduler(): Scheduler {
+  @Singleton @Provides @Named("io") fun provideIoScheduler(): Scheduler {
     return Schedulers.io()
   }
 
-  @Singleton @Provides @Named("obs") internal fun provideObsScheduler(): Scheduler {
+  @Singleton @Provides @Named("obs") fun provideObsScheduler(): Scheduler {
     return AndroidSchedulers.mainThread()
   }
 
   companion object {
 
-    private val SETTINGS_URI_MOBILE_DATA = "mobile_data"
+    private const val SETTINGS_URI_MOBILE_DATA = "mobile_data"
   }
 }

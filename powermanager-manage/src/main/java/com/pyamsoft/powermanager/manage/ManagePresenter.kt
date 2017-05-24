@@ -21,7 +21,7 @@ import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler
 import timber.log.Timber
 
-internal abstract class ManagePresenter(private val interactor: ManageInteractor,
+abstract class ManagePresenter internal constructor(private val interactor: ManageInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
     subscribeScheduler) {
 
@@ -53,14 +53,14 @@ internal abstract class ManagePresenter(private val interactor: ManageInteractor
     }))
   }
 
-  internal interface ActionCallback {
+  interface ActionCallback {
 
     fun onError(throwable: Throwable)
 
     fun onComplete()
   }
 
-  internal interface RetrieveCallback {
+  interface RetrieveCallback {
 
     fun onEnableRetrieved(enabled: Boolean)
 

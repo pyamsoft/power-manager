@@ -21,23 +21,23 @@ import com.evernote.android.job.JobManager
 import com.evernote.android.job.util.JobCat
 import dagger.Module
 import dagger.Provides
+import timber.log.Timber
 import javax.inject.Named
 import javax.inject.Singleton
-import timber.log.Timber
 
 @Module class JobModule {
 
-  @Singleton @Provides @Named("delay") internal fun provideDelayedJobQueuer(
+  @Singleton @Provides @Named("delay") fun provideDelayedJobQueuer(
       jobManager: JobManager): JobQueuer {
     return DelayedJobQueuerImpl(jobManager)
   }
 
-  @Singleton @Provides @Named("instant") internal fun provideInstantJobQueuer(
-      jobManager: JobManager, jobHandler: JobHandler): JobQueuer {
+  @Singleton @Provides @Named("instant") fun provideInstantJobQueuer(jobManager: JobManager,
+      jobHandler: JobHandler): JobQueuer {
     return InstantJobQueuerImpl(jobManager, jobHandler)
   }
 
-  @Singleton @Provides internal fun provideJobManager(context: Context): JobManager {
+  @Singleton @Provides fun provideJobManager(context: Context): JobManager {
     // Job logs via Timber in debug mode
     JobCat.addLogPrinter { priority, tag, message, t -> Timber.tag(tag).log(priority, t, message) }
     JobCat.setLogcatEnabled(false)
