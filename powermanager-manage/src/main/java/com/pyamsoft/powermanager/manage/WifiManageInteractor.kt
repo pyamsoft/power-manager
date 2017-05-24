@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage;
+package com.pyamsoft.powermanager.manage
 
-public enum ManageTargets {
-  WIFI, DATA, BLUETOOTH, SYNC, AIRPLANE, DOZE
+import com.pyamsoft.powermanager.base.preference.WifiPreferences
+import io.reactivex.Completable
+import io.reactivex.Single
+import javax.inject.Inject
+
+internal class WifiManageInteractor @Inject constructor(
+    val preferences: WifiPreferences) : ManageInteractor() {
+
+  override fun setManaged(state: Boolean): Completable {
+    return Completable.fromAction { preferences.wifiManaged = state }
+  }
+
+  override val isManaged: Single<Pair<Boolean, Boolean>>
+    get() = Single.fromCallable {
+      Pair(true, preferences.wifiManaged)
+    }
 }

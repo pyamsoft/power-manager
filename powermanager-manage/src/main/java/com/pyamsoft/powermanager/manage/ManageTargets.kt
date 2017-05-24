@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage;
+package com.pyamsoft.powermanager.manage
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
-import io.reactivex.Completable;
-import io.reactivex.Single;
-
-abstract class ExceptionInteractor {
-
-  @CheckResult @NonNull abstract Completable setIgnoreCharging(boolean state);
-
-  @CheckResult @NonNull abstract Single<Pair<Boolean, Boolean>> isIgnoreCharging();
-
-  @CheckResult @NonNull abstract Completable setIgnoreWear(boolean state);
-
-  @CheckResult @NonNull abstract Single<Pair<Boolean, Boolean>> isIgnoreWear();
+enum class ManageTargets {
+  WIFI, DATA, BLUETOOTH, SYNC, AIRPLANE, DOZE
 }

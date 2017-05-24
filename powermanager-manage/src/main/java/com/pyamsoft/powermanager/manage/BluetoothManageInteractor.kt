@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage.bus;
+package com.pyamsoft.powermanager.manage
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import com.google.auto.value.AutoValue;
-import com.pyamsoft.powermanager.manage.ManageTargets;
+import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
+import io.reactivex.Completable
+import io.reactivex.Single
+import javax.inject.Inject
 
-@AutoValue public abstract class ManageChangeEvent {
+internal class BluetoothManageInteractor @Inject constructor(
+    val preferences: BluetoothPreferences) : ManageInteractor() {
 
-  @CheckResult @NonNull public static ManageChangeEvent create(@NonNull ManageTargets target) {
-    return new AutoValue_ManageChangeEvent(target);
+  override fun setManaged(state: Boolean): Completable {
+    return Completable.fromAction { preferences.bluetoothManaged = state }
   }
 
-  @CheckResult public abstract ManageTargets target();
+  override val isManaged: Single<Pair<Boolean, Boolean>>
+    get() = Single.fromCallable {
+      Pair(true, preferences.bluetoothManaged)
+    }
 }

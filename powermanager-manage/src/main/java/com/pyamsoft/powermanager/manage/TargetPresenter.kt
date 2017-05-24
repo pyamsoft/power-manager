@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage;
+package com.pyamsoft.powermanager.manage
 
-import android.support.annotation.CheckResult;
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
-import io.reactivex.Completable;
-import io.reactivex.Single;
+import android.support.annotation.CheckResult
+import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import io.reactivex.Scheduler
 
-abstract class ManageInteractor {
+internal abstract class TargetPresenter(observeScheduler: Scheduler,
+    subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
 
-  @CheckResult @NonNull abstract Completable setManaged(boolean state);
-
-  @CheckResult @NonNull abstract Single<Pair<Boolean, Boolean>> isManaged();
+  @get:CheckResult internal abstract val target: ManageTargets
 }
