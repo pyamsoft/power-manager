@@ -27,11 +27,11 @@ import com.pyamsoft.powermanager.base.states.WrapperModule
 import com.pyamsoft.powermanager.job.JobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
-import com.pyamsoft.powermanager.manage.TimeItem
-import com.pyamsoft.powermanager.manage.TimeModule
+import com.pyamsoft.powermanager.manage.DelayItem
 import com.pyamsoft.powermanager.manage.ManageComponent
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.manage.ManageSingletonModule
+import com.pyamsoft.powermanager.manage.TimeModule
 import com.pyamsoft.powermanager.receiver.BootCompletedReceiver
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
 import com.pyamsoft.powermanager.service.ActionToggleService
@@ -70,5 +70,5 @@ import javax.inject.Singleton
 
   fun inject(manageFragment: ManageFragment)
 
-  fun inject(timeItem: TimeItem)
+  fun inject(delayItem: DelayItem)
 }

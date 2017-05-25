@@ -80,7 +80,7 @@ class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler:
    * public
    */
   fun getTime(callback: TimeCallback) {
-    disposeOnDestroy(interactor.delayTime.subscribeOn(subscribeScheduler).observeOn(
+    disposeOnDestroy(interactor.time.subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doAfterTerminate { callback.onComplete() }.subscribe(
         { (isCustom, delayTime) ->
           if (isCustom) {

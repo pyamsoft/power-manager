@@ -64,9 +64,9 @@ class ManageFragment : WatchedFragment() {
           Timber.d("Inflate ExceptionItem for TAG: %s", s)
           item = ExceptionItem()
         }
-        TimeItem.TAG -> {
-          Timber.d("Inflate TimeItem for TAG: %s", s)
-          item = TimeItem()
+        DelayItem.TAG -> {
+          Timber.d("Inflate DelayItem for TAG: %s", s)
+          item = DelayItem()
         }
       //        PollItem.TAG -> {
       //          Timber.d("Inflate PollItem for TAG: %s", s)
@@ -89,7 +89,7 @@ class ManageFragment : WatchedFragment() {
     recycler.adapter = adapter.wrap(FastAdapter())
 
     adapter.add(ManageItem())
-    adapter.add(TimeItem())
+    adapter.add(DelayItem())
     adapter.add(ExceptionItem())
   }
 

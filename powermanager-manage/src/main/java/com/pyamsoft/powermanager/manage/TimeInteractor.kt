@@ -32,7 +32,7 @@ import javax.inject.Inject
 class TimeInteractor @Inject internal constructor(val preferences: TimePreferenceWrapper) {
   private val customInputBus: EventBus = EventBus.newLocalBus()
 
-  val delayTime: Single<Pair<Boolean, Long>>
+  val time: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
 
   @CheckResult fun setTime(time: Long): Completable {
