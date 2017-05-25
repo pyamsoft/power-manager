@@ -105,10 +105,20 @@
 
     <com.pyamsoft.pydroid.ui.widget.NoLeakEditText
         android:id="@+id/delay_input_custom"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:layout_weight="1"
         android:gravity="center_vertical|start"
+        />
+
+    <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:gravity="center_vertical|start"
+        android:text="Seconds"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
   </LinearLayout>
