@@ -47,11 +47,10 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
 
   @Synchronized fun openDatabase() {
     // After a 1 minute timeout, close the DB
-    compositeDisposable.add(
-        Flowable.defer { Flowable.timer(1, TimeUnit.MINUTES) }.subscribe({
-          Timber.w("PowerTriggerDB is closed")
-          briteDatabase.close()
-        }, { Timber.e(it, "onError closing database") }))
+    compositeDisposable.add(Flowable.defer { Flowable.timer(1, TimeUnit.MINUTES) }.subscribe({
+      Timber.w("PowerTriggerDB is closed")
+      briteDatabase.close()
+    }, { Timber.e(it, "onError closing database") }))
   }
 
   @CheckResult override fun insert(entry: PowerTriggerEntry): Completable {
@@ -64,10 +63,9 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
       openDatabase()
       val percent = entry.percent()
       return@fromCallable deleteWithPercentUnguarded(percent)
-    }
-        .andThen(Completable.fromCallable {
-          return@fromCallable PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry)
-        })
+    }.andThen(Completable.fromCallable {
+      return@fromCallable PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry)
+    })
   }
 
   override fun updateAvailable(available: Boolean, percent: Int): Completable {
@@ -95,10 +93,10 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
 
       val statement = PowerTriggerEntry.queryAll()
       return@defer RxJavaInterop.toV2Single(
-          briteDatabase.createQuery(statement.tables, statement.statement, *statement.args)
-              .mapToList { PowerTriggerEntry.allEntriesMapper().map(it) }
-              .firstOrDefault(emptyList())
-              .toSingle())
+          briteDatabase.createQuery(statement.tables, statement.statement,
+              *statement.args).mapToList {
+            PowerTriggerEntry.allEntriesMapper().map(it)
+          }.firstOrDefault(emptyList()).toSingle())
     }
   }
 
@@ -109,11 +107,9 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
 
       val statement = PowerTriggerEntry.withPercent(percent)
       return@defer RxJavaInterop.toV2Single(
-          briteDatabase.createQuery(statement.tables, statement.statement, *statement.args)
-              .mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper().map(it) },
-                  PowerTriggerEntry.empty())
-              .firstOrDefault(PowerTriggerEntry.empty())
-              .toSingle())
+          briteDatabase.createQuery(statement.tables, statement.statement,
+              *statement.args).mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper().map(it) },
+              PowerTriggerEntry.empty()).firstOrDefault(PowerTriggerEntry.empty()).toSingle())
     }
   }
 
@@ -125,15 +121,14 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
     }
   }
 
-  @VisibleForTesting @CheckResult fun deleteWithPercentUnguarded(
-      percent: Int): Int {
+  @VisibleForTesting @CheckResult fun deleteWithPercentUnguarded(percent: Int): Int {
     return PowerTriggerEntry.deleteTrigger(openHelper).executeProgram(percent)
   }
 
   @CheckResult override fun deleteAll(): Completable {
     return Completable.fromAction {
       Timber.i("DB: DELETE ALL")
-      briteDatabase.execute(PowerTriggerEntry.DELETE_ALL)
+      briteDatabase.execute(PowerTriggerModel.DELETE_ALL)
       briteDatabase.close()
       compositeDisposable.clear()
     }.andThen(deleteDatabase())
@@ -154,7 +149,7 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
 
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
       Timber.d("onCreate")
-      sqLiteDatabase.execSQL(PowerTriggerEntry.CREATE_TABLE)
+      sqLiteDatabase.execSQL(PowerTriggerModel.CREATE_TABLE)
     }
 
     override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
