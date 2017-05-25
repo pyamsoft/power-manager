@@ -25,8 +25,11 @@ import android.view.ViewGroup
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
+import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import kotlinx.android.synthetic.main.fragment_manage.recycler
 import timber.log.Timber
 
@@ -92,6 +95,16 @@ class ManageFragment : WatchedFragment() {
     adapter.add(DelayItem())
     adapter.add(PollItem())
     adapter.add(ExceptionItem())
+  }
+
+  override fun onResume() {
+    super.onResume()
+    ActionBarUtil.setActionBarUpEnabled(activity, false)
+    ActionBarUtil.setActionBarTitle(activity, R.string.app_name)
+
+    if (activity is MainActivity) {
+      activity.bottomtabs.visibility = View.VISIBLE
+    }
   }
 
   companion object {

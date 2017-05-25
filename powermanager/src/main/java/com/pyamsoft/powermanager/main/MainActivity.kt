@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.pyamsoft.powermanager.BuildConfig
 import com.pyamsoft.powermanager.Injector
@@ -34,11 +35,13 @@ import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.logger.LoggerDialog
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.util.DialogUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
+import kotlinx.android.synthetic.main.activity_main.main_appbar
 import kotlinx.android.synthetic.main.activity_main.main_collapsebar
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import timber.log.Timber
@@ -80,12 +83,16 @@ class MainActivity : TamperActivity() {
           override fun onNavigationItemSelected(item: MenuItem): Boolean {
             val handled: Boolean
             when (item.itemId) {
-              R.id.menu_manage -> handled = replaceFragment(ManageFragment.newInstance(),
-                  ManageFragment.TAG)
+              R.id.menu_manage -> {
+                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
+                main_appbar.setExpanded(true)
+              }
               R.id.menu_triggers -> handled = replaceFragment(ManageFragment.newInstance(),
                   ManageFragment.TAG)
-              R.id.menu_settings -> handled = replaceFragment(ManageFragment.newInstance(),
-                  ManageFragment.TAG)
+              R.id.menu_settings -> {
+                handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
+                main_appbar.setExpanded(false, true)
+              }
               else -> handled = false
             }
 
@@ -136,10 +143,18 @@ class MainActivity : TamperActivity() {
   }
 
   @CheckResult private fun hasNoActiveFragment(): Boolean {
-    val fragmentManager = supportFragmentManager
-    return fragmentManager.findFragmentByTag(
-        AboutLibrariesFragment.TAG) == null && fragmentManager.findFragmentByTag(
+    return supportFragmentManager.findFragmentByTag(
+        AboutLibrariesFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
+        SettingsFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
         ManageFragment.TAG) == null
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    // Hide bottom tabs with About libraries fragment
+    bottomtabs.visibility = if (supportFragmentManager.findFragmentByTag(
+        AboutLibrariesFragment.TAG) != null) View.GONE else View.VISIBLE
   }
 
   override fun onPostResume() {
