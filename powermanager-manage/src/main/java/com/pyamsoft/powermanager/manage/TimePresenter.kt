@@ -23,9 +23,9 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
+class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
     @Named("sub") subscribeScheduler: Scheduler,
-    private val interactor: DelayInteractor) : SchedulerPresenter(observeScheduler,
+    private val interactor: TimeInteractor) : SchedulerPresenter(observeScheduler,
     subscribeScheduler) {
   private var customTimeChangeDisposable = DisposableHelper.dispose(null)
 
@@ -67,8 +67,8 @@ class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler
   /**
    * public
    */
-  fun setPresetDelayTime(time: Long, callback: ActionCallback) {
-    disposeOnDestroy(interactor.setDelayTime(time).subscribeOn(subscribeScheduler).observeOn(
+  fun setPresetTime(time: Long, callback: ActionCallback) {
+    disposeOnDestroy(interactor.setTime(time).subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe(
         { Timber.d("Set delay time successfully: %s", time) }) { throwable ->
       Timber.e(throwable, "Error setting managed")
@@ -79,14 +79,14 @@ class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler
   /**
    * public
    */
-  fun getDelayTime(callback: DelayCallback) {
+  fun getTime(callback: TimeCallback) {
     disposeOnDestroy(interactor.delayTime.subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doAfterTerminate { callback.onComplete() }.subscribe(
         { (isCustom, delayTime) ->
           if (isCustom) {
-            callback.onCustomDelay(delayTime)
+            callback.onCustomTime(delayTime)
           } else {
-            callback.onPresetDelay(delayTime)
+            callback.onPresetTime(delayTime)
           }
         }, {
       Timber.e(it, "Error getting delay time")
@@ -97,9 +97,9 @@ class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler
   /**
    * public
    */
-  fun listenForDelayTimeChanges(callback: OnDelayChangedCallback) {
+  fun listenForTimeChanges(callback: OnTimeChangedCallback) {
     disposeOnDestroy(interactor.listenTimeChanges().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onDelayTimeChanged(it) }, {
+        observeScheduler).subscribe({ callback.onTimeChanged(it) }, {
       Timber.e(it, "Error on delay changed event")
       callback.onError(it)
     }))
@@ -110,9 +110,9 @@ class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler
     fun onError(throwable: Throwable)
   }
 
-  interface OnDelayChangedCallback {
+  interface OnTimeChangedCallback {
 
-    fun onDelayTimeChanged(time: Long)
+    fun onTimeChanged(time: Long)
 
     fun onError(throwable: Throwable)
   }
@@ -126,11 +126,11 @@ class DelayPresenter @Inject internal constructor(@Named("obs") observeScheduler
     fun onError(throwable: Throwable)
   }
 
-  interface DelayCallback {
+  interface TimeCallback {
 
-    fun onCustomDelay(time: Long)
+    fun onCustomTime(time: Long)
 
-    fun onPresetDelay(time: Long)
+    fun onPresetTime(time: Long)
 
     fun onError(throwable: Throwable)
 

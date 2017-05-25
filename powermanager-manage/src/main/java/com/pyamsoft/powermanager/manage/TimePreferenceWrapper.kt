@@ -20,7 +20,7 @@ import android.content.SharedPreferences
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 
-internal interface TimePrefrenceWrapper {
+internal interface TimePreferenceWrapper {
 
   @get:CheckResult val isCustom: Boolean
 

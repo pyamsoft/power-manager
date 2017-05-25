@@ -29,13 +29,13 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class DelayInteractor @Inject internal constructor(val preferences: TimePrefrenceWrapper) {
+class TimeInteractor @Inject internal constructor(val preferences: TimePreferenceWrapper) {
   private val customInputBus: EventBus = EventBus.newLocalBus()
 
   val delayTime: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
 
-  @CheckResult fun setDelayTime(time: Long): Completable {
+  @CheckResult fun setTime(time: Long): Completable {
     return Completable.fromAction { preferences.setTime(time, false) }
   }
 

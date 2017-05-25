@@ -41,8 +41,8 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolder>(DelayItem.TAG) {
-  @field:[Inject Named("manage_delay")] lateinit internal var presenter: DelayPresenter
+class TimeItem internal constructor() : BaseItem<TimeItem, TimeItem.ViewHolder>(TimeItem.TAG) {
+  @field:[Inject Named("manage_delay")] lateinit internal var presenter: TimePresenter
   internal val customTimeWatcher: TextWatcher = object : TextWatcher {
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
@@ -77,14 +77,14 @@ class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolde
     super.bindView(holder, payloads)
 
     val context = holder.itemView.context
-    presenter.getDelayTime(object : DelayPresenter.DelayCallback {
-      override fun onCustomDelay(time: Long) {
+    presenter.getTime(object : TimePresenter.TimeCallback {
+      override fun onCustomTime(time: Long) {
         holder.containerDelay.delay_radio_group.clearCheck()
         holder.containerDelay.delay_input_custom.setText(time.toString())
         enableCustomInput(holder)
       }
 
-      override fun onPresetDelay(time: Long) {
+      override fun onPresetTime(time: Long) {
         disableCustomInput(holder)
 
         val index: Int
@@ -143,7 +143,7 @@ class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolde
           else -> throw IllegalArgumentException("Could not find RadioButton with id: " + checkedId)
         }
 
-        presenter.setPresetDelayTime(time, object : DelayPresenter.ActionCallback {
+        presenter.setPresetTime(time, object : TimePresenter.ActionCallback {
           override fun onError(throwable: Throwable) {
             Toast.makeText(context, "Failed to set delay time", Toast.LENGTH_SHORT).show()
             group.isEnabled = false
@@ -161,8 +161,8 @@ class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolde
       }
     }
 
-    presenter.listenForDelayTimeChanges(object : DelayPresenter.OnDelayChangedCallback {
-      override fun onDelayTimeChanged(time: Long) {
+    presenter.listenForTimeChanges(object : TimePresenter.OnTimeChangedCallback {
+      override fun onTimeChanged(time: Long) {
         // Remove watcher
         holder.containerDelay.delay_input_custom.setText(time.toString())
         holder.containerDelay.delay_input_custom.setSelection(
@@ -190,7 +190,7 @@ class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolde
     holder.containerDelay.delay_input_custom.isEnabled = true
 
     holder.containerDelay.delay_input_custom.addTextChangedListener(customTimeWatcher)
-    presenter.listenForCustomTimeChanges(object : DelayPresenter.CustomTimeChangedCallback {
+    presenter.listenForCustomTimeChanges(object : TimePresenter.CustomTimeChangedCallback {
       override fun onCustomTimeChanged(time: Long) {
         holder.containerDelay.delay_input_custom.setText(time.toString())
       }
@@ -246,7 +246,7 @@ class DelayItem internal constructor() : BaseItem<DelayItem, DelayItem.ViewHolde
 
   companion object {
 
-    const internal val TAG = "DelayItem"
+    const internal val TAG = "TimeItem"
   }
 }
 

@@ -24,11 +24,11 @@ import io.reactivex.Scheduler
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module class DelayModule {
+@Module class TimeModule {
 
   @Singleton @Provides @Named("manage_delay_interactor") fun provideManageDelayInteractor(
-      preferences: ManagePreferences): DelayInteractor {
-    return DelayInteractor(object : TimePrefrenceWrapper {
+      preferences: ManagePreferences): TimeInteractor {
+    return TimeInteractor(object : TimePreferenceWrapper {
       override val time: Long
         get() = preferences.manageDelay
 
@@ -53,8 +53,8 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("manage_disable_interactor") fun provideManageDisableInteractor(
-      preferences: ManagePreferences): DelayInteractor {
-    return DelayInteractor(object : TimePrefrenceWrapper {
+      preferences: ManagePreferences): TimeInteractor {
+    return TimeInteractor(object : TimePreferenceWrapper {
       override val isCustom: Boolean
         get() = preferences.customDisableTime
       override val time: Long
@@ -79,13 +79,13 @@ import javax.inject.Singleton
 
   @Provides @Named("manage_delay") fun provideManageDelayPresenter(
       @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
-      @Named("manage_delay_interactor") interactor: DelayInteractor): DelayPresenter {
-    return DelayPresenter(observeScheduler, subscribeScheduler, interactor)
+      @Named("manage_delay_interactor") interactor: TimeInteractor): TimePresenter {
+    return TimePresenter(observeScheduler, subscribeScheduler, interactor)
   }
 
   @Provides @Named("manage_disable") fun provideManageDisablePresenter(
       @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
-      @Named("manage_disable_interactor") interactor: DelayInteractor): DelayPresenter {
-    return DelayPresenter(observeScheduler, subscribeScheduler, interactor)
+      @Named("manage_disable_interactor") interactor: TimeInteractor): TimePresenter {
+    return TimePresenter(observeScheduler, subscribeScheduler, interactor)
   }
 }
