@@ -56,8 +56,11 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
 
   private fun afterCommandResult(exitCode: Int, rootShell: Boolean, vararg commands: String) {
     val recreate: Boolean
+    if (exitCode == Shell.OnCommandResultListener.SHELL_EXEC_FAILED) {
+
+    }
     if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
-      Timber.e("Command failed. '%s'", Arrays.toString(commands))
+      Timber.w("Command failed, but will recover. '%s'", Arrays.toString(commands))
       recreate = decideRecreation(rootShell)
     } else {
       recreate = false
