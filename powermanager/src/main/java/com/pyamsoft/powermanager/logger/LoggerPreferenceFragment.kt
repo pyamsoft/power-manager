@@ -42,7 +42,7 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
       "logger_presenter_manager")] lateinit internal var loggerManager: LoggerPresenter
   private lateinit var loggingEnabled: Preference
 
-  override fun onCreatePreferences(savedInstanceState: Bundle, rootKey: String) {
+  override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     addPreferencesFromResource(R.xml.logger)
   }
 
