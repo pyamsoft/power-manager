@@ -49,31 +49,31 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
   }
 
   override fun getTimeRadioOne(): Long {
-    return TimeUnit.MINUTES.toSeconds(5L)
+    return TimeUnit.MINUTES.toSeconds(1L)
   }
 
   override fun getTimeRadioTwo(): Long {
-    return TimeUnit.MINUTES.toSeconds(10L)
+    return TimeUnit.MINUTES.toSeconds(5L)
   }
 
   override fun getTimeRadioThree(): Long {
-    return TimeUnit.MINUTES.toSeconds(15L)
+    return TimeUnit.MINUTES.toSeconds(10L)
   }
 
   override fun getTimeRadioFour(): Long {
-    return TimeUnit.MINUTES.toSeconds(30L)
+    return TimeUnit.MINUTES.toSeconds(15L)
   }
 
   override fun getTimeRadioFive(): Long {
-    return TimeUnit.MINUTES.toSeconds(45L)
+    return TimeUnit.MINUTES.toSeconds(30L)
   }
 
   override fun getTimeRadioSix(): Long {
-    return TimeUnit.MINUTES.toSeconds(60L)
+    return TimeUnit.MINUTES.toSeconds(45L)
   }
 
   override fun getTimeRadioSeven(): Long {
-    return TimeUnit.MINUTES.toSeconds(75L)
+    return TimeUnit.MINUTES.toSeconds(60L)
   }
 
   override fun getTimeRadioEight(): Long {
@@ -90,17 +90,18 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
       itemView.simple_expander.setTitle("Smart Poll")
       itemView.simple_expander.setDescription(
           "Peter will create some good description here eventually")
-      containerDelay.delay_radio_one.text = "5 Minutes"
-      containerDelay.delay_radio_two.text = "10 Minutes"
-      containerDelay.delay_radio_three.text = "15 Minutes"
-      containerDelay.delay_radio_four.text = "30 Minutes"
-      containerDelay.delay_radio_five.text = "45 Minutes"
-      containerDelay.delay_radio_six.text = "1 Hour"
+      containerDelay.delay_radio_one.text = "1 Minute"
+      containerDelay.delay_radio_two.text = "5 Minutes"
+      containerDelay.delay_radio_three.text = "10 Minutes"
+      containerDelay.delay_radio_four.text = "15 Minutes"
+      containerDelay.delay_radio_five.text = "30 Minutes"
 
       // Currently unused
+      containerDelay.delay_radio_six.visibility = View.GONE
       containerDelay.delay_radio_seven.visibility = View.GONE
       containerDelay.delay_radio_eight.visibility = View.GONE
-      //      containerDelay.delay_radio_seven.text = "1 Hour 15 Minutes"
+      //      containerDelay.delay_radio_six.text = "45 Minutes"
+      //      containerDelay.delay_radio_seven.text = "1 Hour"
       //      containerDelay.delay_radio_eight.text = "1 Hour 30 Minutes"
     }
   }

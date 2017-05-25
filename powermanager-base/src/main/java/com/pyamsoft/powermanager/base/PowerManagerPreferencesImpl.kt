@@ -459,7 +459,7 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
     @JvmStatic
     private val DELAY_MINIMUM = TimeUnit.SECONDS.toSeconds(5)
     @JvmStatic
-    private val DELAY_MAXIMUM = TimeUnit.MINUTES.toSeconds(30)
+    private val DELAY_MAXIMUM = TimeUnit.MINUTES.toSeconds(5)
     @JvmStatic
     private val PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1)
     @JvmStatic
