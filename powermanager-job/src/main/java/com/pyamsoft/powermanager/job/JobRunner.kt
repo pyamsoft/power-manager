@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.job
 
-import android.os.Build
 import android.support.annotation.CheckResult
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
@@ -26,24 +25,20 @@ import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
 import timber.log.Timber
 
 internal abstract class JobRunner(private val jobQueuer: JobQueuer,
-    private val chargingObserver: StateObserver,
-    private val wifiModifier: StateModifier, private val dataModifier: StateModifier,
-    private val bluetoothModifier: StateModifier, private val syncModifier: StateModifier,
-    private val dozeModifier: StateModifier, private val airplaneModifier: StateModifier,
-    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
+    private val chargingObserver: StateObserver, private val wifiModifier: StateModifier,
+    private val dataModifier: StateModifier, private val bluetoothModifier: StateModifier,
+    private val syncModifier: StateModifier, private val dozeModifier: StateModifier,
+    private val airplaneModifier: StateModifier, private val wifiPreferences: WifiPreferences,
+    private val dataPreferences: DataPreferences,
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences,
-    private val rootPreferences: RootPreferences,
-    private val rootPermissionObserver: PermissionObserver,
-    private val dozePermissionObserver: PermissionObserver) {
+    private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences) {
 
   @CheckResult private fun runJob(tag: String, screenOn: Boolean, firstRun: Boolean): Boolean {
     checkTag(tag)
@@ -62,10 +57,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
 
   @CheckResult private fun runEnableJob(tag: String, firstRun: Boolean): Boolean {
     var didSomething = false
-    if (dozePreferences.originalDoze
-        && (firstRun || dozePreferences.periodicDoze)
-        && rootPreferences.rootEnabled
-        && dozePermissionObserver.hasPermission()) {
+    if (dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
       Timber.i("%s: Disable Doze", tag)
       dozeModifier.unset()
       didSomething = true
@@ -75,10 +67,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (airplanePreferences.originalAirplane
-        && (firstRun || airplanePreferences.periodicAirplane)
-        && rootPreferences.rootEnabled
-        && rootPermissionObserver.hasPermission()) {
+    if (airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
       Timber.i("%s: Disable Airplane mode", tag)
       airplaneModifier.unset()
       didSomething = true
@@ -98,10 +87,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (dataPreferences.originalData
-        && (firstRun || dataPreferences.periodicData)
-        && rootPreferences.rootEnabled
-        && rootPermissionObserver.hasPermission()) {
+    if (dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
       Timber.i("%s: Enable Data", tag)
       dataModifier.set()
       didSomething = true
@@ -150,10 +136,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && dataPreferences.ignoreChargingData) {
       Timber.w("Do not disable Data while device is charging")
     } else {
-      if (dataPreferences.originalData
-          && (firstRun || dataPreferences.periodicData)
-          && rootPreferences.rootEnabled
-          && rootPermissionObserver.hasPermission()) {
+      if (dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
         Timber.i("%s: Disable Data", tag)
         dataModifier.unset()
         didSomething = true
@@ -195,10 +178,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && airplanePreferences.ignoreChargingAirplane) {
       Timber.w("Do not enable Airplane mode while device is charging")
     } else {
-      if (airplanePreferences.originalAirplane
-          && (firstRun || airplanePreferences.periodicAirplane)
-          && rootPreferences.rootEnabled
-          && rootPermissionObserver.hasPermission()) {
+      if (airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
         Timber.i("%s: Enable Airplane mode", tag)
         airplaneModifier.set()
         didSomething = true
@@ -212,10 +192,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && dozePreferences.ignoreChargingDoze) {
       Timber.w("Do not enable Doze mode while device is charging")
     } else {
-      if (dozePreferences.originalDoze
-          && (firstRun || dozePreferences.periodicDoze)
-          && rootPreferences.rootEnabled
-          && dozePermissionObserver.hasPermission()) {
+      if (dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
         Timber.i("%s: Enable Doze mode", tag)
         dozeModifier.set()
         didSomething = true
@@ -227,24 +204,12 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
 
   @CheckResult private fun isJobRepeatRequired(didSomething: Boolean): Boolean {
     val repeatWifi = wifiPreferences.wifiManaged && wifiPreferences.periodicWifi
-    var repeatData = dataPreferences.dataManaged && dataPreferences.periodicData
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      repeatData = repeatData and rootPermissionObserver.hasPermission()
-    }
+    val repeatData = dataPreferences.dataManaged && dataPreferences.periodicData
     val repeatBluetooth = bluetoothPreferences.bluetoothManaged && bluetoothPreferences.periodicBluetooth
     val repeatSync = syncPreferences.syncManaged && syncPreferences.periodicSync
-    val repeatAirplane = airplanePreferences.airplaneManaged
-        && airplanePreferences.periodicAirplane
-        && rootPermissionObserver.hasPermission()
-    val repeatDoze = dozePreferences.dozeManaged
-        && dozePreferences.periodicDoze
-        && dozePermissionObserver.hasPermission()
-    return didSomething && (repeatWifi
-        || repeatData
-        || repeatBluetooth
-        || repeatSync
-        || repeatAirplane
-        || repeatDoze)
+    val repeatAirplane = airplanePreferences.airplaneManaged && airplanePreferences.periodicAirplane
+    val repeatDoze = dozePreferences.dozeManaged && dozePreferences.periodicDoze
+    return didSomething && (repeatWifi || repeatData || repeatBluetooth || repeatSync || repeatAirplane || repeatDoze)
   }
 
   private fun repeatIfRequired(tag: String, screenOn: Boolean, windowOnTime: Long,
@@ -264,14 +229,9 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       newTag = JobQueuer.DISABLE_TAG
     }
 
-    val entry = JobQueuerEntry.builder(newTag)
-        .oneshot(false)
-        .firstRun(false)
-        .screenOn(!screenOn)
-        .delay(newDelayTime)
-        .repeatingOffWindow(windowOffTime)
-        .repeatingOnWindow(windowOnTime)
-        .build()
+    val entry = JobQueuerEntry.builder(newTag).oneshot(false).firstRun(false).screenOn(
+        !screenOn).delay(newDelayTime).repeatingOffWindow(windowOffTime).repeatingOnWindow(
+        windowOnTime).build()
 
     jobQueuer.queue(entry)
   }

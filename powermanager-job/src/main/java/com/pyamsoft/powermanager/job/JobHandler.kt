@@ -24,7 +24,6 @@ import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
 import javax.inject.Inject
@@ -43,17 +42,13 @@ class JobHandler @Inject internal constructor(
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences,
-    private val rootPreferences: RootPreferences,
-    @param:Named("obs_root_permission") private val rootPermissionObserver: PermissionObserver,
-    @param:Named("obs_doze_permission") private val dozePermissionObserver: PermissionObserver) {
+    private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences) {
 
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
     return object : JobRunner(jobQueuer, chargingObserver, wifiModifier, dataModifier,
-        bluetoothModifier,
-        syncModifier, dozeModifier, airplaneModifier, wifiPreferences, dataPreferences,
-        bluetoothPreferences, syncPreferences, airplanePreferences, dozePreferences,
-        rootPreferences, rootPermissionObserver, dozePermissionObserver) {
+        bluetoothModifier, syncModifier, dozeModifier, airplaneModifier, wifiPreferences,
+        dataPreferences, bluetoothPreferences, syncPreferences, airplanePreferences,
+        dozePreferences, rootPreferences) {
       override val isStopped: Boolean
         get() = stopper.invoke()
     }
