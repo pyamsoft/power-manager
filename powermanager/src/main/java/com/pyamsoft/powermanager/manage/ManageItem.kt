@@ -128,16 +128,14 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
     })
   }
 
-  override fun unbindView(holder: ViewHolder?) {
+  override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
-    if (holder != null) {
-      unbindSwitch(holder.container.manage_wifi)
-      unbindSwitch(holder.container.manage_data)
-      unbindSwitch(holder.container.manage_bluetooth)
-      unbindSwitch(holder.container.manage_sync)
-      unbindSwitch(holder.container.manage_airplane)
-      unbindSwitch(holder.container.manage_doze)
-    }
+    unbindSwitch(holder.container.manage_wifi)
+    unbindSwitch(holder.container.manage_data)
+    unbindSwitch(holder.container.manage_bluetooth)
+    unbindSwitch(holder.container.manage_sync)
+    unbindSwitch(holder.container.manage_airplane)
+    unbindSwitch(holder.container.manage_doze)
   }
 
   override fun unbindItem() {

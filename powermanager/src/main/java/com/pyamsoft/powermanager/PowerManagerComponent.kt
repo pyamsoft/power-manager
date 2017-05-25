@@ -31,6 +31,7 @@ import com.pyamsoft.powermanager.manage.DelayItem
 import com.pyamsoft.powermanager.manage.ManageComponent
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.manage.ManageSingletonModule
+import com.pyamsoft.powermanager.manage.PollItem
 import com.pyamsoft.powermanager.manage.TimeModule
 import com.pyamsoft.powermanager.receiver.BootCompletedReceiver
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
@@ -71,4 +72,6 @@ import javax.inject.Singleton
   fun inject(manageFragment: ManageFragment)
 
   fun inject(delayItem: DelayItem)
+
+  fun inject(pollItem: PollItem)
 }

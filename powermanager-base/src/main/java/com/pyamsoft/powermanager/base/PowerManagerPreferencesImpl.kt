@@ -382,6 +382,7 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
       if (time > DELAY_MAXIMUM) {
         time = DELAY_MAXIMUM
       }
+
       preferences.edit().putLong(KEY_MANAGE_DELAY_TIME, time).apply()
     }
 
@@ -414,6 +415,7 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
       if (time > PERIOD_MAXIMUM) {
         time = PERIOD_MAXIMUM
       }
+
       preferences.edit().putLong(KEY_MANAGE_DISABLE_TIME, time).apply()
     }
 

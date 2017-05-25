@@ -21,6 +21,7 @@ import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
+import timber.log.Timber
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -42,11 +43,13 @@ import javax.inject.Singleton
 
       override fun registerTimeChanges(
           listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
+        Timber.w("REGISTER DELAY TIME CHANGES")
         return preferences.registerDelayChanges(listener)
       }
 
       override fun unregisterTimeChanges(
           listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        Timber.w("UNREGISTER DELAY TIME CHANGES")
         preferences.unregisterDelayChanges(listener)
       }
     })

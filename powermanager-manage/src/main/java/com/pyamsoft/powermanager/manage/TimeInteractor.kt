@@ -19,9 +19,7 @@ package com.pyamsoft.powermanager.manage
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.ManagePreferences.TimeChangeListener
 import com.pyamsoft.pydroid.bus.EventBus
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
@@ -39,35 +37,21 @@ class TimeInteractor @Inject internal constructor(val preferences: TimePreferenc
     return Completable.fromAction { preferences.setTime(time, false) }
   }
 
-  @CheckResult fun listenTimeChanges(): Flowable<Long> {
-    return Flowable.create<Long>({
+  @CheckResult fun listenTimeChanges(): Observable<Long> {
+    return Observable.create {
       val listener = preferences.registerTimeChanges(object : TimeChangeListener {
         override fun onTimeChanged(time: Long) {
-          it.onNext(time)
+          if (!it.isDisposed) {
+            it.onNext(time)
+          }
         }
       })
 
       it.setCancellable {
-        Timber.d("Stop listening for delay changes")
+        Timber.d("Cancel: Stop listening for delay changes")
         preferences.unregisterTimeChanges(listener)
       }
-
-      it.setDisposable(object : Disposable {
-
-        private var disposed = false
-
-        override fun dispose() {
-          Timber.d("Dispose: Stop listening for delay changes")
-          preferences.unregisterTimeChanges(listener)
-          disposed = true
-        }
-
-        override fun isDisposed(): Boolean {
-          return disposed
-        }
-
-      })
-    }, BackpressureStrategy.BUFFER)
+    }
   }
 
   /**

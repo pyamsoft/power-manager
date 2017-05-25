@@ -68,10 +68,10 @@ class ManageFragment : WatchedFragment() {
           Timber.d("Inflate DelayItem for TAG: %s", s)
           item = DelayItem()
         }
-      //        PollItem.TAG -> {
-      //          Timber.d("Inflate PollItem for TAG: %s", s)
-      //          item = PollItem()
-      //        }
+        PollItem.TAG -> {
+          Timber.d("Inflate PollItem for TAG: %s", s)
+          item = PollItem()
+        }
         else -> {
           Timber.e("Cannot inflate item for TAG: %s", s)
           item = null
@@ -90,6 +90,7 @@ class ManageFragment : WatchedFragment() {
 
     adapter.add(ManageItem())
     adapter.add(DelayItem())
+    adapter.add(PollItem())
     adapter.add(ExceptionItem())
   }
 

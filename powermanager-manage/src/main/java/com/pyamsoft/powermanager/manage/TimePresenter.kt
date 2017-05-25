@@ -69,11 +69,10 @@ class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler:
    */
   fun setPresetTime(time: Long, callback: ActionCallback) {
     disposeOnDestroy(interactor.setTime(time).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe(
-        { Timber.d("Set delay time successfully: %s", time) }) { throwable ->
-      Timber.e(throwable, "Error setting managed")
-      callback.onError(throwable)
-    })
+        observeScheduler).subscribe({ Timber.d("Set delay time successfully: %s", time) }, {
+      Timber.e(it, "Error setting managed")
+      callback.onError(it)
+    }))
   }
 
   /**
@@ -98,6 +97,7 @@ class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler:
    * public
    */
   fun listenForTimeChanges(callback: OnTimeChangedCallback) {
+    Timber.w("LISTEN FOR TIME CHANGES")
     disposeOnDestroy(interactor.listenTimeChanges().subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({ callback.onTimeChanged(it) }, {
       Timber.e(it, "Error on delay changed event")

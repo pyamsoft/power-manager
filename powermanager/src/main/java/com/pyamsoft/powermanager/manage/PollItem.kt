@@ -28,19 +28,20 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_se
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_six
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
-class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
+class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
 
-  @field:[Inject Named("manage_delay")] lateinit internal var presenter: TimePresenter
+  @field:[Inject Named("manage_disable")] lateinit internal var presenter: TimePresenter
 
   init {
     Injector.get().provideComponent().inject(this)
   }
 
   override fun getType(): Int {
-    return R.id.adapter_delay_card_item
+    return R.id.adapter_poll_card_item
   }
 
   override fun providePresenter(): TimePresenter {
@@ -48,35 +49,35 @@ class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
   }
 
   override fun getTimeRadioOne(): Long {
-    return 5L
+    return TimeUnit.MINUTES.toSeconds(5L)
   }
 
   override fun getTimeRadioTwo(): Long {
-    return 10L
+    return TimeUnit.MINUTES.toSeconds(10L)
   }
 
   override fun getTimeRadioThree(): Long {
-    return 15L
+    return TimeUnit.MINUTES.toSeconds(15L)
   }
 
   override fun getTimeRadioFour(): Long {
-    return 30L
+    return TimeUnit.MINUTES.toSeconds(30L)
   }
 
   override fun getTimeRadioFive(): Long {
-    return 45L
+    return TimeUnit.MINUTES.toSeconds(45L)
   }
 
   override fun getTimeRadioSix(): Long {
-    return 60L
+    return TimeUnit.MINUTES.toSeconds(60L)
   }
 
   override fun getTimeRadioSeven(): Long {
-    return 90L
+    return TimeUnit.MINUTES.toSeconds(75L)
   }
 
   override fun getTimeRadioEight(): Long {
-    return 120L
+    return TimeUnit.MINUTES.toSeconds(90L)
   }
 
   override fun getViewHolder(view: View): ViewHolder {
@@ -86,23 +87,27 @@ class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
 
     init {
-      itemView.simple_expander.setTitle("Active Delay")
+      itemView.simple_expander.setTitle("Smart Poll")
       itemView.simple_expander.setDescription(
-          "Power Manager will wait for the specified amount of time before automatically managing certain device functions")
-      containerDelay.delay_radio_one.text = "5 Seconds"
-      containerDelay.delay_radio_two.text = "10 Seconds"
-      containerDelay.delay_radio_three.text = "15 Seconds"
-      containerDelay.delay_radio_four.text = "30 Seconds"
-      containerDelay.delay_radio_five.text = "45 Seconds"
-      containerDelay.delay_radio_six.text = "1 Minute"
-      containerDelay.delay_radio_seven.text = "1 Minute 30 Seconds"
-      containerDelay.delay_radio_eight.text = "2 Minutes"
+          "Peter will create some good description here eventually")
+      containerDelay.delay_radio_one.text = "5 Minutes"
+      containerDelay.delay_radio_two.text = "10 Minutes"
+      containerDelay.delay_radio_three.text = "15 Minutes"
+      containerDelay.delay_radio_four.text = "30 Minutes"
+      containerDelay.delay_radio_five.text = "45 Minutes"
+      containerDelay.delay_radio_six.text = "1 Hour"
+
+      // Currently unused
+      containerDelay.delay_radio_seven.visibility = View.GONE
+      containerDelay.delay_radio_eight.visibility = View.GONE
+      //      containerDelay.delay_radio_seven.text = "1 Hour 15 Minutes"
+      //      containerDelay.delay_radio_eight.text = "1 Hour 30 Minutes"
     }
   }
 
   companion object {
 
-    const internal val TAG = "DelayItem"
+    const internal val TAG = "PollItem"
   }
 }
 

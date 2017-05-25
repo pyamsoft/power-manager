@@ -47,10 +47,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
     }
   }
 
-  override fun getType(): Int {
-    return R.id.adapter_delay_card_item
-  }
-
   override fun getLayoutRes(): Int {
     return R.layout.adapter_item_simple
   }
@@ -189,15 +185,14 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
     })
   }
 
-  override fun unbindView(holder: VH?) {
+  override fun unbindView(holder: VH) {
     super.unbindView(holder)
-    if (holder != null) {
-      if (holder.containerDelay.delay_input_custom.isEnabled) {
-        providePresenter().submitCustomTimeChange(
-            holder.containerDelay.delay_input_custom.text.toString(), true)
-      }
-      holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
+    if (holder.containerDelay.delay_input_custom.isEnabled) {
+      providePresenter().submitCustomTimeChange(
+          holder.containerDelay.delay_input_custom.text.toString(), true)
     }
+    holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
+    holder.containerDelay.delay_radio_group.setOnCheckedChangeListener(null)
   }
 
   override fun unbindItem() {

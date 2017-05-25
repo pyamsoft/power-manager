@@ -85,22 +85,20 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
         holder.chargingContainer.exception_wear_doze, "Doze", presenterDoze)
   }
 
-  override fun unbindView(holder: ViewHolder?) {
+  override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
-    if (holder != null) {
-      unbind(holder.chargingContainer.exception_charging_airplane,
-          holder.chargingContainer.exception_wear_airplane)
-      unbind(holder.chargingContainer.exception_charging_wifi,
-          holder.chargingContainer.exception_wear_wifi)
-      unbind(holder.chargingContainer.exception_charging_data,
-          holder.chargingContainer.exception_wear_data)
-      unbind(holder.chargingContainer.exception_charging_bluetooth,
-          holder.chargingContainer.exception_wear_bluetooth)
-      unbind(holder.chargingContainer.exception_charging_sync,
-          holder.chargingContainer.exception_wear_sync)
-      unbind(holder.chargingContainer.exception_charging_doze,
-          holder.chargingContainer.exception_wear_doze)
-    }
+    unbind(holder.chargingContainer.exception_charging_airplane,
+        holder.chargingContainer.exception_wear_airplane)
+    unbind(holder.chargingContainer.exception_charging_wifi,
+        holder.chargingContainer.exception_wear_wifi)
+    unbind(holder.chargingContainer.exception_charging_data,
+        holder.chargingContainer.exception_wear_data)
+    unbind(holder.chargingContainer.exception_charging_bluetooth,
+        holder.chargingContainer.exception_wear_bluetooth)
+    unbind(holder.chargingContainer.exception_charging_sync,
+        holder.chargingContainer.exception_wear_sync)
+    unbind(holder.chargingContainer.exception_charging_doze,
+        holder.chargingContainer.exception_wear_doze)
   }
 
   override fun unbindItem() {
