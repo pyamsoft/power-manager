@@ -98,6 +98,11 @@ dependencies {
   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
   testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
+  compile "com.mikepenz:fastadapter-commons:$fastAdapterCommons@aar"
+  compile("com.mikepenz:fastadapter:$fastAdapter@aar") {
+      transitive = true
+  }
+
   // Grid Layout
   compile "com.android.support:gridlayout-v7:$supportLib"
 

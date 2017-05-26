@@ -37,9 +37,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.pyamsoft.powermanager.R
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
-import com.pyamsoft.pydroid.ui.R
 import kotlinx.android.synthetic.main.view_expander.view.expander_arrow
 import kotlinx.android.synthetic.main.view_expander.view.expander_container
 import kotlinx.android.synthetic.main.view_expander.view.expander_description
