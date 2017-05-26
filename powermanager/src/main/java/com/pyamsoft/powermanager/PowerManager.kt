@@ -55,6 +55,9 @@ class PowerManager : Application() {
     Licenses.create("libsuperuser", "http://su.chainfire.eu/", "licenses/libsuperuser")
     Licenses.create("Dagger", "https://github.com/google/dagger", "licenses/dagger2")
     Licenses.create("Firebase", "https://firebase.google.com", "licenses/firebase")
+    Licenses.create("Fast Adapter", "https://github.com/mikepenz/FastAdapter",
+        "licenses/fastadapter")
+    Licenses.create("Leak Canary", "https://github.com/square/leakcanary", "licenses/leakcanary")
 
     val gmsContent = GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this)
     if (gmsContent != null) {
