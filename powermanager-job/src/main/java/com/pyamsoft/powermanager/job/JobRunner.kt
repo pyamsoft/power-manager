@@ -119,7 +119,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = wifiModifier,
+    didSomething = enable(firstRun, latch, false, modifier = wifiModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Wifi"
@@ -139,7 +139,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = dataModifier,
+    didSomething = enable(firstRun, latch, false, modifier = dataModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Data"
@@ -159,7 +159,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = bluetoothModifier,
+    didSomething = enable(firstRun, latch, false, modifier = bluetoothModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Bluetooth"
@@ -179,7 +179,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = syncModifier,
+    didSomething = enable(firstRun, latch, false, modifier = syncModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Sync"
@@ -199,20 +199,26 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     return isJobRepeatRequired(didSomething)
   }
 
-  private fun enable(firstRun: Boolean, latch: CountDownLatch, modifier: StateModifier,
-      conditions: ManageConditions): Boolean {
-    if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
-      composite.add(Completable.fromAction {
-        Timber.d("ENABLE: %s", conditions.tag)
-        modifier.set()
-      }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
-        latch.countDown()
-      }, { Timber.e(it, "Error enabling %s", conditions.tag) }))
-      return true
-    } else {
-      Timber.w("Not managed: %s", conditions.tag)
+  private fun enable(firstRun: Boolean, latch: CountDownLatch, isCharging: Boolean,
+      modifier: StateModifier, conditions: ManageConditions): Boolean {
+    if (isCharging && conditions.ignoreCharging) {
+      Timber.w("Do not disable %s while device is charging", conditions.tag)
       latch.countDown()
       return false
+    } else {
+      if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
+        composite.add(Completable.fromAction {
+          Timber.d("ENABLE: %s", conditions.tag)
+          modifier.set()
+        }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
+          latch.countDown()
+        }, { Timber.e(it, "Error enabling %s", conditions.tag) }))
+        return true
+      } else {
+        Timber.w("Not managed: %s", conditions.tag)
+        latch.countDown()
+        return false
+      }
     }
   }
 
@@ -324,7 +330,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = airplaneModifier,
+    didSomething = enable(firstRun, latch, isCharging, modifier = airplaneModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Airplane Mode"
@@ -344,7 +350,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
-    didSomething = enable(firstRun, latch, modifier = dozeModifier,
+    didSomething = enable(firstRun, latch, isCharging,  modifier = dozeModifier,
         conditions = object : ManageConditions {
           override val tag: String
             get() = "Doze Mode"
