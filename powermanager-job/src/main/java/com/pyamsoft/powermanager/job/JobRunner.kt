@@ -51,6 +51,111 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     private val subScheduler: Scheduler) {
   private val appContext = context.applicationContext
   private val composite = CompositeDisposable()
+  private val wifiConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Wifi"
+    override val ignoreCharging: Boolean
+      get() = wifiPreferences.ignoreChargingWifi
+    override val ignoreWearable: Boolean
+      get() = wifiPreferences.ignoreWearWifi
+    override val managed: Boolean
+      get() = wifiPreferences.wifiManaged
+    override val original: Boolean
+      get() = wifiPreferences.originalWifi
+    override val periodic: Boolean
+      get() = wifiPreferences.periodicWifi
+    override val permission: Boolean
+      get() = true
+  }
+  private val dozeConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Doze Mode"
+    override val ignoreCharging: Boolean
+      get() = dozePreferences.ignoreChargingDoze
+    override val ignoreWearable: Boolean
+      get() = dozePreferences.ignoreWearDoze
+    override val managed: Boolean
+      get() = dozePreferences.dozeManaged
+    override val original: Boolean
+      get() = dozePreferences.originalDoze
+    override val periodic: Boolean
+      get() = dozePreferences.periodicDoze
+    override val permission: Boolean
+      get() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+          return false
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+          return rootPreferences.rootEnabled
+        } else {
+          return appContext.applicationContext.checkCallingOrSelfPermission(
+              Manifest.permission.DUMP) == PackageManager.PERMISSION_GRANTED
+        }
+      }
+  }
+  private val airplaneConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Airplane Mode"
+    override val managed: Boolean
+      get() = airplanePreferences.airplaneManaged
+    override val ignoreCharging: Boolean
+      get() = airplanePreferences.ignoreChargingAirplane
+    override val ignoreWearable: Boolean
+      get() = airplanePreferences.ignoreWearAirplane
+    override val original: Boolean
+      get() = airplanePreferences.originalAirplane
+    override val periodic: Boolean
+      get() = airplanePreferences.periodicAirplane
+    override val permission: Boolean
+      get() = rootPreferences.rootEnabled
+  }
+  private val dataConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Data"
+    override val ignoreCharging: Boolean
+      get() = dataPreferences.ignoreChargingData
+    override val ignoreWearable: Boolean
+      get() = dataPreferences.ignoreWearData
+    override val managed: Boolean
+      get() = dataPreferences.dataManaged
+    override val original: Boolean
+      get() = dataPreferences.originalData
+    override val periodic: Boolean
+      get() = dataPreferences.periodicData
+    override val permission: Boolean
+      get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) rootPreferences.rootEnabled else true
+  }
+  private val bluetoothConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Bluetooth"
+    override val ignoreCharging: Boolean
+      get() = bluetoothPreferences.ignoreChargingBluetooth
+    override val ignoreWearable: Boolean
+      get() = bluetoothPreferences.ignoreWearBluetooth
+    override val managed: Boolean
+      get() = bluetoothPreferences.bluetoothManaged
+    override val original: Boolean
+      get() = bluetoothPreferences.originalBluetooth
+    override val periodic: Boolean
+      get() = bluetoothPreferences.periodicBluetooth
+    override val permission: Boolean
+      get() = true
+  }
+  private val syncConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Sync"
+    override val ignoreCharging: Boolean
+      get() = syncPreferences.ignoreChargingSync
+    override val ignoreWearable: Boolean
+      get() = syncPreferences.ignoreWearSync
+    override val managed: Boolean
+      get() = syncPreferences.syncManaged
+    override val original: Boolean
+      get() = syncPreferences.originalSync
+    override val periodic: Boolean
+      get() = syncPreferences.periodicSync
+    override val permission: Boolean
+      get() = true
+  }
 
   @CheckResult private fun runJob(tag: String, screenOn: Boolean, firstRun: Boolean): Boolean {
     checkTag(tag)
@@ -71,129 +176,46 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     var didSomething = false
     val latch = CountDownLatch(6)
     didSomething = disable(firstRun, latch, false, modifier = dozeModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Doze Mode"
-          override val ignoreCharging: Boolean
-            get() = dozePreferences.ignoreChargingDoze
-          override val managed: Boolean
-            get() = dozePreferences.dozeManaged
-          override val original: Boolean
-            get() = dozePreferences.originalDoze
-          override val periodic: Boolean
-            get() = dozePreferences.periodicDoze
-          override val permission: Boolean
-            get() {
-              if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                return false
-              } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                return rootPreferences.rootEnabled
-              } else {
-                return appContext.applicationContext.checkCallingOrSelfPermission(
-                    Manifest.permission.DUMP) == PackageManager.PERMISSION_GRANTED
-              }
-            }
-        }) || didSomething
+        conditions = dozeConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = disable(firstRun, latch, false, modifier = airplaneModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Airplane Mode"
-          override val managed: Boolean
-            get() = airplanePreferences.airplaneManaged
-          override val ignoreCharging: Boolean
-            get() = airplanePreferences.ignoreChargingAirplane
-          override val original: Boolean
-            get() = airplanePreferences.originalAirplane
-          override val periodic: Boolean
-            get() = airplanePreferences.periodicAirplane
-          override val permission: Boolean
-            get() = rootPreferences.rootEnabled
-        }) || didSomething
+        conditions = airplaneConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = enable(firstRun, latch, false, modifier = wifiModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Wifi"
-          override val ignoreCharging: Boolean
-            get() = wifiPreferences.ignoreChargingWifi
-          override val managed: Boolean
-            get() = wifiPreferences.wifiManaged
-          override val original: Boolean
-            get() = wifiPreferences.originalWifi
-          override val periodic: Boolean
-            get() = wifiPreferences.periodicWifi
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = wifiConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = enable(firstRun, latch, false, modifier = dataModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Data"
-          override val ignoreCharging: Boolean
-            get() = dataPreferences.ignoreChargingData
-          override val managed: Boolean
-            get() = dataPreferences.dataManaged
-          override val original: Boolean
-            get() = dataPreferences.originalData
-          override val periodic: Boolean
-            get() = dataPreferences.periodicData
-          override val permission: Boolean
-            get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) rootPreferences.rootEnabled else true
-        }) || didSomething
+        conditions = dataConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = enable(firstRun, latch, false, modifier = bluetoothModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Bluetooth"
-          override val ignoreCharging: Boolean
-            get() = bluetoothPreferences.ignoreChargingBluetooth
-          override val managed: Boolean
-            get() = bluetoothPreferences.bluetoothManaged
-          override val original: Boolean
-            get() = bluetoothPreferences.originalBluetooth
-          override val periodic: Boolean
-            get() = bluetoothPreferences.periodicBluetooth
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = bluetoothConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = enable(firstRun, latch, false, modifier = syncModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Sync"
-          override val ignoreCharging: Boolean
-            get() = syncPreferences.ignoreChargingSync
-          override val managed: Boolean
-            get() = syncPreferences.syncManaged
-          override val original: Boolean
-            get() = syncPreferences.originalSync
-          override val periodic: Boolean
-            get() = syncPreferences.periodicSync
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = syncConditions) || didSomething
+    if (isStopped) {
+      Timber.w("%s: Stopped early", tag)
+      return false
+    }
 
     await(latch)
     return isJobRepeatRequired(didSomething)
@@ -251,129 +273,46 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     val latch = CountDownLatch(6)
 
     didSomething = disable(firstRun, latch, isCharging, modifier = wifiModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Wifi"
-          override val ignoreCharging: Boolean
-            get() = wifiPreferences.ignoreChargingWifi
-          override val managed: Boolean
-            get() = wifiPreferences.wifiManaged
-          override val original: Boolean
-            get() = wifiPreferences.originalWifi
-          override val periodic: Boolean
-            get() = wifiPreferences.periodicWifi
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = wifiConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = disable(firstRun, latch, isCharging, modifier = dataModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Data"
-          override val ignoreCharging: Boolean
-            get() = dataPreferences.ignoreChargingData
-          override val managed: Boolean
-            get() = dataPreferences.dataManaged
-          override val original: Boolean
-            get() = dataPreferences.originalData
-          override val periodic: Boolean
-            get() = dataPreferences.periodicData
-          override val permission: Boolean
-            get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) rootPreferences.rootEnabled else true
-        }) || didSomething
+        conditions = dataConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = disable(firstRun, latch, isCharging, modifier = bluetoothModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Bluetooth"
-          override val ignoreCharging: Boolean
-            get() = bluetoothPreferences.ignoreChargingBluetooth
-          override val managed: Boolean
-            get() = bluetoothPreferences.bluetoothManaged
-          override val original: Boolean
-            get() = bluetoothPreferences.originalBluetooth
-          override val periodic: Boolean
-            get() = bluetoothPreferences.periodicBluetooth
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = bluetoothConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = disable(firstRun, latch, isCharging, modifier = syncModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Sync"
-          override val ignoreCharging: Boolean
-            get() = syncPreferences.ignoreChargingSync
-          override val managed: Boolean
-            get() = syncPreferences.syncManaged
-          override val original: Boolean
-            get() = syncPreferences.originalSync
-          override val periodic: Boolean
-            get() = syncPreferences.periodicSync
-          override val permission: Boolean
-            get() = true
-        }) || didSomething
+        conditions = syncConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
     didSomething = enable(firstRun, latch, isCharging, modifier = airplaneModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Airplane Mode"
-          override val managed: Boolean
-            get() = airplanePreferences.airplaneManaged
-          override val ignoreCharging: Boolean
-            get() = airplanePreferences.ignoreChargingAirplane
-          override val original: Boolean
-            get() = airplanePreferences.originalAirplane
-          override val periodic: Boolean
-            get() = airplanePreferences.periodicAirplane
-          override val permission: Boolean
-            get() = rootPreferences.rootEnabled
-        }) || didSomething
+        conditions = airplaneConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, isCharging,  modifier = dozeModifier,
-        conditions = object : ManageConditions {
-          override val tag: String
-            get() = "Doze Mode"
-          override val managed: Boolean
-            get() = dozePreferences.dozeManaged
-          override val ignoreCharging: Boolean
-            get() = dozePreferences.ignoreChargingDoze
-          override val original: Boolean
-            get() = dozePreferences.originalDoze
-          override val periodic: Boolean
-            get() = dozePreferences.periodicDoze
-          override val permission: Boolean
-            get() {
-              if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                return false
-              } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                return rootPreferences.rootEnabled
-              } else {
-                return appContext.applicationContext.checkCallingOrSelfPermission(
-                    Manifest.permission.DUMP) == PackageManager.PERMISSION_GRANTED
-              }
-            }
-        }) || didSomething
+    didSomething = enable(firstRun, latch, isCharging, modifier = dozeModifier,
+        conditions = dozeConditions) || didSomething
+    if (isStopped) {
+      Timber.w("%s: Stopped early", tag)
+      return false
+    }
 
     await(latch)
     return isJobRepeatRequired(didSomething)
@@ -448,6 +387,8 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     val tag: String
       @get:CheckResult get
     val ignoreCharging: Boolean
+      @get:CheckResult get
+    val ignoreWearable: Boolean
       @get:CheckResult get
     val managed: Boolean
       @get:CheckResult get

@@ -78,14 +78,14 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
           logger.d("Some screen off action")
           if (checkDisplayState(false)) {
             logger.i("Screen off event")
-            disableManagers()
+            manager.disable { }
           }
         }
         Intent.ACTION_SCREEN_ON -> {
           logger.d("Some screen on action")
           if (checkDisplayState(true)) {
             logger.i("Screen on event")
-            enableManagers()
+            manager.enable { }
           }
         }
         else -> Timber.e("Invalid event: %s", action)
@@ -93,17 +93,9 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
     }
   }
 
-  private fun enableManagers() {
-    manager.enable(null)
-  }
-
-  private fun disableManagers() {
-    manager.disable(null)
-  }
-
   fun register() {
     if (!isRegistered) {
-      cleanup()
+      manager.cleanup()
       appContext.registerReceiver(this, SCREEN_FILTER)
       isRegistered = true
 
@@ -113,14 +105,10 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
     }
   }
 
-  private fun cleanup() {
-    manager.cleanup()
-  }
-
   fun unregister() {
     if (isRegistered) {
       appContext.unregisterReceiver(this)
-      cleanup()
+      manager.cleanup()
       isRegistered = false
 
       Toast.makeText(appContext, "Power Manager suspended", Toast.LENGTH_SHORT).show()
