@@ -34,6 +34,7 @@ import javax.inject.Named
 class JobHandler @Inject internal constructor(private val context: Context,
     @param:Named("delay") private val jobQueuer: JobQueuer,
     @param:Named("obs_charging") private val chargingObserver: StateObserver,
+    @param:Named("obs_wear") private val wearableObserver: StateObserver,
     @param:Named("mod_wifi") private val wifiModifier: StateModifier,
     @param:Named("mod_data") private val dataModifier: StateModifier,
     @param:Named("mod_bluetooth") private val bluetoothModifier: StateModifier,
@@ -47,10 +48,10 @@ class JobHandler @Inject internal constructor(private val context: Context,
     private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences,
     @param:Named("io") private val subScheduler: Scheduler) {
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
-    return object : JobRunner(context, jobQueuer, chargingObserver, wifiModifier, dataModifier,
-        bluetoothModifier, syncModifier, dozeModifier, airplaneModifier, wifiPreferences,
-        dataPreferences, bluetoothPreferences, syncPreferences, airplanePreferences,
-        dozePreferences, rootPreferences, subScheduler) {
+    return object : JobRunner(context, jobQueuer, chargingObserver, wearableObserver, wifiModifier,
+        dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
+        wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
+        airplanePreferences, dozePreferences, rootPreferences, subScheduler) {
       override val isStopped: Boolean
         get() = stopper.invoke()
     }

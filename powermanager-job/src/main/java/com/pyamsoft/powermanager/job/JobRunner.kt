@@ -39,11 +39,11 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.SECONDS
 
 internal abstract class JobRunner(context: Context, private val jobQueuer: JobQueuer,
-    private val chargingObserver: StateObserver, private val wifiModifier: StateModifier,
-    private val dataModifier: StateModifier, private val bluetoothModifier: StateModifier,
-    private val syncModifier: StateModifier, private val dozeModifier: StateModifier,
-    private val airplaneModifier: StateModifier, private val wifiPreferences: WifiPreferences,
-    private val dataPreferences: DataPreferences,
+    private val chargingObserver: StateObserver, private val wearableObserver: StateObserver,
+    private val wifiModifier: StateModifier, private val dataModifier: StateModifier,
+    private val bluetoothModifier: StateModifier, private val syncModifier: StateModifier,
+    private val dozeModifier: StateModifier, private val airplaneModifier: StateModifier,
+    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
@@ -175,43 +175,43 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
   @CheckResult private fun runEnableJob(tag: String, firstRun: Boolean): Boolean {
     var didSomething = false
     val latch = CountDownLatch(6)
-    didSomething = disable(firstRun, latch, false, modifier = dozeModifier,
-        conditions = dozeConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = dozeModifier, conditions = dozeConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = disable(firstRun, latch, false, modifier = airplaneModifier,
-        conditions = airplaneConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = airplaneModifier, conditions = airplaneConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, false, modifier = wifiModifier,
-        conditions = wifiConditions) || didSomething
+    didSomething = enable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = wifiModifier, conditions = wifiConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, false, modifier = dataModifier,
-        conditions = dataConditions) || didSomething
+    didSomething = enable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = dataModifier, conditions = dataConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, false, modifier = bluetoothModifier,
-        conditions = bluetoothConditions) || didSomething
+    didSomething = enable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = bluetoothModifier, conditions = bluetoothConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, false, modifier = syncModifier,
-        conditions = syncConditions) || didSomething
+    didSomething = enable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = syncModifier, conditions = syncConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
@@ -222,92 +222,99 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
   }
 
   private fun enable(firstRun: Boolean, latch: CountDownLatch, isCharging: Boolean,
-      modifier: StateModifier, conditions: ManageConditions): Boolean {
+      isWearableConnected: Boolean, modifier: StateModifier,
+      conditions: ManageConditions): Boolean {
     if (isCharging && conditions.ignoreCharging) {
       Timber.w("Do not disable %s while device is charging", conditions.tag)
       latch.countDown()
       return false
-    } else {
-      if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
-        composite.add(Completable.fromAction {
-          Timber.d("ENABLE: %s", conditions.tag)
-          modifier.set()
-        }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
-          latch.countDown()
-        }, { Timber.e(it, "Error enabling %s", conditions.tag) }))
-        return true
-      } else {
-        Timber.w("Not managed: %s", conditions.tag)
+    } else if (isWearableConnected && conditions.ignoreWearable) {
+      Timber.w("Do not disable %s while wearable is connected", conditions.tag)
+      latch.countDown()
+      return false
+    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
+      composite.add(Completable.fromAction {
+        Timber.d("ENABLE: %s", conditions.tag)
+        modifier.set()
+      }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
         latch.countDown()
-        return false
-      }
+      }, { Timber.e(it, "Error enabling %s", conditions.tag) }))
+      return true
+    } else {
+      Timber.w("Not managed: %s", conditions.tag)
+      latch.countDown()
+      return false
     }
   }
 
   private fun disable(firstRun: Boolean, latch: CountDownLatch, isCharging: Boolean,
-      modifier: StateModifier, conditions: ManageConditions): Boolean {
+      isWearableConnected: Boolean, modifier: StateModifier,
+      conditions: ManageConditions): Boolean {
     if (isCharging && conditions.ignoreCharging) {
       Timber.w("Do not disable %s while device is charging", conditions.tag)
       latch.countDown()
       return false
-    } else {
-      if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
-        composite.add(Completable.fromAction {
-          Timber.d("DISABLE: %s", conditions.tag)
-          modifier.unset()
-        }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
-          latch.countDown()
-        }, { Timber.e(it, "Error disabling %s", conditions.tag) }))
-        return true
-      } else {
-        Timber.w("Not managed: %s", conditions.tag)
+    } else if (isWearableConnected && conditions.ignoreWearable) {
+      Timber.w("Do not disable %s while wearable is connected", conditions.tag)
+      latch.countDown()
+      return false
+    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
+      composite.add(Completable.fromAction {
+        Timber.d("DISABLE: %s", conditions.tag)
+        modifier.unset()
+      }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
         latch.countDown()
-        return false
-      }
+      }, { Timber.e(it, "Error disabling %s", conditions.tag) }))
+      return true
+    } else {
+      Timber.w("Not managed: %s", conditions.tag)
+      latch.countDown()
+      return false
     }
   }
 
   @CheckResult private fun runDisableJob(tag: String, firstRun: Boolean): Boolean {
     var didSomething = false
     val isCharging = chargingObserver.enabled()
+    val isWearableConnected = wearableObserver.enabled()
     val latch = CountDownLatch(6)
 
-    didSomething = disable(firstRun, latch, isCharging, modifier = wifiModifier,
-        conditions = wifiConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = wifiModifier, conditions = wifiConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = disable(firstRun, latch, isCharging, modifier = dataModifier,
-        conditions = dataConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = dataModifier, conditions = dataConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = disable(firstRun, latch, isCharging, modifier = bluetoothModifier,
-        conditions = bluetoothConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = bluetoothModifier, conditions = bluetoothConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = disable(firstRun, latch, isCharging, modifier = syncModifier,
-        conditions = syncConditions) || didSomething
+    didSomething = disable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = syncModifier, conditions = syncConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, isCharging, modifier = airplaneModifier,
-        conditions = airplaneConditions) || didSomething
+    didSomething = enable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = airplaneModifier, conditions = airplaneConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
     }
 
-    didSomething = enable(firstRun, latch, isCharging, modifier = dozeModifier,
+    didSomething = enable(firstRun, latch, isCharging, isWearableConnected, modifier = dozeModifier,
         conditions = dozeConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
