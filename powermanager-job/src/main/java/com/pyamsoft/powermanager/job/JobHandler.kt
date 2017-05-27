@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.job
 
+import android.content.Context
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
@@ -26,10 +27,11 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
+import io.reactivex.Scheduler
 import javax.inject.Inject
 import javax.inject.Named
 
-class JobHandler @Inject internal constructor(
+class JobHandler @Inject internal constructor(private val context: Context,
     @param:Named("delay") private val jobQueuer: JobQueuer,
     @param:Named("obs_charging") private val chargingObserver: StateObserver,
     @param:Named("mod_wifi") private val wifiModifier: StateModifier,
@@ -42,12 +44,13 @@ class JobHandler @Inject internal constructor(
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences) {
+    private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences,
+    @param:Named("io") private val subScheduler: Scheduler) {
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
-    return object : JobRunner(jobQueuer, chargingObserver, wifiModifier, dataModifier,
+    return object : JobRunner(context, jobQueuer, chargingObserver, wifiModifier, dataModifier,
         bluetoothModifier, syncModifier, dozeModifier, airplaneModifier, wifiPreferences,
         dataPreferences, bluetoothPreferences, syncPreferences, airplanePreferences,
-        dozePreferences, rootPreferences) {
+        dozePreferences, rootPreferences, subScheduler) {
       override val isStopped: Boolean
         get() = stopper.invoke()
     }
