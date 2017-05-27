@@ -18,6 +18,7 @@
 
 <resources>
 
+  <string name="app_name">Power Manager</string>
   <string name="hint_create_trigger_name">Trigger Name:</string>
   <string name="hint_create_trigger_percent">Trigger Percent:</string>
   <string name="create_trigger_name_explain">Enter the name of the new Power Trigger here. Names are a single line in length, but should be able to handle any character.</string>

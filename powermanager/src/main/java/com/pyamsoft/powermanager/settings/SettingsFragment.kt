@@ -16,36 +16,30 @@
 
 package com.pyamsoft.powermanager.settings
 
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.main.MainActivity
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState
-import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
-import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
+import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 
-class SettingsFragment : ActionBarSettingsPreferenceFragment() {
+class SettingsFragment : WatchedFragment() {
 
-  override val applicationName: String
-    get() = getString(R.string.app_name)
 
-  override val rootViewContainer: Int
-    get() = R.id.main_container
+  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+      savedInstanceState: Bundle?): View? {
+    return inflater?.inflate(R.layout.fragment_settings, container, false)
+  }
 
-  override val preferenceXmlResId: Int
-    get() = R.xml.preferences
-
-  override val isLastOnBackStack: BackStackState
-    get() = LAST
-
-  override fun onLicenseItemClicked() {
-    ActionBarUtil.setActionBarUpEnabled(activity, true)
-
-    if (activity is MainActivity) {
-      activity.bottomtabs.visibility = View.GONE
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    if (childFragmentManager.findFragmentByTag(SettingsPreferenceFragment.TAG) == null) {
+      childFragmentManager.beginTransaction().add(R.id.settings_child_here,
+          SettingsPreferenceFragment(), SettingsPreferenceFragment.TAG).commit()
     }
-    super.onLicenseItemClicked()
   }
 
   override fun onResume() {
@@ -62,3 +56,4 @@ class SettingsFragment : ActionBarSettingsPreferenceFragment() {
     const val TAG = "SettingsFragment"
   }
 }
+

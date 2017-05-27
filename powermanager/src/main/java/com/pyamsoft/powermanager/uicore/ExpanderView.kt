@@ -171,8 +171,9 @@ class ExpanderView : FrameLayout {
     }
 
     arrowLoad = LoaderHelper.unload(arrowLoad)
-    arrowLoad = ImageLoader.fromResource(context, R.drawable.ic_arrow_up_24dp).into(
+    arrowLoad = ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(
         binding.expander_arrow)
+    binding.expander_arrow.rotation = 180F
   }
 
   override fun onDetachedFromWindow() {
