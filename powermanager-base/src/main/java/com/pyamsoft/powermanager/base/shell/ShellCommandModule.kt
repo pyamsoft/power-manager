@@ -18,16 +18,32 @@ package com.pyamsoft.powermanager.base.shell
 
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class ShellCommandModule {
-  private val impl: ShellHandlerImpl = ShellHandlerImpl()
+  @Volatile private var impl: ShellHandlerImpl? = null
 
-  @Singleton @Provides fun provideShellCommandHelper(): ShellCommandHelper {
-    return impl
+  @Singleton @Provides fun provideShellCommandHelper(@Named("obs") obsScheduler: Scheduler,
+      @Named("io") subScheduler: Scheduler): ShellCommandHelper {
+    return createImpl(obsScheduler, subScheduler)
   }
 
-  @Singleton @Provides fun provideRootChecker(): RootChecker {
-    return impl
+  private fun createImpl(obsScheduler: Scheduler, subScheduler: Scheduler): ShellHandlerImpl {
+    if (impl == null) {
+      synchronized(ShellCommandModule::class.java) {
+        if (impl == null) {
+          impl = ShellHandlerImpl(obsScheduler, subScheduler)
+        }
+      }
+    }
+
+    return impl!!
+  }
+
+  @Singleton @Provides fun provideRootChecker(@Named("obs") obsScheduler: Scheduler,
+      @Named("io") subScheduler: Scheduler): RootChecker {
+    return createImpl(obsScheduler, subScheduler)
   }
 }

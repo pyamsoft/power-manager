@@ -18,14 +18,21 @@ package com.pyamsoft.powermanager.base.shell
 
 import android.support.annotation.CheckResult
 import android.support.annotation.WorkerThread
+import com.pyamsoft.pydroid.helper.DisposableHelper
 import eu.chainfire.libsuperuser.Shell
+import io.reactivex.Scheduler
+import io.reactivex.Single
 import timber.log.Timber
 import java.util.Arrays
+import java.util.concurrent.TimeUnit.MINUTES
 import javax.inject.Inject
 
-internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, RootChecker {
+internal class ShellHandlerImpl @Inject constructor(private val obsScheduler: Scheduler,
+    private val subScheduler: Scheduler) : ShellCommandHelper, RootChecker {
   private var shellSession: Shell.Interactive
   private var rootSession: Shell.Interactive
+  private var rootDisposable = DisposableHelper.dispose(null)
+  private var shellDisposable = DisposableHelper.dispose(null)
 
   init {
     shellSession = openShellSession(false)
@@ -41,24 +48,51 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
     }
 
     Timber.d("Open new %s session", if (useRoot) "SU" else "Shell")
+    setTimer(useRoot)
     return builder.open()
   }
 
-  @WorkerThread private fun recreateShell(useRoot: Boolean) {
+  private fun setTimer(useRoot: Boolean) {
+    // Set a timer to auto close the shell in 1 minute if not used
     if (useRoot) {
-      rootSession.close()
-      rootSession = openShellSession(true)
+      rootDisposable = DisposableHelper.dispose(rootDisposable)
+      rootDisposable = Single.timer(1L, MINUTES).subscribeOn(subScheduler).observeOn(
+          obsScheduler).subscribe({
+        Timber.d("Close useRoot session after 1 minute no activity")
+        rootSession.close()
+        rootDisposable = DisposableHelper.dispose(rootDisposable)
+      }, { Timber.e(it, "Error waiting for Root timeout") })
     } else {
-      shellSession.close()
-      shellSession = openShellSession(false)
+      shellDisposable = DisposableHelper.dispose(shellDisposable)
+      shellDisposable = Single.timer(1L, MINUTES).subscribeOn(subScheduler).observeOn(
+          obsScheduler).subscribe({
+        Timber.d("Close shell session after 1 minute no activity")
+        shellSession.close()
+        shellDisposable = DisposableHelper.dispose(shellDisposable)
+      }, { Timber.e(it, "Error waiting for Shell timeout") })
+    }
+  }
+
+  @WorkerThread private fun recreateShell(useRoot: Boolean) {
+    setTimer(useRoot)
+    if (useRoot) {
+      if (!rootSession.isRunning) {
+        // Even though shell is dead, clean up
+        rootSession.close()
+        rootSession = openShellSession(true)
+      }
+    } else {
+      if (!shellSession.isRunning) {
+        // Even though shell is dead, clean up
+        shellSession.close()
+        shellSession = openShellSession(false)
+      }
     }
   }
 
   private fun afterCommandResult(exitCode: Int, rootShell: Boolean, vararg commands: String) {
     val recreate: Boolean
-    if (exitCode == Shell.OnCommandResultListener.SHELL_EXEC_FAILED) {
-    }
-    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
+    if (exitCode == Shell.OnCommandResultListener.SHELL_DIED || exitCode == Shell.OnCommandResultListener.WATCHDOG_EXIT) {
       Timber.w("Command failed, but will recover. '%s'", Arrays.toString(commands))
       recreate = decideRecreation(rootShell)
     } else {
@@ -113,6 +147,8 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
   }
 
   @WorkerThread override fun runSUCommand(vararg commands: String) {
+    recreateShell(useRoot = true)
+
     Timber.d("Run command '%s' in SU session", Arrays.toString(commands))
     rootSession.addCommand(commands, SHELL_TYPE_ROOT) { commandCode, exitCode, output ->
       parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, *commands)
@@ -120,6 +156,8 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
   }
 
   @WorkerThread override fun runSHCommand(vararg commands: String) {
+    recreateShell(useRoot = false)
+
     Timber.d("Run command '%s' in Shell session", Arrays.toString(commands))
     shellSession.addCommand(commands, SHELL_TYPE_NORMAL) { commandCode, exitCode, output ->
       parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, *commands)
