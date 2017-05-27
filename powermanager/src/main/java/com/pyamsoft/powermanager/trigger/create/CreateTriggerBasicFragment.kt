@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.fragment_trigger_basic.create_trigger_basi
 import timber.log.Timber
 
 class CreateTriggerBasicFragment : WatchedFragment() {
-
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     return inflater?.inflate(R.layout.fragment_trigger_basic, container, false)
@@ -53,7 +52,6 @@ class CreateTriggerBasicFragment : WatchedFragment() {
       }
       return name
     }
-
   val triggerPercent: Int
     @CheckResult get() {
       var percent: Int
@@ -73,7 +71,6 @@ class CreateTriggerBasicFragment : WatchedFragment() {
             Timber.e("Percent is not a Number")
             percent = PowerTriggerEntry.EMPTY_PERCENT
           }
-
         }
       }
       return percent

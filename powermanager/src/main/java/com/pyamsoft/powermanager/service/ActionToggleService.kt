@@ -23,7 +23,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class ActionToggleService : IntentService(ActionToggleService::class.java.simpleName) {
-
   @field:Inject lateinit internal var presenter: ActionTogglePresenter
 
   override fun onCreate() {

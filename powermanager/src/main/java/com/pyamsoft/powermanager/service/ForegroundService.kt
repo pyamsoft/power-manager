@@ -80,7 +80,6 @@ class ForegroundService : AutoRestartService() {
   }
 
   companion object {
-
     const internal val NOTIFICATION_ID = 1000
     private const val EXTRA_RESTART_TRIGGERS = "EXTRA_RESTART_TRIGGERS"
 

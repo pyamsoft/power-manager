@@ -19,8 +19,6 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface LoggerPreferences {
-
   var loggerEnabled: Boolean
     @CheckResult get
-
 }

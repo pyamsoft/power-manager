@@ -19,14 +19,10 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface OnboardingPreferences {
-
   var periodicOnboardingShown: Boolean
     @CheckResult get
-
   var manageOnboardingShown: Boolean
     @CheckResult get
-
   var overviewOnboardingShown: Boolean
     @CheckResult get
-
 }

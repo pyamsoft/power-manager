@@ -37,7 +37,6 @@ import javax.inject.Named
 
 class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHolder>(
     ManageItem.TAG) {
-
   @field:[Inject Named("manage_wifi")] lateinit internal var presenterWifi: ManagePresenter
   @field:[Inject Named("manage_data")] lateinit internal var presenterData: ManagePresenter
   @field:[Inject Named(
@@ -81,7 +80,6 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
 
     // Get current state
     presenter.getState(object : ManagePresenter.RetrieveCallback {
-
       override fun onEnableRetrieved(enabled: Boolean) {
         switchCompat.isEnabled = enabled
       }
@@ -159,7 +157,6 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     internal val container: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_manage, itemView as ViewGroup, false)
 
@@ -171,7 +168,6 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
   }
 
   companion object {
-
     const internal val TAG = "ManageItem"
   }
 }

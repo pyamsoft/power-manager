@@ -17,6 +17,5 @@
 package com.pyamsoft.powermanager.base.preference
 
 interface ClearPreferences {
-
   fun clearAll()
 }

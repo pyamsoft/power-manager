@@ -22,7 +22,6 @@ import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 
 class PowerTriggerFragment : WatchedFragment() {
-
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     addTriggerOptionsFragment()
@@ -37,7 +36,6 @@ class PowerTriggerFragment : WatchedFragment() {
   }
 
   companion object {
-
     const val TAG = "Power Triggers"
   }
 }

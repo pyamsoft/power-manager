@@ -40,10 +40,8 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-class LoggerInteractor @Inject constructor(context: Context,
-    val preferences: LoggerPreferences,
+class LoggerInteractor @Inject constructor(context: Context, val preferences: LoggerPreferences,
     val logId: String) {
-
   internal val appContext: Context = context.applicationContext
   private var logPath: File? = null
 
@@ -54,7 +52,6 @@ class LoggerInteractor @Inject constructor(context: Context,
       synchronized(LoggerInteractor::class.java) {
         if (logPath == null || !logPath!!.exists()) {
           val filesDirPath = appContext.filesDir.absolutePath
-
           val logDir = File(filesDirPath, "logger")
           if (!logDir.exists()) {
             if (!logDir.mkdirs()) {
@@ -62,7 +59,6 @@ class LoggerInteractor @Inject constructor(context: Context,
               Timber.e("Will be unable to log to file")
             }
           }
-
           val logDirPath = logDir.absolutePath
           logPath = File(logDirPath, type)
         }
@@ -72,13 +68,11 @@ class LoggerInteractor @Inject constructor(context: Context,
     return logPath!!
   }
 
-  @CheckResult
-  fun log(logType: LogType, fmt: String, vararg args: Any): Completable {
+  @CheckResult fun log(logType: LogType, fmt: String, vararg args: Any): Completable {
     logWithTimber(logType, fmt, *args)
     return isLoggingEnabled.filter { it }.flatMapCompletable {
       val message = String.format(Locale.getDefault(), fmt, *args)
       val logMessage = String.format(Locale.getDefault(), "%s: %s", logType.name, message)
-
       val writeAppendResult: Completable
       if (it) {
         writeAppendResult = appendToLog(logMessage)
@@ -92,8 +86,7 @@ class LoggerInteractor @Inject constructor(context: Context,
   private val isLoggingEnabled: Single<Boolean>
     @CheckResult get() = Single.fromCallable { preferences.loggerEnabled }
 
-  private fun logWithTimber(logType: LogType, fmt: String,
-      vararg args: Any) {
+  private fun logWithTimber(logType: LogType, fmt: String, vararg args: Any) {
     when (logType) {
       LogType.DEBUG -> Timber.d(fmt, *args)
       LogType.INFO -> Timber.i(fmt, *args)
@@ -135,8 +128,7 @@ class LoggerInteractor @Inject constructor(context: Context,
     }
   }
 
-  @CheckResult fun appendToLog(
-      message: String): Completable {
+  @CheckResult fun appendToLog(message: String): Completable {
     return Maybe.fromCallable { getLogLocation() }.flatMapCompletable {
       FileOutputStream(it, true).use({
         BufferedOutputStream(it).use {
@@ -154,14 +146,12 @@ class LoggerInteractor @Inject constructor(context: Context,
     }
   }
 
-  @CheckResult fun formatMessage(
-      message: String): String {
+  @CheckResult fun formatMessage(message: String): String {
     val datePrefix = DateFormat.getDateTimeInstance().format(Calendar.getInstance().time)
     return String.format(Locale.getDefault(), "[%s] - %s", datePrefix, message)
   }
 
   companion object {
-
     val AIRPLANE_LOG_ID = "AIRPLANE"
     val BLUETOOTH_LOG_ID = "BLUETOOTH"
     val DATA_LOG_ID = "DATA"

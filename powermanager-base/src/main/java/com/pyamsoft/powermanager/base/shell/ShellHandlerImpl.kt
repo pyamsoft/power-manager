@@ -57,7 +57,6 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
   private fun afterCommandResult(exitCode: Int, rootShell: Boolean, vararg commands: String) {
     val recreate: Boolean
     if (exitCode == Shell.OnCommandResultListener.SHELL_EXEC_FAILED) {
-
     }
     if (exitCode == Shell.OnCommandResultListener.SHELL_DIED) {
       Timber.w("Command failed, but will recover. '%s'", Arrays.toString(commands))
@@ -80,8 +79,8 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
     }
   }
 
-  @WorkerThread fun parseCommandResult(exitCode: Int,
-      output: List<String>?, rootShell: Boolean, vararg commands: String) {
+  @WorkerThread fun parseCommandResult(exitCode: Int, output: List<String>?, rootShell: Boolean,
+      vararg commands: String) {
     if (output != null) {
       if (!output.isEmpty()) {
         Timber.d("%s Command output", if (rootShell) "SU" else "SH")
@@ -116,16 +115,14 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
   @WorkerThread override fun runSUCommand(vararg commands: String) {
     Timber.d("Run command '%s' in SU session", Arrays.toString(commands))
     rootSession.addCommand(commands, SHELL_TYPE_ROOT) { commandCode, exitCode, output ->
-      parseCommandResult(exitCode, output,
-          commandCode == SHELL_TYPE_ROOT, *commands)
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, *commands)
     }
   }
 
   @WorkerThread override fun runSHCommand(vararg commands: String) {
     Timber.d("Run command '%s' in Shell session", Arrays.toString(commands))
     shellSession.addCommand(commands, SHELL_TYPE_NORMAL) { commandCode, exitCode, output ->
-      parseCommandResult(exitCode, output,
-          commandCode == SHELL_TYPE_ROOT, *commands)
+      parseCommandResult(exitCode, output, commandCode == SHELL_TYPE_ROOT, *commands)
     }
   }
 
@@ -137,7 +134,6 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
     }
 
   companion object {
-
     private const val SHELL_TYPE_ROOT = 0
     private const val SHELL_TYPE_NORMAL = 1
   }

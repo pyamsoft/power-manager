@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.settings.bus
 
 data class ConfirmEvent(val type: Type) {
-
   enum class Type {
     DATABASE, ALL
   }

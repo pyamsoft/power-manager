@@ -20,6 +20,5 @@ import android.support.annotation.CheckResult
 import android.support.annotation.WorkerThread
 
 interface RootChecker {
-
   @get:WorkerThread @get:CheckResult val isSUAvailable: Boolean
 }

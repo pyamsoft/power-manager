@@ -136,7 +136,6 @@ import javax.inject.Singleton
   }
 
   companion object {
-
     private const val SETTINGS_URI_MOBILE_DATA = "mobile_data"
   }
 }

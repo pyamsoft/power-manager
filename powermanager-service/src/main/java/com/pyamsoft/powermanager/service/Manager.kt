@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager
+package com.pyamsoft.powermanager.service
 
-import android.support.annotation.CallSuper
 import com.pyamsoft.pydroid.helper.SchedulerHelper
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,24 +33,24 @@ class Manager @Inject internal constructor(internal val interactor: ManagerInter
   fun enable(onEnabled: (() -> Unit)?) {
     compositeDisposable.add(
         interactor.queueEnable().subscribeOn(scheduler).observeOn(scheduler).subscribe({ tag ->
-          Timber.d("%s: Queued up a new enable job", tag)
+          timber.log.Timber.d("%s: Queued up a new enable job", tag)
           onEnabled?.invoke()
-        }) { throwable -> Timber.e(throwable, "%s: onError enable") })
+        }) { throwable -> timber.log.Timber.e(throwable, "%s: onError enable") })
   }
 
   fun disable(onDisabled: (() -> Unit)?) {
     compositeDisposable.add(
         interactor.queueDisable().subscribeOn(scheduler).observeOn(scheduler).subscribe({ tag ->
-          Timber.d("%s: Queued up a new disable job", tag)
+          timber.log.Timber.d("%s: Queued up a new disable job", tag)
           onDisabled?.invoke()
-        }) { throwable -> Timber.e(throwable, "%s: onError disable") })
+        }) { throwable -> timber.log.Timber.e(throwable, "%s: onError disable") })
   }
 
-  @CallSuper fun cleanup() {
+  fun cleanup() {
     compositeDisposable.clear()
     interactor.destroy()
 
     // Reset the device back to its original state when the Service is cleaned up
-    enable({ compositeDisposable.clear() })
+    enable { compositeDisposable.clear() }
   }
 }

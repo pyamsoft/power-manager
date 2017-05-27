@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface SyncPreferences {
-
   var originalSync: Boolean
     @CheckResult get
-
   var ignoreChargingSync: Boolean
     @CheckResult get
-
   var syncManaged: Boolean
     @CheckResult get
-
   var periodicSync: Boolean
     @CheckResult get
-
   var ignoreWearSync: Boolean
     @CheckResult get
 }

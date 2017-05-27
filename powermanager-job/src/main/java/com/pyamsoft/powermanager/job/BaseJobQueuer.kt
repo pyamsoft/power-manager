@@ -24,7 +24,6 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQueuer {
-
   override fun cancel(tag: String) {
     Timber.w("Cancel all jobs for tag: %s", tag)
     jobManager.cancelAllForTag(tag)
@@ -51,36 +50,26 @@ internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQ
 
   private fun scheduleJob(entry: JobQueuerEntry, extras: PersistableBundleCompat) {
     val startTime = TimeUnit.SECONDS.toMillis(entry.delay())
-    JobRequest.Builder(entry.tag()).setExecutionWindow(startTime, startTime + FIVE_SECONDS)
-        .setPersisted(false)
-        .setExtras(extras)
-        .setRequiresCharging(false)
-        .setRequiresDeviceIdle(false)
-        .build()
-        .schedule()
+    JobRequest.Builder(entry.tag()).setExecutionWindow(startTime,
+        startTime + FIVE_SECONDS).setPersisted(false).setExtras(extras).setRequiresCharging(
+        false).setRequiresDeviceIdle(false).build().schedule()
   }
 
   override fun queueRepeating(entry: JobQueuerEntry) {
     val extras = createExtras(entry)
-    JobRequest.Builder(entry.tag()).setPeriodic(TimeUnit.SECONDS.toMillis(entry.delay()))
-        .setPersisted(false)
-        .setExtras(extras)
-        .setRequiresCharging(false)
-        .setRequiresDeviceIdle(false)
-        .build()
-        .schedule()
+    JobRequest.Builder(entry.tag()).setPeriodic(
+        TimeUnit.SECONDS.toMillis(entry.delay())).setPersisted(false).setExtras(
+        extras).setRequiresCharging(false).setRequiresDeviceIdle(false).build().schedule()
   }
 
   internal abstract fun runInstantJob(tag: String, extras: PersistableBundleCompat)
 
   companion object {
-
     const val KEY_ON_WINDOW = "extra_key__on_window"
     const val KEY_OFF_WINDOW = "extra_key__off_window"
     const val KEY_SCREEN = "extra_key__screen"
     const val KEY_ONESHOT = "extra_key__once"
     const val KEY_FIRST_RUN = "extra_key__first"
-    @JvmStatic
-    private val FIVE_SECONDS = TimeUnit.SECONDS.toMillis(5)
+    @JvmStatic private val FIVE_SECONDS = TimeUnit.SECONDS.toMillis(5)
   }
 }

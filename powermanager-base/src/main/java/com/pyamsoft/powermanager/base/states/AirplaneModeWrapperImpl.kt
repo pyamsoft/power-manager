@@ -26,8 +26,7 @@ import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class AirplaneModeWrapperImpl @Inject constructor(context: Context,
-    private val logger: Logger,
-    private val preferences: RootPreferences,
+    private val logger: Logger, private val preferences: RootPreferences,
     private val shellCommandHelper: ShellCommandHelper) : DeviceFunctionWrapper {
   private val contentResolver: ContentResolver = context.applicationContext.contentResolver
 
@@ -49,13 +48,11 @@ internal class AirplaneModeWrapperImpl @Inject constructor(context: Context,
   }
 
   override val state: States
-    get() = if (Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON, 0) == 1)
-      States.ENABLED
-    else
-      States.DISABLED
+    get() = if (Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON,
+        0) == 1) States.ENABLED
+    else States.DISABLED
 
   companion object {
-
     private const val AIRPLANE_SETTINGS_COMMAND = "settings put global airplane_mode_on "
     private const val AIRPLANE_BROADCAST_COMMAND = "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state "
   }

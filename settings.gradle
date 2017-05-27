@@ -21,6 +21,6 @@ include ':powermanager', ':powermanager-manage',
     ':powermanager-trigger',
     ':powermanager-main',
     ':powermanager-settings',
-    ':powermanager-service',
-    ':powermanager-manager'
+    ':powermanager-service'
+
 

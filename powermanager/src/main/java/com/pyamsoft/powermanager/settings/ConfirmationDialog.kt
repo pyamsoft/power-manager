@@ -25,7 +25,6 @@ import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.pydroid.bus.EventBus
 
 class ConfirmationDialog : WatchedDialog() {
-
   lateinit internal var clearType: ConfirmEvent.Type
 
   override fun onCreate(savedInstanceState: Bundle?) {

@@ -21,12 +21,11 @@ import android.net.wifi.WifiManager
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.model.Connections
 import com.pyamsoft.powermanager.model.States
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class WifiManagerWrapperImpl @Inject constructor(context: Context,
     private val logger: Logger) : ConnectedDeviceFunctionWrapper {
-
   private val wifiManager: WifiManager?
 
   init {
@@ -58,17 +57,14 @@ internal class WifiManagerWrapperImpl @Inject constructor(context: Context,
         return if (wifiManager.isWifiEnabled) States.ENABLED else States.DISABLED
       }
     }
-
   override val connectionState: Connections
     get() {
       if (wifiManager == null) {
         Timber.w("Wifi connection state unknown")
         return Connections.UNKNOWN
       } else {
-        return if (wifiManager.connectionInfo == null)
-          Connections.DISCONNECTED
-        else
-          Connections.CONNECTED
+        return if (wifiManager.connectionInfo == null) Connections.DISCONNECTED
+        else Connections.CONNECTED
       }
     }
 }

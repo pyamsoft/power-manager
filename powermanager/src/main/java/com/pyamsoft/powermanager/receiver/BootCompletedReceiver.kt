@@ -20,13 +20,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.pyamsoft.powermanager.Injector
-import com.pyamsoft.powermanager.manager.Manager
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.service.Manager
 import timber.log.Timber
 import javax.inject.Inject
 
 class BootCompletedReceiver : BroadcastReceiver() {
-
   @field:Inject lateinit internal var manager: Manager
 
   override fun onReceive(context: Context, intent: Intent?) {

@@ -20,12 +20,11 @@ import android.os.Build
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.model.StateObserver
 import com.pyamsoft.powermanager.model.States
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class DozeStateObserver @Inject constructor(
     private val wrapper: DeviceFunctionWrapper) : StateObserver {
-
   private val isDozeAvailable: Boolean
     @CheckResult get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 

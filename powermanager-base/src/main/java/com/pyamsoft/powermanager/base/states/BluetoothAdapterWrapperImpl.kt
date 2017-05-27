@@ -29,8 +29,8 @@ import javax.inject.Inject
 internal class BluetoothAdapterWrapperImpl @Inject constructor(context: Context,
     private val logger: Logger) : ConnectedDeviceFunctionWrapper {
   private val adapter: BluetoothAdapter?
-  private val bluetoothManager: BluetoothManager = context.applicationContext
-      .getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+  private val bluetoothManager: BluetoothManager = context.applicationContext.getSystemService(
+      Context.BLUETOOTH_SERVICE) as BluetoothManager
 
   init {
     this.adapter = bluetoothManager.adapter
@@ -64,7 +64,6 @@ internal class BluetoothAdapterWrapperImpl @Inject constructor(context: Context,
         return if (adapter.isEnabled) States.ENABLED else States.DISABLED
       }
     }
-
   override // Check if we are connected to any profiles
       // Connected to profile
       // Check if we are connected to any devices
@@ -90,8 +89,7 @@ internal class BluetoothAdapterWrapperImpl @Inject constructor(context: Context,
               BLUETOOTH_CONNECTED_STATES)
           if (devices != null) {
             if (devices.size > 0) {
-              Timber.d("Connected to bluetooth manager device: %s (%d)", devices[0].name,
-                  profile)
+              Timber.d("Connected to bluetooth manager device: %s (%d)", devices[0].name, profile)
               return Connections.CONNECTED
             }
           }
@@ -102,7 +100,6 @@ internal class BluetoothAdapterWrapperImpl @Inject constructor(context: Context,
     }
 
   companion object {
-
     private val BLUETOOTH_ADAPTER_PROFILES = intArrayOf(BluetoothProfile.A2DP,
         BluetoothProfile.HEADSET, BluetoothProfile.HEALTH)
     private val BLUETOOTH_MANAGER_PROFILES = intArrayOf(BluetoothProfile.GATT,

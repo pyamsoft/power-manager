@@ -26,7 +26,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class WrapperModule {
-
   @Singleton @Provides @Named("wrapper_wifi") fun provideWifiManagerWrapper(context: Context,
       @Named("logger_wifi") logger: Logger): ConnectedDeviceFunctionWrapper {
     return WifiManagerWrapperImpl(context, logger)

@@ -58,7 +58,6 @@ class CreateTriggerDialog : WatchedDialog() {
   private fun setupViewPager(bundle: Bundle?) {
     pageChangeListener = object : ViewPager.OnPageChangeListener {
       override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
       }
 
       override fun onPageSelected(position: Int) {
@@ -73,7 +72,6 @@ class CreateTriggerDialog : WatchedDialog() {
       }
 
       override fun onPageScrollStateChanged(state: Int) {
-
       }
     }
     new_trigger_pager.addOnPageChangeListener(pageChangeListener)
@@ -83,7 +81,6 @@ class CreateTriggerDialog : WatchedDialog() {
 
     adapter = CreateTriggerPagerAdapter(this)
     new_trigger_pager.adapter = adapter
-
     val currentPage: Int
     if (bundle == null) {
       currentPage = 0
@@ -113,7 +110,6 @@ class CreateTriggerDialog : WatchedDialog() {
         new_trigger_pager.currentItem = new_trigger_pager.currentItem + 1
       }
     }
-
     val continueTask = ImageLoader.fromResource(activity, R.drawable.ic_arrow_forward_24dp).into(
         new_trigger_continue)
     taskMap.put("continue", continueTask)
@@ -129,11 +125,9 @@ class CreateTriggerDialog : WatchedDialog() {
       Timber.d("Close clicked, dismiss dialog")
       dismiss()
     }
-
     val backTask = ImageLoader.fromResource(activity, R.drawable.ic_arrow_back_24dp).into(
         new_trigger_back)
     taskMap.put("back", backTask)
-
     val closeTask = ImageLoader.fromResource(activity, R.drawable.ic_close_24dp).into(
         new_trigger_close)
     taskMap.put("close", closeTask)
@@ -154,7 +148,6 @@ class CreateTriggerDialog : WatchedDialog() {
   }
 
   companion object {
-
     private const val CURRENT_PAGE = "current_page"
   }
 }

@@ -21,7 +21,6 @@ import android.support.v7.preference.PreferenceFragmentCompat
 import com.pyamsoft.powermanager.PowerManager
 
 abstract class WatchedPreferenceFragment : PreferenceFragmentCompat() {
-
   @CallSuper override fun onDestroy() {
     super.onDestroy()
     PowerManager.getRefWatcher(this).watch(this)

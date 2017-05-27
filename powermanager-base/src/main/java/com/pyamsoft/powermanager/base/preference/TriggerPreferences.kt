@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface TriggerPreferences {
-
   val triggerPeriodTime: Long
     @CheckResult get
 }

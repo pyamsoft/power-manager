@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.model
 
 interface StateModifier {
-
   fun set()
 
   fun unset()

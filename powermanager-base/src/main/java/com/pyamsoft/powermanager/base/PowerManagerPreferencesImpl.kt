@@ -41,9 +41,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class PowerManagerPreferencesImpl @Inject constructor(
-    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences,
-    BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences,
-    OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences {
+    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences {
   private val preferences: SharedPreferences
   private val keyManageAirplane: String
   private val keyManageWifi: String
@@ -181,31 +179,24 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   override var originalWifi: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_WIFI, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_WIFI, state).apply()
-
   override var originalData: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_DATA, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_DATA, state).apply()
-
   override var originalBluetooth: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_BLUETOOTH, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_BLUETOOTH, state).apply()
-
   override var originalSync: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_SYNC, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_SYNC, state).apply()
-
   override var originalAirplane: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_AIRPLANE, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_AIRPLANE, state).apply()
-
   override var originalDoze: Boolean
     get() = preferences.getBoolean(KEY_ORIGINAL_DOZE, false)
     set(state) = preferences.edit().putBoolean(KEY_ORIGINAL_DOZE, state).apply()
-
   override var serviceEnabled: Boolean
     get() = preferences.getBoolean(KEY_SERVICE_ENABLED, true)
     set(enabled) = preferences.edit().putBoolean(KEY_SERVICE_ENABLED, enabled).apply()
-
   override val triggerPeriodTime: Long
     get() {
       val rawPref = preferences.getString(keyTriggerPeriod, triggerPeriodDefault)
@@ -227,11 +218,9 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
       }
       return delay
     }
-
   override var loggerEnabled: Boolean
     get() = preferences.getBoolean(keyLoggerEnabled, loggerEnabledDefault)
     set(b) = preferences.edit().putBoolean(keyLoggerEnabled, b).apply()
-
   override var rootEnabled: Boolean
     get() = preferences.getBoolean(keyUseRoot, useRootDefault)
     set(b) = preferences.edit().putBoolean(keyUseRoot, b).apply()
@@ -242,77 +231,58 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
   override val startWhenOpen: Boolean
     get() = preferences.getBoolean(keyStartWhenOpen, startWhenOpenDefault)
-
   override var periodicOnboardingShown: Boolean
     get() = preferences.getBoolean(KEY_PERIOD_ONBOARD, false)
     set(b) = preferences.edit().putBoolean(KEY_PERIOD_ONBOARD, b).apply()
-
   override var manageOnboardingShown: Boolean
     get() = preferences.getBoolean(KEY_MANAGE_ONBOARD, false)
     set(b) = preferences.edit().putBoolean(KEY_MANAGE_ONBOARD, b).apply()
-
   override var overviewOnboardingShown: Boolean
     get() = preferences.getBoolean(KEY_OVERVIEW_ONBOARD, false)
     set(b) = preferences.edit().putBoolean(KEY_OVERVIEW_ONBOARD, b).apply()
-
   override val wearableDelay: Long
     get() = java.lang.Long.parseLong(preferences.getString(keyWearableDelay, wearableDelayDefault))
-
   override var ignoreChargingDoze: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingDoze, ignoreChargingDozeDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingDoze, state).apply()
-
   override var dozeManaged: Boolean
     get() = preferences.getBoolean(keyManageDoze, manageDozeDefault)
     set(state) = preferences.edit().putBoolean(keyManageDoze, state).apply()
-
   override var ignoreWearDoze: Boolean
     get() = preferences.getBoolean(keyIgnoreWearDoze, ignoreWearDozeDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearDoze, state).apply()
-
   override var airplaneManaged: Boolean
     get() = preferences.getBoolean(keyManageAirplane, manageAirplaneDefault)
     set(state) = preferences.edit().putBoolean(keyManageAirplane, state).apply()
-
   override var ignoreChargingAirplane: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingAirplane, ignoreChargingAirplaneDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingAirplane, state).apply()
-
   override var ignoreWearAirplane: Boolean
     get() = preferences.getBoolean(keyIgnoreWearAirplane, ignoreWearAirplaneDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearAirplane, state).apply()
-
   override var ignoreChargingWifi: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingWifi, ignoreChargingWifiDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingWifi, state).apply()
-
   override var ignoreChargingData: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingData, ignoreChargingDataDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingData, state).apply()
-
   override var ignoreChargingBluetooth: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingBluetooth, ignoreChargingBluetoothDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingBluetooth, state).apply()
-
   override var ignoreChargingSync: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingSync, ignoreChargingSyncDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingSync, state).apply()
-
   override val notificationPriority: Int
     get() = NotificationCompat.PRIORITY_MIN
-
   override var bluetoothManaged: Boolean
     get() = preferences.getBoolean(keyManageBluetooth, manageBluetoothDefault)
     set(state) = preferences.edit().putBoolean(keyManageBluetooth, state).apply()
-
   override var dataManaged: Boolean
     get() = preferences.getBoolean(keyManageData, manageDataDefault)
     set(state) = preferences.edit().putBoolean(keyManageData, state).apply()
-
   override var syncManaged: Boolean
     get() = preferences.getBoolean(keyManageSync, manageSyncDefault)
     set(state) = preferences.edit().putBoolean(keyManageSync, state).apply()
-
   override var wifiManaged: Boolean
     get() = preferences.getBoolean(keyManageWifi, manageWifiDefault)
     set(state) = preferences.edit().putBoolean(keyManageWifi, state).apply()
@@ -324,43 +294,33 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   override var periodicDoze: Boolean
     get() = preferences.getBoolean(keyPeriodicDoze, periodicDozeDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicDoze, state).apply()
-
   override var periodicWifi: Boolean
     get() = preferences.getBoolean(keyPeriodicWifi, periodicWifiDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicWifi, state).apply()
-
   override var ignoreWearWifi: Boolean
     get() = preferences.getBoolean(keyIgnoreWearWifi, ignoreWearWifiDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearWifi, state).apply()
-
   override var periodicData: Boolean
     get() = preferences.getBoolean(keyPeriodicData, periodicDataDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicData, state).apply()
-
   override var ignoreWearData: Boolean
     get() = preferences.getBoolean(keyIgnoreWearData, ignoreWearDataDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearData, state).apply()
-
   override var periodicBluetooth: Boolean
     get() = preferences.getBoolean(keyPeriodicBluetooth, periodicBluetoothDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicBluetooth, state).apply()
-
   override var ignoreWearBluetooth: Boolean
     get() = preferences.getBoolean(keyIgnoreWearBluetooth, ignoreWearBluetoothDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearBluetooth, state).apply()
-
   override var periodicSync: Boolean
     get() = preferences.getBoolean(keyPeriodicSync, periodicSyncDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicSync, state).apply()
-
   override var ignoreWearSync: Boolean
     get() = preferences.getBoolean(keyIgnoreWearSync, ignoreWearSyncDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreWearSync, state).apply()
-
   override var periodicAirplane: Boolean
     get() = preferences.getBoolean(keyPeriodicAirplane, periodicAirplaneDefault)
     set(state) = preferences.edit().putBoolean(keyPeriodicAirplane, state).apply()
-
   override var manageDelay: Long
     get() {
       var delay = preferences.getLong(KEY_MANAGE_DELAY_TIME, MANAGE_DELAY_DEFAULT)
@@ -385,15 +345,12 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
       preferences.edit().putLong(KEY_MANAGE_DELAY_TIME, time).apply()
     }
-
   override var customManageDelay: Boolean
     get() = preferences.getBoolean(CUSTOM_MANAGE_DELAY, false)
     set(custom) = preferences.edit().putBoolean(CUSTOM_MANAGE_DELAY, custom).apply()
-
   override var customDisableTime: Boolean
     get() = preferences.getBoolean(CUSTOM_MANAGE_DISABLE, false)
     set(custom) = preferences.edit().putBoolean(CUSTOM_MANAGE_DISABLE, custom).apply()
-
   override var periodicDisableTime: Long
     get() {
       var delay = preferences.getLong(KEY_MANAGE_DISABLE_TIME, MANAGE_DISABLE_DEFAULT)
@@ -418,7 +375,6 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
       preferences.edit().putLong(KEY_MANAGE_DISABLE_TIME, time).apply()
     }
-
   override val periodicEnableTime: Long
     get() = MANAGE_ENABLE_DEFAULT
 
@@ -455,27 +411,15 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   }
 
   companion object {
-
-    @JvmStatic
-    private val DELAY_MINIMUM = TimeUnit.SECONDS.toSeconds(5)
-    @JvmStatic
-    private val DELAY_MAXIMUM = TimeUnit.MINUTES.toSeconds(5)
-    @JvmStatic
-    private val PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1)
-    @JvmStatic
-    private val PERIOD_MAXIMUM = TimeUnit.HOURS.toSeconds(1)
-    @JvmStatic
-    private val TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15)
-    @JvmStatic
-    private val TRIGGER_MAXIMUM = TimeUnit.HOURS.toSeconds(2)
-
-    @JvmStatic
-    private val MANAGE_DELAY_DEFAULT = TimeUnit.SECONDS.toSeconds(30)
-    @JvmStatic
-    private val MANAGE_DISABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(5)
-    @JvmStatic
-    private val MANAGE_ENABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(1)
-
+    @JvmStatic private val DELAY_MINIMUM = TimeUnit.SECONDS.toSeconds(5)
+    @JvmStatic private val DELAY_MAXIMUM = TimeUnit.MINUTES.toSeconds(5)
+    @JvmStatic private val PERIOD_MINIMUM = TimeUnit.MINUTES.toSeconds(1)
+    @JvmStatic private val PERIOD_MAXIMUM = TimeUnit.HOURS.toSeconds(1)
+    @JvmStatic private val TRIGGER_MINIMUM = TimeUnit.MINUTES.toSeconds(15)
+    @JvmStatic private val TRIGGER_MAXIMUM = TimeUnit.HOURS.toSeconds(2)
+    @JvmStatic private val MANAGE_DELAY_DEFAULT = TimeUnit.SECONDS.toSeconds(30)
+    @JvmStatic private val MANAGE_DISABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(5)
+    @JvmStatic private val MANAGE_ENABLE_DEFAULT = TimeUnit.MINUTES.toSeconds(1)
     private const val CUSTOM_MANAGE_DELAY = "pm7_custom_manage_delay"
     private const val CUSTOM_MANAGE_DISABLE = "pm7_custom_manage_disable"
     private const val KEY_MANAGE_DELAY_TIME = "pm7_global_manage_delay_time"

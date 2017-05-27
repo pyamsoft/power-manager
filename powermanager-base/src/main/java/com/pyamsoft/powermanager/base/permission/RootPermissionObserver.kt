@@ -23,10 +23,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal open class RootPermissionObserver internal constructor(context: Context,
-    private val preferences: RootPreferences,
-    private val rootChecker: RootChecker, permission: String?) : PermissionObserverImpl(context,
-    permission) {
-
+    private val preferences: RootPreferences, private val rootChecker: RootChecker,
+    permission: String?) : PermissionObserverImpl(context, permission) {
   @Inject constructor(context: Context, preferences: RootPreferences,
       rootChecker: RootChecker) : this(context, preferences, rootChecker, null)
 

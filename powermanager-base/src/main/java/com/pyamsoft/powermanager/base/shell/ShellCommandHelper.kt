@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.shell
 import android.support.annotation.WorkerThread
 
 interface ShellCommandHelper {
-
   @WorkerThread fun runSUCommand(vararg commands: String)
 
   @WorkerThread fun runSHCommand(vararg commands: String)

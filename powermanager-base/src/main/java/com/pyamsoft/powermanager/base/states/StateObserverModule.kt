@@ -26,7 +26,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class StateObserverModule {
-
   @Singleton @Named("obs_wifi") @Provides fun provideWifiObserver(
       @Named("wrapper_wifi") wrapper: ConnectedDeviceFunctionWrapper): ConnectedStateObserver {
     return WifiStateObserver(wrapper)

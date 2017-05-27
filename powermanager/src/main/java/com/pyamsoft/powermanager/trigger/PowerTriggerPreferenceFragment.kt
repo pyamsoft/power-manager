@@ -23,14 +23,12 @@ import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 
 class PowerTriggerPreferenceFragment : WatchedPreferenceFragment() {
-
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     addPreferencesFromResource(R.xml.power_trigger_options)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
     val triggerInterval = findPreference(getString(R.string.trigger_period_key))
     triggerInterval.setOnPreferenceChangeListener { _, _ ->
       ForegroundService.restartTriggers(context)
@@ -39,7 +37,6 @@ class PowerTriggerPreferenceFragment : WatchedPreferenceFragment() {
   }
 
   companion object {
-
     const val TAG = "PowerTriggerPreferenceFragment"
   }
 }

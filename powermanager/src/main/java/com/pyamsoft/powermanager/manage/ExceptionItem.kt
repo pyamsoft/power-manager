@@ -139,7 +139,6 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
 
   internal fun getIgnoreCharging(presenter: ExceptionPresenter, checkBox: CheckBox, name: String) {
     presenter.getIgnoreCharging(object : ExceptionPresenter.RetrieveCallback {
-
       override fun onEnableRetrieved(enabled: Boolean) {
         checkBox.isEnabled = enabled
       }
@@ -196,7 +195,6 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
 
   internal fun getIgnoreWear(presenter: ExceptionPresenter, checkBox: CheckBox, name: String) {
     presenter.getIgnoreWear(object : ExceptionPresenter.RetrieveCallback {
-
       override fun onEnableRetrieved(enabled: Boolean) {
         checkBox.isEnabled = enabled
       }
@@ -251,7 +249,6 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     internal var chargingContainer: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_exception, itemView as ViewGroup, false)
 
@@ -263,7 +260,6 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
   }
 
   companion object {
-
     const internal val TAG = "ExceptionItem"
   }
 }

@@ -82,7 +82,6 @@ class ManageFragment : WatchedFragment() {
       }
       return@GenericItemAdapter item
     }
-
     val manager = LinearLayoutManager(activity)
     manager.isItemPrefetchEnabled = true
     manager.initialPrefetchItemCount = 3
@@ -108,7 +107,6 @@ class ManageFragment : WatchedFragment() {
   }
 
   companion object {
-
     const val TAG = "ManageFragment"
 
     @JvmStatic @CheckResult fun newInstance(): ManageFragment {

@@ -24,7 +24,6 @@ import android.view.Window
 import com.pyamsoft.powermanager.PowerManager
 
 abstract class WatchedDialog : DialogFragment() {
-
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = super.onCreateDialog(savedInstanceState)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

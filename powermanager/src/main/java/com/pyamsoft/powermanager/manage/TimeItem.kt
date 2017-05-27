@@ -35,11 +35,9 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
     tag: String) : BaseItem<TimeItem<VH>, VH>(tag) {
   internal val customTimeWatcher: TextWatcher = object : TextWatcher {
     override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
     }
 
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
     }
 
     override fun afterTextChanged(s: Editable) {
@@ -53,7 +51,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
 
   override fun bindView(holder: VH, payloads: List<Any>?) {
     super.bindView(holder, payloads)
-
     val context = holder.itemView.context
     providePresenter().getTime(object : TimePresenter.TimeCallback {
       override fun onCustomTime(time: Long) {
@@ -64,7 +61,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
 
       override fun onPresetTime(time: Long) {
         disableCustomInput(holder)
-
         val index: Int
         if (time == getTimeRadioOne()) {
           index = 0
@@ -96,7 +92,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onComplete() {
-
       }
     })
 
@@ -107,7 +102,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       } else {
         Timber.d("Preset is checked")
         disableCustomInput(holder)
-
         val time: Long
         when (checkedId) {
           R.id.delay_radio_one -> time = getTimeRadioOne()
@@ -212,7 +206,6 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
 
   abstract class ViewHolder protected constructor(itemView: View) : RecyclerView.ViewHolder(
       itemView) {
-
     internal var containerDelay: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_delay, itemView as ViewGroup, false)
 

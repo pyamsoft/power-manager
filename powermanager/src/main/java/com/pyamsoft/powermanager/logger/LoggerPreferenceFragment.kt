@@ -142,7 +142,6 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
   }
 
   companion object {
-
     const val TAG = "LoggerPreferenceFragment"
   }
 }

@@ -27,8 +27,6 @@ import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 
 class SettingsFragment : WatchedFragment() {
-
-
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     return inflater?.inflate(R.layout.fragment_settings, container, false)

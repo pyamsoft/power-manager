@@ -24,24 +24,18 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class LoggerPresenter @Inject internal constructor(
-    internal val interactor: LoggerInteractor,
-    observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
-
+class LoggerPresenter @Inject internal constructor(internal val interactor: LoggerInteractor,
+    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
+    observeScheduler, subscribeScheduler) {
   internal val logDisposables: CompositeDisposable = CompositeDisposable()
 
   fun retrieveLogContents(callback: LogCallback) {
-    logDisposables.add(interactor.logContents
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .doAfterTerminate({ callback.onAllLogContentsRetrieved() })
-        .doOnSubscribe { callback.onPrepareLogContentRetrieval() }
-        .subscribe({ callback.onLogContentRetrieved(it) }
-            , {
-          Timber.e(it, "onError: Failed to retrieve log contents: %s",
-              interactor.logId)
-        }))
+    logDisposables.add(interactor.logContents.subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).doAfterTerminate(
+        { callback.onAllLogContentsRetrieved() }).doOnSubscribe { callback.onPrepareLogContentRetrieval() }.subscribe(
+        { callback.onLogContentRetrieved(it) }, {
+      Timber.e(it, "onError: Failed to retrieve log contents: %s", interactor.logId)
+    }))
   }
 
   override fun onStop() {
@@ -50,10 +44,9 @@ class LoggerPresenter @Inject internal constructor(
   }
 
   internal fun log(logType: LogType, fmt: String, vararg args: Any) {
-    logDisposables.add(interactor.log(logType, fmt, *args)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({
+    logDisposables.add(
+        interactor.log(logType, fmt, *args).subscribeOn(subscribeScheduler).observeOn(
+            observeScheduler).subscribe({
           // TODO anything else?
         }) { throwable ->
           Timber.e(throwable, "onError: Unable to successfully log message to log file")
@@ -64,26 +57,22 @@ class LoggerPresenter @Inject internal constructor(
   }
 
   private fun queueClearLogDisposable() {
-    logDisposables.add(Observable.just(true)
-        .delay(1, TimeUnit.MINUTES)
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({ logDisposables.clear() }
-            , { throwable -> Timber.e(throwable, "onError clearing composite subscription") }))
+    logDisposables.add(
+        Observable.just(true).delay(1, TimeUnit.MINUTES).subscribeOn(subscribeScheduler).observeOn(
+            observeScheduler).subscribe({ logDisposables.clear() },
+            { throwable -> Timber.e(throwable, "onError clearing composite subscription") }))
   }
 
   fun deleteLog(callback: DeleteCallback) {
     // Stop everything before we delete the log
     clearLogs()
-    logDisposables.add(interactor.deleteLog()
-        .subscribeOn(subscribeScheduler)
-        .observeOn(observeScheduler)
-        .subscribe({
-          if (it) {
-            callback.onLogDeleted(interactor.logId)
-          }
-          clearLogs()
-        }, { Timber.e(it, "onError deleteLog") }))
+    logDisposables.add(interactor.deleteLog().subscribeOn(subscribeScheduler).observeOn(
+        observeScheduler).subscribe({
+      if (it) {
+        callback.onLogDeleted(interactor.logId)
+      }
+      clearLogs()
+    }, { Timber.e(it, "onError deleteLog") }))
   }
 
   internal fun clearLogs() {
@@ -91,12 +80,10 @@ class LoggerPresenter @Inject internal constructor(
   }
 
   interface DeleteCallback {
-
     fun onLogDeleted(logId: String)
   }
 
   interface LogCallback {
-
     fun onPrepareLogContentRetrieval()
 
     fun onLogContentRetrieved(logLine: String)

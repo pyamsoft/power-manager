@@ -55,7 +55,6 @@ class DeleteTriggerDialog : WatchedDialog() {
   }
 
   companion object {
-
     private const val TRIGGER_NAME = "trigger_name"
     private const val TRIGGER_PERCENT = "trigger_percent"
 

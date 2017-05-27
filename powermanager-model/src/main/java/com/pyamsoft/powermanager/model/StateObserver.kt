@@ -19,9 +19,7 @@ package com.pyamsoft.powermanager.model
 import android.support.annotation.CheckResult
 
 interface StateObserver {
-
   @CheckResult fun enabled(): Boolean
 
   @CheckResult fun unknown(): Boolean
-
 }

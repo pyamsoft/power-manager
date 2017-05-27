@@ -39,7 +39,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PowerManager : Application() {
-
   @field:Inject lateinit internal var jobHandler: JobHandler
   private lateinit var refWatcher: RefWatcher
 
@@ -58,13 +57,11 @@ class PowerManager : Application() {
     Licenses.create("Fast Adapter", "https://github.com/mikepenz/FastAdapter",
         "licenses/fastadapter")
     Licenses.create("Leak Canary", "https://github.com/square/leakcanary", "licenses/leakcanary")
-
     val gmsContent = GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this)
     if (gmsContent != null) {
       Licenses.createWithContent("Google Play Services",
           "https://developers.google.com/android/guides/overview", gmsContent)
     }
-
     val module = PowerManagerModule(this, MainActivity::class.java, ActionToggleService::class.java)
     val component = DaggerPowerManagerComponent.builder().powerManagerModule(module).build()
     Injector.set(component)
@@ -98,7 +95,6 @@ class PowerManager : Application() {
     }
 
   companion object {
-
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedDialog): RefWatcher {
       return getRefWatcherInternal(fragment)
     }

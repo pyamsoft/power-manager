@@ -19,25 +19,24 @@ package com.pyamsoft.powermanager.base.logger
 import javax.inject.Inject
 
 internal class LoggerImpl @Inject constructor(private val presenter: LoggerPresenter) : Logger {
+  // Does not have to be bound
+  private fun log(logType: LogType, fmt: String, vararg args: Any) {
+    presenter.log(logType, fmt, *args)
+  }
 
-    // Does not have to be bound
-    private fun log(logType: LogType, fmt: String, vararg args: Any) {
-        presenter.log(logType, fmt, *args)
-    }
+  override fun d(fmt: String, vararg args: Any) {
+    log(LogType.DEBUG, fmt, *args)
+  }
 
-    override fun d(fmt: String, vararg args: Any) {
-        log(LogType.DEBUG, fmt, *args)
-    }
+  override fun i(fmt: String, vararg args: Any) {
+    log(LogType.INFO, fmt, *args)
+  }
 
-    override fun i(fmt: String, vararg args: Any) {
-        log(LogType.INFO, fmt, *args)
-    }
+  override fun w(fmt: String, vararg args: Any) {
+    log(LogType.WARNING, fmt, *args)
+  }
 
-    override fun w(fmt: String, vararg args: Any) {
-        log(LogType.WARNING, fmt, *args)
-    }
-
-    override fun e(fmt: String, vararg args: Any) {
-        log(LogType.ERROR, fmt, *args)
-    }
+  override fun e(fmt: String, vararg args: Any) {
+    log(LogType.ERROR, fmt, *args)
+  }
 }

@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 internal class InstantJobQueuerImpl @Inject constructor(jobManager: JobManager,
     private val jobHandler: JobHandler) : BaseJobQueuer(jobManager) {
-
   override fun runInstantJob(tag: String, extras: PersistableBundleCompat) {
     jobHandler.newRunner({ false }).run(tag, extras)
   }

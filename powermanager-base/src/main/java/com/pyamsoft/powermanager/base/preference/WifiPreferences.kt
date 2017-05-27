@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface WifiPreferences {
-
   var originalWifi: Boolean
     @CheckResult get
-
   var ignoreChargingWifi: Boolean
     @CheckResult get
-
   var wifiManaged: Boolean
     @CheckResult get
-
   var periodicWifi: Boolean
     @CheckResult get
-
   var ignoreWearWifi: Boolean
     @CheckResult get
 }

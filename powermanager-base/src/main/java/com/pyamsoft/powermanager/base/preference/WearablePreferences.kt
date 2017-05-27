@@ -19,7 +19,6 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface WearablePreferences {
-
   val wearableDelay: Long
     @CheckResult get
 }

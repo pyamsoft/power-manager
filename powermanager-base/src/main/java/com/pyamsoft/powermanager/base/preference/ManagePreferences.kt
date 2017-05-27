@@ -20,19 +20,14 @@ import android.content.SharedPreferences
 import android.support.annotation.CheckResult
 
 interface ManagePreferences {
-
   var manageDelay: Long
     @CheckResult get
-
   var customManageDelay: Boolean
     @CheckResult get
-
   var customDisableTime: Boolean
     @CheckResult get
-
   var periodicDisableTime: Long
     @CheckResult get
-
   val periodicEnableTime: Long
     @CheckResult get
 
@@ -44,11 +39,9 @@ interface ManagePreferences {
   @CheckResult fun registerDisableChanges(
       listener: TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener
 
-  fun unregisterDisableChanges(
-      listener: SharedPreferences.OnSharedPreferenceChangeListener)
+  fun unregisterDisableChanges(listener: SharedPreferences.OnSharedPreferenceChangeListener)
 
   interface TimeChangeListener {
-
     fun onTimeChanged(time: Long)
   }
 }

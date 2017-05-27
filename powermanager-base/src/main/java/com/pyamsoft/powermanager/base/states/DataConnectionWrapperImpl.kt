@@ -33,23 +33,19 @@ import javax.inject.Inject
 internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
     private val shellCommandHelper: ShellCommandHelper, private val logger: Logger,
     private val preferences: RootPreferences, private val dataUri: String) : DeviceFunctionWrapper {
-
   private val connectivityManager: ConnectivityManager = context.applicationContext.getSystemService(
       Context.CONNECTIVITY_SERVICE) as ConnectivityManager
   private val contentResolver: ContentResolver = context.applicationContext.contentResolver
-
   private val mobileDataEnabledReflection: States
     @CheckResult get() {
       if (GET_MOBILE_DATA_ENABLED_METHOD != null) {
         try {
-          return if (GET_MOBILE_DATA_ENABLED_METHOD.invoke(connectivityManager) as Boolean)
-            States.ENABLED
-          else
-            States.DISABLED
+          return if (GET_MOBILE_DATA_ENABLED_METHOD.invoke(
+              connectivityManager) as Boolean) States.ENABLED
+          else States.DISABLED
         } catch (e: Exception) {
           logger.e("ManagerData getMobileDataEnabled ERROR")
         }
-
       }
 
       return mobileDataEnabledSettings
@@ -62,7 +58,6 @@ internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
       } catch (e: Exception) {
         logger.e("ManagerData setMobileDataEnabled ERROR")
       }
-
     }
   }
 
@@ -81,10 +76,9 @@ internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
   }
 
   private val mobileDataEnabledSettings: States
-    @CheckResult get() = if (Settings.Global.getInt(contentResolver, dataUri, 0) == 1)
-      States.ENABLED
-    else
-      States.DISABLED
+    @CheckResult get() = if (Settings.Global.getInt(contentResolver, dataUri,
+        0) == 1) States.ENABLED
+    else States.DISABLED
 
   private fun setMobileDataEnabled(enabled: Boolean) {
     logger.i("Data: %s", if (enabled) "enable" else "disable")
@@ -113,7 +107,6 @@ internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
     }
 
   companion object {
-
     private val GET_METHOD_NAME = "getMobileDataEnabled"
     private val SET_METHOD_NAME = "setMobileDataEnabled"
     private val GET_MOBILE_DATA_ENABLED_METHOD: Method?

@@ -89,7 +89,6 @@ import javax.inject.Singleton
       val toggleService = Intent(appContext, toggleServiceClass)
       val actionToggleService = PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
           PendingIntent.FLAG_UPDATE_CURRENT)
-
       val title = if (serviceEnabled) "Managing Device Power..." else "Power Management Suspended..."
 
       notificationPriority.map {
@@ -102,7 +101,6 @@ import javax.inject.Singleton
   }
 
   companion object {
-
     private const val PENDING_RC = 1004
     private const val TOGGLE_RC = 421
   }

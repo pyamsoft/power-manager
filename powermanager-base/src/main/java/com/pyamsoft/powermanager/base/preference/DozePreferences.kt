@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface DozePreferences {
-
   var originalDoze: Boolean
     @CheckResult get
-
   var ignoreChargingDoze: Boolean
     @CheckResult get
-
   var dozeManaged: Boolean
     @CheckResult get
-
   var ignoreWearDoze: Boolean
     @CheckResult get
-
   var periodicDoze: Boolean
     @CheckResult get
 }

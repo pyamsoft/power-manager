@@ -26,8 +26,7 @@ import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class DozeDeviceWrapperImpl @Inject constructor(context: Context,
-    private val logger: Logger,
-    private val preferences: RootPreferences,
+    private val logger: Logger, private val preferences: RootPreferences,
     private val shellCommandHelper: ShellCommandHelper) : DeviceFunctionWrapper {
   private val androidPowerManager: android.os.PowerManager = context.applicationContext.getSystemService(
       Context.POWER_SERVICE) as PowerManager

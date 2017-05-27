@@ -22,7 +22,6 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 
 class CreateTriggerNonSwipePager : ViewPager {
-
   constructor(context: Context) : super(context) {}
 
   constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}

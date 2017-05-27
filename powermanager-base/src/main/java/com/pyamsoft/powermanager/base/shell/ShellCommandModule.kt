@@ -21,7 +21,6 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module class ShellCommandModule {
-
   private val impl: ShellHandlerImpl = ShellHandlerImpl()
 
   @Singleton @Provides fun provideShellCommandHelper(): ShellCommandHelper {

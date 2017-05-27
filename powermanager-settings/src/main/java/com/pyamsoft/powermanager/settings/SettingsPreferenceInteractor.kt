@@ -30,10 +30,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton internal class SettingsPreferenceInteractor @Inject constructor(
-    val powerTriggerDB: PowerTriggerDB,
-    val preferences: RootPreferences, val clearPreferences: ClearPreferences,
-    val rootChecker: RootChecker, val triggerInteractor: TriggerInteractor) {
-
+    val powerTriggerDB: PowerTriggerDB, val preferences: RootPreferences,
+    val clearPreferences: ClearPreferences, val rootChecker: RootChecker,
+    val triggerInteractor: TriggerInteractor) {
   /**
    * public
    */
@@ -55,10 +54,8 @@ import javax.inject.Singleton
    * public
    */
   @CheckResult fun clearDatabase(): Single<Boolean> {
-    return powerTriggerDB.deleteAll()
-        .andThen(powerTriggerDB.deleteDatabase())
-        .andThen(Completable.fromAction { triggerInteractor.clearCached() })
-        .andThen(Single.just(true))
+    return powerTriggerDB.deleteAll().andThen(powerTriggerDB.deleteDatabase()).andThen(
+        Completable.fromAction { triggerInteractor.clearCached() }).andThen(Single.just(true))
   }
 
   /**

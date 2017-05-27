@@ -27,7 +27,6 @@ import javax.inject.Named
 class ForegroundPresenter @Inject internal constructor(val interactor: ForegroundInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
-
   /**
    * public
    */
@@ -72,7 +71,6 @@ class ForegroundPresenter @Inject internal constructor(val interactor: Foregroun
   }
 
   interface NotificationCallback {
-
     fun onStartNotificationInForeground(notification: Notification)
   }
 }

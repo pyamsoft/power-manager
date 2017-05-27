@@ -32,7 +32,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
-
   @field:[Inject Named("manage_delay")] lateinit internal var presenter: TimePresenter
 
   init {
@@ -101,7 +100,6 @@ class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
   }
 
   companion object {
-
     const internal val TAG = "DelayItem"
   }
 }

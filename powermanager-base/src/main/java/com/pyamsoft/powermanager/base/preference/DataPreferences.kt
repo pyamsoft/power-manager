@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface DataPreferences {
-
   var originalData: Boolean
     @CheckResult get
-
   var ignoreChargingData: Boolean
     @CheckResult get
-
   var dataManaged: Boolean
     @CheckResult get
-
   var periodicData: Boolean
     @CheckResult get
-
   var ignoreWearData: Boolean
     @CheckResult get
 }

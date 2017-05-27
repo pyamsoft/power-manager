@@ -26,9 +26,7 @@ class Jobs private constructor() {
   }
 
   companion object {
-
-    @JvmStatic
-    @CheckResult fun newJob(jobHandler: JobHandler): Job {
+    @JvmStatic @CheckResult fun newJob(jobHandler: JobHandler): Job {
       return ManagedJob(jobHandler)
     }
   }

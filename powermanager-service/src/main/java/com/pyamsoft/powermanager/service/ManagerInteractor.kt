@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manager
+package com.pyamsoft.powermanager.service
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences

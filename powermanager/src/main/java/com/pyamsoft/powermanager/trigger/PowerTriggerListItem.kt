@@ -33,7 +33,6 @@ import javax.inject.Inject
 class PowerTriggerListItem internal constructor(
     trigger: PowerTriggerEntry) : GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder>(
     trigger) {
-
   @field:Inject lateinit internal var presenter: TriggerItemPresenter
 
   init {
@@ -57,7 +56,6 @@ class PowerTriggerListItem internal constructor(
           override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
             buttonView.setOnCheckedChangeListener(null)
             buttonView.isChecked = !isChecked
-
             val listener = this
             presenter.toggleEnabledState(model, isChecked, object : TriggerToggleCallback {
               override fun updateViewHolder(entry: PowerTriggerEntry) {

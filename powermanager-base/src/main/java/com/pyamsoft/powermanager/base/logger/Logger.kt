@@ -17,12 +17,11 @@
 package com.pyamsoft.powermanager.base.logger
 
 interface Logger {
+  fun d(fmt: String, vararg args: Any)
 
-    fun d(fmt: String, vararg args: Any)
+  fun i(fmt: String, vararg args: Any)
 
-    fun i(fmt: String, vararg args: Any)
+  fun w(fmt: String, vararg args: Any)
 
-    fun w(fmt: String, vararg args: Any)
-
-    fun e(fmt: String, vararg args: Any)
+  fun e(fmt: String, vararg args: Any)
 }

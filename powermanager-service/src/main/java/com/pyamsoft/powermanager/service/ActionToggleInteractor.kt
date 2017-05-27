@@ -24,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton internal class ActionToggleInteractor @Inject constructor(
     preferences: ServicePreferences) : ServiceInteractor(preferences) {
-
   /**
    * public
    */

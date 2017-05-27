@@ -23,7 +23,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class StateModifierModule {
-
   @Singleton @Named("mod_wifi") @Provides fun provideWifiModifier(
       @Named("wrapper_wifi") wrapper: ConnectedDeviceFunctionWrapper): StateModifier {
     return WifiStateModifier(wrapper)

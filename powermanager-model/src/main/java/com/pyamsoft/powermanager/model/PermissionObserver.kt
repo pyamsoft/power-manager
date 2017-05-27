@@ -19,6 +19,5 @@ package com.pyamsoft.powermanager.model
 import android.support.annotation.CheckResult
 
 interface PermissionObserver {
-
   @CheckResult fun hasPermission(): Boolean
 }

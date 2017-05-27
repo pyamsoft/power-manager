@@ -48,7 +48,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : TamperActivity() {
-
   private val longPressBackRunnable = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) null else Runnable { this.handleBackLongPress() }
   private val mainHandler = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) null else Handler(
       Looper.getMainLooper())
@@ -164,7 +163,6 @@ class MainActivity : TamperActivity() {
 
   override val safePackageName: String
     get() = "com.pyamsoft.powermanager"
-
   override val changeLogLines: Array<String>
     get() {
       val line1 = "BUGFIX: Bugfixes and improvements"
@@ -172,10 +170,8 @@ class MainActivity : TamperActivity() {
       val line3 = "BUGFIX: Faster loading of Open Source Licenses page"
       return arrayOf(line1, line2, line3)
     }
-
   override val versionName: String
     get() = BuildConfig.VERSION_NAME
-
   override val applicationIcon: Int
     get() = R.mipmap.ic_launcher
 

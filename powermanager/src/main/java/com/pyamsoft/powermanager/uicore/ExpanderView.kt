@@ -48,7 +48,6 @@ import kotlinx.android.synthetic.main.view_expander.view.expander_title_containe
 import timber.log.Timber
 
 class ExpanderView : FrameLayout {
-
   internal var expanded: Boolean = false
   internal var arrowLoad = LoaderHelper.empty()
   internal var arrowAnimation: ViewPropertyAnimatorCompat? = null
@@ -116,7 +115,6 @@ class ExpanderView : FrameLayout {
         //binding.expanderContainer.setScaleY(0);
         containerAnimation = ViewCompat.animate(binding.expander_container).alpha(1F).setListener(
             object : ViewPropertyAnimatorListenerAdapter() {
-
               override fun onAnimationStart(view: View?) {
                 view!!.visibility = View.VISIBLE
               }
@@ -135,7 +133,6 @@ class ExpanderView : FrameLayout {
         //binding.expanderContainer.setScaleY(1);
         containerAnimation = ViewCompat.animate(binding.expander_container).alpha(0F).setListener(
             object : ViewPropertyAnimatorListenerAdapter() {
-
               override fun onAnimationStart(view: View?) {
                 view!!.visibility = View.VISIBLE
               }

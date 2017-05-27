@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface AirplanePreferences {
-
   var originalAirplane: Boolean
     @CheckResult get
-
   var airplaneManaged: Boolean
     @CheckResult get
-
   var ignoreChargingAirplane: Boolean
     @CheckResult get
-
   var ignoreWearAirplane: Boolean
     @CheckResult get
-
   var periodicAirplane: Boolean
     @CheckResult get
 }

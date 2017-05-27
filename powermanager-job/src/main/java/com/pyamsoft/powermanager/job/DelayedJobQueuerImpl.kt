@@ -22,7 +22,6 @@ import javax.inject.Inject
 
 internal class DelayedJobQueuerImpl @Inject constructor(jobManager: JobManager) : BaseJobQueuer(
     jobManager) {
-
   override fun runInstantJob(tag: String, extras: PersistableBundleCompat) {
     throw RuntimeException(
         tag + ": Cannot schedule instant jobs with DelayedJobQueuerImpl, use InstantJobQueuerImpl")

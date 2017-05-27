@@ -56,7 +56,6 @@ class CreateTriggerManageFragment : WatchedFragment() {
       TYPE_SYNC -> radio = "Sync"
       else -> throw IllegalStateException("Invalid type: $type")
     }
-
     val toggle = "Toggle $radio"
     val toggleExplainChecked = "Change state of $radio as specified"
     val toggleExplainUnchecked = "Do not change state of $radio"
@@ -89,7 +88,6 @@ class CreateTriggerManageFragment : WatchedFragment() {
       }
       return toggle
     }
-
   val triggerEnable: Boolean
     @CheckResult get() {
       val enable: Boolean

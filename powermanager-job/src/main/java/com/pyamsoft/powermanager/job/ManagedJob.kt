@@ -19,10 +19,8 @@ package com.pyamsoft.powermanager.job
 import com.evernote.android.job.Job
 
 internal class ManagedJob(private val jobHandler: JobHandler) : Job() {
-
   override fun onRunJob(params: Job.Params): Job.Result {
-    jobHandler.newRunner { isCanceled || isFinished }
-        .run(params.tag, params.extras)
+    jobHandler.newRunner { isCanceled || isFinished }.run(params.tag, params.extras)
     return Job.Result.SUCCESS
   }
 }

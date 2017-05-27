@@ -21,7 +21,6 @@ import com.pyamsoft.powermanager.PowerManager
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarFragment
 
 abstract class WatchedFragment : ActionBarFragment() {
-
   @CallSuper override fun onDestroy() {
     super.onDestroy()
     PowerManager.getRefWatcher(this).watch(this)

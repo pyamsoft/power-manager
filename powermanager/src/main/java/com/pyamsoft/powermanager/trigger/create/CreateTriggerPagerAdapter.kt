@@ -26,7 +26,6 @@ import timber.log.Timber
 
 internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePagerAdapter(
     fragment.childFragmentManager) {
-
   override fun getItem(position: Int): Fragment {
     val fragment: Fragment
     when (position) {
@@ -54,7 +53,6 @@ internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePage
     val bluetoothFragment = instantiateItem(viewPager,
         POSITION_BLUETOOTH) as CreateTriggerManageFragment
     val syncFragment = instantiateItem(viewPager, POSITION_SYNC) as CreateTriggerManageFragment
-
     val name = basicFragment.triggerName
     val percent = basicFragment.triggerPercent
     val wifiToggle = wifiFragment.triggerToggle
@@ -74,7 +72,6 @@ internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePage
   }
 
   companion object {
-
     const val TOTAL_COUNT = 5
     private const val POSITION_BASIC = 0
     private const val POSITION_WIFI = 1

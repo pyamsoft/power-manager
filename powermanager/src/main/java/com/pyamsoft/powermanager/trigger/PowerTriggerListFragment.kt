@@ -43,7 +43,6 @@ import javax.inject.Inject
 
 class PowerTriggerListFragment : WatchedFragment() {
   private val drawableMap = LoaderMap()
-
   @field:Inject lateinit internal var presenter: TriggerPresenter
   internal var adapter: FastItemAdapter<PowerTriggerListItem>? = null
   internal var listIsRefreshed: Boolean = false
@@ -210,7 +209,6 @@ class PowerTriggerListFragment : WatchedFragment() {
   }
 
   companion object {
-
     const val TAG = "PowerTriggerListFragment"
   }
 }

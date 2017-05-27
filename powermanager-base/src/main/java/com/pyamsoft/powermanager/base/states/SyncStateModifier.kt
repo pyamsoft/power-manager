@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 internal class SyncStateModifier @Inject constructor(
     private val wrapper: DeviceFunctionWrapper) : StateModifier {
-
   override fun set() {
     wrapper.enable()
   }

@@ -21,7 +21,6 @@ import javax.inject.Inject
 
 internal class BluetoothStateModifier @Inject constructor(
     private val wrapper: DeviceFunctionWrapper) : StateModifier {
-
   override fun set() {
     wrapper.enable()
   }

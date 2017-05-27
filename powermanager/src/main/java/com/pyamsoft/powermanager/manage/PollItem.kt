@@ -33,7 +33,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
-
   @field:[Inject Named("manage_disable")] lateinit internal var presenter: TimePresenter
 
   init {
@@ -107,7 +106,6 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
   }
 
   companion object {
-
     const internal val TAG = "PollItem"
   }
 }

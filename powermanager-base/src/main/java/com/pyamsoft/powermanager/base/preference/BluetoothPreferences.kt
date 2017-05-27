@@ -19,19 +19,14 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface BluetoothPreferences {
-
   var originalBluetooth: Boolean
     @CheckResult get
-
   var ignoreChargingBluetooth: Boolean
     @CheckResult get
-
   var bluetoothManaged: Boolean
     @CheckResult get
-
   var periodicBluetooth: Boolean
     @CheckResult get
-
   var ignoreWearBluetooth: Boolean
     @CheckResult get
 }

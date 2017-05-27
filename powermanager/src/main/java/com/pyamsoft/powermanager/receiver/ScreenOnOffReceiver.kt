@@ -27,16 +27,14 @@ import android.view.Display
 import android.widget.Toast
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.base.logger.Logger
-import com.pyamsoft.powermanager.manager.Manager
+import com.pyamsoft.powermanager.service.Manager
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
 class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
-
   private val appContext: Context = context.applicationContext
   private val displayManager: DisplayManager
-
   @field: Inject lateinit internal var manager: Manager
   @field:[Inject Named("logger_manager")] lateinit internal var logger: Logger
   private var isRegistered: Boolean = false
@@ -132,7 +130,6 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
   }
 
   companion object {
-
     @JvmStatic private val SCREEN_FILTER: IntentFilter = IntentFilter()
 
     init {

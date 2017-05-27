@@ -39,7 +39,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences) {
-
   @CheckResult private fun runJob(tag: String, screenOn: Boolean, firstRun: Boolean): Boolean {
     checkTag(tag)
     if (screenOn) {
@@ -57,7 +56,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
 
   @CheckResult private fun runEnableJob(tag: String, firstRun: Boolean): Boolean {
     var didSomething = false
-    if (dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
+    if (dozePreferences.dozeManaged && dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
       Timber.i("%s: Disable Doze", tag)
       dozeModifier.unset()
       didSomething = true
@@ -67,7 +66,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
+    if (airplanePreferences.airplaneManaged && airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
       Timber.i("%s: Disable Airplane mode", tag)
       airplaneModifier.unset()
       didSomething = true
@@ -77,7 +76,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (wifiPreferences.originalWifi && (firstRun || wifiPreferences.periodicWifi)) {
+    if (wifiPreferences.wifiManaged && wifiPreferences.originalWifi && (firstRun || wifiPreferences.periodicWifi)) {
       Timber.i("%s: Enable WiFi", tag)
       wifiModifier.set()
       didSomething = true
@@ -87,7 +86,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
+    if (dataPreferences.dataManaged && dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
       Timber.i("%s: Enable Data", tag)
       dataModifier.set()
       didSomething = true
@@ -97,7 +96,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (bluetoothPreferences.originalBluetooth && (firstRun || bluetoothPreferences.periodicBluetooth)) {
+    if (bluetoothPreferences.bluetoothManaged && bluetoothPreferences.originalBluetooth && (firstRun || bluetoothPreferences.periodicBluetooth)) {
       Timber.i("%s: Enable Bluetooth", tag)
       bluetoothModifier.set()
       didSomething = true
@@ -107,7 +106,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     }
 
-    if (syncPreferences.originalSync && (firstRun || syncPreferences.periodicSync)) {
+    if (syncPreferences.syncManaged && syncPreferences.originalSync && (firstRun || syncPreferences.periodicSync)) {
       Timber.i("%s: Enable Sync", tag)
       syncModifier.set()
       didSomething = true
@@ -122,7 +121,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && wifiPreferences.ignoreChargingWifi) {
       Timber.w("Do not disable WiFi while device is charging")
     } else {
-      if (wifiPreferences.originalWifi && (firstRun || wifiPreferences.periodicWifi)) {
+      if (wifiPreferences.wifiManaged && wifiPreferences.originalWifi && (firstRun || wifiPreferences.periodicWifi)) {
         Timber.i("%s: Disable WiFi", tag)
         wifiModifier.unset()
         didSomething = true
@@ -136,7 +135,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && dataPreferences.ignoreChargingData) {
       Timber.w("Do not disable Data while device is charging")
     } else {
-      if (dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
+      if (dataPreferences.dataManaged && dataPreferences.originalData && (firstRun || dataPreferences.periodicData) && rootPreferences.rootEnabled) {
         Timber.i("%s: Disable Data", tag)
         dataModifier.unset()
         didSomething = true
@@ -150,7 +149,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && bluetoothPreferences.ignoreChargingBluetooth) {
       Timber.w("Do not disable Bluetooth while device is charging")
     } else {
-      if (bluetoothPreferences.originalBluetooth && (firstRun || bluetoothPreferences.periodicBluetooth)) {
+      if (bluetoothPreferences.bluetoothManaged && bluetoothPreferences.originalBluetooth && (firstRun || bluetoothPreferences.periodicBluetooth)) {
         Timber.i("%s: Disable Bluetooth", tag)
         bluetoothModifier.unset()
         didSomething = true
@@ -164,7 +163,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && syncPreferences.ignoreChargingSync) {
       Timber.w("Do not disable Sync while device is charging")
     } else {
-      if (syncPreferences.originalSync && (firstRun || syncPreferences.periodicSync)) {
+      if (syncPreferences.syncManaged && syncPreferences.originalSync && (firstRun || syncPreferences.periodicSync)) {
         Timber.i("%s: Disable Sync", tag)
         syncModifier.unset()
         didSomething = true
@@ -178,7 +177,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && airplanePreferences.ignoreChargingAirplane) {
       Timber.w("Do not enable Airplane mode while device is charging")
     } else {
-      if (airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
+      if (airplanePreferences.airplaneManaged && airplanePreferences.originalAirplane && (firstRun || airplanePreferences.periodicAirplane) && rootPreferences.rootEnabled) {
         Timber.i("%s: Enable Airplane mode", tag)
         airplaneModifier.set()
         didSomething = true
@@ -192,7 +191,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     if (isCharging && dozePreferences.ignoreChargingDoze) {
       Timber.w("Do not enable Doze mode while device is charging")
     } else {
-      if (dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
+      if (dozePreferences.dozeManaged && dozePreferences.originalDoze && (firstRun || dozePreferences.periodicDoze) && rootPreferences.rootEnabled) {
         Timber.i("%s: Enable Doze mode", tag)
         dozeModifier.set()
         didSomething = true
@@ -221,14 +220,12 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     } else {
       newDelayTime = windowOffTime
     }
-
     val newTag: String
     if (tag == JobQueuer.DISABLE_TAG) {
       newTag = JobQueuer.ENABLE_TAG
     } else {
       newTag = JobQueuer.DISABLE_TAG
     }
-
     val entry = JobQueuerEntry.builder(newTag).oneshot(false).firstRun(false).screenOn(
         !screenOn).delay(newDelayTime).repeatingOffWindow(windowOffTime).repeatingOnWindow(
         windowOnTime).build()

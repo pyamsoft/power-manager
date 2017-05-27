@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.model.States
 
 interface DeviceFunctionWrapper {
-
   fun enable()
 
   fun disable()

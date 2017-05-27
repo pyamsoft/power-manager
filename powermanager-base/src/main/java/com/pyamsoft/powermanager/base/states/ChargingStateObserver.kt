@@ -26,7 +26,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 internal class ChargingStateObserver @Inject constructor(context: Context) : StateObserver {
-
   private val appContext: Context = context.applicationContext
   private val filter: IntentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
 
@@ -49,7 +48,6 @@ internal class ChargingStateObserver @Inject constructor(context: Context) : Sta
 
       return status
     }
-
   private val isCharging: Boolean
     @CheckResult get() {
       val status = status

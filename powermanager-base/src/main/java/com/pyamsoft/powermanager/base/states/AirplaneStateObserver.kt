@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.base.states
 
 import com.pyamsoft.powermanager.model.StateObserver
 import com.pyamsoft.powermanager.model.States
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 internal class AirplaneStateObserver @Inject constructor(
     private val wrapper: DeviceFunctionWrapper) : StateObserver {

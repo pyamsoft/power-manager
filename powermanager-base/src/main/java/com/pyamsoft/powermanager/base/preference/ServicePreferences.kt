@@ -19,13 +19,10 @@ package com.pyamsoft.powermanager.base.preference
 import android.support.annotation.CheckResult
 
 interface ServicePreferences {
-
   var serviceEnabled: Boolean
     @CheckResult get
-
   val startWhenOpen: Boolean
     @CheckResult get
-
   val notificationPriority: Int
     @CheckResult get
 }

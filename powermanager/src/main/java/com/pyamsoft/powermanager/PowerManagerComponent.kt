@@ -48,7 +48,6 @@ import javax.inject.Singleton
         LoggerModule::class, ShellCommandModule::class, PermissionObserverModule::class,
         StateObserverModule::class, StateModifierModule::class, JobModule::class,
         ManageSingletonModule::class, TimeModule::class)) interface PowerManagerComponent {
-
   @CheckResult fun plusManageComponent(): ManageComponent
 
   fun inject(fragment: PowerTriggerListFragment)

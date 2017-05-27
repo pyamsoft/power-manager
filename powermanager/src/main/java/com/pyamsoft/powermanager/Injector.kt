@@ -19,13 +19,11 @@ package com.pyamsoft.powermanager
 import android.support.annotation.CheckResult
 
 class Injector private constructor(private val component: PowerManagerComponent) {
-
   @CheckResult fun provideComponent(): PowerManagerComponent {
     return component
   }
 
   companion object {
-
     @JvmStatic @Volatile private var instance: Injector? = null
 
     @JvmStatic internal fun set(component: PowerManagerComponent?) {

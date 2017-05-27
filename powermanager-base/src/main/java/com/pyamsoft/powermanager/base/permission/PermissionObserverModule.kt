@@ -26,7 +26,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class PermissionObserverModule {
-
   @Singleton @Named("obs_root_permission") @Provides fun provideRootPermissionObserver(
       rootChecker: RootChecker, context: Context,
       preferences: RootPreferences): PermissionObserver {

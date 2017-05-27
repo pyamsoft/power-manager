@@ -28,7 +28,6 @@ import javax.inject.Singleton
 @Singleton internal class MainInteractor @Inject constructor(val rootPreferences: RootPreferences,
     val servicePreferences: ServicePreferences,
     @param:Named("obs_root_permission") val rootPermissionObserver: PermissionObserver) {
-
   /**
    * public
    */

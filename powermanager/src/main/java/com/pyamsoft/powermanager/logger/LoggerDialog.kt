@@ -26,8 +26,6 @@ import com.pyamsoft.powermanager.uicore.WatchedDialog
 import timber.log.Timber
 
 class LoggerDialog : WatchedDialog(), LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
-
-
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     return inflater?.inflate(R.layout.dialog_logger, container, false)

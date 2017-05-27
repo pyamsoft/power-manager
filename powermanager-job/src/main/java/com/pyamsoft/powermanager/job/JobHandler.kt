@@ -43,7 +43,6 @@ class JobHandler @Inject internal constructor(
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences) {
-
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
     return object : JobRunner(jobQueuer, chargingObserver, wifiModifier, dataModifier,
         bluetoothModifier, syncModifier, dozeModifier, airplaneModifier, wifiPreferences,

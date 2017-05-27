@@ -25,7 +25,6 @@ import javax.inject.Named
 class MainPresenter @Inject internal constructor(val interactor: MainInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
-
   /**
    * public
    */
@@ -54,7 +53,6 @@ class MainPresenter @Inject internal constructor(val interactor: MainInteractor,
   }
 
   interface StartupCallback {
-
     fun onServiceEnabledWhenOpen()
 
     fun explainRootRequirement()

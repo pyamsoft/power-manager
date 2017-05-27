@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.job
 
 interface JobQueuer {
-
   fun cancel(tag: String)
 
   fun queue(entry: JobQueuerEntry)
@@ -25,7 +24,6 @@ interface JobQueuer {
   fun queueRepeating(entry: JobQueuerEntry)
 
   companion object {
-
     const val ENABLE_TAG = "ENABLE"
     const val DISABLE_TAG = "DISABLE"
   }

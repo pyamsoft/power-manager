@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 internal class SyncConnectionWrapperImpl @Inject constructor(
     private val logger: Logger) : DeviceFunctionWrapper {
-
   private fun toggle(state: Boolean) {
     logger.i("Sync: %s", if (state) "enable" else "disable")
     ContentResolver.setMasterSyncAutomatically(state)

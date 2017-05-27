@@ -24,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton internal open class ServiceInteractor @Inject constructor(
     val preferences: ServicePreferences) {
-
   /**
    * public
    */

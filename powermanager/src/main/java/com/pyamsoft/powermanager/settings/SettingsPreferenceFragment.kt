@@ -26,16 +26,12 @@ import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 
 class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
-
   override val applicationName: String
     get() = getString(R.string.app_name)
-
   override val rootViewContainer: Int
     get() = R.id.main_container
-
   override val preferenceXmlResId: Int
     get() = R.xml.preferences
-
   override val isLastOnBackStack: BackStackState
     get() = LAST
 

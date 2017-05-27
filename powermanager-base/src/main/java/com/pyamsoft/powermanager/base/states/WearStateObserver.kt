@@ -29,11 +29,8 @@ import java.util.concurrent.TimeUnit
 
 internal class WearStateObserver(context: Context,
     private val preferences: WearablePreferences) : StateObserver {
-
-  private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(context.applicationContext).addApiIfAvailable(
-      Wearable.API)
-      .build()
-
+  private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(
+      context.applicationContext).addApiIfAvailable(Wearable.API).build()
   private val isWearableNodeConnected: Boolean
     @WorkerThread @CheckResult get() {
       val waitTime = preferences.wearableDelay
@@ -50,7 +47,6 @@ internal class WearStateObserver(context: Context,
           break
         }
       }
-
       val result: Boolean
       if (wearableNode == null) {
         Timber.w("No wearable node was found")
@@ -63,7 +59,6 @@ internal class WearStateObserver(context: Context,
       disconnectGoogleApiClient()
       return result
     }
-
   /**
    * Return if a wearable is connected
    */

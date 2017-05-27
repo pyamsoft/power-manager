@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult
 import com.google.auto.value.AutoValue
 
 @AutoValue abstract class JobQueuerEntry {
-
   @CheckResult abstract fun tag(): String
 
   @CheckResult abstract fun firstRun(): Boolean
@@ -36,7 +35,6 @@ import com.google.auto.value.AutoValue
   @CheckResult abstract fun repeatingOffWindow(): Long
 
   @AutoValue.Builder abstract class Builder {
-
     @CheckResult protected abstract fun tag(tag: String): Builder
 
     @CheckResult abstract fun screenOn(screen: Boolean): Builder
@@ -55,7 +53,6 @@ import com.google.auto.value.AutoValue
   }
 
   companion object {
-
     @JvmStatic @CheckResult fun builder(tag: String): Builder {
       return AutoValue_JobQueuerEntry.Builder().tag(tag)
     }

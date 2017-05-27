@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/powermanager-job/powermanager-job.iml" filepath="$PROJECT_DIR$/powermanager-job/powermanager-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-main/powermanager-main.iml" filepath="$PROJECT_DIR$/powermanager-main/powermanager-main.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-manage/powermanager-manage.iml" filepath="$PROJECT_DIR$/powermanager-manage/powermanager-manage.iml" />
-      <module fileurl="file://$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" filepath="$PROJECT_DIR$/powermanager-manager/powermanager-manager.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-model/powermanager-model.iml" filepath="$PROJECT_DIR$/powermanager-model/powermanager-model.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-service/powermanager-service.iml" filepath="$PROJECT_DIR$/powermanager-service/powermanager-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" filepath="$PROJECT_DIR$/powermanager-settings/powermanager-settings.iml" />
