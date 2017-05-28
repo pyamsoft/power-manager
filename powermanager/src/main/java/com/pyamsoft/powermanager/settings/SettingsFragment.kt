@@ -46,7 +46,9 @@ class SettingsFragment : WatchedFragment() {
     ActionBarUtil.setActionBarTitle(activity, R.string.app_name)
 
     if (activity is MainActivity) {
-      activity.bottomtabs.visibility = View.VISIBLE
+      val main = activity as MainActivity
+      main.bottomtabs.visibility = View.VISIBLE
+      main.setOverlapTop(0F)
     }
   }
 

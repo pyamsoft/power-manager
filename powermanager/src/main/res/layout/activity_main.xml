@@ -30,6 +30,7 @@
       android:layout_height="200dp"
       android:fitsSystemWindows="true"
       android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      app:elevation="4dp"
       >
 
     <android.support.design.widget.CollapsingToolbarLayout
@@ -67,7 +68,6 @@
       android:id="@+id/main_container"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      app:behavior_overlapTop="56dp"
       app:layout_behavior="@string/appbar_scrolling_view_behavior"
       />
 

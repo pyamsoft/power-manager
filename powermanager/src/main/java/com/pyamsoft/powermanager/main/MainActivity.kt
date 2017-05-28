@@ -22,7 +22,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.CheckResult
+import android.support.annotation.Px
+import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
 import android.view.KeyEvent
@@ -39,10 +42,12 @@ import com.pyamsoft.powermanager.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
+import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.DialogUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import kotlinx.android.synthetic.main.activity_main.main_appbar
 import kotlinx.android.synthetic.main.activity_main.main_collapsebar
+import kotlinx.android.synthetic.main.activity_main.main_container
 import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import timber.log.Timber
 import javax.inject.Inject
@@ -231,6 +236,12 @@ class MainActivity : TamperActivity() {
     }
 
     return super.onKeyUp(keyCode, event)
+  }
+
+  // Set the scrolling overlap top
+  fun setOverlapTop(@Px px: Float) {
+    ((main_container.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? AppBarLayout.ScrollingViewBehavior)?.overlayTop = AppUtil.convertToDP(
+        this, px).toInt()
   }
 
   internal fun handleBackLongPress(): Boolean {
