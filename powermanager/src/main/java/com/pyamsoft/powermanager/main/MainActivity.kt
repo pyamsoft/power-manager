@@ -31,7 +31,6 @@ import android.support.v7.preference.PreferenceManager
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.pyamsoft.powermanager.BuildConfig
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
@@ -40,10 +39,11 @@ import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.AppUtil
-import com.pyamsoft.pydroid.util.DialogUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import kotlinx.android.synthetic.main.activity_main.main_appbar
 import kotlinx.android.synthetic.main.activity_main.main_collapsebar
@@ -196,9 +196,9 @@ class MainActivity : TamperActivity() {
       }
 
       override fun explainRootRequirement() {
-        Toast.makeText(applicationContext,
+        Toasty.makeText(applicationContext,
             "Root is required for certain functions like Doze and Airplane mode",
-            Toast.LENGTH_SHORT).show()
+            Toasty.LENGTH_SHORT).show()
       }
     })
   }

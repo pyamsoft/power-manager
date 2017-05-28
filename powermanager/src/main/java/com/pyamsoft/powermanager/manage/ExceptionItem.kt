@@ -22,10 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
-import android.widget.Toast
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.manage.ExceptionPresenter.BusCallback
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_airplane
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_bluetooth
@@ -150,8 +150,8 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(checkBox.context, "Failed to retrieve state: " + name,
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
+            Toasty.LENGTH_SHORT).show()
 
         // Mark switch as disabled
         checkBox.isEnabled = false
@@ -167,8 +167,8 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
             val listener = this
             presenter.setIgnoreCharging(isChecked, object : ExceptionPresenter.ActionCallback {
               override fun onError(throwable: Throwable) {
-                Toast.makeText(checkBox.context, "Failed to set state: " + name,
-                    Toast.LENGTH_SHORT).show()
+                Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+                    Toasty.LENGTH_SHORT).show()
 
                 // Roll back
                 buttonView.isChecked = !isChecked
@@ -206,8 +206,8 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(checkBox.context.applicationContext, "Failed to retrieve state: " + name,
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
+            Toasty.LENGTH_SHORT).show()
 
         // Mark switch as disabled
         checkBox.isEnabled = false
@@ -223,8 +223,8 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
             val listener = this
             presenter.setIgnoreWear(isChecked, object : ExceptionPresenter.ActionCallback {
               override fun onError(throwable: Throwable) {
-                Toast.makeText(checkBox.context.applicationContext, "Failed to set state: " + name,
-                    Toast.LENGTH_SHORT).show()
+                Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+                    Toasty.LENGTH_SHORT).show()
 
                 // Roll back
                 buttonView.isChecked = !isChecked

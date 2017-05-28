@@ -22,9 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
-import android.widget.Toast
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.layout_container_manage.view.manage_airplane
 import kotlinx.android.synthetic.main.layout_container_manage.view.manage_bluetooth
@@ -91,8 +91,8 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(switchCompat.context.applicationContext, "Failed to retrieve state: " + name,
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(switchCompat.context, "Failed to retrieve state: " + name,
+            Toasty.LENGTH_SHORT).show()
 
         // Mark switch as disabled
         switchCompat.isEnabled = false
@@ -108,8 +108,8 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
             val listener = this
             presenter.setManaged(isChecked, object : ManagePresenter.ActionCallback {
               override fun onError(throwable: Throwable) {
-                Toast.makeText(switchCompat.context.applicationContext, "Failed to set state: " + name,
-                    Toast.LENGTH_SHORT).show()
+                Toasty.makeText(switchCompat.context, "Failed to set state: " + name,
+                    Toasty.LENGTH_SHORT).show()
 
                 // Roll back
                 buttonView.isChecked = !isChecked

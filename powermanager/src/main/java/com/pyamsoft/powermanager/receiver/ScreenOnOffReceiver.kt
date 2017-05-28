@@ -24,10 +24,10 @@ import android.hardware.display.DisplayManager
 import android.os.Build
 import android.support.annotation.CheckResult
 import android.view.Display
-import android.widget.Toast
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.service.Manager
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -98,8 +98,7 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
       manager.cleanup()
       appContext.registerReceiver(this, SCREEN_FILTER)
       isRegistered = true
-
-      Toast.makeText(appContext, "Power Manager started", Toast.LENGTH_SHORT).show()
+      Toasty.makeText(appContext, "Power Manager started", Toasty.LENGTH_SHORT).show()
     } else {
       Timber.w("Already registered")
     }
@@ -110,8 +109,7 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
       appContext.unregisterReceiver(this)
       manager.cleanup()
       isRegistered = false
-
-      Toast.makeText(appContext, "Power Manager suspended", Toast.LENGTH_SHORT).show()
+      Toasty.makeText(appContext, "Power Manager suspended", Toasty.LENGTH_SHORT).show()
     } else {
       Timber.w("Already unregistered")
     }

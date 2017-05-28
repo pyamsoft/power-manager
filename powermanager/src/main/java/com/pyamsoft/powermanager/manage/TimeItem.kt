@@ -23,8 +23,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_input_custom
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_custom
@@ -88,7 +88,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(context.applicationContext, "Error getting delay time", Toast.LENGTH_SHORT).show()
+        Toasty.makeText(context, "Error getting delay time", Toasty.LENGTH_SHORT).show()
       }
 
       override fun onComplete() {
@@ -117,7 +117,8 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
 
         providePresenter().setPresetTime(time, object : TimePresenter.ActionCallback {
           override fun onError(throwable: Throwable) {
-            Toast.makeText(context.applicationContext, "Failed to set delay time", Toast.LENGTH_SHORT).show()
+            Toasty.makeText(context, "Failed to set delay time",
+                Toasty.LENGTH_SHORT).show()
             group.isEnabled = false
           }
         })
@@ -142,8 +143,8 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(context.applicationContext, "Error while listening for time changes",
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(context, "Error while listening for time changes",
+            Toasty.LENGTH_SHORT).show()
         disableCustomInput(holder)
       }
     })
@@ -172,8 +173,8 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(holder.itemView.context.applicationContext, "Error while listening for custom changes",
-            Toast.LENGTH_SHORT).show()
+        Toasty.makeText(holder.itemView.context, "Error while listening for custom changes",
+            Toasty.LENGTH_SHORT).show()
         disableCustomInput(holder)
       }
     })

@@ -24,7 +24,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.PowerManager
@@ -34,7 +33,8 @@ import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
-import com.pyamsoft.pydroid.util.DialogUtil
+import com.pyamsoft.pydroid.ui.helper.Toasty
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_empty
 import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_fab
 import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_list
@@ -127,13 +127,13 @@ class PowerTriggerListFragment : WatchedFragment() {
       }
 
       override fun onNewTriggerCreateError() {
-        Toast.makeText(context, "ERROR: Trigger must have a name and unique percent",
-            Toast.LENGTH_LONG).show()
+        Toasty.makeText(context, "ERROR: Trigger must have a name and unique percent",
+            Toasty.LENGTH_LONG).show()
       }
 
       override fun onNewTriggerInsertError() {
-        Toast.makeText(context, "ERROR: Two triggers cannot have the same percent",
-            Toast.LENGTH_LONG).show()
+        Toasty.makeText(context, "ERROR: Two triggers cannot have the same percent",
+            Toasty.LENGTH_LONG).show()
       }
 
       override fun onTriggerDeleted(position: Int) {
