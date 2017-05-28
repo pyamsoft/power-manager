@@ -88,7 +88,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(context, "Error getting delay time", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context.applicationContext, "Error getting delay time", Toast.LENGTH_SHORT).show()
       }
 
       override fun onComplete() {
@@ -117,7 +117,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
 
         providePresenter().setPresetTime(time, object : TimePresenter.ActionCallback {
           override fun onError(throwable: Throwable) {
-            Toast.makeText(context, "Failed to set delay time", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context.applicationContext, "Failed to set delay time", Toast.LENGTH_SHORT).show()
             group.isEnabled = false
           }
         })
@@ -142,7 +142,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(context, "Error while listening for delay changes",
+        Toast.makeText(context.applicationContext, "Error while listening for time changes",
             Toast.LENGTH_SHORT).show()
         disableCustomInput(holder)
       }
@@ -172,7 +172,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(holder.itemView.context, "Error while listening for custom changes",
+        Toast.makeText(holder.itemView.context.applicationContext, "Error while listening for custom changes",
             Toast.LENGTH_SHORT).show()
         disableCustomInput(holder)
       }

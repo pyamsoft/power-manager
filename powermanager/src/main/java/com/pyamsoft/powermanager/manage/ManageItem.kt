@@ -91,7 +91,7 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(switchCompat.context, "Failed to retrieve state: " + name,
+        Toast.makeText(switchCompat.context.applicationContext, "Failed to retrieve state: " + name,
             Toast.LENGTH_SHORT).show()
 
         // Mark switch as disabled
@@ -108,7 +108,7 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
             val listener = this
             presenter.setManaged(isChecked, object : ManagePresenter.ActionCallback {
               override fun onError(throwable: Throwable) {
-                Toast.makeText(switchCompat.context, "Failed to set state: " + name,
+                Toast.makeText(switchCompat.context.applicationContext, "Failed to set state: " + name,
                     Toast.LENGTH_SHORT).show()
 
                 // Roll back

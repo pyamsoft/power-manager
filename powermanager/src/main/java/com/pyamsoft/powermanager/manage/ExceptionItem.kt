@@ -206,7 +206,7 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
       }
 
       override fun onError(throwable: Throwable) {
-        Toast.makeText(checkBox.context, "Failed to retrieve state: " + name,
+        Toast.makeText(checkBox.context.applicationContext, "Failed to retrieve state: " + name,
             Toast.LENGTH_SHORT).show()
 
         // Mark switch as disabled
@@ -223,7 +223,7 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
             val listener = this
             presenter.setIgnoreWear(isChecked, object : ExceptionPresenter.ActionCallback {
               override fun onError(throwable: Throwable) {
-                Toast.makeText(checkBox.context, "Failed to set state: " + name,
+                Toast.makeText(checkBox.context.applicationContext, "Failed to set state: " + name,
                     Toast.LENGTH_SHORT).show()
 
                 // Roll back
