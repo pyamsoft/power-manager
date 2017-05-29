@@ -16,76 +16,19 @@
 
 package com.pyamsoft.powermanager.manage
 
-import android.content.SharedPreferences
-import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module class TimeModule {
-
-  @Singleton @Provides @Named("manage_delay_interactor") fun provideManageDelayInteractor(
-      preferences: ManagePreferences): TimeInteractor {
-    return TimeInteractor(object : TimePreferenceWrapper {
-      override val time: Long
-        get() = preferences.manageDelay
-
-      override val isCustom: Boolean
-        get() = preferences.customManageDelay
-
-      override fun setTime(time: Long, custom: Boolean) {
-        preferences.manageDelay = time
-        preferences.customManageDelay = custom
-      }
-
-      override fun registerTimeChanges(
-          listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
-        return preferences.registerDelayChanges(listener)
-      }
-
-      override fun unregisterTimeChanges(
-          listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        preferences.unregisterDelayChanges(listener)
-      }
-    })
-  }
-
-  @Singleton @Provides @Named("manage_disable_interactor") fun provideManageDisableInteractor(
-      preferences: ManagePreferences): TimeInteractor {
-    return TimeInteractor(object : TimePreferenceWrapper {
-      override val isCustom: Boolean
-        get() = preferences.customDisableTime
-      override val time: Long
-        get() = preferences.periodicDisableTime
-
-      override fun setTime(time: Long, custom: Boolean) {
-        preferences.periodicDisableTime = time
-        preferences.customDisableTime = custom
-      }
-
-      override fun registerTimeChanges(
-          listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
-        return preferences.registerDisableChanges(listener)
-      }
-
-      override fun unregisterTimeChanges(
-          listener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        preferences.unregisterDisableChanges(listener)
-      }
-    })
-  }
-
-  @Provides @Named("manage_delay") fun provideManageDelayPresenter(
-      @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
-      @Named("manage_delay_interactor") interactor: TimeInteractor): TimePresenter {
+  @Provides internal fun provideManageDelayPresenter(@Named("obs") observeScheduler: Scheduler,
+      @Named("sub") subscribeScheduler: Scheduler, interactor: TimeInteractor): TimePresenter {
     return TimePresenter(observeScheduler, subscribeScheduler, interactor)
   }
 
-  @Provides @Named("manage_disable") fun provideManageDisablePresenter(
-      @Named("obs") observeScheduler: Scheduler, @Named("sub") subscribeScheduler: Scheduler,
-      @Named("manage_disable_interactor") interactor: TimeInteractor): TimePresenter {
-    return TimePresenter(observeScheduler, subscribeScheduler, interactor)
+  @Provides internal fun providePollPresenter(@Named("obs") observeScheduler: Scheduler,
+      @Named("sub") subscribeScheduler: Scheduler, interactor: PollInteractor): PollPresenter {
+    return PollPresenter(interactor, observeScheduler, subscribeScheduler)
   }
 }

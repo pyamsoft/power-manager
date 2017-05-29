@@ -22,14 +22,13 @@ import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TimeInteractor @Inject internal constructor(val preferences: TimePreferenceWrapper) {
+open internal class TimeInteractor @Inject internal constructor(
+    val preferences: TimePreferenceWrapper) {
   private val customInputBus: EventBus = EventBus.newLocalBus()
-
   val time: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
 

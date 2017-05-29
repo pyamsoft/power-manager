@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="periodic_airplane_default">true</bool>
+  <bool name="periodic_airplane_default">false</bool>
   <string name="periodic_airplane_key">pm7_airplane_periodic</string>
 
 </resources>

@@ -28,8 +28,7 @@ import io.reactivex.Scheduler
 import javax.inject.Named
 
 @Module class ManageModule {
-
-  @Provides @Named("manage_wifi") fun provideWifi(
+  @Provides @Named("manage_wifi") internal fun provideWifi(
       @Named("manage_wifi_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -39,7 +38,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("manage_data") fun provideData(
+  @Provides @Named("manage_data") internal fun provideData(
       @Named("manage_data_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -49,7 +48,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("manage_bluetooth") fun provideBluetooth(
+  @Provides @Named("manage_bluetooth") internal fun provideBluetooth(
       @Named("manage_bluetooth_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -59,7 +58,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("manage_sync") fun provideSync(
+  @Provides @Named("manage_sync") internal fun provideSync(
       @Named("manage_sync_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -69,7 +68,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("manage_airplane") fun provideAirplane(
+  @Provides @Named("manage_airplane") internal fun provideAirplane(
       @Named("manage_airplane_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -79,7 +78,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("manage_doze") fun provideDoze(
+  @Provides @Named("manage_doze") internal fun provideDoze(
       @Named("manage_doze_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ManagePresenter {
@@ -89,7 +88,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_wifi") fun provideWifiException(
+  @Provides @Named("exception_wifi") internal fun provideWifiException(
       @Named("exception_wifi_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
@@ -99,7 +98,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_data") fun provideDataException(
+  @Provides @Named("exception_data") internal fun provideDataException(
       @Named("exception_data_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
@@ -109,7 +108,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_bluetooth") fun provideBluetoothException(
+  @Provides @Named("exception_bluetooth") internal fun provideBluetoothException(
       @Named("exception_bluetooth_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
@@ -119,7 +118,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_sync") fun provideSyncException(
+  @Provides @Named("exception_sync") internal fun provideSyncException(
       @Named("exception_sync_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
@@ -129,7 +128,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_airplane") fun provideAirplaneException(
+  @Provides @Named("exception_airplane") internal fun provideAirplaneException(
       @Named("exception_airplane_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
@@ -139,7 +138,7 @@ import javax.inject.Named
     }
   }
 
-  @Provides @Named("exception_doze") fun provideDozeException(
+  @Provides @Named("exception_doze") internal fun provideDozeException(
       @Named("exception_doze_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
       @Named("sub") subScheduler: Scheduler): ExceptionPresenter {

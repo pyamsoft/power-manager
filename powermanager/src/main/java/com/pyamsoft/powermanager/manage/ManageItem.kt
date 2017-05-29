@@ -17,11 +17,11 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SwitchCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import android.widget.Switch
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.pydroid.ui.helper.Toasty
@@ -71,55 +71,57 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
     bindSwitch(holder.container.manage_doze, "Doze Mode", presenterDoze)
   }
 
-  private fun bindSwitch(switchCompat: SwitchCompat, name: String, presenter: ManagePresenter) {
+  private fun bindSwitch(switch: Switch, name: String, presenter: ManagePresenter) {
     // Set enabled in case it failed last time
-    switchCompat.isEnabled = true
+    switch.isEnabled = true
 
     // Set title
-    switchCompat.text = name
+    switch.text = name
 
     // Get current state
     presenter.getState(object : ManagePresenter.RetrieveCallback {
       override fun onEnableRetrieved(enabled: Boolean) {
-        switchCompat.isEnabled = enabled
+        switch.isEnabled = enabled
       }
 
       override fun onStateRetrieved(enabled: Boolean) {
         // Make sure we don't trigger anything
-        switchCompat.setOnCheckedChangeListener(null)
-        switchCompat.isChecked = enabled
+        switch.setOnCheckedChangeListener(null)
+        switch.isChecked = enabled
       }
 
       override fun onError(throwable: Throwable) {
-        Toasty.makeText(switchCompat.context, "Failed to retrieve state: " + name,
+        Toasty.makeText(switch.context, "Failed to retrieve state: " + name,
             Toasty.LENGTH_SHORT).show()
 
         // Mark switch as disabled
-        switchCompat.isEnabled = false
+        switch.isEnabled = false
       }
 
       override fun onComplete() {
-        switchCompat.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-            // Make sure we don't trigger anything
-            buttonView.setOnCheckedChangeListener(null)
+        switch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
+          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            if (buttonView != null) {
+              // Make sure we don't trigger anything
+              buttonView.setOnCheckedChangeListener(null)
 
-            // Update backing
-            val listener = this
-            presenter.setManaged(isChecked, object : ManagePresenter.ActionCallback {
-              override fun onError(throwable: Throwable) {
-                Toasty.makeText(switchCompat.context, "Failed to set state: " + name,
-                    Toasty.LENGTH_SHORT).show()
+              // Update backing
+              val listener = this
+              presenter.setManaged(isChecked, object : ManagePresenter.ActionCallback {
+                override fun onError(throwable: Throwable) {
+                  Toasty.makeText(switch.context, "Failed to set state: " + name,
+                      Toasty.LENGTH_SHORT).show()
 
-                // Roll back
-                buttonView.isChecked = !isChecked
-              }
+                  // Roll back
+                  buttonView.isChecked = !isChecked
+                }
 
-              override fun onComplete() {
-                // Re-apply listener
-                buttonView.setOnCheckedChangeListener(listener)
-              }
-            })
+                override fun onComplete() {
+                  // Re-apply listener
+                  buttonView.setOnCheckedChangeListener(listener)
+                }
+              })
+            }
           }
         })
       }
@@ -151,9 +153,9 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
     presenterDoze.destroy()
   }
 
-  private fun unbindSwitch(switchCompat: SwitchCompat) {
-    switchCompat.text = null
-    switchCompat.setOnCheckedChangeListener(null)
+  private fun unbindSwitch(switch: Switch) {
+    switch.text = null
+    switch.setOnCheckedChangeListener(null)
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

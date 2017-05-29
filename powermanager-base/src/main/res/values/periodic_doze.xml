@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="periodic_doze_default">true</bool>
+  <bool name="periodic_doze_default">false</bool>
   <string name="periodic_doze_key">pm7_doze_periodic</string>
 
 </resources>

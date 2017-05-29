@@ -86,12 +86,12 @@ class ExpanderView : FrameLayout {
     cancelArrowAnimation()
     cancelContainerAnimation()
     if (expanded) {
-      ViewCompat.setRotation(binding.expander_arrow, 0f)
+      ViewCompat.setRotation(binding.expander_arrow, 180f)
       binding.expander_container.alpha = 1F
       //binding.expanderContainer.setScaleY(1);
       binding.expander_container.visibility = View.VISIBLE
     } else {
-      ViewCompat.setRotation(binding.expander_arrow, 180f)
+      ViewCompat.setRotation(binding.expander_arrow, 0f)
       binding.expander_container.visibility = View.GONE
       binding.expander_container.alpha = 0F
       //binding.expanderContainer.setScaleY(0);
@@ -102,7 +102,7 @@ class ExpanderView : FrameLayout {
       expanded = !expanded
       cancelArrowAnimation()
       arrowAnimation = ViewCompat.animate(binding.expander_arrow).rotation(
-          if (expanded) 0F else 180F)
+          if (expanded) 180F else 0F)
       arrowAnimation!!.start()
 
       cancelContainerAnimation()
@@ -170,7 +170,6 @@ class ExpanderView : FrameLayout {
     arrowLoad = LoaderHelper.unload(arrowLoad)
     arrowLoad = ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(
         binding.expander_arrow)
-    binding.expander_arrow.rotation = 180F
   }
 
   override fun onDetachedFromWindow() {

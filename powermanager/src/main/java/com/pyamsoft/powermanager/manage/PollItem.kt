@@ -17,9 +17,15 @@
 package com.pyamsoft.powermanager.manage
 
 import android.view.View
+import android.widget.CompoundButton
+import android.widget.CompoundButton.OnCheckedChangeListener
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.manage.PollPresenter.StateCallback
+import com.pyamsoft.powermanager.manage.PollPresenter.ToggleAllCallback
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
+import kotlinx.android.synthetic.main.adapter_item_toggle.view.toggle_switch
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_eight
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_five
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_four
@@ -28,19 +34,24 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_se
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_six
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
-  @field:[Inject Named("manage_disable")] lateinit internal var presenter: TimePresenter
+
+  @field:Inject lateinit internal var presenter: PollPresenter
 
   init {
-    Injector.get().provideComponent().inject(this)
+    Injector.get().provideComponent().plusManageComponent().inject(this)
   }
 
   override fun getType(): Int {
     return R.id.adapter_poll_card_item
+  }
+
+  override fun getLayoutRes(): Int {
+    return R.layout.adapter_item_toggle
   }
 
   override fun providePresenter(): TimePresenter {
@@ -83,10 +94,66 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
     return ViewHolder(view)
   }
 
+  override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
+    super.bindView(holder, payloads)
+
+    holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
+    presenter.getCurrentPeriodic(object : StateCallback {
+      override fun onError(throwable: Throwable) {
+        Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
+            Toasty.LENGTH_SHORT).show()
+
+        // Mark switch as disabled
+        holder.itemView.toggle_switch.isEnabled = false
+      }
+
+      override fun onStateRetrieved(checked: Boolean) {
+        Timber.d("Poll state retrieved: %s", checked)
+        holder.itemView.toggle_switch.isChecked = checked
+      }
+
+      override fun onCompleted() {
+        holder.itemView.toggle_switch.setOnCheckedChangeListener(object : OnCheckedChangeListener {
+          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            if (buttonView != null) {
+              Timber.d("Set polling enabled: %s", isChecked)
+              buttonView.setOnCheckedChangeListener(null)
+
+              val listener = this
+              presenter.toggleAll(isChecked, object : ToggleAllCallback {
+
+                override fun onError(throwable: Throwable) {
+                  Toasty.makeText(buttonView.context, "Failed to set polling state",
+                      Toasty.LENGTH_SHORT).show()
+
+                  // Mark switch as disabled
+                  buttonView.isEnabled = false
+                }
+
+                override fun onCompleted() {
+                  buttonView.setOnCheckedChangeListener(listener)
+                }
+              })
+
+            }
+          }
+        })
+      }
+    })
+
+  }
+
+  override fun unbindView(holder: ViewHolder) {
+    super.unbindView(holder)
+    holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
+  }
+
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
 
     init {
-      itemView.simple_expander.setTitle("Smart Poll")
+      itemView.toggle_switch.text = "Smart Polling"
+      itemView.simple_expander.setTitle("Polling Delay")
+      itemView.simple_expander.setTitleTextSize(16)
       itemView.simple_expander.setDescription(
           "Peter will create some good description here eventually")
       containerDelay.delay_radio_one.text = "1 Minute"

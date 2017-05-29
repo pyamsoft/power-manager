@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="periodic_data_default">true</bool>
+  <bool name="periodic_data_default">false</bool>
   <string name="periodic_data_key">pm7_data_periodic</string>
 
 </resources>

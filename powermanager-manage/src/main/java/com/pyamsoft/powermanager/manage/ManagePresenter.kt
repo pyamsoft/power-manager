@@ -24,7 +24,6 @@ import timber.log.Timber
 abstract class ManagePresenter internal constructor(private val interactor: ManageInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
     subscribeScheduler) {
-
   /**
    * public
    */
@@ -54,14 +53,12 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
   }
 
   interface ActionCallback {
-
     fun onError(throwable: Throwable)
 
     fun onComplete()
   }
 
   interface RetrieveCallback {
-
     fun onEnableRetrieved(enabled: Boolean)
 
     fun onStateRetrieved(enabled: Boolean)

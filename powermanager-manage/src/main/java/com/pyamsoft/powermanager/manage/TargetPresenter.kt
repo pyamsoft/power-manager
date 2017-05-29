@@ -20,8 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 
-abstract class TargetPresenter(observeScheduler: Scheduler,
+abstract class TargetPresenter protected constructor(observeScheduler: Scheduler,
     subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
-
   @get:CheckResult internal abstract val target: ManageTargets
 }

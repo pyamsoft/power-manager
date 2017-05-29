@@ -159,26 +159,28 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
 
       override fun onComplete() {
         checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-            // Make sure we don't trigger anything
-            buttonView.setOnCheckedChangeListener(null)
+          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            if (buttonView != null) {
+              // Make sure we don't trigger anything
+              buttonView.setOnCheckedChangeListener(null)
 
-            // Update backing
-            val listener = this
-            presenter.setIgnoreCharging(isChecked, object : ExceptionPresenter.ActionCallback {
-              override fun onError(throwable: Throwable) {
-                Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-                    Toasty.LENGTH_SHORT).show()
+              // Update backing
+              val listener = this
+              presenter.setIgnoreCharging(isChecked, object : ExceptionPresenter.ActionCallback {
+                override fun onError(throwable: Throwable) {
+                  Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+                      Toasty.LENGTH_SHORT).show()
 
-                // Roll back
-                buttonView.isChecked = !isChecked
-              }
+                  // Roll back
+                  buttonView.isChecked = !isChecked
+                }
 
-              override fun onComplete() {
-                // Re-apply listener
-                buttonView.setOnCheckedChangeListener(listener)
-              }
-            })
+                override fun onComplete() {
+                  // Re-apply listener
+                  buttonView.setOnCheckedChangeListener(listener)
+                }
+              })
+            }
           }
         })
       }
@@ -215,26 +217,28 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
 
       override fun onComplete() {
         checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-            // Make sure we don't trigger anything
-            buttonView.setOnCheckedChangeListener(null)
+          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            if (buttonView != null) {
+              // Make sure we don't trigger anything
+              buttonView.setOnCheckedChangeListener(null)
 
-            // Update backing
-            val listener = this
-            presenter.setIgnoreWear(isChecked, object : ExceptionPresenter.ActionCallback {
-              override fun onError(throwable: Throwable) {
-                Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-                    Toasty.LENGTH_SHORT).show()
+              // Update backing
+              val listener = this
+              presenter.setIgnoreWear(isChecked, object : ExceptionPresenter.ActionCallback {
+                override fun onError(throwable: Throwable) {
+                  Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+                      Toasty.LENGTH_SHORT).show()
 
-                // Roll back
-                buttonView.isChecked = !isChecked
-              }
+                  // Roll back
+                  buttonView.isChecked = !isChecked
+                }
 
-              override fun onComplete() {
-                // Re-apply listener
-                buttonView.setOnCheckedChangeListener(listener)
-              }
-            })
+                override fun onComplete() {
+                  // Re-apply listener
+                  buttonView.setOnCheckedChangeListener(listener)
+                }
+              })
+            }
           }
         })
       }

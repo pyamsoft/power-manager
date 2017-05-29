@@ -27,12 +27,10 @@ import com.pyamsoft.powermanager.base.states.WrapperModule
 import com.pyamsoft.powermanager.job.JobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
-import com.pyamsoft.powermanager.manage.DelayItem
 import com.pyamsoft.powermanager.manage.ManageComponent
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.manage.ManageSingletonModule
-import com.pyamsoft.powermanager.manage.PollItem
-import com.pyamsoft.powermanager.manage.TimeModule
+import com.pyamsoft.powermanager.manage.TimeSingletonModule
 import com.pyamsoft.powermanager.receiver.BootCompletedReceiver
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
 import com.pyamsoft.powermanager.service.ActionToggleService
@@ -47,7 +45,7 @@ import javax.inject.Singleton
     modules = arrayOf(PowerManagerModule::class, WrapperModule::class, PowerTriggerDBModule::class,
         LoggerModule::class, ShellCommandModule::class, PermissionObserverModule::class,
         StateObserverModule::class, StateModifierModule::class, JobModule::class,
-        ManageSingletonModule::class, TimeModule::class)) interface PowerManagerComponent {
+        ManageSingletonModule::class, TimeSingletonModule::class)) interface PowerManagerComponent {
   @CheckResult fun plusManageComponent(): ManageComponent
 
   fun inject(fragment: PowerTriggerListFragment)
@@ -69,8 +67,4 @@ import javax.inject.Singleton
   fun inject(foregroundService: ForegroundService)
 
   fun inject(manageFragment: ManageFragment)
-
-  fun inject(delayItem: DelayItem)
-
-  fun inject(pollItem: PollItem)
 }

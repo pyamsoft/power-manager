@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="manage_sync_default">true</bool>
+  <bool name="manage_sync_default">false</bool>
   <string name="manage_sync_key">pm7_manage_sync</string>
 
   <bool name="ignore_wear_sync_default">false</bool>

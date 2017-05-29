@@ -23,7 +23,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
+open class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
     @Named("sub") subscribeScheduler: Scheduler,
     private val interactor: TimeInteractor) : SchedulerPresenter(observeScheduler,
     subscribeScheduler) {
@@ -106,19 +106,16 @@ class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler:
   }
 
   interface ActionCallback {
-
     fun onError(throwable: Throwable)
   }
 
   interface OnTimeChangedCallback {
-
     fun onTimeChanged(time: Long)
 
     fun onError(throwable: Throwable)
   }
 
   interface CustomTimeChangedCallback {
-
     fun onCustomTimeChanged(time: Long)
 
     fun onCustomTimeInputError(error: String?)
@@ -127,7 +124,6 @@ class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler:
   }
 
   interface TimeCallback {
-
     fun onCustomTime(time: Long)
 
     fun onPresetTime(time: Long)

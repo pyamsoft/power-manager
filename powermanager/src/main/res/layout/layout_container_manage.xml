@@ -23,7 +23,7 @@
     android:padding="8dp"
     >
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_wifi"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_data"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_bluetooth"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_sync"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_airplane"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       />
 
-  <android.support.v7.widget.SwitchCompat
+  <Switch
       android:id="@+id/manage_doze"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

@@ -29,13 +29,13 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_si
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
 import javax.inject.Inject
-import javax.inject.Named
 
 class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
-  @field:[Inject Named("manage_delay")] lateinit internal var presenter: TimePresenter
+
+  @field:Inject lateinit internal var presenter: TimePresenter
 
   init {
-    Injector.get().provideComponent().inject(this)
+    Injector.get().provideComponent().plusManageComponent().inject(this)
   }
 
   override fun getType(): Int {

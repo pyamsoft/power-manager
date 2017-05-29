@@ -20,8 +20,7 @@ import android.support.annotation.CheckResult
 import io.reactivex.Completable
 import io.reactivex.Single
 
-abstract class ExceptionInteractor {
-
+abstract internal class ExceptionInteractor {
   @CheckResult internal abstract fun setIgnoreCharging(state: Boolean): Completable
 
   @get:CheckResult internal abstract val isIgnoreCharging: Single<Pair<Boolean, Boolean>>

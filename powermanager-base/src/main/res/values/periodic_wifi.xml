@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="periodic_wifi_default">true</bool>
+  <bool name="periodic_wifi_default">false</bool>
   <string name="periodic_wifi_key">pm7_wifi_periodic</string>
 
 </resources>

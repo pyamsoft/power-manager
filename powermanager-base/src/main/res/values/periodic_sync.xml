@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="periodic_sync_default">true</bool>
+  <bool name="periodic_sync_default">false</bool>
   <string name="periodic_sync_key">pm7_sync_periodic</string>
 
 </resources>

@@ -24,7 +24,6 @@ import timber.log.Timber
 abstract class ExceptionPresenter internal constructor(private val interactor: ExceptionInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
     subscribeScheduler) {
-
   /**
    * public
    */
@@ -89,19 +88,16 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   }
 
   interface BusCallback {
-
     fun onManageChanged()
   }
 
   interface ActionCallback {
-
     fun onError(throwable: Throwable)
 
     fun onComplete()
   }
 
   interface RetrieveCallback {
-
     fun onEnableRetrieved(enabled: Boolean)
 
     fun onStateRetrieved(enabled: Boolean)

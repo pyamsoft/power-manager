@@ -29,66 +29,67 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class ManageSingletonModule {
-
-  @Singleton @Provides @Named("manage_wifi_interactor") fun provideWifi(
+  @Singleton @Provides @Named("manage_wifi_interactor") internal fun provideWifi(
       preferences: WifiPreferences): ManageInteractor {
     return WifiManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_data_interactor") fun provideData(
+  @Singleton @Provides @Named("manage_data_interactor") internal fun provideData(
       preferences: DataPreferences,
       @Named("obs_root_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return DataManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("manage_bluetooth_interactor") fun provideBluetooth(
+  @Singleton @Provides @Named("manage_bluetooth_interactor") internal fun provideBluetooth(
       preferences: BluetoothPreferences): ManageInteractor {
     return BluetoothManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_sync_interactor") fun provideSync(
+  @Singleton @Provides @Named("manage_sync_interactor") internal fun provideSync(
       preferences: SyncPreferences): ManageInteractor {
     return SyncManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_airplane_interactor") fun provideAirplane(
+  @Singleton @Provides @Named("manage_airplane_interactor") internal fun provideAirplane(
       preferences: AirplanePreferences,
       @Named("obs_root_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return AirplaneManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("manage_doze_interactor") fun provideDoze(
+  @Singleton @Provides @Named("manage_doze_interactor") internal fun provideDoze(
       preferences: DozePreferences,
       @Named("obs_doze_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return DozeManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("exception_wifi_interactor") fun provideWifiException(
+  @Singleton @Provides @Named("exception_wifi_interactor") internal fun provideWifiException(
       preferences: WifiPreferences): ExceptionInteractor {
     return WifiExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_data_interactor") fun provideDataException(
+  @Singleton @Provides @Named("exception_data_interactor") internal fun provideDataException(
       preferences: DataPreferences): ExceptionInteractor {
     return DataExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_bluetooth_interactor") fun provideBluetoothException(
+  @Singleton @Provides @Named(
+      "exception_bluetooth_interactor") internal fun provideBluetoothException(
       preferences: BluetoothPreferences): ExceptionInteractor {
     return BluetoothExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_sync_interactor") fun provideSyncException(
+  @Singleton @Provides @Named("exception_sync_interactor") internal fun provideSyncException(
       preferences: SyncPreferences): ExceptionInteractor {
     return SyncExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_airplane_interactor") fun provideAirplaneException(
+  @Singleton @Provides @Named(
+      "exception_airplane_interactor") internal fun provideAirplaneException(
       preferences: AirplanePreferences): ExceptionInteractor {
     return AirplaneExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_doze_interactor") fun provideDozeException(
+  @Singleton @Provides @Named("exception_doze_interactor") internal fun provideDozeException(
       preferences: DozePreferences): ExceptionInteractor {
     return DozeExceptionInteractor(preferences)
   }
