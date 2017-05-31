@@ -34,7 +34,7 @@ class MainPresenter @Inject internal constructor(val interactor: MainInteractor,
   }
 
   private fun startServiceWhenOpen(callback: StartupCallback) {
-    disposeOnStop(interactor.isStartWhenOpen.subscribeOn(subscribeScheduler).observeOn(
+    disposeOnStop(interactor.isStartWhenOpen().subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({
       if (it) {
         callback.onServiceEnabledWhenOpen()

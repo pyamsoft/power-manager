@@ -38,8 +38,9 @@ import javax.inject.Singleton
   /**
    * public
    */
-  val isStartWhenOpen: Single<Boolean>
-    @CheckResult get() = Single.fromCallable { servicePreferences.startWhenOpen }
+  @CheckResult fun isStartWhenOpen(): Single<Boolean> {
+    return Single.fromCallable { servicePreferences.startWhenOpen }
+  }
 
   /**
    * public
