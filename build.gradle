@@ -28,6 +28,9 @@ buildscript {
       url "https://plugins.gradle.org/m2/"
     }
     maven {
+      url 'https://maven.google.com'
+    }
+    maven {
       url 'https://jitpack.io'
     }
   }
@@ -36,7 +39,6 @@ buildscript {
     minSdk = 19
     maxSdk = 25
     buildTools = "25.0.3"
-    heapSize = "2g"
 
     supportLib = "25.3.1"
     firebase = "10.2.6"
@@ -44,11 +46,11 @@ buildscript {
     pydroid = "10.2.1"
     autoValue = "1.4.1"
     sqlbrite = "1.1.1"
-    dagger = "2.10"
+    dagger = "2.11"
     libsuperuser = "1.0.0.201704021214"
     androidJob = "1.1.10"
-    fastAdapter = "2.5.2"
-    fastAdapterCommons = "2.5.2"
+    fastAdapter = "2.5.3"
+    fastAdapterCommons = "2.5.3"
   }
 
   dependencies {

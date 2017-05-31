@@ -40,12 +40,6 @@ android {
     sourceCompatibility JavaVersion.VERSION_1_7
     targetCompatibility JavaVersion.VERSION_1_7
   }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-    }
-  }
 }
 
 dependencies {
@@ -66,8 +60,3 @@ dependencies {
   releaseCompile project(path: ":powermanager-model", configuration: "release")
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
-
-kapt {
-  correctErrorTypes = true
-}
-
