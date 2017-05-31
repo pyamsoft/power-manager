@@ -46,8 +46,6 @@ class LoggerInteractor @Inject constructor(context: Context, val preferences: Lo
   private var logPath: File? = null
 
   @CheckResult fun getLogLocation(): File {
-    val type = logId
-
     if (logPath == null || !logPath!!.exists()) {
       synchronized(LoggerInteractor::class.java) {
         if (logPath == null || !logPath!!.exists()) {
@@ -60,7 +58,7 @@ class LoggerInteractor @Inject constructor(context: Context, val preferences: Lo
             }
           }
           val logDirPath = logDir.absolutePath
-          logPath = File(logDirPath, type)
+          logPath = File(logDirPath, logId)
         }
       }
     }
@@ -70,7 +68,7 @@ class LoggerInteractor @Inject constructor(context: Context, val preferences: Lo
 
   @CheckResult fun log(logType: LogType, fmt: String, vararg args: Any): Completable {
     logWithTimber(logType, fmt, *args)
-    return isLoggingEnabled.filter { it }.flatMapCompletable {
+    return isLoggingEnabled().filter { it }.flatMapCompletable {
       val message = String.format(Locale.getDefault(), fmt, *args)
       val logMessage = String.format(Locale.getDefault(), "%s: %s", logType.name, message)
       val writeAppendResult: Completable
@@ -83,8 +81,9 @@ class LoggerInteractor @Inject constructor(context: Context, val preferences: Lo
     }
   }
 
-  private val isLoggingEnabled: Single<Boolean>
-    @CheckResult get() = Single.fromCallable { preferences.loggerEnabled }
+  @CheckResult private fun isLoggingEnabled(): Single<Boolean> {
+    return Single.fromCallable { preferences.loggerEnabled }
+  }
 
   private fun logWithTimber(logType: LogType, fmt: String, vararg args: Any) {
     when (logType) {
@@ -152,13 +151,13 @@ class LoggerInteractor @Inject constructor(context: Context, val preferences: Lo
   }
 
   companion object {
-    val AIRPLANE_LOG_ID = "AIRPLANE"
-    val BLUETOOTH_LOG_ID = "BLUETOOTH"
-    val DATA_LOG_ID = "DATA"
-    val DOZE_LOG_ID = "DOZE"
-    val MANAGER_LOG_ID = "MANAGER"
-    val SYNC_LOG_ID = "SYNC"
-    val TRIGGER_LOG_ID = "TRIGGER"
-    val WIFI_LOG_ID = "WIFI"
+    const val AIRPLANE_LOG_ID = "AIRPLANE"
+    const val BLUETOOTH_LOG_ID = "BLUETOOTH"
+    const val DATA_LOG_ID = "DATA"
+    const val DOZE_LOG_ID = "DOZE"
+    const val MANAGER_LOG_ID = "MANAGER"
+    const val SYNC_LOG_ID = "SYNC"
+    const val TRIGGER_LOG_ID = "TRIGGER"
+    const val WIFI_LOG_ID = "WIFI"
   }
 }
