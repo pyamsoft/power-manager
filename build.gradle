@@ -64,7 +64,7 @@ buildscript {
     classpath 'com.google.gms:google-services:3.0.0'
 
     // Error prone compiler
-    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
+    classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
 
     // SQLDelight
     classpath "com.squareup.sqldelight:gradle-plugin:0.6.1"
@@ -89,14 +89,8 @@ allprojects {
 
   gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
-      options.compilerArgs << '-XepDisableWarningsInGeneratedCode' \
-          << '-Xep:MissingOverride:OFF' << "-Xlint:unchecked" << "-Xlint:deprecation"
-    }
-  }
-
-  tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("lint")) {
-      task.enabled = false
+      options.compilerArgs += [ '-XepDisableWarningsInGeneratedCode',
+        '-Xep:MissingOverride:OFF', '-Xlint:unchecked', '-Xlint:deprecation' ]
     }
   }
 }
