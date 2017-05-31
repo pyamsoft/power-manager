@@ -23,12 +23,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton internal open class ServiceInteractor @Inject constructor(
-    val preferences: ServicePreferences) {
+    internal val preferences: ServicePreferences) {
   /**
    * public
    */
-  val isServiceEnabled: Single<Boolean>
-    @CheckResult get() = Single.fromCallable { preferences.serviceEnabled }
+  @CheckResult fun isServiceEnabled(): Single<Boolean> {
+    return Single.fromCallable { preferences.serviceEnabled }
+  }
 
   /**
    * public

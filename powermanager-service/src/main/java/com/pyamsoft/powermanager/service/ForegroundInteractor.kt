@@ -77,21 +77,22 @@ import javax.inject.Singleton
     //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
-  val notificationPriority: Single<Int>
-    @CheckResult get() = Single.fromCallable { preferences.notificationPriority }
+  @CheckResult fun getNotificationPriority(): Single<Int> {
+    return Single.fromCallable { preferences.notificationPriority }
+  }
 
   /**
    * public
    */
   fun createNotification(foreground: Boolean): Single<Notification> {
-    return isServiceEnabled.flatMap { serviceEnabled ->
+    return isServiceEnabled().flatMap { serviceEnabled ->
       val actionName = if (serviceEnabled) "Suspend" else "Start"
       val toggleService = Intent(appContext, toggleServiceClass)
       val actionToggleService = PendingIntent.getService(appContext, TOGGLE_RC, toggleService,
           PendingIntent.FLAG_UPDATE_CURRENT)
       val title = if (serviceEnabled) "Managing Device Power..." else "Power Management Suspended..."
 
-      notificationPriority.map {
+      getNotificationPriority().map {
         // Clear all of the Actions
         builder.mActions.clear()
         builder.setPriority(it).setContentText(title).setOngoing(foreground).addAction(

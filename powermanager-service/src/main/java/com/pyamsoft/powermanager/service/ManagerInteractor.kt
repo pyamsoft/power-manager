@@ -36,8 +36,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton internal class ManagerInteractor @Inject constructor(
-    @param:Named("instant") val jobQueuer: JobQueuer,
-    private val preferences: ManagePreferences,
+    @param:Named("instant") internal val jobQueuer: JobQueuer,
+    internal val preferences: ManagePreferences,
     @param:Named("obs_wifi") private val wifiObserver: ConnectedStateObserver,
     @param:Named("obs_data") private val dataObserver: StateObserver,
     @param:Named("obs_bluetooth") private val bluetoothObserver: ConnectedStateObserver,
@@ -66,14 +66,8 @@ import javax.inject.Singleton
       val tag = JobQueuer.ENABLE_TAG
       // Queue up an enable job
       jobQueuer.cancel(tag)
-      jobQueuer.queue(JobQueuerEntry.builder(tag)
-          .screenOn(true)
-          .delay(0)
-          .oneshot(true)
-          .firstRun(true)
-          .repeatingOffWindow(0L)
-          .repeatingOnWindow(0L)
-          .build())
+      jobQueuer.queue(JobQueuerEntry.builder(tag).screenOn(true).delay(0).oneshot(true).firstRun(
+          true).repeatingOffWindow(0L).repeatingOnWindow(0L).build())
       return@fromCallable tag
     }.doAfterSuccess { eraseOriginalStates() }
   }
@@ -82,21 +76,17 @@ import javax.inject.Singleton
    * public
    */
   @CheckResult fun queueDisable(): Single<String> {
-    return Completable.fromAction({ storeOriginalStates() }).andThen(
-        Single.fromCallable {
-          val tag = JobQueuer.DISABLE_TAG
-          // Queue up a disable job
-          jobQueuer.cancel(tag)
-          jobQueuer.queue(JobQueuerEntry.builder(tag)
-              .screenOn(false)
-              .delay(delayTime)
-              .oneshot(false)
-              .firstRun(true)
-              .repeatingOffWindow(periodicDisableTime)
-              .repeatingOnWindow(periodicEnableTime)
-              .build())
-          return@fromCallable tag
-        })
+    return Completable.fromAction({ storeOriginalStates() }).andThen(Single.fromCallable {
+      val tag = JobQueuer.DISABLE_TAG
+      // Queue up a disable job
+      jobQueuer.cancel(tag)
+      jobQueuer.queue(
+          JobQueuerEntry.builder(tag).screenOn(false).delay(preferences.manageDelay).oneshot(
+              false).firstRun(true).repeatingOffWindow(
+              preferences.periodicDisableTime).repeatingOnWindow(
+              preferences.periodicEnableTime).build())
+      return@fromCallable tag
+    })
   }
 
   internal fun eraseOriginalStates() {
@@ -137,12 +127,4 @@ import javax.inject.Singleton
     Timber.w("Stored original states, prepare for Sleep")
   }
 
-  val delayTime: Long
-    @CheckResult get() = preferences.manageDelay
-
-  val periodicEnableTime: Long
-    @CheckResult get() = preferences.periodicEnableTime
-
-  val periodicDisableTime: Long
-    @CheckResult get() = preferences.periodicDisableTime
 }

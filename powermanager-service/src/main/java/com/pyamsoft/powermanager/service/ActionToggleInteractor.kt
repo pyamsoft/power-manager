@@ -24,11 +24,12 @@ import javax.inject.Singleton
 
 @Singleton internal class ActionToggleInteractor @Inject constructor(
     preferences: ServicePreferences) : ServiceInteractor(preferences) {
+
   /**
    * public
    */
   @CheckResult fun toggleEnabledState(): Single<Boolean> {
-    return isServiceEnabled.map {
+    return isServiceEnabled().map {
       val newState = !it
       setServiceEnabled(newState)
       return@map newState
