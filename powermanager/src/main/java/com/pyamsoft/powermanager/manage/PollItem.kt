@@ -140,7 +140,6 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
         })
       }
     })
-
   }
 
   override fun unbindView(holder: ViewHolder) {
