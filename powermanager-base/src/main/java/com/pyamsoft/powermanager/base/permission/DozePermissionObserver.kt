@@ -27,6 +27,7 @@ import javax.inject.Inject
 internal class DozePermissionObserver @Inject internal constructor(context: Context,
     preferences: RootPreferences, rootChecker: RootChecker) : RootPermissionObserver(context,
     preferences, rootChecker, Manifest.permission.DUMP) {
+
   override fun checkPermission(appContext: Context): Boolean {
     val hasPermission: Boolean
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {

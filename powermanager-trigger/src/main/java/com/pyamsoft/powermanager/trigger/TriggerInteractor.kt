@@ -29,7 +29,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton class TriggerInteractor @Inject internal constructor(powerTriggerDB: PowerTriggerDB,
-    internal val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
+    private val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
   fun clearCached() {
     cacheInteractor.clearCache()

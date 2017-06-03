@@ -25,6 +25,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class LoggerModule {
+
   @Singleton @Provides @Named("logger_manager") fun provideLoggerManager(
       @Named("logger_presenter_manager") loggerPresenter: LoggerPresenter): Logger {
     return LoggerImpl(loggerPresenter)

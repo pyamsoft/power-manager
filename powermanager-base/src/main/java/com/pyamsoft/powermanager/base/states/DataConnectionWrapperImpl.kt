@@ -24,14 +24,14 @@ import android.provider.Settings
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper
+import com.pyamsoft.powermanager.base.shell.ShellHelper
 import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import java.lang.reflect.Method
 import javax.inject.Inject
 
 internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
-    private val shellCommandHelper: ShellCommandHelper, private val logger: Logger,
+    private val shellHelper: ShellHelper, private val logger: Logger,
     private val preferences: RootPreferences, private val dataUri: String) : DeviceFunctionWrapper {
   private val connectivityManager: ConnectivityManager = context.applicationContext.getSystemService(
       Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -69,7 +69,7 @@ internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
   private fun setMobileDataEnabledRoot(enabled: Boolean) {
     if (preferences.rootEnabled) {
       val command = "svc data " + if (enabled) "enable" else "disable"
-      shellCommandHelper.runSUCommand(command)
+      shellHelper.runSUCommand(command)
     } else {
       logger.w("Root not enabled, cannot toggle Data")
     }

@@ -40,12 +40,6 @@ import javax.inject.Inject
 
 class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
 
-  @field:Inject lateinit internal var presenter: PollPresenter
-
-  init {
-    Injector.get().provideComponent().plusManageComponent().inject(this)
-  }
-
   override fun getType(): Int {
     return R.id.adapter_poll_card_item
   }
@@ -54,8 +48,8 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
     return R.layout.adapter_item_toggle
   }
 
-  override fun providePresenter(): TimePresenter {
-    return presenter
+  override fun providePresenter(holder: ViewHolder): TimePresenter {
+    return holder.presenter
   }
 
   override fun getTimeRadioOne(): Long {
@@ -98,7 +92,7 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
     super.bindView(holder, payloads)
 
     holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
-    presenter.getCurrentPeriodic(object : StateCallback {
+    holder.presenter.getCurrentPeriodic(object : StateCallback {
       override fun onError(throwable: Throwable) {
         Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
             Toasty.LENGTH_SHORT).show()
@@ -120,7 +114,7 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
               buttonView.setOnCheckedChangeListener(null)
 
               val listener = this
-              presenter.toggleAll(isChecked, object : ToggleAllCallback {
+              holder.presenter.toggleAll(isChecked, object : ToggleAllCallback {
 
                 override fun onError(throwable: Throwable) {
                   Toasty.makeText(buttonView.context, "Failed to set polling state",
@@ -149,6 +143,8 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
 
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
 
+    @field:Inject lateinit internal var presenter: PollPresenter
+
     init {
       itemView.toggle_switch.text = "Smart Polling"
       itemView.simple_expander.setTitle("Polling Delay")
@@ -168,6 +164,8 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
       //      containerDelay.delay_radio_six.text = "45 Minutes"
       //      containerDelay.delay_radio_seven.text = "1 Hour"
       //      containerDelay.delay_radio_eight.text = "1 Hour 30 Minutes"
+
+      Injector.get().provideComponent().plusManageComponent().inject(this)
     }
   }
 

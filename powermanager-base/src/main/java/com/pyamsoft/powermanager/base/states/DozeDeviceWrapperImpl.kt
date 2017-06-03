@@ -21,13 +21,13 @@ import android.os.Build
 import android.os.PowerManager
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper
+import com.pyamsoft.powermanager.base.shell.ShellHelper
 import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class DozeDeviceWrapperImpl @Inject constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
-    private val shellCommandHelper: ShellCommandHelper) : DeviceFunctionWrapper {
+    private val shellHelper: ShellHelper) : DeviceFunctionWrapper {
   private val androidPowerManager: android.os.PowerManager = context.applicationContext.getSystemService(
       Context.POWER_SERVICE) as PowerManager
 
@@ -38,16 +38,16 @@ internal class DozeDeviceWrapperImpl @Inject constructor(context: Context,
       command = "dumpsys deviceidle " + if (enabled) "force-idle" else "step"
       if (preferences.rootEnabled) {
         // If root is enabled, we attempt with root
-        shellCommandHelper.runSUCommand(command)
+        shellHelper.runSUCommand(command)
       } else {
         // API 23 can do this without root
-        shellCommandHelper.runSHCommand(command)
+        shellHelper.runSHCommand(command)
       }
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       if (preferences.rootEnabled) {
         // API 24 requires root
         command = "dumpsys deviceidle " + if (enabled) "force-idle deep" else "unforce"
-        shellCommandHelper.runSUCommand(command)
+        shellHelper.runSUCommand(command)
       } else {
         logger.w("Root not enabled, cannot toggle Doze")
       }

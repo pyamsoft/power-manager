@@ -25,27 +25,28 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Singleton internal class MainInteractor @Inject constructor(val rootPreferences: RootPreferences,
-    val servicePreferences: ServicePreferences,
-    @param:Named("obs_root_permission") val rootPermissionObserver: PermissionObserver) {
+@Singleton internal class MainInteractor @Inject constructor(
+    private val rootPreferences: RootPreferences,
+    private val servicePreferences: ServicePreferences,
+    @param:Named("obs_root_permission") private val rootPermissionObserver: PermissionObserver) {
   /**
    * public
    */
-  fun missingRootPermission() {
+  internal fun missingRootPermission() {
     rootPreferences.resetRootEnabled()
   }
 
   /**
    * public
    */
-  @CheckResult fun isStartWhenOpen(): Single<Boolean> {
+  @CheckResult internal fun isStartWhenOpen(): Single<Boolean> {
     return Single.fromCallable { servicePreferences.startWhenOpen }
   }
 
   /**
    * public
    */
-  @CheckResult fun hasRootPermission(): Single<Boolean> {
+  @CheckResult internal fun hasRootPermission(): Single<Boolean> {
     return Single.fromCallable { rootPermissionObserver.hasPermission() }
   }
 }

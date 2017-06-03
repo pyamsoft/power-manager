@@ -20,7 +20,6 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.PowerManagerModule
 import com.pyamsoft.powermanager.base.logger.LoggerModule
 import com.pyamsoft.powermanager.base.permission.PermissionObserverModule
-import com.pyamsoft.powermanager.base.shell.ShellCommandModule
 import com.pyamsoft.powermanager.base.states.StateModifierModule
 import com.pyamsoft.powermanager.base.states.StateObserverModule
 import com.pyamsoft.powermanager.base.states.WrapperModule
@@ -43,14 +42,14 @@ import javax.inject.Singleton
 
 @Singleton @Component(
     modules = arrayOf(PowerManagerModule::class, WrapperModule::class, PowerTriggerDBModule::class,
-        LoggerModule::class, ShellCommandModule::class, PermissionObserverModule::class,
-        StateObserverModule::class, StateModifierModule::class, JobModule::class,
-        ManageSingletonModule::class, TimeSingletonModule::class)) interface PowerManagerComponent {
+        LoggerModule::class, PermissionObserverModule::class, StateObserverModule::class,
+        StateModifierModule::class, JobModule::class, ManageSingletonModule::class,
+        TimeSingletonModule::class)) interface PowerManagerComponent {
   @CheckResult fun plusManageComponent(): ManageComponent
 
   fun inject(fragment: PowerTriggerListFragment)
 
-  fun inject(powerTriggerListItem: PowerTriggerListItem)
+  fun inject(powerTriggerListItem: PowerTriggerListItem.ViewHolder)
 
   fun inject(application: PowerManager)
 

@@ -40,9 +40,9 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-class LoggerInteractor @Inject constructor(context: Context, val preferences: LoggerPreferences,
-    val logId: String) {
-  internal val appContext: Context = context.applicationContext
+class LoggerInteractor @Inject constructor(context: Context,
+    private val preferences: LoggerPreferences, internal val logId: String) {
+  private val appContext: Context = context.applicationContext
   private var logPath: File? = null
 
   @CheckResult fun getLogLocation(): File {

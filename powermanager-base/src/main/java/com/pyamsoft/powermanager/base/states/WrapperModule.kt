@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.states
 import android.content.Context
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper
+import com.pyamsoft.powermanager.base.shell.ShellHelper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -37,10 +37,10 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("wrapper_data") fun provideDataConnectionWrapper(context: Context,
-      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
+      preferences: RootPreferences, shellHelper: ShellHelper,
       @Named("logger_data") logger: Logger,
       @Named("data_uri") dataUri: String): DeviceFunctionWrapper {
-    return DataConnectionWrapperImpl(context, shellCommandHelper, logger, preferences, dataUri)
+    return DataConnectionWrapperImpl(context, shellHelper, logger, preferences, dataUri)
   }
 
   @Singleton @Provides @Named("wrapper_sync") fun provideSyncConnectionWrapper(
@@ -49,14 +49,14 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("wrapper_airplane") fun provideAirplaneModeWrapper(context: Context,
-      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
+      preferences: RootPreferences, shellHelper: ShellHelper,
       @Named("logger_airplane") logger: Logger): DeviceFunctionWrapper {
-    return AirplaneModeWrapperImpl(context, logger, preferences, shellCommandHelper)
+    return AirplaneModeWrapperImpl(context, logger, preferences, shellHelper)
   }
 
   @Singleton @Provides @Named("wrapper_doze") fun provideDozeWrapper(context: Context,
-      preferences: RootPreferences, shellCommandHelper: ShellCommandHelper,
+      preferences: RootPreferences, shellHelper: ShellHelper,
       @Named("logger_doze") logger: Logger): DeviceFunctionWrapper {
-    return DozeDeviceWrapperImpl(context, logger, preferences, shellCommandHelper)
+    return DozeDeviceWrapperImpl(context, logger, preferences, shellHelper)
   }
 }

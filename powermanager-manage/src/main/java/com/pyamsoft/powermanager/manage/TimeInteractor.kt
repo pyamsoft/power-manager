@@ -27,16 +27,17 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 open internal class TimeInteractor @Inject internal constructor(
-    val preferences: TimePreferenceWrapper) {
+    private val preferences: TimePreferenceWrapper) {
   private val customInputBus: EventBus = EventBus.newLocalBus()
-  val time: Single<Pair<Boolean, Long>>
+
+  internal val time: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
 
-  @CheckResult fun setTime(time: Long): Completable {
+  @CheckResult internal fun setTime(time: Long): Completable {
     return Completable.fromAction { preferences.setTime(time, false) }
   }
 
-  @CheckResult fun listenTimeChanges(): Observable<Long> {
+  @CheckResult internal fun listenTimeChanges(): Observable<Long> {
     return Observable.create {
       val listener = preferences.registerTimeChanges(object : TimeChangeListener {
         override fun onTimeChanged(time: Long) {
@@ -56,7 +57,7 @@ open internal class TimeInteractor @Inject internal constructor(
   /**
    * public
    */
-  fun acceptCustomTimeChange(text: String, instant: Boolean) {
+  internal fun acceptCustomTimeChange(text: String, instant: Boolean) {
     if (instant) {
       val pair = convertAndSaveCustomTime(text)
       if (pair.first == null) {
@@ -69,12 +70,12 @@ open internal class TimeInteractor @Inject internal constructor(
     }
   }
 
-  @CheckResult fun listenCustomTimeChanges(): Observable<Pair<String?, Long>> {
+  @CheckResult internal fun listenCustomTimeChanges(): Observable<Pair<String?, Long>> {
     return customInputBus.listen(String::class.java).debounce(800,
         TimeUnit.MILLISECONDS).distinctUntilChanged().map { convertAndSaveCustomTime(it) }
   }
 
-  @CheckResult fun convertAndSaveCustomTime(s: String): Pair<String?, Long> {
+  @CheckResult internal fun convertAndSaveCustomTime(s: String): Pair<String?, Long> {
     var errorString: String?
     var time: Long
     try {

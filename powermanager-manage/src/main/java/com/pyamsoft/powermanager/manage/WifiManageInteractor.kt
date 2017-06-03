@@ -22,7 +22,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 internal class WifiManageInteractor @Inject constructor(
-    val preferences: WifiPreferences) : ManageInteractor() {
+    private val preferences: WifiPreferences) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {
     return Completable.fromAction { preferences.wifiManaged = state }

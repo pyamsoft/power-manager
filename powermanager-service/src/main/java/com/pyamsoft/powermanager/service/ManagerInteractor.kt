@@ -36,8 +36,8 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton internal class ManagerInteractor @Inject constructor(
-    @param:Named("instant") internal val jobQueuer: JobQueuer,
-    internal val preferences: ManagePreferences,
+    @param:Named("instant") private val jobQueuer: JobQueuer,
+    private val preferences: ManagePreferences,
     @param:Named("obs_wifi") private val wifiObserver: ConnectedStateObserver,
     @param:Named("obs_data") private val dataObserver: StateObserver,
     @param:Named("obs_bluetooth") private val bluetoothObserver: ConnectedStateObserver,

@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Switch
+import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.pydroid.ui.helper.Toasty
@@ -35,19 +36,8 @@ import kotlinx.android.synthetic.main.layout_container_manage.view.manage_wifi
 import javax.inject.Inject
 import javax.inject.Named
 
-class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHolder>(
+class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem, ManageItem.ViewHolder>(
     ManageItem.TAG) {
-  @field:[Inject Named("manage_wifi")] lateinit internal var presenterWifi: ManagePresenter
-  @field:[Inject Named("manage_data")] lateinit internal var presenterData: ManagePresenter
-  @field:[Inject Named(
-      "manage_bluetooth")] lateinit internal var presenterBluetooth: ManagePresenter
-  @field:[Inject Named("manage_sync")] lateinit internal var presenterSync: ManagePresenter
-  @field:[Inject Named("manage_airplane")] lateinit internal var presenterAirplane: ManagePresenter
-  @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
-
-  init {
-    Injector.get().provideComponent().plusManageComponent().inject(this)
-  }
 
   override fun getViewHolder(view: View): ViewHolder {
     return ViewHolder(view)
@@ -63,12 +53,12 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
 
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
-    bindSwitch(holder.container.manage_wifi, "WiFi", presenterWifi)
-    bindSwitch(holder.container.manage_data, "Cellular Data", presenterData)
-    bindSwitch(holder.container.manage_bluetooth, "Bluetooth", presenterBluetooth)
-    bindSwitch(holder.container.manage_sync, "Auto Sync", presenterSync)
-    bindSwitch(holder.container.manage_airplane, "Airplane Mode", presenterAirplane)
-    bindSwitch(holder.container.manage_doze, "Doze Mode", presenterDoze)
+    bindSwitch(holder.container.manage_wifi, "WiFi", holder.presenterWifi)
+    bindSwitch(holder.container.manage_data, "Cellular Data", holder.presenterData)
+    bindSwitch(holder.container.manage_bluetooth, "Bluetooth", holder.presenterBluetooth)
+    bindSwitch(holder.container.manage_sync, "Auto Sync", holder.presenterSync)
+    bindSwitch(holder.container.manage_airplane, "Airplane Mode", holder.presenterAirplane)
+    bindSwitch(holder.container.manage_doze, "Doze Mode", holder.presenterDoze)
   }
 
   private fun bindSwitch(switch: Switch, name: String, presenter: ManagePresenter) {
@@ -136,21 +126,19 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
     unbindSwitch(holder.container.manage_sync)
     unbindSwitch(holder.container.manage_airplane)
     unbindSwitch(holder.container.manage_doze)
-  }
 
-  override fun unbindItem() {
-    presenterAirplane.stop()
-    presenterAirplane.destroy()
-    presenterWifi.stop()
-    presenterWifi.destroy()
-    presenterData.stop()
-    presenterData.destroy()
-    presenterBluetooth.stop()
-    presenterBluetooth.destroy()
-    presenterSync.stop()
-    presenterSync.destroy()
-    presenterDoze.stop()
-    presenterDoze.destroy()
+    holder.presenterAirplane.stop()
+    holder.presenterAirplane.destroy()
+    holder.presenterWifi.stop()
+    holder.presenterWifi.destroy()
+    holder.presenterData.stop()
+    holder.presenterData.destroy()
+    holder.presenterBluetooth.stop()
+    holder.presenterBluetooth.destroy()
+    holder.presenterSync.stop()
+    holder.presenterSync.destroy()
+    holder.presenterDoze.stop()
+    holder.presenterDoze.destroy()
   }
 
   private fun unbindSwitch(switch: Switch) {
@@ -159,6 +147,16 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    @field:[Inject Named("manage_wifi")] lateinit internal var presenterWifi: ManagePresenter
+    @field:[Inject Named("manage_data")] lateinit internal var presenterData: ManagePresenter
+    @field:[Inject Named(
+        "manage_bluetooth")] lateinit internal var presenterBluetooth: ManagePresenter
+    @field:[Inject Named("manage_sync")] lateinit internal var presenterSync: ManagePresenter
+    @field:[Inject Named(
+        "manage_airplane")] lateinit internal var presenterAirplane: ManagePresenter
+    @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
+
     internal val container: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_manage, itemView as ViewGroup, false)
 
@@ -166,6 +164,7 @@ class ManageItem internal constructor() : BaseItem<ManageItem, ManageItem.ViewHo
       itemView.simple_expander.setTitle(R.string.manage_title)
       itemView.simple_expander.setDescription(R.string.manage_desc)
       itemView.simple_expander.setExpandingContent(container)
+      Injector.get().provideComponent().plusManageComponent().inject(this)
     }
   }
 

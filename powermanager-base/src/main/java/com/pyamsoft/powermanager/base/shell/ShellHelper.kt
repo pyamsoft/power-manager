@@ -24,7 +24,12 @@ import timber.log.Timber
 import java.util.Arrays
 import javax.inject.Inject
 
-internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, RootChecker {
+class ShellHelper @Inject internal constructor() {
+
+  init {
+    Timber.d("New ShellHelper instance")
+  }
+
   @CheckResult private fun prepareShellSession(useRoot: Boolean,
       vararg commands: String): Shell.Builder {
     val builder = Shell.Builder().setWantSTDERR(!BuildConfig.DEBUG).setOnSTDERRLineListener {
@@ -41,20 +46,13 @@ internal class ShellHandlerImpl @Inject constructor() : ShellCommandHelper, Root
     return builder
   }
 
-  @WorkerThread override fun runSUCommand(vararg commands: String) {
+  @WorkerThread fun runSUCommand(vararg commands: String) {
     Timber.d("Run command '%s' in SU session", Arrays.toString(commands))
     prepareShellSession(useRoot = true, commands = *commands).open().close()
   }
 
-  @WorkerThread override fun runSHCommand(vararg commands: String) {
+  @WorkerThread fun runSHCommand(vararg commands: String) {
     Timber.d("Run command '%s' in Shell session", Arrays.toString(commands))
     prepareShellSession(useRoot = false, commands = *commands).open().close()
   }
-
-  override val isSUAvailable: Boolean
-    @WorkerThread @CheckResult get() {
-      val available = Shell.SU.available()
-      Timber.d("Is SU available: %s", available)
-      return available
-    }
 }

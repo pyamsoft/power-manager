@@ -24,6 +24,7 @@ import timber.log.Timber
 
 internal abstract class PermissionObserverImpl internal constructor(context: Context,
     private val permission: String?) : PermissionObserver {
+
   private val appContext: Context = context.applicationContext
 
   @CheckResult fun hasRuntimePermission(): Boolean {

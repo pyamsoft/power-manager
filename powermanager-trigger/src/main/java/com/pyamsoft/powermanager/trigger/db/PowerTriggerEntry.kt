@@ -23,21 +23,21 @@ import com.squareup.sqldelight.SqlDelightStatement
 
 @AutoValue abstract class PowerTriggerEntry : PowerTriggerModel {
 
-  class DeleteTriggerManager internal constructor(openHelper: SQLiteOpenHelper) {
+  internal class DeleteTriggerManager internal constructor(openHelper: SQLiteOpenHelper) {
     private val deleteTrigger: PowerTriggerModel.Delete_trigger = PowerTriggerModel.Delete_trigger(
         openHelper.writableDatabase)
 
-    @CheckResult fun executeProgram(percent: Int): Int {
+    @CheckResult internal fun executeProgram(percent: Int): Int {
       deleteTrigger.bind(percent)
       return deleteTrigger.program.executeUpdateDelete()
     }
   }
 
-  class InsertManager internal constructor(openHelper: SQLiteOpenHelper) {
+  internal class InsertManager internal constructor(openHelper: SQLiteOpenHelper) {
     private val insertTrigger: PowerTriggerModel.Insert_trigger = PowerTriggerModel.Insert_trigger(
         openHelper.writableDatabase)
 
-    @CheckResult fun executeProgram(newEntry: PowerTriggerEntry): Long {
+    @CheckResult internal fun executeProgram(newEntry: PowerTriggerEntry): Long {
       insertTrigger.bind(newEntry.percent(), newEntry.name(), newEntry.enabled(),
           newEntry.available(), newEntry.toggleWifi(), newEntry.toggleData(),
           newEntry.toggleBluetooth(), newEntry.toggleSync(), newEntry.enableWifi(),
@@ -46,21 +46,21 @@ import com.squareup.sqldelight.SqlDelightStatement
     }
   }
 
-  class UpdateAvailabeManager internal constructor(openHelper: SQLiteOpenHelper) {
+  internal class UpdateAvailabeManager internal constructor(openHelper: SQLiteOpenHelper) {
     private val updateAvailable: PowerTriggerModel.Update_available = PowerTriggerModel.Update_available(
         openHelper.writableDatabase)
 
-    @CheckResult fun executeProgram(available: Boolean, percent: Int): Int {
+    @CheckResult internal fun executeProgram(available: Boolean, percent: Int): Int {
       updateAvailable.bind(available, percent)
       return updateAvailable.program.executeUpdateDelete()
     }
   }
 
-  class UpdateEnabledManager internal constructor(openHelper: SQLiteOpenHelper) {
+  internal class UpdateEnabledManager internal constructor(openHelper: SQLiteOpenHelper) {
     private val updateEnabled: PowerTriggerModel.Update_enabled = PowerTriggerModel.Update_enabled(
         openHelper.writableDatabase)
 
-    @CheckResult fun executeProgram(enabled: Boolean, percent: Int): Int {
+    @CheckResult internal fun executeProgram(enabled: Boolean, percent: Int): Int {
       updateEnabled.bind(enabled, percent)
       return updateEnabled.program.executeUpdateDelete()
     }
@@ -140,7 +140,7 @@ import com.squareup.sqldelight.SqlDelightStatement
       return factory().creator
     }
 
-    @JvmStatic @CheckResult fun isEmpty(entry: PowerTriggerEntry): Boolean {
+    @JvmStatic @CheckResult internal fun isEmpty(entry: PowerTriggerEntry): Boolean {
       return empty() === entry
     }
 

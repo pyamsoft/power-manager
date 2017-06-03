@@ -38,10 +38,10 @@ import javax.inject.Singleton
     @param:Named("delay") private val jobQueuer: JobQueuer, context: Context,
     preferences: ServicePreferences, private val triggerPreferences: TriggerPreferences,
     @Named("main") mainActivityClass: Class<out Activity>,
-    @param:Named("toggle") val toggleServiceClass: Class<out Service>) : ServiceInteractor(
+    @param:Named("toggle") private val toggleServiceClass: Class<out Service>) : ServiceInteractor(
     preferences) {
-  val builder: NotificationCompat.Builder
-  val appContext: Context = context.applicationContext
+  private val builder: NotificationCompat.Builder
+  private val appContext: Context = context.applicationContext
 
   init {
     val intent = Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

@@ -21,13 +21,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.support.annotation.CheckResult
 import android.support.annotation.VisibleForTesting
+import com.pyamsoft.pydroid.helper.DisposableHelper
 import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
 import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import rx.schedulers.Schedulers
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -35,19 +35,21 @@ import javax.inject.Inject
 
 internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerTriggerDB {
 
-  val briteDatabase: BriteDatabase
-  val openHelper: PowerTriggerOpenHelper
-  val compositeDisposable: CompositeDisposable
+  private val briteDatabase: BriteDatabase
+  private val openHelper: PowerTriggerOpenHelper
+  private var timerDisposable = DisposableHelper.dispose(null)
 
   init {
     openHelper = PowerTriggerOpenHelper(context)
     briteDatabase = SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, Schedulers.io())
-    compositeDisposable = CompositeDisposable()
   }
 
   @Synchronized fun openDatabase() {
     // After a 1 minute timeout, close the DB
-    compositeDisposable.add(Flowable.defer { Flowable.timer(1, TimeUnit.MINUTES) }.subscribe({
+    timerDisposable = DisposableHelper.dispose(timerDisposable)
+    timerDisposable = (Flowable.defer { Flowable.timer(1, TimeUnit.MINUTES) }.doAfterTerminate {
+      timerDisposable = DisposableHelper.dispose(timerDisposable)
+    }.subscribe({
       Timber.w("PowerTriggerDB is closed")
       briteDatabase.close()
     }, { Timber.e(it, "onError closing database") }))
@@ -130,7 +132,7 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
       Timber.i("DB: DELETE ALL")
       briteDatabase.execute(PowerTriggerModel.DELETE_ALL)
       briteDatabase.close()
-      compositeDisposable.clear()
+      timerDisposable = DisposableHelper.dispose(timerDisposable)
     }.andThen(deleteDatabase())
   }
 
@@ -138,7 +140,7 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
     return Completable.fromAction { openHelper.deleteDatabase() }
   }
 
-  internal class PowerTriggerOpenHelper internal constructor(context: Context) : SQLiteOpenHelper(
+  private class PowerTriggerOpenHelper internal constructor(context: Context) : SQLiteOpenHelper(
       context.applicationContext, PowerTriggerDBImpl.PowerTriggerOpenHelper.DB_NAME, null,
       PowerTriggerDBImpl.PowerTriggerOpenHelper.DATABASE_VERSION) {
     private val appContext: Context = context.applicationContext
@@ -158,8 +160,8 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
 
     companion object {
 
-      private val DB_NAME = "power_trigger_db"
-      private val DATABASE_VERSION = 1
+      private const val DB_NAME = "power_trigger_db"
+      private const val DATABASE_VERSION = 1
     }
   }
 }

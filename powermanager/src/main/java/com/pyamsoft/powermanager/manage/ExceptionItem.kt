@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.manage.ExceptionPresenter.BusCallback
@@ -42,20 +43,8 @@ import kotlinx.android.synthetic.main.layout_container_exception.view.exception_
 import javax.inject.Inject
 import javax.inject.Named
 
-class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionItem.ViewHolder>(
+class ExceptionItem internal constructor() : GenericAbstractItem<String, ExceptionItem, ExceptionItem.ViewHolder>(
     ExceptionItem.TAG) {
-  @field:[Inject Named("exception_wifi")] lateinit internal var presenterWifi: ExceptionPresenter
-  @field:[Inject Named("exception_data")] lateinit internal var presenterData: ExceptionPresenter
-  @field:[Inject Named(
-      "exception_bluetooth")] lateinit internal var presenterBluetooth: ExceptionPresenter
-  @field:[Inject Named("exception_sync")] lateinit internal var presenterSync: ExceptionPresenter
-  @field:[Inject Named(
-      "exception_airplane")] lateinit internal var presenterAirplane: ExceptionPresenter
-  @field:[Inject Named("exception_doze")] lateinit internal var presenterDoze: ExceptionPresenter
-
-  init {
-    Injector.get().provideComponent().plusManageComponent().inject(this)
-  }
 
   override fun getViewHolder(view: View): ViewHolder {
     return ViewHolder(view)
@@ -72,17 +61,17 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     bind(holder.chargingContainer.exception_charging_wifi,
-        holder.chargingContainer.exception_wear_wifi, "Wifi", presenterWifi)
+        holder.chargingContainer.exception_wear_wifi, "Wifi", holder.presenterWifi)
     bind(holder.chargingContainer.exception_charging_data,
-        holder.chargingContainer.exception_wear_data, "Data", presenterData)
+        holder.chargingContainer.exception_wear_data, "Data", holder.presenterData)
     bind(holder.chargingContainer.exception_charging_bluetooth,
-        holder.chargingContainer.exception_wear_bluetooth, "Bluetooth", presenterBluetooth)
+        holder.chargingContainer.exception_wear_bluetooth, "Bluetooth", holder.presenterBluetooth)
     bind(holder.chargingContainer.exception_charging_sync,
-        holder.chargingContainer.exception_wear_sync, "Sync", presenterSync)
+        holder.chargingContainer.exception_wear_sync, "Sync", holder.presenterSync)
     bind(holder.chargingContainer.exception_charging_airplane,
-        holder.chargingContainer.exception_wear_airplane, "Airplane", presenterAirplane)
+        holder.chargingContainer.exception_wear_airplane, "Airplane", holder.presenterAirplane)
     bind(holder.chargingContainer.exception_charging_doze,
-        holder.chargingContainer.exception_wear_doze, "Doze", presenterDoze)
+        holder.chargingContainer.exception_wear_doze, "Doze", holder.presenterDoze)
   }
 
   override fun unbindView(holder: ViewHolder) {
@@ -99,21 +88,19 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
         holder.chargingContainer.exception_wear_sync)
     unbind(holder.chargingContainer.exception_charging_doze,
         holder.chargingContainer.exception_wear_doze)
-  }
 
-  override fun unbindItem() {
-    presenterAirplane.stop()
-    presenterAirplane.destroy()
-    presenterWifi.stop()
-    presenterWifi.destroy()
-    presenterData.stop()
-    presenterData.destroy()
-    presenterBluetooth.stop()
-    presenterBluetooth.destroy()
-    presenterSync.stop()
-    presenterSync.destroy()
-    presenterDoze.stop()
-    presenterDoze.destroy()
+    holder.presenterAirplane.stop()
+    holder.presenterAirplane.destroy()
+    holder.presenterWifi.stop()
+    holder.presenterWifi.destroy()
+    holder.presenterData.stop()
+    holder.presenterData.destroy()
+    holder.presenterBluetooth.stop()
+    holder.presenterBluetooth.destroy()
+    holder.presenterSync.stop()
+    holder.presenterSync.destroy()
+    holder.presenterDoze.stop()
+    holder.presenterDoze.destroy()
   }
 
   private fun bind(charging: CheckBox, wear: CheckBox, name: String,
@@ -253,6 +240,16 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    @field:[Inject Named("exception_wifi")] lateinit internal var presenterWifi: ExceptionPresenter
+    @field:[Inject Named("exception_data")] lateinit internal var presenterData: ExceptionPresenter
+    @field:[Inject Named(
+        "exception_bluetooth")] lateinit internal var presenterBluetooth: ExceptionPresenter
+    @field:[Inject Named("exception_sync")] lateinit internal var presenterSync: ExceptionPresenter
+    @field:[Inject Named(
+        "exception_airplane")] lateinit internal var presenterAirplane: ExceptionPresenter
+    @field:[Inject Named("exception_doze")] lateinit internal var presenterDoze: ExceptionPresenter
+
     internal var chargingContainer: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_exception, itemView as ViewGroup, false)
 
@@ -260,6 +257,8 @@ class ExceptionItem internal constructor() : BaseItem<ExceptionItem, ExceptionIt
       itemView.simple_expander.setTitle(R.string.exceptions_title)
       itemView.simple_expander.setDescription(R.string.exceptions_desc)
       itemView.simple_expander.setExpandingContent(chargingContainer)
+
+      Injector.get().provideComponent().plusManageComponent().inject(this)
     }
   }
 

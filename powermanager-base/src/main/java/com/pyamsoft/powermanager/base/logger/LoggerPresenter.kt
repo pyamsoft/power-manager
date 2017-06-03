@@ -27,7 +27,8 @@ import javax.inject.Inject
 class LoggerPresenter @Inject internal constructor(internal val interactor: LoggerInteractor,
     observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
     observeScheduler, subscribeScheduler) {
-  internal val logDisposables: CompositeDisposable = CompositeDisposable()
+
+  private val logDisposables: CompositeDisposable = CompositeDisposable()
 
   fun retrieveLogContents(callback: LogCallback) {
     logDisposables.add(interactor.logContents.subscribeOn(subscribeScheduler).observeOn(

@@ -27,6 +27,7 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
     @Named("sub") subscribeScheduler: Scheduler,
     private val interactor: TimeInteractor) : SchedulerPresenter(observeScheduler,
     subscribeScheduler) {
+
   private var customTimeChangeDisposable = DisposableHelper.dispose(null)
 
   override fun onStop() {

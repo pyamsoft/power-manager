@@ -30,9 +30,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton internal class SettingsPreferenceInteractor @Inject constructor(
-    val powerTriggerDB: PowerTriggerDB, val preferences: RootPreferences,
-    val clearPreferences: ClearPreferences, val rootChecker: RootChecker,
-    val triggerInteractor: TriggerInteractor) {
+    private val powerTriggerDB: PowerTriggerDB, private val preferences: RootPreferences,
+    private val clearPreferences: ClearPreferences, private val rootChecker: RootChecker,
+    private val triggerInteractor: TriggerInteractor) {
   /**
    * public
    */

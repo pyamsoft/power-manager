@@ -19,11 +19,12 @@ package com.pyamsoft.powermanager.manage
 import dagger.Subcomponent
 
 @Subcomponent(modules = arrayOf(ManageModule::class, TimeModule::class)) interface ManageComponent {
-  fun inject(manageItem: ManageItem)
 
-  fun inject(exceptionItem: ExceptionItem)
+  fun inject(manageItem: ManageItem.ViewHolder)
 
-  fun inject(pollItem: PollItem)
+  fun inject(exceptionItem: ExceptionItem.ViewHolder)
 
-  fun inject(delayItem: DelayItem)
+  fun inject(pollItem: PollItem.ViewHolder)
+
+  fun inject(delayItem: DelayItem.ViewHolder)
 }

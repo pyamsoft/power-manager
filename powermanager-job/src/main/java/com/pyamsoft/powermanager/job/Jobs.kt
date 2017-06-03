@@ -19,15 +19,9 @@ package com.pyamsoft.powermanager.job
 import android.support.annotation.CheckResult
 import com.evernote.android.job.Job
 
-class Jobs private constructor() {
+object Jobs {
 
-  init {
-    throw RuntimeException("No instances")
-  }
-
-  companion object {
-    @JvmStatic @CheckResult fun newJob(jobHandler: JobHandler): Job {
-      return ManagedJob(jobHandler)
-    }
+  @JvmStatic @CheckResult fun newJob(jobHandler: JobHandler): Job {
+    return ManagedJob(jobHandler)
   }
 }

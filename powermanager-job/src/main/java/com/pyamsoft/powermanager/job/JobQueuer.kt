@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.job
 
 interface JobQueuer {
+
   fun cancel(tag: String)
 
   fun queue(entry: JobQueuerEntry)

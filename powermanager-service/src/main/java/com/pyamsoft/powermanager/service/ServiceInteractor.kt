@@ -23,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton internal open class ServiceInteractor @Inject constructor(
-    internal val preferences: ServicePreferences) {
+    protected val preferences: ServicePreferences) {
   /**
    * public
    */

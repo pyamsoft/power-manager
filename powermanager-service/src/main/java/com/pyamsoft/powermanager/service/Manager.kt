@@ -22,9 +22,9 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Named
 
-class Manager @Inject internal constructor(internal val interactor: ManagerInteractor,
+class Manager @Inject internal constructor(private val interactor: ManagerInteractor,
     @param:Named("io") private val scheduler: Scheduler) {
-  internal val compositeDisposable: CompositeDisposable = CompositeDisposable()
+  private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
   init {
     SchedulerHelper.enforceSubscribeScheduler(scheduler)

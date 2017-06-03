@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
+import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
@@ -34,20 +35,11 @@ import kotlinx.android.synthetic.main.fragment_manage.recycler
 import timber.log.Timber
 
 class ManageFragment : WatchedFragment() {
-  lateinit internal var adapter: GenericItemAdapter<String, BaseItem<*, *>>
+  lateinit internal var adapter: GenericItemAdapter<String, GenericAbstractItem<String, *, *>>
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     return inflater?.inflate(R.layout.fragment_manage, container, false)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-
-    // Explicit unbind list item observables
-    Observable.just(adapter).map { it.adapterItems }.flatMap {
-      Observable.fromIterable(it)
-    }.blockingForEach { it.unbindItem() }
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -56,8 +48,8 @@ class ManageFragment : WatchedFragment() {
   }
 
   private fun setupRecyclerView() {
-    adapter = GenericItemAdapter<String, BaseItem<*, *>> { s ->
-      val item: BaseItem<*, *>?
+    adapter = GenericItemAdapter<String, GenericAbstractItem<String, *, *>> { s ->
+      val item: GenericAbstractItem<String, *, *>?
       when (s) {
         ManageItem.TAG -> {
           Timber.d("Inflate ManageItem for TAG: %s", s)

@@ -32,18 +32,12 @@ import javax.inject.Inject
 
 class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
 
-  @field:Inject lateinit internal var presenter: TimePresenter
-
-  init {
-    Injector.get().provideComponent().plusManageComponent().inject(this)
-  }
-
   override fun getType(): Int {
     return R.id.adapter_delay_card_item
   }
 
-  override fun providePresenter(): TimePresenter {
-    return presenter
+  override fun providePresenter(holder: DelayItem.ViewHolder): TimePresenter {
+    return holder.presenter
   }
 
   override fun getTimeRadioOne(): Long {
@@ -84,7 +78,10 @@ class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
 
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
 
+    @field:Inject lateinit internal var presenter: TimePresenter
+
     init {
+      Injector.get().provideComponent().plusManageComponent().inject(this)
       itemView.simple_expander.setTitle("Active Delay")
       itemView.simple_expander.setDescription(
           "Power Manager will wait for the specified amount of time before automatically managing certain device functions")

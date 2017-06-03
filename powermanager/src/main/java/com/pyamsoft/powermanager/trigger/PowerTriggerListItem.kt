@@ -33,11 +33,6 @@ import javax.inject.Inject
 class PowerTriggerListItem internal constructor(
     trigger: PowerTriggerEntry) : GenericAbstractItem<PowerTriggerEntry, PowerTriggerListItem, PowerTriggerListItem.ViewHolder>(
     trigger) {
-  @field:Inject lateinit internal var presenter: TriggerItemPresenter
-
-  init {
-    Injector.get().provideComponent().inject(this)
-  }
 
   override fun getType(): Int {
     return R.id.adapter_trigger_item
@@ -57,7 +52,7 @@ class PowerTriggerListItem internal constructor(
             buttonView.setOnCheckedChangeListener(null)
             buttonView.isChecked = !isChecked
             val listener = this
-            presenter.toggleEnabledState(model, isChecked, object : TriggerToggleCallback {
+            holder.presenter.toggleEnabledState(model, isChecked, object : TriggerToggleCallback {
               override fun updateViewHolder(entry: PowerTriggerEntry) {
                 withModel(entry)
                 bindModelToHolder(holder)
@@ -76,21 +71,25 @@ class PowerTriggerListItem internal constructor(
     holder.itemView.trigger_enabled_switch.isChecked = model.enabled()
   }
 
-  override fun unbindView(holder: ViewHolder?) {
+  override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
-    if (holder != null) {
-      holder.itemView.trigger_name.text = null
-      holder.itemView.trigger_percent.text = null
-      holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener(null)
-    }
-
-    presenter.stop()
-    presenter.destroy()
+    holder.itemView.trigger_name.text = null
+    holder.itemView.trigger_percent.text = null
+    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener(null)
+    holder.presenter.stop()
+    holder.presenter.destroy()
   }
 
   override fun getViewHolder(view: View): ViewHolder {
     return ViewHolder(view)
   }
 
-  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
+  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    @field:Inject lateinit internal var presenter: TriggerItemPresenter
+
+    init {
+      Injector.get().provideComponent().inject(this)
+    }
+  }
 }

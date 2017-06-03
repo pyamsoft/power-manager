@@ -18,7 +18,19 @@ package com.pyamsoft.powermanager.base.shell
 
 import android.support.annotation.CheckResult
 import android.support.annotation.WorkerThread
+import eu.chainfire.libsuperuser.Shell
+import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface RootChecker {
-  @get:WorkerThread @get:CheckResult val isSUAvailable: Boolean
+@Singleton class RootChecker @Inject internal constructor() {
+
+  val isSUAvailable: Boolean
+    @WorkerThread @CheckResult get() {
+      val available = Shell.SU.available()
+      Timber.d("Is SU available: %s", available)
+      return available
+    }
+
 }
+

@@ -24,7 +24,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 internal class DataManageInteractor @Inject constructor(val preferences: DataPreferences,
-    val permissionObserver: PermissionObserver) : ManageInteractor() {
+    private val permissionObserver: PermissionObserver) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {
     return Completable.fromAction { preferences.dataManaged = state }

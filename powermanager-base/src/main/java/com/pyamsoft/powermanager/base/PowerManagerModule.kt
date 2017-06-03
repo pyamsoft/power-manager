@@ -44,12 +44,9 @@ import javax.inject.Singleton
 @Module class PowerManagerModule(context: Context,
     private val mainActivityClass: Class<out Activity>,
     private val toggleServiceClass: Class<out Service>) {
-  private val appContext: Context = context.applicationContext
-  private val preferences: PowerManagerPreferencesImpl
 
-  init {
-    preferences = PowerManagerPreferencesImpl(appContext)
-  }
+  private val appContext: Context = context.applicationContext
+  private val preferences = PowerManagerPreferencesImpl(appContext)
 
   @Singleton @Provides @Named("data_uri") fun provideMobileDataUri(): String {
     return SETTINGS_URI_MOBILE_DATA

@@ -28,11 +28,11 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 internal class PollInteractor @Inject internal constructor(
-    internal val wifiPreferences: WifiPreferences, internal val dataPreferences: DataPreferences,
-    internal val bluetoothPreferences: BluetoothPreferences,
-    internal val syncPreferences: SyncPreferences,
-    internal val airplanePreferences: AirplanePreferences,
-    internal val dozePreferences: DozePreferences,
+    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
+    private val bluetoothPreferences: BluetoothPreferences,
+    private val syncPreferences: SyncPreferences,
+    private val airplanePreferences: AirplanePreferences,
+    private val dozePreferences: DozePreferences,
     preferenceWrapper: TimePreferenceWrapper) : TimeInteractor(preferenceWrapper) {
 
   @CheckResult fun toggleAll(checked: Boolean): Completable {

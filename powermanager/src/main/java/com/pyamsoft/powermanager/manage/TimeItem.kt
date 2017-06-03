@@ -23,6 +23,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
@@ -32,19 +33,9 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_gr
 import timber.log.Timber
 
 abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
-    tag: String) : BaseItem<TimeItem<VH>, VH>(tag) {
-  internal val customTimeWatcher: TextWatcher = object : TextWatcher {
-    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-    }
+    tag: String) : GenericAbstractItem<String, TimeItem<VH>, VH>(tag) {
 
-    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-    }
-
-    override fun afterTextChanged(s: Editable) {
-      providePresenter().submitCustomTimeChange(s.toString(), false)
-    }
-  }
-
+  internal var customTimeWatcher: TextWatcher? = null
   override fun getLayoutRes(): Int {
     return R.layout.adapter_item_simple
   }
@@ -52,7 +43,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
   override fun bindView(holder: VH, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     val context = holder.itemView.context
-    providePresenter().getTime(object : TimePresenter.TimeCallback {
+    providePresenter(holder).getTime(object : TimePresenter.TimeCallback {
       override fun onCustomTime(time: Long) {
         holder.containerDelay.delay_radio_group.clearCheck()
         holder.containerDelay.delay_input_custom.setText(time.toString())
@@ -115,7 +106,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
           else -> throw IllegalArgumentException("Could not find RadioButton with id: " + checkedId)
         }
 
-        providePresenter().setPresetTime(time, object : TimePresenter.ActionCallback {
+        providePresenter(holder).setPresetTime(time, object : TimePresenter.ActionCallback {
           override fun onError(throwable: Throwable) {
             Toasty.makeText(context, "Failed to set delay time",
                 Toasty.LENGTH_SHORT).show()
@@ -134,7 +125,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
     }
 
-    providePresenter().listenForTimeChanges(object : TimePresenter.OnTimeChangedCallback {
+    providePresenter(holder).listenForTimeChanges(object : TimePresenter.OnTimeChangedCallback {
       override fun onTimeChanged(time: Long) {
         // Remove watcher
         holder.containerDelay.delay_input_custom.setText(time.toString())
@@ -150,20 +141,37 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
     })
   }
 
-  internal fun disableCustomInput(holder: ViewHolder) {
+  internal fun disableCustomInput(holder: VH) {
     holder.containerDelay.delay_radio_custom.isChecked = false
     holder.containerDelay.delay_input_custom.isEnabled = false
 
-    holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
-    providePresenter().stopListeningCustomTimeChanges()
+    if (customTimeWatcher != null) {
+      holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
+      customTimeWatcher = null
+    }
+    providePresenter(holder).stopListeningCustomTimeChanges()
   }
 
-  internal fun enableCustomInput(holder: ViewHolder) {
+  internal fun enableCustomInput(holder: VH) {
     holder.containerDelay.delay_radio_custom.isChecked = true
     holder.containerDelay.delay_input_custom.isEnabled = true
 
-    holder.containerDelay.delay_input_custom.addTextChangedListener(customTimeWatcher)
-    providePresenter().listenForCustomTimeChanges(object : TimePresenter.CustomTimeChangedCallback {
+    customTimeWatcher = object : TextWatcher {
+      override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+      }
+
+      override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+      }
+
+      override fun afterTextChanged(s: Editable) {
+        providePresenter(holder).submitCustomTimeChange(s.toString(), false)
+      }
+    }
+
+    if (customTimeWatcher != null) {
+      holder.containerDelay.delay_input_custom.addTextChangedListener(customTimeWatcher)
+    }
+    providePresenter(holder).listenForCustomTimeChanges(object : TimePresenter.CustomTimeChangedCallback {
       override fun onCustomTimeChanged(time: Long) {
         holder.containerDelay.delay_input_custom.setText(time.toString())
       }
@@ -183,19 +191,16 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
   override fun unbindView(holder: VH) {
     super.unbindView(holder)
     if (holder.containerDelay.delay_input_custom.isEnabled) {
-      providePresenter().submitCustomTimeChange(
+      providePresenter(holder).submitCustomTimeChange(
           holder.containerDelay.delay_input_custom.text.toString(), true)
     }
     holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
     holder.containerDelay.delay_radio_group.setOnCheckedChangeListener(null)
+    providePresenter(holder).stop()
+    providePresenter(holder).destroy()
   }
 
-  override fun unbindItem() {
-    providePresenter().stop()
-    providePresenter().destroy()
-  }
-
-  @CheckResult abstract fun providePresenter(): TimePresenter
+  @CheckResult abstract fun providePresenter(holder: VH): TimePresenter
   @CheckResult abstract fun getTimeRadioOne(): Long
   @CheckResult abstract fun getTimeRadioTwo(): Long
   @CheckResult abstract fun getTimeRadioThree(): Long

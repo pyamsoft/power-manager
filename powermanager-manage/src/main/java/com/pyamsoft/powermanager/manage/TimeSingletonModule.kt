@@ -29,6 +29,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module class TimeSingletonModule {
+
   @Singleton @Provides internal fun provideManageDelayInteractor(
       preferences: ManagePreferences): TimeInteractor {
     return TimeInteractor(object : TimePreferenceWrapper {

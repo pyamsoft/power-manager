@@ -21,13 +21,13 @@ import android.content.Context
 import android.provider.Settings
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
-import com.pyamsoft.powermanager.base.shell.ShellCommandHelper
+import com.pyamsoft.powermanager.base.shell.ShellHelper
 import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class AirplaneModeWrapperImpl @Inject constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
-    private val shellCommandHelper: ShellCommandHelper) : DeviceFunctionWrapper {
+    private val shellHelper: ShellHelper) : DeviceFunctionWrapper {
   private val contentResolver: ContentResolver = context.applicationContext.contentResolver
 
   private fun setAirplaneModeEnabled(enabled: Boolean) {
@@ -35,7 +35,7 @@ internal class AirplaneModeWrapperImpl @Inject constructor(context: Context,
       logger.i("Airplane Mode: %s", if (enabled) "enable" else "disable")
       val airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + if (enabled) "1" else "0"
       val airplaneBroadcastCommand = AIRPLANE_BROADCAST_COMMAND + if (enabled) "true" else "false"
-      shellCommandHelper.runSUCommand(airplaneSettingsCommand, airplaneBroadcastCommand)
+      shellHelper.runSUCommand(airplaneSettingsCommand, airplaneBroadcastCommand)
     }
   }
 
