@@ -16,11 +16,18 @@
 
 package com.pyamsoft.powermanager.base.shell
 
-import android.support.annotation.WorkerThread
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
-interface ShellHelper {
+@Module class ShellModule {
 
-  @WorkerThread fun runSUCommand(vararg commands: String)
+  @Singleton @Provides fun provideRootChecker(): RootChecker {
+    return RootCheckerImpl()
+  }
 
-  @WorkerThread fun runSHCommand(vararg commands: String)
+  @Provides fun provideShellHelper(): ShellHelper {
+    return ShellHelperImpl()
+  }
 }
+
