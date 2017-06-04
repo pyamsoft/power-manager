@@ -27,44 +27,29 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
   /**
    * public
    */
-  fun setManaged(state: Boolean, callback: ActionCallback) {
+  fun setManaged(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.setManaged(state).subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doAfterTerminate {
       EventBus.get().publish(ManageChangeEvent(target))
-    }.doAfterTerminate { callback.onComplete() }.subscribe(
+    }.doAfterTerminate { onComplete() }.subscribe(
         { Timber.d("Set managed state successfully: %s", state) }, {
       Timber.e(it, "Error setting managed")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun getState(callback: RetrieveCallback) {
+  fun getState(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
+      onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.isManaged.subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doOnSuccess { (first) ->
-      callback.onEnableRetrieved(first)
-    }.doAfterTerminate { callback.onComplete() }.map { (_, second) -> second }.subscribe(
-        { callback.onStateRetrieved(it) }, {
+      onEnableRetrieved(first)
+    }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
+        { onStateRetrieved(it) }, {
       Timber.e(it, "Error getting managed")
-      callback.onError(it)
+      onError(it)
     }))
-  }
-
-  interface ActionCallback {
-    fun onError(throwable: Throwable)
-
-    fun onComplete()
-  }
-
-  interface RetrieveCallback {
-    fun onEnableRetrieved(enabled: Boolean)
-
-    fun onStateRetrieved(enabled: Boolean)
-
-    fun onError(throwable: Throwable)
-
-    fun onComplete()
   }
 }

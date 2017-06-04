@@ -53,84 +53,57 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
   /**
    * public
    */
-  fun listenForCustomTimeChanges(callback: CustomTimeChangedCallback) {
+  fun listenForCustomTimeChanges(onTimeChanged: (Long) -> Unit, onTimeError: (String?) -> Unit,
+      onError: (Throwable) -> Unit) {
     stopListeningCustomTimeChanges()
     customTimeChangeDisposable = interactor.listenCustomTimeChanges().subscribeOn(
         subscribeScheduler).observeOn(observeScheduler).subscribe({ (first, second) ->
-      callback.onCustomTimeInputError(first)
-      callback.onCustomTimeChanged(second)
+      onTimeError(first)
+      onTimeChanged(second)
     }, {
       Timber.e(it, "Error listen custom time change")
-      callback.onError(it)
+      onError(it)
     })
   }
 
   /**
    * public
    */
-  fun setPresetTime(time: Long, callback: ActionCallback) {
+  fun setPresetTime(time: Long, onError: (Throwable) -> Unit) {
     disposeOnDestroy(interactor.setTime(time).subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({ Timber.d("Set delay time successfully: %s", time) }, {
       Timber.e(it, "Error setting managed")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun getTime(callback: TimeCallback) {
+  fun getTime(onCustom: (Long) -> Unit, onPreset: (Long) -> Unit, onError: (Throwable) -> Unit,
+      onCompleted: () -> Unit) {
     disposeOnDestroy(interactor.time.subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onComplete() }.subscribe(
-        { (isCustom, delayTime) ->
-          if (isCustom) {
-            callback.onCustomTime(delayTime)
-          } else {
-            callback.onPresetTime(delayTime)
-          }
-        }, {
+        observeScheduler).doAfterTerminate { onCompleted() }.subscribe({ (isCustom, delayTime) ->
+      if (isCustom) {
+        onCustom(delayTime)
+      } else {
+        onPreset(delayTime)
+      }
+    }, {
       Timber.e(it, "Error getting delay time")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun listenForTimeChanges(callback: OnTimeChangedCallback) {
+  fun listenForTimeChanges(onTimeChanged: (Long) -> Unit, onError: (Throwable) -> Unit) {
     Timber.w("LISTEN FOR TIME CHANGES")
     disposeOnDestroy(interactor.listenTimeChanges().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onTimeChanged(it) }, {
+        observeScheduler).subscribe({ onTimeChanged(it) }, {
       Timber.e(it, "Error on delay changed event")
-      callback.onError(it)
+      onError(it)
     }))
-  }
-
-  interface ActionCallback {
-    fun onError(throwable: Throwable)
-  }
-
-  interface OnTimeChangedCallback {
-    fun onTimeChanged(time: Long)
-
-    fun onError(throwable: Throwable)
-  }
-
-  interface CustomTimeChangedCallback {
-    fun onCustomTimeChanged(time: Long)
-
-    fun onCustomTimeInputError(error: String?)
-
-    fun onError(throwable: Throwable)
-  }
-
-  interface TimeCallback {
-    fun onCustomTime(time: Long)
-
-    fun onPresetTime(time: Long)
-
-    fun onError(throwable: Throwable)
-
-    fun onComplete()
   }
 }

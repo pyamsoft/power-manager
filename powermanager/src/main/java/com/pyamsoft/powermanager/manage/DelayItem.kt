@@ -28,16 +28,13 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_se
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_six
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
+import timber.log.Timber
 import javax.inject.Inject
 
-class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
+class DelayItem : TimeItem<TimePresenter, DelayItem.ViewHolder>(TAG) {
 
   override fun getType(): Int {
     return R.id.adapter_delay_card_item
-  }
-
-  override fun providePresenter(holder: DelayItem.ViewHolder): TimePresenter {
-    return holder.presenter
   }
 
   override fun getTimeRadioOne(): Long {
@@ -76,9 +73,20 @@ class DelayItem : TimeItem<DelayItem.ViewHolder>(TAG) {
     return ViewHolder(view)
   }
 
-  class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
+  override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
+    super.bindView(holder, payloads)
+    Timber.d("Bind Delay item")
+  }
 
-    @field:Inject lateinit internal var presenter: TimePresenter
+  override fun unbindView(holder: ViewHolder) {
+    super.unbindView(holder)
+    Timber.d("Unbind Delay item")
+  }
+
+  class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder<TimePresenter>(
+      itemView) {
+
+    @field:Inject override lateinit var presenter: TimePresenter
 
     init {
       Injector.get().provideComponent().plusManageComponent().inject(this)

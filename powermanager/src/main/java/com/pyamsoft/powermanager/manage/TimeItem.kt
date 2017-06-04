@@ -32,8 +32,8 @@ import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_cu
 import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_group
 import timber.log.Timber
 
-abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
-    tag: String) : GenericAbstractItem<String, TimeItem<VH>, VH>(tag) {
+abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal constructor(
+    tag: String) : GenericAbstractItem<String, TimeItem<P, VH>, VH>(tag) {
 
   internal var customTimeWatcher: TextWatcher? = null
   override fun getLayoutRes(): Int {
@@ -43,48 +43,40 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
   override fun bindView(holder: VH, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     val context = holder.itemView.context
-    providePresenter(holder).getTime(object : TimePresenter.TimeCallback {
-      override fun onCustomTime(time: Long) {
-        holder.containerDelay.delay_radio_group.clearCheck()
-        holder.containerDelay.delay_input_custom.setText(time.toString())
-        enableCustomInput(holder)
+    holder.presenter.getTime(onCustom = {
+      holder.containerDelay.delay_radio_group.clearCheck()
+      holder.containerDelay.delay_input_custom.setText(it.toString())
+      enableCustomInput(holder)
+    }, onPreset = {
+      disableCustomInput(holder)
+      val index: Int
+      if (it == getTimeRadioOne()) {
+        index = 0
+      } else if (it == getTimeRadioTwo()) {
+        index = 1
+      } else if (it == getTimeRadioThree()) {
+        index = 2
+      } else if (it == getTimeRadioFour()) {
+        index = 3
+      } else if (it == getTimeRadioFive()) {
+        index = 4
+      } else if (it == getTimeRadioSix()) {
+        index = 5
+      } else if (it == getTimeRadioSeven()) {
+        index = 6
+      } else if (it == getTimeRadioEight()) {
+        index = 7
+      } else {
+        throw IllegalStateException("No preset delay with time: $it")
       }
 
-      override fun onPresetTime(time: Long) {
-        disableCustomInput(holder)
-        val index: Int
-        if (time == getTimeRadioOne()) {
-          index = 0
-        } else if (time == getTimeRadioTwo()) {
-          index = 1
-        } else if (time == getTimeRadioThree()) {
-          index = 2
-        } else if (time == getTimeRadioFour()) {
-          index = 3
-        } else if (time == getTimeRadioFive()) {
-          index = 4
-        } else if (time == getTimeRadioSix()) {
-          index = 5
-        } else if (time == getTimeRadioSeven()) {
-          index = 6
-        } else if (time == getTimeRadioEight()) {
-          index = 7
-        } else {
-          throw IllegalStateException("No preset delay with time: " + time)
-        }
+      holder.containerDelay.delay_radio_group.check(
+          holder.containerDelay.delay_radio_group.getChildAt(index).id)
+      holder.containerDelay.delay_input_custom.setText(it.toString())
 
-        holder.containerDelay.delay_radio_group.check(
-            holder.containerDelay.delay_radio_group.getChildAt(index).id)
-        holder.containerDelay.delay_input_custom.setText(time.toString())
-      }
-
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(context, "Error getting delay time", Toasty.LENGTH_SHORT).show()
-      }
-
-      override fun onComplete() {
-      }
-    })
+    }, onError = {
+      Toasty.makeText(context, "Error getting delay time", Toasty.LENGTH_SHORT).show()
+    }, onCompleted = {})
 
     holder.containerDelay.delay_radio_group.setOnCheckedChangeListener { group, checkedId ->
       if (checkedId == -1) {
@@ -106,12 +98,9 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
           else -> throw IllegalArgumentException("Could not find RadioButton with id: " + checkedId)
         }
 
-        providePresenter(holder).setPresetTime(time, object : TimePresenter.ActionCallback {
-          override fun onError(throwable: Throwable) {
-            Toasty.makeText(context, "Failed to set delay time",
-                Toasty.LENGTH_SHORT).show()
-            group.isEnabled = false
-          }
+        holder.presenter.setPresetTime(time, {
+          Toasty.makeText(context, "Failed to set delay time", Toasty.LENGTH_SHORT).show()
+          group.isEnabled = false
         })
       }
     }
@@ -124,20 +113,14 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
         disableCustomInput(holder)
       }
     }
-
-    providePresenter(holder).listenForTimeChanges(object : TimePresenter.OnTimeChangedCallback {
-      override fun onTimeChanged(time: Long) {
-        // Remove watcher
-        holder.containerDelay.delay_input_custom.setText(time.toString())
-        holder.containerDelay.delay_input_custom.setSelection(
-            holder.containerDelay.delay_input_custom.text.length - 1)
-      }
-
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(context, "Error while listening for time changes",
-            Toasty.LENGTH_SHORT).show()
-        disableCustomInput(holder)
-      }
+    holder.presenter.listenForTimeChanges({
+      // Remove watcher
+      holder.containerDelay.delay_input_custom.setText(it.toString())
+      holder.containerDelay.delay_input_custom.setSelection(
+          holder.containerDelay.delay_input_custom.text.length - 1)
+    }, {
+      Toasty.makeText(context, "Error while listening for time changes", Toasty.LENGTH_SHORT).show()
+      disableCustomInput(holder)
     })
   }
 
@@ -149,7 +132,7 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
       customTimeWatcher = null
     }
-    providePresenter(holder).stopListeningCustomTimeChanges()
+    holder.presenter.stopListeningCustomTimeChanges()
   }
 
   internal fun enableCustomInput(holder: VH) {
@@ -164,43 +147,36 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
       }
 
       override fun afterTextChanged(s: Editable) {
-        providePresenter(holder).submitCustomTimeChange(s.toString(), false)
+        holder.presenter.submitCustomTimeChange(s.toString(), false)
       }
     }
 
     if (customTimeWatcher != null) {
       holder.containerDelay.delay_input_custom.addTextChangedListener(customTimeWatcher)
     }
-    providePresenter(holder).listenForCustomTimeChanges(object : TimePresenter.CustomTimeChangedCallback {
-      override fun onCustomTimeChanged(time: Long) {
-        holder.containerDelay.delay_input_custom.setText(time.toString())
-      }
-
-      override fun onCustomTimeInputError(error: String?) {
-        holder.containerDelay.delay_input_custom.error = if (error == null) null else "Invalid number: " + error
-      }
-
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(holder.itemView.context, "Error while listening for custom changes",
-            Toasty.LENGTH_SHORT).show()
-        disableCustomInput(holder)
-      }
+    holder.presenter.listenForCustomTimeChanges(onTimeChanged = {
+      holder.containerDelay.delay_input_custom.setText(it.toString())
+    }, onTimeError = {
+      holder.containerDelay.delay_input_custom.error = if (it == null) null else "Invalid number: $it"
+    }, onError = {
+      Toasty.makeText(holder.itemView.context, "Error while listening for custom changes",
+          Toasty.LENGTH_SHORT).show()
+      disableCustomInput(holder)
     })
   }
 
   override fun unbindView(holder: VH) {
     super.unbindView(holder)
     if (holder.containerDelay.delay_input_custom.isEnabled) {
-      providePresenter(holder).submitCustomTimeChange(
+      holder.presenter.submitCustomTimeChange(
           holder.containerDelay.delay_input_custom.text.toString(), true)
     }
     holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
     holder.containerDelay.delay_radio_group.setOnCheckedChangeListener(null)
-    providePresenter(holder).stop()
-    providePresenter(holder).destroy()
+    holder.presenter.stop()
+    holder.presenter.destroy()
   }
 
-  @CheckResult abstract fun providePresenter(holder: VH): TimePresenter
   @CheckResult abstract fun getTimeRadioOne(): Long
   @CheckResult abstract fun getTimeRadioTwo(): Long
   @CheckResult abstract fun getTimeRadioThree(): Long
@@ -210,10 +186,12 @@ abstract class TimeItem<VH : TimeItem.ViewHolder> internal constructor(
   @CheckResult abstract fun getTimeRadioSeven(): Long
   @CheckResult abstract fun getTimeRadioEight(): Long
 
-  abstract class ViewHolder protected constructor(itemView: View) : RecyclerView.ViewHolder(
-      itemView) {
+  abstract class ViewHolder<P : TimePresenter> protected constructor(
+      itemView: View) : RecyclerView.ViewHolder(itemView) {
     internal var containerDelay: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_delay, itemView as ViewGroup, false)
+
+    abstract internal var presenter: P
 
     init {
       itemView.simple_expander.setExpandingContent(containerDelay)

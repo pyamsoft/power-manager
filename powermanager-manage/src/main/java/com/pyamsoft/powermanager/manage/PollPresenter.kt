@@ -24,36 +24,20 @@ class PollPresenter @Inject internal constructor(private val interactor: PollInt
     obsScheduler: Scheduler, subScheduler: Scheduler) : TimePresenter(obsScheduler, subScheduler,
     interactor) {
 
-  fun getCurrentPeriodic(callback: StateCallback) {
+  fun getCurrentPeriodic(onStateRetrieved: (Boolean) -> Unit, onError: (Throwable) -> Unit,
+      onCompleted: () -> Unit) {
     disposeOnDestroy(interactor.getCurrentState().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onCompleted() }.subscribe(
-        { callback.onStateRetrieved(it) }, {
+        observeScheduler).doAfterTerminate { onCompleted() }.subscribe({ onStateRetrieved(it) }, {
       Timber.e(it, "Error getting polling state")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
-  fun toggleAll(checked: Boolean, callback: ToggleAllCallback) {
+  fun toggleAll(checked: Boolean, onError: (Throwable) -> Unit, onCompleted: () -> Unit) {
     disposeOnDestroy(interactor.toggleAll(checked).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onCompleted() }, {
+        observeScheduler).subscribe({ onCompleted() }, {
       Timber.e(it, "Error toggle all polling")
-      callback.onError(it)
+      onError(it)
     }))
-  }
-
-  interface StateCallback {
-
-    fun onStateRetrieved(checked: Boolean)
-
-    fun onError(throwable: Throwable)
-
-    fun onCompleted()
-  }
-
-  interface ToggleAllCallback {
-
-    fun onError(throwable: Throwable)
-
-    fun onCompleted()
   }
 }

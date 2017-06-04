@@ -20,7 +20,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.Switch
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
@@ -33,6 +32,7 @@ import kotlinx.android.synthetic.main.layout_container_manage.view.manage_data
 import kotlinx.android.synthetic.main.layout_container_manage.view.manage_doze
 import kotlinx.android.synthetic.main.layout_container_manage.view.manage_sync
 import kotlinx.android.synthetic.main.layout_container_manage.view.manage_wifi
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -53,6 +53,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
 
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
+    Timber.d("Bind manage item")
     bindSwitch(holder.container.manage_wifi, "WiFi", holder.presenterWifi)
     bindSwitch(holder.container.manage_data, "Cellular Data", holder.presenterData)
     bindSwitch(holder.container.manage_bluetooth, "Bluetooth", holder.presenterBluetooth)
@@ -69,57 +70,32 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     switch.text = name
 
     // Get current state
-    presenter.getState(object : ManagePresenter.RetrieveCallback {
-      override fun onEnableRetrieved(enabled: Boolean) {
-        switch.isEnabled = enabled
-      }
+    presenter.getState(onEnableRetrieved = {
+      switch.isEnabled = it
+    }, onStateRetrieved = {
+      switch.isChecked = it
+    }, onError = {
+      Toasty.makeText(switch.context, "Failed to retrieve state: " + name,
+          Toasty.LENGTH_SHORT).show()
 
-      override fun onStateRetrieved(enabled: Boolean) {
-        // Make sure we don't trigger anything
-        switch.setOnCheckedChangeListener(null)
-        switch.isChecked = enabled
-      }
+      // Mark switch as disabled
+      switch.isEnabled = false
+    }, onComplete = {
+      switch.setOnCheckedChangeListener { buttonView, isChecked ->
+        presenter.setManaged(isChecked, {
+          Toasty.makeText(switch.context, "Failed to set state: " + name,
+              Toasty.LENGTH_SHORT).show()
 
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(switch.context, "Failed to retrieve state: " + name,
-            Toasty.LENGTH_SHORT).show()
-
-        // Mark switch as disabled
-        switch.isEnabled = false
-      }
-
-      override fun onComplete() {
-        switch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            if (buttonView != null) {
-              // Make sure we don't trigger anything
-              buttonView.setOnCheckedChangeListener(null)
-
-              // Update backing
-              val listener = this
-              presenter.setManaged(isChecked, object : ManagePresenter.ActionCallback {
-                override fun onError(throwable: Throwable) {
-                  Toasty.makeText(switch.context, "Failed to set state: " + name,
-                      Toasty.LENGTH_SHORT).show()
-
-                  // Roll back
-                  buttonView.isChecked = !isChecked
-                }
-
-                override fun onComplete() {
-                  // Re-apply listener
-                  buttonView.setOnCheckedChangeListener(listener)
-                }
-              })
-            }
-          }
-        })
+          // Roll back
+          buttonView.isChecked = !isChecked
+        }, {})
       }
     })
   }
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
+    Timber.d("Unbind manage item")
     unbindSwitch(holder.container.manage_wifi)
     unbindSwitch(holder.container.manage_data)
     unbindSwitch(holder.container.manage_bluetooth)

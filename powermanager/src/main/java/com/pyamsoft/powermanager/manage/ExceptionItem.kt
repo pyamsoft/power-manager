@@ -21,11 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.manage.ExceptionPresenter.BusCallback
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_airplane
@@ -40,6 +38,7 @@ import kotlinx.android.synthetic.main.layout_container_exception.view.exception_
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_doze
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_sync
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_wifi
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -60,6 +59,7 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
 
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
+    Timber.d("Bind exception item")
     bind(holder.chargingContainer.exception_charging_wifi,
         holder.chargingContainer.exception_wear_wifi, "Wifi", holder.presenterWifi)
     bind(holder.chargingContainer.exception_charging_data,
@@ -76,6 +76,7 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
+    Timber.d("Unbind exception item")
     unbind(holder.chargingContainer.exception_charging_airplane,
         holder.chargingContainer.exception_wear_airplane)
     unbind(holder.chargingContainer.exception_charging_wifi,
@@ -108,12 +109,10 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
     bindChargingCheck(charging, name, presenter)
     bindWearCheck(wear, name, presenter)
 
-    presenter.registerOnBus(object : BusCallback {
-      override fun onManageChanged() {
-        getIgnoreCharging(presenter, charging, name)
-        getIgnoreWear(presenter, wear, name)
-      }
-    })
+    presenter.registerOnBus {
+      getIgnoreCharging(presenter, charging, name)
+      getIgnoreWear(presenter, wear, name)
+    }
   }
 
   private fun bindChargingCheck(checkBox: CheckBox, name: String, presenter: ExceptionPresenter) {
@@ -125,51 +124,25 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
   }
 
   internal fun getIgnoreCharging(presenter: ExceptionPresenter, checkBox: CheckBox, name: String) {
-    presenter.getIgnoreCharging(object : ExceptionPresenter.RetrieveCallback {
-      override fun onEnableRetrieved(enabled: Boolean) {
-        checkBox.isEnabled = enabled
-      }
+    presenter.getIgnoreCharging(onEnableRetrieved = {
+      checkBox.isEnabled = it
+    }, onStateRetrieved = {
+      checkBox.isChecked = it
+    }, onError = {
+      Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
+          Toasty.LENGTH_SHORT).show()
 
-      override fun onStateRetrieved(enabled: Boolean) {
-        // Make sure we don't trigger anything
-        checkBox.setOnCheckedChangeListener(null)
-        checkBox.isChecked = enabled
-      }
+      // Mark switch as disabled
+      checkBox.isEnabled = false
+    }, onComplete = {
+      checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        presenter.setIgnoreCharging(isChecked, {
+          Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+              Toasty.LENGTH_SHORT).show()
 
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
-            Toasty.LENGTH_SHORT).show()
-
-        // Mark switch as disabled
-        checkBox.isEnabled = false
-      }
-
-      override fun onComplete() {
-        checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            if (buttonView != null) {
-              // Make sure we don't trigger anything
-              buttonView.setOnCheckedChangeListener(null)
-
-              // Update backing
-              val listener = this
-              presenter.setIgnoreCharging(isChecked, object : ExceptionPresenter.ActionCallback {
-                override fun onError(throwable: Throwable) {
-                  Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-                      Toasty.LENGTH_SHORT).show()
-
-                  // Roll back
-                  buttonView.isChecked = !isChecked
-                }
-
-                override fun onComplete() {
-                  // Re-apply listener
-                  buttonView.setOnCheckedChangeListener(listener)
-                }
-              })
-            }
-          }
-        })
+          // Roll back
+          buttonView.isChecked = !isChecked
+        }, {})
       }
     })
   }
@@ -183,51 +156,26 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
   }
 
   internal fun getIgnoreWear(presenter: ExceptionPresenter, checkBox: CheckBox, name: String) {
-    presenter.getIgnoreWear(object : ExceptionPresenter.RetrieveCallback {
-      override fun onEnableRetrieved(enabled: Boolean) {
-        checkBox.isEnabled = enabled
-      }
+    presenter.getIgnoreWear(onEnableRetrieved = {
+      checkBox.isEnabled = it
+    }, onStateRetrieved = {
+      checkBox.isChecked = it
+    }, onError = {
+      Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
+          Toasty.LENGTH_SHORT).show()
 
-      override fun onStateRetrieved(enabled: Boolean) {
-        // Make sure we don't trigger anything
-        checkBox.setOnCheckedChangeListener(null)
-        checkBox.isChecked = enabled
-      }
+      // Mark switch as disabled
+      checkBox.isEnabled = false
+    }, onComplete = {
+      checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        // Update backing
+        presenter.setIgnoreWear(isChecked, {
+          Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+              Toasty.LENGTH_SHORT).show()
 
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(checkBox.context, "Failed to retrieve state: " + name,
-            Toasty.LENGTH_SHORT).show()
-
-        // Mark switch as disabled
-        checkBox.isEnabled = false
-      }
-
-      override fun onComplete() {
-        checkBox.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            if (buttonView != null) {
-              // Make sure we don't trigger anything
-              buttonView.setOnCheckedChangeListener(null)
-
-              // Update backing
-              val listener = this
-              presenter.setIgnoreWear(isChecked, object : ExceptionPresenter.ActionCallback {
-                override fun onError(throwable: Throwable) {
-                  Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-                      Toasty.LENGTH_SHORT).show()
-
-                  // Roll back
-                  buttonView.isChecked = !isChecked
-                }
-
-                override fun onComplete() {
-                  // Re-apply listener
-                  buttonView.setOnCheckedChangeListener(listener)
-                }
-              })
-            }
-          }
-        })
+          // Roll back
+          buttonView.isChecked = !isChecked
+        }, {})
       }
     })
   }

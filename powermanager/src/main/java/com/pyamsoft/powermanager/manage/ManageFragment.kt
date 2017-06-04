@@ -29,7 +29,6 @@ import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import kotlinx.android.synthetic.main.fragment_manage.recycler
 import timber.log.Timber
@@ -86,6 +85,14 @@ class ManageFragment : WatchedFragment() {
     adapter.add(DelayItem())
     adapter.add(PollItem())
     adapter.add(ExceptionItem())
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+
+    // Have to null out the adapter or unbindView never called
+    adapter.clear()
+    recycler.adapter = null
   }
 
   override fun onResume() {

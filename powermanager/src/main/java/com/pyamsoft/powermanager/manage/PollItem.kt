@@ -17,12 +17,8 @@
 package com.pyamsoft.powermanager.manage
 
 import android.view.View
-import android.widget.CompoundButton
-import android.widget.CompoundButton.OnCheckedChangeListener
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.manage.PollPresenter.StateCallback
-import com.pyamsoft.powermanager.manage.PollPresenter.ToggleAllCallback
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.adapter_item_toggle.view.toggle_switch
@@ -38,7 +34,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
+class PollItem : TimeItem<PollPresenter, PollItem.ViewHolder>(TAG) {
 
   override fun getType(): Int {
     return R.id.adapter_poll_card_item
@@ -46,10 +42,6 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
 
   override fun getLayoutRes(): Int {
     return R.layout.adapter_item_toggle
-  }
-
-  override fun providePresenter(holder: ViewHolder): TimePresenter {
-    return holder.presenter
   }
 
   override fun getTimeRadioOne(): Long {
@@ -90,60 +82,44 @@ class PollItem : TimeItem<PollItem.ViewHolder>(TAG) {
 
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
+    Timber.d("Bind poll item")
 
     holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
-    holder.presenter.getCurrentPeriodic(object : StateCallback {
-      override fun onError(throwable: Throwable) {
-        Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
-            Toasty.LENGTH_SHORT).show()
+    holder.presenter.getCurrentPeriodic({
+      Timber.d("Poll state retrieved: %s", it)
+      holder.itemView.toggle_switch.isChecked = it
+    }, {
+      Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
+          Toasty.LENGTH_SHORT).show()
 
-        // Mark switch as disabled
-        holder.itemView.toggle_switch.isEnabled = false
-      }
+      // Mark switch as disabled
+      holder.itemView.toggle_switch.isEnabled = false
+    }, {
+      holder.itemView.toggle_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+        if (buttonView != null) {
+          Timber.d("Set polling enabled: %s", isChecked)
+          holder.presenter.toggleAll(isChecked, {
+            Toasty.makeText(buttonView.context, "Failed to set polling state",
+                Toasty.LENGTH_SHORT).show()
 
-      override fun onStateRetrieved(checked: Boolean) {
-        Timber.d("Poll state retrieved: %s", checked)
-        holder.itemView.toggle_switch.isChecked = checked
-      }
-
-      override fun onCompleted() {
-        holder.itemView.toggle_switch.setOnCheckedChangeListener(object : OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            if (buttonView != null) {
-              Timber.d("Set polling enabled: %s", isChecked)
-              buttonView.setOnCheckedChangeListener(null)
-
-              val listener = this
-              holder.presenter.toggleAll(isChecked, object : ToggleAllCallback {
-
-                override fun onError(throwable: Throwable) {
-                  Toasty.makeText(buttonView.context, "Failed to set polling state",
-                      Toasty.LENGTH_SHORT).show()
-
-                  // Mark switch as disabled
-                  buttonView.isEnabled = false
-                }
-
-                override fun onCompleted() {
-                  buttonView.setOnCheckedChangeListener(listener)
-                }
-              })
-
-            }
-          }
-        })
+            // Mark switch as disabled
+            buttonView.isEnabled = false
+          }, {})
+        }
       }
     })
   }
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
+    Timber.d("Unbind poll item")
     holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
   }
 
-  class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder(itemView) {
+  class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder<PollPresenter>(
+      itemView) {
 
-    @field:Inject lateinit internal var presenter: PollPresenter
+    @field:Inject lateinit override var presenter: PollPresenter
 
     init {
       itemView.toggle_switch.text = "Smart Polling"

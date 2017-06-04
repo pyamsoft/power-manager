@@ -27,83 +27,65 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   /**
    * public
    */
-  fun setIgnoreCharging(state: Boolean, callback: ActionCallback) {
+  fun setIgnoreCharging(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.setIgnoreCharging(state).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onComplete() }.subscribe(
+        observeScheduler).doAfterTerminate { onComplete() }.subscribe(
         { Timber.d("Set ignore charging state successfully: %s", state) }, {
       Timber.e(it, "Error setting ignore charging")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun getIgnoreCharging(callback: RetrieveCallback) {
+  fun getIgnoreCharging(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
+      onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.isIgnoreCharging.subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doOnSuccess { (first) ->
-      callback.onEnableRetrieved(first)
-    }.doAfterTerminate { callback.onComplete() }.map { (_, second) -> second }.subscribe(
-        { callback.onStateRetrieved(it) }, {
+      onEnableRetrieved(first)
+    }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
+        { onStateRetrieved(it) }, {
       Timber.e(it, "Error getting ignore charging")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun setIgnoreWear(state: Boolean, callback: ActionCallback) {
+  fun setIgnoreWear(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.setIgnoreWear(state).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onComplete() }.subscribe(
+        observeScheduler).doAfterTerminate { onComplete() }.subscribe(
         { Timber.d("Set ignore wear state successfully: %s", state) }, {
       Timber.e(it, "Error setting ignore wear")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun getIgnoreWear(callback: RetrieveCallback) {
+  fun getIgnoreWear(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
+      onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy(interactor.isIgnoreWear.subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doOnSuccess { (first) ->
-      callback.onEnableRetrieved(first)
-    }.doAfterTerminate { callback.onComplete() }.map { (_, second) -> second }.subscribe(
-        { callback.onStateRetrieved(it) }, {
+      onEnableRetrieved(first)
+    }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
+        { onStateRetrieved(it) }, {
       Timber.e(it, "Error getting ignore wear")
-      callback.onError(it)
+      onError(it)
     }))
   }
 
   /**
    * public
    */
-  fun registerOnBus(callback: BusCallback) {
+  fun registerOnBus(onManageChanged: () -> Unit) {
     disposeOnDestroy(EventBus.get().listen(
         ManageChangeEvent::class.java).filter { it.target === target }.subscribeOn(
-        subscribeScheduler).observeOn(observeScheduler).subscribe({ callback.onManageChanged() }, {
+        subscribeScheduler).observeOn(observeScheduler).subscribe({ onManageChanged() }, {
       Timber.e(it, "Error on manage change bus for target: %s", target)
     }))
-  }
-
-  interface BusCallback {
-    fun onManageChanged()
-  }
-
-  interface ActionCallback {
-    fun onError(throwable: Throwable)
-
-    fun onComplete()
-  }
-
-  interface RetrieveCallback {
-    fun onEnableRetrieved(enabled: Boolean)
-
-    fun onStateRetrieved(enabled: Boolean)
-
-    fun onError(throwable: Throwable)
-
-    fun onComplete()
   }
 }
