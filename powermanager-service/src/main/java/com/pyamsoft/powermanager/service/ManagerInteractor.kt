@@ -37,14 +37,14 @@ import javax.inject.Singleton
 
 @Singleton internal class ManagerInteractor @Inject constructor(
     @param:Named("instant") private val jobQueuer: JobQueuer,
-    private val preferences: ManagePreferences,
     @param:Named("obs_wifi") private val wifiObserver: ConnectedStateObserver,
     @param:Named("obs_data") private val dataObserver: StateObserver,
     @param:Named("obs_bluetooth") private val bluetoothObserver: ConnectedStateObserver,
     @param:Named("obs_sync") private val syncObserver: StateObserver,
     @param:Named("obs_doze") private val dozeObserver: StateObserver,
     @param:Named("obs_airplane") private val airplaneObserver: StateObserver,
-    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
+    private val preferences: ManagePreferences, private val wifiPreferences: WifiPreferences,
+    private val dataPreferences: DataPreferences,
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,

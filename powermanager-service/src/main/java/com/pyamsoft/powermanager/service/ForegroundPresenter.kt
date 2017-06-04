@@ -24,7 +24,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class ForegroundPresenter @Inject internal constructor(val interactor: ForegroundInteractor,
+class ForegroundPresenter @Inject internal constructor(private val interactor: ForegroundInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
   /**
