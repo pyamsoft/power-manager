@@ -24,7 +24,7 @@ import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class WifiManagerWrapperImpl @Inject constructor(context: Context,
+internal class WifiManagerWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger) : ConnectedDeviceFunctionWrapper {
   private val wifiManager: WifiManager?
 

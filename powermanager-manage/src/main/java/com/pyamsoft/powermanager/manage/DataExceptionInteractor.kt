@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class DataExceptionInteractor @Inject constructor(
+internal class DataExceptionInteractor @Inject internal constructor(
     val preferences: DataPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

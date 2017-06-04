@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class DozeExceptionInteractor @Inject constructor(
+internal class DozeExceptionInteractor @Inject internal constructor(
     private val preferences: DozePreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

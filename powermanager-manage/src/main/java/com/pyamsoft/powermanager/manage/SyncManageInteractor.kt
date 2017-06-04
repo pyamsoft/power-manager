@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class SyncManageInteractor @Inject constructor(
+internal class SyncManageInteractor @Inject internal constructor(
     private val preferences: SyncPreferences) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {

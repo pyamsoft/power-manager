@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class WifiExceptionInteractor @Inject constructor(
+internal class WifiExceptionInteractor @Inject internal constructor(
     private val preferences: WifiPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

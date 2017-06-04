@@ -20,5 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.model.Connections
 
 interface ConnectedDeviceFunctionWrapper : DeviceFunctionWrapper {
+
   @get:CheckResult val connectionState: Connections
+
 }

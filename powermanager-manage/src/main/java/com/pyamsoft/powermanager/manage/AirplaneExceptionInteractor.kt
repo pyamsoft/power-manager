@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class AirplaneExceptionInteractor @Inject constructor(
+internal class AirplaneExceptionInteractor @Inject internal constructor(
     private val preferences: AirplanePreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

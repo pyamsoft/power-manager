@@ -29,68 +29,75 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class ManageSingletonModule {
-  @Singleton @Provides @Named("manage_wifi_interactor") internal fun provideWifi(
+
+  @Singleton @Provides @Named("manage_wifi_interactor") internal fun provideWifiInteractor(
       preferences: WifiPreferences): ManageInteractor {
     return WifiManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_data_interactor") internal fun provideData(
+  @Singleton @Provides @Named("manage_data_interactor") internal fun provideDataInteractor(
       preferences: DataPreferences,
       @Named("obs_root_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return DataManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("manage_bluetooth_interactor") internal fun provideBluetooth(
+  @Singleton @Provides @Named(
+      "manage_bluetooth_interactor") internal fun provideBluetoothInteractor(
       preferences: BluetoothPreferences): ManageInteractor {
     return BluetoothManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_sync_interactor") internal fun provideSync(
+  @Singleton @Provides @Named("manage_sync_interactor") internal fun provideSyncInteractor(
       preferences: SyncPreferences): ManageInteractor {
     return SyncManageInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("manage_airplane_interactor") internal fun provideAirplane(
+  @Singleton @Provides @Named("manage_airplane_interactor") internal fun provideAirplaneInteractor(
       preferences: AirplanePreferences,
       @Named("obs_root_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return AirplaneManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("manage_doze_interactor") internal fun provideDoze(
+  @Singleton @Provides @Named("manage_doze_interactor") internal fun provideDozeInteractor(
       preferences: DozePreferences,
       @Named("obs_doze_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return DozeManageInteractor(preferences, permissionObserver)
   }
 
-  @Singleton @Provides @Named("exception_wifi_interactor") internal fun provideWifiException(
+  @Singleton @Provides @Named(
+      "exception_wifi_interactor") internal fun provideWifiExceptionInteractor(
       preferences: WifiPreferences): ExceptionInteractor {
     return WifiExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_data_interactor") internal fun provideDataException(
+  @Singleton @Provides @Named(
+      "exception_data_interactor") internal fun provideDataExceptionInteractor(
       preferences: DataPreferences): ExceptionInteractor {
     return DataExceptionInteractor(preferences)
   }
 
   @Singleton @Provides @Named(
-      "exception_bluetooth_interactor") internal fun provideBluetoothException(
+      "exception_bluetooth_interactor") internal fun provideBluetoothExceptionInteractor(
       preferences: BluetoothPreferences): ExceptionInteractor {
     return BluetoothExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_sync_interactor") internal fun provideSyncException(
+  @Singleton @Provides @Named(
+      "exception_sync_interactor") internal fun provideSyncExceptionInteractor(
       preferences: SyncPreferences): ExceptionInteractor {
     return SyncExceptionInteractor(preferences)
   }
 
   @Singleton @Provides @Named(
-      "exception_airplane_interactor") internal fun provideAirplaneException(
+      "exception_airplane_interactor") internal fun provideAirplaneExceptionInteractor(
       preferences: AirplanePreferences): ExceptionInteractor {
     return AirplaneExceptionInteractor(preferences)
   }
 
-  @Singleton @Provides @Named("exception_doze_interactor") internal fun provideDozeException(
+  @Singleton @Provides @Named(
+      "exception_doze_interactor") internal fun provideDozeExceptionInteractor(
       preferences: DozePreferences): ExceptionInteractor {
     return DozeExceptionInteractor(preferences)
   }
+
 }

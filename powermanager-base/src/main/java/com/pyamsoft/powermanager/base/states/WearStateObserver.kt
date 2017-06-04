@@ -26,9 +26,11 @@ import com.pyamsoft.powermanager.base.preference.WearablePreferences
 import com.pyamsoft.powermanager.model.StateObserver
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-internal class WearStateObserver(context: Context,
+internal class WearStateObserver @Inject internal constructor(context: Context,
     private val preferences: WearablePreferences) : StateObserver {
+
   private val googleApiClient: GoogleApiClient = GoogleApiClient.Builder(
       context.applicationContext).addApiIfAvailable(Wearable.API).build()
   private val isWearableNodeConnected: Boolean

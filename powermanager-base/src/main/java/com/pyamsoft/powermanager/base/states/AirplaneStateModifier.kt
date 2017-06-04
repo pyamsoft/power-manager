@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.base.states
 import com.pyamsoft.powermanager.model.StateModifier
 import javax.inject.Inject
 
-internal class AirplaneStateModifier @Inject constructor(
+internal class AirplaneStateModifier @Inject internal constructor(
     private val wrapper: DeviceFunctionWrapper) : StateModifier {
   override fun set() {
     wrapper.enable()

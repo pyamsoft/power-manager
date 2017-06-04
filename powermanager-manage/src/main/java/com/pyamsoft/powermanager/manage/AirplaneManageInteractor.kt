@@ -22,7 +22,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class AirplaneManageInteractor @Inject constructor(val preferences: AirplanePreferences,
+internal class AirplaneManageInteractor @Inject internal constructor(val preferences: AirplanePreferences,
     private val permissionObserver: PermissionObserver) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {

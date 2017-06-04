@@ -30,7 +30,7 @@ import timber.log.Timber
 import java.lang.reflect.Method
 import javax.inject.Inject
 
-internal class DataConnectionWrapperImpl @Inject constructor(context: Context,
+internal class DataConnectionWrapperImpl @Inject internal constructor(context: Context,
     private val shellHelper: ShellHelper, private val logger: Logger,
     private val preferences: RootPreferences, private val dataUri: String) : DeviceFunctionWrapper {
   private val connectivityManager: ConnectivityManager = context.applicationContext.getSystemService(

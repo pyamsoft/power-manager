@@ -22,7 +22,7 @@ import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class WifiStateObserver @Inject constructor(
+internal class WifiStateObserver @Inject internal constructor(
     private val wrapper: ConnectedDeviceFunctionWrapper) : ConnectedStateObserver {
 
   init {

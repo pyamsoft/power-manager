@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class AirplaneStateObserver @Inject constructor(
+internal class AirplaneStateObserver @Inject internal constructor(
     private val wrapper: DeviceFunctionWrapper) : StateObserver {
 
   init {

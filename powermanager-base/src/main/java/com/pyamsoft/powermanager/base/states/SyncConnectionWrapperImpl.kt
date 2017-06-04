@@ -21,7 +21,7 @@ import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
-internal class SyncConnectionWrapperImpl @Inject constructor(
+internal class SyncConnectionWrapperImpl @Inject internal constructor(
     private val logger: Logger) : DeviceFunctionWrapper {
   private fun toggle(state: Boolean) {
     logger.i("Sync: %s", if (state) "enable" else "disable")

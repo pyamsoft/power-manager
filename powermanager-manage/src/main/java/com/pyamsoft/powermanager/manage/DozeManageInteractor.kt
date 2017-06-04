@@ -22,7 +22,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class DozeManageInteractor @Inject constructor(val preferences: DozePreferences,
+internal class DozeManageInteractor @Inject internal constructor(val preferences: DozePreferences,
     private val permissionObserver: PermissionObserver) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {

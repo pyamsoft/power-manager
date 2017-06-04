@@ -16,6 +16,10 @@
 
 package com.pyamsoft.powermanager.manage
 
+import dagger.Module
+import dagger.Provides
+import io.reactivex.Scheduler
+import javax.inject.Named
 import android.content.SharedPreferences
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
@@ -24,8 +28,6 @@ import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import dagger.Module
-import dagger.Provides
 import javax.inject.Singleton
 
 @Module class TimeSingletonModule {

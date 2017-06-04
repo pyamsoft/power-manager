@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class BluetoothAdapterWrapperImpl @Inject constructor(context: Context,
+internal class BluetoothAdapterWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger) : ConnectedDeviceFunctionWrapper {
   private val adapter: BluetoothAdapter?
   private val bluetoothManager: BluetoothManager = context.applicationContext.getSystemService(

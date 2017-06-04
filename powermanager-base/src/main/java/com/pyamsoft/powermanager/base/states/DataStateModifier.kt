@@ -19,8 +19,9 @@ package com.pyamsoft.powermanager.base.states
 import com.pyamsoft.powermanager.model.StateModifier
 import javax.inject.Inject
 
-internal class DataStateModifier @Inject constructor(
+internal class DataStateModifier @Inject internal constructor(
     private val wrapper: DeviceFunctionWrapper) : StateModifier {
+
   override fun set() {
     wrapper.enable()
   }

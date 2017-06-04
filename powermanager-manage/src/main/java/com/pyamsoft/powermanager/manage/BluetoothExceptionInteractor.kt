@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class BluetoothExceptionInteractor @Inject constructor(
+internal class BluetoothExceptionInteractor @Inject internal constructor(
     val preferences: BluetoothPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

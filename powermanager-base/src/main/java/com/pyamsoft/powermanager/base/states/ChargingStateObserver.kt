@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.model.StateObserver
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class ChargingStateObserver @Inject constructor(context: Context) : StateObserver {
+internal class ChargingStateObserver @Inject internal constructor(context: Context) : StateObserver {
   private val appContext: Context = context.applicationContext
   private val filter: IntentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
 

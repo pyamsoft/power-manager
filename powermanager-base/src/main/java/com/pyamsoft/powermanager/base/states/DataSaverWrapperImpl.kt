@@ -16,44 +16,55 @@
 
 package com.pyamsoft.powermanager.base.states
 
-import android.content.ContentResolver
 import android.content.Context
-import android.provider.Settings
+import android.net.ConnectivityManager
+import android.os.Build
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.shell.ShellHelper
 import com.pyamsoft.powermanager.model.States
+import com.pyamsoft.powermanager.model.States.DISABLED
 import javax.inject.Inject
 
-internal class AirplaneModeWrapperImpl @Inject internal constructor(context: Context,
+internal class DataSaverWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
     private val shellHelper: ShellHelper) : DeviceFunctionWrapper {
-  private val contentResolver: ContentResolver = context.applicationContext.contentResolver
 
-  private fun setAirplaneModeEnabled(enabled: Boolean) {
+  private val appContext = context.applicationContext
+  private val connectionManager = appContext.getSystemService(
+      Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+  private fun setDataSaver(enabled: Boolean) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+      logger.w("Cannot setDataSaver on API below Nougat")
+      return
+    }
+
     if (preferences.rootEnabled) {
-      logger.i("Airplane Mode: %s", if (enabled) "enable" else "disable")
-      val airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + if (enabled) "1" else "0"
-      val airplaneBroadcastCommand = AIRPLANE_BROADCAST_COMMAND + if (enabled) "true" else "false"
-      shellHelper.runSUCommand(airplaneSettingsCommand, airplaneBroadcastCommand)
+      val command = "cmd netpolicy set restrict-background ${if (enabled) "true" else "false"}"
+      logger.d("Data saver mode: ${if (enabled) "enable" else "disable"}")
+      shellHelper.runSUCommand(command)
+    } else {
+      logger.w("Cannot setDataSaver without root permission")
     }
   }
 
   override fun enable() {
-    setAirplaneModeEnabled(true)
+    setDataSaver(true)
   }
 
   override fun disable() {
-    setAirplaneModeEnabled(false)
+    setDataSaver(false)
   }
 
   override val state: States
-    get() = if (Settings.Global.getInt(contentResolver, Settings.Global.AIRPLANE_MODE_ON,
-        0) == 1) States.ENABLED
-    else States.DISABLED
-
-  companion object {
-    private const val AIRPLANE_SETTINGS_COMMAND = "settings put global airplane_mode_on "
-    private const val AIRPLANE_BROADCAST_COMMAND = "am broadcast -a android.intent.action.AIRPLANE_MODE --ez state "
-  }
+    get() {
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+        return States.UNKNOWN
+      } else {
+        return if (connectionManager.restrictBackgroundStatus != ConnectivityManager.RESTRICT_BACKGROUND_STATUS_DISABLED) States.ENABLED
+        else DISABLED
+      }
+    }
 }
+

@@ -161,4 +161,21 @@ import javax.inject.Singleton
       context: Context, preferences: LoggerPreferences): LoggerInteractor {
     return LoggerInteractor(context, preferences, LoggerInteractor.TRIGGER_LOG_ID)
   }
+
+  @Singleton @Provides @Named("logger_data_saver") fun provideLoggerDataSaver(
+      @Named("logger_presenter_trigger") loggerPresenter: LoggerPresenter): Logger {
+    return LoggerImpl(loggerPresenter)
+  }
+
+  @Singleton @Provides @Named("logger_presenter_data_saver") fun provideLoggerPresenterDataSaver(
+      @Named("logger_interactor_data_saver") interactor: LoggerInteractor,
+      @Named("obs") obsScheduler: Scheduler,
+      @Named("sub") subScheduler: Scheduler): LoggerPresenter {
+    return LoggerPresenter(interactor, obsScheduler, subScheduler)
+  }
+
+  @Singleton @Provides @Named("logger_interactor_data_saver") fun provideLoggerInteractorDataSaver(
+      context: Context, preferences: LoggerPreferences): LoggerInteractor {
+    return LoggerInteractor(context, preferences, LoggerInteractor.DATA_SAVER_LOG_ID)
+  }
 }

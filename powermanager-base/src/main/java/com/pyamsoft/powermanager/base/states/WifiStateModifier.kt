@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.base.states;
+package com.pyamsoft.powermanager.base.states
 
-import android.support.annotation.NonNull;
-import com.pyamsoft.powermanager.model.StateModifier;
-import javax.inject.Inject;
+import com.pyamsoft.powermanager.model.StateModifier
+import javax.inject.Inject
 
-class WifiStateModifier implements StateModifier {
+internal class WifiStateModifier @Inject internal constructor(
+    private val wrapper: DeviceFunctionWrapper) : StateModifier {
 
-  @NonNull private final DeviceFunctionWrapper wrapper;
-
-  @Inject WifiStateModifier(@NonNull DeviceFunctionWrapper wrapper) {
-    this.wrapper = wrapper;
+  override fun set() {
+    wrapper.enable()
   }
 
-  @Override public void set() {
-    wrapper.enable();
-  }
-
-  @Override public void unset() {
-    wrapper.disable();
+  override fun unset() {
+    wrapper.disable()
   }
 }

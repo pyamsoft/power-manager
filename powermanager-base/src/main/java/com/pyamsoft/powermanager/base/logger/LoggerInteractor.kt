@@ -159,5 +159,6 @@ class LoggerInteractor @Inject constructor(context: Context,
     const val SYNC_LOG_ID = "SYNC"
     const val TRIGGER_LOG_ID = "TRIGGER"
     const val WIFI_LOG_ID = "WIFI"
+    const val DATA_SAVER_LOG_ID = "DATA SAVER"
   }
 }

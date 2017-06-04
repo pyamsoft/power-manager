@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class SyncExceptionInteractor @Inject constructor(
+internal class SyncExceptionInteractor @Inject internal constructor(
     private val preferences: SyncPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {

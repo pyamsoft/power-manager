@@ -21,7 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
-internal class BluetoothManageInteractor @Inject constructor(
+internal class BluetoothManageInteractor @Inject internal constructor(
     private val preferences: BluetoothPreferences) : ManageInteractor() {
 
   override fun setManaged(state: Boolean): Completable {

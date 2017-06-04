@@ -22,6 +22,7 @@ import io.reactivex.Scheduler
 import javax.inject.Named
 
 @Module class TimeModule {
+
   @Provides internal fun provideManageDelayPresenter(@Named("obs") observeScheduler: Scheduler,
       @Named("sub") subscribeScheduler: Scheduler, interactor: TimeInteractor): TimePresenter {
     return TimePresenter(observeScheduler, subscribeScheduler, interactor)
@@ -31,4 +32,5 @@ import javax.inject.Named
       @Named("sub") subscribeScheduler: Scheduler, interactor: PollInteractor): PollPresenter {
     return PollPresenter(interactor, observeScheduler, subscribeScheduler)
   }
+
 }

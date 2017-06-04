@@ -23,8 +23,9 @@ import com.pyamsoft.powermanager.model.States
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class DozeStateObserver @Inject constructor(
+internal class DozeStateObserver @Inject internal constructor(
     private val wrapper: DeviceFunctionWrapper) : StateObserver {
+
   private val isDozeAvailable: Boolean
     @CheckResult get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 

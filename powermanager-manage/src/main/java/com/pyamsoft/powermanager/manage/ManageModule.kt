@@ -28,6 +28,7 @@ import io.reactivex.Scheduler
 import javax.inject.Named
 
 @Module class ManageModule {
+
   @Provides @Named("manage_wifi") internal fun provideWifi(
       @Named("manage_wifi_interactor") interactor: ManageInteractor,
       @Named("obs") obsScheduler: Scheduler,
@@ -147,4 +148,5 @@ import javax.inject.Named
         get() = DOZE
     }
   }
+
 }
