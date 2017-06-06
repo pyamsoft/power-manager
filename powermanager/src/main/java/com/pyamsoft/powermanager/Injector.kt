@@ -16,37 +16,32 @@
 
 package com.pyamsoft.powermanager
 
+import android.app.Activity
+import android.app.Service
+import android.content.Context
 import android.support.annotation.CheckResult
+import com.pyamsoft.powermanager.base.PowerManagerModule
+import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
 
 class Injector private constructor(private val component: PowerManagerComponent) {
+
   @CheckResult fun provideComponent(): PowerManagerComponent {
     return component
   }
 
   companion object {
-    @JvmStatic @Volatile private var instance: Injector? = null
 
-    @JvmStatic internal fun set(component: PowerManagerComponent?) {
-      if (component == null) {
-        throw NullPointerException("Cannot set a NULL component")
-      }
+    private val singleton = MutableSingleton<Injector>(null)
 
-      synchronized(Injector::class.java) {
-        instance = Injector(component)
-      }
+    @JvmStatic internal fun set(context: Context, mainActivityClass: Class<out Activity>,
+        toggleServiceClass: Class<out Service>) {
+      singleton.assign(Injector(DaggerPowerManagerComponent.builder().powerManagerModule(
+          PowerManagerModule(context.applicationContext, mainActivityClass,
+              toggleServiceClass)).build()))
     }
 
     @JvmStatic @CheckResult fun get(): Injector {
-      if (instance == null) {
-        synchronized(Injector::class.java) {
-          if (instance == null) {
-            throw NullPointerException("Instance is NULL")
-          }
-        }
-      }
-
-
-      return instance!!
+      return singleton.access()
     }
   }
 }

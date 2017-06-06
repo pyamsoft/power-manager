@@ -21,7 +21,6 @@ import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
 import com.evernote.android.job.JobManager
 import com.google.android.gms.common.GoogleApiAvailability
-import com.pyamsoft.powermanager.base.PowerManagerModule
 import com.pyamsoft.powermanager.job.JobHandler
 import com.pyamsoft.powermanager.job.JobQueuer
 import com.pyamsoft.powermanager.job.Jobs
@@ -62,11 +61,8 @@ class PowerManager : Application() {
       Licenses.createWithContent("Google Play Services",
           "https://developers.google.com/android/guides/overview", gmsContent)
     }
-    val module = PowerManagerModule(this, MainActivity::class.java, ActionToggleService::class.java)
-    val component = DaggerPowerManagerComponent.builder().powerManagerModule(module).build()
-    Injector.set(component)
 
-    // Inject the jobHandler
+    Injector.set(this, MainActivity::class.java, ActionToggleService::class.java)
     Injector.get().provideComponent().inject(this)
 
     // Guarantee JobManager creation

@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.trigger.db
 import android.database.sqlite.SQLiteOpenHelper
 import android.support.annotation.CheckResult
 import com.google.auto.value.AutoValue
+import com.pyamsoft.pydroid.helper.ThreadSafe.DynamicSingleton
 import com.squareup.sqldelight.SqlDelightStatement
 
 @AutoValue abstract class PowerTriggerEntry : PowerTriggerModel {
@@ -68,72 +69,49 @@ import com.squareup.sqldelight.SqlDelightStatement
 
   companion object {
 
-    @JvmField val EMPTY_NAME = PowerTriggerEntry::class.java.name + ".__TRIGGER_NAME_EMPTY"
-    @JvmField val EMPTY_PERCENT = -1
+    const val EMPTY_NAME = "PowerTriggerEntry.__TRIGGER_NAME_EMPTY"
+    const val EMPTY_PERCENT = -1
 
-    @Volatile private var empty: PowerTriggerEntry? = null
-    @Volatile private var factory: PowerTriggerModel.Factory<PowerTriggerEntry>? = null
-    @Volatile private var allEntriesMapper: PowerTriggerModel.Mapper<PowerTriggerEntry>? = null
-    @Volatile private var withPercentMapper: PowerTriggerModel.Mapper<PowerTriggerEntry>? = null
+    private val empty = DynamicSingleton<PowerTriggerEntry>(null)
+    private val factory = DynamicSingleton<PowerTriggerModel.Factory<PowerTriggerEntry>>(null)
+    private val allEntriesMapper = DynamicSingleton<PowerTriggerModel.Mapper<PowerTriggerEntry>>(
+        null)
+    private val withPercentMapper = DynamicSingleton<PowerTriggerModel.Mapper<PowerTriggerEntry>>(
+        null)
 
     @JvmStatic @CheckResult fun empty(): PowerTriggerEntry {
-      if (empty == null) {
-        synchronized(PowerTriggerEntry::class.java) {
-          if (empty == null) {
-            empty = AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false,
-                false, false, false, false, false, false, false)
-          }
-        }
+      return empty.access {
+        AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
+            false, false, false, false, false)
       }
-
-      return empty!!
     }
 
     @JvmStatic @CheckResult private fun factory(): PowerTriggerModel.Factory<PowerTriggerEntry> {
-      if (factory == null) {
-        synchronized(PowerTriggerEntry::class.java) {
-          if (factory == null) {
-            factory = PowerTriggerModel.Factory(
-                PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync ->
-                  AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi,
-                      toggleData, toggleBluetooth, toggleSync, enableWifi, enableData,
-                      enableBluetooth, enableSync)
-                })
-          }
-        }
+      return factory.access {
+        PowerTriggerModel.Factory(
+            PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync ->
+              AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi, toggleData,
+                  toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
+            })
       }
-
-      return factory!!
     }
 
     /**
      * public
      */
     @JvmStatic @CheckResult internal fun allEntriesMapper(): PowerTriggerModel.Mapper<PowerTriggerEntry> {
-      if (allEntriesMapper == null) {
-        synchronized(PowerTriggerEntry::class.java) {
-          if (allEntriesMapper == null) {
-            allEntriesMapper = factory().all_entriesMapper()
-          }
-        }
+      return allEntriesMapper.access {
+        factory().all_entriesMapper()
       }
-
-      return allEntriesMapper!!
     }
 
     /**
      * public
      */
     @JvmStatic @CheckResult internal fun withPercentMapper(): PowerTriggerModel.Mapper<PowerTriggerEntry> {
-      if (withPercentMapper == null) {
-        synchronized(PowerTriggerEntry::class.java) {
-          if (withPercentMapper == null) {
-            withPercentMapper = factory().with_percentMapper()
-          }
-        }
+      return withPercentMapper.access {
+        factory().with_percentMapper()
       }
-
-      return withPercentMapper!!
     }
 
     @JvmStatic @CheckResult fun creator(): PowerTriggerModel.Creator<PowerTriggerEntry> {
