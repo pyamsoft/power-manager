@@ -97,7 +97,7 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
       return@defer RxJavaInterop.toV2Single(
           briteDatabase.createQuery(statement.tables, statement.statement,
               *statement.args).mapToList {
-            PowerTriggerEntry.allEntriesMapper().map(it)
+            PowerTriggerEntry.allEntriesMapper.map(it)
           }.firstOrDefault(emptyList()).toSingle())
     }
   }
@@ -110,8 +110,8 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
       val statement = PowerTriggerEntry.withPercent(percent)
       return@defer RxJavaInterop.toV2Single(
           briteDatabase.createQuery(statement.tables, statement.statement,
-              *statement.args).mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper().map(it) },
-              PowerTriggerEntry.empty()).firstOrDefault(PowerTriggerEntry.empty()).toSingle())
+              *statement.args).mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper.map(it) },
+              PowerTriggerEntry.empty).firstOrDefault(PowerTriggerEntry.empty).toSingle())
     }
   }
 

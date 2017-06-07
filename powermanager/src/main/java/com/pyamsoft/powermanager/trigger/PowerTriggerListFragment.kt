@@ -50,7 +50,9 @@ class PowerTriggerListFragment : WatchedFragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.get().provideComponent().inject(this)
+    Injector.with(context) {
+      it.inject(this)
+    }
   }
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

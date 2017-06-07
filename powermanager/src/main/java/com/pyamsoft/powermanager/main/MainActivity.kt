@@ -63,7 +63,9 @@ class MainActivity : TamperActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    Injector.get().provideComponent().inject(this)
+    Injector.with(this) {
+      it.inject(this)
+    }
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
     setupAppBar()
     setupBottomBar()

@@ -48,7 +48,9 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Injector.get().provideComponent().inject(this)
+    Injector.with(context) {
+      it.inject(this)
+    }
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

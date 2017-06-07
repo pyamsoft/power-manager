@@ -19,7 +19,8 @@ package com.pyamsoft.powermanager.trigger.db
 import android.database.sqlite.SQLiteOpenHelper
 import android.support.annotation.CheckResult
 import com.google.auto.value.AutoValue
-import com.pyamsoft.pydroid.helper.ThreadSafe.DynamicSingleton
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerModel.Creator
+import com.pyamsoft.powermanager.trigger.db.PowerTriggerModel.Mapper
 import com.squareup.sqldelight.SqlDelightStatement
 
 @AutoValue abstract class PowerTriggerEntry : PowerTriggerModel {
@@ -72,68 +73,43 @@ import com.squareup.sqldelight.SqlDelightStatement
     const val EMPTY_NAME = "PowerTriggerEntry.__TRIGGER_NAME_EMPTY"
     const val EMPTY_PERCENT = -1
 
-    private val empty = DynamicSingleton<PowerTriggerEntry>(null)
-    private val factory = DynamicSingleton<PowerTriggerModel.Factory<PowerTriggerEntry>>(null)
-    private val allEntriesMapper = DynamicSingleton<PowerTriggerModel.Mapper<PowerTriggerEntry>>(
-        null)
-    private val withPercentMapper = DynamicSingleton<PowerTriggerModel.Mapper<PowerTriggerEntry>>(
-        null)
-
-    @JvmStatic @CheckResult fun empty(): PowerTriggerEntry {
-      return empty.access {
-        AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
-            false, false, false, false, false)
-      }
+    private val factory: PowerTriggerModel.Factory<PowerTriggerEntry> by lazy {
+      PowerTriggerModel.Factory(
+          PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync ->
+            AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi, toggleData,
+                toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
+          })
     }
-
-    @JvmStatic @CheckResult private fun factory(): PowerTriggerModel.Factory<PowerTriggerEntry> {
-      return factory.access {
-        PowerTriggerModel.Factory(
-            PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync ->
-              AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi, toggleData,
-                  toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
-            })
-      }
+    val empty: PowerTriggerEntry by lazy {
+      AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
+          false, false, false, false, false)
     }
-
-    /**
-     * public
-     */
-    @JvmStatic @CheckResult internal fun allEntriesMapper(): PowerTriggerModel.Mapper<PowerTriggerEntry> {
-      return allEntriesMapper.access {
-        factory().all_entriesMapper()
-      }
+    val allEntriesMapper: Mapper<PowerTriggerEntry> by lazy {
+      factory.all_entriesMapper()
     }
-
-    /**
-     * public
-     */
-    @JvmStatic @CheckResult internal fun withPercentMapper(): PowerTriggerModel.Mapper<PowerTriggerEntry> {
-      return withPercentMapper.access {
-        factory().with_percentMapper()
-      }
+    val withPercentMapper: Mapper<PowerTriggerEntry> by lazy {
+      factory.with_percentMapper()
     }
-
-    @JvmStatic @CheckResult fun creator(): PowerTriggerModel.Creator<PowerTriggerEntry> {
-      return factory().creator
+    val creator: Creator<PowerTriggerEntry> by lazy {
+      factory.creator
     }
 
     @JvmStatic @CheckResult internal fun isEmpty(entry: PowerTriggerEntry): Boolean {
-      return empty() === entry
+      return empty === entry
     }
 
     /**
      * public
      */
     @JvmStatic @CheckResult internal fun queryAll(): SqlDelightStatement {
-      return factory().all_entries()
+      return factory.all_entries()
     }
 
     /**
      * public
      */
     @JvmStatic @CheckResult internal fun withPercent(percent: Int): SqlDelightStatement {
-      return factory().with_percent(percent)
+      return factory.with_percent(percent)
     }
 
     /**

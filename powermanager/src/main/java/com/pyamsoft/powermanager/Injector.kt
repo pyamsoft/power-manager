@@ -16,32 +16,17 @@
 
 package com.pyamsoft.powermanager
 
-import android.app.Activity
-import android.app.Service
 import android.content.Context
-import android.support.annotation.CheckResult
-import com.pyamsoft.powermanager.base.PowerManagerModule
-import com.pyamsoft.pydroid.helper.ThreadSafe.MutableSingleton
 
-class Injector private constructor(private val component: PowerManagerComponent) {
+object Injector {
 
-  @CheckResult fun provideComponent(): PowerManagerComponent {
-    return component
-  }
-
-  companion object {
-
-    private val singleton = MutableSingleton<Injector>(null)
-
-    @JvmStatic internal fun set(context: Context, mainActivityClass: Class<out Activity>,
-        toggleServiceClass: Class<out Service>) {
-      singleton.assign(Injector(DaggerPowerManagerComponent.builder().powerManagerModule(
-          PowerManagerModule(context.applicationContext, mainActivityClass,
-              toggleServiceClass)).build()))
-    }
-
-    @JvmStatic @CheckResult fun get(): Injector {
-      return singleton.access()
+  fun with(context: Context, func: (PowerManagerComponent) -> Unit) {
+    val app = context.applicationContext
+    if (app is PowerManager) {
+      func(app.getComponent())
+    } else {
+      throw ClassCastException("Application is not Power Manager")
     }
   }
+
 }

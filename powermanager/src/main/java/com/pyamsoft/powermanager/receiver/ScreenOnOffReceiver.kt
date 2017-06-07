@@ -42,7 +42,9 @@ class ScreenOnOffReceiver(context: Context) : BroadcastReceiver() {
   init {
     isRegistered = false
     displayManager = appContext.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-    Injector.get().provideComponent().inject(this)
+    Injector.with(appContext) {
+      it.inject(this)
+    }
   }
 
   /**

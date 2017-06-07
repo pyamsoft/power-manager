@@ -33,7 +33,10 @@ class BootCompletedReceiver : BroadcastReceiver() {
       val action = intent.action
       if (Intent.ACTION_BOOT_COMPLETED == action) {
         Timber.d("Boot completed")
-        Injector.get().provideComponent().inject(this)
+        Injector.with(context) {
+          it.inject(this)
+        }
+
         manager.cleanup()
         ForegroundService.start(context.applicationContext)
       }

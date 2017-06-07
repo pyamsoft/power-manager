@@ -206,7 +206,9 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
       itemView.simple_expander.setDescription(R.string.exceptions_desc)
       itemView.simple_expander.setExpandingContent(chargingContainer)
 
-      Injector.get().provideComponent().plusManageComponent().inject(this)
+      Injector.with(itemView.context) {
+        it.plusManageComponent().inject(this)
+      }
     }
   }
 

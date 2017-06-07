@@ -140,7 +140,9 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
       itemView.simple_expander.setTitle(R.string.manage_title)
       itemView.simple_expander.setDescription(R.string.manage_desc)
       itemView.simple_expander.setExpandingContent(container)
-      Injector.get().provideComponent().plusManageComponent().inject(this)
+      Injector.with(itemView.context) {
+        it.plusManageComponent().inject(this)
+      }
     }
   }
 

@@ -89,7 +89,9 @@ class PowerTriggerListItem internal constructor(
     @field:Inject lateinit internal var presenter: TriggerItemPresenter
 
     init {
-      Injector.get().provideComponent().inject(this)
+      Injector.with(itemView.context) {
+        it.inject(this)
+      }
     }
   }
 }

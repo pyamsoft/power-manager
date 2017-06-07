@@ -21,6 +21,7 @@ import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
 import com.evernote.android.job.JobManager
 import com.google.android.gms.common.GoogleApiAvailability
+import com.pyamsoft.powermanager.base.PowerManagerModule
 import com.pyamsoft.powermanager.job.JobHandler
 import com.pyamsoft.powermanager.job.JobQueuer
 import com.pyamsoft.powermanager.job.Jobs
@@ -40,6 +41,17 @@ import javax.inject.Inject
 class PowerManager : Application() {
   @field:Inject lateinit internal var jobHandler: JobHandler
   private lateinit var refWatcher: RefWatcher
+
+  private var component: PowerManagerComponent? = null
+
+  @CheckResult fun getComponent(): PowerManagerComponent {
+    val obj = component
+    if (obj == null) {
+      throw IllegalStateException("PowerManagerComponent must be initialized before use")
+    } else {
+      return obj
+    }
+  }
 
   override fun onCreate() {
     super.onCreate()
@@ -62,8 +74,10 @@ class PowerManager : Application() {
           "https://developers.google.com/android/guides/overview", gmsContent)
     }
 
-    Injector.set(this, MainActivity::class.java, ActionToggleService::class.java)
-    Injector.get().provideComponent().inject(this)
+    val dagger = DaggerPowerManagerComponent.builder().powerManagerModule(
+        PowerManagerModule(this, MainActivity::class.java, ActionToggleService::class.java)).build()
+    dagger.inject(this)
+    component = dagger
 
     // Guarantee JobManager creation
     JobManager.create(this)

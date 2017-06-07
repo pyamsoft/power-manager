@@ -27,7 +27,9 @@ class ActionToggleService : IntentService(ActionToggleService::class.java.simple
 
   override fun onCreate() {
     super.onCreate()
-    Injector.get().provideComponent().inject(this)
+    Injector.with(this) {
+      it.inject(this)
+    }
   }
 
   override fun onDestroy() {

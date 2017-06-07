@@ -40,7 +40,9 @@ class ForegroundService : AutoRestartService() {
 
   override fun onCreate() {
     super.onCreate()
-    Injector.get().provideComponent().inject(this)
+    Injector.with(this) {
+      it.inject(this)
+    }
 
     notificationManager = NotificationManagerCompat.from(applicationContext)
     notificationManager.cancel(NOTIFICATION_ID)

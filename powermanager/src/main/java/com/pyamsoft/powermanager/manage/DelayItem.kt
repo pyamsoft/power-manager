@@ -89,7 +89,9 @@ class DelayItem : TimeItem<TimePresenter, DelayItem.ViewHolder>(TAG) {
     @field:Inject override lateinit var presenter: TimePresenter
 
     init {
-      Injector.get().provideComponent().plusManageComponent().inject(this)
+      Injector.with(itemView.context) {
+        it.plusManageComponent().inject(this)
+      }
       itemView.simple_expander.setTitle("Active Delay")
       itemView.simple_expander.setDescription(
           "Power Manager will wait for the specified amount of time before automatically managing certain device functions")

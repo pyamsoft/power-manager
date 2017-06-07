@@ -65,9 +65,8 @@ internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePage
     val syncEnable = syncFragment.triggerEnable
 
     Timber.d("Post content values to bus")
-    val entry = PowerTriggerEntry.creator().create(percent, name, true, true, wifiToggle,
-        dataToggle, bluetoothToggle, syncToggle, wifiEnable, dataEnable, bluetoothEnable,
-        syncEnable)
+    val entry = PowerTriggerEntry.creator.create(percent, name, true, true, wifiToggle, dataToggle,
+        bluetoothToggle, syncToggle, wifiEnable, dataEnable, bluetoothEnable, syncEnable)
     EventBus.get().publish(TriggerCreateEvent(entry))
   }
 
