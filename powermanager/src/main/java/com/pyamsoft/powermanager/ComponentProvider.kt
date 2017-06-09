@@ -16,17 +16,10 @@
 
 package com.pyamsoft.powermanager
 
-import android.content.Context
+import android.support.annotation.CheckResult
 
-object Injector {
+internal interface ComponentProvider {
 
-  fun with(context: Context, func: (PowerManagerComponent) -> Unit) {
-    val app = context.applicationContext
-    if (app is ComponentProvider) {
-      func(app.getComponent())
-    } else {
-      throw ClassCastException("Application is not Power Manager")
-    }
-  }
-
+  @CheckResult fun getComponent(): PowerManagerComponent
 }
+

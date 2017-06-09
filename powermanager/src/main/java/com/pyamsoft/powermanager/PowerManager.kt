@@ -37,13 +37,13 @@ import com.squareup.leakcanary.RefWatcher
 import timber.log.Timber
 import javax.inject.Inject
 
-class PowerManager : Application() {
+class PowerManager : Application(), ComponentProvider {
   @field:Inject lateinit internal var jobHandler: JobHandler
   private lateinit var refWatcher: RefWatcher
 
   private var component: PowerManagerComponent? = null
 
-  @CheckResult fun getComponent(): PowerManagerComponent {
+  @CheckResult override fun getComponent(): PowerManagerComponent {
     val obj = component
     if (obj == null) {
       throw IllegalStateException("PowerManagerComponent must be initialized before use")
