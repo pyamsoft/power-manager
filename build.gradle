@@ -41,7 +41,7 @@ buildscript {
     buildTools = "25.0.3"
 
     supportLib = "25.3.1"
-    firebase = "10.2.6"
+    firebase = "11.0.0"
     leakCanary = "1.5.1"
     pydroid = "10.4.0"
     autoValue = "1.4.1"
@@ -54,7 +54,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:2.3.2'
+    classpath 'com.android.tools.build:gradle:2.3.3'
 
     // Dex count
     classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'

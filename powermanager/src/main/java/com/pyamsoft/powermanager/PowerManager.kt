@@ -20,7 +20,6 @@ import android.app.Application
 import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
 import com.evernote.android.job.JobManager
-import com.google.android.gms.common.GoogleApiAvailability
 import com.pyamsoft.powermanager.base.PowerManagerModule
 import com.pyamsoft.powermanager.job.JobHandler
 import com.pyamsoft.powermanager.job.JobQueuer
@@ -68,11 +67,6 @@ class PowerManager : Application() {
     Licenses.create("Fast Adapter", "https://github.com/mikepenz/FastAdapter",
         "licenses/fastadapter")
     Licenses.create("Leak Canary", "https://github.com/square/leakcanary", "licenses/leakcanary")
-    val gmsContent = GoogleApiAvailability.getInstance().getOpenSourceSoftwareLicenseInfo(this)
-    if (gmsContent != null) {
-      Licenses.createWithContent("Google Play Services",
-          "https://developers.google.com/android/guides/overview", gmsContent)
-    }
 
     val dagger = DaggerPowerManagerComponent.builder().powerManagerModule(
         PowerManagerModule(this, MainActivity::class.java, ActionToggleService::class.java)).build()
