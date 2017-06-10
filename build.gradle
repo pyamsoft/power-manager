@@ -49,7 +49,7 @@ buildscript {
     dagger = "2.11"
     libsuperuser = "1.0.0.201704021214"
     androidJob = "1.1.10"
-    fastAdapter = "2.6.0"
+    fastAdapter = "2.6.2"
     fastAdapterCommons = "2.6.0"
   }
 
