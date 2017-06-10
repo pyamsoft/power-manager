@@ -39,7 +39,8 @@
         android:id="@+id/expander_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:text="@string/manage_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -51,7 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
-        android:padding="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         android:text="@string/manage_desc"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
@@ -61,7 +63,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
@@ -70,7 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
@@ -79,7 +83,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
@@ -88,7 +93,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
@@ -97,7 +103,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
@@ -106,7 +113,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:padding="4dp"
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
