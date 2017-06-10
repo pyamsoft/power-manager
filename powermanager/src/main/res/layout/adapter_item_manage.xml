@@ -30,17 +30,14 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/material_light_background"
       android:orientation="vertical"
-      android:padding="8dp"
       >
 
     <TextView
         android:id="@+id/expander_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="8dp"
         android:gravity="center_vertical"
         android:text="@string/manage_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -51,72 +48,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:gravity="center_vertical"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
         android:text="@string/manage_desc"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
-    <Switch
-        android:id="@+id/manage_wifi"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+        android:background="@color/material_light_background"
+        android:orientation="vertical"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingBottom="8dp"
+        >
 
-    <Switch
-        android:id="@+id/manage_data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+      <Switch
+          android:id="@+id/manage_wifi"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
 
-    <Switch
-        android:id="@+id/manage_bluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+      <Switch
+          android:id="@+id/manage_data"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
 
-    <Switch
-        android:id="@+id/manage_sync"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+      <Switch
+          android:id="@+id/manage_bluetooth"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
 
-    <Switch
-        android:id="@+id/manage_airplane"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+      <Switch
+          android:id="@+id/manage_sync"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
 
-    <Switch
-        android:id="@+id/manage_doze"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        />
+      <Switch
+          android:id="@+id/manage_airplane"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
+
+      <Switch
+          android:id="@+id/manage_doze"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
+
+    </LinearLayout>
 
   </LinearLayout>
 
