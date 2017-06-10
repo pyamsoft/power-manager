@@ -26,6 +26,7 @@ import com.pyamsoft.pydroid.ui.helper.Toasty
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_airplane
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_bluetooth
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_data
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_data_saver
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_doze
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_sync
 import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_wifi
@@ -57,6 +58,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     bindSwitch(holder.itemView.manage_sync, "Auto Sync", holder.presenterSync)
     bindSwitch(holder.itemView.manage_airplane, "Airplane Mode", holder.presenterAirplane)
     bindSwitch(holder.itemView.manage_doze, "Doze Mode", holder.presenterDoze)
+    bindSwitch(holder.itemView.manage_data_saver, "Data Saver", holder.presenterDataSaver)
   }
 
   private fun bindSwitch(switch: Switch, name: String, presenter: ManagePresenter) {
@@ -99,6 +101,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     unbindSwitch(holder.itemView.manage_sync)
     unbindSwitch(holder.itemView.manage_airplane)
     unbindSwitch(holder.itemView.manage_doze)
+    unbindSwitch(holder.itemView.manage_data_saver)
 
     holder.presenterAirplane.stop()
     holder.presenterAirplane.destroy()
@@ -112,6 +115,8 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     holder.presenterSync.destroy()
     holder.presenterDoze.stop()
     holder.presenterDoze.destroy()
+    holder.presenterDataSaver.stop()
+    holder.presenterDataSaver.destroy()
   }
 
   private fun unbindSwitch(switch: Switch) {
@@ -129,6 +134,8 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     @field:[Inject Named(
         "manage_airplane")] lateinit internal var presenterAirplane: ManagePresenter
     @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
+    @field:[Inject Named(
+        "manage_data_saver")] lateinit internal var presenterDataSaver: ManagePresenter
 
     init {
       Injector.with(itemView.context) {

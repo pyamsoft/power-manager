@@ -29,12 +29,14 @@ import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_airplane
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_bluetooth
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_data
+import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_data_saver
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_doze
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_sync
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_wifi
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_airplane
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_bluetooth
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_data
+import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_data_saver
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_doze
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_sync
 import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_wifi
@@ -69,9 +71,11 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
     bind(holder.chargingContainer.exception_charging_sync,
         holder.chargingContainer.exception_wear_sync, "Sync", holder.presenterSync)
     bind(holder.chargingContainer.exception_charging_airplane,
-        holder.chargingContainer.exception_wear_airplane, "Airplane", holder.presenterAirplane)
+        holder.chargingContainer.exception_wear_airplane, "Airplane Mode", holder.presenterAirplane)
     bind(holder.chargingContainer.exception_charging_doze,
-        holder.chargingContainer.exception_wear_doze, "Doze", holder.presenterDoze)
+        holder.chargingContainer.exception_wear_doze, "Doze Mode", holder.presenterDoze)
+    bind(holder.chargingContainer.exception_charging_data_saver,
+        holder.chargingContainer.exception_wear_data_saver, "Data Saver", holder.presenterDataSaver)
   }
 
   override fun unbindView(holder: ViewHolder) {
@@ -89,6 +93,8 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
         holder.chargingContainer.exception_wear_sync)
     unbind(holder.chargingContainer.exception_charging_doze,
         holder.chargingContainer.exception_wear_doze)
+    unbind(holder.chargingContainer.exception_charging_data_saver,
+        holder.chargingContainer.exception_wear_data_saver)
 
     holder.presenterAirplane.stop()
     holder.presenterAirplane.destroy()
@@ -102,6 +108,8 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
     holder.presenterSync.destroy()
     holder.presenterDoze.stop()
     holder.presenterDoze.destroy()
+    holder.presenterDataSaver.stop()
+    holder.presenterDataSaver.destroy()
   }
 
   private fun bind(charging: CheckBox, wear: CheckBox, name: String,
@@ -197,6 +205,8 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
     @field:[Inject Named(
         "exception_airplane")] lateinit internal var presenterAirplane: ExceptionPresenter
     @field:[Inject Named("exception_doze")] lateinit internal var presenterDoze: ExceptionPresenter
+    @field:[Inject Named(
+        "exception_data_saver")] lateinit internal var presenterDataSaver: ExceptionPresenter
 
     internal var chargingContainer: View = LayoutInflater.from(itemView.context).inflate(
         R.layout.layout_container_exception, itemView as ViewGroup, false)

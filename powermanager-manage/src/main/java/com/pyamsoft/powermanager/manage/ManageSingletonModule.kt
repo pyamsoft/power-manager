@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.manage
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
@@ -65,6 +66,13 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named(
+      "manage_data_saver_interactor") internal fun provideDataSaverInteractor(
+      preferences: DataSaverPreferences, @Named(
+      "obs_data_saver_permission") permissionObserver: PermissionObserver): ManageInteractor {
+    return DataSaverManageInteractor(preferences, permissionObserver)
+  }
+
+  @Singleton @Provides @Named(
       "exception_wifi_interactor") internal fun provideWifiExceptionInteractor(
       preferences: WifiPreferences): ExceptionInteractor {
     return WifiExceptionInteractor(preferences)
@@ -98,6 +106,12 @@ import javax.inject.Singleton
       "exception_doze_interactor") internal fun provideDozeExceptionInteractor(
       preferences: DozePreferences): ExceptionInteractor {
     return DozeExceptionInteractor(preferences)
+  }
+
+  @Singleton @Provides @Named(
+      "exception_data_saver_interactor") internal fun provideDataSaverExceptionInteractor(
+      preferences: DataSaverPreferences): ExceptionInteractor {
+    return DataSaverExceptionInteractor(preferences)
   }
 
 }

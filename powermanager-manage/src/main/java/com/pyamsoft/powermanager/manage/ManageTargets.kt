@@ -17,5 +17,5 @@
 package com.pyamsoft.powermanager.manage
 
 enum class ManageTargets {
-  WIFI, DATA, BLUETOOTH, SYNC, AIRPLANE, DOZE
+  WIFI, DATA, BLUETOOTH, SYNC, AIRPLANE, DOZE, DATA_SAVER
 }

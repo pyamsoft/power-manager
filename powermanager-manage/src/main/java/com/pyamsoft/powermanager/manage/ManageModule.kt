@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.manage
 import com.pyamsoft.powermanager.manage.ManageTargets.AIRPLANE
 import com.pyamsoft.powermanager.manage.ManageTargets.BLUETOOTH
 import com.pyamsoft.powermanager.manage.ManageTargets.DATA
+import com.pyamsoft.powermanager.manage.ManageTargets.DATA_SAVER
 import com.pyamsoft.powermanager.manage.ManageTargets.DOZE
 import com.pyamsoft.powermanager.manage.ManageTargets.SYNC
 import com.pyamsoft.powermanager.manage.ManageTargets.WIFI
@@ -89,6 +90,16 @@ import javax.inject.Named
     }
   }
 
+  @Provides @Named("manage_data_saver") internal fun provideDataSaver(
+      @Named("manage_data_saver_interactor") interactor: ManageInteractor,
+      @Named("obs") obsScheduler: Scheduler,
+      @Named("sub") subScheduler: Scheduler): ManagePresenter {
+    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      override val target: ManageTargets
+        get() = DATA_SAVER
+    }
+  }
+
   @Provides @Named("exception_wifi") internal fun provideWifiException(
       @Named("exception_wifi_interactor") interactor: ExceptionInteractor,
       @Named("obs") obsScheduler: Scheduler,
@@ -149,4 +160,13 @@ import javax.inject.Named
     }
   }
 
+  @Provides @Named("exception_data_saver") internal fun provideDataSaverException(
+      @Named("exception_data_saver_interactor") interactor: ExceptionInteractor,
+      @Named("obs") obsScheduler: Scheduler,
+      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      override val target: ManageTargets
+        get() = DATA_SAVER
+    }
+  }
 }

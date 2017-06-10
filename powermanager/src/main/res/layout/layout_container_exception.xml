@@ -32,7 +32,7 @@
       app:columnCount="3"
       app:columnOrderPreserved="true"
       app:orientation="vertical"
-      app:rowCount="7"
+      app:rowCount="8"
       app:rowOrderPreserved="true"
       app:useDefaultMargins="true"
       >
@@ -194,6 +194,28 @@
         app:layout_column="2"
         app:layout_gravity="center"
         app:layout_row="6"
+        />
+
+    <TextView
+        android:text="Data Saver"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        app:layout_column="0"
+        app:layout_gravity="center_vertical"
+        app:layout_row="7"
+        />
+
+    <CheckBox
+        android:id="@+id/exception_charging_data_saver"
+        app:layout_column="1"
+        app:layout_gravity="center"
+        app:layout_row="7"
+        />
+
+    <CheckBox
+        android:id="@+id/exception_wear_data_saver"
+        app:layout_column="2"
+        app:layout_gravity="center"
+        app:layout_row="7"
         />
 
   </android.support.v7.widget.GridLayout>

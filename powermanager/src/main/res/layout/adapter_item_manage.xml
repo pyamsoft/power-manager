@@ -124,6 +124,16 @@
           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
           />
 
+      <Switch
+          android:id="@+id/manage_data_saver"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:paddingBottom="4dp"
+          android:paddingTop="4dp"
+          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          />
+
     </LinearLayout>
 
   </LinearLayout>
