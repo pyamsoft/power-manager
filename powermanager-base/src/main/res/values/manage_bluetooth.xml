@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="manage_bluetooth_default">false</bool>
+  <bool name="manage_bluetooth_default">true</bool>
   <string name="manage_bluetooth_key">pm7_manage_bluetooth</string>
 
   <bool name="ignore_wear_bluetooth_default">false</bool>

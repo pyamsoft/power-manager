@@ -17,7 +17,7 @@
 
 <resources>
 
-  <bool name="manage_airplane_default">false</bool>
+  <bool name="manage_airplane_default">true</bool>
   <string name="manage_airplane_key">pm7_manage_airplane</string>
 
   <bool name="ignore_wear_airplane_default">false</bool>
