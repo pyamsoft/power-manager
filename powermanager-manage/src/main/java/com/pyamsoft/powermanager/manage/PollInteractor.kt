@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
@@ -33,6 +34,7 @@ internal class PollInteractor @Inject internal constructor(
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences,
+    private val dataSaverPreferences: DataSaverPreferences,
     preferenceWrapper: TimePreferenceWrapper) : TimeInteractor(preferenceWrapper) {
 
   @CheckResult fun toggleAll(checked: Boolean): Completable {
@@ -43,12 +45,13 @@ internal class PollInteractor @Inject internal constructor(
       syncPreferences.periodicSync = checked
       airplanePreferences.periodicAirplane = checked
       dozePreferences.periodicDoze = checked
+      dataSaverPreferences.periodicDataSaver = checked
     }
   }
 
   @CheckResult fun getCurrentState(): Single<Boolean> {
     return Single.fromCallable {
-      wifiPreferences.periodicWifi && dataPreferences.periodicData && bluetoothPreferences.periodicBluetooth && syncPreferences.periodicSync && airplanePreferences.periodicAirplane && dozePreferences.periodicDoze
+      wifiPreferences.periodicWifi && dataPreferences.periodicData && bluetoothPreferences.periodicBluetooth && syncPreferences.periodicSync && airplanePreferences.periodicAirplane && dozePreferences.periodicDoze && dataSaverPreferences.periodicDataSaver
     }
   }
 }

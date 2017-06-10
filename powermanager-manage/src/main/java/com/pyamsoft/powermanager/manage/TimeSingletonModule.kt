@@ -16,18 +16,17 @@
 
 package com.pyamsoft.powermanager.manage
 
-import dagger.Module
-import dagger.Provides
-import io.reactivex.Scheduler
-import javax.inject.Named
 import android.content.SharedPreferences
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
+import dagger.Module
+import dagger.Provides
 import javax.inject.Singleton
 
 @Module class TimeSingletonModule {
@@ -60,9 +59,10 @@ import javax.inject.Singleton
   @Singleton @Provides internal fun provideManageDisableInteractor(wifiPreferences: WifiPreferences,
       dataPreferences: DataPreferences, bluetoothPreferences: BluetoothPreferences,
       syncPreferences: SyncPreferences, airplanePreferences: AirplanePreferences,
-      dozePreferences: DozePreferences, preferences: ManagePreferences): PollInteractor {
+      dataSaverPreferences: DataSaverPreferences, dozePreferences: DozePreferences,
+      preferences: ManagePreferences): PollInteractor {
     return PollInteractor(wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
-        airplanePreferences, dozePreferences, object : TimePreferenceWrapper {
+        airplanePreferences, dozePreferences, dataSaverPreferences, object : TimePreferenceWrapper {
       override val isCustom: Boolean
         get() = preferences.customDisableTime
       override val time: Long

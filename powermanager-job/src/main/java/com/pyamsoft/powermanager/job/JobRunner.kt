@@ -16,19 +16,17 @@
 
 package com.pyamsoft.powermanager.job
 
-import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
-import android.os.Build
 import android.support.annotation.CheckResult
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
+import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Completable
@@ -38,18 +36,23 @@ import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit.SECONDS
 
-internal abstract class JobRunner(context: Context, private val jobQueuer: JobQueuer,
+internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     private val chargingObserver: StateObserver, private val wearableObserver: StateObserver,
     private val wifiModifier: StateModifier, private val dataModifier: StateModifier,
     private val bluetoothModifier: StateModifier, private val syncModifier: StateModifier,
     private val dozeModifier: StateModifier, private val airplaneModifier: StateModifier,
-    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
+    private val dataSaverModifier: StateModifier, private val wifiPreferences: WifiPreferences,
+    private val dataPreferences: DataPreferences,
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences,
+    private val dozePreferences: DozePreferences,
+    private val dataSaverPreferences: DataSaverPreferences,
+    private val rootPreferences: RootPreferences,
+    private val dozePermissionObserver: PermissionObserver,
+    private val dataPermissionObserver: PermissionObserver,
+    private val dataSaverPermissionObserver: PermissionObserver,
     private val subScheduler: Scheduler) {
-  private val appContext = context.applicationContext
   private val composite = CompositeDisposable()
   private val wifiConditions = object : ManageConditions {
     override val tag: String
@@ -81,16 +84,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     override val periodic: Boolean
       get() = dozePreferences.periodicDoze
     override val permission: Boolean
-      get() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-          return false
-        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-          return rootPreferences.rootEnabled
-        } else {
-          return appContext.applicationContext.checkCallingOrSelfPermission(
-              Manifest.permission.DUMP) == PackageManager.PERMISSION_GRANTED
-        }
-      }
+      get() = dozePermissionObserver.hasPermission()
   }
   private val airplaneConditions = object : ManageConditions {
     override val tag: String
@@ -122,7 +116,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     override val periodic: Boolean
       get() = dataPreferences.periodicData
     override val permission: Boolean
-      get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) rootPreferences.rootEnabled else true
+      get() = dataPermissionObserver.hasPermission()
   }
   private val bluetoothConditions = object : ManageConditions {
     override val tag: String
@@ -156,6 +150,22 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     override val permission: Boolean
       get() = true
   }
+  private val dataSaverConditions = object : ManageConditions {
+    override val tag: String
+      get() = "Data Saver"
+    override val ignoreCharging: Boolean
+      get() = dataSaverPreferences.ignoreChargingDataSaver
+    override val ignoreWearable: Boolean
+      get() = dataSaverPreferences.ignoreWearDataSaver
+    override val managed: Boolean
+      get() = dataSaverPreferences.dataSaverManaged
+    override val original: Boolean
+      get() = dataSaverPreferences.originalDataSaver
+    override val periodic: Boolean
+      get() = dataSaverPreferences.periodicDataSaver
+    override val permission: Boolean
+      get() = dataSaverPermissionObserver.hasPermission()
+  }
 
   @CheckResult private fun runJob(tag: String, screenOn: Boolean, firstRun: Boolean): Boolean {
     checkTag(tag)
@@ -184,6 +194,13 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
 
     didSomething = disable(firstRun, latch, isCharging = false, isWearableConnected = false,
         modifier = airplaneModifier, conditions = airplaneConditions) || didSomething
+    if (isStopped) {
+      Timber.w("%s: Stopped early", tag)
+      return false
+    }
+
+    didSomething = disable(firstRun, latch, isCharging = false, isWearableConnected = false,
+        modifier = dataSaverModifier, conditions = dataSaverConditions) || didSomething
     if (isStopped) {
       Timber.w("%s: Stopped early", tag)
       return false
@@ -321,6 +338,13 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
       return false
     }
 
+    didSomething = enable(firstRun, latch, isCharging, isWearableConnected,
+        modifier = dataSaverModifier, conditions = dataSaverConditions) || didSomething
+    if (isStopped) {
+      Timber.w("%s: Stopped early", tag)
+      return false
+    }
+
     await(latch)
     return isJobRepeatRequired(didSomething)
   }
@@ -344,7 +368,8 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
     val repeatSync = syncPreferences.syncManaged && syncPreferences.periodicSync
     val repeatAirplane = airplanePreferences.airplaneManaged && airplanePreferences.periodicAirplane
     val repeatDoze = dozePreferences.dozeManaged && dozePreferences.periodicDoze
-    return didSomething && (repeatWifi || repeatData || repeatBluetooth || repeatSync || repeatAirplane || repeatDoze)
+    val repeatDataSaver = dataSaverPreferences.dataSaverManaged && dataSaverPreferences.periodicDataSaver
+    return didSomething && (repeatWifi || repeatData || repeatBluetooth || repeatSync || repeatAirplane || repeatDoze || repeatDataSaver)
   }
 
   private fun repeatIfRequired(tag: String, screenOn: Boolean, windowOnTime: Long,
@@ -390,7 +415,7 @@ internal abstract class JobRunner(context: Context, private val jobQueuer: JobQu
    */
   @get:CheckResult internal abstract val isStopped: Boolean
 
-  internal interface ManageConditions {
+  private interface ManageConditions {
     val tag: String
       @get:CheckResult get
     val ignoreCharging: Boolean

@@ -37,7 +37,7 @@ import javax.inject.Singleton
 
   @Singleton @Provides @Named("manage_data_interactor") internal fun provideDataInteractor(
       preferences: DataPreferences,
-      @Named("obs_root_permission") permissionObserver: PermissionObserver): ManageInteractor {
+      @Named("obs_data_permission") permissionObserver: PermissionObserver): ManageInteractor {
     return DataManageInteractor(preferences, permissionObserver)
   }
 

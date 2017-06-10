@@ -17,26 +17,23 @@
 package com.pyamsoft.powermanager.base.permission
 
 import android.content.Context
+import android.os.Build
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.shell.RootChecker
 import timber.log.Timber
 import javax.inject.Inject
 
-internal open class RootPermissionObserver @Inject internal constructor(context: Context,
-    private val preferences: RootPreferences, private val rootChecker: RootChecker,
-    permission: String?) : PermissionObserverImpl(context, permission) {
-
-  constructor(context: Context, preferences: RootPreferences, rootChecker: RootChecker) : this(
-      context, preferences, rootChecker, null)
+internal open class DataSaverPermissionObserver @Inject internal constructor(context: Context,
+    preferences: RootPreferences, rootChecker: RootChecker) : RootPermissionObserver(context,
+    preferences, rootChecker) {
 
   override fun checkPermission(appContext: Context): Boolean {
-    if (preferences.rootEnabled) {
-      val hasPermission = rootChecker.isSUAvailable
-      Timber.d("Has root permission? %s", hasPermission)
-      return hasPermission
-    } else {
-      Timber.w("Root is not enabled")
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+      Timber.w("Data Saver did not exist on < Nougat")
       return false
+    } else {
+      Timber.d("Data Saver requires root")
+      return super.checkPermission(appContext)
     }
   }
 }

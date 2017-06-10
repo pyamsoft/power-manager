@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.manage
 
-import android.os.Build
 import com.pyamsoft.powermanager.base.preference.DataPreferences
 import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Completable
@@ -32,12 +31,6 @@ internal class DataManageInteractor @Inject internal constructor(val preferences
 
   override val isManaged: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      val permission: Boolean
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        permission = permissionObserver.hasPermission()
-      } else {
-        permission = true
-      }
-      return@fromCallable Pair(permission, preferences.dataManaged)
+      return@fromCallable Pair(permissionObserver.hasPermission(), preferences.dataManaged)
     }
 }

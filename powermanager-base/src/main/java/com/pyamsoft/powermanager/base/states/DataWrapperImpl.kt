@@ -82,10 +82,10 @@ internal class DataWrapperImpl @Inject internal constructor(context: Context,
 
   private fun setMobileDataEnabled(enabled: Boolean) {
     logger.i("Data: %s", if (enabled) "enable" else "disable")
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-      setMobileDataEnabledReflection(enabled)
-    } else {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       setMobileDataEnabledRoot(enabled)
+    } else {
+      setMobileDataEnabledReflection(enabled)
     }
   }
 
@@ -99,10 +99,10 @@ internal class DataWrapperImpl @Inject internal constructor(context: Context,
 
   override val state: States
     get() {
-      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        return mobileDataEnabledReflection
-      } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         return mobileDataEnabledSettings
+      } else {
+        return mobileDataEnabledReflection
       }
     }
 

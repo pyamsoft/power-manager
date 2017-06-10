@@ -38,4 +38,16 @@ import javax.inject.Singleton
       preferences: RootPreferences): PermissionObserver {
     return DozePermissionObserver(context, preferences, rootChecker)
   }
+
+  @Singleton @Named("obs_data_permission") @Provides fun provideDataPermissionObserver(
+      rootChecker: RootChecker, context: Context,
+      preferences: RootPreferences): PermissionObserver {
+    return DataPermissionObserver(context, preferences, rootChecker)
+  }
+
+  @Singleton @Named("obs_data_saver_permission") @Provides fun provideDataSaverPermissionObserver(
+      rootChecker: RootChecker, context: Context,
+      preferences: RootPreferences): PermissionObserver {
+    return DataSaverPermissionObserver(context, preferences, rootChecker)
+  }
 }

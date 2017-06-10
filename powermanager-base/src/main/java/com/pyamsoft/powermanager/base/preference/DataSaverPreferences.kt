@@ -23,7 +23,7 @@ interface DataSaverPreferences {
     @CheckResult get
   var ignoreChargingDataSaver: Boolean
     @CheckResult get
-  var dataManagedSaver: Boolean
+  var dataSaverManaged: Boolean
     @CheckResult get
   var periodicDataSaver: Boolean
     @CheckResult get

@@ -401,7 +401,7 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   override var ignoreChargingDataSaver: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingDataSaver, ignoreChargingDataSaverDefault)
     set(value) = preferences.edit().putBoolean(keyIgnoreChargingDataSaver, value).apply()
-  override var dataManagedSaver: Boolean
+  override var dataSaverManaged: Boolean
     get() = preferences.getBoolean(keyManageDataSaver, manageDataSaverDefault)
     set(value) = preferences.edit().putBoolean(keyManageDataSaver, value).apply()
   override var periodicDataSaver: Boolean
