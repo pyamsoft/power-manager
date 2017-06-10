@@ -26,18 +26,22 @@ class PollPresenter @Inject internal constructor(private val interactor: PollInt
 
   fun getCurrentPeriodic(onStateRetrieved: (Boolean) -> Unit, onError: (Throwable) -> Unit,
       onCompleted: () -> Unit) {
-    disposeOnDestroy(interactor.getCurrentState().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { onCompleted() }.subscribe({ onStateRetrieved(it) }, {
-      Timber.e(it, "Error getting polling state")
-      onError(it)
-    }))
+    disposeOnDestroy {
+      interactor.getCurrentState().subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate { onCompleted() }.subscribe({ onStateRetrieved(it) }, {
+        Timber.e(it, "Error getting polling state")
+        onError(it)
+      })
+    }
   }
 
   fun toggleAll(checked: Boolean, onError: (Throwable) -> Unit, onCompleted: () -> Unit) {
-    disposeOnDestroy(interactor.toggleAll(checked).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ onCompleted() }, {
-      Timber.e(it, "Error toggle all polling")
-      onError(it)
-    }))
+    disposeOnDestroy {
+      interactor.toggleAll(checked).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ onCompleted() }, {
+        Timber.e(it, "Error toggle all polling")
+        onError(it)
+      })
+    }
   }
 }

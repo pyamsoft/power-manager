@@ -29,68 +29,51 @@ import javax.inject.Named
 internal class SettingsPreferencePresenter @Inject constructor(
     private val interactor: SettingsPreferenceInteractor, @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
+
   /**
    * public
    *
    * Gets confirm events from ConfirmationDialog
    */
-  fun registerOnBus(callback: BusCallback) {
-    disposeOnStop(
-        EventBus.get().listen(ConfirmEvent::class.java).subscribeOn(subscribeScheduler).observeOn(
-            observeScheduler).subscribe({ (type) ->
-          when (type) {
-            DATABASE -> clearDatabase(callback)
-            ALL -> clearAll(callback)
-            else -> throw IllegalStateException("Received invalid confirmation event type: " + type)
-          }
-        }, { Timber.e(it, "confirm bus error") }))
+  fun registerOnBus(onClearDatabase: () -> Unit, onClearAll: () -> Unit) {
+    disposeOnStop {
+      EventBus.get().listen(ConfirmEvent::class.java).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ (type) ->
+        when (type) {
+          DATABASE -> clearDatabase(onClearDatabase)
+          ALL -> clearAll(onClearAll)
+          else -> throw IllegalStateException("Received invalid confirmation event type: " + type)
+        }
+      }, { Timber.e(it, "confirm bus error") })
+    }
   }
 
-  fun clearAll(callback: ClearRequestCallback) {
-    disposeOnStop(
-        interactor.clearAll().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
-            { callback.onClearAll() }, { Timber.e(it, "onError") }))
+  private fun clearAll(onClearAll: () -> Unit) {
+    disposeOnStop {
+      interactor.clearAll().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+          { onClearAll() }, { Timber.e(it, "onError") })
+    }
   }
 
-  fun clearDatabase(callback: ClearRequestCallback) {
-    disposeOnStop(interactor.clearDatabase().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onClearDatabase() }, { Timber.e(it, "onError") }))
-  }
-
-  /**
-   * public
-   */
-  fun checkRootEnabled(callback: RootCallback) {
-    disposeOnStop(interactor.isRootEnabled.subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onComplete() }.doOnSubscribe { callback.onBegin() }.subscribe(
-        { checkRoot(false, it, callback) }, { Timber.e(it, "onError bindCheckRoot") }))
+  private fun clearDatabase(onClearDatabase: () -> Unit) {
+    disposeOnStop {
+      interactor.clearDatabase().subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ onClearDatabase() }, { Timber.e(it, "onError") })
+    }
   }
 
   /**
    * public
    */
-  fun checkRoot(causedByUser: Boolean, rootEnable: Boolean, callback: RootCallback) {
-    disposeOnStop(interactor.checkRoot(rootEnable).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate { callback.onComplete() }.doOnSubscribe { callback.onBegin() }.subscribe(
-        { callback.onRootCallback(causedByUser, it, rootEnable) }, {
-      Timber.e(it, "onError checking root")
-      callback.onRootCallback(causedByUser, false, rootEnable)
-    }))
-  }
-
-  internal interface BusCallback : ClearRequestCallback
-
-  internal interface RootCallback {
-    fun onBegin()
-
-    fun onRootCallback(causedByUser: Boolean, hasPermission: Boolean, rootEnable: Boolean)
-
-    fun onComplete()
-  }
-
-  internal interface ClearRequestCallback {
-    fun onClearAll()
-
-    fun onClearDatabase()
+  fun checkRoot(causedByUser: Boolean, rootEnable: Boolean, onBegin: () -> Unit,
+      onRoot: (Boolean, Boolean, Boolean) -> Unit, onComplete: () -> Unit) {
+    disposeOnStop {
+      interactor.checkRoot(rootEnable).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate { onComplete() }.doOnSubscribe { onBegin() }.subscribe(
+          { onRoot(causedByUser, it, rootEnable) }, {
+        Timber.e(it, "onError checking root")
+        onRoot(causedByUser, false, rootEnable)
+      })
+    }
   }
 }

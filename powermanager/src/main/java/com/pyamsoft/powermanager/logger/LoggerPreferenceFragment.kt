@@ -27,7 +27,7 @@ import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import javax.inject.Inject
 import javax.inject.Named
 
-class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
+class LoggerPreferenceFragment : WatchedPreferenceFragment() {
   @field:[Inject Named("logger_presenter_wifi")] lateinit internal var loggerWifi: LoggerPresenter
   @field:[Inject Named("logger_presenter_data")] lateinit internal var loggerData: LoggerPresenter
   @field:[Inject Named(
@@ -66,14 +66,14 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
   }
 
   internal fun deleteAllPreviousLogs() {
-    loggerWifi.deleteLog(this)
-    loggerData.deleteLog(this)
-    loggerBluetooth.deleteLog(this)
-    loggerSync.deleteLog(this)
-    loggerAirplane.deleteLog(this)
-    loggerDoze.deleteLog(this)
-    loggerManager.deleteLog(this)
-    loggerTrigger.deleteLog(this)
+    loggerWifi.deleteLog(this::onLogDeleted)
+    loggerData.deleteLog(this::onLogDeleted)
+    loggerBluetooth.deleteLog(this::onLogDeleted)
+    loggerSync.deleteLog(this::onLogDeleted)
+    loggerAirplane.deleteLog(this::onLogDeleted)
+    loggerDoze.deleteLog(this::onLogDeleted)
+    loggerManager.deleteLog(this::onLogDeleted)
+    loggerTrigger.deleteLog(this::onLogDeleted)
   }
 
   override fun onDestroyView() {
@@ -83,14 +83,22 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
 
   override fun onStart() {
     super.onStart()
-    loggerWifi.retrieveLogContents(this)
-    loggerData.retrieveLogContents(this)
-    loggerBluetooth.retrieveLogContents(this)
-    loggerSync.retrieveLogContents(this)
-    loggerAirplane.retrieveLogContents(this)
-    loggerDoze.retrieveLogContents(this)
-    loggerManager.retrieveLogContents(this)
-    loggerTrigger.retrieveLogContents(this)
+    loggerWifi.retrieveLogContents(this::onPrepareLogContentRetrieval, this::onLogContentRetrieved,
+        this::onAllLogContentsRetrieved)
+    loggerData.retrieveLogContents(this::onPrepareLogContentRetrieval, this::onLogContentRetrieved,
+        this::onAllLogContentsRetrieved)
+    loggerBluetooth.retrieveLogContents(this::onPrepareLogContentRetrieval,
+        this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
+    loggerSync.retrieveLogContents(this::onPrepareLogContentRetrieval, this::onLogContentRetrieved,
+        this::onAllLogContentsRetrieved)
+    loggerAirplane.retrieveLogContents(this::onPrepareLogContentRetrieval,
+        this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
+    loggerDoze.retrieveLogContents(this::onPrepareLogContentRetrieval, this::onLogContentRetrieved,
+        this::onAllLogContentsRetrieved)
+    loggerManager.retrieveLogContents(this::onPrepareLogContentRetrieval,
+        this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
+    loggerTrigger.retrieveLogContents(this::onPrepareLogContentRetrieval,
+        this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
   }
 
   override fun onStop() {
@@ -127,19 +135,19 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment(), LoggerPresenter.De
       }
     }
 
-  override fun onPrepareLogContentRetrieval() {
+  fun onPrepareLogContentRetrieval() {
     loggerDialog.onPrepareLogContentRetrieval()
   }
 
-  override fun onLogContentRetrieved(logLine: String) {
+  fun onLogContentRetrieved(logLine: String) {
     loggerDialog.onLogContentRetrieved(logLine)
   }
 
-  override fun onAllLogContentsRetrieved() {
+  fun onAllLogContentsRetrieved() {
     loggerDialog.onAllLogContentsRetrieved()
   }
 
-  override fun onLogDeleted(logId: String) {
+  fun onLogDeleted(logId: String) {
     loggerDialog.onLogDeleted(logId)
   }
 

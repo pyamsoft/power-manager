@@ -25,36 +25,16 @@ import javax.inject.Named
 class MainPresenter @Inject internal constructor(private val interactor: MainInteractor,
     @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
-  /**
-   * public
-   */
-  fun runStartupHooks(callback: StartupCallback) {
-    startServiceWhenOpen(callback)
-    checkForRoot(callback)
-  }
 
-  private fun startServiceWhenOpen(callback: StartupCallback) {
+  fun startServiceWhenOpen(onServiceEnabled: () -> Unit, onServiceError: (Throwable) -> Unit) {
     disposeOnStop(interactor.isStartWhenOpen().subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({
       if (it) {
-        callback.onServiceEnabledWhenOpen()
+        onServiceEnabled()
       }
-    }, { Timber.e(it, "onError isStartWhenOpen") }))
-  }
-
-  private fun checkForRoot(callback: StartupCallback) {
-    disposeOnStop(interactor.hasRootPermission().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({
-      if (!it) {
-        interactor.missingRootPermission()
-        callback.explainRootRequirement()
-      }
-    }, { Timber.e(it, "onError checking root permission") }))
-  }
-
-  interface StartupCallback {
-    fun onServiceEnabledWhenOpen()
-
-    fun explainRootRequirement()
+    }, {
+      Timber.e(it, "onError isStartWhenOpen")
+      onServiceError(it)
+    }))
   }
 }

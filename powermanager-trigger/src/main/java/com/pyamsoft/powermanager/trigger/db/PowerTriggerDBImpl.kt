@@ -26,7 +26,6 @@ import com.squareup.sqlbrite.BriteDatabase
 import com.squareup.sqlbrite.SqlBrite
 import hu.akarnokd.rxjava.interop.RxJavaInterop
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Single
 import rx.schedulers.Schedulers
 import timber.log.Timber
@@ -47,12 +46,12 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
   @Synchronized fun openDatabase() {
     // After a 1 minute timeout, close the DB
     timerDisposable = DisposableHelper.dispose(timerDisposable)
-    timerDisposable = (Flowable.defer { Flowable.timer(1, TimeUnit.MINUTES) }.doAfterTerminate {
+    timerDisposable = Single.defer { Single.timer(1, TimeUnit.MINUTES) }.doAfterTerminate {
       timerDisposable = DisposableHelper.dispose(timerDisposable)
     }.subscribe({
       Timber.w("PowerTriggerDB is closed")
       briteDatabase.close()
-    }, { Timber.e(it, "onError closing database") }))
+    }, { Timber.e(it, "onError closing database") })
   }
 
   @CheckResult override fun insert(entry: PowerTriggerEntry): Completable {

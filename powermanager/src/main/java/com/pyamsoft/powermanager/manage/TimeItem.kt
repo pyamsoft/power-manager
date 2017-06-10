@@ -172,6 +172,7 @@ abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal
           holder.containerDelay.delay_input_custom.text.toString(), true)
     }
     holder.containerDelay.delay_input_custom.removeTextChangedListener(customTimeWatcher)
+    holder.containerDelay.delay_radio_custom.setOnCheckedChangeListener(null)
     holder.containerDelay.delay_radio_group.setOnCheckedChangeListener(null)
     holder.presenter.stop()
     holder.presenter.destroy()

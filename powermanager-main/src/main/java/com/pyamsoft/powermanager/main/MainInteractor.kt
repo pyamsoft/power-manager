@@ -17,36 +17,18 @@
 package com.pyamsoft.powermanager.main
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.ServicePreferences
-import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Single
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton internal class MainInteractor @Inject constructor(
-    private val rootPreferences: RootPreferences,
-    private val servicePreferences: ServicePreferences,
-    @param:Named("obs_root_permission") private val rootPermissionObserver: PermissionObserver) {
-  /**
-   * public
-   */
-  internal fun missingRootPermission() {
-    rootPreferences.resetRootEnabled()
-  }
+    private val servicePreferences: ServicePreferences) {
 
   /**
    * public
    */
   @CheckResult internal fun isStartWhenOpen(): Single<Boolean> {
     return Single.fromCallable { servicePreferences.startWhenOpen }
-  }
-
-  /**
-   * public
-   */
-  @CheckResult internal fun hasRootPermission(): Single<Boolean> {
-    return Single.fromCallable { rootPermissionObserver.hasPermission() }
   }
 }

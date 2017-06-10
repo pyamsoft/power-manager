@@ -47,11 +47,13 @@ class JobHandler @Inject internal constructor(private val context: Context,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences, private val rootPreferences: RootPreferences,
     @param:Named("io") private val subScheduler: Scheduler) {
+
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
     return object : JobRunner(context, jobQueuer, chargingObserver, wearableObserver, wifiModifier,
         dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
         wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
         airplanePreferences, dozePreferences, rootPreferences, subScheduler) {
+
       override val isStopped: Boolean
         get() = stopper.invoke()
     }

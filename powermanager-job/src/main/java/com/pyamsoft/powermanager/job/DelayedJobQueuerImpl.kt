@@ -25,6 +25,6 @@ internal class DelayedJobQueuerImpl @Inject constructor(jobManager: JobManager) 
 
   override fun runInstantJob(tag: String, extras: PersistableBundleCompat) {
     throw RuntimeException(
-        tag + ": Cannot schedule instant jobs with DelayedJobQueuerImpl, use InstantJobQueuerImpl")
+        "$tag: Cannot schedule instant jobs with DelayedJobQueuerImpl, use InstantJobQueuerImpl")
   }
 }

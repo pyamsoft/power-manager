@@ -39,15 +39,13 @@ class ActionToggleService : IntentService(ActionToggleService::class.java.simple
   }
 
   override fun onHandleIntent(intent: Intent?) {
-    presenter.toggleForegroundState(object : ActionTogglePresenter.ForegroundStateCallback {
-      override fun onForegroundStateToggled(state: Boolean) {
-        Timber.d("Foreground state toggled: %s", state)
-        if (state) {
-          ForegroundService.start(applicationContext)
-        } else {
-          ForegroundService.stop(applicationContext)
-        }
+    presenter.toggleForegroundState {
+      Timber.d("Foreground state toggled: $it")
+      if (it) {
+        ForegroundService.start(applicationContext)
+      } else {
+        ForegroundService.stop(applicationContext)
       }
-    })
+    }
   }
 }

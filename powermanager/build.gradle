@@ -18,7 +18,6 @@ apply plugin: "com.android.application"
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: "com.google.gms.google-services"
 apply plugin: "com.github.ben-manes.versions"
 apply plugin: "com.getkeepsafe.dexcount"
 apply plugin: "net.ltgt.errorprone"
@@ -121,3 +120,5 @@ dependencies {
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
+// Firebase
+apply plugin: "com.google.gms.google-services"

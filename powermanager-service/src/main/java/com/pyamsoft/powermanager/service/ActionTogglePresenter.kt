@@ -24,14 +24,11 @@ import javax.inject.Named
 class ActionTogglePresenter @Inject internal constructor(
     private val interactor: ActionToggleInteractor, @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
+
   /**
    * public
    */
-  fun toggleForegroundState(callback: ForegroundStateCallback) {
-    callback.onForegroundStateToggled(interactor.toggleEnabledState().blockingGet())
-  }
-
-  interface ForegroundStateCallback {
-    fun onForegroundStateToggled(state: Boolean)
+  fun toggleForegroundState(onForegroundStateToggled: (Boolean) -> Unit) {
+    onForegroundStateToggled(interactor.toggleEnabledState().blockingGet())
   }
 }

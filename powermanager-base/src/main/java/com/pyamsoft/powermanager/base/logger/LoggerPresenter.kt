@@ -30,11 +30,12 @@ class LoggerPresenter @Inject internal constructor(private val interactor: Logge
 
   private val logDisposables: CompositeDisposable = CompositeDisposable()
 
-  fun retrieveLogContents(callback: LogCallback) {
-    logDisposables.add(interactor.logContents.subscribeOn(subscribeScheduler).observeOn(
+  fun retrieveLogContents(onPrepareLogContentRetrieval: () -> Unit,
+      onLogContentRetrieved: (String) -> Unit, onAllLogContentsRetrieved: () -> Unit) {
+    logDisposables.add(interactor.getLogContents().subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).doAfterTerminate(
-        { callback.onAllLogContentsRetrieved() }).doOnSubscribe { callback.onPrepareLogContentRetrieval() }.subscribe(
-        { callback.onLogContentRetrieved(it) }, {
+        { onAllLogContentsRetrieved() }).doOnSubscribe { onPrepareLogContentRetrieval() }.subscribe(
+        { onLogContentRetrieved(it) }, {
       Timber.e(it, "onError: Failed to retrieve log contents: %s", interactor.logId)
     }))
   }
@@ -64,13 +65,13 @@ class LoggerPresenter @Inject internal constructor(private val interactor: Logge
             { throwable -> Timber.e(throwable, "onError clearing composite subscription") }))
   }
 
-  fun deleteLog(callback: DeleteCallback) {
+  fun deleteLog(onLogDeleted: (String) -> Unit) {
     // Stop everything before we delete the log
     clearLogs()
     logDisposables.add(interactor.deleteLog().subscribeOn(subscribeScheduler).observeOn(
         observeScheduler).subscribe({
       if (it) {
-        callback.onLogDeleted(interactor.logId)
+        onLogDeleted(interactor.logId)
       }
       clearLogs()
     }, { Timber.e(it, "onError deleteLog") }))
@@ -78,17 +79,5 @@ class LoggerPresenter @Inject internal constructor(private val interactor: Logge
 
   internal fun clearLogs() {
     logDisposables.clear()
-  }
-
-  interface DeleteCallback {
-    fun onLogDeleted(logId: String)
-  }
-
-  interface LogCallback {
-    fun onPrepareLogContentRetrieval()
-
-    fun onLogContentRetrieved(logLine: String)
-
-    fun onAllLogContentsRetrieved()
   }
 }

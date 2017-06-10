@@ -30,19 +30,19 @@ class Manager @Inject internal constructor(private val interactor: ManagerIntera
     SchedulerHelper.enforceSubscribeScheduler(scheduler)
   }
 
-  fun enable(onEnabled: (() -> Unit)?) {
+  fun enable(onEnabled: (() -> Unit)) {
     compositeDisposable.add(
-        interactor.queueEnable().subscribeOn(scheduler).observeOn(scheduler).subscribe({ tag ->
-          timber.log.Timber.d("%s: Queued up a new enable job", tag)
-          onEnabled?.invoke()
+        interactor.queueEnable().subscribeOn(scheduler).observeOn(scheduler).subscribe({
+          timber.log.Timber.d("%s: Queued up a new enable job", it)
+          onEnabled.invoke()
         }) { throwable -> timber.log.Timber.e(throwable, "%s: onError enable") })
   }
 
-  fun disable(onDisabled: (() -> Unit)?) {
+  fun disable(onDisabled: (() -> Unit)) {
     compositeDisposable.add(
-        interactor.queueDisable().subscribeOn(scheduler).observeOn(scheduler).subscribe({ tag ->
-          timber.log.Timber.d("%s: Queued up a new disable job", tag)
-          onDisabled?.invoke()
+        interactor.queueDisable().subscribeOn(scheduler).observeOn(scheduler).subscribe({
+          timber.log.Timber.d("%s: Queued up a new disable job", it)
+          onDisabled.invoke()
         }) { throwable -> timber.log.Timber.e(throwable, "%s: onError disable") })
   }
 

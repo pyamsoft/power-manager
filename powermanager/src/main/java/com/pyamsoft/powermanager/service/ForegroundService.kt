@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.service
 
-import android.app.Notification
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -24,7 +23,6 @@ import android.os.IBinder
 import android.support.v4.app.NotificationManagerCompat
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
-import com.pyamsoft.powermanager.service.ForegroundPresenter.NotificationCallback
 import com.pyamsoft.pydroid.ui.app.AutoRestartService
 import timber.log.Timber
 import javax.inject.Inject
@@ -73,11 +71,9 @@ class ForegroundService : AutoRestartService() {
         presenter.restartTriggerAlarm()
       }
     }
-    presenter.startNotification(object : NotificationCallback {
-      override fun onStartNotificationInForeground(notification: Notification) {
-        startForeground(NOTIFICATION_ID, notification)
-      }
-    })
+    presenter.startNotification {
+      startForeground(NOTIFICATION_ID, it)
+    }
     return Service.START_STICKY
   }
 

@@ -34,68 +34,65 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
   /**
    * public
    */
-  fun registerOnBus(callback: BusCallback) {
-    disposeOnStop(EventBus.get().listen(TriggerCreateEvent::class.java).subscribeOn(
-        subscribeScheduler).observeOn(observeScheduler).subscribe(
-        { createPowerTrigger(it.entry, callback) }, { Timber.e(it, "onError create bus") }))
+  fun registerOnBus(onAdd: (PowerTriggerEntry) -> Unit, onAddError: (Throwable) -> Unit,
+      onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
+      onTriggerDeleteError: (Throwable) -> Unit) {
+    disposeOnStop {
+      EventBus.get().listen(TriggerCreateEvent::class.java).subscribeOn(
+          subscribeScheduler).observeOn(observeScheduler).subscribe(
+          { createPowerTrigger(it.entry, onAdd, onAddError, onCreateError) },
+          { Timber.e(it, "onError create bus") })
+    }
 
-    disposeOnStop(EventBus.get().listen(TriggerDeleteEvent::class.java).subscribeOn(
-        subscribeScheduler).observeOn(observeScheduler).subscribe(
-        { deleteTrigger(it.percent, callback) }, { Timber.e(it, "onError create bus") }))
+    disposeOnStop {
+      EventBus.get().listen(TriggerDeleteEvent::class.java).subscribeOn(
+          subscribeScheduler).observeOn(observeScheduler).subscribe(
+          { deleteTrigger(it.percent, onTriggerDeleted, onTriggerDeleteError) },
+          { Timber.e(it, "onError create bus") })
+    }
   }
 
-  fun createPowerTrigger(entry: PowerTriggerEntry, callback: TriggerCreateCallback) {
-    Timber.d("Create new power trigger")
-    disposeOnStop(
-        interactor.put(entry).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
-            { callback.onNewTriggerAdded(it) }, {
-          Timber.e(it, "onError")
-          if (it is SQLiteConstraintException) {
-            Timber.e("Error inserting into DB")
-            callback.onNewTriggerInsertError()
-          } else {
-            Timber.e("Issue creating trigger")
-            callback.onNewTriggerCreateError()
-          }
-        }))
+  fun createPowerTrigger(entry: PowerTriggerEntry, onAdd: (PowerTriggerEntry) -> Unit,
+      onAddError: (Throwable) -> Unit, onCreateError: (Throwable) -> Unit) {
+    disposeOnStop {
+      Timber.d("Create new power trigger")
+      interactor.put(entry).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+          { onAdd(it) }, {
+        Timber.e(it, "onError")
+        if (it is SQLiteConstraintException) {
+          Timber.e("Error inserting into DB")
+          onAddError(it)
+        } else {
+          Timber.e("Issue creating trigger")
+          onCreateError(it)
+        }
+      })
+    }
   }
 
-  fun deleteTrigger(percent: Int, callback: TriggerDeleteCallback) {
-    disposeOnStop(interactor.delete(percent).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onTriggerDeleted(it) }, {
-      Timber.e(it, "onError")
-    }))
+  fun deleteTrigger(percent: Int, onTriggerDeleted: (Int) -> Unit,
+      onTriggerError: (Throwable) -> Unit) {
+    disposeOnStop {
+      interactor.delete(percent).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ onTriggerDeleted(it) }, {
+        Timber.e(it, "onError")
+        onTriggerError(it)
+      })
+    }
   }
 
   /**
    * public
    */
-  fun loadTriggerView(callback: TriggerLoadCallback, forceRefresh: Boolean) {
-    disposeOnStop(interactor.queryAll(forceRefresh).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate({ callback.onTriggerLoadFinished() }).subscribe(
-        { callback.onTriggerLoaded(it) }, { Timber.e(it, "onError") }))
-  }
-
-  interface TriggerLoadCallback {
-
-    fun onTriggerLoaded(entry: PowerTriggerEntry)
-
-    fun onTriggerLoadFinished()
-  }
-
-  interface BusCallback : TriggerDeleteCallback, TriggerCreateCallback
-
-  interface TriggerDeleteCallback {
-
-    fun onTriggerDeleted(position: Int)
-  }
-
-  interface TriggerCreateCallback {
-
-    fun onNewTriggerAdded(entry: PowerTriggerEntry)
-
-    fun onNewTriggerCreateError()
-
-    fun onNewTriggerInsertError()
+  fun loadTriggerView(forceRefresh: Boolean, onTriggerLoaded: (PowerTriggerEntry) -> Unit,
+      onTriggerLoadError: (Throwable) -> Unit, onTriggerLoadFinished: () -> Unit) {
+    disposeOnStop {
+      interactor.queryAll(forceRefresh).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate({ onTriggerLoadFinished() }).subscribe(
+          { onTriggerLoaded(it) }, {
+        Timber.e(it, "onError")
+        onTriggerLoadError(it)
+      })
+    }
   }
 }

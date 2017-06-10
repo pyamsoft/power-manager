@@ -17,21 +17,18 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Switch
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.pydroid.ui.helper.Toasty
-import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_airplane
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_bluetooth
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_data
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_doze
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_sync
-import kotlinx.android.synthetic.main.layout_container_manage.view.manage_wifi
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_airplane
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_bluetooth
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_data
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_doze
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_sync
+import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_wifi
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,18 +45,18 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
   }
 
   override fun getLayoutRes(): Int {
-    return R.layout.adapter_item_simple
+    return R.layout.adapter_item_manage
   }
 
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     Timber.d("Bind manage item")
-    bindSwitch(holder.container.manage_wifi, "WiFi", holder.presenterWifi)
-    bindSwitch(holder.container.manage_data, "Cellular Data", holder.presenterData)
-    bindSwitch(holder.container.manage_bluetooth, "Bluetooth", holder.presenterBluetooth)
-    bindSwitch(holder.container.manage_sync, "Auto Sync", holder.presenterSync)
-    bindSwitch(holder.container.manage_airplane, "Airplane Mode", holder.presenterAirplane)
-    bindSwitch(holder.container.manage_doze, "Doze Mode", holder.presenterDoze)
+    bindSwitch(holder.itemView.manage_wifi, "WiFi", holder.presenterWifi)
+    bindSwitch(holder.itemView.manage_data, "Cellular Data", holder.presenterData)
+    bindSwitch(holder.itemView.manage_bluetooth, "Bluetooth", holder.presenterBluetooth)
+    bindSwitch(holder.itemView.manage_sync, "Auto Sync", holder.presenterSync)
+    bindSwitch(holder.itemView.manage_airplane, "Airplane Mode", holder.presenterAirplane)
+    bindSwitch(holder.itemView.manage_doze, "Doze Mode", holder.presenterDoze)
   }
 
   private fun bindSwitch(switch: Switch, name: String, presenter: ManagePresenter) {
@@ -96,12 +93,12 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
     Timber.d("Unbind manage item")
-    unbindSwitch(holder.container.manage_wifi)
-    unbindSwitch(holder.container.manage_data)
-    unbindSwitch(holder.container.manage_bluetooth)
-    unbindSwitch(holder.container.manage_sync)
-    unbindSwitch(holder.container.manage_airplane)
-    unbindSwitch(holder.container.manage_doze)
+    unbindSwitch(holder.itemView.manage_wifi)
+    unbindSwitch(holder.itemView.manage_data)
+    unbindSwitch(holder.itemView.manage_bluetooth)
+    unbindSwitch(holder.itemView.manage_sync)
+    unbindSwitch(holder.itemView.manage_airplane)
+    unbindSwitch(holder.itemView.manage_doze)
 
     holder.presenterAirplane.stop()
     holder.presenterAirplane.destroy()
@@ -133,13 +130,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
         "manage_airplane")] lateinit internal var presenterAirplane: ManagePresenter
     @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
 
-    internal val container: View = LayoutInflater.from(itemView.context).inflate(
-        R.layout.layout_container_manage, itemView as ViewGroup, false)
-
     init {
-      itemView.simple_expander.setTitle(R.string.manage_title)
-      itemView.simple_expander.setDescription(R.string.manage_desc)
-      itemView.simple_expander.setExpandingContent(container)
       Injector.with(itemView.context) {
         it.plusManageComponent().inject(this)
       }

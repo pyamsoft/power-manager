@@ -39,7 +39,6 @@ import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.SettingsFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
-import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.util.DialogUtil
@@ -191,18 +190,10 @@ class MainActivity : TamperActivity() {
 
   override fun onStart() {
     super.onStart()
-    presenter.runStartupHooks(object : MainPresenter.StartupCallback {
-      override fun onServiceEnabledWhenOpen() {
-        Timber.d("Should refresh service when opened")
-        ForegroundService.start(applicationContext)
-      }
-
-      override fun explainRootRequirement() {
-        Toasty.makeText(applicationContext,
-            "Root is required for certain functions like Doze and Airplane mode",
-            Toasty.LENGTH_SHORT).show()
-      }
-    })
+    presenter.startServiceWhenOpen({
+      Timber.d("Should refresh service when opened")
+      ForegroundService.start(applicationContext)
+    }, {})
   }
 
   override fun onStop() {

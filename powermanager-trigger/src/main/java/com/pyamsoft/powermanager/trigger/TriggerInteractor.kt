@@ -38,7 +38,7 @@ import javax.inject.Singleton
   /**
    * public
    */
-  @CheckResult internal fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
+  @CheckResult fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
     // TODO
     Timber.d("Force refresh? %s", forceRefresh)
     return Observable.empty()
@@ -47,7 +47,7 @@ import javax.inject.Singleton
   /**
    * public
    */
-  @CheckResult internal fun put(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
+  @CheckResult fun put(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
     return powerTriggerDB.queryWithPercent(entry.percent()).flatMapCompletable {
       if (!PowerTriggerEntry.isEmpty(it)) {
         Timber.e("Entry already exists, throw")
@@ -71,7 +71,7 @@ import javax.inject.Singleton
   /**
    * public
    */
-  @CheckResult internal fun delete(percent: Int): Single<Int> {
+  @CheckResult fun delete(percent: Int): Single<Int> {
     return powerTriggerDB.queryAll().map {
 
       // Sort first

@@ -45,25 +45,22 @@ class LoggerInteractor @Inject constructor(context: Context,
   private val appContext: Context = context.applicationContext
   private var logPath: File? = null
 
-  @CheckResult fun getLogLocation(): File {
-    if (logPath == null || !logPath!!.exists()) {
-      synchronized(LoggerInteractor::class.java) {
-        if (logPath == null || !logPath!!.exists()) {
-          val filesDirPath = appContext.filesDir.absolutePath
-          val logDir = File(filesDirPath, "logger")
-          if (!logDir.exists()) {
-            if (!logDir.mkdirs()) {
-              Timber.e("Failed to make log dir: %s", logDir.absolutePath)
-              Timber.e("Will be unable to log to file")
-            }
-          }
-          val logDirPath = logDir.absolutePath
-          logPath = File(logDirPath, logId)
+  @CheckResult private fun getLogLocation(): File {
+    var obj = logPath
+    if (obj == null || !obj.exists()) {
+      val logDir = File(appContext.filesDir.absolutePath, "logger")
+      if (!logDir.exists()) {
+        if (!logDir.mkdirs()) {
+          Timber.e("Failed to make log dir: %s", logDir.absolutePath)
+          Timber.e("Will be unable to log to file")
         }
       }
+      val logDirPath = logDir.absolutePath
+      obj = File(logDirPath, logId)
+      logPath = obj
     }
 
-    return logPath!!
+    return obj
   }
 
   @CheckResult fun log(logType: LogType, fmt: String, vararg args: Any): Completable {
@@ -98,8 +95,8 @@ class LoggerInteractor @Inject constructor(context: Context,
   /**
    * public
    */
-  val logContents: Observable<String>
-    @CheckResult get() = Single.fromCallable { getLogLocation() }.map {
+  @CheckResult fun getLogContents(): Observable<String> {
+    return Single.fromCallable { getLogLocation() }.map {
       val fileContents = ArrayList<String>()
       FileInputStream(it).use({
         BufferedInputStream(it).use {
@@ -116,6 +113,7 @@ class LoggerInteractor @Inject constructor(context: Context,
       })
       return@map fileContents
     }.flatMapObservable { Observable.fromIterable(it) }
+  }
 
   /**
    * public
@@ -127,7 +125,7 @@ class LoggerInteractor @Inject constructor(context: Context,
     }
   }
 
-  @CheckResult fun appendToLog(message: String): Completable {
+  @CheckResult private fun appendToLog(message: String): Completable {
     return Maybe.fromCallable { getLogLocation() }.flatMapCompletable {
       FileOutputStream(it, true).use({
         BufferedOutputStream(it).use {
@@ -145,7 +143,7 @@ class LoggerInteractor @Inject constructor(context: Context,
     }
   }
 
-  @CheckResult fun formatMessage(message: String): String {
+  @CheckResult private fun formatMessage(message: String): String {
     val datePrefix = DateFormat.getDateTimeInstance().format(Calendar.getInstance().time)
     return String.format(Locale.getDefault(), "[%s] - %s", datePrefix, message)
   }

@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.base.logger.LoggerPresenter
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import timber.log.Timber
 
-class LoggerDialog : WatchedDialog(), LoggerPresenter.DeleteCallback, LoggerPresenter.LogCallback {
+class LoggerDialog : WatchedDialog() {
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     return inflater?.inflate(R.layout.dialog_logger, container, false)
@@ -44,19 +44,19 @@ class LoggerDialog : WatchedDialog(), LoggerPresenter.DeleteCallback, LoggerPres
     }
   }
 
-  override fun onPrepareLogContentRetrieval() {
+  fun onPrepareLogContentRetrieval() {
     Timber.d("onPrepareLogContentRetrieval")
   }
 
-  override fun onLogContentRetrieved(logLine: String) {
+  fun onLogContentRetrieved(logLine: String) {
     Timber.d("onLogContentRetrieved: %s", logLine)
   }
 
-  override fun onAllLogContentsRetrieved() {
+  fun onAllLogContentsRetrieved() {
     Timber.d("onAllLogContentsRetrieved")
   }
 
-  override fun onLogDeleted(logId: String) {
+  fun onLogDeleted(logId: String) {
     Timber.d("onLogDeleted: %s", logId)
   }
 }

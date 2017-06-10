@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import android.support.annotation.CallSuper
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Single
 import javax.inject.Inject
@@ -40,7 +39,7 @@ import javax.inject.Singleton
   /**
    * public
    */
-  @CallSuper fun retrieve(): Single<List<PowerTriggerEntry>>? {
+  fun retrieve(): Single<List<PowerTriggerEntry>>? {
     return cachedPowerTriggerEntryObservable
   }
 

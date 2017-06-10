@@ -49,10 +49,12 @@ class ForegroundPresenter @Inject internal constructor(private val interactor: F
   /**
    * public
    */
-  fun startNotification(callback: NotificationCallback) {
-    disposeOnStop(interactor.createNotification(true).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({ callback.onStartNotificationInForeground(it) },
-        { Timber.e(it, "onError") }))
+  fun startNotification(onStartNotificationInForeground: (Notification) -> Unit) {
+    disposeOnStop {
+      interactor.createNotification(true).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ onStartNotificationInForeground(it) },
+          { Timber.e(it, "onError") })
+    }
   }
 
   /**
@@ -68,9 +70,5 @@ class ForegroundPresenter @Inject internal constructor(private val interactor: F
 
   fun setForegroundState(enable: Boolean) {
     interactor.setServiceEnabled(enable)
-  }
-
-  interface NotificationCallback {
-    fun onStartNotificationInForeground(notification: Notification)
   }
 }

@@ -22,5 +22,6 @@ import io.reactivex.Scheduler
 
 abstract class TargetPresenter protected constructor(observeScheduler: Scheduler,
     subscribeScheduler: Scheduler) : SchedulerPresenter(observeScheduler, subscribeScheduler) {
+
   @get:CheckResult internal abstract val target: ManageTargets
 }

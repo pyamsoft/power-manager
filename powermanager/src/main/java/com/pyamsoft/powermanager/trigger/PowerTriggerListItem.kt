@@ -18,11 +18,9 @@ package com.pyamsoft.powermanager.trigger
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import android.widget.CompoundButton
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.trigger.TriggerItemPresenter.TriggerToggleCallback
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import kotlinx.android.synthetic.main.adapter_item_trigger.view.trigger_enabled_switch
 import kotlinx.android.synthetic.main.adapter_item_trigger.view.trigger_name
@@ -46,21 +44,13 @@ class PowerTriggerListItem internal constructor(
     super.bindView(holder, payloads)
     bindModelToHolder(holder)
 
-    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener(
-        object : CompoundButton.OnCheckedChangeListener {
-          override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-            buttonView.setOnCheckedChangeListener(null)
-            buttonView.isChecked = !isChecked
-            val listener = this
-            holder.presenter.toggleEnabledState(model, isChecked, object : TriggerToggleCallback {
-              override fun updateViewHolder(entry: PowerTriggerEntry) {
-                withModel(entry)
-                bindModelToHolder(holder)
-                buttonView.setOnCheckedChangeListener(listener)
-              }
-            })
-          }
-        })
+    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+      buttonView.isChecked = !isChecked
+      holder.presenter.toggleEnabledState(model, isChecked, {
+        withModel(it)
+        bindModelToHolder(holder)
+      })
+    }
   }
 
   internal fun bindModelToHolder(holder: ViewHolder) {

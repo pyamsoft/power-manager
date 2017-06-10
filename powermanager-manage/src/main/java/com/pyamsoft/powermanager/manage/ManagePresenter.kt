@@ -28,14 +28,16 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
    * public
    */
   fun setManaged(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
-    disposeOnDestroy(interactor.setManaged(state).subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate {
-      EventBus.get().publish(ManageChangeEvent(target))
-    }.doAfterTerminate { onComplete() }.subscribe(
-        { Timber.d("Set managed state successfully: %s", state) }, {
-      Timber.e(it, "Error setting managed")
-      onError(it)
-    }))
+    disposeOnDestroy {
+      interactor.setManaged(state).subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doAfterTerminate {
+        EventBus.get().publish(ManageChangeEvent(target))
+      }.doAfterTerminate { onComplete() }.subscribe(
+          { Timber.d("Set managed state successfully: %s", state) }, {
+        Timber.e(it, "Error setting managed")
+        onError(it)
+      })
+    }
   }
 
   /**
@@ -43,13 +45,15 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
    */
   fun getState(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
       onError: (Throwable) -> Unit, onComplete: () -> Unit) {
-    disposeOnDestroy(interactor.isManaged.subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doOnSuccess { (first) ->
-      onEnableRetrieved(first)
-    }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
-        { onStateRetrieved(it) }, {
-      Timber.e(it, "Error getting managed")
-      onError(it)
-    }))
+    disposeOnDestroy {
+      interactor.isManaged.subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).doOnSuccess { (first) ->
+        onEnableRetrieved(first)
+      }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
+          { onStateRetrieved(it) }, {
+        Timber.e(it, "Error getting managed")
+        onError(it)
+      })
+    }
   }
 }

@@ -101,51 +101,39 @@ class PowerTriggerListFragment : WatchedFragment() {
     if (!listIsRefreshed) {
       // Because we may already have an Adapter with entries, we clear it first so that there are no doubles.
       adapter?.clear()
-      presenter.loadTriggerView(object : TriggerPresenter.TriggerLoadCallback {
-        override fun onTriggerLoaded(entry: PowerTriggerEntry) {
-          adapter?.add(createNewPowerTriggerListItem(entry))
-        }
-
-        override fun onTriggerLoadFinished() {
-          if (adapter?.itemCount == 0) {
-            loadEmptyView()
-          } else {
-            listIsRefreshed = true
-            loadListView()
-          }
-        }
-      }, false)
-    }
-
-    presenter.registerOnBus(object : TriggerPresenter.BusCallback {
-      override fun onNewTriggerAdded(entry: PowerTriggerEntry) {
-        Timber.d("Added new trigger with percent: %d", entry.percent())
-
-        adapter?.add(createNewPowerTriggerListItem(entry))
-        if (power_trigger_list.adapter == null) {
-          Timber.d("First trigger, show list")
+      presenter.loadTriggerView(false, onTriggerLoaded = {
+        adapter?.add(createNewPowerTriggerListItem(it))
+      }, onTriggerLoadError = {}, onTriggerLoadFinished = {
+        if (adapter?.itemCount == 0) {
+          loadEmptyView()
+        } else {
+          listIsRefreshed = true
           loadListView()
         }
-      }
+      })
+    }
 
-      override fun onNewTriggerCreateError() {
-        Toasty.makeText(context, "ERROR: Trigger must have a name and unique percent",
-            Toasty.LENGTH_LONG).show()
-      }
+    presenter.registerOnBus(onAdd = {
+      Timber.d("Added new trigger with percent: %d", it.percent())
 
-      override fun onNewTriggerInsertError() {
-        Toasty.makeText(context, "ERROR: Two triggers cannot have the same percent",
-            Toasty.LENGTH_LONG).show()
+      adapter?.add(createNewPowerTriggerListItem(it))
+      if (power_trigger_list.adapter == null) {
+        Timber.d("First trigger, show list")
+        loadListView()
       }
-
-      override fun onTriggerDeleted(position: Int) {
-        adapter?.remove(position)
-        if (adapter?.itemCount == 0) {
-          Timber.d("Last trigger, hide list")
-          loadEmptyView()
-        }
+    }, onAddError = {
+      Toasty.makeText(context, "ERROR: Two triggers cannot have the same percent",
+          Toasty.LENGTH_LONG).show()
+    }, onCreateError = {
+      Toasty.makeText(context, "ERROR: Trigger must have a name and unique percent",
+          Toasty.LENGTH_LONG).show()
+    }, onTriggerDeleted = {
+      adapter?.remove(it)
+      if (adapter?.itemCount == 0) {
+        Timber.d("Last trigger, hide list")
+        loadEmptyView()
       }
-    })
+    }, onTriggerDeleteError = {})
   }
 
   override fun onResume() {
