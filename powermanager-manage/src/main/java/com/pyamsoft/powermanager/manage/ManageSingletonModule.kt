@@ -80,8 +80,9 @@ import javax.inject.Singleton
 
   @Singleton @Provides @Named(
       "exception_data_interactor") internal fun provideDataExceptionInteractor(
+      @Named("obs_data_permission") permissionObserver: PermissionObserver,
       preferences: DataPreferences): ExceptionInteractor {
-    return DataExceptionInteractor(preferences)
+    return DataExceptionInteractor(permissionObserver, preferences)
   }
 
   @Singleton @Provides @Named(
@@ -98,20 +99,23 @@ import javax.inject.Singleton
 
   @Singleton @Provides @Named(
       "exception_airplane_interactor") internal fun provideAirplaneExceptionInteractor(
+      @Named("obs_root_permission") permissionObserver: PermissionObserver,
       preferences: AirplanePreferences): ExceptionInteractor {
-    return AirplaneExceptionInteractor(preferences)
+    return AirplaneExceptionInteractor(permissionObserver, preferences)
   }
 
   @Singleton @Provides @Named(
       "exception_doze_interactor") internal fun provideDozeExceptionInteractor(
+      @Named("obs_doze_permission") permissionObserver: PermissionObserver,
       preferences: DozePreferences): ExceptionInteractor {
-    return DozeExceptionInteractor(preferences)
+    return DozeExceptionInteractor(permissionObserver, preferences)
   }
 
   @Singleton @Provides @Named(
       "exception_data_saver_interactor") internal fun provideDataSaverExceptionInteractor(
+      @Named("obs_data_saver_permission") permissionObserver: PermissionObserver,
       preferences: DataSaverPreferences): ExceptionInteractor {
-    return DataSaverExceptionInteractor(preferences)
+    return DataSaverExceptionInteractor(permissionObserver, preferences)
   }
 
 }

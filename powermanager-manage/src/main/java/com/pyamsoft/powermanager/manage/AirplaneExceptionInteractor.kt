@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.manage
 
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
+import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 internal class AirplaneExceptionInteractor @Inject internal constructor(
+    private val permissionObserver: PermissionObserver,
     private val preferences: AirplanePreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {
@@ -34,11 +36,13 @@ internal class AirplaneExceptionInteractor @Inject internal constructor(
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.airplaneManaged, preferences.ignoreChargingAirplane)
+      Pair(preferences.airplaneManaged && permissionObserver.hasPermission(),
+          preferences.ignoreChargingAirplane)
     }
 
   override val isIgnoreWear: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.airplaneManaged, preferences.ignoreWearAirplane)
+      Pair(preferences.airplaneManaged && permissionObserver.hasPermission(),
+          preferences.ignoreWearAirplane)
     }
 }

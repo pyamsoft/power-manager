@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.manage
 
 import com.pyamsoft.powermanager.base.preference.DozePreferences
+import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 internal class DozeExceptionInteractor @Inject internal constructor(
+    private val permissionObserver: PermissionObserver,
     private val preferences: DozePreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {
@@ -34,11 +36,13 @@ internal class DozeExceptionInteractor @Inject internal constructor(
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dozeManaged, preferences.ignoreChargingDoze)
+      Pair(preferences.dozeManaged && permissionObserver.hasPermission(),
+          preferences.ignoreChargingDoze)
     }
 
   override val isIgnoreWear: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dozeManaged, preferences.ignoreWearDoze)
+      Pair(preferences.dozeManaged && permissionObserver.hasPermission(),
+          preferences.ignoreWearDoze)
     }
 }

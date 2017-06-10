@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.manage
 
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 internal class DataExceptionInteractor @Inject internal constructor(
+    private val permissionObserver: PermissionObserver,
     private val preferences: DataPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {
@@ -34,11 +36,13 @@ internal class DataExceptionInteractor @Inject internal constructor(
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dataManaged, preferences.ignoreChargingData)
+      Pair(preferences.dataManaged && permissionObserver.hasPermission(),
+          preferences.ignoreChargingData)
     }
 
   override val isIgnoreWear: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dataManaged, preferences.ignoreWearData)
+      Pair(preferences.dataManaged && permissionObserver.hasPermission(),
+          preferences.ignoreWearData)
     }
 }

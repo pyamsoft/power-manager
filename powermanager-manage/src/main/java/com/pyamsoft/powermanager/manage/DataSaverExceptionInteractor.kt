@@ -17,11 +17,13 @@
 package com.pyamsoft.powermanager.manage
 
 import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
+import com.pyamsoft.powermanager.model.PermissionObserver
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
 internal class DataSaverExceptionInteractor @Inject internal constructor(
+    private val permissionObserver: PermissionObserver,
     private val preferences: DataSaverPreferences) : ExceptionInteractor() {
 
   override fun setIgnoreCharging(state: Boolean): Completable {
@@ -34,11 +36,13 @@ internal class DataSaverExceptionInteractor @Inject internal constructor(
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dataSaverManaged, preferences.ignoreChargingDataSaver)
+      Pair(preferences.dataSaverManaged && permissionObserver.hasPermission(),
+          preferences.ignoreChargingDataSaver)
     }
 
   override val isIgnoreWear: Single<Pair<Boolean, Boolean>>
     get() = Single.fromCallable {
-      Pair(preferences.dataSaverManaged, preferences.ignoreWearDataSaver)
+      Pair(preferences.dataSaverManaged && permissionObserver.hasPermission(),
+          preferences.ignoreWearDataSaver)
     }
 }
