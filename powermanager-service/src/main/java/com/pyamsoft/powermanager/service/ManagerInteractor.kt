@@ -20,6 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
@@ -43,12 +44,14 @@ import javax.inject.Singleton
     @param:Named("obs_sync") private val syncObserver: StateObserver,
     @param:Named("obs_doze") private val dozeObserver: StateObserver,
     @param:Named("obs_airplane") private val airplaneObserver: StateObserver,
+    @param:Named("obs_data_saver") private val dataSaverObserver: StateObserver,
     private val preferences: ManagePreferences, private val wifiPreferences: WifiPreferences,
     private val dataPreferences: DataPreferences,
     private val bluetoothPreferences: BluetoothPreferences,
     private val syncPreferences: SyncPreferences,
     private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences) {
+    private val dozePreferences: DozePreferences,
+    private val dataSaverPreferences: DataSaverPreferences) {
 
   /**
    * public
@@ -96,6 +99,7 @@ import javax.inject.Singleton
     syncPreferences.originalSync = false
     airplanePreferences.originalAirplane = false
     dozePreferences.originalDoze = false
+    dataSaverPreferences.originalDataSaver = false
     Timber.w("Erased original states, prepare for another Screen event")
   }
 
@@ -122,6 +126,10 @@ import javax.inject.Singleton
 
     if (!dozeObserver.unknown()) {
       dozePreferences.originalDoze = !dozeObserver.enabled()
+    }
+
+    if (!dataSaverObserver.unknown()) {
+      dataSaverPreferences.originalDataSaver = !dataSaverObserver.enabled()
     }
 
     Timber.w("Stored original states, prepare for Sleep")
