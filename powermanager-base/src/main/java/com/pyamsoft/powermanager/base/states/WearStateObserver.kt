@@ -61,6 +61,7 @@ internal class WearStateObserver @Inject internal constructor(context: Context,
       disconnectGoogleApiClient()
       return result
     }
+
   /**
    * Return if a wearable is connected
    */

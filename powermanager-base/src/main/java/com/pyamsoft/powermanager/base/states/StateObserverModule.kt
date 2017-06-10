@@ -65,4 +65,9 @@ import javax.inject.Singleton
       context: Context): StateObserver {
     return ChargingStateObserver(context)
   }
+
+  @Singleton @Named("obs_data_saver") @Provides fun provideDataSaverObserver(
+      @Named("wrapper_data_saver") wrapper: DeviceFunctionWrapper): StateObserver {
+    return DataSaverStateObserver(wrapper)
+  }
 }

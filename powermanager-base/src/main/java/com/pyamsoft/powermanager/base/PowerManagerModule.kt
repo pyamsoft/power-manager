@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.ClearPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
+import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
@@ -105,6 +106,10 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides fun provideServicePreferences(): ServicePreferences {
+    return preferences
+  }
+
+  @Singleton @Provides fun provideDataSaverPreferences(): DataSaverPreferences {
     return preferences
   }
 

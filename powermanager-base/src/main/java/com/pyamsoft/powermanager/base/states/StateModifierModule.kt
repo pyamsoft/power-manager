@@ -52,4 +52,9 @@ import javax.inject.Singleton
       @Named("wrapper_doze") wrapper: DeviceFunctionWrapper): StateModifier {
     return DozeStateModifier(wrapper)
   }
+
+  @Singleton @Named("mod_data_saver") @Provides fun provideDataSaverModifier(
+      @Named("wrapper_data_saver") wrapper: DeviceFunctionWrapper): StateModifier {
+    return DataSaverStateModifier(wrapper)
+  }
 }

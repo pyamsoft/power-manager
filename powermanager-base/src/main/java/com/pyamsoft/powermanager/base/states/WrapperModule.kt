@@ -40,7 +40,7 @@ import javax.inject.Singleton
       preferences: RootPreferences, shellHelper: ShellHelper,
       @Named("logger_data") logger: Logger,
       @Named("data_uri") dataUri: String): DeviceFunctionWrapper {
-    return DataConnectionWrapperImpl(context, shellHelper, logger, preferences, dataUri)
+    return DataWrapperImpl(context, shellHelper, logger, preferences, dataUri)
   }
 
   @Singleton @Provides @Named("wrapper_sync") fun provideSyncConnectionWrapper(
