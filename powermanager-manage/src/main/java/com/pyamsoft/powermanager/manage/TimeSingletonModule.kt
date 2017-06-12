@@ -57,7 +57,7 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides internal fun provideManageDisableInteractor(wifiPreferences: WifiPreferences,
-      dataPreferences: DataPreferences, bluetothPreferences: BluetoothPreferences,
+      dataPreferences: DataPreferences, bluetoothPreferences: BluetoothPreferences,
       syncPreferences: SyncPreferences, airplanePreferences: AirplanePreferences,
       dataSaverPreferences: DataSaverPreferences, dozePreferences: DozePreferences,
       preferences: ManagePreferences): PollInteractor {

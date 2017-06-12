@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences
+import com.pyamsoft.powermanager.base.preference.PhonePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.ServicePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
@@ -122,6 +123,10 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides fun provideManagePreferences(): ManagePreferences {
+    return preferences
+  }
+
+  @Singleton @Provides fun providePhonePreferences(): PhonePreferences {
     return preferences
   }
 

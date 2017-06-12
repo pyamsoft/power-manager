@@ -32,6 +32,7 @@ import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import com.pyamsoft.pydroid.about.Licenses
 import com.pyamsoft.pydroid.ui.PYDroid
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import timber.log.Timber
@@ -108,6 +109,11 @@ class PowerManager : Application(), ComponentProvider {
     }
 
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedFragment): RefWatcher {
+      return getRefWatcherInternal(fragment)
+    }
+
+    @JvmStatic @CheckResult fun getRefWatcher(
+        fragment: ActionBarSettingsPreferenceFragment): RefWatcher {
       return getRefWatcherInternal(fragment)
     }
 

@@ -23,7 +23,6 @@ import com.pyamsoft.powermanager.base.shell.RootChecker
 import com.pyamsoft.powermanager.trigger.TriggerInteractor
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
@@ -33,23 +32,6 @@ import javax.inject.Singleton
     private val powerTriggerDB: PowerTriggerDB, private val preferences: RootPreferences,
     private val clearPreferences: ClearPreferences, private val rootChecker: RootChecker,
     private val triggerInteractor: TriggerInteractor) {
-
-  /**
-   * public
-   */
-  val isRootEnabled: Observable<Boolean>
-    @CheckResult get() = Observable.fromCallable { preferences.rootEnabled }
-
-  /**
-   * public
-   */
-  @CheckResult fun checkRoot(rootEnable: Boolean): Observable<Boolean> {
-    return Observable.fromCallable {
-      // If we are enabling root, check SU available
-      // If we are not enabling root, then everything is ok
-      !rootEnable || rootChecker.isSUAvailable
-    }
-  }
 
   /**
    * public

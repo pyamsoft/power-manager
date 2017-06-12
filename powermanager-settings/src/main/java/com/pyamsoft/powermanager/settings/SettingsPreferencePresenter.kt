@@ -26,7 +26,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-internal class SettingsPreferencePresenter @Inject constructor(
+class SettingsPreferencePresenter @Inject internal constructor(
     private val interactor: SettingsPreferenceInteractor, @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -59,21 +59,6 @@ internal class SettingsPreferencePresenter @Inject constructor(
     disposeOnStop {
       interactor.clearDatabase().subscribeOn(subscribeScheduler).observeOn(
           observeScheduler).subscribe({ onClearDatabase() }, { Timber.e(it, "onError") })
-    }
-  }
-
-  /**
-   * public
-   */
-  fun checkRoot(causedByUser: Boolean, rootEnable: Boolean, onBegin: () -> Unit,
-      onRoot: (Boolean, Boolean, Boolean) -> Unit, onComplete: () -> Unit) {
-    disposeOnStop {
-      interactor.checkRoot(rootEnable).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate { onComplete() }.doOnSubscribe { onBegin() }.subscribe(
-          { onRoot(causedByUser, it, rootEnable) }, {
-        Timber.e(it, "onError checking root")
-        onRoot(causedByUser, false, rootEnable)
-      })
     }
   }
 }
