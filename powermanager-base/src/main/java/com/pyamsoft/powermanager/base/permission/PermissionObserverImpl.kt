@@ -27,7 +27,7 @@ internal abstract class PermissionObserverImpl internal constructor(context: Con
 
   private val appContext: Context = context.applicationContext
 
-  @CheckResult fun hasRuntimePermission(): Boolean {
+  @CheckResult protected fun hasRuntimePermission(): Boolean {
     if (permission == null) {
       Timber.w("No permission watched")
       return false
