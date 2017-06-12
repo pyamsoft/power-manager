@@ -32,6 +32,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState.LAST
 import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import timber.log.Timber
 import javax.inject.Inject
@@ -69,7 +70,7 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     findPreference(getString(R.string.clear_db_key))?.setOnPreferenceClickListener {
-      ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE)
+      DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "clear_db")
       return@setOnPreferenceClickListener true
     }
 
@@ -88,7 +89,7 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onClearAllClicked() {
     super.onClearAllClicked()
-    ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL)
+    DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "clear_all")
   }
 
   override fun onStart() {
