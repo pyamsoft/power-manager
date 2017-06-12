@@ -45,7 +45,7 @@ import javax.inject.Singleton
       }
 
       override fun registerTimeChanges(
-          listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
+          listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener {
         return preferences.registerDelayChanges(listener)
       }
 
@@ -57,7 +57,7 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides internal fun provideManageDisableInteractor(wifiPreferences: WifiPreferences,
-      dataPreferences: DataPreferences, bluetoothPreferences: BluetoothPreferences,
+      dataPreferences: DataPreferences, bluetothPreferences: BluetoothPreferences,
       syncPreferences: SyncPreferences, airplanePreferences: AirplanePreferences,
       dataSaverPreferences: DataSaverPreferences, dozePreferences: DozePreferences,
       preferences: ManagePreferences): PollInteractor {
@@ -74,7 +74,7 @@ import javax.inject.Singleton
       }
 
       override fun registerTimeChanges(
-          listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
+          listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener {
         return preferences.registerDisableChanges(listener)
       }
 

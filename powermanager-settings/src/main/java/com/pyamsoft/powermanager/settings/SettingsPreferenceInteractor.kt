@@ -33,6 +33,7 @@ import javax.inject.Singleton
     private val powerTriggerDB: PowerTriggerDB, private val preferences: RootPreferences,
     private val clearPreferences: ClearPreferences, private val rootChecker: RootChecker,
     private val triggerInteractor: TriggerInteractor) {
+
   /**
    * public
    */

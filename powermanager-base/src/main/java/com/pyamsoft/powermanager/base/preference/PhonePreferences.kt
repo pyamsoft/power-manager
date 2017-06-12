@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.manage
+package com.pyamsoft.powermanager.base.preference
 
-import android.content.SharedPreferences
 import android.support.annotation.CheckResult
 
-internal interface TimePreferenceWrapper {
+interface PhonePreferences {
 
-  @get:CheckResult val isCustom: Boolean
-
-  @get:CheckResult val time: Long
-
-  fun setTime(time: Long, custom: Boolean)
-
-  @CheckResult fun registerTimeChanges(
-      listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener
-
-  fun unregisterTimeChanges(listener: SharedPreferences.OnSharedPreferenceChangeListener)
+  @CheckResult fun isIgnoreDuringPhoneCall(): Boolean
 }
+

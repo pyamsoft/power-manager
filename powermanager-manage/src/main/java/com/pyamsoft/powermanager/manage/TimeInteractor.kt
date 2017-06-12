@@ -17,7 +17,6 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.powermanager.base.preference.ManagePreferences.TimeChangeListener
 import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -38,16 +37,14 @@ open internal class TimeInteractor @Inject internal constructor(
   }
 
   @CheckResult internal fun listenTimeChanges(): Observable<Long> {
-    return Observable.create {
-      val listener = preferences.registerTimeChanges(object : TimeChangeListener {
-        override fun onTimeChanged(time: Long) {
-          if (!it.isDisposed) {
-            it.onNext(time)
-          }
+    return Observable.create { emitter ->
+      val listener = preferences.registerTimeChanges {
+        if (!emitter.isDisposed) {
+          emitter.onNext(it)
         }
-      })
+      }
 
-      it.setCancellable {
+      emitter.setCancellable {
         Timber.d("Cancel: Stop listening for delay changes")
         preferences.unregisterTimeChanges(listener)
       }

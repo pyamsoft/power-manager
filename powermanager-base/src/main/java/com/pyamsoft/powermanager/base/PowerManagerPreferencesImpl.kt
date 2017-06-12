@@ -31,6 +31,7 @@ import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.LoggerPreferences
 import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.OnboardingPreferences
+import com.pyamsoft.powermanager.base.preference.PhonePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.ServicePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class PowerManagerPreferencesImpl @Inject constructor(
-    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences, DataSaverPreferences {
+    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences, DataSaverPreferences, PhonePreferences {
   private val preferences: SharedPreferences
   private val keyManageAirplane: String
   private val keyManageWifi: String
@@ -111,6 +112,8 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   private val keyTriggerPeriod: String
   private val triggerPeriodDefault: String
   private val defaultTriggerPeriodValue: Long
+  private val keyIgnorePhone: String
+  private val ignorePhoneDefault: Boolean
 
   init {
     val appContext = context.applicationContext
@@ -191,6 +194,9 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
     keyTriggerPeriod = res.getString(R.string.trigger_period_key)
     triggerPeriodDefault = res.getString(R.string.trigger_period_default)
     defaultTriggerPeriodValue = Integer.valueOf(triggerPeriodDefault)!!.toLong()
+
+    keyIgnorePhone = res.getString(R.string.key_ignore_phone_call)
+    ignorePhoneDefault = res.getBoolean(R.bool.default_ignore_phone_call)
   }
 
   override var originalWifi: Boolean
@@ -412,10 +418,10 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
     set(value) = preferences.edit().putBoolean(keyIgnoreWearDataSaver, value).apply()
 
   override fun registerDelayChanges(
-      listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
+      listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener {
     val preferenceListener: OnSharedPreferenceChangeListener = OnSharedPreferenceChangeListener { _, key ->
       if (KEY_MANAGE_DELAY_TIME == key) {
-        listener.onTimeChanged(manageDelay)
+        listener(manageDelay)
       }
     }
     preferences.registerOnSharedPreferenceChangeListener(preferenceListener)
@@ -428,10 +434,10 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   }
 
   override fun registerDisableChanges(
-      listener: ManagePreferences.TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener {
+      listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener {
     val preferenceListener: OnSharedPreferenceChangeListener = OnSharedPreferenceChangeListener { _, key ->
       if (KEY_MANAGE_DISABLE_TIME == key) {
-        listener.onTimeChanged(periodicDisableTime)
+        listener(periodicDisableTime)
       }
     }
     preferences.registerOnSharedPreferenceChangeListener(preferenceListener)
@@ -441,6 +447,10 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   override fun unregisterDisableChanges(
       listener: SharedPreferences.OnSharedPreferenceChangeListener) {
     preferences.unregisterOnSharedPreferenceChangeListener(listener)
+  }
+
+  override fun isIgnoreDuringPhoneCall(): Boolean {
+    return preferences.getBoolean(keyIgnorePhone, ignorePhoneDefault)
   }
 
   companion object {

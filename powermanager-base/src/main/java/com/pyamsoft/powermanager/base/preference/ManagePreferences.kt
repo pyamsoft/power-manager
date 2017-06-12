@@ -32,16 +32,12 @@ interface ManagePreferences {
     @CheckResult get
 
   @CheckResult fun registerDelayChanges(
-      listener: TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener
+      listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener
 
   fun unregisterDelayChanges(listener: SharedPreferences.OnSharedPreferenceChangeListener)
 
   @CheckResult fun registerDisableChanges(
-      listener: TimeChangeListener): SharedPreferences.OnSharedPreferenceChangeListener
+      listener: (Long) -> Unit): SharedPreferences.OnSharedPreferenceChangeListener
 
   fun unregisterDisableChanges(listener: SharedPreferences.OnSharedPreferenceChangeListener)
-
-  interface TimeChangeListener {
-    fun onTimeChanged(time: Long)
-  }
 }

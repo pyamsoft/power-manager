@@ -54,6 +54,7 @@ class JobHandler @Inject internal constructor(
     @param:Named("obs_data_permission") private val dataPermissionObserver: PermissionObserver,
     @param:Named(
         "obs_data_saver_permission") private val dataSaverPermissionObserver: PermissionObserver,
+    @param:Named("obs_phone") private val phoneObserver: StateObserver,
     @param:Named("io") private val subScheduler: Scheduler) {
 
   @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
@@ -61,7 +62,8 @@ class JobHandler @Inject internal constructor(
         dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
         dataSaverModifier, wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
         airplanePreferences, dozePreferences, dataSaverPreferences, rootPreferences,
-        dozePermissionObserver, dataPermissionObserver, dataSaverPermissionObserver, subScheduler) {
+        dozePermissionObserver, dataPermissionObserver, dataSaverPermissionObserver, phoneObserver,
+        subScheduler) {
 
       override val isStopped: Boolean
         get() = stopper.invoke()

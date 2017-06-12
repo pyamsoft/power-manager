@@ -52,7 +52,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     private val dozePermissionObserver: PermissionObserver,
     private val dataPermissionObserver: PermissionObserver,
     private val dataSaverPermissionObserver: PermissionObserver,
-    private val subScheduler: Scheduler) {
+    private val phoneObserver: StateObserver, private val subScheduler: Scheduler) {
   private val composite = CompositeDisposable()
   private val wifiConditions = object : ManageConditions {
     override val tag: String
@@ -291,6 +291,13 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
   }
 
   @CheckResult private fun runDisableJob(tag: String, firstRun: Boolean): Boolean {
+    if (!phoneObserver.unknown()) {
+      if (phoneObserver.enabled()) {
+        Timber.w("Do not manage, device is in a phone call.")
+        return false
+      }
+    }
+
     var didSomething = false
     val isCharging = chargingObserver.enabled()
     val isWearableConnected = wearableObserver.enabled()
