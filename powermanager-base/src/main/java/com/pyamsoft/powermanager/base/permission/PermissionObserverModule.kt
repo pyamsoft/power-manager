@@ -50,9 +50,4 @@ import javax.inject.Singleton
       preferences: RootPreferences): PermissionObserver {
     return DataSaverPermissionObserver(context, preferences, rootChecker)
   }
-
-  @Singleton @Named("obs_phone_permission") @Provides fun providePhonePermissionObserver(
-      context: Context): PermissionObserver {
-    return PhonePermissionObserver(context.applicationContext)
-  }
 }
