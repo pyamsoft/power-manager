@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
 import com.pyamsoft.powermanager.base.preference.DataPreferences
 import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
+import com.pyamsoft.powermanager.base.preference.PhonePreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
@@ -48,7 +49,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences,
     private val dataSaverPreferences: DataSaverPreferences,
-    private val rootPreferences: RootPreferences,
+    private val rootPreferences: RootPreferences, private val phonePreferences: PhonePreferences,
     private val dozePermissionObserver: PermissionObserver,
     private val dataPermissionObserver: PermissionObserver,
     private val dataSaverPermissionObserver: PermissionObserver,
@@ -291,10 +292,12 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
   }
 
   @CheckResult private fun runDisableJob(tag: String, firstRun: Boolean): Boolean {
-    if (!phoneObserver.unknown()) {
-      if (phoneObserver.enabled()) {
-        Timber.w("Do not manage, device is in a phone call.")
-        return false
+    if (phonePreferences.isIgnoreDuringPhoneCall()) {
+      if (!phoneObserver.unknown()) {
+        if (phoneObserver.enabled()) {
+          Timber.w("Do not manage, device is in a phone call.")
+          return false
+        }
       }
     }
 
