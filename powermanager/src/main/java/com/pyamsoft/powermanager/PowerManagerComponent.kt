@@ -35,6 +35,7 @@ import com.pyamsoft.powermanager.receiver.BootCompletedReceiver
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
 import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListItem
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
@@ -67,4 +68,6 @@ import javax.inject.Singleton
   fun inject(foregroundService: ForegroundService)
 
   fun inject(manageFragment: ManageFragment)
+
+  fun inject(settingsPreferenceFragment: SettingsPreferenceFragment)
 }

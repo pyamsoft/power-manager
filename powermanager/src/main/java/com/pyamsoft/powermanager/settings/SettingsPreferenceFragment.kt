@@ -21,6 +21,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.NotificationManagerCompat
 import android.view.View
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.PowerManager
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.main.MainActivity
@@ -47,6 +48,13 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
     get() = R.xml.preferences
   override val isLastOnBackStack: BackStackState
     get() = LAST
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.with(context) {
+      it.inject(this)
+    }
+  }
 
   override fun onLicenseItemClicked() {
     ActionBarUtil.setActionBarUpEnabled(activity, true)
