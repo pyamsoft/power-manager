@@ -35,5 +35,6 @@
   <string name="charging">Charging</string>
   <string name="connected_to_android_wear">Connected to Android Wear</string>
   <string name="custom_time">Custom Time</string>
+  <string name="workarounds">Workarounds</string>
 </resources>
 

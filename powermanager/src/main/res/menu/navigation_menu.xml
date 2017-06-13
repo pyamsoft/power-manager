@@ -27,6 +27,11 @@
         android:title="@string/manage_title"/>
 
     <item
+        android:id="@+id/menu_workarounds"
+        android:icon="@drawable/ic_workaround_24dp"
+        android:title="@string/workarounds"/>
+
+    <item
         android:id="@+id/menu_triggers"
         android:icon="@drawable/ic_battery_24dp"
         android:title="@string/triggers"/>
