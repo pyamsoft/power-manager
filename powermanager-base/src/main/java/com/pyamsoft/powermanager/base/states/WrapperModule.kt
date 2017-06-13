@@ -19,7 +19,9 @@ package com.pyamsoft.powermanager.base.states
 import android.content.Context
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.ShellHelper
+import com.pyamsoft.powermanager.model.PermissionObserver
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -37,10 +39,11 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("wrapper_data") fun provideDataConnectionWrapper(context: Context,
-      preferences: RootPreferences, shellHelper: ShellHelper,
-      @Named("logger_data") logger: Logger,
-      @Named("data_uri") dataUri: String): DeviceFunctionWrapper {
-    return DataWrapperImpl(context, shellHelper, logger, preferences, dataUri)
+      preferences: RootPreferences, shellHelper: ShellHelper, @Named("logger_data") logger: Logger,
+      @Named("data_uri") dataUri: String, workaroundPreferences: WorkaroundPreferences,
+      @Named("obs_data_permission") permissionObserver: PermissionObserver): DeviceFunctionWrapper {
+    return DataWrapperImpl(context, shellHelper, logger, preferences, dataUri,
+        workaroundPreferences, permissionObserver)
   }
 
   @Singleton @Provides @Named("wrapper_sync") fun provideSyncConnectionWrapper(

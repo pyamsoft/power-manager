@@ -18,6 +18,7 @@ package com.pyamsoft.powermanager.base.permission
 
 import android.content.Context
 import com.pyamsoft.powermanager.base.preference.RootPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.RootChecker
 import com.pyamsoft.powermanager.model.PermissionObserver
 import dagger.Module
@@ -40,9 +41,9 @@ import javax.inject.Singleton
   }
 
   @Singleton @Named("obs_data_permission") @Provides fun provideDataPermissionObserver(
-      rootChecker: RootChecker, context: Context,
-      preferences: RootPreferences): PermissionObserver {
-    return DataPermissionObserver(context, preferences, rootChecker)
+      rootChecker: RootChecker, context: Context, preferences: RootPreferences,
+      workaroundPreferences: WorkaroundPreferences): PermissionObserver {
+    return DataPermissionObserver(context, preferences, rootChecker, workaroundPreferences)
   }
 
   @Singleton @Named("obs_data_saver_permission") @Provides fun provideDataSaverPermissionObserver(

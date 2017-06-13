@@ -16,21 +16,29 @@
 
 package com.pyamsoft.powermanager.base.permission
 
+import android.Manifest
 import android.content.Context
 import android.os.Build
 import com.pyamsoft.powermanager.base.preference.RootPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.RootChecker
 import timber.log.Timber
 import javax.inject.Inject
 
 internal open class DataPermissionObserver @Inject internal constructor(context: Context,
-    preferences: RootPreferences, rootChecker: RootChecker) : RootPermissionObserver(context,
-    preferences, rootChecker) {
+    preferences: RootPreferences, rootChecker: RootChecker,
+    private val workaroundPreferences: WorkaroundPreferences) : RootPermissionObserver(context,
+    preferences, rootChecker, Manifest.permission.WRITE_SECURE_SETTINGS) {
 
   override fun checkPermission(appContext: Context): Boolean {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      Timber.w("Lollipop and up requires root for Data")
-      return super.checkPermission(appContext)
+      if (workaroundPreferences.isDataWorkaroundEnabled()) {
+        Timber.i("DATA WORKAROUND: Enabled")
+        return hasRuntimePermission()
+      } else {
+        Timber.w("Lollipop and up requires root for Data")
+        return super.checkPermission(appContext)
+      }
     } else {
       Timber.d("Kitkat has reflection based Data method")
       return true

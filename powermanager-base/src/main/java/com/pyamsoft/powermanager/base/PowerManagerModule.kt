@@ -35,6 +35,7 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences
 import com.pyamsoft.powermanager.base.preference.WearablePreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -127,6 +128,10 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides fun providePhonePreferences(): PhonePreferences {
+    return preferences
+  }
+
+  @Singleton @Provides fun provideWorkaroundPreferences(): WorkaroundPreferences {
     return preferences
   }
 

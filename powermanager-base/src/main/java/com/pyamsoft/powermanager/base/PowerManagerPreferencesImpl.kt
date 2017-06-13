@@ -38,12 +38,13 @@ import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences
 import com.pyamsoft.powermanager.base.preference.WearablePreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 internal class PowerManagerPreferencesImpl @Inject constructor(
-    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences, DataSaverPreferences, PhonePreferences {
+    context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences, DataSaverPreferences, PhonePreferences, WorkaroundPreferences {
   private val preferences: SharedPreferences
   private val keyManageAirplane: String
   private val keyManageWifi: String
@@ -114,6 +115,8 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   private val defaultTriggerPeriodValue: Long
   private val keyIgnorePhone: String
   private val ignorePhoneDefault: Boolean
+  private val keyWorkaroundData: String
+  private val workaroundDataDefault: Boolean
 
   init {
     val appContext = context.applicationContext
@@ -197,6 +200,9 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
     keyIgnorePhone = res.getString(R.string.key_ignore_phone_call)
     ignorePhoneDefault = res.getBoolean(R.bool.default_ignore_phone_call)
+
+    keyWorkaroundData = res.getString(R.string.key_workaround_data)
+    workaroundDataDefault = res.getBoolean(R.bool.workaround_data_default)
   }
 
   override var originalWifi: Boolean
@@ -451,6 +457,10 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
   override fun isIgnoreDuringPhoneCall(): Boolean {
     return preferences.getBoolean(keyIgnorePhone, ignorePhoneDefault)
+  }
+
+  override fun isDataWorkaroundEnabled(): Boolean {
+    return preferences.getBoolean(keyWorkaroundData, workaroundDataDefault)
   }
 
   companion object {
