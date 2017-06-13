@@ -39,7 +39,6 @@ import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListItem
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
-import com.pyamsoft.powermanager.workaround.WorkaroundFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -71,6 +70,4 @@ import javax.inject.Singleton
   fun inject(manageFragment: ManageFragment)
 
   fun inject(settingsPreferenceFragment: SettingsPreferenceFragment)
-
-  fun inject(workaroundFragment: WorkaroundFragment)
 }

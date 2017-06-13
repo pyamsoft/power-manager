@@ -16,25 +16,19 @@
 
 package com.pyamsoft.powermanager.workaround
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
-import com.pyamsoft.powermanager.Injector
+import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
-import javax.inject.Inject
-import javax.inject.Named
 
 class WorkaroundFragment : WatchedPreferenceFragment() {
 
-  @field:[Inject Named(
-      "obs_data_permission")] internal lateinit var dataPermissionObserver: PermissionObserver
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    Injector.with(context) {
-      it.inject(this)
-    }
+  @CheckResult private fun hasDataWorkaroundRuntimePermission(): Boolean {
+    return context.applicationContext.checkCallingOrSelfPermission(
+        Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
   }
 
   override fun onCreatePreferences(p0: Bundle?, p1: String?) {
@@ -50,19 +44,20 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
 
 
     findPreference(getString(R.string.key_workaround_data)).setOnPreferenceChangeListener { _, _ ->
-      dataPermissionObserver.hasPermission()
+      hasDataWorkaroundRuntimePermission()
     }
   }
 
   override fun onResume() {
     super.onResume()
     findPreference(
-        getString(R.string.key_workaround_data)).isEnabled = dataPermissionObserver.hasPermission()
+        getString(R.string.key_workaround_data)).isEnabled = hasDataWorkaroundRuntimePermission()
   }
 
   override fun onStop() {
     super.onStop()
     findPreference(getString(R.string.key_workaround_data)).onPreferenceChangeListener = null
+    findPreference(getString(R.string.key_workaround_howto_data)).onPreferenceClickListener = null
   }
 
   companion object {
