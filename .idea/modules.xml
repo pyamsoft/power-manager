@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Power Manager.iml" filepath="$PROJECT_DIR$/Power Manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/myapplication/myapplication.iml" filepath="$PROJECT_DIR$/myapplication/myapplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager/powermanager.iml" filepath="$PROJECT_DIR$/powermanager/powermanager.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-base/powermanager-base.iml" filepath="$PROJECT_DIR$/powermanager-base/powermanager-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/powermanager-job/powermanager-job.iml" filepath="$PROJECT_DIR$/powermanager-job/powermanager-job.iml" />

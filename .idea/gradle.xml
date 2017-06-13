@@ -8,6 +8,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/myapplication" />
             <option value="$PROJECT_DIR$/powermanager" />
             <option value="$PROJECT_DIR$/powermanager-base" />
             <option value="$PROJECT_DIR$/powermanager-job" />
