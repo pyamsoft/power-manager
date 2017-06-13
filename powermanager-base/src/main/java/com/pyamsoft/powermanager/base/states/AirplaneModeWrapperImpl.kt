@@ -36,6 +36,8 @@ internal class AirplaneModeWrapperImpl @Inject internal constructor(context: Con
       val airplaneSettingsCommand = AIRPLANE_SETTINGS_COMMAND + if (enabled) "1" else "0"
       val airplaneBroadcastCommand = AIRPLANE_BROADCAST_COMMAND + if (enabled) "true" else "false"
       shellHelper.runSUCommand(airplaneSettingsCommand, airplaneBroadcastCommand)
+    } else {
+      logger.w("Root not enabled, cannot toggle Airplane Mode")
     }
   }
 
