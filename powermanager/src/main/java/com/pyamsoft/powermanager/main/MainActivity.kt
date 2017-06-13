@@ -38,6 +38,8 @@ import com.pyamsoft.powermanager.logger.LoggerDialog
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.SettingsFragment
+import com.pyamsoft.powermanager.trigger.PowerTriggerFragment
+import com.pyamsoft.powermanager.workaround.WorkaroundFragment
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
@@ -92,8 +94,14 @@ class MainActivity : TamperActivity() {
                 handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
                 main_appbar.setExpanded(true)
               }
-              R.id.menu_triggers -> handled = replaceFragment(ManageFragment.newInstance(),
-                  ManageFragment.TAG)
+              R.id.menu_workarounds -> {
+                handled = replaceFragment(WorkaroundFragment(), WorkaroundFragment.TAG)
+                main_appbar.setExpanded(true)
+              }
+              R.id.menu_triggers -> {
+                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
+                main_appbar.setExpanded(false, true)
+              }
               R.id.menu_settings -> {
                 handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
                 main_appbar.setExpanded(false, true)
@@ -151,6 +159,8 @@ class MainActivity : TamperActivity() {
     return supportFragmentManager.findFragmentByTag(
         AboutLibrariesFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
         SettingsFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
+        WorkaroundFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
+        PowerTriggerFragment.TAG) == null && supportFragmentManager.findFragmentByTag(
         ManageFragment.TAG) == null
   }
 

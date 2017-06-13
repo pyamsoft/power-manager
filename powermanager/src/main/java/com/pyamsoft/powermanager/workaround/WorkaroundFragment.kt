@@ -64,5 +64,10 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
     super.onStop()
     findPreference(getString(R.string.key_workaround_data)).onPreferenceChangeListener = null
   }
+
+  companion object {
+
+    const val TAG = "WorkaroundFragment"
+  }
 }
 
