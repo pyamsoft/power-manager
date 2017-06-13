@@ -24,6 +24,11 @@
       android:name="android.permission.DUMP"
       tools:ignore="ProtectedPermissions"/>
 
+  <!-- To use Cellular Data workaround on Nougat -->
+  <uses-permission
+      android:name="android.permission.WRITE_SECURE_SETTINGS"
+      tools:ignore="ProtectedPermissions"/>
+
   <!-- For WiFi -->
   <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
   <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>

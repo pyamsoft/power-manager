@@ -17,10 +17,11 @@
 package com.pyamsoft.powermanager.uicore
 
 import android.support.annotation.CallSuper
-import android.support.v7.preference.PreferenceFragmentCompat
 import com.pyamsoft.powermanager.PowerManager
+import com.pyamsoft.pydroid.ui.app.fragment.ActionBarPreferenceFragment
 
-abstract class WatchedPreferenceFragment : PreferenceFragmentCompat() {
+abstract class WatchedPreferenceFragment : ActionBarPreferenceFragment() {
+
   @CallSuper override fun onDestroy() {
     super.onDestroy()
     PowerManager.getRefWatcher(this).watch(this)

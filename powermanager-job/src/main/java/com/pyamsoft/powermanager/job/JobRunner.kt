@@ -24,10 +24,8 @@ import com.pyamsoft.powermanager.base.preference.DataPreferences
 import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.PhonePreferences
-import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Completable
@@ -49,11 +47,8 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences,
     private val dataSaverPreferences: DataSaverPreferences,
-    private val rootPreferences: RootPreferences, private val phonePreferences: PhonePreferences,
-    private val dozePermissionObserver: PermissionObserver,
-    private val dataPermissionObserver: PermissionObserver,
-    private val dataSaverPermissionObserver: PermissionObserver,
-    private val phoneObserver: StateObserver, private val subScheduler: Scheduler) {
+    private val phonePreferences: PhonePreferences, private val phoneObserver: StateObserver,
+    private val subScheduler: Scheduler) {
   private val composite = CompositeDisposable()
   private val wifiConditions = object : ManageConditions {
     override val tag: String
@@ -68,8 +63,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = wifiPreferences.originalWifi
     override val periodic: Boolean
       get() = wifiPreferences.periodicWifi
-    override val permission: Boolean
-      get() = true
   }
   private val dozeConditions = object : ManageConditions {
     override val tag: String
@@ -84,8 +77,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = dozePreferences.originalDoze
     override val periodic: Boolean
       get() = dozePreferences.periodicDoze
-    override val permission: Boolean
-      get() = dozePermissionObserver.hasPermission()
   }
   private val airplaneConditions = object : ManageConditions {
     override val tag: String
@@ -100,8 +91,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = airplanePreferences.originalAirplane
     override val periodic: Boolean
       get() = airplanePreferences.periodicAirplane
-    override val permission: Boolean
-      get() = rootPreferences.rootEnabled
   }
   private val dataConditions = object : ManageConditions {
     override val tag: String
@@ -116,8 +105,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = dataPreferences.originalData
     override val periodic: Boolean
       get() = dataPreferences.periodicData
-    override val permission: Boolean
-      get() = dataPermissionObserver.hasPermission()
   }
   private val bluetoothConditions = object : ManageConditions {
     override val tag: String
@@ -132,8 +119,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = bluetoothPreferences.originalBluetooth
     override val periodic: Boolean
       get() = bluetoothPreferences.periodicBluetooth
-    override val permission: Boolean
-      get() = true
   }
   private val syncConditions = object : ManageConditions {
     override val tag: String
@@ -148,8 +133,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = syncPreferences.originalSync
     override val periodic: Boolean
       get() = syncPreferences.periodicSync
-    override val permission: Boolean
-      get() = true
   }
   private val dataSaverConditions = object : ManageConditions {
     override val tag: String
@@ -164,8 +147,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       get() = dataSaverPreferences.originalDataSaver
     override val periodic: Boolean
       get() = dataSaverPreferences.periodicDataSaver
-    override val permission: Boolean
-      get() = dataSaverPermissionObserver.hasPermission()
   }
 
   @CheckResult private fun runJob(tag: String, screenOn: Boolean, firstRun: Boolean): Boolean {
@@ -250,7 +231,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       Timber.w("Do not disable %s while wearable is connected", conditions.tag)
       latch.countDown()
       return false
-    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
+    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic)) {
       composite.add(Completable.fromAction {
         Timber.d("ENABLE: %s", conditions.tag)
         modifier.set()
@@ -276,7 +257,7 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       Timber.w("Do not disable %s while wearable is connected", conditions.tag)
       latch.countDown()
       return false
-    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic) && conditions.permission) {
+    } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic)) {
       composite.add(Completable.fromAction {
         Timber.d("DISABLE: %s", conditions.tag)
         modifier.unset()
@@ -437,8 +418,6 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     val original: Boolean
       @get:CheckResult get
     val periodic: Boolean
-      @get:CheckResult get
-    val permission: Boolean
       @get:CheckResult get
   }
 }

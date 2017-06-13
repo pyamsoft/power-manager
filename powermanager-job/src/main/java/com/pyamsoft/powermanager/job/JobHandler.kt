@@ -23,10 +23,8 @@ import com.pyamsoft.powermanager.base.preference.DataPreferences
 import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
 import com.pyamsoft.powermanager.base.preference.DozePreferences
 import com.pyamsoft.powermanager.base.preference.PhonePreferences
-import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Scheduler
@@ -50,11 +48,7 @@ class JobHandler @Inject internal constructor(
     private val airplanePreferences: AirplanePreferences,
     private val dozePreferences: DozePreferences,
     private val dataSaverPreferences: DataSaverPreferences,
-    private val rootPreferences: RootPreferences, private val phonePreferences: PhonePreferences,
-    @param:Named("obs_doze_permission") private val dozePermissionObserver: PermissionObserver,
-    @param:Named("obs_data_permission") private val dataPermissionObserver: PermissionObserver,
-    @param:Named(
-        "obs_data_saver_permission") private val dataSaverPermissionObserver: PermissionObserver,
+    private val phonePreferences: PhonePreferences,
     @param:Named("obs_phone") private val phoneObserver: StateObserver,
     @param:Named("io") private val subScheduler: Scheduler) {
 
@@ -62,9 +56,8 @@ class JobHandler @Inject internal constructor(
     return object : JobRunner(jobQueuer, chargingObserver, wearableObserver, wifiModifier,
         dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
         dataSaverModifier, wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
-        airplanePreferences, dozePreferences, dataSaverPreferences, rootPreferences,
-        phonePreferences, dozePermissionObserver, dataPermissionObserver,
-        dataSaverPermissionObserver, phoneObserver, subScheduler) {
+        airplanePreferences, dozePreferences, dataSaverPreferences, phonePreferences, phoneObserver,
+        subScheduler) {
 
       override val isStopped: Boolean
         get() = stopper.invoke()
