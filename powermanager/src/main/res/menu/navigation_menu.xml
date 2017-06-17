@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/menu_manage"
-        android:icon="@drawable/ic_network_wifi_24dp"
+        android:icon="@drawable/ic_manage_24dp"
         android:title="@string/manage_title"/>
 
     <item
