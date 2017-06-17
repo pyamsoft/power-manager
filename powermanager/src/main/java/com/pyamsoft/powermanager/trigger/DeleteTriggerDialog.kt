@@ -20,15 +20,18 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import com.pyamsoft.powermanager.uicore.WatchedDialog
-import com.pyamsoft.pydroid.bus.EventBus
 import timber.log.Timber
+import javax.inject.Inject
 
 class DeleteTriggerDialog : WatchedDialog() {
   internal var percent: Int = 0
   private var name: String? = null
+
+  @field: Inject internal lateinit var publisher: TriggerPublisher
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -38,6 +41,10 @@ class DeleteTriggerDialog : WatchedDialog() {
     if (percent == -1) {
       Timber.e("Invalid percent for DeleteTriggerDialog. Dismiss dialog")
       dismiss()
+    }
+
+    Injector.with(context) {
+      it.inject(this)
     }
   }
 
@@ -51,7 +58,7 @@ class DeleteTriggerDialog : WatchedDialog() {
   }
 
   internal fun sendDeleteEvent(percent: Int) {
-    EventBus.get().publish(TriggerDeleteEvent(percent))
+    publisher.publish(TriggerDeleteEvent(percent))
   }
 
   companion object {

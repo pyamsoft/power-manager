@@ -43,7 +43,7 @@ buildscript {
     supportLib = "25.4.0"
     firebase = "11.0.0"
     leakCanary = "1.5.1"
-    pydroid = "10.4.4"
+    pydroid = "10.5.1"
     autoValue = "1.4.1"
     sqlbrite = "1.1.1"
     dagger = "2.11"
@@ -57,13 +57,13 @@ buildscript {
     classpath 'com.android.tools.build:gradle:2.3.3'
 
     // Dex count
-    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'
+    classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.7.0'
 
     // Gradle version checker
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
 
     // Google services
-    classpath 'com.google.gms:google-services:3.0.0'
+    classpath 'com.google.gms:google-services:3.1.0'
 
     // Error prone compiler
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"

@@ -20,7 +20,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.pyamsoft.powermanager.Injector
-import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.service.Manager
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,7 +37,6 @@ class BootCompletedReceiver : BroadcastReceiver() {
         }
 
         manager.cleanup()
-        ForegroundService.start(context.applicationContext)
       }
     }
   }

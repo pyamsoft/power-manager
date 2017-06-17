@@ -17,10 +17,9 @@
 package com.pyamsoft.powermanager.trigger
 
 import android.database.sqlite.SQLiteConstraintException
-import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent
-import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
+import com.pyamsoft.powermanager.trigger.bus.TriggerCreateBus
+import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
@@ -28,7 +27,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: Scheduler,
-    @Named("sub") subScheduler: Scheduler,
+    @Named("sub") subScheduler: Scheduler, private val deleteBus: TriggerDeleteBus,
+    private val createBus: TriggerCreateBus,
     private val interactor: TriggerInteractor) : SchedulerPresenter(obsScheduler, subScheduler) {
 
   /**
@@ -38,15 +38,13 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
       onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
       onTriggerDeleteError: (Throwable) -> Unit) {
     disposeOnStop {
-      EventBus.get().listen(TriggerCreateEvent::class.java).subscribeOn(
-          subscribeScheduler).observeOn(observeScheduler).subscribe(
+      createBus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
           { createPowerTrigger(it.entry, onAdd, onAddError, onCreateError) },
           { Timber.e(it, "onError create bus") })
     }
 
     disposeOnStop {
-      EventBus.get().listen(TriggerDeleteEvent::class.java).subscribeOn(
-          subscribeScheduler).observeOn(observeScheduler).subscribe(
+      deleteBus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
           { deleteTrigger(it.percent, onTriggerDeleted, onTriggerDeleteError) },
           { Timber.e(it, "onError create bus") })
     }

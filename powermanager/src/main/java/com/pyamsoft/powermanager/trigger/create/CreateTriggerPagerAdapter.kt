@@ -19,13 +19,24 @@ package com.pyamsoft.powermanager.trigger.create
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import com.pyamsoft.powermanager.Injector
+import com.pyamsoft.powermanager.trigger.TriggerPublisher
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import com.pyamsoft.pydroid.bus.EventBus
 import timber.log.Timber
+import javax.inject.Inject
 
-internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePagerAdapter(
+class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePagerAdapter(
     fragment.childFragmentManager) {
+
+  @field: Inject internal lateinit var publisher: TriggerPublisher
+
+  init {
+    Injector.with(fragment.context) {
+      it.inject(this)
+    }
+  }
+
   override fun getItem(position: Int): Fragment {
     val fragment: Fragment
     when (position) {
@@ -67,7 +78,7 @@ internal class CreateTriggerPagerAdapter(fragment: Fragment) : FragmentStatePage
     Timber.d("Post content values to bus")
     val entry = PowerTriggerEntry.creator.create(percent, name, true, true, wifiToggle, dataToggle,
         bluetoothToggle, syncToggle, wifiEnable, dataEnable, bluetoothEnable, syncEnable)
-    EventBus.get().publish(TriggerCreateEvent(entry))
+    publisher.publish(TriggerCreateEvent(entry))
   }
 
   companion object {

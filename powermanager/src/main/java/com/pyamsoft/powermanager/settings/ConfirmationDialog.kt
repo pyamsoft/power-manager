@@ -20,11 +20,14 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
 import android.support.v7.app.AlertDialog
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent
 import com.pyamsoft.powermanager.uicore.WatchedDialog
-import com.pyamsoft.pydroid.bus.EventBus
+import javax.inject.Inject
 
 class ConfirmationDialog : WatchedDialog() {
+
+  @field:Inject lateinit internal var publisher: SettingsPublisher
   lateinit internal var clearType: ConfirmEvent.Type
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,13 +36,17 @@ class ConfirmationDialog : WatchedDialog() {
         "Cannot show dialog without ClearCode")
 
     clearType = ConfirmEvent.Type.valueOf(code)
+
+    Injector.with(context) {
+      it.inject(this)
+    }
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(activity).setMessage(
         if (clearType === ConfirmEvent.Type.DATABASE) "Really clear entire database?\n\nYou will have to re-configure all triggers again"
         else "Really clear all application settings?").setPositiveButton("Yes") { _, _ ->
-      EventBus.get().publish(ConfirmEvent(clearType))
+      publisher.publish(ConfirmEvent(clearType))
     }.setNegativeButton("No") { _, _ -> dismiss() }.create()
   }
 

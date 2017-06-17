@@ -16,14 +16,14 @@
 
 package com.pyamsoft.powermanager.manage
 
+import com.pyamsoft.powermanager.manage.bus.ManageBus
 import com.pyamsoft.powermanager.manage.bus.ManageChangeEvent
-import com.pyamsoft.pydroid.bus.EventBus
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 abstract class ManagePresenter internal constructor(private val interactor: ManageInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
-    subscribeScheduler) {
+    private val bus: ManageBus, observeScheduler: Scheduler,
+    subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler, subscribeScheduler) {
   /**
    * public
    */
@@ -31,7 +31,7 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
     disposeOnDestroy {
       interactor.setManaged(state).subscribeOn(subscribeScheduler).observeOn(
           observeScheduler).doAfterTerminate {
-        EventBus.get().publish(ManageChangeEvent(target))
+        bus.publish(ManageChangeEvent(target))
       }.doAfterTerminate { onComplete() }.subscribe(
           { Timber.d("Set managed state successfully: %s", state) }, {
         Timber.e(it, "Error setting managed")

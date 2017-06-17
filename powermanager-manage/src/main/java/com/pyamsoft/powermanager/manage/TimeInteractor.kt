@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.pydroid.bus.RxBus
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 open internal class TimeInteractor @Inject internal constructor(
     private val preferences: TimePreferenceWrapper) {
-  private val customInputBus: EventBus = EventBus.newLocalBus()
+  private val customInputBus = RxBus.create<String>()
 
   internal val time: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
@@ -68,7 +68,7 @@ open internal class TimeInteractor @Inject internal constructor(
   }
 
   @CheckResult internal fun listenCustomTimeChanges(): Observable<Pair<String?, Long>> {
-    return customInputBus.listen(String::class.java).debounce(800,
+    return customInputBus.listen().debounce(800,
         TimeUnit.MILLISECONDS).distinctUntilChanged().map { convertAndSaveCustomTime(it) }
   }
 

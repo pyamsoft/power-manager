@@ -23,6 +23,7 @@ import com.pyamsoft.powermanager.manage.ManageTargets.DATA_SAVER
 import com.pyamsoft.powermanager.manage.ManageTargets.DOZE
 import com.pyamsoft.powermanager.manage.ManageTargets.SYNC
 import com.pyamsoft.powermanager.manage.ManageTargets.WIFI
+import com.pyamsoft.powermanager.manage.bus.ManageBus
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
@@ -32,9 +33,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_wifi") internal fun provideWifi(
       @Named("manage_wifi_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = WIFI
     }
@@ -42,9 +43,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_data") internal fun provideData(
       @Named("manage_data_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DATA
     }
@@ -52,9 +53,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_bluetooth") internal fun provideBluetooth(
       @Named("manage_bluetooth_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = BLUETOOTH
     }
@@ -62,9 +63,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_sync") internal fun provideSync(
       @Named("manage_sync_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = SYNC
     }
@@ -72,9 +73,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_airplane") internal fun provideAirplane(
       @Named("manage_airplane_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = AIRPLANE
     }
@@ -82,9 +83,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_doze") internal fun provideDoze(
       @Named("manage_doze_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DOZE
     }
@@ -92,9 +93,9 @@ import javax.inject.Named
 
   @Provides @Named("manage_data_saver") internal fun provideDataSaver(
       @Named("manage_data_saver_interactor") interactor: ManageInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ManagePresenter {
-    return object : ManagePresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ManagePresenter {
+    return object : ManagePresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DATA_SAVER
     }
@@ -102,9 +103,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_wifi") internal fun provideWifiException(
       @Named("exception_wifi_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = WIFI
     }
@@ -112,9 +113,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_data") internal fun provideDataException(
       @Named("exception_data_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DATA
     }
@@ -122,9 +123,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_bluetooth") internal fun provideBluetoothException(
       @Named("exception_bluetooth_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = BLUETOOTH
     }
@@ -132,9 +133,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_sync") internal fun provideSyncException(
       @Named("exception_sync_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = SYNC
     }
@@ -142,9 +143,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_airplane") internal fun provideAirplaneException(
       @Named("exception_airplane_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = AIRPLANE
     }
@@ -152,9 +153,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_doze") internal fun provideDozeException(
       @Named("exception_doze_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DOZE
     }
@@ -162,9 +163,9 @@ import javax.inject.Named
 
   @Provides @Named("exception_data_saver") internal fun provideDataSaverException(
       @Named("exception_data_saver_interactor") interactor: ExceptionInteractor,
-      @Named("obs") obsScheduler: Scheduler,
-      @Named("sub") subScheduler: Scheduler): ExceptionPresenter {
-    return object : ExceptionPresenter(interactor, obsScheduler, subScheduler) {
+      @Named("obs") obsScheduler: Scheduler, @Named("sub") subScheduler: Scheduler,
+      bus: ManageBus): ExceptionPresenter {
+    return object : ExceptionPresenter(interactor, bus, obsScheduler, subScheduler) {
       override val target: ManageTargets
         get() = DATA_SAVER
     }

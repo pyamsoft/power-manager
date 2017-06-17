@@ -35,9 +35,12 @@ import com.pyamsoft.powermanager.receiver.BootCompletedReceiver
 import com.pyamsoft.powermanager.receiver.ScreenOnOffReceiver
 import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.settings.ConfirmationDialog
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
+import com.pyamsoft.powermanager.trigger.DeleteTriggerDialog
 import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListItem
+import com.pyamsoft.powermanager.trigger.create.CreateTriggerPagerAdapter
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
 import dagger.Component
 import javax.inject.Singleton
@@ -70,4 +73,10 @@ import javax.inject.Singleton
   fun inject(manageFragment: ManageFragment)
 
   fun inject(settingsPreferenceFragment: SettingsPreferenceFragment)
+
+  fun inject(deleteTriggerDialog: DeleteTriggerDialog)
+
+  fun inject(createTriggerPagerAdapter: CreateTriggerPagerAdapter)
+
+  fun inject(confirmationDialog: ConfirmationDialog)
 }

@@ -16,17 +16,16 @@
 
 package com.pyamsoft.powermanager.settings
 
-import com.pyamsoft.powermanager.settings.bus.ConfirmEvent
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.ALL
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.DATABASE
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.powermanager.settings.bus.SettingsBus
 import com.pyamsoft.pydroid.presenter.SchedulerPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class SettingsPreferencePresenter @Inject internal constructor(
+class SettingsPreferencePresenter @Inject internal constructor(private val bus: SettingsBus,
     private val interactor: SettingsPreferenceInteractor, @Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
@@ -37,8 +36,7 @@ class SettingsPreferencePresenter @Inject internal constructor(
    */
   fun registerOnBus(onClearDatabase: () -> Unit, onClearAll: () -> Unit) {
     disposeOnStop {
-      EventBus.get().listen(ConfirmEvent::class.java).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ (type) ->
+      bus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe({ (type) ->
         when (type) {
           DATABASE -> clearDatabase(onClearDatabase)
           ALL -> clearAll(onClearAll)

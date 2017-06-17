@@ -16,14 +16,13 @@
 
 package com.pyamsoft.powermanager.manage
 
-import com.pyamsoft.powermanager.manage.bus.ManageChangeEvent
-import com.pyamsoft.pydroid.bus.EventBus
+import com.pyamsoft.powermanager.manage.bus.ManageBus
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 abstract class ExceptionPresenter internal constructor(private val interactor: ExceptionInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler,
-    subscribeScheduler) {
+    private val bus: ManageBus, observeScheduler: Scheduler,
+    subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler, subscribeScheduler) {
   /**
    * public
    */
@@ -91,9 +90,8 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
    */
   fun registerOnBus(onManageChanged: () -> Unit) {
     disposeOnDestroy {
-      EventBus.get().listen(
-          ManageChangeEvent::class.java).filter { it.target === target }.subscribeOn(
-          subscribeScheduler).observeOn(observeScheduler).subscribe({ onManageChanged() }, {
+      bus.listen().filter { it.target === target }.subscribeOn(subscribeScheduler).observeOn(
+          observeScheduler).subscribe({ onManageChanged() }, {
         Timber.e(it, "Error on manage change bus for target: %s", target)
       })
     }
