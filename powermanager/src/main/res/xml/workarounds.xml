@@ -25,7 +25,8 @@
         android:summary="@string/desc_workaround_howto_data"
         android:title="@string/title_workaround_howto_data"/>
 
-    <SwitchPreference
+    <!--suppress AndroidElementNotAllowed -->
+    <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="@bool/workaround_data_default"
         android:key="@string/key_workaround_data"
         android:summary="Manage Cellular Data without needing a rooted device"

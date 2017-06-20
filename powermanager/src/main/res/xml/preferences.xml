@@ -29,7 +29,7 @@
         />
 
     <!--suppress AndroidElementNotAllowed -->
-    <SwitchPreference
+    <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="@bool/use_root_default"
         android:key="@string/use_root_key"
         android:summary="@string/use_root_summary"
