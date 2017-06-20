@@ -19,17 +19,8 @@ package com.pyamsoft.powermanager.manage
 import android.view.View
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.AdapterItemToggleBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
-import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
-import kotlinx.android.synthetic.main.adapter_item_toggle.view.toggle_switch
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_eight
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_five
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_four
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_one
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_seven
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_six
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -84,18 +75,18 @@ class PollItem : TimeItem<PollPresenter, PollItem.ViewHolder>(TAG) {
     super.bindView(holder, payloads)
     Timber.d("Bind poll item")
 
-    holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
+    holder.binding.toggleSwitch.setOnCheckedChangeListener(null)
     holder.presenter.getCurrentPeriodic({
       Timber.d("Poll state retrieved: %s", it)
-      holder.itemView.toggle_switch.isChecked = it
+      holder.binding.toggleSwitch.isChecked = it
     }, {
       Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
           Toasty.LENGTH_SHORT).show()
 
       // Mark switch as disabled
-      holder.itemView.toggle_switch.isEnabled = false
+      holder.binding.toggleSwitch.isEnabled = false
     }, {
-      holder.itemView.toggle_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+      holder.binding.toggleSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
         if (buttonView != null) {
           Timber.d("Set polling enabled: %s", isChecked)
           holder.presenter.toggleAll(isChecked, {
@@ -113,30 +104,33 @@ class PollItem : TimeItem<PollPresenter, PollItem.ViewHolder>(TAG) {
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
     Timber.d("Unbind poll item")
-    holder.itemView.toggle_switch.setOnCheckedChangeListener(null)
+    holder.binding.toggleSwitch.setOnCheckedChangeListener(null)
   }
 
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder<PollPresenter>(
       itemView) {
 
     @field:Inject lateinit override var presenter: PollPresenter
+    internal val binding = AdapterItemToggleBinding.bind(itemView)
 
     init {
-      itemView.toggle_switch.text = "Smart Polling"
-      itemView.simple_expander.setTitle("Polling Delay")
-      itemView.simple_expander.setTitleTextSize(16)
-      itemView.simple_expander.setDescription(
+      binding.toggleSwitch.text = "Smart Polling"
+      binding.simpleExpander.setTitle("Polling Delay")
+      binding.simpleExpander.setTitleTextSize(16)
+      binding.simpleExpander.setDescription(
           "Peter will create some good description here eventually")
-      containerDelay.delay_radio_one.text = "1 Minute"
-      containerDelay.delay_radio_two.text = "5 Minutes"
-      containerDelay.delay_radio_three.text = "10 Minutes"
-      containerDelay.delay_radio_four.text = "15 Minutes"
-      containerDelay.delay_radio_five.text = "30 Minutes"
+      binding.simpleExpander.setExpandingContent(containerBinding.root)
+
+      containerBinding.delayRadioOne.text = "1 Minute"
+      containerBinding.delayRadioTwo.text = "5 Minutes"
+      containerBinding.delayRadioThree.text = "10 Minutes"
+      containerBinding.delayRadioFour.text = "15 Minutes"
+      containerBinding.delayRadioFive.text = "30 Minutes"
 
       // Currently unused
-      containerDelay.delay_radio_six.visibility = View.GONE
-      containerDelay.delay_radio_seven.visibility = View.GONE
-      containerDelay.delay_radio_eight.visibility = View.GONE
+      containerBinding.delayRadioSix.visibility = View.GONE
+      containerBinding.delayRadioSeven.visibility = View.GONE
+      containerBinding.delayRadioEight.visibility = View.GONE
       //      containerDelay.delay_radio_six.text = "45 Minutes"
       //      containerDelay.delay_radio_seven.text = "1 Hour"
       //      containerDelay.delay_radio_eight.text = "1 Hour 30 Minutes"

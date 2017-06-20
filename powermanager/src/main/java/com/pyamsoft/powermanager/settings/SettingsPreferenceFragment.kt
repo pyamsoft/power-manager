@@ -33,7 +33,6 @@ import com.pyamsoft.pydroid.ui.app.fragment.ActionBarSettingsPreferenceFragment
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import com.pyamsoft.pydroid.ui.util.DialogUtil
-import kotlinx.android.synthetic.main.activity_main.bottomtabs
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -60,8 +59,9 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
   override fun onLicenseItemClicked() {
     ActionBarUtil.setActionBarUpEnabled(activity, true)
 
-    if (activity is MainActivity) {
-      activity.bottomtabs.visibility = View.GONE
+    val act = activity
+    if (act is MainActivity) {
+      act.binding.bottomtabs.visibility = View.GONE
     }
     super.onLicenseItemClicked()
   }
@@ -70,7 +70,8 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
     super.onViewCreated(view, savedInstanceState)
 
     findPreference(getString(R.string.clear_db_key))?.setOnPreferenceClickListener {
-      DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "clear_db")
+      DialogUtil.guaranteeSingleDialogFragment(activity,
+          ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "clear_db")
       return@setOnPreferenceClickListener true
     }
 
@@ -89,7 +90,8 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onClearAllClicked() {
     super.onClearAllClicked()
-    DialogUtil.guaranteeSingleDialogFragment(activity, ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "clear_all")
+    DialogUtil.guaranteeSingleDialogFragment(activity,
+        ConfirmationDialog.newInstance(ConfirmEvent.Type.ALL), "clear_all")
   }
 
   override fun onStart() {

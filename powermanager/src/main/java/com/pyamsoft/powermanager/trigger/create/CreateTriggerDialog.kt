@@ -23,29 +23,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.DialogNewTriggerBinding
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
-import kotlinx.android.synthetic.main.dialog_new_trigger.new_trigger_back
-import kotlinx.android.synthetic.main.dialog_new_trigger.new_trigger_close
-import kotlinx.android.synthetic.main.dialog_new_trigger.new_trigger_continue
-import kotlinx.android.synthetic.main.dialog_new_trigger.new_trigger_pager
 import timber.log.Timber
 
 class CreateTriggerDialog : WatchedDialog() {
   private val taskMap = LoaderMap()
   private lateinit var adapter: CreateTriggerPagerAdapter
   private lateinit var pageChangeListener: ViewPager.OnPageChangeListener
+  private lateinit var binding: DialogNewTriggerBinding
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.dialog_new_trigger, container, false)
+    binding = DialogNewTriggerBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     taskMap.clear()
-    new_trigger_pager.removeOnPageChangeListener(pageChangeListener)
+    binding.newTriggerPager.removeOnPageChangeListener(pageChangeListener)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -64,23 +63,23 @@ class CreateTriggerDialog : WatchedDialog() {
         Timber.d("Page selected: %d", position)
         if (position == 0) {
           Timber.d("Hide back button")
-          new_trigger_back.visibility = View.GONE
+          binding.newTriggerBack.visibility = View.GONE
         } else {
           Timber.d("Show back button")
-          new_trigger_back.visibility = View.VISIBLE
+          binding.newTriggerBack.visibility = View.VISIBLE
         }
       }
 
       override fun onPageScrollStateChanged(state: Int) {
       }
     }
-    new_trigger_pager.addOnPageChangeListener(pageChangeListener)
+    binding.newTriggerPager.addOnPageChangeListener(pageChangeListener)
 
     // Hold all the pages in memory so we can retrieve their content
-    new_trigger_pager.offscreenPageLimit = 4
+    binding.newTriggerPager.offscreenPageLimit = 4
 
     adapter = CreateTriggerPagerAdapter(this)
-    new_trigger_pager.adapter = adapter
+    binding.newTriggerPager.adapter = adapter
     val currentPage: Int
     if (bundle == null) {
       currentPage = 0
@@ -90,51 +89,51 @@ class CreateTriggerDialog : WatchedDialog() {
     if (currentPage == 0) {
       // Hide the back button at first
       Timber.d("Show first page")
-      new_trigger_back.visibility = View.GONE
+      binding.newTriggerBack.visibility = View.GONE
     } else {
       Timber.d("Show saved page: %d", currentPage)
-      new_trigger_back.visibility = View.VISIBLE
-      new_trigger_pager.currentItem = currentPage
+      binding.newTriggerBack.visibility = View.VISIBLE
+      binding.newTriggerPager.currentItem = currentPage
     }
   }
 
   private fun setupContinueButton() {
-    new_trigger_continue.setOnClickListener {
-      val currentItem = new_trigger_pager.currentItem
+    binding.newTriggerContinue.setOnClickListener {
+      val currentItem = binding.newTriggerPager.currentItem
       if (currentItem + 1 == CreateTriggerPagerAdapter.TOTAL_COUNT) {
         Timber.d("Final item continue clicked, process dialog and close")
         dismiss()
-        adapter.collect(new_trigger_pager)
+        adapter.collect(binding.newTriggerPager)
       } else {
         Timber.d("Continue clicked, progress 1 item")
-        new_trigger_pager.currentItem = new_trigger_pager.currentItem + 1
+        binding.newTriggerPager.currentItem = binding.newTriggerPager.currentItem + 1
       }
     }
     val continueTask = ImageLoader.fromResource(activity, R.drawable.ic_arrow_forward_24dp).into(
-        new_trigger_continue)
+        binding.newTriggerContinue)
     taskMap.put("continue", continueTask)
   }
 
   private fun setupToolbarButtons() {
-    new_trigger_back.setOnClickListener {
+    binding.newTriggerBack.setOnClickListener {
       Timber.d("Go back one item")
-      new_trigger_pager.currentItem = new_trigger_pager.currentItem - 1
+      binding.newTriggerPager.currentItem = binding.newTriggerPager.currentItem - 1
     }
 
-    new_trigger_close.setOnClickListener {
+    binding.newTriggerClose.setOnClickListener {
       Timber.d("Close clicked, dismiss dialog")
       dismiss()
     }
     val backTask = ImageLoader.fromResource(activity, R.drawable.ic_arrow_back_24dp).into(
-        new_trigger_back)
+        binding.newTriggerBack)
     taskMap.put("back", backTask)
     val closeTask = ImageLoader.fromResource(activity, R.drawable.ic_close_24dp).into(
-        new_trigger_close)
+        binding.newTriggerClose)
     taskMap.put("close", closeTask)
   }
 
   override fun onSaveInstanceState(outState: Bundle?) {
-    outState?.putInt(CURRENT_PAGE, new_trigger_pager.currentItem)
+    outState?.putInt(CURRENT_PAGE, binding.newTriggerPager.currentItem)
     super.onSaveInstanceState(outState)
   }
 

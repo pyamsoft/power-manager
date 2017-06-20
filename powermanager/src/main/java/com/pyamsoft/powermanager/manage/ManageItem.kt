@@ -17,19 +17,13 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SwitchCompat
 import android.view.View
-import android.widget.Switch
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.AdapterItemManageBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_airplane
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_bluetooth
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_data
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_data_saver
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_doze
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_sync
-import kotlinx.android.synthetic.main.adapter_item_manage.view.manage_wifi
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,16 +46,16 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     Timber.d("Bind manage item")
-    bindSwitch(holder.itemView.manage_wifi, "WiFi", holder.presenterWifi)
-    bindSwitch(holder.itemView.manage_data, "Cellular Data", holder.presenterData)
-    bindSwitch(holder.itemView.manage_bluetooth, "Bluetooth", holder.presenterBluetooth)
-    bindSwitch(holder.itemView.manage_sync, "Auto Sync", holder.presenterSync)
-    bindSwitch(holder.itemView.manage_airplane, "Airplane Mode", holder.presenterAirplane)
-    bindSwitch(holder.itemView.manage_doze, "Doze Mode", holder.presenterDoze)
-    bindSwitch(holder.itemView.manage_data_saver, "Data Saver", holder.presenterDataSaver)
+    bindSwitch(holder.binding.manageWifi, "WiFi", holder.presenterWifi)
+    bindSwitch(holder.binding.manageData, "Cellular Data", holder.presenterData)
+    bindSwitch(holder.binding.manageBluetooth, "Bluetooth", holder.presenterBluetooth)
+    bindSwitch(holder.binding.manageSync, "Auto Sync", holder.presenterSync)
+    bindSwitch(holder.binding.manageAirplane, "Airplane Mode", holder.presenterAirplane)
+    bindSwitch(holder.binding.manageDoze, "Doze Mode", holder.presenterDoze)
+    bindSwitch(holder.binding.manageDataSaver, "Data Saver", holder.presenterDataSaver)
   }
 
-  private fun bindSwitch(switch: Switch, name: String, presenter: ManagePresenter) {
+  private fun bindSwitch(switch: SwitchCompat, name: String, presenter: ManagePresenter) {
     // Set enabled in case it failed last time
     switch.isEnabled = true
 
@@ -95,13 +89,13 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
     Timber.d("Unbind manage item")
-    unbindSwitch(holder.itemView.manage_wifi)
-    unbindSwitch(holder.itemView.manage_data)
-    unbindSwitch(holder.itemView.manage_bluetooth)
-    unbindSwitch(holder.itemView.manage_sync)
-    unbindSwitch(holder.itemView.manage_airplane)
-    unbindSwitch(holder.itemView.manage_doze)
-    unbindSwitch(holder.itemView.manage_data_saver)
+    unbindSwitch(holder.binding.manageWifi)
+    unbindSwitch(holder.binding.manageData)
+    unbindSwitch(holder.binding.manageBluetooth)
+    unbindSwitch(holder.binding.manageSync)
+    unbindSwitch(holder.binding.manageAirplane)
+    unbindSwitch(holder.binding.manageDoze)
+    unbindSwitch(holder.binding.manageDataSaver)
 
     holder.presenterAirplane.stop()
     holder.presenterAirplane.destroy()
@@ -119,7 +113,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     holder.presenterDataSaver.destroy()
   }
 
-  private fun unbindSwitch(switch: Switch) {
+  private fun unbindSwitch(switch: SwitchCompat) {
     switch.text = null
     switch.setOnCheckedChangeListener(null)
   }
@@ -136,6 +130,8 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
     @field:[Inject Named(
         "manage_data_saver")] lateinit internal var presenterDataSaver: ManagePresenter
+
+    internal val binding = AdapterItemManageBinding.bind(itemView)
 
     init {
       Injector.with(itemView.context) {

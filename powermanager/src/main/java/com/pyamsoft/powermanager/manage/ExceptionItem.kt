@@ -24,22 +24,9 @@ import android.widget.CheckBox
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding
+import com.pyamsoft.powermanager.databinding.LayoutContainerExceptionBinding
 import com.pyamsoft.pydroid.ui.helper.Toasty
-import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_airplane
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_bluetooth
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_data
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_data_saver
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_doze
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_sync
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_charging_wifi
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_airplane
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_bluetooth
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_data
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_data_saver
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_doze
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_sync
-import kotlinx.android.synthetic.main.layout_container_exception.view.exception_wear_wifi
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -62,39 +49,35 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
   override fun bindView(holder: ViewHolder, payloads: List<Any>?) {
     super.bindView(holder, payloads)
     Timber.d("Bind exception item")
-    bind(holder.chargingContainer.exception_charging_wifi,
-        holder.chargingContainer.exception_wear_wifi, "Wifi", holder.presenterWifi)
-    bind(holder.chargingContainer.exception_charging_data,
-        holder.chargingContainer.exception_wear_data, "Data", holder.presenterData)
-    bind(holder.chargingContainer.exception_charging_bluetooth,
-        holder.chargingContainer.exception_wear_bluetooth, "Bluetooth", holder.presenterBluetooth)
-    bind(holder.chargingContainer.exception_charging_sync,
-        holder.chargingContainer.exception_wear_sync, "Sync", holder.presenterSync)
-    bind(holder.chargingContainer.exception_charging_airplane,
-        holder.chargingContainer.exception_wear_airplane, "Airplane Mode", holder.presenterAirplane)
-    bind(holder.chargingContainer.exception_charging_doze,
-        holder.chargingContainer.exception_wear_doze, "Doze Mode", holder.presenterDoze)
-    bind(holder.chargingContainer.exception_charging_data_saver,
-        holder.chargingContainer.exception_wear_data_saver, "Data Saver", holder.presenterDataSaver)
+    bind(holder.chargingBinding.exceptionChargingWifi, holder.chargingBinding.exceptionWearWifi,
+        "Wifi", holder.presenterWifi)
+    bind(holder.chargingBinding.exceptionChargingData, holder.chargingBinding.exceptionWearData,
+        "Data", holder.presenterData)
+    bind(holder.chargingBinding.exceptionChargingBluetooth,
+        holder.chargingBinding.exceptionWearBluetooth, "Bluetooth", holder.presenterBluetooth)
+    bind(holder.chargingBinding.exceptionChargingSync, holder.chargingBinding.exceptionWearSync,
+        "Sync", holder.presenterSync)
+    bind(holder.chargingBinding.exceptionChargingAirplane,
+        holder.chargingBinding.exceptionWearAirplane, "Airplane Mode", holder.presenterAirplane)
+    bind(holder.chargingBinding.exceptionChargingDoze, holder.chargingBinding.exceptionWearDoze,
+        "Doze Mode", holder.presenterDoze)
+    bind(holder.chargingBinding.exceptionChargingDataSaver,
+        holder.chargingBinding.exceptionWearDataSaver, "Data Saver", holder.presenterDataSaver)
   }
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
     Timber.d("Unbind exception item")
-    unbind(holder.chargingContainer.exception_charging_airplane,
-        holder.chargingContainer.exception_wear_airplane)
-    unbind(holder.chargingContainer.exception_charging_wifi,
-        holder.chargingContainer.exception_wear_wifi)
-    unbind(holder.chargingContainer.exception_charging_data,
-        holder.chargingContainer.exception_wear_data)
-    unbind(holder.chargingContainer.exception_charging_bluetooth,
-        holder.chargingContainer.exception_wear_bluetooth)
-    unbind(holder.chargingContainer.exception_charging_sync,
-        holder.chargingContainer.exception_wear_sync)
-    unbind(holder.chargingContainer.exception_charging_doze,
-        holder.chargingContainer.exception_wear_doze)
-    unbind(holder.chargingContainer.exception_charging_data_saver,
-        holder.chargingContainer.exception_wear_data_saver)
+    unbind(holder.chargingBinding.exceptionChargingAirplane,
+        holder.chargingBinding.exceptionWearAirplane)
+    unbind(holder.chargingBinding.exceptionChargingWifi, holder.chargingBinding.exceptionWearWifi)
+    unbind(holder.chargingBinding.exceptionChargingData, holder.chargingBinding.exceptionWearData)
+    unbind(holder.chargingBinding.exceptionChargingBluetooth,
+        holder.chargingBinding.exceptionWearBluetooth)
+    unbind(holder.chargingBinding.exceptionChargingSync, holder.chargingBinding.exceptionWearSync)
+    unbind(holder.chargingBinding.exceptionChargingDoze, holder.chargingBinding.exceptionWearDoze)
+    unbind(holder.chargingBinding.exceptionChargingDataSaver,
+        holder.chargingBinding.exceptionWearDataSaver)
 
     holder.presenterAirplane.stop()
     holder.presenterAirplane.destroy()
@@ -208,13 +191,17 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
     @field:[Inject Named(
         "exception_data_saver")] lateinit internal var presenterDataSaver: ExceptionPresenter
 
-    internal var chargingContainer: View = LayoutInflater.from(itemView.context).inflate(
-        R.layout.layout_container_exception, itemView as ViewGroup, false)
+    internal val binding = AdapterItemSimpleBinding.bind(itemView)
+    internal val chargingBinding: LayoutContainerExceptionBinding
 
     init {
-      itemView.simple_expander.setTitle(R.string.exceptions_title)
-      itemView.simple_expander.setDescription(R.string.exceptions_desc)
-      itemView.simple_expander.setExpandingContent(chargingContainer)
+      val chargingContainer = LayoutInflater.from(itemView.context).inflate(
+          R.layout.layout_container_exception, itemView as ViewGroup, false)
+      chargingBinding = LayoutContainerExceptionBinding.bind(chargingContainer)
+
+      binding.simpleExpander.setTitle(R.string.exceptions_title)
+      binding.simpleExpander.setDescription(R.string.exceptions_desc)
+      binding.simpleExpander.setExpandingContent(chargingBinding.root)
 
       Injector.with(itemView.context) {
         it.plusManageComponent().inject(this)

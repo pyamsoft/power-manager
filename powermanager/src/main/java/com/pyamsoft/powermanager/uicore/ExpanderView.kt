@@ -38,21 +38,17 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.ViewExpanderBinding
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
-import kotlinx.android.synthetic.main.view_expander.view.expander_arrow
-import kotlinx.android.synthetic.main.view_expander.view.expander_container
-import kotlinx.android.synthetic.main.view_expander.view.expander_description
-import kotlinx.android.synthetic.main.view_expander.view.expander_title
-import kotlinx.android.synthetic.main.view_expander.view.expander_title_container
 import timber.log.Timber
 
 class ExpanderView : FrameLayout {
-  internal var expanded: Boolean = false
-  internal var arrowLoad = LoaderHelper.empty()
-  internal var arrowAnimation: ViewPropertyAnimatorCompat? = null
-  internal var containerAnimation: ViewPropertyAnimatorCompat? = null
-  internal lateinit var binding: View
+  private var expanded: Boolean = false
+  private var arrowLoad = LoaderHelper.empty()
+  private var arrowAnimation: ViewPropertyAnimatorCompat? = null
+  private var containerAnimation: ViewPropertyAnimatorCompat? = null
+  private lateinit var binding: ViewExpanderBinding
 
   constructor(context: Context) : super(context) {
     init()
@@ -80,28 +76,28 @@ class ExpanderView : FrameLayout {
       return
     }
 
-    binding = LayoutInflater.from(context).inflate(R.layout.view_expander, this, false)
-    addView(binding)
+    binding = ViewExpanderBinding.inflate(LayoutInflater.from(context), this, false)
+    addView(binding.root)
 
     cancelArrowAnimation()
     cancelContainerAnimation()
     if (expanded) {
-      ViewCompat.setRotation(binding.expander_arrow, 180f)
-      binding.expander_container.alpha = 1F
+      ViewCompat.setRotation(binding.expanderArrow, 180f)
+      binding.expanderContainer.alpha = 1F
       //binding.expanderContainer.setScaleY(1);
-      binding.expander_container.visibility = View.VISIBLE
+      binding.expanderContainer.visibility = View.VISIBLE
     } else {
-      ViewCompat.setRotation(binding.expander_arrow, 0f)
-      binding.expander_container.visibility = View.GONE
-      binding.expander_container.alpha = 0F
+      ViewCompat.setRotation(binding.expanderArrow, 0f)
+      binding.expanderContainer.visibility = View.GONE
+      binding.expanderContainer.alpha = 0F
       //binding.expanderContainer.setScaleY(0);
     }
 
-    binding.expander_container.visibility = if (expanded) View.VISIBLE else View.GONE
-    binding.expander_title_container.setOnClickListener({
+    binding.expanderContainer.visibility = if (expanded) View.VISIBLE else View.GONE
+    binding.expanderTitleContainer.setOnClickListener {
       expanded = !expanded
       cancelArrowAnimation()
-      arrowAnimation = ViewCompat.animate(binding.expander_arrow).rotation(
+      arrowAnimation = ViewCompat.animate(binding.expanderArrow).rotation(
           if (expanded) 180F else 0F)
       arrowAnimation!!.start()
 
@@ -109,11 +105,11 @@ class ExpanderView : FrameLayout {
       if (expanded) {
         // This is expanding now
         // Be visible, but hidden
-        binding.expander_container.alpha = 0F
+        binding.expanderContainer.alpha = 0F
 
         // TODO Animation is buggy
         //binding.expanderContainer.setScaleY(0);
-        containerAnimation = ViewCompat.animate(binding.expander_container).alpha(1F).setListener(
+        containerAnimation = ViewCompat.animate(binding.expanderContainer).alpha(1F).setListener(
             object : ViewPropertyAnimatorListenerAdapter() {
               override fun onAnimationStart(view: View?) {
                 view!!.visibility = View.VISIBLE
@@ -127,11 +123,11 @@ class ExpanderView : FrameLayout {
       } else {
         // This is collapsing now
         // Be visible
-        binding.expander_container.alpha = 1F
+        binding.expanderContainer.alpha = 1F
 
         // TODO Animation is buggy
         //binding.expanderContainer.setScaleY(1);
-        containerAnimation = ViewCompat.animate(binding.expander_container).alpha(0F).setListener(
+        containerAnimation = ViewCompat.animate(binding.expanderContainer).alpha(0F).setListener(
             object : ViewPropertyAnimatorListenerAdapter() {
               override fun onAnimationStart(view: View?) {
                 view!!.visibility = View.VISIBLE
@@ -143,7 +139,7 @@ class ExpanderView : FrameLayout {
             })
         containerAnimation!!.start()
       }
-    })
+    }
   }
 
   internal fun cancelArrowAnimation() {
@@ -169,7 +165,7 @@ class ExpanderView : FrameLayout {
 
     arrowLoad = LoaderHelper.unload(arrowLoad)
     arrowLoad = ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(
-        binding.expander_arrow)
+        binding.expanderArrow)
   }
 
   override fun onDetachedFromWindow() {
@@ -185,7 +181,7 @@ class ExpanderView : FrameLayout {
   }
 
   @CheckResult fun editTitleView(): TextView {
-    return binding.expander_title
+    return binding.expanderTitle
   }
 
   fun setTitle(title: String) {
@@ -197,21 +193,21 @@ class ExpanderView : FrameLayout {
   }
 
   fun setTitle(title: Spannable) {
-    binding.expander_title.text = title
-    binding.expander_title.visibility = View.VISIBLE
+    binding.expanderTitle.text = title
+    binding.expanderTitle.visibility = View.VISIBLE
   }
 
   fun clearTitle() {
-    binding.expander_title.text = null
-    binding.expander_title.visibility = View.GONE
+    binding.expanderTitle.text = null
+    binding.expanderTitle.visibility = View.GONE
   }
 
   fun setTitleTextSize(@Px size: Int) {
-    binding.expander_title.setTextSize(TypedValue.COMPLEX_UNIT_SP, size.toFloat())
+    binding.expanderTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, size.toFloat())
   }
 
   @CheckResult fun editDescriptionView(): TextView {
-    return binding.expander_description
+    return binding.expanderDescription
   }
 
   fun setDescription(description: String) {
@@ -223,13 +219,13 @@ class ExpanderView : FrameLayout {
   }
 
   fun setDescription(description: Spannable) {
-    binding.expander_description.text = description
-    binding.expander_description.visibility = View.VISIBLE
+    binding.expanderDescription.text = description
+    binding.expanderDescription.visibility = View.VISIBLE
   }
 
   fun clearDescription() {
-    binding.expander_description.text = null
-    binding.expander_description.visibility = View.GONE
+    binding.expanderDescription.text = null
+    binding.expanderDescription.visibility = View.GONE
   }
 
   fun setExpandingContent(@LayoutRes layout: Int) {
@@ -237,6 +233,6 @@ class ExpanderView : FrameLayout {
   }
 
   fun setExpandingContent(view: View) {
-    binding.expander_container.addView(view)
+    binding.expanderContainer.addView(view)
   }
 }

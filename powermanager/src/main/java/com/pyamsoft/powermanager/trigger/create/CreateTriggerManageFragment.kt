@@ -21,16 +21,13 @@ import android.support.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.FragmentTriggerManageBinding
 import com.pyamsoft.powermanager.uicore.WatchedFragment
-import kotlinx.android.synthetic.main.fragment_trigger_manage.create_trigger_manage_enable
-import kotlinx.android.synthetic.main.fragment_trigger_manage.create_trigger_manage_enable_explanation
-import kotlinx.android.synthetic.main.fragment_trigger_manage.create_trigger_manage_toggle
-import kotlinx.android.synthetic.main.fragment_trigger_manage.create_trigger_manage_toggle_explanation
 import timber.log.Timber
 
 class CreateTriggerManageFragment : WatchedFragment() {
   private var type: Int = 0
+  private lateinit var binding: FragmentTriggerManageBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -39,7 +36,8 @@ class CreateTriggerManageFragment : WatchedFragment() {
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.fragment_trigger_manage, container, false)
+    binding = FragmentTriggerManageBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -63,40 +61,40 @@ class CreateTriggerManageFragment : WatchedFragment() {
     val enableExplainChecked = "$radio will be turned on"
     val enableExplainUnchecked = "$radio will be turned off"
 
-    create_trigger_manage_toggle_explanation.text = toggleExplainUnchecked
-    create_trigger_manage_toggle.text = toggle
-    create_trigger_manage_toggle.setOnCheckedChangeListener { _, b ->
-      create_trigger_manage_toggle_explanation.text = if (b) toggleExplainChecked else toggleExplainUnchecked
+    binding.createTriggerManageToggleExplanation.text = toggleExplainUnchecked
+    binding.createTriggerManageToggle.text = toggle
+    binding.createTriggerManageToggle.setOnCheckedChangeListener { _, b ->
+      binding.createTriggerManageToggleExplanation.text = if (b) toggleExplainChecked else toggleExplainUnchecked
     }
 
-    create_trigger_manage_enable_explanation.text = enableExplainUnchecked
-    create_trigger_manage_enable.text = enable
-    create_trigger_manage_enable.setOnCheckedChangeListener { _, b ->
-      create_trigger_manage_enable_explanation.text = if (b) enableExplainChecked else enableExplainUnchecked
+    binding.createTriggerManageEnableExplanation.text = enableExplainUnchecked
+    binding.createTriggerManageEnable.text = enable
+    binding.createTriggerManageEnable.setOnCheckedChangeListener { _, b ->
+      binding.createTriggerManageEnableExplanation.text = if (b) enableExplainChecked else enableExplainUnchecked
     }
   }
 
   val triggerToggle: Boolean
     @CheckResult get() {
       val toggle: Boolean
-      if (create_trigger_manage_toggle == null) {
+      if (binding.createTriggerManageToggle == null) {
         Timber.e("Toggle is NULL")
         toggle = false
       } else {
         Timber.d("Get toggle")
-        toggle = create_trigger_manage_toggle.isChecked
+        toggle = binding.createTriggerManageToggle.isChecked
       }
       return toggle
     }
   val triggerEnable: Boolean
     @CheckResult get() {
       val enable: Boolean
-      if (create_trigger_manage_enable == null) {
+      if (binding.createTriggerManageEnable == null) {
         Timber.e("Enable is NULL")
         enable = false
       } else {
         Timber.d("Get enable")
-        enable = create_trigger_manage_enable.isChecked
+        enable = binding.createTriggerManageEnable.isChecked
       }
       return enable
     }

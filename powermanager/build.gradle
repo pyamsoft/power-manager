@@ -85,6 +85,9 @@ android {
 dependencies {
   compile fileTree(dir: "libs", include: ["*.jar"])
 
+  // Databinding
+  kapt "com.android.databinding:compiler:$plugin_version"
+
   // Dagger
   kapt "com.google.dagger:dagger-compiler:$dagger"
 

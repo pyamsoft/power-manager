@@ -14,76 +14,77 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/create_trigger_basic_root_scroll"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-  <LinearLayout
-      android:id="@+id/create_trigger_basic_root_view"
+<layout>
+  <ScrollView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/create_trigger_basic_root_scroll"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="8dp"
+      android:layout_height="match_parent"
       >
 
-    <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
-        android:id="@+id/create_trigger_basic_root_name_explanation"
+    <LinearLayout
+        android:id="@+id/create_trigger_basic_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_trigger_name_explain"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/create_trigger_basic_name_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_create_trigger_name"
+        android:orientation="vertical"
+        android:padding="8dp"
         >
 
-      <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
-          android:id="@+id/create_trigger_basic_name_entry"
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+          android:id="@+id/create_trigger_basic_root_name_explanation"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:imeOptions="actionNext"
-          android:inputType="text"
-          android:maxLines="1"
+          android:text="@string/create_trigger_name_explain"
+          android:textAppearance="?android:attr/textAppearanceSmall"
           />
 
-    </android.support.design.widget.TextInputLayout>
-
-    <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
-        android:id="@+id/create_trigger_basic_root_percent_explanation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/create_trigger_percent_explain"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/create_trigger_basic_percent_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_create_trigger_percent"
-        >
-
-      <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
-          android:id="@+id/create_trigger_basic_percent_entry"
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/create_trigger_basic_name_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:imeOptions="actionDone"
-          android:inputType="number"
-          android:maxLength="3"
-          android:maxLines="1"
+          android:hint="@string/hint_create_trigger_name"
+          >
+
+        <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
+            android:id="@+id/create_trigger_basic_name_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:maxLines="1"
+            />
+
+      </android.support.design.widget.TextInputLayout>
+
+      <com.pyamsoft.pydroid.ui.widget.NoLeakTextView
+          android:id="@+id/create_trigger_basic_root_percent_explanation"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="16dp"
+          android:text="@string/create_trigger_percent_explain"
+          android:textAppearance="?android:attr/textAppearanceSmall"
           />
 
-    </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputLayout
+          android:id="@+id/create_trigger_basic_percent_layout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/hint_create_trigger_percent"
+          >
 
-  </LinearLayout>
+        <com.pyamsoft.pydroid.design.widget.NoLeakTextInputEditText
+            android:id="@+id/create_trigger_basic_percent_entry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            />
 
-</ScrollView>
+      </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+  </ScrollView>
+</layout>

@@ -26,19 +26,20 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.FragmentManageBinding
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
-import kotlinx.android.synthetic.main.activity_main.bottomtabs
-import kotlinx.android.synthetic.main.fragment_manage.recycler
 import timber.log.Timber
 
 class ManageFragment : WatchedFragment() {
   lateinit internal var adapter: GenericItemAdapter<String, GenericAbstractItem<String, *, *>>
+  private lateinit var binding: FragmentManageBinding
 
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.fragment_manage, container, false)
+    binding = FragmentManageBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -76,10 +77,10 @@ class ManageFragment : WatchedFragment() {
     val manager = LinearLayoutManager(activity)
     manager.isItemPrefetchEnabled = true
     manager.initialPrefetchItemCount = 3
-    recycler.layoutManager = manager
-    recycler.clipToPadding = false
-    recycler.setHasFixedSize(true)
-    recycler.adapter = adapter.wrap(FastAdapter())
+    binding.recycler.layoutManager = manager
+    binding.recycler.clipToPadding = false
+    binding.recycler.setHasFixedSize(true)
+    binding.recycler.adapter = adapter.wrap(FastAdapter())
 
     adapter.add(ManageItem())
     adapter.add(DelayItem())
@@ -92,7 +93,7 @@ class ManageFragment : WatchedFragment() {
 
     // Have to null out the adapter or unbindView never called
     adapter.clear()
-    recycler.adapter = null
+    binding.recycler.adapter = null
   }
 
   override fun onResume() {
@@ -102,7 +103,7 @@ class ManageFragment : WatchedFragment() {
 
     if (activity is MainActivity) {
       val main = activity as MainActivity
-      main.bottomtabs.visibility = View.VISIBLE
+      main.binding.bottomtabs.visibility = View.VISIBLE
       main.setOverlapTop(56F)
     }
   }

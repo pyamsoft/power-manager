@@ -21,10 +21,8 @@ import android.view.View
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.AdapterItemTriggerBinding
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import kotlinx.android.synthetic.main.adapter_item_trigger.view.trigger_enabled_switch
-import kotlinx.android.synthetic.main.adapter_item_trigger.view.trigger_name
-import kotlinx.android.synthetic.main.adapter_item_trigger.view.trigger_percent
 import java.util.Locale
 import javax.inject.Inject
 
@@ -44,7 +42,7 @@ class PowerTriggerListItem internal constructor(
     super.bindView(holder, payloads)
     bindModelToHolder(holder)
 
-    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener { buttonView, isChecked ->
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
       buttonView.isChecked = !isChecked
       holder.presenter.toggleEnabledState(model, isChecked, {
         withModel(it)
@@ -54,18 +52,18 @@ class PowerTriggerListItem internal constructor(
   }
 
   internal fun bindModelToHolder(holder: ViewHolder) {
-    holder.itemView.trigger_name.text = model.name()
-    holder.itemView.trigger_percent.text = String.format(Locale.getDefault(), "Percent: %s",
+    holder.binding.triggerName.text = model.name()
+    holder.binding.triggerPercent.text = String.format(Locale.getDefault(), "Percent: %s",
         model.percent())
-    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener(null)
-    holder.itemView.trigger_enabled_switch.isChecked = model.enabled()
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null)
+    holder.binding.triggerEnabledSwitch.isChecked = model.enabled()
   }
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
-    holder.itemView.trigger_name.text = null
-    holder.itemView.trigger_percent.text = null
-    holder.itemView.trigger_enabled_switch.setOnCheckedChangeListener(null)
+    holder.binding.triggerName.text = null
+    holder.binding.triggerPercent.text = null
+    holder.binding.triggerEnabledSwitch.setOnCheckedChangeListener(null)
     holder.presenter.stop()
     holder.presenter.destroy()
   }
@@ -77,6 +75,7 @@ class PowerTriggerListItem internal constructor(
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @field:Inject lateinit internal var presenter: TriggerItemPresenter
+    internal val binding: AdapterItemTriggerBinding = AdapterItemTriggerBinding.bind(itemView)
 
     init {
       Injector.with(itemView.context) {

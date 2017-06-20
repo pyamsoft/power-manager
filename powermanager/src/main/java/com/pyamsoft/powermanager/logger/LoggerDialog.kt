@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.base.logger.LoggerPresenter
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import timber.log.Timber
 

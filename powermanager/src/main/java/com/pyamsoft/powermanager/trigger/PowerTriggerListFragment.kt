@@ -28,6 +28,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.PowerManager
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerDialog
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import com.pyamsoft.powermanager.uicore.WatchedFragment
@@ -35,9 +36,6 @@ import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderMap
 import com.pyamsoft.pydroid.ui.helper.Toasty
 import com.pyamsoft.pydroid.ui.util.DialogUtil
-import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_empty
-import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_fab
-import kotlinx.android.synthetic.main.fragment_powertrigger.power_trigger_list
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,6 +45,7 @@ class PowerTriggerListFragment : WatchedFragment() {
   internal var adapter: FastItemAdapter<PowerTriggerListItem>? = null
   internal var listIsRefreshed: Boolean = false
   private lateinit var dividerDecoration: RecyclerView.ItemDecoration
+  private lateinit var binding: FragmentPowertriggerBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -59,7 +58,8 @@ class PowerTriggerListFragment : WatchedFragment() {
       savedInstanceState: Bundle?): View? {
     listIsRefreshed = false
     dividerDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-    return inflater?.inflate(R.layout.fragment_powertrigger, container, false)
+    binding = FragmentPowertriggerBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   override fun onDestroyView() {
@@ -67,7 +67,7 @@ class PowerTriggerListFragment : WatchedFragment() {
     setActionBarUpEnabled(false)
 
     drawableMap.clear()
-    power_trigger_list.removeItemDecoration(dividerDecoration)
+    binding.powerTriggerList.removeItemDecoration(dividerDecoration)
   }
 
   override fun onStart() {
@@ -117,7 +117,7 @@ class PowerTriggerListFragment : WatchedFragment() {
       Timber.d("Added new trigger with percent: %d", it.percent())
 
       adapter?.add(createNewPowerTriggerListItem(it))
-      if (power_trigger_list.adapter == null) {
+      if (binding.powerTriggerList.adapter == null) {
         Timber.d("First trigger, show list")
         loadListView()
       }
@@ -160,10 +160,10 @@ class PowerTriggerListFragment : WatchedFragment() {
 
   private fun setupFab() {
     val subscription = ImageLoader.fromResource(activity, R.drawable.ic_add_24dp).tint(
-        android.R.color.white).into(power_trigger_fab)
+        android.R.color.white).into(binding.powerTriggerFab)
     drawableMap.put("fab", subscription)
 
-    power_trigger_fab.setOnClickListener {
+    binding.powerTriggerFab.setOnClickListener {
       Timber.d("Show new trigger dialog")
       DialogUtil.guaranteeSingleDialogFragment(activity, CreateTriggerDialog(), "create_trigger")
     }
@@ -173,24 +173,24 @@ class PowerTriggerListFragment : WatchedFragment() {
     val manager = LinearLayoutManager(context)
     manager.isItemPrefetchEnabled = true
     manager.initialPrefetchItemCount = 3
-    power_trigger_list.layoutManager = manager
-    power_trigger_list.setHasFixedSize(true)
-    power_trigger_list.clipToPadding = false
-    power_trigger_list.addItemDecoration(dividerDecoration)
+    binding.powerTriggerList.layoutManager = manager
+    binding.powerTriggerList.setHasFixedSize(true)
+    binding.powerTriggerList.clipToPadding = false
+    binding.powerTriggerList.addItemDecoration(dividerDecoration)
   }
 
   internal fun loadEmptyView() {
     Timber.d("Load empty view")
-    power_trigger_list.visibility = View.GONE
-    power_trigger_list.adapter = null
-    power_trigger_empty.visibility = View.VISIBLE
+    binding.powerTriggerList.visibility = View.GONE
+    binding.powerTriggerList.adapter = null
+    binding.powerTriggerEmpty.visibility = View.VISIBLE
   }
 
   internal fun loadListView() {
     Timber.d("Load list view")
-    power_trigger_empty.visibility = View.GONE
-    power_trigger_list.adapter = adapter
-    power_trigger_list.visibility = View.VISIBLE
+    binding.powerTriggerEmpty.visibility = View.GONE
+    binding.powerTriggerList.adapter = adapter
+    binding.powerTriggerList.visibility = View.VISIBLE
   }
 
   @CheckResult internal fun createNewPowerTriggerListItem(

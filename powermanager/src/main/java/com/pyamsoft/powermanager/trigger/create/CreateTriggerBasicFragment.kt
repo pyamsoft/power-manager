@@ -21,27 +21,28 @@ import android.support.annotation.CheckResult
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.FragmentTriggerBasicBinding
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import com.pyamsoft.powermanager.uicore.WatchedFragment
-import kotlinx.android.synthetic.main.fragment_trigger_basic.create_trigger_basic_name_layout
-import kotlinx.android.synthetic.main.fragment_trigger_basic.create_trigger_basic_percent_layout
 import timber.log.Timber
 
 class CreateTriggerBasicFragment : WatchedFragment() {
+  private lateinit var binding: FragmentTriggerBasicBinding
+
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
-    return inflater?.inflate(R.layout.fragment_trigger_basic, container, false)
+    binding = FragmentTriggerBasicBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
   val triggerName: String
     @CheckResult get() {
       val name: String
-      if (create_trigger_basic_name_layout == null) {
+      if (binding.createTriggerBasicNameLayout == null) {
         Timber.e("Name layout is empty!")
         name = PowerTriggerEntry.EMPTY_NAME
       } else {
-        val editText = create_trigger_basic_name_layout.editText
+        val editText = binding.createTriggerBasicNameLayout.editText
         if (editText == null || editText.text.toString().isEmpty()) {
           Timber.e("Name edit is empty!")
           name = PowerTriggerEntry.EMPTY_NAME
@@ -55,11 +56,11 @@ class CreateTriggerBasicFragment : WatchedFragment() {
   val triggerPercent: Int
     @CheckResult get() {
       var percent: Int
-      if (create_trigger_basic_percent_layout == null) {
+      if (binding.createTriggerBasicPercentLayout == null) {
         Timber.e("Percent layout is empty!")
         percent = PowerTriggerEntry.EMPTY_PERCENT
       } else {
-        val editText = create_trigger_basic_percent_layout.editText
+        val editText = binding.createTriggerBasicPercentLayout.editText
         if (editText == null) {
           Timber.e("Percent edit is empty!")
           percent = PowerTriggerEntry.EMPTY_PERCENT

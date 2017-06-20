@@ -24,7 +24,6 @@ import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
-import kotlinx.android.synthetic.main.activity_main.bottomtabs
 
 class SettingsFragment : WatchedFragment() {
   override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -47,7 +46,7 @@ class SettingsFragment : WatchedFragment() {
 
     if (activity is MainActivity) {
       val main = activity as MainActivity
-      main.bottomtabs.visibility = View.VISIBLE
+      main.binding.bottomtabs.visibility = View.VISIBLE
       main.setOverlapTop(0F)
     }
   }

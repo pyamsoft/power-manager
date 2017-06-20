@@ -16,6 +16,7 @@
 
 package com.pyamsoft.powermanager.main
 
+import android.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -34,6 +35,7 @@ import android.view.View
 import com.pyamsoft.powermanager.BuildConfig
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.ActivityMainBinding
 import com.pyamsoft.powermanager.logger.LoggerDialog
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.service.ForegroundService
@@ -45,15 +47,11 @@ import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.util.DialogUtil
 import com.pyamsoft.pydroid.util.AppUtil
-import kotlinx.android.synthetic.main.activity_main.bottomtabs
-import kotlinx.android.synthetic.main.activity_main.main_appbar
-import kotlinx.android.synthetic.main.activity_main.main_collapsebar
-import kotlinx.android.synthetic.main.activity_main.main_container
-import kotlinx.android.synthetic.main.activity_main.main_toolbar
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainActivity : TamperActivity() {
+  internal lateinit var binding: ActivityMainBinding
   private val longPressBackRunnable = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) null else Runnable { this.handleBackLongPress() }
   private val mainHandler = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) null else Handler(
       Looper.getMainLooper())
@@ -62,7 +60,7 @@ class MainActivity : TamperActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.Theme_PowerManager_Light)
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
     Injector.with(this) {
       it.inject(this)
@@ -72,39 +70,39 @@ class MainActivity : TamperActivity() {
     setupBottomBar()
 
     if (hasNoActiveFragment()) {
-      bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
+      binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
     }
   }
 
   private fun setupAppBar() {
-    setSupportActionBar(main_toolbar)
-    main_toolbar.title = getString(R.string.app_name)
+    setSupportActionBar(binding.mainToolbar)
+    binding.mainToolbar.title = getString(R.string.app_name)
 
     // Hide expanded title
-    main_collapsebar.setExpandedTitleColor(Color.TRANSPARENT)
+    binding.mainCollapsebar.setExpandedTitleColor(Color.TRANSPARENT)
   }
 
   private fun setupBottomBar() {
-    bottomtabs.setOnNavigationItemSelectedListener(
+    binding.bottomtabs.setOnNavigationItemSelectedListener(
         object : BottomNavigationView.OnNavigationItemSelectedListener {
           override fun onNavigationItemSelected(item: MenuItem): Boolean {
             val handled: Boolean
             when (item.itemId) {
               R.id.menu_manage -> {
                 handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
-                main_appbar.setExpanded(true)
+                binding.mainAppbar.setExpanded(true)
               }
               R.id.menu_workarounds -> {
                 handled = replaceFragment(WorkaroundFragment(), WorkaroundFragment.TAG)
-                main_appbar.setExpanded(true)
+                binding.mainAppbar.setExpanded(true)
               }
               R.id.menu_triggers -> {
                 handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
-                main_appbar.setExpanded(false, true)
+                binding.mainAppbar.setExpanded(false, true)
               }
               R.id.menu_settings -> {
                 handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
-                main_appbar.setExpanded(false, true)
+                binding.mainAppbar.setExpanded(false, true)
               }
               else -> handled = false
             }
@@ -168,7 +166,7 @@ class MainActivity : TamperActivity() {
     super.onResume()
 
     // Hide bottom tabs with About libraries fragment
-    bottomtabs.visibility = if (supportFragmentManager.findFragmentByTag(
+    binding.bottomtabs.visibility = if (supportFragmentManager.findFragmentByTag(
         AboutLibrariesFragment.TAG) != null) View.GONE else View.VISIBLE
   }
 
@@ -243,7 +241,7 @@ class MainActivity : TamperActivity() {
 
   // Set the scrolling overlap top
   fun setOverlapTop(@Px px: Float) {
-    ((main_container.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? AppBarLayout.ScrollingViewBehavior)?.overlayTop = AppUtil.convertToDP(
+    ((binding.mainContainer.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? AppBarLayout.ScrollingViewBehavior)?.overlayTop = AppUtil.convertToDP(
         this, px).toInt()
   }
 

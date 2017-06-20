@@ -19,15 +19,7 @@ package com.pyamsoft.powermanager.manage
 import android.view.View
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
-import kotlinx.android.synthetic.main.adapter_item_simple.view.simple_expander
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_eight
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_five
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_four
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_one
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_seven
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_six
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_three
-import kotlinx.android.synthetic.main.layout_container_delay.view.delay_radio_two
+import com.pyamsoft.powermanager.databinding.AdapterItemSimpleBinding
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -87,22 +79,24 @@ class DelayItem : TimeItem<TimePresenter, DelayItem.ViewHolder>(TAG) {
       itemView) {
 
     @field:Inject override lateinit var presenter: TimePresenter
+    internal val binding = AdapterItemSimpleBinding.bind(itemView)
 
     init {
       Injector.with(itemView.context) {
         it.plusManageComponent().inject(this)
       }
-      itemView.simple_expander.setTitle("Active Delay")
-      itemView.simple_expander.setDescription(
+      binding.simpleExpander.setTitle("Active Delay")
+      binding.simpleExpander.setDescription(
           "Power Manager will wait for the specified amount of time before automatically managing certain device functions")
-      containerDelay.delay_radio_one.text = "5 Seconds"
-      containerDelay.delay_radio_two.text = "10 Seconds"
-      containerDelay.delay_radio_three.text = "15 Seconds"
-      containerDelay.delay_radio_four.text = "30 Seconds"
-      containerDelay.delay_radio_five.text = "45 Seconds"
-      containerDelay.delay_radio_six.text = "1 Minute"
-      containerDelay.delay_radio_seven.text = "1 Minute 30 Seconds"
-      containerDelay.delay_radio_eight.text = "2 Minutes"
+      binding.simpleExpander.setExpandingContent(containerBinding.root)
+      containerBinding.delayRadioOne.text = "5 Seconds"
+      containerBinding.delayRadioTwo.text = "10 Seconds"
+      containerBinding.delayRadioThree.text = "15 Seconds"
+      containerBinding.delayRadioFour.text = "30 Seconds"
+      containerBinding.delayRadioFive.text = "45 Seconds"
+      containerBinding.delayRadioSix.text = "1 Minute"
+      containerBinding.delayRadioSeven.text = "1 Minute 30 Seconds"
+      containerBinding.delayRadioEight.text = "2 Minutes"
     }
   }
 

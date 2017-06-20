@@ -14,19 +14,20 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="?attr/actionBarSize"
-    android:orientation="vertical"
-    >
-
+<layout>
   <FrameLayout
-      android:id="@+id/settings_child_here"
+      xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      />
+      android:layout_marginBottom="?attr/actionBarSize"
+      android:orientation="vertical"
+      >
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/settings_child_here"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+  </FrameLayout>
+</layout>
