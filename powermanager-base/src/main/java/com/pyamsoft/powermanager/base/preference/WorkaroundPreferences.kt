@@ -21,5 +21,7 @@ import android.support.annotation.CheckResult
 interface WorkaroundPreferences {
 
   @CheckResult fun isDataWorkaroundEnabled(): Boolean
+
+  @CheckResult fun isDozeWorkaroundEnabled(): Boolean
 }
 

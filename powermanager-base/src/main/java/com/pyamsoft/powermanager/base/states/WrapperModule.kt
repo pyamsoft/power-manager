@@ -59,8 +59,9 @@ import javax.inject.Singleton
 
   @Singleton @Provides @Named("wrapper_doze") fun provideDozeWrapper(context: Context,
       preferences: RootPreferences, shellHelper: ShellHelper,
+      workaroundPreferences: WorkaroundPreferences,
       @Named("logger_doze") logger: Logger): DeviceFunctionWrapper {
-    return DozeModeWrapperImpl(context, logger, preferences, shellHelper)
+    return DozeModeWrapperImpl(context, logger, preferences, shellHelper, workaroundPreferences)
   }
 
   @Singleton @Provides @Named("wrapper_data_saver") fun provideDataSaverWrapper(context: Context,

@@ -19,40 +19,46 @@ package com.pyamsoft.powermanager.base.states
 import android.content.Context
 import android.os.Build
 import android.os.PowerManager
+import android.provider.Settings
 import com.pyamsoft.powermanager.base.logger.Logger
 import com.pyamsoft.powermanager.base.preference.RootPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.ShellHelper
 import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class DozeModeWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
-    private val shellHelper: ShellHelper) : DeviceFunctionWrapper {
+    private val shellHelper: ShellHelper,
+    private val workaroundPreferences: WorkaroundPreferences) : DeviceFunctionWrapper {
   private val androidPowerManager: android.os.PowerManager = context.applicationContext.getSystemService(
       Context.POWER_SERVICE) as PowerManager
+  private val resolver = context.applicationContext.contentResolver
 
   private fun setDozeEnabled(enabled: Boolean) {
     val command: String
-    logger.i("Doze mode: ${if (enabled) "enable" else "disable"}")
     if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
       command = "dumpsys deviceidle ${if (enabled) "force-idle" else "step"}"
-      if (preferences.rootEnabled) {
-        // If root is enabled, we attempt with root
-        shellHelper.runSUCommand(command)
-      } else {
-        // API 23 can do this without root
-        shellHelper.runSHCommand(command)
-      }
     } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      if (preferences.rootEnabled) {
-        // API 24 requires root
-        command = "dumpsys deviceidle ${if (enabled) "force-idle deep" else "unforce"}"
-        shellHelper.runSUCommand(command)
-      } else {
-        logger.w("Root not enabled, cannot toggle Doze")
-      }
+      command = "dumpsys deviceidle ${if (enabled) "force-idle deep" else "unforce"}"
     } else {
       logger.w("This API level cannot run Doze")
+      return
+    }
+
+    logger.i("Doze mode: ${if (enabled) "enable" else "disable"}")
+    if (workaroundPreferences.isDozeWorkaroundEnabled()) {
+      if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+        shellHelper.runSHCommand(command)
+      } else {
+        Settings.Global.putString(resolver, "device_idle_constants",
+            if (enabled) "inactive_to=600000,light_after_inactive_to=300000,idle_after_inactive_to=5100,sensing_to=5100,locating_to=5100,location_accuracy=10000"
+            else null)
+      }
+    } else if (preferences.rootEnabled) {
+      shellHelper.runSUCommand(command)
+    } else {
+      logger.w("Root not enabled, cannot toggle Doze")
     }
   }
 

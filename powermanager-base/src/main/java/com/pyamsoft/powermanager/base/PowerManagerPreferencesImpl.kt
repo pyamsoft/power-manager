@@ -45,6 +45,7 @@ import javax.inject.Inject
 
 internal class PowerManagerPreferencesImpl @Inject constructor(
     context: Context) : WifiPreferences, ClearPreferences, WearablePreferences, AirplanePreferences, BluetoothPreferences, DataPreferences, DozePreferences, SyncPreferences, LoggerPreferences, OnboardingPreferences, RootPreferences, ServicePreferences, TriggerPreferences, ManagePreferences, DataSaverPreferences, PhonePreferences, WorkaroundPreferences {
+
   private val preferences: SharedPreferences
   private val keyManageAirplane: String
   private val keyManageWifi: String
@@ -117,6 +118,8 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   private val ignorePhoneDefault: Boolean
   private val keyWorkaroundData: String
   private val workaroundDataDefault: Boolean
+  private val keyWorkaroundDoze: String
+  private val workaroundDozeDefault: Boolean
 
   init {
     val appContext = context.applicationContext
@@ -203,6 +206,8 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
     keyWorkaroundData = res.getString(R.string.key_workaround_data)
     workaroundDataDefault = res.getBoolean(R.bool.workaround_data_default)
+    keyWorkaroundDoze = res.getString(R.string.key_workaround_doze)
+    workaroundDozeDefault = res.getBoolean(R.bool.workaround_doze_default)
   }
 
   override var originalWifi: Boolean
@@ -461,6 +466,10 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
 
   override fun isDataWorkaroundEnabled(): Boolean {
     return preferences.getBoolean(keyWorkaroundData, workaroundDataDefault)
+  }
+
+  override fun isDozeWorkaroundEnabled(): Boolean {
+    return preferences.getBoolean(keyWorkaroundDoze, workaroundDozeDefault)
   }
 
   companion object {

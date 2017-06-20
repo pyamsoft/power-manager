@@ -35,9 +35,9 @@ import javax.inject.Singleton
   }
 
   @Singleton @Named("obs_doze_permission") @Provides fun provideDozePermissionObserver(
-      rootChecker: RootChecker, context: Context,
-      preferences: RootPreferences): PermissionObserver {
-    return DozePermissionObserver(context, preferences, rootChecker)
+      rootChecker: RootChecker, context: Context, preferences: RootPreferences,
+      workaroundPreferences: WorkaroundPreferences): PermissionObserver {
+    return DozePermissionObserver(context, workaroundPreferences, preferences, rootChecker)
   }
 
   @Singleton @Named("obs_data_permission") @Provides fun provideDataPermissionObserver(

@@ -19,5 +19,7 @@
 
   <string name="key_workaround_data">key_workaround_data</string>
   <bool name="workaround_data_default">false</bool>
+  <string name="key_workaround_doze">key_workaround_doze</string>
+  <bool name="workaround_doze_default">false</bool>
 
 </resources>

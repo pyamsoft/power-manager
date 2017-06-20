@@ -31,9 +31,9 @@ internal open class RootPermissionObserver @Inject internal constructor(context:
 
   override fun checkPermission(appContext: Context): Boolean {
     if (preferences.rootEnabled) {
-      val hasPermission = rootChecker.isSUAvailable
-      Timber.d("Has root permission? %s", hasPermission)
-      return hasPermission
+      val permission = rootChecker.isSUAvailable
+      Timber.d("Has root permission? %s", permission)
+      return permission
     } else {
       Timber.w("Root is not enabled")
       return false

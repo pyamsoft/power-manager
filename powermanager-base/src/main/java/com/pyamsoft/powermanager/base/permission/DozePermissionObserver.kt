@@ -20,29 +20,49 @@ import android.Manifest
 import android.content.Context
 import android.os.Build
 import com.pyamsoft.powermanager.base.preference.RootPreferences
+import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.RootChecker
 import timber.log.Timber
 import javax.inject.Inject
 
 internal class DozePermissionObserver @Inject internal constructor(context: Context,
-    preferences: RootPreferences, rootChecker: RootChecker) : RootPermissionObserver(context,
-    preferences, rootChecker, Manifest.permission.DUMP) {
+    private val workaroundPreferences: WorkaroundPreferences, preferences: RootPreferences,
+    rootChecker: RootChecker) : RootPermissionObserver(context, preferences, rootChecker) {
+
+  private val dumpPermissionObserver = object : PermissionObserverImpl(context,
+      Manifest.permission.DUMP) {
+
+    override fun checkPermission(appContext: Context): Boolean {
+      return hasRuntimePermission()
+    }
+  }
+
+  private val secureSettingPermissionObserver = object : PermissionObserverImpl(context,
+      Manifest.permission.WRITE_SECURE_SETTINGS) {
+
+    override fun checkPermission(appContext: Context): Boolean {
+      return hasRuntimePermission()
+    }
+  }
 
   override fun checkPermission(appContext: Context): Boolean {
-    val hasPermission: Boolean
-    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-      // Doze can run without root on M
-      // Doze can also run with root
-      hasPermission = hasRuntimePermission() || super.checkPermission(appContext)
-    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      // Doze needs root on N
-      hasPermission = super.checkPermission(appContext)
+    if (workaroundPreferences.isDozeWorkaroundEnabled()) {
+      if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+        return dumpPermissionObserver.hasPermission()
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        return secureSettingPermissionObserver.hasPermission()
+      } else {
+        Timber.w("Doze workaround is not supported on this API level")
+        return false
+      }
     } else {
-      Timber.e("This API level cannot run Doze")
-      hasPermission = false
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        return super.checkPermission(appContext)
+      } else {
+        Timber.w("Doze workaround is not supported on this API level")
+        return false
+      }
     }
-
-    Timber.d("Has doze permission? %s", hasPermission)
-    return hasPermission
   }
+
 }
