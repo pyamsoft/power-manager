@@ -65,13 +65,18 @@ class MainActivity : TamperActivity() {
     Injector.with(this) {
       it.inject(this)
     }
-    PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+    setupPreferenceDefaults()
     setupAppBar()
     setupBottomBar()
 
     if (hasNoActiveFragment()) {
       binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
     }
+  }
+
+  private fun setupPreferenceDefaults() {
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+    PreferenceManager.setDefaultValues(this, R.xml.workarounds, false)
   }
 
   private fun setupAppBar() {
