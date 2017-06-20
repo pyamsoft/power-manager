@@ -233,10 +233,11 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic)) {
       composite.add(Completable.fromAction {
-        Timber.d("ENABLE: %s", conditions.tag)
         modifier.set()
-      }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
+      }.subscribeOn(subScheduler).observeOn(subScheduler).doAfterTerminate {
         latch.countDown()
+      }.subscribe({
+        Timber.d("ENABLE: %s", conditions.tag)
       }, { Timber.e(it, "Error enabling %s", conditions.tag) }))
       return true
     } else {
@@ -259,10 +260,11 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
       return false
     } else if (conditions.managed && conditions.original && (firstRun || conditions.periodic)) {
       composite.add(Completable.fromAction {
-        Timber.d("DISABLE: %s", conditions.tag)
         modifier.unset()
-      }.subscribeOn(subScheduler).observeOn(subScheduler).subscribe({
+      }.subscribeOn(subScheduler).observeOn(subScheduler).doAfterTerminate {
         latch.countDown()
+      }.subscribe({
+        Timber.d("DISABLE: %s", conditions.tag)
       }, { Timber.e(it, "Error disabling %s", conditions.tag) }))
       return true
     } else {

@@ -21,15 +21,18 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import com.pyamsoft.powermanager.base.logger.Logger
+import com.pyamsoft.powermanager.base.permission.DozePermissionObserver
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.ShellHelper
+import com.pyamsoft.powermanager.model.PermissionObserver
 import com.pyamsoft.powermanager.model.States
 import javax.inject.Inject
 
 internal class DozeModeWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
     private val shellHelper: ShellHelper,
+    private val dozePermissionObserver: PermissionObserver,
     private val workaroundPreferences: WorkaroundPreferences) : DeviceFunctionWrapper {
   private val androidPowerManager: android.os.PowerManager = context.applicationContext.getSystemService(
       Context.POWER_SERVICE) as PowerManager
@@ -48,12 +51,16 @@ internal class DozeModeWrapperImpl @Inject internal constructor(context: Context
 
     logger.i("Doze mode: ${if (enabled) "enable" else "disable"}")
     if (workaroundPreferences.isDozeWorkaroundEnabled()) {
-      if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-        shellHelper.runSHCommand(command)
+      if (dozePermissionObserver.hasPermission()) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
+          shellHelper.runSHCommand(command)
+        } else {
+          Settings.Global.putString(resolver, "device_idle_constants",
+              if (enabled) "inactive_to=600000,light_after_inactive_to=300000,idle_after_inactive_to=5100,sensing_to=5100,locating_to=5100,location_accuracy=10000"
+              else null)
+        }
       } else {
-        Settings.Global.putString(resolver, "device_idle_constants",
-            if (enabled) "inactive_to=600000,light_after_inactive_to=300000,idle_after_inactive_to=5100,sensing_to=5100,locating_to=5100,location_accuracy=10000"
-            else null)
+        logger.w("Workaround permission not granted, cannot toggle Doze")
       }
     } else if (preferences.rootEnabled) {
       shellHelper.runSUCommand(command)
