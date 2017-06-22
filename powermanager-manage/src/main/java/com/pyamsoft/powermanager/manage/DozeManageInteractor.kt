@@ -25,8 +25,8 @@ import javax.inject.Inject
 internal class DozeManageInteractor @Inject internal constructor(val preferences: DozePreferences,
     private val permissionObserver: PermissionObserver) : ManageInteractor() {
 
-  override fun setManaged(state: Boolean): Completable {
-    return Completable.fromAction { preferences.dozeManaged = state }
+  override fun setManaged(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.dozeManaged = state }.andThen(Single.just(state))
   }
 
   override val isManaged: Single<Pair<Boolean, Boolean>>

@@ -17,12 +17,11 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import io.reactivex.Completable
 import io.reactivex.Single
 
 abstract internal class ManageInteractor {
 
-  @CheckResult internal abstract fun setManaged(state: Boolean): Completable
+  @CheckResult internal abstract fun setManaged(state: Boolean): Single<Boolean>
 
   @get:CheckResult internal abstract val isManaged: Single<Pair<Boolean, Boolean>>
 }

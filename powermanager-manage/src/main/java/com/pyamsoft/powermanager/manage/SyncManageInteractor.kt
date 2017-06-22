@@ -24,8 +24,8 @@ import javax.inject.Inject
 internal class SyncManageInteractor @Inject internal constructor(
     private val preferences: SyncPreferences) : ManageInteractor() {
 
-  override fun setManaged(state: Boolean): Completable {
-    return Completable.fromAction { preferences.syncManaged = state }
+  override fun setManaged(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.syncManaged = state }.andThen(Single.just(state))
   }
 
   override val isManaged: Single<Pair<Boolean, Boolean>>

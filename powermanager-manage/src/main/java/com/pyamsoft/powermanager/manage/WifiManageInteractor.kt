@@ -24,8 +24,8 @@ import javax.inject.Inject
 internal class WifiManageInteractor @Inject internal constructor(
     private val preferences: WifiPreferences) : ManageInteractor() {
 
-  override fun setManaged(state: Boolean): Completable {
-    return Completable.fromAction { preferences.wifiManaged = state }
+  override fun setManaged(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.wifiManaged = state }.andThen(Single.just(state))
   }
 
   override val isManaged: Single<Pair<Boolean, Boolean>>

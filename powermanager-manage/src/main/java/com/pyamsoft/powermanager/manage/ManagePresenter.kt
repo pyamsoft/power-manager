@@ -16,24 +16,28 @@
 
 package com.pyamsoft.powermanager.manage
 
+import android.widget.CompoundButton
 import com.pyamsoft.powermanager.manage.bus.ManageBus
 import com.pyamsoft.powermanager.manage.bus.ManageChangeEvent
+import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
 import timber.log.Timber
 
 abstract class ManagePresenter internal constructor(private val interactor: ManageInteractor,
     private val bus: ManageBus, foregroundScheduler: Scheduler,
     backgroundScheduler: Scheduler) : TargetPresenter(foregroundScheduler, backgroundScheduler) {
+
   /**
    * public
    */
-  fun setManaged(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
+  fun setManaged(view: CompoundButton, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setManaged(state).subscribeOn(backgroundScheduler).observeOn(
+      RxViews.onCheckChanged(view).observeOn(
+          backgroundScheduler).flatMapSingle { interactor.setManaged(it.checked) }.observeOn(
           foregroundScheduler).doAfterTerminate {
         bus.publish(ManageChangeEvent(target))
       }.doAfterTerminate { onComplete() }.subscribe(
-          { Timber.d("Set managed state successfully: %s", state) }, {
+          { Timber.d("Set managed state successfully: %s", it) }, {
         Timber.e(it, "Error setting managed")
         onError(it)
       })

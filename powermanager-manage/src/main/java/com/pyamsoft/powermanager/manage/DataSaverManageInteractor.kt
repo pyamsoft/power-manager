@@ -26,8 +26,9 @@ internal class DataSaverManageInteractor @Inject internal constructor(
     val preferences: DataSaverPreferences,
     private val permissionObserver: PermissionObserver) : ManageInteractor() {
 
-  override fun setManaged(state: Boolean): Completable {
-    return Completable.fromAction { preferences.dataSaverManaged = state }
+  override fun setManaged(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.dataSaverManaged = state }.andThen(
+        Single.just(state))
   }
 
   override val isManaged: Single<Pair<Boolean, Boolean>>

@@ -74,15 +74,12 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
       // Mark switch as disabled
       switch.isEnabled = false
     }, onComplete = {
-      switch.setOnCheckedChangeListener { buttonView, isChecked ->
-        presenter.setManaged(isChecked, {
-          Toasty.makeText(switch.context, "Failed to set state: " + name,
-              Toasty.LENGTH_SHORT).show()
+      presenter.setManaged(switch, {
+        Toasty.makeText(switch.context, "Failed to set state: " + name, Toasty.LENGTH_SHORT).show()
 
-          // Roll back
-          buttonView.isChecked = !isChecked
-        }, {})
-      }
+        // Mark switch as disabled
+        switch.isEnabled = false
+      }, {})
     })
   }
 
