@@ -51,8 +51,8 @@ class ForegroundPresenter @Inject internal constructor(private val interactor: F
    */
   fun startNotification(onStartNotificationInForeground: (Notification) -> Unit) {
     disposeOnStop {
-      interactor.createNotification(true).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ onStartNotificationInForeground(it) },
+      interactor.createNotification(true).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onStartNotificationInForeground(it) },
           { Timber.e(it, "onError") })
     }
   }

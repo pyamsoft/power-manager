@@ -27,7 +27,7 @@ class Manager @Inject internal constructor(private val interactor: ManagerIntera
   private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
   init {
-    SchedulerHelper.enforceSubscribeScheduler(scheduler)
+    SchedulerHelper.enforceBackgroundScheduler(scheduler)
   }
 
   fun enable(onEnabled: (() -> Unit)) {

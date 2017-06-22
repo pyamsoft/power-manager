@@ -23,14 +23,14 @@ import javax.inject.Named
 
 @Module class TimeModule {
 
-  @Provides internal fun provideManageDelayPresenter(@Named("obs") observeScheduler: Scheduler,
-      @Named("sub") subscribeScheduler: Scheduler, interactor: TimeInteractor): TimePresenter {
-    return TimePresenter(observeScheduler, subscribeScheduler, interactor)
+  @Provides internal fun provideManageDelayPresenter(@Named("obs") foregroundScheduler: Scheduler,
+      @Named("sub") backgroundScheduler: Scheduler, interactor: TimeInteractor): TimePresenter {
+    return TimePresenter(foregroundScheduler, backgroundScheduler, interactor)
   }
 
-  @Provides internal fun providePollPresenter(@Named("obs") observeScheduler: Scheduler,
-      @Named("sub") subscribeScheduler: Scheduler, interactor: PollInteractor): PollPresenter {
-    return PollPresenter(interactor, observeScheduler, subscribeScheduler)
+  @Provides internal fun providePollPresenter(@Named("obs") foregroundScheduler: Scheduler,
+      @Named("sub") backgroundScheduler: Scheduler, interactor: PollInteractor): PollPresenter {
+    return PollPresenter(interactor, foregroundScheduler, backgroundScheduler)
   }
 
 }

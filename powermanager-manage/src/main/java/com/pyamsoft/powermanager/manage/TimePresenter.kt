@@ -23,10 +23,10 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-open class TimePresenter @Inject internal constructor(@Named("obs") observeScheduler: Scheduler,
-    @Named("sub") subscribeScheduler: Scheduler,
-    private val interactor: TimeInteractor) : SchedulerPresenter(observeScheduler,
-    subscribeScheduler) {
+open class TimePresenter @Inject internal constructor(@Named("obs") foregroundScheduler: Scheduler,
+    @Named("sub") backgroundScheduler: Scheduler,
+    private val interactor: TimeInteractor) : SchedulerPresenter(foregroundScheduler,
+    backgroundScheduler) {
 
   private var customTimeChangeDisposable = DisposableHelper.dispose(null)
 
@@ -57,7 +57,7 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
       onError: (Throwable) -> Unit) {
     stopListeningCustomTimeChanges()
     customTimeChangeDisposable = interactor.listenCustomTimeChanges().subscribeOn(
-        subscribeScheduler).observeOn(observeScheduler).subscribe({ (first, second) ->
+        backgroundScheduler).observeOn(foregroundScheduler).subscribe({ (first, second) ->
       onTimeError(first)
       onTimeChanged(second)
     }, {
@@ -71,8 +71,8 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
    */
   fun setPresetTime(time: Long, onError: (Throwable) -> Unit) {
     disposeOnDestroy {
-      interactor.setTime(time).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ Timber.d("Set delay time successfully: %s", time) }, {
+      interactor.setTime(time).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ Timber.d("Set delay time successfully: %s", time) }, {
         Timber.e(it, "Error setting managed")
         onError(it)
       })
@@ -85,8 +85,8 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
   fun getTime(onCustom: (Long) -> Unit, onPreset: (Long) -> Unit, onError: (Throwable) -> Unit,
       onCompleted: () -> Unit) {
     disposeOnDestroy {
-      interactor.time.subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate { onCompleted() }.subscribe({ (isCustom, delayTime) ->
+      interactor.time.subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate { onCompleted() }.subscribe({ (isCustom, delayTime) ->
         if (isCustom) {
           onCustom(delayTime)
         } else {
@@ -105,8 +105,8 @@ open class TimePresenter @Inject internal constructor(@Named("obs") observeSched
   fun listenForTimeChanges(onTimeChanged: (Long) -> Unit, onError: (Throwable) -> Unit) {
     Timber.w("LISTEN FOR TIME CHANGES")
     disposeOnDestroy {
-      interactor.listenTimeChanges().subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ onTimeChanged(it) }, {
+      interactor.listenTimeChanges().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onTimeChanged(it) }, {
         Timber.e(it, "Error on delay changed event")
         onError(it)
       })

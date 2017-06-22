@@ -21,15 +21,15 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 abstract class ExceptionPresenter internal constructor(private val interactor: ExceptionInteractor,
-    private val bus: ManageBus, observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler, subscribeScheduler) {
+    private val bus: ManageBus, foregroundScheduler: Scheduler,
+    backgroundScheduler: Scheduler) : TargetPresenter(foregroundScheduler, backgroundScheduler) {
   /**
    * public
    */
   fun setIgnoreCharging(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setIgnoreCharging(state).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate { onComplete() }.subscribe(
+      interactor.setIgnoreCharging(state).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate { onComplete() }.subscribe(
           { Timber.d("Set ignore charging state successfully: %s", state) }, {
         Timber.e(it, "Error setting ignore charging")
         onError(it)
@@ -43,8 +43,8 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   fun getIgnoreCharging(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
       onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.isIgnoreCharging.subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doOnSuccess { (first) ->
+      interactor.isIgnoreCharging.subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doOnSuccess { (first) ->
         onEnableRetrieved(first)
       }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
           { onStateRetrieved(it) }, {
@@ -59,8 +59,8 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
    */
   fun setIgnoreWear(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setIgnoreWear(state).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate { onComplete() }.subscribe(
+      interactor.setIgnoreWear(state).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate { onComplete() }.subscribe(
           { Timber.d("Set ignore wear state successfully: %s", state) }, {
         Timber.e(it, "Error setting ignore wear")
         onError(it)
@@ -74,8 +74,8 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   fun getIgnoreWear(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
       onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.isIgnoreWear.subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doOnSuccess { (first) ->
+      interactor.isIgnoreWear.subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doOnSuccess { (first) ->
         onEnableRetrieved(first)
       }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
           { onStateRetrieved(it) }, {
@@ -90,8 +90,8 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
    */
   fun registerOnBus(onManageChanged: () -> Unit) {
     disposeOnDestroy {
-      bus.listen().filter { it.target === target }.subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ onManageChanged() }, {
+      bus.listen().filter { it.target === target }.subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onManageChanged() }, {
         Timber.e(it, "Error on manage change bus for target: %s", target)
       })
     }

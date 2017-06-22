@@ -38,13 +38,13 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
       onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
       onTriggerDeleteError: (Throwable) -> Unit) {
     disposeOnStop {
-      createBus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+      createBus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
           { createPowerTrigger(it.entry, onAdd, onAddError, onCreateError) },
           { Timber.e(it, "onError create bus") })
     }
 
     disposeOnStop {
-      deleteBus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+      deleteBus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
           { deleteTrigger(it.percent, onTriggerDeleted, onTriggerDeleteError) },
           { Timber.e(it, "onError create bus") })
     }
@@ -54,8 +54,8 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
       onAddError: (Throwable) -> Unit, onCreateError: (Throwable) -> Unit) {
     disposeOnStop {
       Timber.d("Create new power trigger")
-      interactor.put(entry).subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
-          { onAdd(it) }, {
+      interactor.put(entry).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onAdd(it) }, {
         Timber.e(it, "onError")
         if (it is SQLiteConstraintException) {
           Timber.e("Error inserting into DB")
@@ -71,8 +71,8 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
   fun deleteTrigger(percent: Int, onTriggerDeleted: (Int) -> Unit,
       onTriggerError: (Throwable) -> Unit) {
     disposeOnStop {
-      interactor.delete(percent).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ onTriggerDeleted(it) }, {
+      interactor.delete(percent).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onTriggerDeleted(it) }, {
         Timber.e(it, "onError")
         onTriggerError(it)
       })
@@ -85,8 +85,8 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
   fun loadTriggerView(forceRefresh: Boolean, onTriggerLoaded: (PowerTriggerEntry) -> Unit,
       onTriggerLoadError: (Throwable) -> Unit, onTriggerLoadFinished: () -> Unit) {
     disposeOnStop {
-      interactor.queryAll(forceRefresh).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate({ onTriggerLoadFinished() }).subscribe(
+      interactor.queryAll(forceRefresh).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate({ onTriggerLoadFinished() }).subscribe(
           { onTriggerLoaded(it) }, {
         Timber.e(it, "onError")
         onTriggerLoadError(it)

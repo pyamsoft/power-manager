@@ -25,15 +25,15 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoggerPresenter @Inject internal constructor(private val interactor: LoggerInteractor,
-    observeScheduler: Scheduler, subscribeScheduler: Scheduler) : SchedulerPresenter(
-    observeScheduler, subscribeScheduler) {
+    foregroundScheduler: Scheduler, backgroundScheduler: Scheduler) : SchedulerPresenter(
+    foregroundScheduler, backgroundScheduler) {
 
   private val logDisposables: CompositeDisposable = CompositeDisposable()
 
   fun retrieveLogContents(onPrepareLogContentRetrieval: () -> Unit,
       onLogContentRetrieved: (String) -> Unit, onAllLogContentsRetrieved: () -> Unit) {
-    logDisposables.add(interactor.getLogContents().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).doAfterTerminate(
+    logDisposables.add(interactor.getLogContents().subscribeOn(backgroundScheduler).observeOn(
+        foregroundScheduler).doAfterTerminate(
         { onAllLogContentsRetrieved() }).doOnSubscribe { onPrepareLogContentRetrieval() }.subscribe(
         { onLogContentRetrieved(it) }, {
       Timber.e(it, "onError: Failed to retrieve log contents: %s", interactor.logId)
@@ -47,8 +47,8 @@ class LoggerPresenter @Inject internal constructor(private val interactor: Logge
 
   internal fun log(logType: LogType, fmt: String, vararg args: Any) {
     logDisposables.add(
-        interactor.log(logType, fmt, *args).subscribeOn(subscribeScheduler).observeOn(
-            observeScheduler).subscribe({
+        interactor.log(logType, fmt, *args).subscribeOn(backgroundScheduler).observeOn(
+            foregroundScheduler).subscribe({
           // TODO anything else?
         }) { throwable ->
           Timber.e(throwable, "onError: Unable to successfully log message to log file")
@@ -60,16 +60,16 @@ class LoggerPresenter @Inject internal constructor(private val interactor: Logge
 
   private fun queueClearLogDisposable() {
     logDisposables.add(
-        Observable.just(true).delay(1, TimeUnit.MINUTES).subscribeOn(subscribeScheduler).observeOn(
-            observeScheduler).subscribe({ logDisposables.clear() },
+        Observable.just(true).delay(1, TimeUnit.MINUTES).subscribeOn(backgroundScheduler).observeOn(
+            foregroundScheduler).subscribe({ logDisposables.clear() },
             { throwable -> Timber.e(throwable, "onError clearing composite subscription") }))
   }
 
   fun deleteLog(onLogDeleted: (String) -> Unit) {
     // Stop everything before we delete the log
     clearLogs()
-    logDisposables.add(interactor.deleteLog().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({
+    logDisposables.add(interactor.deleteLog().subscribeOn(backgroundScheduler).observeOn(
+        foregroundScheduler).subscribe({
       if (it) {
         onLogDeleted(interactor.logId)
       }

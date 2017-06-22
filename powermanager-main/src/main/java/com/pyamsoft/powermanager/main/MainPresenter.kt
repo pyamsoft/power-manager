@@ -27,8 +27,8 @@ class MainPresenter @Inject internal constructor(private val interactor: MainInt
     @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
 
   fun startServiceWhenOpen(onServiceEnabled: () -> Unit, onServiceError: (Throwable) -> Unit) {
-    disposeOnStop(interactor.isStartWhenOpen().subscribeOn(subscribeScheduler).observeOn(
-        observeScheduler).subscribe({
+    disposeOnStop(interactor.isStartWhenOpen().subscribeOn(backgroundScheduler).observeOn(
+        foregroundScheduler).subscribe({
       if (it) {
         onServiceEnabled()
       }

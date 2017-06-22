@@ -36,7 +36,7 @@ class SettingsPreferencePresenter @Inject internal constructor(private val bus: 
    */
   fun registerOnBus(onClearDatabase: () -> Unit, onClearAll: () -> Unit) {
     disposeOnStop {
-      bus.listen().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe({ (type) ->
+      bus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe({ (type) ->
         when (type) {
           DATABASE -> clearDatabase(onClearDatabase)
           ALL -> clearAll(onClearAll)
@@ -48,15 +48,15 @@ class SettingsPreferencePresenter @Inject internal constructor(private val bus: 
 
   private fun clearAll(onClearAll: () -> Unit) {
     disposeOnStop {
-      interactor.clearAll().subscribeOn(subscribeScheduler).observeOn(observeScheduler).subscribe(
+      interactor.clearAll().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
           { onClearAll() }, { Timber.e(it, "onError") })
     }
   }
 
   private fun clearDatabase(onClearDatabase: () -> Unit) {
     disposeOnStop {
-      interactor.clearDatabase().subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).subscribe({ onClearDatabase() }, { Timber.e(it, "onError") })
+      interactor.clearDatabase().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onClearDatabase() }, { Timber.e(it, "onError") })
     }
   }
 }

@@ -22,15 +22,15 @@ import io.reactivex.Scheduler
 import timber.log.Timber
 
 abstract class ManagePresenter internal constructor(private val interactor: ManageInteractor,
-    private val bus: ManageBus, observeScheduler: Scheduler,
-    subscribeScheduler: Scheduler) : TargetPresenter(observeScheduler, subscribeScheduler) {
+    private val bus: ManageBus, foregroundScheduler: Scheduler,
+    backgroundScheduler: Scheduler) : TargetPresenter(foregroundScheduler, backgroundScheduler) {
   /**
    * public
    */
   fun setManaged(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setManaged(state).subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doAfterTerminate {
+      interactor.setManaged(state).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doAfterTerminate {
         bus.publish(ManageChangeEvent(target))
       }.doAfterTerminate { onComplete() }.subscribe(
           { Timber.d("Set managed state successfully: %s", state) }, {
@@ -46,8 +46,8 @@ abstract class ManagePresenter internal constructor(private val interactor: Mana
   fun getState(onEnableRetrieved: (Boolean) -> Unit, onStateRetrieved: (Boolean) -> Unit,
       onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.isManaged.subscribeOn(subscribeScheduler).observeOn(
-          observeScheduler).doOnSuccess { (first) ->
+      interactor.isManaged.subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).doOnSuccess { (first) ->
         onEnableRetrieved(first)
       }.doAfterTerminate { onComplete() }.map { (_, second) -> second }.subscribe(
           { onStateRetrieved(it) }, {
