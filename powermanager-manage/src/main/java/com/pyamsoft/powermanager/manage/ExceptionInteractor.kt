@@ -17,16 +17,15 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import io.reactivex.Completable
 import io.reactivex.Single
 
 abstract internal class ExceptionInteractor {
 
-  @CheckResult internal abstract fun setIgnoreCharging(state: Boolean): Completable
+  @CheckResult internal abstract fun setIgnoreCharging(state: Boolean): Single<Boolean>
 
   @get:CheckResult internal abstract val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
 
-  @CheckResult internal abstract fun setIgnoreWear(state: Boolean): Completable
+  @CheckResult internal abstract fun setIgnoreWear(state: Boolean): Single<Boolean>
 
   @get:CheckResult internal abstract val isIgnoreWear: Single<Pair<Boolean, Boolean>>
 }

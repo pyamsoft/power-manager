@@ -24,12 +24,13 @@ import javax.inject.Inject
 internal class SyncExceptionInteractor @Inject internal constructor(
     private val preferences: SyncPreferences) : ExceptionInteractor() {
 
-  override fun setIgnoreCharging(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreChargingSync = state }
+  override fun setIgnoreCharging(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreChargingSync = state }.andThen(
+        Single.just(state))
   }
 
-  override fun setIgnoreWear(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreWearSync = state }
+  override fun setIgnoreWear(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreWearSync = state }.andThen(Single.just(state))
   }
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>

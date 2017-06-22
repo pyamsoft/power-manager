@@ -26,12 +26,14 @@ internal class DataSaverExceptionInteractor @Inject internal constructor(
     private val permissionObserver: PermissionObserver,
     private val preferences: DataSaverPreferences) : ExceptionInteractor() {
 
-  override fun setIgnoreCharging(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreChargingDataSaver = state }
+  override fun setIgnoreCharging(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreChargingDataSaver = state }.andThen(
+        Single.just(state))
   }
 
-  override fun setIgnoreWear(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreWearDataSaver = state }
+  override fun setIgnoreWear(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreWearDataSaver = state }.andThen(
+        Single.just(state))
   }
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>

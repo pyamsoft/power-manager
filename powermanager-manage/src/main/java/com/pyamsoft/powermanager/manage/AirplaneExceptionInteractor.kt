@@ -26,12 +26,14 @@ internal class AirplaneExceptionInteractor @Inject internal constructor(
     private val permissionObserver: PermissionObserver,
     private val preferences: AirplanePreferences) : ExceptionInteractor() {
 
-  override fun setIgnoreCharging(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreChargingAirplane = state }
+  override fun setIgnoreCharging(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreChargingAirplane = state }.andThen(
+        Single.just(state))
   }
 
-  override fun setIgnoreWear(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreWearAirplane = state }
+  override fun setIgnoreWear(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreWearAirplane = state }.andThen(
+        Single.just(state))
   }
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>

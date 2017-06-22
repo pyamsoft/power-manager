@@ -126,15 +126,13 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
       // Mark switch as disabled
       checkBox.isEnabled = false
     }, onComplete = {
-      checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-        presenter.setIgnoreCharging(isChecked, {
-          Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-              Toasty.LENGTH_SHORT).show()
+      presenter.setIgnoreCharging(checkBox, {
+        Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+            Toasty.LENGTH_SHORT).show()
 
-          // Roll back
-          buttonView.isChecked = !isChecked
-        }, {})
-      }
+        // Mark switch as disabled
+        checkBox.isEnabled = false
+      }, {})
     })
   }
 
@@ -158,24 +156,19 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
       // Mark switch as disabled
       checkBox.isEnabled = false
     }, onComplete = {
-      checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-        // Update backing
-        presenter.setIgnoreWear(isChecked, {
-          Toasty.makeText(checkBox.context, "Failed to set state: " + name,
-              Toasty.LENGTH_SHORT).show()
+      presenter.setIgnoreWear(checkBox, {
+        Toasty.makeText(checkBox.context, "Failed to set state: " + name,
+            Toasty.LENGTH_SHORT).show()
 
-          // Roll back
-          buttonView.isChecked = !isChecked
-        }, {})
-      }
+        // Mark switch as disabled
+        checkBox.isEnabled = false
+      }, {})
     })
   }
 
   private fun unbind(chargeCheckbox: CheckBox, wearCheckBox: CheckBox) {
     chargeCheckbox.text = null
-    chargeCheckbox.setOnCheckedChangeListener(null)
     wearCheckBox.text = null
-    wearCheckBox.setOnCheckedChangeListener(null)
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

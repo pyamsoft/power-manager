@@ -24,12 +24,14 @@ import javax.inject.Inject
 internal class BluetoothExceptionInteractor @Inject internal constructor(
     private val preferences: BluetoothPreferences) : ExceptionInteractor() {
 
-  override fun setIgnoreCharging(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreChargingBluetooth = state }
+  override fun setIgnoreCharging(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreChargingBluetooth = state }.andThen(
+        Single.just(state))
   }
 
-  override fun setIgnoreWear(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreWearBluetooth = state }
+  override fun setIgnoreWear(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreWearBluetooth = state }.andThen(
+        Single.just(state))
   }
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>

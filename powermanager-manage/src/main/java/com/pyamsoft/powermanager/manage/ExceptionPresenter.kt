@@ -16,7 +16,9 @@
 
 package com.pyamsoft.powermanager.manage
 
+import android.widget.CompoundButton
 import com.pyamsoft.powermanager.manage.bus.ManageBus
+import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
 import timber.log.Timber
 
@@ -26,11 +28,13 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   /**
    * public
    */
-  fun setIgnoreCharging(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
+  fun setIgnoreCharging(view: CompoundButton, onError: (Throwable) -> Unit,
+      onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setIgnoreCharging(state).subscribeOn(backgroundScheduler).observeOn(
+      RxViews.onCheckChanged(view).observeOn(
+          backgroundScheduler).flatMapSingle { interactor.setIgnoreCharging(it.checked) }.observeOn(
           foregroundScheduler).doAfterTerminate { onComplete() }.subscribe(
-          { Timber.d("Set ignore charging state successfully: %s", state) }, {
+          { Timber.d("Set ignore charging state successfully: %s", it) }, {
         Timber.e(it, "Error setting ignore charging")
         onError(it)
       })
@@ -57,11 +61,12 @@ abstract class ExceptionPresenter internal constructor(private val interactor: E
   /**
    * public
    */
-  fun setIgnoreWear(state: Boolean, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
+  fun setIgnoreWear(view: CompoundButton, onError: (Throwable) -> Unit, onComplete: () -> Unit) {
     disposeOnDestroy {
-      interactor.setIgnoreWear(state).subscribeOn(backgroundScheduler).observeOn(
+      RxViews.onCheckChanged(view).observeOn(
+          backgroundScheduler).flatMapSingle { interactor.setIgnoreWear(it.checked) }.observeOn(
           foregroundScheduler).doAfterTerminate { onComplete() }.subscribe(
-          { Timber.d("Set ignore wear state successfully: %s", state) }, {
+          { Timber.d("Set ignore wear state successfully: %s", it) }, {
         Timber.e(it, "Error setting ignore wear")
         onError(it)
       })

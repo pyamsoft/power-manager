@@ -17,11 +17,12 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
 import io.reactivex.Scheduler
 
 abstract class TargetPresenter protected constructor(foregroundScheduler: Scheduler,
-    backgroundScheduler: Scheduler) : SchedulerPresenter(foregroundScheduler, backgroundScheduler) {
+    backgroundScheduler: Scheduler) : SchedulerViewPresenter(foregroundScheduler,
+    backgroundScheduler) {
 
   @get:CheckResult internal abstract val target: ManageTargets
 }

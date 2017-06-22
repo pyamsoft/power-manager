@@ -26,12 +26,13 @@ internal class DozeExceptionInteractor @Inject internal constructor(
     private val permissionObserver: PermissionObserver,
     private val preferences: DozePreferences) : ExceptionInteractor() {
 
-  override fun setIgnoreCharging(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreChargingDoze = state }
+  override fun setIgnoreCharging(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreChargingDoze = state }.andThen(
+        Single.just(state))
   }
 
-  override fun setIgnoreWear(state: Boolean): Completable {
-    return Completable.fromAction { preferences.ignoreWearDoze = state }
+  override fun setIgnoreWear(state: Boolean): Single<Boolean> {
+    return Completable.fromAction { preferences.ignoreWearDoze = state }.andThen(Single.just(state))
   }
 
   override val isIgnoreCharging: Single<Pair<Boolean, Boolean>>
