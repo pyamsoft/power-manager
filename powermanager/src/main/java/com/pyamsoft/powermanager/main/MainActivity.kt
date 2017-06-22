@@ -23,9 +23,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.CheckResult
-import android.support.annotation.Px
 import android.support.design.widget.AppBarLayout
-import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.CoordinatorLayout
 import android.support.v4.app.Fragment
 import android.support.v7.preference.PreferenceManager
@@ -67,11 +65,6 @@ class MainActivity : TamperActivity() {
     }
     setupPreferenceDefaults()
     setupAppBar()
-    setupBottomBar()
-
-    if (hasNoActiveFragment()) {
-      binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
-    }
   }
 
   private fun setupPreferenceDefaults() {
@@ -88,48 +81,44 @@ class MainActivity : TamperActivity() {
   }
 
   private fun setupBottomBar() {
-    binding.bottomtabs.setOnNavigationItemSelectedListener(
-        object : BottomNavigationView.OnNavigationItemSelectedListener {
-          override fun onNavigationItemSelected(item: MenuItem): Boolean {
-            val handled: Boolean
-            when (item.itemId) {
-              R.id.menu_manage -> {
-                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
-                binding.mainAppbar.setExpanded(true)
-              }
-              R.id.menu_workarounds -> {
-                handled = replaceFragment(WorkaroundFragment(), WorkaroundFragment.TAG)
-                binding.mainAppbar.setExpanded(true)
-              }
-              R.id.menu_triggers -> {
-                handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
-                binding.mainAppbar.setExpanded(false, true)
-              }
-              R.id.menu_settings -> {
-                handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
-                binding.mainAppbar.setExpanded(false, true)
-              }
-              else -> handled = false
-            }
+    binding.bottomtabs.setOnNavigationItemSelectedListener { item ->
+      val handled: Boolean
+      when (item.itemId) {
+        R.id.menu_manage -> {
+          handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
+          binding.mainAppbar.setExpanded(true)
+        }
+        R.id.menu_workarounds -> {
+          handled = replaceFragment(WorkaroundFragment(), WorkaroundFragment.TAG)
+          binding.mainAppbar.setExpanded(true)
+        }
+        R.id.menu_triggers -> {
+          handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
+          binding.mainAppbar.setExpanded(false, true)
+        }
+        R.id.menu_settings -> {
+          handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
+          binding.mainAppbar.setExpanded(false, true)
+        }
+        else -> handled = false
+      }
 
-            if (handled) {
-              item.isChecked = !item.isChecked
-            }
+      if (handled) {
+        item.isChecked = !item.isChecked
+      }
 
-            return handled
-          }
+      handled
+    }
+  }
 
-          @CheckResult private fun replaceFragment(fragment: Fragment, tag: String): Boolean {
-            val fragmentManager = supportFragmentManager
-            if (fragmentManager.findFragmentByTag(tag) == null) {
-              fragmentManager.beginTransaction().replace(R.id.main_container, fragment,
-                  tag).commit()
-              return true
-            } else {
-              return false
-            }
-          }
-        })
+  @CheckResult private fun replaceFragment(fragment: Fragment, tag: String): Boolean {
+    val fragmentManager = supportFragmentManager
+    if (fragmentManager.findFragmentByTag(tag) == null) {
+      fragmentManager.beginTransaction().replace(R.id.main_container, fragment, tag).commit()
+      return true
+    } else {
+      return false
+    }
   }
 
   override fun onDestroy() {
@@ -203,15 +192,23 @@ class MainActivity : TamperActivity() {
 
   override fun onStart() {
     super.onStart()
+    setupBottomBar()
+
     presenter.startServiceWhenOpen({
       Timber.d("Should refresh service when opened")
       ForegroundService.start(applicationContext)
     }, {})
+
+    if (hasNoActiveFragment()) {
+      binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
+    }
   }
 
   override fun onStop() {
     super.onStop()
     presenter.stop()
+
+    binding.bottomtabs.setOnNavigationItemSelectedListener(null)
   }
 
   // https://github.com/mozilla/gecko-dev/blob/master/mobile/android/base/java/org/mozilla/gecko/BrowserApp.java
@@ -245,7 +242,7 @@ class MainActivity : TamperActivity() {
   }
 
   // Set the scrolling overlap top
-  fun setOverlapTop(@Px px: Float) {
+  fun setOverlapTop(px: Float) {
     ((binding.mainContainer.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? AppBarLayout.ScrollingViewBehavior)?.overlayTop = AppUtil.convertToDP(
         this, px).toInt()
   }
