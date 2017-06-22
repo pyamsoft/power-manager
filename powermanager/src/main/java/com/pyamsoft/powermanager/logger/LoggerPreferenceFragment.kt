@@ -22,6 +22,7 @@ import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.base.logger.LoggerPreferencePresenter
 import com.pyamsoft.powermanager.base.logger.LoggerPresenter
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import javax.inject.Inject
@@ -41,6 +42,7 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment() {
   @field:[Inject Named(
       "logger_presenter_manager")] lateinit internal var loggerManager: LoggerPresenter
   private lateinit var loggingEnabled: Preference
+  @Inject internal lateinit var loggerPrefrencePresenter: LoggerPreferencePresenter
 
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     addPreferencesFromResource(R.xml.logger)
@@ -56,13 +58,6 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment() {
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     loggingEnabled = findPreference(getString(R.string.logger_enabled))
-    loggingEnabled.setOnPreferenceChangeListener { _, newValue ->
-      if (newValue is Boolean) {
-        deleteAllPreviousLogs()
-        return@setOnPreferenceChangeListener true
-      }
-      return@setOnPreferenceChangeListener false
-    }
   }
 
   internal fun deleteAllPreviousLogs() {
@@ -99,6 +94,10 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment() {
         this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
     loggerTrigger.retrieveLogContents(this::onPrepareLogContentRetrieval,
         this::onLogContentRetrieved, this::onAllLogContentsRetrieved)
+
+    loggerPrefrencePresenter.clickEvent(loggingEnabled, {
+      deleteAllPreviousLogs()
+    })
   }
 
   override fun onStop() {
@@ -111,6 +110,8 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment() {
     loggerDoze.stop()
     loggerManager.stop()
     loggerTrigger.stop()
+
+    loggerPrefrencePresenter.stop()
   }
 
   override fun onDestroy() {
@@ -123,6 +124,9 @@ class LoggerPreferenceFragment : WatchedPreferenceFragment() {
     loggerDoze.destroy()
     loggerManager.destroy()
     loggerTrigger.destroy()
+
+
+    loggerPrefrencePresenter.destroy()
   }
 
   private val loggerDialog: LoggerDialog
