@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.settings
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.ALL
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.DATABASE
 import com.pyamsoft.powermanager.settings.bus.SettingsBus
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.SchedulerPreferencePresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,7 +27,8 @@ import javax.inject.Named
 
 class SettingsPreferencePresenter @Inject internal constructor(private val bus: SettingsBus,
     private val interactor: SettingsPreferenceInteractor, @Named("obs") obsScheduler: Scheduler,
-    @Named("sub") subScheduler: Scheduler) : SchedulerPresenter(obsScheduler, subScheduler) {
+    @Named("sub") subScheduler: Scheduler) : SchedulerPreferencePresenter(obsScheduler,
+    subScheduler) {
 
   /**
    * public
@@ -36,20 +37,22 @@ class SettingsPreferencePresenter @Inject internal constructor(private val bus: 
    */
   fun registerOnBus(onClearDatabase: () -> Unit, onClearAll: () -> Unit) {
     disposeOnStop {
-      bus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe({ (type) ->
-        when (type) {
-          DATABASE -> clearDatabase(onClearDatabase)
-          ALL -> clearAll(onClearAll)
-          else -> throw IllegalStateException("Received invalid confirmation event type: " + type)
-        }
-      }, { Timber.e(it, "confirm bus error") })
+      bus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
+          { (type) ->
+            when (type) {
+              DATABASE -> clearDatabase(onClearDatabase)
+              ALL -> clearAll(onClearAll)
+              else -> throw IllegalStateException(
+                  "Received invalid confirmation event type: " + type)
+            }
+          }, { Timber.e(it, "confirm bus error") })
     }
   }
 
   private fun clearAll(onClearAll: () -> Unit) {
     disposeOnStop {
-      interactor.clearAll().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
-          { onClearAll() }, { Timber.e(it, "onError") })
+      interactor.clearAll().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ onClearAll() }, { Timber.e(it, "onError") })
     }
   }
 

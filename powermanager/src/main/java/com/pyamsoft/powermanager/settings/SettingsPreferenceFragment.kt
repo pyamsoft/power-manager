@@ -20,6 +20,7 @@ import android.app.ActivityManager
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.NotificationManagerCompat
+import android.support.v7.preference.Preference
 import android.view.View
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.PowerManager
@@ -39,6 +40,8 @@ import javax.inject.Inject
 class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   @field:Inject internal lateinit var presenter: SettingsPreferencePresenter
+  private lateinit var clearDb: Preference
+  private lateinit var useRoot: Preference
 
   override val applicationName: String
     get() = getString(R.string.app_name)
@@ -68,24 +71,8 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    findPreference(getString(R.string.clear_db_key))?.setOnPreferenceClickListener {
-      DialogUtil.guaranteeSingleDialogFragment(activity,
-          ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "clear_db")
-      return@setOnPreferenceClickListener true
-    }
-
-    findPreference(getString(R.string.use_root_key))?.setOnPreferenceClickListener {
-      Timber.d("Root clicked")
-      return@setOnPreferenceClickListener true
-    }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    findPreference(getString(R.string.clear_db_key))?.onPreferenceClickListener = null
-    findPreference(getString(R.string.clear_all_key))?.onPreferenceClickListener = null
-    findPreference(getString(R.string.use_root_key))?.onPreferenceClickListener = null
+    clearDb = findPreference(getString(R.string.clear_db_key))
+    useRoot = findPreference(getString(R.string.use_root_key))
   }
 
   override fun onClearAllClicked() {
@@ -104,6 +91,18 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
           ForegroundService.NOTIFICATION_ID)
       (context.applicationContext.getSystemService(
           Context.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData()
+    })
+
+    presenter.clickEvent(clearDb, {
+      DialogUtil.guaranteeSingleDialogFragment(activity,
+          ConfirmationDialog.newInstance(ConfirmEvent.Type.DATABASE), "clear_db")
+    })
+
+    presenter.clickEvent(useRoot, {
+      Timber.d("Root clicked")
+    }, {
+      // TODO Check root conditions
+      true
     })
   }
 
