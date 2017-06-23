@@ -16,19 +16,11 @@
 
 package com.pyamsoft.powermanager.uicore
 
-import android.app.Dialog
-import android.os.Bundle
 import android.support.annotation.CallSuper
-import android.support.v4.app.DialogFragment
-import android.view.Window
 import com.pyamsoft.powermanager.PowerManager
+import com.pyamsoft.pydroid.ui.app.fragment.DialogFragmentBase
 
-abstract class WatchedDialog : DialogFragment() {
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
-    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-    return dialog
-  }
+abstract class WatchedDialog : DialogFragmentBase() {
 
   @CallSuper override fun onDestroy() {
     super.onDestroy()
