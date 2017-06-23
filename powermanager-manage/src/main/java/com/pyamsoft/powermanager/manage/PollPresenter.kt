@@ -16,6 +16,8 @@
 
 package com.pyamsoft.powermanager.manage
 
+import android.widget.CompoundButton
+import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,16 +30,18 @@ class PollPresenter @Inject internal constructor(private val interactor: PollInt
       onCompleted: () -> Unit) {
     disposeOnDestroy {
       interactor.getCurrentState().subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).doAfterTerminate { onCompleted() }.subscribe({ onStateRetrieved(it) }, {
+          foregroundScheduler).doAfterTerminate { onCompleted() }.subscribe(
+          { onStateRetrieved(it) }, {
         Timber.e(it, "Error getting polling state")
         onError(it)
       })
     }
   }
 
-  fun toggleAll(checked: Boolean, onError: (Throwable) -> Unit, onCompleted: () -> Unit) {
+  fun toggleAll(view: CompoundButton, onError: (Throwable) -> Unit, onCompleted: () -> Unit) {
     disposeOnDestroy {
-      interactor.toggleAll(checked).subscribeOn(backgroundScheduler).observeOn(
+      RxViews.onCheckChanged(view).observeOn(
+          backgroundScheduler).flatMapSingle { interactor.toggleAll(it.checked) }.observeOn(
           foregroundScheduler).subscribe({ onCompleted() }, {
         Timber.e(it, "Error toggle all polling")
         onError(it)

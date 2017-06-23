@@ -37,7 +37,7 @@ internal class PollInteractor @Inject internal constructor(
     private val dataSaverPreferences: DataSaverPreferences,
     preferenceWrapper: TimePreferenceWrapper) : TimeInteractor(preferenceWrapper) {
 
-  @CheckResult fun toggleAll(checked: Boolean): Completable {
+  @CheckResult fun toggleAll(checked: Boolean): Single<Boolean> {
     return Completable.fromAction {
       wifiPreferences.periodicWifi = checked
       dataPreferences.periodicData = checked
@@ -46,7 +46,7 @@ internal class PollInteractor @Inject internal constructor(
       airplanePreferences.periodicAirplane = checked
       dozePreferences.periodicDoze = checked
       dataSaverPreferences.periodicDataSaver = checked
-    }
+    }.andThen(Single.just(checked))
   }
 
   @CheckResult fun getCurrentState(): Single<Boolean> {

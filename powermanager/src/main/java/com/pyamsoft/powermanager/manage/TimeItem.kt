@@ -75,34 +75,37 @@ abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal
       Toasty.makeText(context, "Error getting delay time", Toasty.LENGTH_SHORT).show()
     }, onCompleted = {})
 
-    holder.containerBinding.delayRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-      if (checkedId == -1) {
-        Timber.d("Custom is checked")
-        enableCustomInput(holder)
-      } else {
-        Timber.d("Preset is checked")
-        disableCustomInput(holder)
-        val time: Long
-        when (checkedId) {
-          R.id.delay_radio_one -> time = getTimeRadioOne()
-          R.id.delay_radio_two -> time = getTimeRadioTwo()
-          R.id.delay_radio_three -> time = getTimeRadioThree()
-          R.id.delay_radio_four -> time = getTimeRadioFour()
-          R.id.delay_radio_five -> time = getTimeRadioFive()
-          R.id.delay_radio_six -> time = getTimeRadioSix()
-          R.id.delay_radio_seven -> time = getTimeRadioSeven()
-          R.id.delay_radio_eight -> time = getTimeRadioEight()
-          else -> throw IllegalArgumentException("Could not find RadioButton with id: " + checkedId)
-        }
+    holder.presenter.setPresetTime(holder.containerBinding.delayRadioGroup,
+        onChange = { _, checkedId ->
+          val time: Long
+          if (checkedId == -1) {
+            Timber.d("Custom is checked")
+            enableCustomInput(holder)
+            time = 0L
+          } else {
+            Timber.d("Preset is checked")
+            disableCustomInput(holder)
+            when (checkedId) {
+              R.id.delay_radio_one -> time = getTimeRadioOne()
+              R.id.delay_radio_two -> time = getTimeRadioTwo()
+              R.id.delay_radio_three -> time = getTimeRadioThree()
+              R.id.delay_radio_four -> time = getTimeRadioFour()
+              R.id.delay_radio_five -> time = getTimeRadioFive()
+              R.id.delay_radio_six -> time = getTimeRadioSix()
+              R.id.delay_radio_seven -> time = getTimeRadioSeven()
+              R.id.delay_radio_eight -> time = getTimeRadioEight()
+              else -> throw IllegalArgumentException(
+                  "Could not find RadioButton with id: " + checkedId)
+            }
+          }
 
-        holder.presenter.setPresetTime(time, {
-          Toasty.makeText(context, "Failed to set delay time", Toasty.LENGTH_SHORT).show()
-          group.isEnabled = false
-        })
-      }
-    }
+          return@setPresetTime time
+        }, onError = {
+      Toasty.makeText(context, "Failed to set delay time", Toasty.LENGTH_SHORT).show()
+      holder.containerBinding.delayRadioGroup.isEnabled = false
+    })
 
-    holder.containerBinding.delayRadioCustom.setOnCheckedChangeListener { _, isChecked ->
+    holder.presenter.checkChangedEvent(holder.containerBinding.delayRadioCustom) { _, isChecked ->
       if (isChecked) {
         holder.containerBinding.delayRadioGroup.clearCheck()
         enableCustomInput(holder)
@@ -110,6 +113,7 @@ abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal
         disableCustomInput(holder)
       }
     }
+
     holder.presenter.listenForTimeChanges({
       // Remove watcher
       holder.containerBinding.delayInputCustom.setText(it.toString())
@@ -169,8 +173,6 @@ abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal
           holder.containerBinding.delayInputCustom.text.toString(), true)
     }
     holder.containerBinding.delayInputCustom.removeTextChangedListener(customTimeWatcher)
-    holder.containerBinding.delayRadioCustom.setOnCheckedChangeListener(null)
-    holder.containerBinding.delayRadioGroup.setOnCheckedChangeListener(null)
     holder.presenter.stop()
     holder.presenter.destroy()
   }

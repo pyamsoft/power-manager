@@ -16,16 +16,21 @@
 
 package com.pyamsoft.powermanager.manage
 
+import android.support.annotation.CheckResult
+import android.widget.RadioGroup
 import com.pyamsoft.pydroid.helper.DisposableHelper
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
 import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
 open class TimePresenter @Inject internal constructor(@Named("obs") foregroundScheduler: Scheduler,
     @Named("sub") backgroundScheduler: Scheduler,
-    private val interactor: TimeInteractor) : SchedulerPresenter(foregroundScheduler,
+    private val interactor: TimeInteractor) : SchedulerViewPresenter(foregroundScheduler,
     backgroundScheduler) {
 
   private var customTimeChangeDisposable = DisposableHelper.dispose(null)
@@ -69,10 +74,15 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
   /**
    * public
    */
-  fun setPresetTime(time: Long, onError: (Throwable) -> Unit) {
+  fun setPresetTime(group: RadioGroup, onChange: (RadioGroup, Int) -> Long,
+      onError: (Throwable) -> Unit) {
     disposeOnDestroy {
-      interactor.setTime(time).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ Timber.d("Set delay time successfully: %s", time) }, {
+      onCheckChanged(group).observeOn(foregroundScheduler).map {
+        onChange(it.group, it.checkedId)
+      }.observeOn(backgroundScheduler).flatMapMaybe {
+        interactor.setTime(it)
+      }.observeOn(foregroundScheduler).subscribe(
+          { Timber.d("Set delay time successfully: %s", it) }, {
         Timber.e(it, "Error setting managed")
         onError(it)
       })
@@ -86,13 +96,14 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
       onCompleted: () -> Unit) {
     disposeOnDestroy {
       interactor.time.subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).doAfterTerminate { onCompleted() }.subscribe({ (isCustom, delayTime) ->
-        if (isCustom) {
-          onCustom(delayTime)
-        } else {
-          onPreset(delayTime)
-        }
-      }, {
+          foregroundScheduler).doAfterTerminate { onCompleted() }.subscribe(
+          { (isCustom, delayTime) ->
+            if (isCustom) {
+              onCustom(delayTime)
+            } else {
+              onPreset(delayTime)
+            }
+          }, {
         Timber.e(it, "Error getting delay time")
         onError(it)
       })
@@ -111,5 +122,29 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
         onError(it)
       })
     }
+  }
+
+  companion object {
+
+    // TODO possible graduate to RxViews
+    private data class GroupChangedEvent(val group: RadioGroup, val checkedId: Int)
+
+    // TODO possible graduate to RxViews
+    @CheckResult private fun onCheckChanged(group: RadioGroup,
+        scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<GroupChangedEvent> {
+      return Observable.create { emitter: ObservableEmitter<GroupChangedEvent> ->
+
+        emitter.setCancellable {
+          group.setOnCheckedChangeListener(null)
+        }
+
+        group.setOnCheckedChangeListener { group, checkedId ->
+          if (!emitter.isDisposed) {
+            emitter.onNext(GroupChangedEvent(group, checkedId))
+          }
+        }
+      }.subscribeOn(scheduler)
+    }
+
   }
 }

@@ -112,7 +112,6 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
 
   private fun unbindSwitch(switch: SwitchCompat) {
     switch.text = null
-    switch.setOnCheckedChangeListener(null)
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

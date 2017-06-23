@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.manage
 import android.support.annotation.CheckResult
 import com.pyamsoft.pydroid.bus.RxBus
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
@@ -32,8 +33,12 @@ open internal class TimeInteractor @Inject internal constructor(
   internal val time: Single<Pair<Boolean, Long>>
     @CheckResult get() = Single.fromCallable { Pair(preferences.isCustom, preferences.time) }
 
-  @CheckResult internal fun setTime(time: Long): Completable {
-    return Completable.fromAction { preferences.setTime(time, false) }
+  @CheckResult internal fun setTime(time: Long): Maybe<Long> {
+    if (time > 0L) {
+      return Completable.fromAction { preferences.setTime(time, false) }.andThen(Maybe.just(time))
+    } else {
+      return Maybe.empty()
+    }
   }
 
   @CheckResult internal fun listenTimeChanges(): Observable<Long> {

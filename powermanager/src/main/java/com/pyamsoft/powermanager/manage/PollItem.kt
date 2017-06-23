@@ -76,35 +76,29 @@ class PollItem : TimeItem<PollPresenter, PollItem.ViewHolder>(TAG) {
     Timber.d("Bind poll item")
 
     holder.binding.toggleSwitch.setOnCheckedChangeListener(null)
-    holder.presenter.getCurrentPeriodic({
+    holder.presenter.getCurrentPeriodic(onStateRetrieved = {
       Timber.d("Poll state retrieved: %s", it)
       holder.binding.toggleSwitch.isChecked = it
-    }, {
+    }, onError = {
       Toasty.makeText(holder.itemView.context, "Failed to retrieve polling state",
           Toasty.LENGTH_SHORT).show()
 
       // Mark switch as disabled
       holder.binding.toggleSwitch.isEnabled = false
-    }, {
-      holder.binding.toggleSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (buttonView != null) {
-          Timber.d("Set polling enabled: %s", isChecked)
-          holder.presenter.toggleAll(isChecked, {
-            Toasty.makeText(buttonView.context, "Failed to set polling state",
-                Toasty.LENGTH_SHORT).show()
+    }, onCompleted = {
+      holder.presenter.toggleAll(holder.binding.toggleSwitch, onError = {
+        Toasty.makeText(holder.itemView.context, "Failed to set polling state",
+            Toasty.LENGTH_SHORT).show()
 
-            // Mark switch as disabled
-            buttonView.isEnabled = false
-          }, {})
-        }
-      }
+        // Mark switch as disabled
+        holder.binding.toggleSwitch.isEnabled = false
+      }, onCompleted = {})
     })
   }
 
   override fun unbindView(holder: ViewHolder) {
     super.unbindView(holder)
     Timber.d("Unbind poll item")
-    holder.binding.toggleSwitch.setOnCheckedChangeListener(null)
   }
 
   class ViewHolder internal constructor(itemView: View) : TimeItem.ViewHolder<PollPresenter>(
