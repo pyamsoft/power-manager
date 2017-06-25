@@ -130,7 +130,7 @@ class PollItem : TimeItem<PollPresenter, PollItem.ViewHolder>(TAG) {
       //      containerDelay.delay_radio_eight.text = "1 Hour 30 Minutes"
 
       Injector.with(itemView.context) {
-        it.plusManageComponent().inject(this)
+        it.plusManageComponent().injectPoll(this)
       }
     }
   }

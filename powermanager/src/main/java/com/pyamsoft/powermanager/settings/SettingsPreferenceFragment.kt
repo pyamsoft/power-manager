@@ -46,7 +46,7 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
   override val applicationName: String
     get() = getString(R.string.app_name)
   override val rootViewContainer: Int
-    get() = R.id.main_container
+    get() = R.id.fragment_container
   override val preferenceXmlResId: Int
     get() = R.xml.preferences
   override val isLastOnBackStack: BackStackState
@@ -61,11 +61,6 @@ class SettingsPreferenceFragment : ActionBarSettingsPreferenceFragment() {
 
   override fun onLicenseItemClicked() {
     ActionBarUtil.setActionBarUpEnabled(activity, true)
-
-    val act = activity
-    if (act is MainActivity) {
-      act.binding.bottomtabs.visibility = View.GONE
-    }
     super.onLicenseItemClicked()
   }
 

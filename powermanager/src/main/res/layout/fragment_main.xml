@@ -15,28 +15,39 @@
   ~ limitations under the License.
   -->
 <layout>
-  <LinearLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
+  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/main_root"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical"
       >
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/main_toolbar"
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottomtabs"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:layout_collapseMode="pin"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:layout_alignParentBottom="true"
+        android:background="@color/material_light_background"
+        app:itemIconTint="@drawable/bottom_nav_state"
+        app:itemTextColor="@drawable/bottom_nav_state"
+        app:menu="@menu/navigation_menu"
+        />
+
+    <View
+        android:id="@+id/bottomtabs_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/bottomtabs"
+        android:background="@drawable/bottom_nav_scrim"
         />
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/bottomtabs_scrim"
+        android:layout_alignParentTop="true"
         />
 
-  </LinearLayout>
+  </RelativeLayout>
 </layout>

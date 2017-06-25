@@ -138,9 +138,9 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
           group.setOnCheckedChangeListener(null)
         }
 
-        group.setOnCheckedChangeListener { group, checkedId ->
+        group.setOnCheckedChangeListener { grp, checkedId ->
           if (!emitter.isDisposed) {
-            emitter.onNext(GroupChangedEvent(group, checkedId))
+            emitter.onNext(GroupChangedEvent(grp, checkedId))
           }
         }
       }.subscribeOn(scheduler)

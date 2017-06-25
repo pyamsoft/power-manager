@@ -42,8 +42,6 @@ class SettingsPreferencePresenter @Inject internal constructor(private val bus: 
             when (type) {
               DATABASE -> clearDatabase(onClearDatabase)
               ALL -> clearAll(onClearAll)
-              else -> throw IllegalStateException(
-                  "Received invalid confirmation event type: " + type)
             }
           }, { Timber.e(it, "confirm bus error") })
     }

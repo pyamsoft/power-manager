@@ -55,30 +55,30 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     bindSwitch(holder.binding.manageDataSaver, "Data Saver", holder.presenterDataSaver)
   }
 
-  private fun bindSwitch(switch: SwitchCompat, name: String, presenter: ManagePresenter) {
+  fun bindSwitch(button: SwitchCompat, name: String, presenter: ManagePresenter) {
     // Set enabled in case it failed last time
-    switch.isEnabled = true
+    button.isEnabled = true
 
     // Set title
-    switch.text = name
+    button.text = name
 
     // Get current state
     presenter.getState(onEnableRetrieved = {
-      switch.isEnabled = it
+      button.isEnabled = it
     }, onStateRetrieved = {
-      switch.isChecked = it
+      button.isChecked = it
     }, onError = {
-      Toasty.makeText(switch.context, "Failed to retrieve state: " + name,
+      Toasty.makeText(button.context, "Failed to retrieve state: " + name,
           Toasty.LENGTH_SHORT).show()
 
-      // Mark switch as disabled
-      switch.isEnabled = false
+      // Mark button as disabled
+      button.isEnabled = false
     }, onComplete = {
-      presenter.setManaged(switch, {
-        Toasty.makeText(switch.context, "Failed to set state: " + name, Toasty.LENGTH_SHORT).show()
+      presenter.setManaged(button, {
+        Toasty.makeText(button.context, "Failed to set state: " + name, Toasty.LENGTH_SHORT).show()
 
-        // Mark switch as disabled
-        switch.isEnabled = false
+        // Mark button as disabled
+        button.isEnabled = false
       }, {})
     })
   }
@@ -110,33 +110,30 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     holder.presenterDataSaver.destroy()
   }
 
-  private fun unbindSwitch(switch: SwitchCompat) {
-    switch.text = null
+  fun unbindSwitch(button: SwitchCompat) {
+    button.text = null
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    @field:[Inject Named("manage_wifi")] lateinit internal var presenterWifi: ManagePresenter
-    @field:[Inject Named("manage_data")] lateinit internal var presenterData: ManagePresenter
-    @field:[Inject Named(
-        "manage_bluetooth")] lateinit internal var presenterBluetooth: ManagePresenter
-    @field:[Inject Named("manage_sync")] lateinit internal var presenterSync: ManagePresenter
-    @field:[Inject Named(
-        "manage_airplane")] lateinit internal var presenterAirplane: ManagePresenter
-    @field:[Inject Named("manage_doze")] lateinit internal var presenterDoze: ManagePresenter
-    @field:[Inject Named(
-        "manage_data_saver")] lateinit internal var presenterDataSaver: ManagePresenter
+    @field:[Inject Named("manage_wifi")] lateinit var presenterWifi: ManagePresenter
+    @field:[Inject Named("manage_data")] lateinit var presenterData: ManagePresenter
+    @field:[Inject Named("manage_bluetooth")] lateinit var presenterBluetooth: ManagePresenter
+    @field:[Inject Named("manage_sync")] lateinit var presenterSync: ManagePresenter
+    @field:[Inject Named("manage_airplane")] lateinit var presenterAirplane: ManagePresenter
+    @field:[Inject Named("manage_doze")] lateinit var presenterDoze: ManagePresenter
+    @field:[Inject Named("manage_data_saver")] lateinit var presenterDataSaver: ManagePresenter
 
-    internal val binding = AdapterItemManageBinding.bind(itemView)
+    val binding: AdapterItemManageBinding = AdapterItemManageBinding.bind(itemView)
 
     init {
       Injector.with(itemView.context) {
-        it.plusManageComponent().inject(this)
+        it.plusManageComponent().injectManage(this)
       }
     }
   }
 
   companion object {
-    const internal val TAG = "ManageItem"
+    const val TAG = "ManageItem"
   }
 }

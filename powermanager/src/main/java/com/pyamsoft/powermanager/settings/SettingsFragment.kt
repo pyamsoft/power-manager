@@ -21,7 +21,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 
@@ -43,12 +42,6 @@ class SettingsFragment : WatchedFragment() {
     super.onResume()
     ActionBarUtil.setActionBarUpEnabled(activity, false)
     ActionBarUtil.setActionBarTitle(activity, R.string.app_name)
-
-    if (activity is MainActivity) {
-      val main = activity as MainActivity
-      main.binding.bottomtabs.visibility = View.VISIBLE
-      main.setOverlapTop(0F)
-    }
   }
 
   companion object {

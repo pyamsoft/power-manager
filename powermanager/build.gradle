@@ -110,9 +110,6 @@ dependencies {
   compile("com.github.pyamsoft.pydroid:pydroid-ui:$pydroid@aar") {
     transitive = true
   }
-  compile("com.github.pyamsoft.pydroid:pydroid-design:$pydroid@aar") {
-    transitive = true
-  }
 
   debugCompile project(path: ":powermanager-manage", configuration: "debug")
   releaseCompile project(path: ":powermanager-manage", configuration: "release")

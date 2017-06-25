@@ -83,7 +83,7 @@ class DelayItem : TimeItem<TimePresenter, DelayItem.ViewHolder>(TAG) {
 
     init {
       Injector.with(itemView.context) {
-        it.plusManageComponent().inject(this)
+        it.plusManageComponent().injectDelay(this)
       }
       binding.simpleExpander.setTitle("Active Delay")
       binding.simpleExpander.setDescription(

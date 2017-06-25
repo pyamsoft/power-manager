@@ -197,7 +197,7 @@ class ExceptionItem internal constructor() : GenericAbstractItem<String, Excepti
       binding.simpleExpander.setExpandingContent(chargingBinding.root)
 
       Injector.with(itemView.context) {
-        it.plusManageComponent().inject(this)
+        it.plusManageComponent().injectException(this)
       }
     }
   }

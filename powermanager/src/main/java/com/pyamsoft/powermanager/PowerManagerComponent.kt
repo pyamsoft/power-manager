@@ -27,6 +27,7 @@ import com.pyamsoft.powermanager.base.states.WrapperModule
 import com.pyamsoft.powermanager.job.JobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
+import com.pyamsoft.powermanager.main.MainFragment
 import com.pyamsoft.powermanager.manage.ManageComponent
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.manage.ManageSingletonModule
@@ -79,4 +80,6 @@ import javax.inject.Singleton
   fun inject(createTriggerPagerAdapter: CreateTriggerPagerAdapter)
 
   fun inject(confirmationDialog: ConfirmationDialog)
+
+  fun inject(mainFragment: MainFragment)
 }

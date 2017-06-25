@@ -88,7 +88,6 @@ class LoggerInteractor @Inject constructor(context: Context,
       LogType.INFO -> Timber.i(fmt, *args)
       LogType.WARNING -> Timber.w(fmt, *args)
       LogType.ERROR -> Timber.e(fmt, *args)
-      else -> throw IllegalStateException("Invalid LogType: " + logType.name)
     }
   }
 

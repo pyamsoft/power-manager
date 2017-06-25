@@ -20,11 +20,11 @@ import dagger.Subcomponent
 
 @Subcomponent(modules = arrayOf(ManageModule::class, TimeModule::class)) interface ManageComponent {
 
-  fun inject(manageItem: ManageItem.ViewHolder)
+  fun injectManage(manageItem: ManageItem.ViewHolder)
 
-  fun inject(exceptionItem: ExceptionItem.ViewHolder)
+  fun injectException(exceptionItem: ExceptionItem.ViewHolder)
 
-  fun inject(pollItem: PollItem.ViewHolder)
+  fun injectPoll(pollItem: PollItem.ViewHolder)
 
-  fun inject(delayItem: DelayItem.ViewHolder)
+  fun injectDelay(delayItem: DelayItem.ViewHolder)
 }

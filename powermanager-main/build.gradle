@@ -46,6 +46,10 @@ dependencies {
 
   kapt "com.google.dagger:dagger-compiler:$dagger"
 
+  compile("com.github.pyamsoft.pydroid:pydroid-design:$pydroid@aar") {
+    transitive = true
+  }
+
   debugCompile project(path: ":powermanager-base", configuration: "debug")
   releaseCompile project(path: ":powermanager-base", configuration: "release")
   compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

@@ -27,7 +27,6 @@ import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.databinding.FragmentManageBinding
-import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.ui.util.ActionBarUtil
 import timber.log.Timber
@@ -51,10 +50,10 @@ class ManageFragment : WatchedFragment() {
     adapter = GenericItemAdapter<String, GenericAbstractItem<String, *, *>> { s ->
       val item: GenericAbstractItem<String, *, *>?
       when (s) {
-        ManageItem.TAG -> {
-          Timber.d("Inflate ManageItem for TAG: %s", s)
-          item = ManageItem()
-        }
+//        ManageItem.TAG -> {
+//          Timber.d("Inflate ManageItem for TAG: %s", s)
+//          item = ManageItem()
+//        }
         ExceptionItem.TAG -> {
           Timber.d("Inflate ExceptionItem for TAG: %s", s)
           item = ExceptionItem()
@@ -82,7 +81,7 @@ class ManageFragment : WatchedFragment() {
     binding.recycler.setHasFixedSize(true)
     binding.recycler.adapter = adapter.wrap(FastAdapter())
 
-    adapter.add(ManageItem())
+//    adapter.add(ManageItem())
     adapter.add(DelayItem())
     adapter.add(PollItem())
     adapter.add(ExceptionItem())
@@ -100,12 +99,6 @@ class ManageFragment : WatchedFragment() {
     super.onResume()
     ActionBarUtil.setActionBarUpEnabled(activity, false)
     ActionBarUtil.setActionBarTitle(activity, R.string.app_name)
-
-    if (activity is MainActivity) {
-      val main = activity as MainActivity
-      main.binding.bottomtabs.visibility = View.VISIBLE
-      main.setOverlapTop(56F)
-    }
   }
 
   companion object {
