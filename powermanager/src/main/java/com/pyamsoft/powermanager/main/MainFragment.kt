@@ -88,8 +88,18 @@ class MainFragment : WatchedFragment() {
   override fun onStart() {
     super.onStart()
     setupBottomBar()
+
     if (hasNoActiveFragment()) {
-      binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
+      // There is a slight delay in between setting the on click and running this block
+      // which causes the following line to not actually run correctly as there is no
+      // click listener to respond to the fake click
+      //
+      // binding.bottomtabs.menu.performIdentifierAction(R.id.menu_manage, 0)
+
+      // Work around by manually performing action
+      if (replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)) {
+        binding.bottomtabs.menu.findItem(R.id.menu_manage).isChecked = true
+      }
     }
   }
 

@@ -50,10 +50,10 @@ class ManageFragment : WatchedFragment() {
     adapter = GenericItemAdapter<String, GenericAbstractItem<String, *, *>> { s ->
       val item: GenericAbstractItem<String, *, *>?
       when (s) {
-//        ManageItem.TAG -> {
-//          Timber.d("Inflate ManageItem for TAG: %s", s)
-//          item = ManageItem()
-//        }
+        ManageItem.TAG -> {
+          Timber.d("Inflate ManageItem for TAG: %s", s)
+          item = ManageItem()
+        }
         ExceptionItem.TAG -> {
           Timber.d("Inflate ExceptionItem for TAG: %s", s)
           item = ExceptionItem()
@@ -81,7 +81,7 @@ class ManageFragment : WatchedFragment() {
     binding.recycler.setHasFixedSize(true)
     binding.recycler.adapter = adapter.wrap(FastAdapter())
 
-//    adapter.add(ManageItem())
+    adapter.add(ManageItem())
     adapter.add(DelayItem())
     adapter.add(PollItem())
     adapter.add(ExceptionItem())
