@@ -17,14 +17,20 @@
 
 <resources>
 
-  <string name="unsuspend_when_open_summary">Start Service when Application is open</string>
-  <string name="unsuspend_when_open_title">Start When Open</string>
+  <string name="unsuspend_when_open_title">Automatically Resume Service</string>
+  <string name="unsuspend_when_open_summary_on">Automatically restart service when app is opened</string>
+  <string name="unsuspend_when_open_summary_off">Do not automatically restart service when app is opened</string>
 
-  <string name="use_root_title">Enable Superuser</string>
-  <string name="use_root_summary">For rooted devices, allows SuperUser functions like toggling Data or Airplane Mode</string>
+  <string name="use_root_title">Allow Root (SuperUser)</string>
+  <string name="use_root_summary_on">Power Manager will use root (SuperUser) for functions like Data and Airplane Mode</string>
+  <string name="use_root_summary_off">Power Manager will use not use root (SuperUser)</string>
+
+  <string name="ignore_phone_call_title">Exception for Phone Calls</string>
+  <string name="ignore_phone_call_summary_on">Power Manager will not control device during a phone call</string>
+  <string name="ignore_phone_call_summary_off">Power Manager will continue to control device during a phone call</string>
 
   <string name="clear_db_key">clear_db</string>
   <string name="clear_db_title">Reset Database</string>
-  <string name="clear_db_summary">Reset the power trigger database</string>
+  <string name="clear_db_summary">Erase and reset the power trigger database</string>
 
 </resources>

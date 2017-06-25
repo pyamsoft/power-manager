@@ -21,10 +21,21 @@
   <PreferenceCategory
       android:title="Service Settings">
 
-    <CheckBoxPreference
+    <!--suppress AndroidElementNotAllowed -->
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="@bool/default_ignore_phone_call"
+        android:key="@string/key_ignore_phone_call"
+        android:summaryOff="@string/ignore_phone_call_summary_off"
+        android:summaryOn="@string/ignore_phone_call_summary_on"
+        android:title="@string/ignore_phone_call_title"
+        />
+
+    <!--suppress AndroidElementNotAllowed -->
+    <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="@bool/unsuspend_when_open_default"
         android:key="@string/unsuspend_when_open_key"
-        android:summary="@string/unsuspend_when_open_summary"
+        android:summaryOff="@string/unsuspend_when_open_summary_off"
+        android:summaryOn="@string/unsuspend_when_open_summary_on"
         android:title="@string/unsuspend_when_open_title"
         />
 
@@ -32,7 +43,8 @@
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="@bool/use_root_default"
         android:key="@string/use_root_key"
-        android:summary="@string/use_root_summary"
+        android:summaryOff="@string/use_root_summary_off"
+        android:summaryOn="@string/use_root_summary_on"
         android:title="@string/use_root_title"
         />
 
