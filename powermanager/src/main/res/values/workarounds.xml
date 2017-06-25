@@ -19,4 +19,8 @@
   <string name="key_workaround_howto_data">data_workaround</string>
   <string name="title_workaround_howto_data">Cellular Data Workaround</string>
   <string name="desc_workaround_howto_data">Learn how to enable Cellular Data workarounds</string>
+
+  <string name="key_workaround_howto_doze">doze_workaround</string>
+  <string name="title_workaround_howto_doze">Doze Mode Workaround</string>
+  <string name="desc_workaround_howto_doze">Learn how to enable Doze Mode workarounds</string>
 </resources>

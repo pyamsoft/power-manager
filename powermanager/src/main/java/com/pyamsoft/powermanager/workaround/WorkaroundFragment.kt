@@ -18,46 +18,89 @@ package com.pyamsoft.powermanager.workaround
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.support.annotation.CheckResult
+import android.support.v7.preference.Preference
+import android.view.View
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
 import com.pyamsoft.pydroid.ui.util.DialogUtil
+import timber.log.Timber
+import javax.inject.Inject
 
 class WorkaroundFragment : WatchedPreferenceFragment() {
+
+  @field:Inject internal lateinit var presenter: WorkaroundPresenter
+  private lateinit var dataHowTo: Preference
+  private lateinit var dataWorkaround: Preference
+
+  private lateinit var dozeHowTo: Preference
+  private lateinit var dozeWorkaround: Preference
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.with(context) {
+      it.inject(this)
+    }
+  }
 
   @CheckResult private fun hasDataWorkaroundRuntimePermission(): Boolean {
     return context.applicationContext.checkCallingOrSelfPermission(
         Manifest.permission.WRITE_SECURE_SETTINGS) == PackageManager.PERMISSION_GRANTED
   }
 
+  @CheckResult private fun hasDozeWorkaroundRuntimePermission(): Boolean {
+    return context.applicationContext.checkCallingOrSelfPermission(
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Manifest.permission.WRITE_SECURE_SETTINGS
+        else Manifest.permission.DUMP) == PackageManager.PERMISSION_GRANTED
+  }
+
   override fun onCreatePreferences(p0: Bundle?, p1: String?) {
     addPreferencesFromResource(R.xml.workarounds)
   }
 
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    dataHowTo = findPreference(getString(R.string.key_workaround_howto_data))
+    dataWorkaround = findPreference(getString(R.string.key_workaround_data))
+
+    dozeHowTo = findPreference(getString(R.string.key_workaround_howto_doze))
+    dozeWorkaround = findPreference(getString(R.string.key_workaround_doze))
+  }
+
   override fun onStart() {
     super.onStart()
-    findPreference(getString(R.string.key_workaround_howto_data)).setOnPreferenceClickListener {
+    presenter.clickEvent(dataHowTo, {
       DialogUtil.guaranteeSingleDialogFragment(activity, DataWorkaroundDialog(), "data_workaround")
-      return@setOnPreferenceClickListener true
-    }
+    })
 
+    presenter.clickEvent(dataWorkaround, { Timber.d("Data workaround clicked") },
+        { hasDataWorkaroundRuntimePermission() })
 
-    findPreference(getString(R.string.key_workaround_data)).setOnPreferenceChangeListener { _, _ ->
-      hasDataWorkaroundRuntimePermission()
-    }
+    presenter.clickEvent(dozeHowTo, {
+      DialogUtil.guaranteeSingleDialogFragment(activity, DozeWorkaroundDialog(), "doze_workaround")
+    })
+
+    presenter.clickEvent(dozeWorkaround, { Timber.d("Doze workaround clicked") },
+        { hasDozeWorkaroundRuntimePermission() })
   }
 
   override fun onResume() {
     super.onResume()
-    findPreference(
-        getString(R.string.key_workaround_data)).isEnabled = hasDataWorkaroundRuntimePermission()
+    dataWorkaround.isEnabled = hasDataWorkaroundRuntimePermission()
+    dozeWorkaround.isEnabled = hasDozeWorkaroundRuntimePermission()
   }
 
   override fun onStop() {
     super.onStop()
-    findPreference(getString(R.string.key_workaround_data)).onPreferenceChangeListener = null
-    findPreference(getString(R.string.key_workaround_howto_data)).onPreferenceClickListener = null
+    presenter.stop()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    presenter.destroy()
   }
 
   companion object {

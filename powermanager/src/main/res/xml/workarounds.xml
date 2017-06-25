@@ -29,7 +29,25 @@
     <android.support.v7.preference.SwitchPreferenceCompat
         android:defaultValue="@bool/workaround_data_default"
         android:key="@string/key_workaround_data"
-        android:summary="Manage Cellular Data without needing a rooted device"
+        android:summary="Manage Cellular Data without a rooted device"
+        android:title="Manage without Root"
+        />
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
+      android:title="Doze Mode Workarounds">
+
+    <Preference
+        android:key="@string/key_workaround_howto_doze"
+        android:summary="@string/desc_workaround_howto_doze"
+        android:title="@string/title_workaround_howto_doze"/>
+
+    <!--suppress AndroidElementNotAllowed -->
+    <android.support.v7.preference.SwitchPreferenceCompat
+        android:defaultValue="@bool/workaround_doze_default"
+        android:key="@string/key_workaround_doze"
+        android:summary="Manage Doze Mode without a rooted device"
         android:title="Manage without Root"
         />
 

@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.workaround
 
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.text.SpannableString
@@ -24,11 +25,11 @@ import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.pydroid.util.AppUtil
 import com.pyamsoft.pydroid.util.StringUtil
 
-class DataWorkaroundDialog : WatchedDialog() {
+class DozeWorkaroundDialog : WatchedDialog() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val message = // @formatter:off
-    "On newer Android devices running Lollipop and up, Cellular Data can " +
+    "On newer Android devices running Marshmallow and up, Doze Mode can " +
     "normally only be automatically controlled using a rooted device." +
     "A workaround exists however, but it may not work on every device. " +
     "If successful, this alternative method is safer, faster, and more reliable." +
@@ -40,14 +41,20 @@ class DataWorkaroundDialog : WatchedDialog() {
         |To enable this workaround, one must do the following.
         |1. Connect to the device directly using the Android Debug Bridge
         |2. Launch a Shell on the device using 'adb shell'
-        |3. Grant the WRITE_SECURE_SETTINGS permission:
+        ${if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        // formatter:off
+          """|3. Grant the WRITE_SECURE_SETTINGS permission:
         |
-        |pm grant com.pyamsoft.powermanager android.permission.WRITE_SECURE_SETTINGS
+        |pm grant com.pyamsoft.powermanager android.permission.WRITE_SECURE_SETTINGS""".trimMargin()
+        // formatter:on
+        else """|3. Grant the DUMP permission:
+        |
+        |pm grant com.pyamsoft.powermanager android.permission.DUMP""".trimMargin()}
         |
         |Finally, close and re-open the application.""".trimMargin()
     val messageSpan = SpannableString(message)
     StringUtil.sizeSpan(messageSpan, 0, message.length, AppUtil.convertToDP(activity, 14F).toInt())
-    return AlertDialog.Builder(activity).setTitle("Cellular Data Workaround").setMessage(
+    return AlertDialog.Builder(activity).setTitle("Doze Mode Workaround").setMessage(
         messageSpan).setPositiveButton("Ok", { _, _ -> dismiss() }).create()
   }
 

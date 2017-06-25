@@ -43,6 +43,7 @@ import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerListItem
 import com.pyamsoft.powermanager.trigger.create.CreateTriggerPagerAdapter
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
+import com.pyamsoft.powermanager.workaround.WorkaroundFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -82,4 +83,6 @@ import javax.inject.Singleton
   fun inject(confirmationDialog: ConfirmationDialog)
 
   fun inject(mainFragment: MainFragment)
+
+  fun inject(workaroundFragment: WorkaroundFragment)
 }
