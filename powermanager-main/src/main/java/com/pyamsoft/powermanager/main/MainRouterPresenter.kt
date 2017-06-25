@@ -29,6 +29,7 @@ class MainRouterPresenter @Inject internal constructor() : ViewPresenter() {
 
   // TODO Graduate to RxDesignViews
   fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
+      condition: (MenuItem) -> Boolean = { true },
       scheduler: Scheduler = AndroidSchedulers.mainThread()) {
     disposeOnStop {
       Observable.create<MenuItem> { emitter: ObservableEmitter<MenuItem> ->
@@ -43,7 +44,7 @@ class MainRouterPresenter @Inject internal constructor() : ViewPresenter() {
             emitter.onNext(it)
           }
 
-          return@setOnNavigationItemSelectedListener active
+          return@setOnNavigationItemSelectedListener condition(it)
         }
 
       }.subscribeOn(scheduler).subscribe { func(it) }

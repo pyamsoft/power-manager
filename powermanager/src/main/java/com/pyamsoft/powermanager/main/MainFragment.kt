@@ -72,7 +72,7 @@ class MainFragment : WatchedFragment() {
       if (handled) {
         it.isChecked = !it.isChecked
       }
-    })
+    }, { it.isChecked })
   }
 
   @CheckResult private fun replaceFragment(fragment: Fragment, tag: String): Boolean {
