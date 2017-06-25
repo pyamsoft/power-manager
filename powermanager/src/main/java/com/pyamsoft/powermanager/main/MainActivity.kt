@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.CheckResult
+import android.support.v4.view.ViewCompat
 import android.support.v7.preference.PreferenceManager
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -35,6 +36,7 @@ import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment
 import com.pyamsoft.pydroid.ui.rating.RatingDialog
 import com.pyamsoft.pydroid.ui.sec.TamperActivity
 import com.pyamsoft.pydroid.ui.util.DialogUtil
+import com.pyamsoft.pydroid.util.AppUtil
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -70,6 +72,7 @@ class MainActivity : TamperActivity() {
   private fun setupAppBar() {
     setSupportActionBar(binding.mainToolbar)
     binding.mainToolbar.title = getString(R.string.app_name)
+    ViewCompat.setElevation(binding.mainToolbar, AppUtil.convertToDP(this, 4F))
   }
 
   override fun onDestroy() {
