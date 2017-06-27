@@ -105,14 +105,14 @@ abstract class TimeItem<P : TimePresenter, VH : TimeItem.ViewHolder<P>> internal
       holder.containerBinding.delayRadioGroup.isEnabled = false
     })
 
-    holder.presenter.checkChangedEvent(holder.containerBinding.delayRadioCustom) { _, isChecked ->
+    holder.presenter.checkChangedEvent(holder.containerBinding.delayRadioCustom, { _, isChecked ->
       if (isChecked) {
         holder.containerBinding.delayRadioGroup.clearCheck()
         enableCustomInput(holder)
       } else {
         disableCustomInput(holder)
       }
-    }
+    })
 
     holder.presenter.listenForTimeChanges({
       // Remove watcher

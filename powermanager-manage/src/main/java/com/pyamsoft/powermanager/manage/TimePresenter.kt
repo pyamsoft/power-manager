@@ -16,14 +16,11 @@
 
 package com.pyamsoft.powermanager.manage
 
-import android.support.annotation.CheckResult
 import android.widget.RadioGroup
 import com.pyamsoft.pydroid.helper.DisposableHelper
 import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
+import com.pyamsoft.pydroid.rx.RxViews
 import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -77,7 +74,7 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
   fun setPresetTime(group: RadioGroup, onChange: (RadioGroup, Int) -> Long,
       onError: (Throwable) -> Unit) {
     disposeOnDestroy {
-      onCheckChanged(group).observeOn(foregroundScheduler).map {
+      RxViews.onCheckChanged(group).observeOn(foregroundScheduler).map {
         onChange(it.group, it.checkedId)
       }.observeOn(backgroundScheduler).flatMapMaybe {
         interactor.setTime(it)
@@ -122,29 +119,5 @@ open class TimePresenter @Inject internal constructor(@Named("obs") foregroundSc
         onError(it)
       })
     }
-  }
-
-  companion object {
-
-    // TODO possible graduate to RxViews
-    private data class GroupChangedEvent(val group: RadioGroup, val checkedId: Int)
-
-    // TODO possible graduate to RxViews
-    @CheckResult private fun onCheckChanged(group: RadioGroup,
-        scheduler: Scheduler = AndroidSchedulers.mainThread()): Observable<GroupChangedEvent> {
-      return Observable.create { emitter: ObservableEmitter<GroupChangedEvent> ->
-
-        emitter.setCancellable {
-          group.setOnCheckedChangeListener(null)
-        }
-
-        group.setOnCheckedChangeListener { grp, checkedId ->
-          if (!emitter.isDisposed) {
-            emitter.onNext(GroupChangedEvent(grp, checkedId))
-          }
-        }
-      }.subscribeOn(scheduler)
-    }
-
   }
 }

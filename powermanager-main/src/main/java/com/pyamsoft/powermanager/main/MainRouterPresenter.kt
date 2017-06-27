@@ -16,39 +16,8 @@
 
 package com.pyamsoft.powermanager.main
 
-import android.support.design.widget.BottomNavigationView
-import android.view.MenuItem
-import com.pyamsoft.pydroid.presenter.ViewPresenter
-import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.pyamsoft.pydroid.design.presenter.DesignPresenter
 import javax.inject.Inject
 
-class MainRouterPresenter @Inject internal constructor() : ViewPresenter() {
-
-  // TODO Graduate to RxDesignViews
-  fun clickBottomNavigation(bottomBar: BottomNavigationView, func: (MenuItem) -> Unit,
-      condition: (MenuItem) -> Boolean = { true },
-      scheduler: Scheduler = AndroidSchedulers.mainThread()) {
-    disposeOnStop {
-      Observable.create<MenuItem> { emitter: ObservableEmitter<MenuItem> ->
-
-        emitter.setCancellable {
-          bottomBar.setOnNavigationItemSelectedListener(null)
-        }
-
-        bottomBar.setOnNavigationItemSelectedListener {
-          val active = !emitter.isDisposed
-          if (active) {
-            emitter.onNext(it)
-          }
-
-          return@setOnNavigationItemSelectedListener condition(it)
-        }
-
-      }.subscribeOn(scheduler).subscribe { func(it) }
-    }
-  }
-}
+class MainRouterPresenter @Inject internal constructor() : DesignPresenter()
 
