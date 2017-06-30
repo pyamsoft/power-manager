@@ -16,47 +16,6 @@
 
 package com.pyamsoft.powermanager.job
 
-import android.support.annotation.CheckResult
-import com.google.auto.value.AutoValue
-
-@AutoValue abstract class JobQueuerEntry {
-
-  @CheckResult abstract fun tag(): String
-
-  @CheckResult abstract fun firstRun(): Boolean
-
-  @CheckResult abstract fun oneshot(): Boolean
-
-  @CheckResult abstract fun screenOn(): Boolean
-
-  @CheckResult abstract fun delay(): Long
-
-  @CheckResult abstract fun repeatingOnWindow(): Long
-
-  @CheckResult abstract fun repeatingOffWindow(): Long
-
-  @AutoValue.Builder abstract class Builder {
-
-    @CheckResult protected abstract fun tag(tag: String): Builder
-
-    @CheckResult abstract fun screenOn(screen: Boolean): Builder
-
-    @CheckResult abstract fun firstRun(first: Boolean): Builder
-
-    @CheckResult abstract fun oneshot(oneshot: Boolean): Builder
-
-    @CheckResult abstract fun delay(delay: Long): Builder
-
-    @CheckResult abstract fun repeatingOnWindow(window: Long): Builder
-
-    @CheckResult abstract fun repeatingOffWindow(window: Long): Builder
-
-    @CheckResult abstract fun build(): JobQueuerEntry
-  }
-
-  companion object {
-    @JvmStatic @CheckResult fun builder(tag: String): Builder {
-      return AutoValue_JobQueuerEntry.Builder().tag(tag)
-    }
-  }
-}
+data class JobQueuerEntry(val tag: String, val firstRun: Boolean, val oneShot: Boolean,
+    val screenOn: Boolean, val delay: Long, val repeatingOnWindow: Long,
+    val repeatingOffWindow: Long)

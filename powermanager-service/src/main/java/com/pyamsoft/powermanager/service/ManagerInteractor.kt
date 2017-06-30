@@ -69,8 +69,8 @@ import javax.inject.Singleton
       val tag = JobQueuer.ENABLE_TAG
       // Queue up an enable job
       jobQueuer.cancel(tag)
-      jobQueuer.queue(JobQueuerEntry.builder(tag).screenOn(true).delay(0).oneshot(true).firstRun(
-          true).repeatingOffWindow(0L).repeatingOnWindow(0L).build())
+      jobQueuer.queue(JobQueuerEntry(tag = tag, firstRun = true, oneShot = true, screenOn = true,
+          repeatingOffWindow = 0L, repeatingOnWindow = 0L, delay = 0L))
       return@fromCallable tag
     }.doAfterSuccess { eraseOriginalStates() }
   }
@@ -83,11 +83,9 @@ import javax.inject.Singleton
       val tag = JobQueuer.DISABLE_TAG
       // Queue up a disable job
       jobQueuer.cancel(tag)
-      jobQueuer.queue(
-          JobQueuerEntry.builder(tag).screenOn(false).delay(preferences.manageDelay).oneshot(
-              false).firstRun(true).repeatingOffWindow(
-              preferences.periodicDisableTime).repeatingOnWindow(
-              preferences.periodicEnableTime).build())
+      jobQueuer.queue(JobQueuerEntry(tag = tag, firstRun = true, oneShot = false, screenOn = false,
+          repeatingOffWindow = preferences.periodicDisableTime,
+          repeatingOnWindow = preferences.periodicEnableTime, delay = preferences.manageDelay))
       return@fromCallable tag
     })
   }

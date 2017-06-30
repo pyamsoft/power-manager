@@ -380,9 +380,9 @@ internal abstract class JobRunner(private val jobQueuer: JobQueuer,
     } else {
       newTag = JobQueuer.DISABLE_TAG
     }
-    val entry = JobQueuerEntry.builder(newTag).oneshot(false).firstRun(false).screenOn(
-        !screenOn).delay(newDelayTime).repeatingOffWindow(windowOffTime).repeatingOnWindow(
-        windowOnTime).build()
+    val entry = JobQueuerEntry(tag = newTag, firstRun = false, oneShot = false,
+        screenOn = !screenOn, delay = newDelayTime, repeatingOffWindow = windowOffTime,
+        repeatingOnWindow = windowOnTime)
 
     jobQueuer.queue(entry)
   }

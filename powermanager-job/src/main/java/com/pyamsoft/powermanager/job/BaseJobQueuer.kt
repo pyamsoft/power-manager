@@ -32,35 +32,35 @@ internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQ
 
   @CheckResult private fun createExtras(entry: JobQueuerEntry): PersistableBundleCompat {
     val extras = PersistableBundleCompat()
-    extras.putBoolean(KEY_SCREEN, entry.screenOn())
-    extras.putLong(KEY_ON_WINDOW, entry.repeatingOnWindow())
-    extras.putLong(KEY_OFF_WINDOW, entry.repeatingOffWindow())
-    extras.putBoolean(KEY_ONESHOT, entry.oneshot())
-    extras.putBoolean(KEY_FIRST_RUN, entry.firstRun())
+    extras.putBoolean(KEY_SCREEN, entry.screenOn)
+    extras.putLong(KEY_ON_WINDOW, entry.repeatingOnWindow)
+    extras.putLong(KEY_OFF_WINDOW, entry.repeatingOffWindow)
+    extras.putBoolean(KEY_ONESHOT, entry.oneShot)
+    extras.putBoolean(KEY_FIRST_RUN, entry.firstRun)
     return extras
   }
 
   override fun queue(entry: JobQueuerEntry) {
     val extras = createExtras(entry)
-    if (entry.delay() == 0L) {
-      runInstantJob(entry.tag(), extras)
+    if (entry.delay == 0L) {
+      runInstantJob(entry.tag, extras)
     } else {
       scheduleJob(entry, extras)
     }
   }
 
   private fun scheduleJob(entry: JobQueuerEntry, extras: PersistableBundleCompat) {
-    val startTime = TimeUnit.SECONDS.toMillis(entry.delay())
-    JobRequest.Builder(entry.tag()).setExecutionWindow(startTime,
+    val startTime = TimeUnit.SECONDS.toMillis(entry.delay)
+    JobRequest.Builder(entry.tag).setExecutionWindow(startTime,
         startTime + FIVE_SECONDS).setPersisted(false).setExtras(extras).setRequiresCharging(
         false).setRequiresDeviceIdle(false).build().schedule()
   }
 
   override fun queueRepeating(entry: JobQueuerEntry) {
     val extras = createExtras(entry)
-    JobRequest.Builder(entry.tag()).setPeriodic(
-        TimeUnit.SECONDS.toMillis(entry.delay())).setPersisted(false).setExtras(
-        extras).setRequiresCharging(false).setRequiresDeviceIdle(false).build().schedule()
+    JobRequest.Builder(entry.tag).setPeriodic(TimeUnit.SECONDS.toMillis(entry.delay)).setPersisted(
+        false).setExtras(extras).setRequiresCharging(false).setRequiresDeviceIdle(
+        false).build().schedule()
   }
 
   internal abstract fun runInstantJob(tag: String, extras: PersistableBundleCompat)
