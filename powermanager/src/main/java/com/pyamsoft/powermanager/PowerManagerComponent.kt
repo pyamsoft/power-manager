@@ -39,9 +39,7 @@ import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.ConfirmationDialog
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
 import com.pyamsoft.powermanager.trigger.DeleteTriggerDialog
-import com.pyamsoft.powermanager.trigger.PowerTriggerListFragment
-import com.pyamsoft.powermanager.trigger.PowerTriggerListItem
-import com.pyamsoft.powermanager.trigger.create.CreateTriggerPagerAdapter
+import com.pyamsoft.powermanager.trigger.PowerTriggerPreferenceFragment
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
 import com.pyamsoft.powermanager.workaround.WorkaroundFragment
 import dagger.Component
@@ -52,11 +50,8 @@ import javax.inject.Singleton
         PowerTriggerDBModule::class, LoggerModule::class, PermissionObserverModule::class,
         StateObserverModule::class, StateModifierModule::class, JobModule::class,
         ManageSingletonModule::class, TimeSingletonModule::class)) interface PowerManagerComponent {
+
   @CheckResult fun plusManageComponent(): ManageComponent
-
-  fun inject(fragment: PowerTriggerListFragment)
-
-  fun inject(powerTriggerListItem: PowerTriggerListItem.ViewHolder)
 
   fun inject(application: PowerManager)
 
@@ -78,11 +73,11 @@ import javax.inject.Singleton
 
   fun inject(deleteTriggerDialog: DeleteTriggerDialog)
 
-  fun inject(createTriggerPagerAdapter: CreateTriggerPagerAdapter)
-
   fun inject(confirmationDialog: ConfirmationDialog)
 
   fun inject(mainFragment: MainFragment)
 
   fun inject(workaroundFragment: WorkaroundFragment)
+
+  fun inject(powerTriggerPreferenceFragment: PowerTriggerPreferenceFragment)
 }

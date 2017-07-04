@@ -17,23 +17,50 @@
 package com.pyamsoft.powermanager.trigger
 
 import android.os.Bundle
+import android.support.v7.preference.Preference
 import android.view.View
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
+import javax.inject.Inject
 
 class PowerTriggerPreferenceFragment : WatchedPreferenceFragment() {
+
+  @field:Inject internal lateinit var presenter: TriggerPreferencePresenter
+  private lateinit var triggerInterval: Preference
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    Injector.with(context) {
+      it.inject(this)
+    }
+  }
+
   override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
     addPreferencesFromResource(R.xml.power_trigger_options)
   }
 
   override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val triggerInterval = findPreference(getString(R.string.trigger_period_key))
-    triggerInterval.setOnPreferenceChangeListener { _, _ ->
+    triggerInterval = findPreference(getString(R.string.trigger_period_key))
+  }
+
+  override fun onStart() {
+    super.onStart()
+    presenter.clickEvent(triggerInterval, {
       ForegroundService.restartTriggers(context)
-      true
-    }
+    })
+  }
+
+  override fun onStop() {
+    super.onStop()
+    presenter.stop()
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    presenter.destroy()
   }
 
   companion object {

@@ -17,21 +17,33 @@
 package com.pyamsoft.powermanager.trigger
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.pyamsoft.powermanager.R
+import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 
 class PowerTriggerFragment : WatchedFragment() {
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    addTriggerOptionsFragment()
+
+  private lateinit var binding: FragmentPowertriggerBinding
+
+  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+      savedInstanceState: Bundle?): View? {
+    binding = FragmentPowertriggerBinding.inflate(inflater, container, false)
+    return binding.root
   }
 
-  private fun addTriggerOptionsFragment() {
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    addPreferenceFragment()
+  }
+
+  private fun addPreferenceFragment() {
     val fragmentManager = childFragmentManager
-    if (fragmentManager.findFragmentByTag(TAG) == null) {
+    if (fragmentManager.findFragmentByTag(PowerTriggerPreferenceFragment.TAG) == null) {
       fragmentManager.beginTransaction().replace(R.id.power_trigger_preference_container,
-          PowerTriggerPreferenceFragment(), TAG).commit()
+          PowerTriggerPreferenceFragment(), PowerTriggerPreferenceFragment.TAG).commit()
     }
   }
 

@@ -28,10 +28,11 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DeleteTriggerDialog : WatchedDialog() {
-  internal var percent: Int = 0
-  private var name: String? = null
 
-  @field: Inject internal lateinit var publisher: TriggerPublisher
+  private var percent: Int = 0
+  private lateinit var name: String
+
+  @field:Inject internal lateinit var publisher: TriggerPublisher
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -52,13 +53,9 @@ class DeleteTriggerDialog : WatchedDialog() {
     return AlertDialog.Builder(activity).setTitle("Delete Trigger").setMessage(
         "Really delete trigger for: $name [$percent%] ?").setNegativeButton(
         "Cancel") { _, _ -> dismiss() }.setPositiveButton("Okay") { _, _ ->
-      sendDeleteEvent(percent)
+      publisher.publish(TriggerDeleteEvent(percent))
       dismiss()
     }.create()
-  }
-
-  internal fun sendDeleteEvent(percent: Int) {
-    publisher.publish(TriggerDeleteEvent(percent))
   }
 
   companion object {

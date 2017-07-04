@@ -61,7 +61,7 @@ class MainFragment : WatchedFragment() {
           handled = replaceFragment(WorkaroundFragment(), WorkaroundFragment.TAG)
         }
         R.id.menu_triggers -> {
-          handled = replaceFragment(ManageFragment.newInstance(), ManageFragment.TAG)
+          handled = replaceFragment(PowerTriggerFragment(), PowerTriggerFragment.TAG)
         }
         R.id.menu_settings -> {
           handled = replaceFragment(SettingsFragment(), SettingsFragment.TAG)
