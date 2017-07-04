@@ -74,7 +74,7 @@ import javax.inject.Singleton
   fun destroy() {
     Timber.d("Cancel all trigger jobs")
     // TODO
-    //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    //    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
   }
 
   @CheckResult fun getNotificationPriority(): Single<Int> {

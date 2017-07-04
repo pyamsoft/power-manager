@@ -25,6 +25,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class BootCompletedReceiver : BroadcastReceiver() {
+
   @field:Inject lateinit internal var manager: Manager
 
   override fun onReceive(context: Context, intent: Intent?) {
