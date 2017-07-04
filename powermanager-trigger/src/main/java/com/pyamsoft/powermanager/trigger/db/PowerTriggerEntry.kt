@@ -68,6 +68,18 @@ import com.squareup.sqldelight.SqlDelightStatement
     }
   }
 
+  @CheckResult fun updateEnabled(enabled: Boolean): PowerTriggerEntry {
+    return creator.create(percent(), name(), enabled, available(), toggleWifi(), toggleData(),
+        toggleBluetooth(), toggleSync(), enableWifi(), enableData(), enableBluetooth(),
+        enableSync())
+  }
+
+  @CheckResult fun updateAvailable(available: Boolean): PowerTriggerEntry {
+    return creator.create(percent(), name(), enabled(), available, toggleWifi(), toggleData(),
+        toggleBluetooth(), toggleSync(), enableWifi(), enableData(), enableBluetooth(),
+        enableSync())
+  }
+
   companion object {
 
     const val EMPTY_NAME = "PowerTriggerEntry.__TRIGGER_NAME_EMPTY"

@@ -35,11 +35,10 @@ import javax.inject.Inject
 internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerTriggerDB {
 
   private val briteDatabase: BriteDatabase
-  private val openHelper: PowerTriggerOpenHelper
+  private val openHelper = PowerTriggerOpenHelper(context.applicationContext)
   private var timerDisposable = DisposableHelper.dispose(null)
 
   init {
-    openHelper = PowerTriggerOpenHelper(context)
     briteDatabase = SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, Schedulers.io())
   }
 
@@ -65,25 +64,25 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context) : PowerT
       val percent = entry.percent()
       return@fromCallable deleteWithPercentUnguarded(percent)
     }.andThen(Completable.fromCallable {
-      return@fromCallable PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry)
+      PowerTriggerEntry.insertTrigger(openHelper).executeProgram(entry)
     })
   }
 
-  override fun updateAvailable(available: Boolean, percent: Int): Completable {
+  override fun updateAvailable(entry: PowerTriggerEntry): Completable {
     return Completable.fromCallable {
       Timber.i("DB: UPDATE AVAILABLE")
       openDatabase()
-      return@fromCallable PowerTriggerEntry.updateAvailable(openHelper).executeProgram(available,
-          percent)
+      return@fromCallable PowerTriggerEntry.updateAvailable(openHelper).executeProgram(
+          entry.available(), entry.percent())
     }
   }
 
-  override fun updateEnabled(enabled: Boolean, percent: Int): Completable {
+  override fun updateEnabled(entry: PowerTriggerEntry): Completable {
     return Completable.fromCallable {
       Timber.i("DB: UPDATE ENABLED")
       openDatabase()
-      return@fromCallable PowerTriggerEntry.updateEnabled(openHelper).executeProgram(enabled,
-          percent)
+      return@fromCallable PowerTriggerEntry.updateEnabled(openHelper).executeProgram(
+          entry.enabled(), entry.percent())
     }
   }
 

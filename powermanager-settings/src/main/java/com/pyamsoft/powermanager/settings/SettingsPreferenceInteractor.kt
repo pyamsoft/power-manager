@@ -20,7 +20,7 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.ClearPreferences
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.shell.RootChecker
-import com.pyamsoft.powermanager.trigger.TriggerInteractor
+import com.pyamsoft.powermanager.trigger.TriggerCacheInteractor
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -31,14 +31,14 @@ import javax.inject.Singleton
 @Singleton internal class SettingsPreferenceInteractor @Inject constructor(
     private val powerTriggerDB: PowerTriggerDB, private val preferences: RootPreferences,
     private val clearPreferences: ClearPreferences, private val rootChecker: RootChecker,
-    private val triggerInteractor: TriggerInteractor) {
+    private val triggerInteractor: TriggerCacheInteractor) {
 
   /**
    * public
    */
   @CheckResult fun clearDatabase(): Single<Boolean> {
     return powerTriggerDB.deleteAll().andThen(powerTriggerDB.deleteDatabase()).andThen(
-        Completable.fromAction { triggerInteractor.clearCached() }).andThen(Single.just(true))
+        Completable.fromAction { triggerInteractor.clearCache() }).andThen(Single.just(true))
   }
 
   /**

@@ -22,32 +22,26 @@ import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import timber.log.Timber
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton class TriggerInteractor @Inject internal constructor(powerTriggerDB: PowerTriggerDB,
+@Singleton internal class TriggerInteractor @Inject internal constructor(
+    powerTriggerDB: PowerTriggerDB,
     private val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
   fun clearCached() {
     cacheInteractor.clearCache()
   }
 
-  /**
-   * public
-   */
   @CheckResult fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
     // TODO
     Timber.d("Force refresh? %s", forceRefresh)
     return Observable.empty()
   }
 
-  /**
-   * public
-   */
-  @CheckResult fun put(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
+  @CheckResult fun put(entry: PowerTriggerEntry): Completable {
     return powerTriggerDB.queryWithPercent(entry.percent()).flatMapCompletable {
       if (!PowerTriggerEntry.isEmpty(it)) {
         Timber.e("Entry already exists, throw")
@@ -65,13 +59,10 @@ import javax.inject.Singleton
         return@flatMapCompletable powerTriggerDB.queryWithPercent(
             entry.percent()).flatMapCompletable { powerTriggerDB.insert(it) }
       }
-    }.andThen(Completable.fromAction { cacheInteractor.clearCache() }).andThen(get(entry.percent()))
+    }.andThen(Completable.fromAction { cacheInteractor.clearCache() })
   }
 
-  /**
-   * public
-   */
-  @CheckResult fun delete(percent: Int): Single<Int> {
+  @CheckResult fun delete(percent: Int): Completable {
     return powerTriggerDB.queryAll().map {
 
       // Sort first
@@ -99,15 +90,13 @@ import javax.inject.Singleton
 
       if (foundEntry == -1) {
         throw IllegalStateException("Could not find entry with percent: " + percent)
+      } else {
+        return@map foundEntry
       }
-
-      return@map foundEntry
-    }.flatMap { position ->
+    }.flatMapCompletable {
       Timber.d("Delete trigger with percent: %d", percent)
-      powerTriggerDB.deleteWithPercent(percent).andThen(Single.fromCallable {
-        Timber.d("Return the position")
+      powerTriggerDB.deleteWithPercent(percent).andThen(Completable.fromAction {
         cacheInteractor.clearCache()
-        return@fromCallable position
       })
     }
   }

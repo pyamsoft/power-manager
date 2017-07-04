@@ -31,9 +31,6 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
     private val createBus: TriggerCreateBus,
     private val interactor: TriggerInteractor) : SchedulerPresenter(obsScheduler, subScheduler) {
 
-  /**
-   * public
-   */
   fun registerOnBus(onAdd: (PowerTriggerEntry) -> Unit, onAddError: (Throwable) -> Unit,
       onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
       onTriggerDeleteError: (Throwable) -> Unit) {
@@ -55,7 +52,7 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
     disposeOnStop {
       Timber.d("Create new power trigger")
       interactor.put(entry).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ onAdd(it) }, {
+          foregroundScheduler).subscribe({ onAdd(entry) }, {
         Timber.e(it, "onError")
         if (it is SQLiteConstraintException) {
           Timber.e("Error inserting into DB")
@@ -72,16 +69,13 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
       onTriggerError: (Throwable) -> Unit) {
     disposeOnStop {
       interactor.delete(percent).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ onTriggerDeleted(it) }, {
+          foregroundScheduler).subscribe({ onTriggerDeleted(percent) }, {
         Timber.e(it, "onError")
         onTriggerError(it)
       })
     }
   }
 
-  /**
-   * public
-   */
   fun loadTriggerView(forceRefresh: Boolean, onTriggerLoaded: (PowerTriggerEntry) -> Unit,
       onTriggerLoadError: (Throwable) -> Unit, onTriggerLoadFinished: () -> Unit) {
     disposeOnStop {

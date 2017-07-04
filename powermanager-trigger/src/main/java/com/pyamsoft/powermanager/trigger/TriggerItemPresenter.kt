@@ -28,14 +28,11 @@ class TriggerItemPresenter @Inject internal constructor(@Named("obs") obsSchedul
     private val interactor: TriggerItemInteractor) : SchedulerPresenter(obsScheduler,
     subScheduler) {
 
-  /**
-   * public
-   */
   fun toggleEnabledState(entry: PowerTriggerEntry, enabled: Boolean,
       updateTriggerEntry: (PowerTriggerEntry) -> Unit) {
     disposeOnStop {
-      interactor.update(entry, enabled).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ updateTriggerEntry(it) }, { Timber.e(it, "onError") })
+      interactor.update(entry.updateEnabled(enabled)).subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).subscribe({ updateTriggerEntry(entry) }, { Timber.e(it, "onError") })
     }
   }
 }

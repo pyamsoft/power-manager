@@ -20,23 +20,15 @@ import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Completable
-import io.reactivex.Single
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton internal class TriggerItemInteractor @Inject constructor(powerTriggerDB: PowerTriggerDB,
     private val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
-  /**
-   * public
-   */
-  @CheckResult fun update(entry: PowerTriggerEntry, enabled: Boolean): Single<PowerTriggerEntry> {
+  @CheckResult fun update(entry: PowerTriggerEntry): Completable {
     return Completable.fromCallable {
-      val percent = entry.percent()
-      Timber.d("Update enabled state with percent: %d", percent)
-      Timber.d("Update entry to enabled state: %s", enabled)
-      powerTriggerDB.updateEnabled(enabled, percent)
-    }.andThen(Completable.fromAction { cacheInteractor.clearCache() }).andThen(get(entry.percent()))
+      powerTriggerDB.updateEnabled(entry)
+    }.andThen(Completable.fromAction { cacheInteractor.clearCache() })
   }
 }

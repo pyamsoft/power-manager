@@ -21,7 +21,7 @@ import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton internal class TriggerCacheInteractor @Inject constructor() {
+@Singleton class TriggerCacheInteractor @Inject constructor() {
 
   private var cachedPowerTriggerEntryObservable: Single<List<PowerTriggerEntry>>? = null
 

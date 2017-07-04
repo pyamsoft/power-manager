@@ -21,11 +21,9 @@ import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Single
 
-abstract class TriggerBaseInteractor(protected val powerTriggerDB: PowerTriggerDB) {
+internal abstract class TriggerBaseInteractor internal constructor(
+    protected val powerTriggerDB: PowerTriggerDB) {
 
-  /**
-   * public
-   */
   @CheckResult operator fun get(percent: Int): Single<PowerTriggerEntry> {
     return powerTriggerDB.queryWithPercent(percent)
   }
