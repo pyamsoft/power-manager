@@ -22,7 +22,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.support.annotation.CheckResult
 import android.support.annotation.VisibleForTesting
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry.Companion
-import com.pyamsoft.pydroid.helper.DisposableHelper
 import com.squareup.sqlbrite2.BriteDatabase
 import com.squareup.sqlbrite2.SqlBrite
 import io.reactivex.Completable
@@ -36,7 +35,6 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
 
   private val briteDatabase: BriteDatabase
   private val openHelper = PowerTriggerOpenHelper(context.applicationContext)
-  private var timerDisposable = DisposableHelper.dispose(null)
 
   init {
     briteDatabase = SqlBrite.Builder().build().wrapDatabaseHelper(openHelper, scheduler)
@@ -110,7 +108,6 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
       Timber.i("DB: DELETE ALL")
       briteDatabase.execute(PowerTriggerModel.DELETE_ALL)
       briteDatabase.close()
-      timerDisposable = DisposableHelper.dispose(timerDisposable)
     }.andThen(deleteDatabase())
   }
 

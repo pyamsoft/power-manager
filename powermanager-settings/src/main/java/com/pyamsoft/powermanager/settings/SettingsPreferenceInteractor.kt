@@ -37,7 +37,7 @@ import javax.inject.Singleton
    * public
    */
   @CheckResult fun clearDatabase(): Single<Boolean> {
-    return powerTriggerDB.deleteAll().andThen(powerTriggerDB.deleteDatabase()).andThen(
+    return powerTriggerDB.deleteAll().andThen(
         Completable.fromAction { triggerInteractor.clearCache() }).andThen(Single.just(true))
   }
 
