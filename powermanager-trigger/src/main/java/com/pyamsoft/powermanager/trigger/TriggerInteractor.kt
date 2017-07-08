@@ -22,6 +22,7 @@ import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import timber.log.Timber
 import java.util.Collections
 import javax.inject.Inject
@@ -36,9 +37,19 @@ import javax.inject.Singleton
   }
 
   @CheckResult fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
-    // TODO
-    Timber.d("Force refresh? %s", forceRefresh)
-    return Observable.empty()
+    return Single.defer {
+      val dataSource: Single<List<PowerTriggerEntry>>
+      val cached = cacheInteractor.retrieve()
+      if (cached == null || forceRefresh) {
+        Timber.d("Fetch triggers from DB")
+        dataSource = powerTriggerDB.queryAll().cache()
+        cacheInteractor.cache(dataSource)
+      } else {
+        Timber.d("Restore triggers from cache")
+        dataSource = cached
+      }
+      return@defer dataSource
+    }.flatMapObservable { Observable.fromIterable(it) }
   }
 
   @CheckResult fun put(entry: PowerTriggerEntry): Completable {
