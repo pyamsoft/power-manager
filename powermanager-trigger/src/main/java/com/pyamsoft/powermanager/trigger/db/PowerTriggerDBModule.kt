@@ -19,11 +19,14 @@ package com.pyamsoft.powermanager.trigger.db
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module class PowerTriggerDBModule {
 
-  @Singleton @Provides fun providePowerTriggerDB(context: Context): PowerTriggerDB {
-    return PowerTriggerDBImpl(context.applicationContext)
+  @Singleton @Provides fun providePowerTriggerDB(context: Context,
+      @Named("io") scheduler: Scheduler): PowerTriggerDB {
+    return PowerTriggerDBImpl(context.applicationContext, scheduler)
   }
 }

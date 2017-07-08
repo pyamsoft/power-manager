@@ -43,7 +43,7 @@ buildscript {
     leakCanary = "1.5.1"
     pydroid = "10.6.6"
     autoValue = "1.4.1"
-    sqlbrite = "1.1.1"
+    sqlbrite = "2.0.0"
     dagger = "2.11"
     libsuperuser = "1.0.0.201704021214"
     androidJob = "1.1.10"
