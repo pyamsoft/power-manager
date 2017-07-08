@@ -39,6 +39,7 @@ import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.ConfirmationDialog
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
 import com.pyamsoft.powermanager.trigger.DeleteTriggerDialog
+import com.pyamsoft.powermanager.trigger.PowerTriggerFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerPreferenceFragment
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
 import com.pyamsoft.powermanager.workaround.WorkaroundFragment
@@ -80,4 +81,6 @@ import javax.inject.Singleton
   fun inject(workaroundFragment: WorkaroundFragment)
 
   fun inject(powerTriggerPreferenceFragment: PowerTriggerPreferenceFragment)
+
+  fun inject(powerTriggerFragment: PowerTriggerFragment)
 }

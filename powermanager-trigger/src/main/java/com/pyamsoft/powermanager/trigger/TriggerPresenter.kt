@@ -20,7 +20,7 @@ import android.database.sqlite.SQLiteConstraintException
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import com.pyamsoft.pydroid.presenter.SchedulerPresenter
+import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,50 +29,50 @@ import javax.inject.Named
 class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: Scheduler,
     @Named("sub") subScheduler: Scheduler, private val deleteBus: TriggerDeleteBus,
     private val createBus: TriggerCreateBus,
-    private val interactor: TriggerInteractor) : SchedulerPresenter(obsScheduler, subScheduler) {
+    private val interactor: TriggerInteractor) : SchedulerViewPresenter(obsScheduler,
+    subScheduler) {
 
   fun registerOnBus(onAdd: (PowerTriggerEntry) -> Unit, onAddError: (Throwable) -> Unit,
       onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
       onTriggerDeleteError: (Throwable) -> Unit) {
     disposeOnStop {
-      createBus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
-          { createPowerTrigger(it.entry, onAdd, onAddError, onCreateError) },
-          { Timber.e(it, "onError create bus") })
-    }
-
-    disposeOnStop {
-      deleteBus.listen().subscribeOn(backgroundScheduler).observeOn(foregroundScheduler).subscribe(
-          { deleteTrigger(it.percent, onTriggerDeleted, onTriggerDeleteError) },
-          { Timber.e(it, "onError create bus") })
-    }
-  }
-
-  fun createPowerTrigger(entry: PowerTriggerEntry, onAdd: (PowerTriggerEntry) -> Unit,
-      onAddError: (Throwable) -> Unit, onCreateError: (Throwable) -> Unit) {
-    disposeOnStop {
-      Timber.d("Create new power trigger")
-      interactor.put(entry).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ onAdd(entry) }, {
-        Timber.e(it, "onError")
-        if (it is SQLiteConstraintException) {
-          Timber.e("Error inserting into DB")
-          onAddError(it)
-        } else {
-          Timber.e("Issue creating trigger")
-          onCreateError(it)
+      createBus.listen().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).flatMapSingle {
+        interactor.createTrigger(it.entry).onErrorReturn {
+          Timber.e(it, "createTrigger Error")
+          if (it is SQLiteConstraintException) {
+            Timber.e("Error inserting into DB")
+            onAddError(it)
+          } else {
+            Timber.e("Issue creating trigger")
+            onCreateError(it)
+          }
+          return@onErrorReturn PowerTriggerEntry.empty
         }
-      })
+      }.subscribe({
+        if (PowerTriggerEntry.isEmpty(it)) {
+          Timber.w("Empty entry passed, do nothing")
+        } else {
+          onAdd(it)
+        }
+      }, { Timber.e(it, "onError create bus") })
     }
-  }
 
-  fun deleteTrigger(percent: Int, onTriggerDeleted: (Int) -> Unit,
-      onTriggerError: (Throwable) -> Unit) {
     disposeOnStop {
-      interactor.delete(percent).subscribeOn(backgroundScheduler).observeOn(
-          foregroundScheduler).subscribe({ onTriggerDeleted(percent) }, {
-        Timber.e(it, "onError")
-        onTriggerError(it)
-      })
+      deleteBus.listen().subscribeOn(backgroundScheduler).observeOn(
+          foregroundScheduler).flatMapSingle {
+        interactor.delete(it.percent).onErrorReturn {
+          Timber.e(it, "Trigger Delete error")
+          onTriggerDeleteError(it)
+          return@onErrorReturn -1
+        }
+      }.subscribe({
+        if (it < 0) {
+          Timber.w("Trigger delete failed, do nothing")
+        } else {
+          onTriggerDeleted(it)
+        }
+      }, { Timber.e(it, "onError create bus") })
     }
   }
 

@@ -21,7 +21,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.support.annotation.CheckResult
 import android.support.annotation.VisibleForTesting
-import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry.Companion
 import com.squareup.sqlbrite2.BriteDatabase
 import com.squareup.sqlbrite2.SqlBrite
 import io.reactivex.Completable
@@ -88,7 +87,7 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
       val statement = PowerTriggerEntry.withPercent(percent)
       return@defer briteDatabase.createQuery(statement.tables, statement.statement,
           *statement.args).mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper.map(it) },
-          PowerTriggerEntry.empty).first(Companion.empty)
+          PowerTriggerEntry.empty).first(PowerTriggerEntry.empty)
     }
   }
 

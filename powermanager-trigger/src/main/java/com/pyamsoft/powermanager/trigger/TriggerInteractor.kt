@@ -20,7 +20,6 @@ import android.database.sqlite.SQLiteConstraintException
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDB
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
@@ -48,8 +47,8 @@ import javax.inject.Singleton
     }.flatMapObservable { Observable.fromIterable(it) }
   }
 
-  @CheckResult fun put(entry: PowerTriggerEntry): Completable {
-    return powerTriggerDB.queryWithPercent(entry.percent()).flatMapCompletable {
+  @CheckResult fun createTrigger(entry: PowerTriggerEntry): Single<PowerTriggerEntry> {
+    return powerTriggerDB.queryWithPercent(entry.percent()).flatMap {
       if (!PowerTriggerEntry.isEmpty(it)) {
         Timber.e("Entry already exists, throw")
         throw SQLiteConstraintException("Entry already exists with percent: " + entry.percent())
@@ -63,13 +62,12 @@ import javax.inject.Singleton
         throw IllegalStateException("Percent is too high")
       } else {
         Timber.d("Insert new Trigger into DB")
-        return@flatMapCompletable powerTriggerDB.queryWithPercent(
-            entry.percent()).flatMapCompletable { powerTriggerDB.insert(it) }
+        return@flatMap powerTriggerDB.insert(entry).toSingleDefault(entry)
       }
-    }.andThen(Completable.fromAction { cacheInteractor.clearCache() })
+    }.doFinally { cacheInteractor.clearCache() }
   }
 
-  @CheckResult fun delete(percent: Int): Completable {
+  @CheckResult fun delete(percent: Int): Single<Int> {
     return powerTriggerDB.queryAll().map {
 
       // Sort first
@@ -82,7 +80,7 @@ import javax.inject.Singleton
           return@sort 1
         } else {
           // Same percent. This is impossible technically due to DB rules
-          throw IllegalStateException("Cannot have two entries with the same percent")
+          throw SQLiteConstraintException("Cannot have two entries with the same percent")
         }
       }
 
@@ -100,11 +98,11 @@ import javax.inject.Singleton
       } else {
         return@map foundEntry
       }
-    }.flatMapCompletable {
+    }.flatMap {
       Timber.d("Delete trigger with percent: %d", percent)
-      powerTriggerDB.deleteWithPercent(percent).andThen(Completable.fromAction {
-        cacheInteractor.clearCache()
-      })
+      return@flatMap powerTriggerDB.deleteWithPercent(percent).toSingleDefault(percent)
+    }.doFinally {
+      cacheInteractor.clearCache()
     }
   }
 }
