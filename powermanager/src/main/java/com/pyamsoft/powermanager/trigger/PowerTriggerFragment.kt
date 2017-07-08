@@ -94,7 +94,9 @@ class PowerTriggerFragment : WatchedFragment() {
 
     presenter.loadTriggerView(false, onTriggerLoaded = {
       Timber.d("TODO: Add trigger: %s", it)
-    }, onTriggerLoadError = { TODO() }, onTriggerLoadFinished = { TODO() })
+    }, onTriggerLoadError = { TODO() }, onTriggerLoadFinished = {
+      Timber.d("TODO: Done loading...")
+    })
 
     presenter.clickEvent(binding.powerTriggerFab, {
       Timber.d("TODO: Show trigger creation dialog")
