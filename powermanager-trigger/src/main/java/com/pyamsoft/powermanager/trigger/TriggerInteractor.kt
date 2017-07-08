@@ -32,10 +32,6 @@ import javax.inject.Singleton
     powerTriggerDB: PowerTriggerDB,
     private val cacheInteractor: TriggerCacheInteractor) : TriggerBaseInteractor(powerTriggerDB) {
 
-  fun clearCached() {
-    cacheInteractor.clearCache()
-  }
-
   @CheckResult fun queryAll(forceRefresh: Boolean): Observable<PowerTriggerEntry> {
     return Single.defer {
       val dataSource: Single<List<PowerTriggerEntry>>
