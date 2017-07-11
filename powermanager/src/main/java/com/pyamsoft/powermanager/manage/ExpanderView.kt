@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.uicore
+package com.pyamsoft.powermanager.manage
 
 import android.content.Context
 import android.os.Build

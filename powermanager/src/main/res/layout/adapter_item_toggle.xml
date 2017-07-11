@@ -44,7 +44,7 @@
           android:textAppearance="@style/TextAppearance.AppCompat.Medium"
           />
 
-      <com.pyamsoft.powermanager.uicore.ExpanderView
+      <com.pyamsoft.powermanager.manage.ExpanderView
           android:id="@+id/simple_expander"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
