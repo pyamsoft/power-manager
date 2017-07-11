@@ -27,6 +27,7 @@ import com.pyamsoft.powermanager.job.Jobs
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.uicore.WatchedBottomSheet
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.powermanager.uicore.WatchedPreferenceFragment
@@ -39,9 +40,9 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PowerManager : Application(), ComponentProvider {
-  @field:Inject lateinit internal var jobHandler: JobHandler
-  private lateinit var refWatcher: RefWatcher
 
+  @field:Inject internal lateinit var jobHandler: JobHandler
+  private lateinit var refWatcher: RefWatcher
   private var component: PowerManagerComponent? = null
 
   @CheckResult override fun getComponent(): PowerManagerComponent {
@@ -101,6 +102,10 @@ class PowerManager : Application(), ComponentProvider {
 
   companion object {
     @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedDialog): RefWatcher {
+      return getRefWatcherInternal(fragment)
+    }
+
+    @JvmStatic @CheckResult fun getRefWatcher(fragment: WatchedBottomSheet): RefWatcher {
       return getRefWatcherInternal(fragment)
     }
 

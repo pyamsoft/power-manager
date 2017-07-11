@@ -16,18 +16,15 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CheckResult
-import android.support.v7.app.AlertDialog
 import com.pyamsoft.powermanager.Injector
-import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import com.pyamsoft.powermanager.uicore.WatchedDialog
+import com.pyamsoft.powermanager.uicore.WatchedBottomSheet
 import timber.log.Timber
 import javax.inject.Inject
 
-class DeleteTriggerDialog : WatchedDialog() {
+class DeleteTriggerDialog : WatchedBottomSheet() {
 
   private var percent: Int = 0
   private lateinit var name: String
@@ -47,15 +44,6 @@ class DeleteTriggerDialog : WatchedDialog() {
     Injector.with(context) {
       it.inject(this)
     }
-  }
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(activity).setTitle("Delete Trigger").setMessage(
-        "Really delete trigger for: $name [$percent%] ?").setNegativeButton(
-        "Cancel") { _, _ -> dismiss() }.setPositiveButton("Okay") { _, _ ->
-      publisher.publish(TriggerDeleteEvent(percent))
-      dismiss()
-    }.create()
   }
 
   companion object {

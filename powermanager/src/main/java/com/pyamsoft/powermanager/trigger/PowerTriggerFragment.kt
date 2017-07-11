@@ -109,11 +109,13 @@ class PowerTriggerFragment : WatchedFragment() {
   }
 
   private fun loadTriggerListEmpty() {
-    TODO()
+    binding.powerTriggerList.visibility = View.GONE
+    binding.powerTriggerEmpty.visibility = View.VISIBLE
   }
 
   private fun loadTriggerList() {
-    TODO()
+    binding.powerTriggerEmpty.visibility = View.GONE
+    binding.powerTriggerList.visibility = View.VISIBLE
   }
 
   override fun onStop() {

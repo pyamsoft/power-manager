@@ -36,13 +36,13 @@
           />
 
       <FrameLayout
-          android:id="@+id/power_trigger_list_container"
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
           >
 
         <TextView
+            android:id="@+id/power_trigger_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -50,12 +50,14 @@
             android:gravity="center"
             android:text="@string/no_power_triggers_msg"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/power_trigger_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             />
 
       </FrameLayout>
