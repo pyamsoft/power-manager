@@ -94,13 +94,26 @@ class PowerTriggerFragment : WatchedFragment() {
 
     presenter.loadTriggerView(false, onTriggerLoaded = {
       Timber.d("TODO: Add trigger: %s", it)
-    }, onTriggerLoadError = { TODO() }, onTriggerLoadFinished = {
-      Timber.d("TODO: Done loading...")
-    })
+    }, onTriggerLoadError = { Timber.e(it, "Failed to load trigger into list") },
+        onTriggerLoadFinished = {
+          if (adapter.itemCount == 0) {
+            loadTriggerListEmpty()
+          } else {
+            loadTriggerList()
+          }
+        })
 
     presenter.clickEvent(binding.powerTriggerFab, {
       Timber.d("TODO: Show trigger creation dialog")
     })
+  }
+
+  private fun loadTriggerListEmpty() {
+    TODO()
+  }
+
+  private fun loadTriggerList() {
+    TODO()
   }
 
   override fun onStop() {
