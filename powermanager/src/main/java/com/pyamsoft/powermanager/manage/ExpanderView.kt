@@ -44,6 +44,7 @@ import com.pyamsoft.pydroid.loader.LoaderHelper
 import timber.log.Timber
 
 class ExpanderView : FrameLayout {
+
   private var expanded: Boolean = false
   private var arrowLoad = LoaderHelper.empty()
   private var arrowAnimation: ViewPropertyAnimatorCompat? = null
