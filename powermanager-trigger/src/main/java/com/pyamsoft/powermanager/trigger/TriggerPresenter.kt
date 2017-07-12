@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import android.database.sqlite.SQLiteConstraintException
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
@@ -33,20 +32,13 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
     subScheduler) {
 
   fun registerOnBus(onAdd: (PowerTriggerEntry) -> Unit, onAddError: (Throwable) -> Unit,
-      onCreateError: (Throwable) -> Unit, onTriggerDeleted: (Int) -> Unit,
-      onTriggerDeleteError: (Throwable) -> Unit) {
+      onTriggerDeleted: (Int) -> Unit, onTriggerDeleteError: (Throwable) -> Unit) {
     disposeOnStop {
       createBus.listen().subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).flatMapSingle {
         interactor.createTrigger(it.entry).onErrorReturn {
           Timber.e(it, "createTrigger Error")
-          if (it is SQLiteConstraintException) {
-            Timber.e("Error inserting into DB")
-            onAddError(it)
-          } else {
-            Timber.e("Issue creating trigger")
-            onCreateError(it)
-          }
+          onAddError(it)
           return@onErrorReturn PowerTriggerEntry.empty
         }
       }.subscribe({

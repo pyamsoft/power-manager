@@ -51,15 +51,16 @@ import javax.inject.Singleton
     return powerTriggerDB.queryWithPercent(entry.percent()).flatMap {
       if (!PowerTriggerEntry.isEmpty(it)) {
         Timber.e("Entry already exists, throw")
-        throw SQLiteConstraintException("Entry already exists with percent: " + entry.percent())
+        throw SQLiteConstraintException(
+            "Cannot create trigger: duplicate percent ${entry.percent()}%")
       }
 
       if (PowerTriggerEntry.isEmpty(entry)) {
         Timber.e("Trigger is EMPTY")
-        throw IllegalStateException("Trigger is EMPTY")
+        throw IllegalStateException("Cannot create trigger: invalid")
       } else if (entry.percent() > 100 || entry.percent() <= 0) {
         Timber.e("Percent too high")
-        throw IllegalStateException("Percent is too high")
+        throw IllegalStateException("Cannot create trigger: percent invalid ${entry.percent()}%")
       } else {
         Timber.d("Insert new Trigger into DB")
         return@flatMap powerTriggerDB.insert(entry).toSingleDefault(entry)
@@ -80,7 +81,8 @@ import javax.inject.Singleton
           return@sort 1
         } else {
           // Same percent. This is impossible technically due to DB rules
-          throw SQLiteConstraintException("Cannot have two entries with the same percent")
+          throw SQLiteConstraintException(
+              "Cannot create trigger: duplicate percent ${entry.percent()}%")
         }
       }
 

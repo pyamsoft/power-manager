@@ -27,6 +27,7 @@ import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.loader.ImageLoader
+import com.pyamsoft.pydroid.ui.helper.Toasty
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -80,15 +81,45 @@ class PowerTriggerFragment : WatchedFragment() {
   override fun onStart() {
     super.onStart()
     presenter.registerOnBus(onAdd = {
-      TODO()
+      if (adapter.adapterItems.isEmpty()) {
+        // We are it, just add
+        adapter.add(PowerTriggerItem(it))
+      } else {
+        // Go down the line until we are the big boy
+        val items = adapter.adapterItems
+        var i = 0
+        while (i < items.size && items[i].model.percent() > it.percent()) {
+          ++i
+        }
+
+        adapter.add(i, PowerTriggerItem(it))
+      }
     }, onAddError = {
-      TODO()
-    }, onCreateError = {
-      TODO()
+      Timber.e(it, "Error adding new power trigger")
+      val msg = it.message
+      if (msg != null) {
+        Toasty.makeText(context, msg, Toasty.LENGTH_SHORT).show()
+      }
     }, onTriggerDeleted = {
-      TODO()
+      val items = adapter.adapterItems
+      var index = -1
+      for (i in items.indices) {
+        val item = items[i]
+        if (item.model.percent() == it) {
+          index = i
+          break
+        }
+      }
+
+      if (index >= 0) {
+        adapter.remove(index)
+      }
     }, onTriggerDeleteError = {
-      TODO()
+      Timber.e(it, "Error deleting power trigger")
+      val msg = it.message
+      if (msg != null) {
+        Toasty.makeText(context, msg, Toasty.LENGTH_SHORT).show()
+      }
     })
 
     presenter.loadTriggerView(false, onTriggerLoaded = { trigger ->
