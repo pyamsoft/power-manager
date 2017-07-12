@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.job.JobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.main.MainFragment
+import com.pyamsoft.powermanager.manage.ExpanderView
 import com.pyamsoft.powermanager.manage.ManageComponent
 import com.pyamsoft.powermanager.manage.ManageFragment
 import com.pyamsoft.powermanager.manage.ManageSingletonModule
@@ -83,4 +84,6 @@ import javax.inject.Singleton
   fun inject(powerTriggerPreferenceFragment: PowerTriggerPreferenceFragment)
 
   fun inject(powerTriggerFragment: PowerTriggerFragment)
+
+  fun inject(expanderView: ExpanderView)
 }

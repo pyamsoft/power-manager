@@ -37,11 +37,13 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.databinding.ViewExpanderBinding
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.loader.LoaderHelper
 import timber.log.Timber
+import javax.inject.Inject
 
 class ExpanderView : FrameLayout {
 
@@ -50,6 +52,7 @@ class ExpanderView : FrameLayout {
   private var arrowAnimation: ViewPropertyAnimatorCompat? = null
   private var containerAnimation: ViewPropertyAnimatorCompat? = null
   private lateinit var binding: ViewExpanderBinding
+  @field:Inject internal lateinit var presenter: ManageViewPresenter
 
   constructor(context: Context) : super(context) {
     init()
@@ -77,6 +80,10 @@ class ExpanderView : FrameLayout {
       return
     }
 
+    Injector.with(context) {
+      it.inject(this)
+    }
+
     binding = ViewExpanderBinding.inflate(LayoutInflater.from(context), this, false)
     addView(binding.root)
 
@@ -95,66 +102,16 @@ class ExpanderView : FrameLayout {
     }
 
     binding.expanderContainer.visibility = if (expanded) View.VISIBLE else View.GONE
-    binding.expanderTitleContainer.setOnClickListener {
-      expanded = !expanded
-      cancelArrowAnimation()
-      arrowAnimation = ViewCompat.animate(binding.expanderArrow).rotation(
-          if (expanded) 180F else 0F)
-      arrowAnimation!!.start()
-
-      cancelContainerAnimation()
-      if (expanded) {
-        // This is expanding now
-        // Be visible, but hidden
-        binding.expanderContainer.alpha = 0F
-
-        // TODO Animation is buggy
-        //binding.expanderContainer.setScaleY(0);
-        containerAnimation = ViewCompat.animate(binding.expanderContainer).alpha(1F).setListener(
-            object : ViewPropertyAnimatorListenerAdapter() {
-              override fun onAnimationStart(view: View?) {
-                view!!.visibility = View.VISIBLE
-              }
-
-              override fun onAnimationEnd(view: View?) {
-                view!!.visibility = View.VISIBLE
-              }
-            })
-        containerAnimation!!.start()
-      } else {
-        // This is collapsing now
-        // Be visible
-        binding.expanderContainer.alpha = 1F
-
-        // TODO Animation is buggy
-        //binding.expanderContainer.setScaleY(1);
-        containerAnimation = ViewCompat.animate(binding.expanderContainer).alpha(0F).setListener(
-            object : ViewPropertyAnimatorListenerAdapter() {
-              override fun onAnimationStart(view: View?) {
-                view!!.visibility = View.VISIBLE
-              }
-
-              override fun onAnimationEnd(view: View?) {
-                view!!.visibility = View.GONE
-              }
-            })
-        containerAnimation!!.start()
-      }
-    }
   }
 
   internal fun cancelArrowAnimation() {
-    if (arrowAnimation != null) {
-      arrowAnimation!!.cancel()
-      arrowAnimation = null
-    }
+    arrowAnimation?.cancel()
+    arrowAnimation = null
   }
 
   internal fun cancelContainerAnimation() {
-    if (containerAnimation != null) {
-      containerAnimation!!.cancel()
-      containerAnimation = null
-    }
+    containerAnimation?.cancel()
+    containerAnimation = null
   }
 
   override fun onAttachedToWindow() {
@@ -167,6 +124,63 @@ class ExpanderView : FrameLayout {
     arrowLoad = LoaderHelper.unload(arrowLoad)
     arrowLoad = ImageLoader.fromResource(context, R.drawable.ic_arrow_down_24dp).into(
         binding.expanderArrow)
+
+    presenter.clickEvent(binding.expanderTitleContainer, {
+      expanded = !expanded
+      cancelArrowAnimation()
+      val anim = ViewCompat.animate(binding.expanderArrow).rotation(if (expanded) 180F else 0F)
+      anim.start()
+      arrowAnimation = anim
+
+      cancelContainerAnimation()
+      if (expanded) {
+        // This is expanding now
+        // Be visible, but hidden
+        binding.expanderContainer.alpha = 0F
+
+        // TODO Animation is buggy
+        //binding.expanderContainer.setScaleY(0);
+        val contAnim = ViewCompat.animate(binding.expanderContainer).alpha(1F).setListener(
+            object : ViewPropertyAnimatorListenerAdapter() {
+              override fun onAnimationStart(view: View?) {
+                if (view != null) {
+                  view.visibility = View.VISIBLE
+                }
+              }
+
+              override fun onAnimationEnd(view: View?) {
+                if (view != null) {
+                  view.visibility = View.VISIBLE
+                }
+              }
+            })
+        contAnim.start()
+        containerAnimation = contAnim
+      } else {
+        // This is collapsing now
+        // Be visible
+        binding.expanderContainer.alpha = 1F
+
+        // TODO Animation is buggy
+        //binding.expanderContainer.setScaleY(1);
+        val contAnim = ViewCompat.animate(binding.expanderContainer).alpha(0F).setListener(
+            object : ViewPropertyAnimatorListenerAdapter() {
+              override fun onAnimationStart(view: View?) {
+                if (view != null) {
+                  view.visibility = View.VISIBLE
+                }
+              }
+
+              override fun onAnimationEnd(view: View?) {
+                if (view != null) {
+                  view.visibility = View.GONE
+                }
+              }
+            })
+        contAnim.start()
+        containerAnimation = contAnim
+      }
+    })
   }
 
   override fun onDetachedFromWindow() {
@@ -179,6 +193,9 @@ class ExpanderView : FrameLayout {
     arrowLoad = LoaderHelper.unload(arrowLoad)
     cancelArrowAnimation()
     cancelContainerAnimation()
+
+    presenter.stop()
+    presenter.destroy()
   }
 
   @CheckResult fun editTitleView(): TextView {
