@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager
 import android.app.Application
 import android.support.annotation.CheckResult
 import android.support.v4.app.Fragment
+import com.evernote.android.job.Job
 import com.evernote.android.job.JobManager
 import com.pyamsoft.powermanager.base.PowerManagerModule
 import com.pyamsoft.powermanager.job.JobHandler
@@ -78,12 +79,15 @@ class PowerManager : Application(), ComponentProvider {
     // Guarantee JobManager creation
     JobManager.create(this)
     JobManager.instance().addJobCreator {
+      val job: Job?
       if (JobQueuer.ENABLE_TAG == it || JobQueuer.DISABLE_TAG == it) {
-        return@addJobCreator Jobs.newJob(jobHandler)
+        job = Jobs.newJob(jobHandler)
       } else {
         Timber.e("Could not create job for tag: %s", it)
-        return@addJobCreator null
+        job = null
       }
+
+      return@addJobCreator job
     }
 
     if (BuildConfig.DEBUG) {
