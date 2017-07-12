@@ -49,7 +49,7 @@
             android:layout_margin="16dp"
             android:gravity="center"
             android:text="@string/no_power_triggers_msg"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:visibility="gone"
             />
 

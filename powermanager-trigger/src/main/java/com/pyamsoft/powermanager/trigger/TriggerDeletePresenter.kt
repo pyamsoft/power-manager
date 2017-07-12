@@ -16,21 +16,20 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import com.pyamsoft.powermanager.trigger.bus.TriggerCreateBus
-import com.pyamsoft.powermanager.trigger.bus.TriggerCreateEvent
+import android.view.View
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
+import com.pyamsoft.pydroid.presenter.ViewPresenter
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton class TriggerPublisher @Inject internal constructor(
-    private val createBus: TriggerCreateBus, private val deleteBus: TriggerDeleteBus) {
+@Singleton class TriggerDeletePresenter @Inject internal constructor(
+    private val deleteBus: TriggerDeleteBus) : ViewPresenter() {
 
-  fun publish(event: TriggerCreateEvent) {
-    createBus.publish(event)
-  }
-
-  fun publish(event: TriggerDeleteEvent) {
-    deleteBus.publish(event)
+  fun deleteTrigger(view: View, percent: Int, func: (View) -> Unit) {
+    clickEvent(view, {
+      func(it)
+      deleteBus.publish(TriggerDeleteEvent(percent))
+    })
   }
 }
