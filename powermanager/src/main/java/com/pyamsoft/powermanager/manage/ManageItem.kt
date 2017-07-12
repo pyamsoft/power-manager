@@ -124,7 +124,7 @@ class ManageItem internal constructor() : GenericAbstractItem<String, ManageItem
     @field:[Inject Named("manage_doze")] lateinit var presenterDoze: ManagePresenter
     @field:[Inject Named("manage_data_saver")] lateinit var presenterDataSaver: ManagePresenter
 
-    val binding: AdapterItemManageBinding = AdapterItemManageBinding.bind(itemView)
+    internal val binding: AdapterItemManageBinding = AdapterItemManageBinding.bind(itemView)
 
     init {
       Injector.with(itemView.context) {

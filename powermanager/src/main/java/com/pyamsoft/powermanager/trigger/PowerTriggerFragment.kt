@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-import com.mikepenz.fastadapter.items.GenericAbstractItem
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.R
 import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding
@@ -35,7 +34,7 @@ class PowerTriggerFragment : WatchedFragment() {
 
   private lateinit var binding: FragmentPowertriggerBinding
   @field:Inject internal lateinit var presenter: TriggerPresenter
-  private lateinit var adapter: FastItemAdapter<GenericAbstractItem<Any, *, *>>
+  private lateinit var adapter: FastItemAdapter<PowerTriggerItem>
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -92,8 +91,12 @@ class PowerTriggerFragment : WatchedFragment() {
       TODO()
     })
 
-    presenter.loadTriggerView(false, onTriggerLoaded = {
-      Timber.d("TODO: Add trigger: %s", it)
+    presenter.loadTriggerView(false, onTriggerLoaded = { trigger ->
+      if (adapter.adapterItems.filter {
+        it.model.percent() == trigger.percent()
+      }.isEmpty()) {
+        adapter.add(PowerTriggerItem(trigger))
+      }
     }, onTriggerLoadError = { Timber.e(it, "Failed to load trigger into list") },
         onTriggerLoadFinished = {
           if (adapter.itemCount == 0) {
