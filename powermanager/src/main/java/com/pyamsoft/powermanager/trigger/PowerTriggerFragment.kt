@@ -28,6 +28,7 @@ import com.pyamsoft.powermanager.databinding.FragmentPowertriggerBinding
 import com.pyamsoft.powermanager.uicore.WatchedFragment
 import com.pyamsoft.pydroid.loader.ImageLoader
 import com.pyamsoft.pydroid.ui.helper.Toasty
+import com.pyamsoft.pydroid.ui.util.DialogUtil
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -140,6 +141,12 @@ class PowerTriggerFragment : WatchedFragment() {
     presenter.clickEvent(binding.powerTriggerFab, {
       Timber.d("TODO: Show trigger creation dialog")
     })
+
+    adapter.withOnLongClickListener { _, _, powerTriggerItem, _ ->
+      DialogUtil.guaranteeSingleDialogFragment(activity,
+          DeleteTriggerDialog.newInstance(powerTriggerItem.model), "delete_trigger")
+      return@withOnLongClickListener true
+    }
   }
 
   private fun loadTriggerListEmpty() {
@@ -155,6 +162,8 @@ class PowerTriggerFragment : WatchedFragment() {
   override fun onStop() {
     super.onStop()
     presenter.stop()
+
+    adapter.withOnLongClickListener(null)
   }
 
   override fun onDestroyView() {

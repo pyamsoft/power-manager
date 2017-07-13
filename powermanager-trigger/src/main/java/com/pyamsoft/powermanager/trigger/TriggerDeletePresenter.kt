@@ -21,9 +21,8 @@ import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
 import com.pyamsoft.pydroid.presenter.ViewPresenter
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton class TriggerDeletePresenter @Inject internal constructor(
+class TriggerDeletePresenter @Inject internal constructor(
     private val deleteBus: TriggerDeleteBus) : ViewPresenter() {
 
   fun deleteTrigger(view: View, percent: Int, func: (View) -> Unit) {
