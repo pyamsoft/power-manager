@@ -53,14 +53,6 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
     })
   }
 
-  override fun updateAvailable(entry: PowerTriggerEntry): Completable {
-    return Completable.fromCallable {
-      Timber.i("DB: UPDATE AVAILABLE")
-      return@fromCallable PowerTriggerEntry.updateAvailable(openHelper).executeProgram(
-          entry.available(), entry.percent())
-    }
-  }
-
   override fun updateEnabled(entry: PowerTriggerEntry): Completable {
     return Completable.fromCallable {
       Timber.i("DB: UPDATE ENABLED")
@@ -130,12 +122,16 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
 
     override fun onUpgrade(sqLiteDatabase: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
       Timber.d("onUpgrade from old version %d to new %d", oldVersion, newVersion)
+      if (oldVersion == 1 && newVersion == 2) {
+        Timber.d("on upgrade from 1 to 2, drop entire table")
+        sqLiteDatabase.execSQL("DROP TABLE ${PowerTriggerModel.TABLE_NAME}")
+      }
     }
 
     companion object {
 
       private const val DB_NAME = "power_trigger_db"
-      private const val DATABASE_VERSION = 1
+      private const val DATABASE_VERSION = 2
     }
   }
 }

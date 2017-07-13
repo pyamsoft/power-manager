@@ -41,20 +41,9 @@ import com.squareup.sqldelight.SqlDelightStatement
 
     @CheckResult internal fun executeProgram(newEntry: PowerTriggerEntry): Long {
       insertTrigger.bind(newEntry.percent(), newEntry.name(), newEntry.enabled(),
-          newEntry.available(), newEntry.toggleWifi(), newEntry.toggleData(),
-          newEntry.toggleBluetooth(), newEntry.toggleSync(), newEntry.enableWifi(),
-          newEntry.enableData(), newEntry.enableBluetooth(), newEntry.enableSync())
+          newEntry.stateWifi(), newEntry.stateData(), newEntry.stateBluetooth(),
+          newEntry.stateSync())
       return insertTrigger.program.executeInsert()
-    }
-  }
-
-  internal class UpdateAvailabeManager internal constructor(openHelper: SQLiteOpenHelper) {
-    private val updateAvailable: PowerTriggerModel.Update_available = PowerTriggerModel.Update_available(
-        openHelper.writableDatabase)
-
-    @CheckResult internal fun executeProgram(available: Boolean, percent: Int): Int {
-      updateAvailable.bind(available, percent)
-      return updateAvailable.program.executeUpdateDelete()
     }
   }
 
@@ -69,32 +58,29 @@ import com.squareup.sqldelight.SqlDelightStatement
   }
 
   @CheckResult fun updateEnabled(enabled: Boolean): PowerTriggerEntry {
-    return creator.create(percent(), name(), enabled, available(), toggleWifi(), toggleData(),
-        toggleBluetooth(), toggleSync(), enableWifi(), enableData(), enableBluetooth(),
-        enableSync())
-  }
-
-  @CheckResult fun updateAvailable(available: Boolean): PowerTriggerEntry {
-    return creator.create(percent(), name(), enabled(), available, toggleWifi(), toggleData(),
-        toggleBluetooth(), toggleSync(), enableWifi(), enableData(), enableBluetooth(),
-        enableSync())
+    return creator.create(percent(), name(), enabled, stateWifi(), stateData(), stateBluetooth(),
+        stateSync())
   }
 
   companion object {
+
+    const val STATE_NONE = 0
+    const val STATE_ENABLE = 1
+    const val STATE_DISABLE = 2
 
     const val EMPTY_NAME = "PowerTriggerEntry.__TRIGGER_NAME_EMPTY"
     const val EMPTY_PERCENT = -1
 
     private val factory: PowerTriggerModel.Factory<PowerTriggerEntry> by lazy {
       PowerTriggerModel.Factory(
-          PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync ->
-            AutoValue_PowerTriggerEntry(percent, name, enabled, available, toggleWifi, toggleData,
-                toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
+          PowerTriggerModel.Creator<PowerTriggerEntry> { percent, name, enabled, stateWifi, stateData, stateBluetooth, stateSync ->
+            AutoValue_PowerTriggerEntry(percent, name, enabled, stateWifi, stateData,
+                stateBluetooth, stateSync)
           })
     }
     val empty: PowerTriggerEntry by lazy {
-      AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, false, false, false, false,
-          false, false, false, false, false)
+      AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, STATE_NONE, STATE_NONE,
+          STATE_NONE, STATE_NONE)
     }
     val allEntriesMapper: Mapper<PowerTriggerEntry> by lazy {
       factory.all_entriesMapper()
@@ -138,14 +124,6 @@ import com.squareup.sqldelight.SqlDelightStatement
     @JvmStatic @CheckResult internal fun deleteTrigger(
         openHelper: SQLiteOpenHelper): DeleteTriggerManager {
       return DeleteTriggerManager(openHelper)
-    }
-
-    /**
-     * public
-     */
-    @JvmStatic @CheckResult internal fun updateAvailable(
-        openHelper: SQLiteOpenHelper): UpdateAvailabeManager {
-      return UpdateAvailabeManager(openHelper)
     }
 
     /**

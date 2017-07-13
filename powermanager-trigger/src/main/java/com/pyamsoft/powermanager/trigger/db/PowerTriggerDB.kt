@@ -24,8 +24,6 @@ interface PowerTriggerDB {
 
   @CheckResult fun insert(entry: PowerTriggerEntry): Completable
 
-  @CheckResult fun updateAvailable(entry: PowerTriggerEntry): Completable
-
   @CheckResult fun updateEnabled(entry: PowerTriggerEntry): Completable
 
   @CheckResult fun queryAll(): Single<List<PowerTriggerEntry>>

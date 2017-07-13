@@ -3,15 +3,10 @@ CREATE TABLE power_triggers (
   percent INTEGER As Integer NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
   enabled INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  available INTEGER AS Boolean DEFAULT 1 NOT NULL,
-  toggleWifi INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  toggleData INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  toggleBluetooth INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  toggleSync INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  enableWifi INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  enableData INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  enableBluetooth INTEGER AS Boolean DEFAULT 0 NOT NULL,
-  enableSync INTEGER AS Boolean DEFAULT 0 NOT NULL
+  stateWifi INTEGER As Integer DEFAULT 0 NOT NULL,
+  stateData INTEGER As Integer DEFAULT 0 NOT NULL,
+  stateBluetooth INTEGER As Integer DEFAULT 0 NOT NULL,
+  stateSync INTEGER As Integer DEFAULT 0 NOT NULL
 );
 
 -- Get all entries in the table
@@ -25,8 +20,8 @@ FROM power_triggers
 WHERE percent = ?;
 
 insert_trigger:
-INSERT INTO power_triggers(percent, name, enabled, available, toggleWifi, toggleData, toggleBluetooth, toggleSync, enableWifi, enableData, enableBluetooth, enableSync)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+INSERT INTO power_triggers(percent, name, enabled, stateWifi, stateData, stateBluetooth, stateSync)
+VALUES (?, ?, ?, ?, ?, ?, ?);
 
 delete_trigger:
 DELETE FROM power_triggers
@@ -39,9 +34,4 @@ WHERE 1 = 1;
 update_enabled:
 UPDATE power_triggers
 SET enabled = ?
-WHERE percent = ?;
-
-update_available:
-UPDATE power_triggers
-SET available = ?
 WHERE percent = ?;
