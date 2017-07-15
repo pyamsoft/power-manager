@@ -16,6 +16,10 @@
 
 package com.pyamsoft.powermanager.job
 
-data class JobQueuerEntry(val tag: String, val firstRun: Boolean, val oneShot: Boolean,
-    val screenOn: Boolean, val delay: Long, val repeatingOnWindow: Long,
-    val repeatingOffWindow: Long)
+import android.support.annotation.CheckResult
+import com.evernote.android.job.util.support.PersistableBundleCompat
+
+abstract class JobQueuerEntry(internal val tag: String, internal val delay: Long) {
+
+  @CheckResult internal abstract fun getOptions(): PersistableBundleCompat
+}

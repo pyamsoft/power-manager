@@ -39,10 +39,11 @@ import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class PowerManager : Application(), ComponentProvider {
 
-  @field:Inject internal lateinit var jobHandler: JobHandler
+  @field:[Inject Named("manage_handler")] internal lateinit var jobHandler: JobHandler
   private lateinit var refWatcher: RefWatcher
   private var component: PowerManagerComponent? = null
 

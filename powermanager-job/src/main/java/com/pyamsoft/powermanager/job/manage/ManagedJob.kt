@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job
+package com.pyamsoft.powermanager.job.manage
 
 import com.evernote.android.job.Job
+import com.pyamsoft.powermanager.job.JobHandler
 
 internal class ManagedJob(private val jobHandler: JobHandler) : Job() {
 

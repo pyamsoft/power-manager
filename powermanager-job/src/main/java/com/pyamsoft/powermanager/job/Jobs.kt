@@ -18,10 +18,16 @@ package com.pyamsoft.powermanager.job
 
 import android.support.annotation.CheckResult
 import com.evernote.android.job.Job
+import com.pyamsoft.powermanager.job.manage.ManageJobHandler
+import com.pyamsoft.powermanager.job.manage.ManagedJob
 
 object Jobs {
 
   @JvmStatic @CheckResult fun newJob(jobHandler: JobHandler): Job {
-    return ManagedJob(jobHandler)
+    when (jobHandler) {
+      is ManageJobHandler -> return ManagedJob(
+          jobHandler)
+      else -> throw IllegalArgumentException("Invalid JobHandler: $jobHandler")
+    }
   }
 }

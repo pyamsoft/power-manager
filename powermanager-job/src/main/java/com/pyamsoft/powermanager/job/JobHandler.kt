@@ -17,50 +17,8 @@
 package com.pyamsoft.powermanager.job
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.powermanager.base.preference.AirplanePreferences
-import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
-import com.pyamsoft.powermanager.base.preference.DataPreferences
-import com.pyamsoft.powermanager.base.preference.DataSaverPreferences
-import com.pyamsoft.powermanager.base.preference.DozePreferences
-import com.pyamsoft.powermanager.base.preference.PhonePreferences
-import com.pyamsoft.powermanager.base.preference.SyncPreferences
-import com.pyamsoft.powermanager.base.preference.WifiPreferences
-import com.pyamsoft.powermanager.model.StateModifier
-import com.pyamsoft.powermanager.model.StateObserver
-import io.reactivex.Scheduler
-import javax.inject.Inject
-import javax.inject.Named
 
-class JobHandler @Inject internal constructor(
-    @param:Named("delay") private val jobQueuer: JobQueuer,
-    @param:Named("obs_charging") private val chargingObserver: StateObserver,
-    @param:Named("obs_wear") private val wearableObserver: StateObserver,
-    @param:Named("mod_wifi") private val wifiModifier: StateModifier,
-    @param:Named("mod_data") private val dataModifier: StateModifier,
-    @param:Named("mod_bluetooth") private val bluetoothModifier: StateModifier,
-    @param:Named("mod_sync") private val syncModifier: StateModifier,
-    @param:Named("mod_doze") private val dozeModifier: StateModifier,
-    @param:Named("mod_airplane") private val airplaneModifier: StateModifier,
-    @param:Named("mod_data_saver") private val dataSaverModifier: StateModifier,
-    private val wifiPreferences: WifiPreferences, private val dataPreferences: DataPreferences,
-    private val bluetoothPreferences: BluetoothPreferences,
-    private val syncPreferences: SyncPreferences,
-    private val airplanePreferences: AirplanePreferences,
-    private val dozePreferences: DozePreferences,
-    private val dataSaverPreferences: DataSaverPreferences,
-    private val phonePreferences: PhonePreferences,
-    @param:Named("obs_phone") private val phoneObserver: StateObserver,
-    @param:Named("io") private val subScheduler: Scheduler) {
+interface JobHandler {
 
-  @CheckResult internal fun newRunner(stopper: () -> Boolean): JobRunner {
-    return object : JobRunner(jobQueuer, chargingObserver, wearableObserver, wifiModifier,
-        dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
-        dataSaverModifier, wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
-        airplanePreferences, dozePreferences, dataSaverPreferences, phonePreferences, phoneObserver,
-        subScheduler) {
-
-      override val isStopped: Boolean
-        get() = stopper.invoke()
-    }
-  }
+  @CheckResult fun newRunner(stopper: () -> Boolean): JobRunner
 }

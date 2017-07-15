@@ -25,6 +25,7 @@ import com.pyamsoft.powermanager.base.states.StateModifierModule
 import com.pyamsoft.powermanager.base.states.StateObserverModule
 import com.pyamsoft.powermanager.base.states.WrapperModule
 import com.pyamsoft.powermanager.job.JobModule
+import com.pyamsoft.powermanager.job.manage.ManageJobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.main.MainFragment
@@ -51,7 +52,8 @@ import javax.inject.Singleton
     modules = arrayOf(PowerManagerModule::class, WrapperModule::class, ShellModule::class,
         PowerTriggerDBModule::class, LoggerModule::class, PermissionObserverModule::class,
         StateObserverModule::class, StateModifierModule::class, JobModule::class,
-        ManageSingletonModule::class, TimeSingletonModule::class)) interface PowerManagerComponent {
+        ManageJobModule::class, ManageSingletonModule::class,
+        TimeSingletonModule::class)) interface PowerManagerComponent {
 
   @CheckResult fun plusManageComponent(): ManageComponent
 

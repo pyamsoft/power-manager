@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
 import com.pyamsoft.powermanager.job.JobQueuer
-import com.pyamsoft.powermanager.job.JobQueuerEntry
+import com.pyamsoft.powermanager.job.manage.ManageJobQueuerEntry
 import com.pyamsoft.powermanager.model.ConnectedStateObserver
 import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Completable
@@ -37,7 +37,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton internal class ManagerInteractor @Inject constructor(
-    @param:Named("instant") private val jobQueuer: JobQueuer,
+    @param:Named("manage_instant") private val jobQueuer: JobQueuer,
     @param:Named("obs_wifi") private val wifiObserver: ConnectedStateObserver,
     @param:Named("obs_data") private val dataObserver: StateObserver,
     @param:Named("obs_bluetooth") private val bluetoothObserver: ConnectedStateObserver,
@@ -69,8 +69,9 @@ import javax.inject.Singleton
       val tag = JobQueuer.ENABLE_TAG
       // Queue up an enable job
       jobQueuer.cancel(tag)
-      jobQueuer.queue(JobQueuerEntry(tag = tag, firstRun = true, oneShot = true, screenOn = true,
-          repeatingOffWindow = 0L, repeatingOnWindow = 0L, delay = 0L))
+      jobQueuer.queue(
+          ManageJobQueuerEntry(tag = tag, firstRun = true, oneShot = true, screenOn = true,
+              repeatingOffWindow = 0L, repeatingOnWindow = 0L, delay = 0L))
       return@fromCallable tag
     }.doAfterSuccess { eraseOriginalStates() }
   }
@@ -83,9 +84,10 @@ import javax.inject.Singleton
       val tag = JobQueuer.DISABLE_TAG
       // Queue up a disable job
       jobQueuer.cancel(tag)
-      jobQueuer.queue(JobQueuerEntry(tag = tag, firstRun = true, oneShot = false, screenOn = false,
-          repeatingOffWindow = preferences.periodicDisableTime,
-          repeatingOnWindow = preferences.periodicEnableTime, delay = preferences.manageDelay))
+      jobQueuer.queue(
+          ManageJobQueuerEntry(tag = tag, firstRun = true, oneShot = false, screenOn = false,
+              repeatingOffWindow = preferences.periodicDisableTime,
+              repeatingOnWindow = preferences.periodicEnableTime, delay = preferences.manageDelay))
       return@fromCallable tag
     })
   }

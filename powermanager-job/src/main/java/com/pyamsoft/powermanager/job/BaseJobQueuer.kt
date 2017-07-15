@@ -16,7 +16,6 @@
 
 package com.pyamsoft.powermanager.job
 
-import android.support.annotation.CheckResult
 import com.evernote.android.job.JobManager
 import com.evernote.android.job.JobRequest
 import com.evernote.android.job.util.support.PersistableBundleCompat
@@ -30,18 +29,8 @@ internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQ
     jobManager.cancelAllForTag(tag)
   }
 
-  @CheckResult private fun createExtras(entry: JobQueuerEntry): PersistableBundleCompat {
-    val extras = PersistableBundleCompat()
-    extras.putBoolean(KEY_SCREEN, entry.screenOn)
-    extras.putLong(KEY_ON_WINDOW, entry.repeatingOnWindow)
-    extras.putLong(KEY_OFF_WINDOW, entry.repeatingOffWindow)
-    extras.putBoolean(KEY_ONESHOT, entry.oneShot)
-    extras.putBoolean(KEY_FIRST_RUN, entry.firstRun)
-    return extras
-  }
-
   override fun queue(entry: JobQueuerEntry) {
-    val extras = createExtras(entry)
+    val extras = entry.getOptions()
     if (entry.delay == 0L) {
       runInstantJob(entry.tag, extras)
     } else {
@@ -57,7 +46,7 @@ internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQ
   }
 
   override fun queueRepeating(entry: JobQueuerEntry) {
-    val extras = createExtras(entry)
+    val extras = entry.getOptions()
     JobRequest.Builder(entry.tag).setPeriodic(TimeUnit.SECONDS.toMillis(entry.delay)).setPersisted(
         false).setExtras(extras).setRequiresCharging(false).setRequiresDeviceIdle(
         false).build().schedule()
@@ -66,11 +55,6 @@ internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQ
   internal abstract fun runInstantJob(tag: String, extras: PersistableBundleCompat)
 
   companion object {
-    const val KEY_ON_WINDOW = "extra_key__on_window"
-    const val KEY_OFF_WINDOW = "extra_key__off_window"
-    const val KEY_SCREEN = "extra_key__screen"
-    const val KEY_ONESHOT = "extra_key__once"
-    const val KEY_FIRST_RUN = "extra_key__first"
     @JvmStatic private val FIVE_SECONDS = TimeUnit.SECONDS.toMillis(5)
   }
 }

@@ -27,17 +27,12 @@ import javax.inject.Singleton
 
 @Module class JobModule {
 
-  @Singleton @Provides @Named("delay") fun provideDelayedJobQueuer(
+  @Singleton @Provides @Named("delay") internal fun provideDelayedJobQueuer(
       jobManager: JobManager): JobQueuer {
     return DelayedJobQueuerImpl(jobManager)
   }
 
-  @Singleton @Provides @Named("instant") fun provideInstantJobQueuer(jobManager: JobManager,
-      jobHandler: JobHandler): JobQueuer {
-    return InstantJobQueuerImpl(jobManager, jobHandler)
-  }
-
-  @Singleton @Provides fun provideJobManager(context: Context): JobManager {
+  @Singleton @Provides internal fun provideJobManager(context: Context): JobManager {
     // Job logs via Timber in debug mode
     JobCat.addLogPrinter { priority, tag, message, t -> Timber.tag(tag).log(priority, t, message) }
     JobCat.setLogcatEnabled(false)
