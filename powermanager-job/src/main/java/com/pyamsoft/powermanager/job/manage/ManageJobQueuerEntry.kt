@@ -19,22 +19,18 @@ package com.pyamsoft.powermanager.job.manage
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.pyamsoft.powermanager.job.JobQueuerEntry
 
-class ManageJobQueuerEntry(tag: String, delay: Long, val firstRun: Boolean, val oneShot: Boolean,
-    val screenOn: Boolean, val repeatingOnWindow: Long,
-    val repeatingOffWindow: Long) : JobQueuerEntry(tag, delay) {
+class ManageJobQueuerEntry(tag: String, delay: Long, internal val firstRun: Boolean,
+    internal val oneShot: Boolean, internal val screenOn: Boolean,
+    internal val repeatingOnWindow: Long, internal val repeatingOffWindow: Long) : JobQueuerEntry(
+    tag, delay) {
 
   override fun getOptions(): PersistableBundleCompat {
     val extras = PersistableBundleCompat()
-    extras.putBoolean(
-        KEY_SCREEN, screenOn)
-    extras.putLong(
-        KEY_ON_WINDOW, repeatingOnWindow)
-    extras.putLong(
-        KEY_OFF_WINDOW, repeatingOffWindow)
-    extras.putBoolean(
-        KEY_ONESHOT, oneShot)
-    extras.putBoolean(
-        KEY_FIRST_RUN, firstRun)
+    extras.putBoolean(KEY_SCREEN, screenOn)
+    extras.putLong(KEY_ON_WINDOW, repeatingOnWindow)
+    extras.putLong(KEY_OFF_WINDOW, repeatingOffWindow)
+    extras.putBoolean(KEY_ONESHOT, oneShot)
+    extras.putBoolean(KEY_FIRST_RUN, firstRun)
     return extras
   }
 
