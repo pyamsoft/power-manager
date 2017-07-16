@@ -67,12 +67,9 @@ android {
 
   buildTypes {
     debug {
-      multiDexEnabled true
       versionNameSuffix "-dev"
     }
     release {
-      //noinspection GroovyAssignabilityCheck
-      multiDexEnabled false
       signingConfig signingConfigs.release
       minifyEnabled true
       shrinkResources true
