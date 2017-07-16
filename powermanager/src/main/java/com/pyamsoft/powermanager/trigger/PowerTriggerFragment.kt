@@ -139,8 +139,7 @@ class PowerTriggerFragment : WatchedFragment() {
         })
 
     presenter.clickEvent(binding.powerTriggerFab, {
-      Timber.d("TODO: Show trigger creation dialog")
-    })
+      DialogUtil.guaranteeSingleDialogFragment(activity, CreateTriggerDialog(), "create_trigger")})
 
     adapter.withOnLongClickListener { _, _, powerTriggerItem, _ ->
       DialogUtil.guaranteeSingleDialogFragment(activity,
