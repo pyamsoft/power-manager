@@ -19,14 +19,16 @@ package com.pyamsoft.powermanager.uicore
 import android.app.Dialog
 import android.os.Bundle
 import android.support.annotation.CallSuper
+import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
 import android.view.Window
 import com.pyamsoft.powermanager.PowerManager
+import com.pyamsoft.powermanager.R
 
 abstract class WatchedBottomSheet : BottomSheetDialogFragment() {
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val dialog = super.onCreateDialog(savedInstanceState)
+    val dialog = BottomSheetDialog(activity, R.style.Theme_PowerManager_Light_BottomSheet)
     dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
     return dialog
   }

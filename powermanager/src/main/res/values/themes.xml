@@ -23,6 +23,12 @@
     <item name="colorAccent">@color/lightblueA200</item>
   </style>
 
+  <style name="Base.Theme.PowerManager.Light.BottomSheet" parent="@style/Theme.Design.Light.BottomSheetDialog">
+    <item name="colorPrimary">@color/amber500</item>
+    <item name="colorPrimaryDark">@color/amber700</item>
+    <item name="colorAccent">@color/lightblueA200</item>
+  </style>
+
   <!-- Normal App Theme -->
   <style name="Theme.PowerManager.Light" parent="@style/Base.Theme.PowerManager.Light">
     <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
@@ -32,4 +38,9 @@
   <style name="Theme.PowerManager.Light.Splash" parent="@style/Base.Theme.PowerManager.Light">
     <item name="android:windowBackground">@drawable/splash_screen</item>
   </style>
+
+  <!-- Normal Bottom Sheet Theme -->
+  <style name="Theme.PowerManager.Light.BottomSheet" parent="@style/Base.Theme.PowerManager.Light.BottomSheet">
+  </style>
+
 </resources>
