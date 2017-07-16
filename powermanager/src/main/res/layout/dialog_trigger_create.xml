@@ -15,7 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <RelativeLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,240 +24,207 @@
       android:padding="16dp"
       >
 
-    <LinearLayout
-        android:id="@+id/trigger_create_name"
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/trigger_create_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        app:alignmentMode="alignMargins"
+        app:columnCount="2"
+        app:columnOrderPreserved="true"
+        app:orientation="vertical"
+        app:rowCount="5"
+        app:rowOrderPreserved="true"
+        app:useDefaultMargins="true"
         >
 
       <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:gravity="center_vertical"
-          android:text="Name: "
-          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          android:layout_marginEnd="16dp"
+          android:text="@string/name"
+          android:textAppearance="@style/TextAppearance.AppCompat.Large"
+          app:layout_column="0"
+          app:layout_row="0"
           />
 
       <com.pyamsoft.pydroid.ui.widget.NoLeakEditText
-          android:id="@+id/trigger_create_name_entry"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
-          android:hint="Trigger Name"
-          android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+          android:hint="@string/trigger_name"
+          app:layout_column="1"
+          app:layout_gravity="fill_horizontal"
+          app:layout_row="0"
           />
 
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/trigger_create_wifi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_name"
-        android:padding="4dp"
-        android:text="WiFi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        />
-
-    <RadioGroup
-        android:id="@+id/trigger_create_wifi_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/trigger_create_wifi"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/trigger_create_wifi"
-        android:layout_below="@id/trigger_create_name"
-        android:layout_marginStart="32dp"
-        android:layout_toEndOf="@id/trigger_create_wifi"
-        android:orientation="horizontal"
-        >
-
-      <RadioButton
-          android:id="@+id/trigger_create_wifi_none"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Nothing"
+      <TextView
+          android:layout_marginEnd="16dp"
+          android:text="@string/wifi"
+          android:textAppearance="@style/TextAppearance.AppCompat.Large"
+          app:layout_column="0"
+          app:layout_row="1"
           />
 
-      <RadioButton
-          android:id="@+id/trigger_create_wifi_on"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="On"
+      <RadioGroup
+          android:orientation="horizontal"
+          app:layout_column="1"
+          app:layout_gravity="fill_horizontal"
+          app:layout_row="1"
+          >
+
+        <RadioButton
+            android:id="@+id/trigger_create_wifi_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/none"
+            />
+
+        <RadioButton
+            android:id="@+id/trigger_create_wifi_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/on"
+            />
+
+        <RadioButton
+            android:id="@+id/trigger_create_wifi_off"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/off"
+            />
+
+      </RadioGroup>
+
+      <TextView
+          android:layout_marginEnd="16dp"
+          android:text="@string/data"
+          android:textAppearance="@style/TextAppearance.AppCompat.Large"
+          app:layout_column="0"
+          app:layout_row="2"
           />
 
-      <RadioButton
-          android:id="@+id/trigger_create_wifi_off"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Off"
+      <RadioGroup
+          android:orientation="horizontal"
+          app:layout_column="1"
+          app:layout_gravity="fill_horizontal"
+          app:layout_row="2"
+          >
+
+        <RadioButton
+            android:id="@+id/trigger_create_data_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/none"
+            />
+
+        <RadioButton
+            android:id="@+id/trigger_create_data_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/on"
+            />
+
+        <RadioButton
+            android:id="@+id/trigger_create_data_off"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/off"
+            />
+
+      </RadioGroup>
+
+      <TextView
+          android:layout_marginEnd="16dp"
+          android:text="@string/bluetooth"
+          android:textAppearance="@style/TextAppearance.AppCompat.Large"
+          app:layout_column="0"
+          app:layout_row="3"
           />
 
-    </RadioGroup>
+      <RadioGroup
+          android:orientation="horizontal"
+          app:layout_column="1"
+          app:layout_gravity="fill_horizontal"
+          app:layout_row="3"
+          >
 
-    <TextView
-        android:id="@+id/trigger_create_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_wifi_group"
-        android:padding="4dp"
-        android:text="Data"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        />
+        <RadioButton
+            android:id="@+id/trigger_create_bluetooth_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/none"
+            />
 
-    <RadioGroup
-        android:id="@+id/trigger_create_data_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/trigger_create_data_group"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/trigger_create_data_group"
-        android:layout_below="@id/trigger_create_wifi_group"
-        android:layout_marginStart="32dp"
-        android:layout_toEndOf="@id/trigger_create_data"
-        android:orientation="horizontal"
-        >
+        <RadioButton
+            android:id="@+id/trigger_create_bluetooth_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/on"
+            />
 
-      <RadioButton
-          android:id="@+id/trigger_create_data_none"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Nothing"
+        <RadioButton
+            android:id="@+id/trigger_create_bluetooth_off"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/off"
+            />
+
+      </RadioGroup>
+
+      <TextView
+          android:layout_marginEnd="16dp"
+          android:text="@string/sync"
+          android:textAppearance="@style/TextAppearance.AppCompat.Large"
+          app:layout_column="0"
+          app:layout_row="4"
           />
 
-      <RadioButton
-          android:id="@+id/trigger_create_data_on"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="On"
-          />
+      <RadioGroup
+          android:orientation="horizontal"
+          app:layout_column="1"
+          app:layout_gravity="fill_horizontal"
+          app:layout_row="4"
+          >
 
-      <RadioButton
-          android:id="@+id/trigger_create_data_off"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Off"
-          />
+        <RadioButton
+            android:id="@+id/trigger_create_sync_none"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/none"
+            />
 
-    </RadioGroup>
+        <RadioButton
+            android:id="@+id/trigger_create_sync_on"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/on"
+            />
 
-    <TextView
-        android:id="@+id/trigger_create_bluetooth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_data_group"
-        android:padding="4dp"
-        android:text="Bluetooth"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        />
+        <RadioButton
+            android:id="@+id/trigger_create_sync_off"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/off"
+            />
 
-    <RadioGroup
-        android:id="@+id/trigger_create_bluetooth_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/trigger_create_bluetooth"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/trigger_create_bluetooth"
-        android:layout_below="@id/trigger_create_data_group"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/trigger_create_bluetooth"
-        android:orientation="horizontal"
-        >
+      </RadioGroup>
 
-      <RadioButton
-          android:id="@+id/trigger_create_bluetooth_none"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Nothing"
-          />
-
-      <RadioButton
-          android:id="@+id/trigger_create_bluetooth_on"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="On"
-          />
-
-      <RadioButton
-          android:id="@+id/trigger_create_bluetooth_off"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Off"
-          />
-
-    </RadioGroup>
-
-    <TextView
-        android:id="@+id/trigger_create_sync"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_bluetooth_group"
-        android:padding="4dp"
-        android:text="Sync"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        />
-
-    <RadioGroup
-        android:id="@+id/trigger_create_sync_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/trigger_create_sync"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/trigger_create_sync"
-        android:layout_below="@id/trigger_create_bluetooth_group"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="32dp"
-        android:layout_toEndOf="@id/trigger_create_sync"
-        android:orientation="horizontal"
-        >
-
-      <RadioButton
-          android:id="@+id/trigger_create_sync_none"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Nothing"
-          />
-
-      <RadioButton
-          android:id="@+id/trigger_create_sync_on"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="On"
-          />
-
-      <RadioButton
-          android:id="@+id/trigger_create_sync_off"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="Off"
-          />
-
-    </RadioGroup>
+    </android.support.v7.widget.GridLayout>
 
     <Button
         android:id="@+id/trigger_create_confirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/trigger_create_sync_group"
+        android:layout_below="@id/trigger_create_grid"
         android:gravity="center"
         android:text="@string/confirm"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
@@ -267,7 +234,7 @@
         android:id="@+id/trigger_create_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/trigger_create_sync_group"
+        android:layout_below="@id/trigger_create_grid"
         android:layout_toStartOf="@id/trigger_create_confirm"
         android:gravity="center"
         android:text="@string/cancel"

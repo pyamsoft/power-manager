@@ -38,5 +38,19 @@
   <string name="workarounds">Workarounds</string>
   <string name="confirm">Confirm</string>
   <string name="cancel">Cancel</string>
+  <string name="off">Off</string>
+  <string name="on">On</string>
+  <string name="none">None</string>
+  <string name="trigger_name">Trigger Name</string>
+  <string name="name">Name</string>
+  <string name="wifi">Wifi</string>
+  <string name="data">Data</string>
+  <string name="bluetooth">Bluetooth</string>
+  <string name="sync">Sync</string>
+  <string name="ignore_if">Ignore If:</string>
+  <string name="wearable_connected">Wearable Connected</string>
+  <string name="airplane_mode">Airplane Mode</string>
+  <string name="doze_mode">Doze Mode</string>
+  <string name="data_saver">Data Saver</string>
 </resources>
 

@@ -33,7 +33,7 @@
       >
 
     <TextView
-        android:text="Ignore If:"
+        android:text="@string/ignore_if"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -42,7 +42,7 @@
 
     <TextView
         android:layout_marginEnd="8dp"
-        android:text="Charging"
+        android:text="@string/charging"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold"
         app:layout_column="1"
@@ -51,7 +51,7 @@
         />
 
     <TextView
-        android:text="Wearable\nConnected"
+        android:text="@string/wearable_connected"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold"
         app:layout_column="2"
@@ -60,7 +60,7 @@
         />
 
     <TextView
-        android:text="WiFi"
+        android:text="@string/wifi"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -82,7 +82,7 @@
         />
 
     <TextView
-        android:text="Data"
+        android:text="@string/data"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -104,7 +104,7 @@
         />
 
     <TextView
-        android:text="Bluetooth"
+        android:text="@string/bluetooth"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -126,7 +126,7 @@
         />
 
     <TextView
-        android:text="Sync"
+        android:text="@string/sync"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -148,7 +148,7 @@
         />
 
     <TextView
-        android:text="Airplane Mode"
+        android:text="@string/airplane_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -170,7 +170,7 @@
         />
 
     <TextView
-        android:text="Doze Mode"
+        android:text="@string/doze_mode"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
@@ -192,7 +192,7 @@
         />
 
     <TextView
-        android:text="Data Saver"
+        android:text="@string/data_saver"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_column="0"
         app:layout_gravity="center_vertical"
