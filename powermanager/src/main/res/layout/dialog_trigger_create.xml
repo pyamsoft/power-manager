@@ -57,17 +57,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/trigger_create_name"
+        android:padding="4dp"
         android:text="WiFi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         />
 
     <RadioGroup
         android:id="@+id/trigger_create_wifi_group"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_wifi"
-        android:layout_marginBottom="8dp"
+        android:layout_alignBottom="@id/trigger_create_wifi"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/trigger_create_wifi"
+        android:layout_below="@id/trigger_create_name"
+        android:layout_marginStart="32dp"
+        android:layout_toEndOf="@id/trigger_create_wifi"
         android:orientation="horizontal"
         >
 
@@ -103,17 +107,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/trigger_create_wifi_group"
+        android:padding="4dp"
         android:text="Data"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         />
 
     <RadioGroup
         android:id="@+id/trigger_create_data_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_data"
-        android:layout_marginBottom="8dp"
+        android:layout_alignBottom="@id/trigger_create_data_group"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/trigger_create_data_group"
+        android:layout_below="@id/trigger_create_wifi_group"
+        android:layout_marginStart="32dp"
+        android:layout_toEndOf="@id/trigger_create_data"
         android:orientation="horizontal"
         >
 
@@ -149,17 +157,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/trigger_create_data_group"
+        android:padding="4dp"
         android:text="Bluetooth"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         />
 
     <RadioGroup
         android:id="@+id/trigger_create_bluetooth_group"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_bluetooth"
-        android:layout_marginBottom="8dp"
+        android:layout_alignBottom="@id/trigger_create_bluetooth"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/trigger_create_bluetooth"
+        android:layout_below="@id/trigger_create_data_group"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/trigger_create_bluetooth"
         android:orientation="horizontal"
         >
 
@@ -195,17 +207,22 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/trigger_create_bluetooth_group"
+        android:padding="4dp"
         android:text="Sync"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         />
 
     <RadioGroup
         android:id="@+id/trigger_create_sync_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/trigger_create_sync"
-        android:layout_marginBottom="32dp"
+        android:layout_alignBottom="@id/trigger_create_sync"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@id/trigger_create_sync"
+        android:layout_below="@id/trigger_create_bluetooth_group"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_toEndOf="@id/trigger_create_sync"
         android:orientation="horizontal"
         >
 
