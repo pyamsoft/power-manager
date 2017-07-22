@@ -36,7 +36,7 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
     disposeOnStop {
       createBus.listen().subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).flatMapSingle {
-        interactor.createTrigger(it.entry).onErrorReturn {
+        interactor.createTrigger(it.entry).observeOn(foregroundScheduler).onErrorReturn {
           Timber.e(it, "createTrigger Error")
           onAddError(it)
           return@onErrorReturn PowerTriggerEntry.empty
@@ -53,7 +53,7 @@ class TriggerPresenter @Inject internal constructor(@Named("obs") obsScheduler: 
     disposeOnStop {
       deleteBus.listen().subscribeOn(backgroundScheduler).observeOn(
           foregroundScheduler).flatMapSingle {
-        interactor.delete(it.percent).onErrorReturn {
+        interactor.delete(it.percent).observeOn(foregroundScheduler).onErrorReturn {
           Timber.e(it, "Trigger Delete error")
           onTriggerDeleteError(it)
           return@onErrorReturn -1
