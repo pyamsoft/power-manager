@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.pyamsoft.powermanager.databinding.DialogTriggerCreateBinding
 import com.pyamsoft.powermanager.uicore.WatchedBottomSheet
+import javax.inject.Inject
 
 class CreateTriggerDialog : WatchedBottomSheet() {
 
@@ -31,6 +32,10 @@ class CreateTriggerDialog : WatchedBottomSheet() {
       savedInstanceState: Bundle?): View? {
     binding = DialogTriggerCreateBinding.inflate(inflater, container, false)
     return binding.root
+  }
+
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
   }
 
 }

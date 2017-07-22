@@ -52,5 +52,7 @@
   <string name="airplane_mode">Airplane Mode</string>
   <string name="doze_mode">Doze Mode</string>
   <string name="data_saver">Data Saver</string>
+  <string name="trigger_percent">Trigger Percent</string>
+  <string name="percent">Percent</string>
 </resources>
 
