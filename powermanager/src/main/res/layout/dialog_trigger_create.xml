@@ -47,7 +47,7 @@
           />
 
       <com.pyamsoft.pydroid.ui.widget.NoLeakEditText
-          android:id="@+id/trigger_name"
+          android:id="@+id/trigger_create_name"
           android:hint="@string/trigger_name"
           app:layout_column="1"
           app:layout_gravity="fill_horizontal"
@@ -63,7 +63,7 @@
           />
 
       <com.pyamsoft.pydroid.ui.widget.NoLeakEditText
-          android:id="@+id/trigger_percent"
+          android:id="@+id/trigger_create_percent"
           android:hint="@string/trigger_percent"
           app:layout_column="1"
           app:layout_gravity="fill_horizontal"

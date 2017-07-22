@@ -40,6 +40,7 @@ import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.ConfirmationDialog
 import com.pyamsoft.powermanager.settings.SettingsPreferenceFragment
+import com.pyamsoft.powermanager.trigger.CreateTriggerDialog
 import com.pyamsoft.powermanager.trigger.DeleteTriggerDialog
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerPreferenceFragment
@@ -88,4 +89,6 @@ import javax.inject.Singleton
   fun inject(powerTriggerFragment: PowerTriggerFragment)
 
   fun inject(expanderView: ExpanderView)
+
+  fun inject(createTriggerDialog: CreateTriggerDialog)
 }
