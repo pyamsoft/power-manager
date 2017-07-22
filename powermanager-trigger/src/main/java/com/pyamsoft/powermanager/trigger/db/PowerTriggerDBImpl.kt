@@ -125,6 +125,8 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
       if (oldVersion == 1 && newVersion == 2) {
         Timber.d("on upgrade from 1 to 2, drop entire table")
         sqLiteDatabase.execSQL("DROP TABLE ${PowerTriggerModel.TABLE_NAME}")
+        Timber.d("Re-create table")
+        onCreate(sqLiteDatabase)
       }
     }
 
