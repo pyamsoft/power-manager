@@ -81,6 +81,8 @@ class PowerTriggerFragment : WatchedFragment() {
 
   override fun onStart() {
     super.onStart()
+
+    // Doesn't correctly add from empty state to first trigger state
     presenter.registerOnBus(onAdd = {
       if (adapter.adapterItems.isEmpty()) {
         // We are it, just add
@@ -139,7 +141,8 @@ class PowerTriggerFragment : WatchedFragment() {
         })
 
     presenter.clickEvent(binding.powerTriggerFab, {
-      DialogUtil.guaranteeSingleDialogFragment(activity, CreateTriggerDialog(), "create_trigger")})
+      DialogUtil.guaranteeSingleDialogFragment(activity, CreateTriggerDialog(), "create_trigger")
+    })
 
     adapter.withOnLongClickListener { _, _, powerTriggerItem, _ ->
       DialogUtil.guaranteeSingleDialogFragment(activity,

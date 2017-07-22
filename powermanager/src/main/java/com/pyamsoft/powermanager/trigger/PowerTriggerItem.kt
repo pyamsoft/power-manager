@@ -44,6 +44,7 @@ class PowerTriggerItem internal constructor(
     if (holder != null) {
       holder.binding.triggerTitle.text = model.name()
       holder.binding.triggerPercent.text = "Trigger at percent: ${model.percent()}"
+      holder.binding.triggerEnableSwitch.isChecked = model.enabled()
     }
   }
 
