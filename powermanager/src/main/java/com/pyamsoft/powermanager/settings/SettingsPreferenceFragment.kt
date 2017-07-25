@@ -25,7 +25,6 @@ import android.view.View
 import com.pyamsoft.powermanager.Injector
 import com.pyamsoft.powermanager.PowerManager
 import com.pyamsoft.powermanager.R
-import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent
 import com.pyamsoft.pydroid.ui.about.AboutLibrariesFragment.BackStackState

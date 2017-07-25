@@ -18,12 +18,18 @@ package com.pyamsoft.powermanager.service
 
 import android.app.Activity
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import android.os.Build.VERSION_CODES
 import android.support.annotation.CheckResult
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.content.ContextCompat
 import com.pyamsoft.powermanager.base.preference.ServicePreferences
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences
@@ -40,17 +46,38 @@ import javax.inject.Singleton
     @Named("main") mainActivityClass: Class<out Activity>,
     @param:Named("toggle") private val toggleServiceClass: Class<out Service>) : ServiceInteractor(
     preferences) {
-  private val builder: NotificationCompat.Builder
+  private var builder: NotificationCompat.Builder
   private val appContext: Context = context.applicationContext
 
   init {
+    val notificationChannelId: String = "power_manager_foreground"
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      setupNotificationChannel(notificationChannelId)
+    }
+
     val intent = Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
     val pendingIntent = PendingIntent.getActivity(appContext, PENDING_RC, intent, 0)
-
     builder = NotificationCompat.Builder(appContext).setContentTitle(
-        context.getString(R.string.app_name)).setSmallIcon(R.drawable.ic_notification).setColor(
-        ContextCompat.getColor(context, R.color.amber500)).setAutoCancel(false).setWhen(
+        appContext.getString(R.string.app_name)).setSmallIcon(R.drawable.ic_notification).setColor(
+        ContextCompat.getColor(appContext, R.color.amber500)).setAutoCancel(false).setWhen(
         0).setNumber(0).setContentIntent(pendingIntent)
+  }
+
+  @RequiresApi(VERSION_CODES.O) private fun setupNotificationChannel(
+      notificationChannelId: String) {
+    val name = "Manager Service"
+    val description = "Notification related to the Power Manager service"
+    val importance = NotificationManagerCompat.IMPORTANCE_MIN
+    val notificationChannel = NotificationChannel(notificationChannelId, name, importance)
+    notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+    notificationChannel.description = description
+    notificationChannel.enableLights(false)
+    notificationChannel.enableVibration(false)
+
+    Timber.d("Create notification channel with id: %s", notificationChannelId)
+    val notificationManager: NotificationManager = appContext.getSystemService(
+        Context.NOTIFICATION_SERVICE) as NotificationManager
+    notificationManager.createNotificationChannel(notificationChannel)
   }
 
   /**

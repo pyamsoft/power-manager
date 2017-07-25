@@ -21,7 +21,6 @@ import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import com.pyamsoft.powermanager.base.logger.Logger
-import com.pyamsoft.powermanager.base.permission.DozePermissionObserver
 import com.pyamsoft.powermanager.base.preference.RootPreferences
 import com.pyamsoft.powermanager.base.preference.WorkaroundPreferences
 import com.pyamsoft.powermanager.base.shell.ShellHelper
@@ -31,8 +30,7 @@ import javax.inject.Inject
 
 internal class DozeModeWrapperImpl @Inject internal constructor(context: Context,
     private val logger: Logger, private val preferences: RootPreferences,
-    private val shellHelper: ShellHelper,
-    private val dozePermissionObserver: PermissionObserver,
+    private val shellHelper: ShellHelper, private val dozePermissionObserver: PermissionObserver,
     private val workaroundPreferences: WorkaroundPreferences) : DeviceFunctionWrapper {
   private val androidPowerManager: android.os.PowerManager = context.applicationContext.getSystemService(
       Context.POWER_SERVICE) as PowerManager

@@ -19,6 +19,7 @@ package com.pyamsoft.powermanager.service
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.support.v4.app.NotificationManagerCompat
 import com.pyamsoft.powermanager.Injector
@@ -85,8 +86,12 @@ class ForegroundService : AutoRestartService() {
      * Force the service On
      */
     @JvmStatic fun start(context: Context) {
-      context.applicationContext.startService(
-          Intent(context.applicationContext, ForegroundService::class.java))
+      val intent = Intent(context.applicationContext, ForegroundService::class.java)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        context.applicationContext.startForegroundService(intent)
+      } else {
+        context.applicationContext.startService(intent)
+      }
     }
 
     /**

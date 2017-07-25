@@ -16,10 +16,8 @@
 
 package com.pyamsoft.powermanager.manage.bus
 
-import com.pyamsoft.powermanager.manage.bus.ManageChangeEvent
 import com.pyamsoft.pydroid.bus.EventBus
 import com.pyamsoft.pydroid.bus.RxBus
-import com.pyamsoft.pydroid.bus.RxBus.Companion
 import io.reactivex.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
