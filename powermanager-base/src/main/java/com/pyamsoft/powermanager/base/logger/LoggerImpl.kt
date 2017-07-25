@@ -18,7 +18,8 @@ package com.pyamsoft.powermanager.base.logger
 
 import javax.inject.Inject
 
-internal class LoggerImpl @Inject constructor(private val presenter: LoggerPresenter) : Logger {
+internal class LoggerImpl @Inject internal constructor(
+    private val presenter: LoggerPresenter) : Logger {
 
   // Does not have to be bound
   private fun log(logType: LogType, fmt: String, vararg args: Any) {

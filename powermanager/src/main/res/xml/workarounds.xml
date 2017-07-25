@@ -18,6 +18,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
   <PreferenceCategory
+      android:title="Stability Workarounds">
+
+    <Preference
+        android:key="@string/key_workaround_howto_stability"
+        android:summary="@string/desc_workaround_howto_stability"
+        android:title="@string/title_workaround_howto_stability"/>
+
+  </PreferenceCategory>
+
+  <PreferenceCategory
       android:title="Cellular Data Workarounds">
 
     <Preference

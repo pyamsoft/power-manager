@@ -17,9 +17,14 @@
 package com.pyamsoft.powermanager.workaround
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.support.annotation.CheckResult
 import android.support.v7.preference.Preference
 import android.view.View
@@ -39,11 +44,18 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
   private lateinit var dozeHowTo: Preference
   private lateinit var dozeWorkaround: Preference
 
+  private lateinit var stability: Preference
+  private lateinit var androidPowerManager: PowerManager
+  private var whitelistIntent: Intent? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Injector.with(context) {
       it.inject(this)
     }
+
+    androidPowerManager = context.applicationContext.getSystemService(
+        Context.POWER_SERVICE) as PowerManager
   }
 
   @CheckResult private fun hasDataWorkaroundRuntimePermission(): Boolean {
@@ -68,6 +80,8 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
 
     dozeHowTo = findPreference(getString(R.string.key_workaround_howto_doze))
     dozeWorkaround = findPreference(getString(R.string.key_workaround_doze))
+
+    stability = findPreference(getString(R.string.key_workaround_howto_stability))
   }
 
   override fun onStart() {
@@ -85,6 +99,32 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
 
     presenter.clickEvent(dozeWorkaround, { Timber.d("Doze workaround clicked") },
         { hasDozeWorkaroundRuntimePermission() })
+
+    presenter.clickEvent(stability, {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (androidPowerManager.isIgnoringBatteryOptimizations(context.packageName)) {
+          Timber.i("Power Manager is already ignoring optimization")
+          // TODO show dialog with message
+        } else {
+
+          if (whitelistIntent == null) {
+            val intent: Intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+            intent.data = Uri.parse("package:${context.packageName}")
+            whitelistIntent = intent
+          }
+
+          val obj = whitelistIntent
+          if (obj != null) {
+            context.startActivity(whitelistIntent)
+          } else {
+            Timber.e("Could not start battery activity, intent is NULL")
+          }
+        }
+      } else {
+        Timber.i("no Doze before marshmallow")
+        // TODO show dialog with message
+      }
+    })
   }
 
   override fun onResume() {

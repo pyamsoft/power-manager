@@ -40,7 +40,7 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-class LoggerInteractor @Inject constructor(context: Context,
+class LoggerInteractor @Inject internal constructor(context: Context,
     private val preferences: LoggerPreferences, internal val logId: String) {
   private val appContext: Context = context.applicationContext
   private var logPath: File? = null
@@ -156,6 +156,6 @@ class LoggerInteractor @Inject constructor(context: Context,
     const val SYNC_LOG_ID = "SYNC"
     const val TRIGGER_LOG_ID = "TRIGGER"
     const val WIFI_LOG_ID = "WIFI"
-    const val DATA_SAVER_LOG_ID = "DATA SAVER"
+    const val DATA_SAVER_LOG_ID = "DATA_SAVER"
   }
 }

@@ -16,6 +16,11 @@
   -->
 
 <resources>
+
+  <string name="key_workaround_howto_stability">stability_workaround</string>
+  <string name="title_workaround_howto_stability">Better Service Reliability</string>
+  <string name="desc_workaround_howto_stability">Service can achieve better stability and reliability if it is excluded from Battery Optimizations</string>
+
   <string name="key_workaround_howto_data">data_workaround</string>
   <string name="title_workaround_howto_data">Cellular Data Workaround</string>
   <string name="desc_workaround_howto_data">Learn how to enable Cellular Data workarounds</string>
