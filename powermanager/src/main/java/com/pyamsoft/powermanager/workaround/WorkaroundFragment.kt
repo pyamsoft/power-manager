@@ -17,6 +17,7 @@
 package com.pyamsoft.powermanager.workaround
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -47,6 +48,7 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
   private lateinit var stability: Preference
   private lateinit var androidPowerManager: PowerManager
   private var whitelistIntent: Intent? = null
+  private var fallbackIntent: Intent? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -108,14 +110,31 @@ class WorkaroundFragment : WatchedPreferenceFragment() {
         } else {
 
           if (whitelistIntent == null) {
-            val intent: Intent = Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
-            intent.data = Uri.parse("package:${context.packageName}")
+            val intent: Intent = Intent(
+                Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS).setData(
+                Uri.parse("package:${context.packageName}"))
             whitelistIntent = intent
           }
 
           val obj = whitelistIntent
           if (obj != null) {
-            context.startActivity(whitelistIntent)
+            try {
+              context.startActivity(obj)
+            } catch (e: ActivityNotFoundException) {
+              Timber.e(e, "No activity found for Ignore Battery Optimization")
+              // TODO show custom dialog
+
+              if (fallbackIntent == null) {
+                val fallback: Intent = Intent(Settings.ACTION_SETTINGS)
+                fallbackIntent = fallback
+              }
+              val fallback = fallbackIntent
+              if (fallback != null) {
+                context.startActivity(fallback)
+              } else {
+                Timber.w("Fallback intent is NULL, cannot launch")
+              }
+            }
           } else {
             Timber.e("Could not start battery activity, intent is NULL")
           }
