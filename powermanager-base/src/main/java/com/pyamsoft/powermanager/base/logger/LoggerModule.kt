@@ -163,7 +163,7 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("logger_data_saver") fun provideLoggerDataSaver(
-      @Named("logger_presenter_trigger") loggerPresenter: LoggerPresenter): Logger {
+      @Named("logger_presenter_data_saver") loggerPresenter: LoggerPresenter): Logger {
     return LoggerImpl(loggerPresenter)
   }
 
