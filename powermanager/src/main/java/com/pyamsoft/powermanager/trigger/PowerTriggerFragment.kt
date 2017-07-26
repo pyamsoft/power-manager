@@ -87,6 +87,9 @@ class PowerTriggerFragment : WatchedFragment() {
       if (adapter.adapterItems.isEmpty()) {
         // We are it, just add
         adapter.add(PowerTriggerItem(it))
+
+        // Show the list as we are the first item
+        loadTriggerList()
       } else {
         // Go down the line until we are the big boy
         val items = adapter.adapterItems
