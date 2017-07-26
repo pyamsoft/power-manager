@@ -94,7 +94,7 @@ class PowerTriggerFragment : WatchedFragment() {
         // Go down the line until we are the big boy
         val items = adapter.adapterItems
         var i = 0
-        while (i < items.size && items[i].model.percent() > it.percent()) {
+        while (i < items.size && items[i].model.percent() < it.percent()) {
           ++i
         }
 
@@ -119,6 +119,10 @@ class PowerTriggerFragment : WatchedFragment() {
 
       if (index >= 0) {
         adapter.remove(index)
+      }
+
+      if (adapter.adapterItemCount == 0) {
+        loadTriggerListEmpty()
       }
     }, onTriggerDeleteError = {
       Timber.e(it, "Error deleting power trigger")

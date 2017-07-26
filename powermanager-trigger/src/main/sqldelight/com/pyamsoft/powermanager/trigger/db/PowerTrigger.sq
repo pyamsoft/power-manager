@@ -1,4 +1,5 @@
 -- Create the table for PowerTrigger objects
+
 CREATE TABLE power_triggers (
   percent INTEGER As Integer NOT NULL PRIMARY KEY,
   name TEXT NOT NULL,
@@ -10,14 +11,17 @@ CREATE TABLE power_triggers (
 );
 
 -- Get all entries in the table
+
 all_entries:
 SELECT *
-FROM power_triggers;
+FROM power_triggers
+ORDER BY percent ASC;
 
 with_percent:
 SELECT *
 FROM power_triggers
-WHERE percent = ?;
+WHERE percent = ?
+LIMIT 1;
 
 insert_trigger:
 INSERT INTO power_triggers(percent, name, enabled, stateWifi, stateData, stateBluetooth, stateSync)
