@@ -78,8 +78,8 @@ internal class PowerTriggerDBImpl @Inject constructor(context: Context,
 
       val statement = PowerTriggerEntry.withPercent(percent)
       return@defer briteDatabase.createQuery(statement.tables, statement.statement,
-          *statement.args).mapToOneOrDefault({ PowerTriggerEntry.withPercentMapper.map(it) },
-          PowerTriggerEntry.empty).first(PowerTriggerEntry.empty)
+          *statement.args).mapToOne { PowerTriggerEntry.withPercentMapper.map(it) }.first(
+          PowerTriggerEntry.empty)
     }
   }
 

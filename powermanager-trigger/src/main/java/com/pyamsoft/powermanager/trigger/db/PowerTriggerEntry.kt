@@ -78,60 +78,67 @@ import com.squareup.sqldelight.SqlDelightStatement
                 stateBluetooth, stateSync)
           })
     }
-    val empty: PowerTriggerEntry by lazy {
+    internal val empty: PowerTriggerEntry by lazy {
       AutoValue_PowerTriggerEntry(EMPTY_PERCENT, EMPTY_NAME, false, STATE_NONE, STATE_NONE,
           STATE_NONE, STATE_NONE)
     }
-    val allEntriesMapper: Mapper<PowerTriggerEntry> by lazy {
+    internal val allEntriesMapper: Mapper<PowerTriggerEntry> by lazy {
       factory.all_entriesMapper()
     }
-    val withPercentMapper: Mapper<PowerTriggerEntry> by lazy {
+    internal val withPercentMapper: Mapper<PowerTriggerEntry> by lazy {
       factory.with_percentMapper()
     }
-    val creator: Creator<PowerTriggerEntry> by lazy {
+    internal val creator: Creator<PowerTriggerEntry> by lazy {
       factory.creator
     }
+
+    private var insertManager: InsertManager? = null
+    private var deleteManager: DeleteTriggerManager? = null
+    private var updateManager: UpdateEnabledManager? = null
 
     @JvmStatic @CheckResult internal fun isEmpty(entry: PowerTriggerEntry): Boolean {
       return empty === entry
     }
 
-    /**
-     * public
-     */
     @JvmStatic @CheckResult internal fun queryAll(): SqlDelightStatement {
       return factory.all_entries()
     }
 
-    /**
-     * public
-     */
     @JvmStatic @CheckResult internal fun withPercent(percent: Int): SqlDelightStatement {
       return factory.with_percent(percent)
     }
 
-    /**
-     * public
-     */
     @JvmStatic @CheckResult internal fun insertTrigger(
         openHelper: SQLiteOpenHelper): InsertManager {
-      return InsertManager(openHelper)
+      var obj = insertManager
+      if (obj == null) {
+        val im = InsertManager(openHelper)
+        insertManager = im
+        obj = im
+      }
+      return obj
     }
 
-    /**
-     * public
-     */
     @JvmStatic @CheckResult internal fun deleteTrigger(
         openHelper: SQLiteOpenHelper): DeleteTriggerManager {
-      return DeleteTriggerManager(openHelper)
+      var obj = deleteManager
+      if (obj == null) {
+        val dm = DeleteTriggerManager(openHelper)
+        deleteManager = dm
+        obj = dm
+      }
+      return obj
     }
 
-    /**
-     * public
-     */
     @JvmStatic @CheckResult internal fun updateEnabled(
         openHelper: SQLiteOpenHelper): UpdateEnabledManager {
-      return UpdateEnabledManager(openHelper)
+      var obj = updateManager
+      if (obj == null) {
+        val um = UpdateEnabledManager(openHelper)
+        updateManager = um
+        obj = um
+      }
+      return obj
     }
   }
 }
