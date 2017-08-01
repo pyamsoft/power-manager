@@ -22,7 +22,7 @@ import com.evernote.android.job.util.support.PersistableBundleCompat
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-internal abstract class BaseJobQueuer(private val jobManager: JobManager) : JobQueuer {
+abstract class BaseJobQueuer internal constructor(private val jobManager: JobManager) : JobQueuer {
 
   override fun cancel(tag: String) {
     Timber.w("Cancel all jobs for tag: %s", tag)

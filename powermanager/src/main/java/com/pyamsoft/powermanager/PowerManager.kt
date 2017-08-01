@@ -22,12 +22,12 @@ import android.support.v4.app.Fragment
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobManager
 import com.pyamsoft.powermanager.base.PowerManagerModule
-import com.pyamsoft.powermanager.job.JobHandler
 import com.pyamsoft.powermanager.job.JobQueuer
-import com.pyamsoft.powermanager.job.Jobs
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
+import com.pyamsoft.powermanager.service.job.ManageJobHandler
+import com.pyamsoft.powermanager.service.job.ManagedJob
 import com.pyamsoft.powermanager.uicore.WatchedBottomSheet
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.powermanager.uicore.WatchedFragment
@@ -39,11 +39,10 @@ import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 class PowerManager : Application(), ComponentProvider {
 
-  @field:[Inject Named("manage_handler")] internal lateinit var jobHandler: JobHandler
+  @field:Inject internal lateinit var jobHandler: ManageJobHandler
   private lateinit var refWatcher: RefWatcher
   private var component: PowerManagerComponent? = null
 
@@ -82,7 +81,7 @@ class PowerManager : Application(), ComponentProvider {
     JobManager.instance().addJobCreator {
       val job: Job?
       if (JobQueuer.ENABLE_TAG == it || JobQueuer.DISABLE_TAG == it) {
-        job = Jobs.newJob(jobHandler)
+        job = ManagedJob.newJob(jobHandler)
       } else {
         Timber.e("Could not create job for tag: %s", it)
         job = null

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job.manage
+package com.pyamsoft.powermanager.service.job
 
 import android.support.annotation.CheckResult
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
@@ -33,7 +33,7 @@ import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Scheduler
 import javax.inject.Inject
 
-internal class ManageJobHandler @Inject internal constructor(private val jobQueuer: JobQueuer,
+class ManageJobHandler @Inject internal constructor(private val jobQueuer: JobQueuer,
     private val chargingObserver: StateObserver, private val wearableObserver: StateObserver,
     private val wifiModifier: StateModifier, private val dataModifier: StateModifier,
     private val bluetoothModifier: StateModifier, private val syncModifier: StateModifier,

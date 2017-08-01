@@ -26,7 +26,7 @@ import com.pyamsoft.powermanager.base.preference.ManagePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
 import com.pyamsoft.powermanager.job.JobQueuer
-import com.pyamsoft.powermanager.job.manage.ManageJobQueuerEntry
+import com.pyamsoft.powermanager.service.job.ManageJobQueuerEntry
 import com.pyamsoft.powermanager.model.ConnectedStateObserver
 import com.pyamsoft.powermanager.model.StateObserver
 import io.reactivex.Completable
@@ -70,8 +70,9 @@ import javax.inject.Singleton
       // Queue up an enable job
       jobQueuer.cancel(tag)
       jobQueuer.queue(
-          ManageJobQueuerEntry(tag = tag, firstRun = true, oneShot = true, screenOn = true,
-              repeatingOffWindow = 0L, repeatingOnWindow = 0L, delay = 0L))
+          ManageJobQueuerEntry(tag = tag, firstRun = true,
+              oneShot = true, screenOn = true, repeatingOffWindow = 0L, repeatingOnWindow = 0L,
+              delay = 0L))
       return@fromCallable tag
     }.doAfterSuccess { eraseOriginalStates() }
   }
@@ -85,7 +86,8 @@ import javax.inject.Singleton
       // Queue up a disable job
       jobQueuer.cancel(tag)
       jobQueuer.queue(
-          ManageJobQueuerEntry(tag = tag, firstRun = true, oneShot = false, screenOn = false,
+          ManageJobQueuerEntry(tag = tag, firstRun = true,
+              oneShot = false, screenOn = false,
               repeatingOffWindow = preferences.periodicDisableTime,
               repeatingOnWindow = preferences.periodicEnableTime, delay = preferences.manageDelay))
       return@fromCallable tag

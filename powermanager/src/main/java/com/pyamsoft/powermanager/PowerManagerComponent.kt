@@ -25,7 +25,7 @@ import com.pyamsoft.powermanager.base.states.StateModifierModule
 import com.pyamsoft.powermanager.base.states.StateObserverModule
 import com.pyamsoft.powermanager.base.states.WrapperModule
 import com.pyamsoft.powermanager.job.JobModule
-import com.pyamsoft.powermanager.job.manage.ManageJobModule
+import com.pyamsoft.powermanager.service.job.ManageJobModule
 import com.pyamsoft.powermanager.logger.LoggerPreferenceFragment
 import com.pyamsoft.powermanager.main.MainActivity
 import com.pyamsoft.powermanager.main.MainFragment

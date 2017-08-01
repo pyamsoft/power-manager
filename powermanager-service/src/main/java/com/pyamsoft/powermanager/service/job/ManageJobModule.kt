@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job.manage
+package com.pyamsoft.powermanager.service.job
 
 import com.evernote.android.job.JobManager
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
@@ -26,7 +26,6 @@ import com.pyamsoft.powermanager.base.preference.PhonePreferences
 import com.pyamsoft.powermanager.base.preference.SyncPreferences
 import com.pyamsoft.powermanager.base.preference.WifiPreferences
 import com.pyamsoft.powermanager.job.InstantJobQueuerImpl
-import com.pyamsoft.powermanager.job.JobHandler
 import com.pyamsoft.powermanager.job.JobQueuer
 import com.pyamsoft.powermanager.model.StateModifier
 import com.pyamsoft.powermanager.model.StateObserver
@@ -38,8 +37,8 @@ import javax.inject.Singleton
 
 @Module class ManageJobModule {
 
-  @Singleton @Provides @Named("manage_handler") internal fun provideManageJobHandler(
-      @Named("delay") jobQueuer: JobQueuer, @Named("obs_charging") chargingObserver: StateObserver,
+  @Singleton @Provides internal fun provideManageJobHandler(@Named("delay") jobQueuer: JobQueuer,
+      @Named("obs_charging") chargingObserver: StateObserver,
       @Named("obs_wear") wearableObserver: StateObserver,
       @Named("mod_wifi") wifiModifier: StateModifier,
       @Named("mod_data") dataModifier: StateModifier,
@@ -52,7 +51,7 @@ import javax.inject.Singleton
       syncPreferences: SyncPreferences, airplanePreferences: AirplanePreferences,
       dozePreferences: DozePreferences, dataSaverPreferences: DataSaverPreferences,
       phonePreferences: PhonePreferences, @Named("obs_phone") phoneObserver: StateObserver,
-      @Named("io") subScheduler: Scheduler): JobHandler {
+      @Named("io") subScheduler: Scheduler): ManageJobHandler {
     return ManageJobHandler(jobQueuer, chargingObserver, wearableObserver, wifiModifier,
         dataModifier, bluetoothModifier, syncModifier, dozeModifier, airplaneModifier,
         dataSaverModifier, wifiPreferences, dataPreferences, bluetoothPreferences, syncPreferences,
@@ -61,7 +60,7 @@ import javax.inject.Singleton
   }
 
   @Singleton @Provides @Named("manage_instant") internal fun provideInstantJobQueuer(
-      jobManager: JobManager, @Named("manage_handler") jobHandler: JobHandler): JobQueuer {
+      jobManager: JobManager, jobHandler: ManageJobHandler): JobQueuer {
     return InstantJobQueuerImpl(jobManager, jobHandler)
   }
 }

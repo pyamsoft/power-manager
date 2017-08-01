@@ -19,7 +19,8 @@ package com.pyamsoft.powermanager.job
 import android.support.annotation.CheckResult
 import com.evernote.android.job.util.support.PersistableBundleCompat
 
-abstract class JobQueuerEntry(internal val tag: String, internal val delay: Long) {
+abstract class JobQueuerEntry protected constructor(internal val tag: String,
+    internal val delay: Long) {
 
-  @CheckResult internal abstract fun getOptions(): PersistableBundleCompat
+  @CheckResult abstract fun getOptions(): PersistableBundleCompat
 }

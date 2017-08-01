@@ -20,7 +20,7 @@ import com.evernote.android.job.JobManager
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import javax.inject.Inject
 
-internal class InstantJobQueuerImpl @Inject constructor(jobManager: JobManager,
+class InstantJobQueuerImpl @Inject constructor(jobManager: JobManager,
     private val jobHandler: JobHandler) : BaseJobQueuer(jobManager) {
 
   override fun runInstantJob(tag: String, extras: PersistableBundleCompat) {

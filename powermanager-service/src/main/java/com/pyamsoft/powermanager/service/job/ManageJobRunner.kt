@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job.manage
+package com.pyamsoft.powermanager.service.job
 
 import android.support.annotation.CheckResult
 import com.evernote.android.job.util.support.PersistableBundleCompat

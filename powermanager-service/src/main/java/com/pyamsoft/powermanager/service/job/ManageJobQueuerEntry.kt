@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job.manage
+package com.pyamsoft.powermanager.service.job
 
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.pyamsoft.powermanager.job.JobQueuerEntry
 
-class ManageJobQueuerEntry(tag: String, delay: Long, internal val firstRun: Boolean,
-    internal val oneShot: Boolean, internal val screenOn: Boolean,
+internal class ManageJobQueuerEntry internal constructor(tag: String, delay: Long,
+    internal val firstRun: Boolean, internal val oneShot: Boolean, internal val screenOn: Boolean,
     internal val repeatingOnWindow: Long, internal val repeatingOffWindow: Long) : JobQueuerEntry(
     tag, delay) {
 
