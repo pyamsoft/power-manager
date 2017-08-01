@@ -45,6 +45,7 @@ import com.pyamsoft.powermanager.trigger.DeleteTriggerDialog
 import com.pyamsoft.powermanager.trigger.PowerTriggerFragment
 import com.pyamsoft.powermanager.trigger.PowerTriggerPreferenceFragment
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerDBModule
+import com.pyamsoft.powermanager.trigger.job.TriggerJobModule
 import com.pyamsoft.powermanager.workaround.WorkaroundFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -53,7 +54,7 @@ import javax.inject.Singleton
     modules = arrayOf(PowerManagerModule::class, WrapperModule::class, ShellModule::class,
         PowerTriggerDBModule::class, LoggerModule::class, PermissionObserverModule::class,
         StateObserverModule::class, StateModifierModule::class, JobModule::class,
-        ManageJobModule::class, ManageSingletonModule::class,
+        ManageJobModule::class, ManageSingletonModule::class, TriggerJobModule::class,
         TimeSingletonModule::class)) interface PowerManagerComponent {
 
   @CheckResult fun plusManageComponent(): ManageComponent

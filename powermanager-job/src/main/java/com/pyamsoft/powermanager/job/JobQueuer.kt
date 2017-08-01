@@ -27,5 +27,6 @@ interface JobQueuer {
   companion object {
     const val ENABLE_TAG = "ENABLE"
     const val DISABLE_TAG = "DISABLE"
+    const val TRIGGER_TAG = "TRIGGER"
   }
 }

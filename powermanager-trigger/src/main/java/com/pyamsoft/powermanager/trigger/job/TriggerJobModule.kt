@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.service.job
+package com.pyamsoft.powermanager.trigger.job
 
-import android.support.annotation.CheckResult
-import com.evernote.android.job.Job
+import com.evernote.android.job.JobManager
+import com.pyamsoft.powermanager.job.InstantJobQueuerImpl
+import com.pyamsoft.powermanager.job.JobQueuer
+import dagger.Module
+import dagger.Provides
+import javax.inject.Named
+import javax.inject.Singleton
 
-class ManagedJob internal constructor(private val jobHandler: ManageJobHandler) : Job() {
+@Module class TriggerJobModule {
 
-  override fun onRunJob(params: Job.Params): Job.Result {
-    jobHandler.newRunner { isCanceled || isFinished }.run(params.tag, params.extras)
-    return Job.Result.SUCCESS
-  }
-
-  companion object {
-
-    @JvmStatic @CheckResult fun newJob(jobHandler: ManageJobHandler): Job {
-      return ManagedJob(jobHandler)
-    }
+  @Singleton @Provides @Named("trigger_instant") internal fun provideInstantJobQueuer(
+      jobManager: JobManager, jobHandler: TriggerJobHandler): JobQueuer {
+    return InstantJobQueuerImpl(jobManager, jobHandler)
   }
 }

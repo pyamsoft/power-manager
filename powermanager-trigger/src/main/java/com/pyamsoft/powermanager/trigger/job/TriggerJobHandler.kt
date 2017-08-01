@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.service.job
+package com.pyamsoft.powermanager.trigger.job
 
-import android.support.annotation.CheckResult
-import com.evernote.android.job.Job
+import com.pyamsoft.powermanager.job.JobHandler
+import com.pyamsoft.powermanager.job.JobRunner
+import javax.inject.Inject
 
-class ManagedJob internal constructor(private val jobHandler: ManageJobHandler) : Job() {
+class TriggerJobHandler @Inject internal constructor() : JobHandler {
 
-  override fun onRunJob(params: Job.Params): Job.Result {
-    jobHandler.newRunner { isCanceled || isFinished }.run(params.tag, params.extras)
-    return Job.Result.SUCCESS
+  override fun newRunner(stopper: () -> Boolean): JobRunner {
+    TODO(
+        "not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  companion object {
-
-    @JvmStatic @CheckResult fun newJob(jobHandler: ManageJobHandler): Job {
-      return ManagedJob(jobHandler)
-    }
-  }
 }
+

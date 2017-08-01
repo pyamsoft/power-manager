@@ -28,6 +28,8 @@ import com.pyamsoft.powermanager.service.ActionToggleService
 import com.pyamsoft.powermanager.service.ForegroundService
 import com.pyamsoft.powermanager.service.job.ManageJobHandler
 import com.pyamsoft.powermanager.service.job.ManagedJob
+import com.pyamsoft.powermanager.trigger.job.TriggerJob
+import com.pyamsoft.powermanager.trigger.job.TriggerJobHandler
 import com.pyamsoft.powermanager.uicore.WatchedBottomSheet
 import com.pyamsoft.powermanager.uicore.WatchedDialog
 import com.pyamsoft.powermanager.uicore.WatchedFragment
@@ -42,7 +44,8 @@ import javax.inject.Inject
 
 class PowerManager : Application(), ComponentProvider {
 
-  @field:Inject internal lateinit var jobHandler: ManageJobHandler
+  @field:Inject internal lateinit var manageJobHandler: ManageJobHandler
+  @field:Inject internal lateinit var triggerJobHandler: TriggerJobHandler
   private lateinit var refWatcher: RefWatcher
   private var component: PowerManagerComponent? = null
 
@@ -81,7 +84,9 @@ class PowerManager : Application(), ComponentProvider {
     JobManager.instance().addJobCreator {
       val job: Job?
       if (JobQueuer.ENABLE_TAG == it || JobQueuer.DISABLE_TAG == it) {
-        job = ManagedJob.newJob(jobHandler)
+        job = ManagedJob.newJob(manageJobHandler)
+      } else if (JobQueuer.TRIGGER_TAG == it) {
+        job = TriggerJob.newJob(triggerJobHandler)
       } else {
         Timber.e("Could not create job for tag: %s", it)
         job = null

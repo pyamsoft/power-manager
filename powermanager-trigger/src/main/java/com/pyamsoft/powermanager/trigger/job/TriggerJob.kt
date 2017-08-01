@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.service.job
+package com.pyamsoft.powermanager.trigger.job
 
 import android.support.annotation.CheckResult
 import com.evernote.android.job.Job
 
-class ManagedJob internal constructor(private val jobHandler: ManageJobHandler) : Job() {
+class TriggerJob internal constructor(private val jobHandler: TriggerJobHandler) : Job() {
 
   override fun onRunJob(params: Job.Params): Job.Result {
     jobHandler.newRunner { isCanceled || isFinished }.run(params.tag, params.extras)
@@ -28,8 +28,8 @@ class ManagedJob internal constructor(private val jobHandler: ManageJobHandler) 
 
   companion object {
 
-    @JvmStatic @CheckResult fun newJob(jobHandler: ManageJobHandler): Job {
-      return ManagedJob(jobHandler)
+    @JvmStatic @CheckResult fun newJob(jobHandler: TriggerJobHandler): Job {
+      return TriggerJob(jobHandler)
     }
   }
 }
