@@ -90,12 +90,12 @@ class ExpanderView : FrameLayout {
     cancelArrowAnimation()
     cancelContainerAnimation()
     if (expanded) {
-      ViewCompat.setRotation(binding.expanderArrow, 180f)
+      binding.expanderArrow.rotation = 180f;
       binding.expanderContainer.alpha = 1F
       //binding.expanderContainer.setScaleY(1);
       binding.expanderContainer.visibility = View.VISIBLE
     } else {
-      ViewCompat.setRotation(binding.expanderArrow, 0f)
+      binding.expanderArrow.rotation = 0f;
       binding.expanderContainer.visibility = View.GONE
       binding.expanderContainer.alpha = 0F
       //binding.expanderContainer.setScaleY(0);
