@@ -51,6 +51,11 @@ dependencies {
   // Check if Android Wear is connected before handling Bluetooth/Wifi
   compile "com.google.android.gms:play-services-wearable:$firebase"
 
+  // PYDroid
+  compile("com.github.pyamsoft.pydroid:pydroid-util:$pydroid@aar") {
+    transitive = true
+  }
+
   // Dagger2
   compile "com.google.dagger:dagger:$dagger"
   kapt "com.google.dagger:dagger-compiler:$dagger"

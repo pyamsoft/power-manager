@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.manage
 
 import android.widget.CompoundButton
-import com.pyamsoft.pydroid.rx.RxViews
+import com.pyamsoft.pydroid.util.rx.RxViews
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject

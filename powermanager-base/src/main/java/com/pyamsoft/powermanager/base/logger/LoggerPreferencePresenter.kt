@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.base.logger
 
-import com.pyamsoft.pydroid.presenter.PreferencePresenter
+import com.pyamsoft.pydroid.util.presenter.PreferencePresenter
 import javax.inject.Inject
 
 class LoggerPreferencePresenter @Inject internal constructor() : PreferencePresenter()

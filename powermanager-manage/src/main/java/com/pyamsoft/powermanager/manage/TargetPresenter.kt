@@ -17,7 +17,7 @@
 package com.pyamsoft.powermanager.manage
 
 import android.support.annotation.CheckResult
-import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
+import com.pyamsoft.pydroid.util.presenter.SchedulerViewPresenter
 import io.reactivex.Scheduler
 
 abstract class TargetPresenter protected constructor(foregroundScheduler: Scheduler,

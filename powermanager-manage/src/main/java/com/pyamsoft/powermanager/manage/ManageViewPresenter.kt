@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.manage
 
-import com.pyamsoft.pydroid.presenter.ViewPresenter
+import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 import javax.inject.Inject
 
 class ManageViewPresenter @Inject internal constructor() : ViewPresenter()

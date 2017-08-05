@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.settings
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.ALL
 import com.pyamsoft.powermanager.settings.bus.ConfirmEvent.Type.DATABASE
 import com.pyamsoft.powermanager.settings.bus.SettingsBus
-import com.pyamsoft.pydroid.presenter.SchedulerPreferencePresenter
+import com.pyamsoft.pydroid.util.presenter.SchedulerPreferencePresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject

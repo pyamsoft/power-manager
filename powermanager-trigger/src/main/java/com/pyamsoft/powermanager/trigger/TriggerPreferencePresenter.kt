@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import com.pyamsoft.pydroid.presenter.PreferencePresenter
+import com.pyamsoft.pydroid.util.presenter.PreferencePresenter
 import javax.inject.Inject
 
 class TriggerPreferencePresenter @Inject internal constructor() : PreferencePresenter()

@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.workaround
 
-import com.pyamsoft.pydroid.presenter.PreferencePresenter
+import com.pyamsoft.pydroid.util.presenter.PreferencePresenter
 import javax.inject.Inject
 
 // TODO move into module

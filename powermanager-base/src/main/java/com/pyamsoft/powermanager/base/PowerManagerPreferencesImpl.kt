@@ -18,9 +18,11 @@ package com.pyamsoft.powermanager.base
 
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.os.Build
 import android.preference.PreferenceManager
 import com.pyamsoft.powermanager.base.preference.AirplanePreferences
 import com.pyamsoft.powermanager.base.preference.BluetoothPreferences
@@ -306,8 +308,16 @@ internal class PowerManagerPreferencesImpl @Inject constructor(
   override var ignoreChargingSync: Boolean
     get() = preferences.getBoolean(keyIgnoreChargingSync, ignoreChargingSyncDefault)
     set(state) = preferences.edit().putBoolean(keyIgnoreChargingSync, state).apply()
-  override val notificationPriority: Int
-    get() = Notification.PRIORITY_MIN
+  @Suppress("DEPRECATION") override val notificationPriority: Int
+    get() {
+      val priority: Int
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O) {
+        priority = Notification.PRIORITY_MIN
+      } else {
+        priority = NotificationManager.IMPORTANCE_MIN
+      }
+      return priority
+    }
   override var bluetoothManaged: Boolean
     get() = preferences.getBoolean(keyManageBluetooth, manageBluetoothDefault)
     set(state) = preferences.edit().putBoolean(keyManageBluetooth, state).apply()

@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.trigger
 import android.view.View
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteEvent
-import com.pyamsoft.pydroid.presenter.ViewPresenter
+import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 import javax.inject.Inject
 
 class TriggerDeletePresenter @Inject internal constructor(

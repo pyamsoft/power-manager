@@ -19,7 +19,7 @@ package com.pyamsoft.powermanager.trigger
 import com.pyamsoft.powermanager.trigger.bus.TriggerCreateBus
 import com.pyamsoft.powermanager.trigger.bus.TriggerDeleteBus
 import com.pyamsoft.powermanager.trigger.db.PowerTriggerEntry
-import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
+import com.pyamsoft.pydroid.util.presenter.SchedulerViewPresenter
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject

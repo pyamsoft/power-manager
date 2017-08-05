@@ -16,7 +16,7 @@
 
 package com.pyamsoft.powermanager.trigger
 
-import com.pyamsoft.pydroid.presenter.ViewPresenter
+import com.pyamsoft.pydroid.util.presenter.ViewPresenter
 import javax.inject.Inject
 
 class TriggerCreatePresenter @Inject internal constructor() : ViewPresenter()

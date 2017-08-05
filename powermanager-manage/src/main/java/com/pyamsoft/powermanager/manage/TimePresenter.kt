@@ -18,8 +18,8 @@ package com.pyamsoft.powermanager.manage
 
 import android.widget.RadioGroup
 import com.pyamsoft.pydroid.helper.DisposableHelper
-import com.pyamsoft.pydroid.presenter.SchedulerViewPresenter
-import com.pyamsoft.pydroid.rx.RxViews
+import com.pyamsoft.pydroid.util.presenter.SchedulerViewPresenter
+import com.pyamsoft.pydroid.util.rx.RxViews
 import io.reactivex.Scheduler
 import timber.log.Timber
 import javax.inject.Inject
