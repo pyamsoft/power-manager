@@ -19,8 +19,8 @@ package com.pyamsoft.powermanager.service.job
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.pyamsoft.powermanager.job.JobQueuerEntry
 
-internal class ManageJobQueuerEntry internal constructor(tag: String, delay: Long,
-    internal val firstRun: Boolean, internal val oneShot: Boolean, internal val screenOn: Boolean,
+class ManageJobQueuerEntry(tag: String, delay: Long, internal val firstRun: Boolean,
+    internal val oneShot: Boolean, internal val screenOn: Boolean,
     internal val repeatingOnWindow: Long, internal val repeatingOffWindow: Long) : JobQueuerEntry(
     tag, delay) {
 

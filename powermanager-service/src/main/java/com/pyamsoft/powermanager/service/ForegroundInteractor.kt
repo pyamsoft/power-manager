@@ -34,8 +34,10 @@ import android.support.v4.content.ContextCompat
 import com.pyamsoft.powermanager.base.preference.ServicePreferences
 import com.pyamsoft.powermanager.base.preference.TriggerPreferences
 import com.pyamsoft.powermanager.job.JobQueuer
+import com.pyamsoft.powermanager.trigger.job.TriggerJobQueuerEntry
 import io.reactivex.Single
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -57,7 +59,7 @@ import javax.inject.Singleton
 
     val intent = Intent(appContext, mainActivityClass).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
     val pendingIntent = PendingIntent.getActivity(appContext, PENDING_RC, intent, 0)
-    builder = NotificationCompat.Builder(appContext).setContentTitle(
+    builder = NotificationCompat.Builder(appContext, notificationChannelId).setContentTitle(
         appContext.getString(R.string.app_name)).setSmallIcon(R.drawable.ic_notification).setColor(
         ContextCompat.getColor(appContext, R.color.amber500)).setAutoCancel(false).setWhen(
         0).setNumber(0).setContentIntent(pendingIntent)
@@ -84,24 +86,15 @@ import javax.inject.Singleton
    * public
    */
   fun queueRepeatingTriggerJob() {
-    // TODO
-    //    val delayTime = triggerPreferences.triggerPeriodTime
-    //    val triggerPeriod = TimeUnit.MINUTES.toSeconds(delayTime)
-    //jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
-    //jobQueuer.queueRepeating(JobQueuerEntry.builder(JobQueuer.TRIGGER_JOB_TAG)
-    //    .repeatingOnWindow(0)
-    //    .repeating(true)
-    //    .repeatingOffWindow(0)
-    //    .delay(triggerPeriod)
-    //    .ignoreIfCharging(false)
-    //    .type(QueuerType.POWER_TRIGGER)
-    //    .build());
+    val delayTime = triggerPreferences.triggerPeriodTime
+    val triggerPeriod = TimeUnit.MINUTES.toSeconds(delayTime)
+    jobQueuer.cancel(JobQueuer.TRIGGER_TAG)
+    jobQueuer.queueRepeating(TriggerJobQueuerEntry(JobQueuer.TRIGGER_TAG, triggerPeriod))
   }
 
   fun destroy() {
     Timber.d("Cancel all trigger jobs")
-    // TODO
-    //    jobQueuer.cancel(JobQueuer.TRIGGER_JOB_TAG);
+    jobQueuer.cancel(JobQueuer.TRIGGER_TAG)
   }
 
   @CheckResult fun getNotificationPriority(): Single<Int> {

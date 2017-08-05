@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
-package com.pyamsoft.powermanager.job
+package com.pyamsoft.powermanager.trigger.job
 
-import android.support.annotation.CheckResult
 import com.evernote.android.job.util.support.PersistableBundleCompat
+import com.pyamsoft.powermanager.job.JobQueuerEntry
 
-abstract class JobQueuerEntry protected constructor(internal val tag: String, val delay: Long) {
+class TriggerJobQueuerEntry(tag: String, delay: Long) : JobQueuerEntry(tag, delay) {
 
-  @CheckResult abstract fun getOptions(): PersistableBundleCompat
+  override fun getOptions(): PersistableBundleCompat {
+    val extras: PersistableBundleCompat = PersistableBundleCompat()
+    extras.putLong(KEY_PERIOD, delay)
+    return extras
+  }
+
+  companion object {
+
+    private const val KEY_PERIOD: String = "key__trigger_period"
+  }
+
 }
