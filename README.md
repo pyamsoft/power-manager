@@ -2,6 +2,15 @@
 
 Power Manager Android application by pyamsoft
 
+# Deprecated
+
+The Power Manager project is deprecated and will no longer receive new  
+features, bugfixes, or any official support. While it should continue  
+to work with the latest Android versions, there are no guarantees for  
+the future. Android OS has thankfully reached a point where applications  
+like Power Manager are no longer neccessary, and can cause more trouble  
+or more battery drain than it saves in some cases.
+
 [![Get it on Google Play](https://raw.githubusercontent.com/pyamsoft/power-manager/master/art/google-play-badge.png)][1]
 
 ## What is Power Manager
